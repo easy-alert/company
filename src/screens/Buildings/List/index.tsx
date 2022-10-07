@@ -61,7 +61,7 @@ export const BuildingsList = () => {
     <>
       <Style.Header>
         <Style.LeftSide>
-          <h2>Usuários</h2>
+          <h2>Edificações</h2>
 
           <Style.SearchField>
             <IconButton
@@ -152,6 +152,23 @@ export const BuildingsList = () => {
           </Style.BuildingCard>
         ))}
       </Style.GridContainer>
+      <Style.PaginationFooter>
+        {/* <Pagination
+          totalCountOfRegister={count}
+          currentPage={page}
+          registerPerPage={offset}
+          onPageChange={(page) => {
+            setPage(page);
+            requestUsersList({
+              setCompanies,
+              setLoading,
+              page,
+              setCount,
+              filter,
+            });
+          }}
+        /> */}
+      </Style.PaginationFooter>
     </>
   );
 };

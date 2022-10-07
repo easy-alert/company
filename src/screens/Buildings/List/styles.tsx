@@ -44,9 +44,18 @@ export const SearchField = styled.div`
 export const GridContainer = styled.div`
   display: grid;
   grid-gap: ${theme.size.xsm};
+
   grid-template-columns: 1fr 1fr 1fr 1fr;
 
-  @media (max-width: 900px) {
+  @media (max-width: 950px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 400px) {
     grid-template-columns: 1fr;
   }
 `;
