@@ -155,7 +155,7 @@ export const CompaniesList = () => {
                 {companies.map((companie) => (
                   <TableContent
                     onClick={() => {
-                      navigate(`/companies/${companie.id}`, {
+                      navigate(`/user/${companie.id}`, {
                         state: companie,
                       });
                     }}

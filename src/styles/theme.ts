@@ -1,19 +1,21 @@
 export const theme = {
   color: {
     primary: '#B21D1D',
-    success: '#34B53A',
-    danger: '#FF4E4E',
-
     primaryM: '#E66666',
     primaryL: '#F1A7A7',
 
+    success: '#34B53A',
     successM: '#74D779',
     successL: '#C4EEC6',
 
+    danger: '#FF4E4E',
     dangerM: '#FF6D4C',
     dangerL: '#FFC0B3',
+    actionDanger: '#FF3508',
 
+    warning: '#FFB200',
     warningL: '#FFE8B3',
+
     infoL: '#B3DFFF',
 
     gray1: '#EDEDED',
@@ -21,6 +23,8 @@ export const theme = {
     gray3: '#D5D5D5',
     gray4: '#999999',
     gray5: '#2B2B2B',
+
+    orange1: '#FF7B1C',
 
     black: '#000000',
     white: '#FFFFFF',

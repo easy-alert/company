@@ -44,7 +44,7 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/companies');
+              navigate('/user');
             })
             .catch((err) => {
               setOnQuery(false);

@@ -23,14 +23,16 @@ export const Sidebar = ({ children }: ISidebar) => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    { icon: icon.user, label: 'Usuários', url: '/companies' },
+    { icon: icon.gear, label: 'Conta', url: '/user' },
     { icon: icon.maintenances, label: 'Manutenções', url: '/maintenances' },
+    { icon: icon.building, label: 'Edificações', url: '/buildings' },
+
     { icon: icon.power, label: 'Sair', url: '/login' },
   ];
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
-      navigate('/companies');
+      navigate('/user');
     }
   }, []);
 
@@ -91,7 +93,9 @@ export const Sidebar = ({ children }: ISidebar) => {
                   }, 125);
                 }
               }}
-              selected={window.location.pathname.startsWith(element.url) || element.url === '/login'}
+              selected={
+                window.location.pathname.startsWith(element.url) || element.url === '/login'
+              }
             />
           </React.Fragment>
         ))}

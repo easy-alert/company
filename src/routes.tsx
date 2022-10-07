@@ -7,12 +7,10 @@ import { Sidebar } from './components/Sidebar';
 // AUTHENTICATION
 import { Login } from './screens/Authentication/Login';
 
-// COMPANIES
 import { CompaniesList } from './screens/Companies/List';
 import { CompanyDetails } from './screens/Companies/Details';
 import { MaintenancesList } from './screens/Maintenances/List';
-
-// CATEGORIES
+import { BuildingsList } from './screens/Buildings/List';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -30,12 +28,14 @@ const AppRoutes = () => (
             </Sidebar>
           }
         >
-          <Route path="/companies" element={<Outlet />}>
+          <Route path="/user" element={<Outlet />}>
             <Route index element={<CompaniesList />} />
             <Route path=":user_id" element={<CompanyDetails />} />
           </Route>
 
           <Route path="/maintenances" element={<MaintenancesList />} />
+
+          <Route path="/buildings" element={<BuildingsList />} />
         </Route>
       </Routes>
     </BrowserRouter>

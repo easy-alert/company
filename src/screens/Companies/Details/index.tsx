@@ -41,7 +41,7 @@ export const CompanyDetails = () => {
 
   useEffect(() => {
     if (!state) {
-      navigate('/companies');
+      navigate('/user');
     }
     setLoading(false);
   }, []);

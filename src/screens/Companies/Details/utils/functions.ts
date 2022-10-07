@@ -44,7 +44,7 @@ export const requestDeleteCompany = async ({
     data: { companyId: company.id },
   })
     .then((res) => {
-      navigate('/companies', { replace: true });
+      navigate('/user', { replace: true });
       toast.dismiss();
       toast.success(res.data.ServerMessage.message);
       setOnQuery(false);
