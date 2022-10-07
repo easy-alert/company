@@ -84,11 +84,8 @@ export const MaintenanceCategory = ({
           {category.Maintenances.length ? (
             <Style.MaintenancesHeader>
               <Style.MaintenancesGrid>
-                <p
-                  className="p2"
-                  style={{
-                    opacity: sortType.type === 'element' ? '1' : '0.5',
-                  }}
+                <Style.SortHeader
+                  highlighted={sortType.type === 'element'}
                   onClick={() => {
                     setSortType({ type: 'element' });
                     alphabeticalOrder({
@@ -100,18 +97,19 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  Elemento
-                  {(isSorted && sortType.type === 'element') || sortType.type !== 'element' ? (
-                    <Image img={icon.upTriangle} size="8px" />
-                  ) : (
-                    <Image img={icon.downTriangle} size="8px" />
-                  )}
-                </p>
-                <p
-                  className="p2"
-                  style={{
-                    opacity: sortType.type === 'activity' ? '1' : '0.5',
-                  }}
+                  <p className="p2">Elemento</p>
+                  <Image
+                    img={
+                      (isSorted && sortType.type === 'element') || sortType.type !== 'element'
+                        ? icon.upTriangle
+                        : icon.downTriangle
+                    }
+                    size="8px"
+                  />
+                </Style.SortHeader>
+
+                <Style.SortHeader
+                  highlighted={sortType.type === 'activity'}
                   onClick={() => {
                     setSortType({ type: 'activity' });
                     alphabeticalOrder({
@@ -122,18 +120,17 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  Atividade
-                  {isSorted && sortType.type === 'activity' ? (
-                    <Image img={icon.downTriangle} size="8px" />
-                  ) : (
-                    <Image img={icon.upTriangle} size="8px" />
-                  )}
-                </p>
-                <p
-                  className="p2"
-                  style={{
-                    opacity: sortType.type === 'frequency' ? '1' : '0.5',
-                  }}
+                  <p className="p2">Atividade</p>
+
+                  <Image
+                    img={
+                      isSorted && sortType.type === 'activity' ? icon.downTriangle : icon.upTriangle
+                    }
+                    size="8px"
+                  />
+                </Style.SortHeader>
+                <Style.SortHeader
+                  highlighted={sortType.type === 'frequency'}
                   onClick={() => {
                     setSortType({ type: 'frequency' });
                     nestedObjectAlphabeticalOrder({
@@ -145,18 +142,20 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  Frequência
-                  {isSorted && sortType.type === 'frequency' ? (
-                    <Image img={icon.downTriangle} size="8px" />
-                  ) : (
-                    <Image img={icon.upTriangle} size="8px" />
-                  )}
-                </p>
-                <p
-                  className="p2"
-                  style={{
-                    opacity: sortType.type === 'responsible' ? '1' : '0.5',
-                  }}
+                  <p className="p2">Frequência</p>
+
+                  <Image
+                    img={
+                      isSorted && sortType.type === 'frequency'
+                        ? icon.downTriangle
+                        : icon.upTriangle
+                    }
+                    size="8px"
+                  />
+                </Style.SortHeader>
+
+                <Style.SortHeader
+                  highlighted={sortType.type === 'responsible'}
                   onClick={() => {
                     setSortType({ type: 'responsible' });
                     alphabeticalOrder({
@@ -167,18 +166,20 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  Responsável
-                  {isSorted && sortType.type === 'responsible' ? (
-                    <Image img={icon.downTriangle} size="8px" />
-                  ) : (
-                    <Image img={icon.upTriangle} size="8px" />
-                  )}
-                </p>
-                <p
-                  className="p2"
-                  style={{
-                    opacity: sortType.type === 'source' ? '1' : '0.5',
-                  }}
+                  <p className="p2">Responsável</p>
+
+                  <Image
+                    img={
+                      isSorted && sortType.type === 'responsible'
+                        ? icon.downTriangle
+                        : icon.upTriangle
+                    }
+                    size="8px"
+                  />
+                </Style.SortHeader>
+
+                <Style.SortHeader
+                  highlighted={sortType.type === 'source'}
                   onClick={() => {
                     setSortType({ type: 'source' });
                     alphabeticalOrder({
@@ -189,13 +190,14 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  Fonte
-                  {isSorted && sortType.type === 'source' ? (
-                    <Image img={icon.downTriangle} size="8px" />
-                  ) : (
-                    <Image img={icon.upTriangle} size="8px" />
-                  )}
-                </p>
+                  <p className="p2">Fonte</p>
+                  <Image
+                    img={
+                      isSorted && sortType.type === 'source' ? icon.downTriangle : icon.upTriangle
+                    }
+                    size="8px"
+                  />
+                </Style.SortHeader>
               </Style.MaintenancesGrid>
             </Style.MaintenancesHeader>
           ) : (

@@ -62,16 +62,20 @@ export const MaintenancesGrid = styled.div`
   align-items: center;
   grid-gap: ${theme.size.sm};
   grid-template-columns: 250px minmax(250px, 1fr) 0.5fr 0.7fr 0.6fr 0.1fr;
+`;
 
-  > p {
-    cursor: pointer;
-    width: fit-content;
-    transition: 0.25s;
-    display: flex;
-    align-items: flex-start;
-    gap: ${theme.size.xxsm};
-    :hover {
-      opacity: 0.7;
-    }
+export const SortHeader = styled.div<{ highlighted: boolean }>`
+  cursor: pointer;
+  width: fit-content;
+  transition: 0.25s;
+
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+
+  :hover {
+    opacity: 0.8;
   }
+
+  ${({ highlighted }) => (highlighted ? `opacity: 1` : `opacity: 0.4`)}
 `;

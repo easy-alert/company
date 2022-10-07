@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // COMPONENTS
 import { AuthProvider } from './contexts/Auth/AuthProvider';
 import { RequireAuth } from './contexts/Auth/RequireAuth';
@@ -7,8 +7,7 @@ import { Sidebar } from './components/Sidebar';
 // AUTHENTICATION
 import { Login } from './screens/Authentication/Login';
 
-import { CompaniesList } from './screens/Companies/List';
-import { CompanyDetails } from './screens/Companies/Details';
+import { UserDetails } from './screens/User/Details';
 import { MaintenancesList } from './screens/Maintenances/List';
 import { BuildingsList } from './screens/Buildings/List';
 
@@ -28,10 +27,7 @@ const AppRoutes = () => (
             </Sidebar>
           }
         >
-          <Route path="/user" element={<Outlet />}>
-            <Route index element={<CompaniesList />} />
-            <Route path=":user_id" element={<CompanyDetails />} />
-          </Route>
+          <Route path="/user" element={<UserDetails />} />
 
           <Route path="/maintenances" element={<MaintenancesList />} />
 
