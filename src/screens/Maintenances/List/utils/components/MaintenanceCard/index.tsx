@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 // LIBS
 import { useState } from 'react';
 
@@ -9,9 +11,11 @@ import * as Style from './styles';
 
 // TYPES
 import { IMaintenanceCard } from './utils/types';
+import { IMaintenance } from '../../types';
 
 // MODALS
 import { ModalEditMaintenance } from './utils/ModalEditMaintenance';
+import { ModalCloneMaintenance } from './utils/ModalCloneMaintenance';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -21,7 +25,12 @@ export const MaintenanceCard = ({
   categoryId,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
+
   const [modalEditMaintenanceOpen, setModalEditMaintenanceOpen] = useState<boolean>(false);
+
+  const [modalCloneMaintenanceOpen, setModalCloneMaintenanceOpen] = useState<boolean>(false);
+
+  const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
   return (
     <>
@@ -35,6 +44,18 @@ export const MaintenanceCard = ({
           categoryId={categoryId}
         />
       )}
+
+      {modalCloneMaintenanceOpen && toCloneMaintenance && (
+        <ModalCloneMaintenance
+          setModal={setModalCloneMaintenanceOpen}
+          categoryId={categoryId}
+          categories={categories}
+          setCategories={setCategories}
+          timeIntervals={timeIntervals}
+          maintenance={toCloneMaintenance}
+        />
+      )}
+
       <Style.MaintenancesCard
         onClick={() => {
           setCardIsOpen((prevState) => !prevState);
@@ -56,6 +77,15 @@ export const MaintenanceCard = ({
               <p className="p2">{maintenance.MaintenancesHistory[0].responsible}</p>
               <p className="p2">{maintenance.MaintenancesHistory[0].source}</p>
               <Style.ArrowContainer>
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setToCloneMaintenance(maintenance);
+                    setModalCloneMaintenanceOpen(true);
+                  }}
+                >
+                  <Image size="16px" img={icon.copy} />
+                </div>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
                   <Image img={icon.downArrow} size="16px" />
                 </Style.Arrow>

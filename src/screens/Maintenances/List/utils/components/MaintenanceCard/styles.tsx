@@ -4,7 +4,18 @@ import { theme } from '../../../../../../styles/theme';
 export const ArrowContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: ${theme.size.xsm};
+
+  > :first-child {
+    transition: 0.25s;
+    :hover {
+      opacity: 0.7;
+    }
+  }
 `;
+
+export const CopyIcon = styled.div``;
 
 export const Arrow = styled.div<{ cardIsOpen: boolean }>`
   transition: 0.25s;
@@ -27,6 +38,7 @@ export const MaintenancesCard = styled.div`
   transition: 0.25s;
   :hover {
     cursor: pointer;
+    background-color: ${`${theme.color.white}B3`};
   }
 `;
 

@@ -81,6 +81,7 @@ export const BuildingCardHeaderInfo = styled.div`
   > p {
     font-weight: 500;
     color: ${theme.color.gray4};
+    margin-top: ${theme.size.xxsm};
   }
 `;
 
