@@ -8,7 +8,7 @@ export const Background = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: ${theme.size.sm} ${theme.size.md};
-  background-color: ${theme.color.gray5};
+  background-color: #3f3e3e;
 `;
 
 export const InputWrapper = styled.div`

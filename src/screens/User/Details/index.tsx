@@ -90,7 +90,7 @@ export const UserDetails = () => {
           icon={icon.editWithBg}
           label="Editar"
           onClick={() => {
-            // setEditModalCreateCompanyAndOwnerIsOpen(true);
+            // ;
           }}
         />
       </Style.Footer>
