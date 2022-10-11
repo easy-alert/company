@@ -58,7 +58,7 @@ export const Login = () => {
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <h2>Login/Client</h2>
+                  <h2>Login/Company</h2>
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
