@@ -99,13 +99,14 @@ export const BuildingCreate = () => {
   };
 
   return (
-    <>
+    <Style.Container>
       <Style.Header>
         <h2>Cadastrar edificação</h2>
       </Style.Header>
       <ReturnButton path="/buildings" />
       <Style.CalendarWrapper>
         <Calendar
+          culture="pt-BR"
           messages={messages}
           localizer={localizer}
           events={events}
@@ -116,6 +117,6 @@ export const BuildingCreate = () => {
           showAllEvents
         />
       </Style.CalendarWrapper>
-    </>
+    </Style.Container>
   );
 };

@@ -16,7 +16,7 @@ export const MobileBackground = styled.div<{ animate: boolean }>`
   height: 100vh;
   width: 100%;
   position: absolute;
-  z-index: 1;
+  z-index: 5;
 
   ${({ animate }) =>
     animate
@@ -40,7 +40,7 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
     position: absolute;
     transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-85px)')};
     transition: 0.25s;
-    z-index: 2;
+    z-index: 6;
   }
 `;
 

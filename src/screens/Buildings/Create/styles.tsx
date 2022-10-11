@@ -1,11 +1,19 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
+export const Container = styled.header`
+  width: 100%;
+  overflow: auto;
+`;
+
 export const Header = styled.header`
   margin-bottom: ${theme.size.xsm};
 `;
 
 export const CalendarWrapper = styled.div`
+  min-width: 600px;
+  width: 100%;
+  // ver pra scrollar só o calendário
   .rbc-btn-group {
     :last-child {
       > button {
@@ -25,10 +33,6 @@ export const CalendarWrapper = styled.div`
     background-color: red;
   }
 
-  .rbc-show-more {
-    color: red;
-  }
-
   .rbc-date-cell {
     pointer-events: none;
   }
@@ -44,7 +48,7 @@ export const CalendarWrapper = styled.div`
   }
 
   .rbc-allday-cell {
-    height: 600px;
+    height: 550px;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
     box-sizing: border-box;
@@ -53,5 +57,9 @@ export const CalendarWrapper = styled.div`
   .rbc-header {
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
+  }
+
+  .rbc-row-bg {
+    border-bottom: 1px solid #ddd;
   }
 `;
