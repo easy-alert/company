@@ -85,12 +85,14 @@ export const Sidebar = ({ children }: ISidebar) => {
               color={theme.color.white}
               gap="0px"
               onClick={() => {
-                navigate(element.url);
                 if (openSidebar) {
                   setAnimate(false);
                   setTimeout(() => {
                     setOpenSidebar(false);
+                    navigate(element.url);
                   }, 125);
+                } else {
+                  navigate(element.url);
                 }
               }}
               selected={

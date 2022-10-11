@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 // COMPONENTS
 import { AuthProvider } from './contexts/Auth/AuthProvider';
 import { RequireAuth } from './contexts/Auth/RequireAuth';
@@ -10,6 +10,7 @@ import { Login } from './screens/Authentication/Login';
 import { UserDetails } from './screens/User/Details';
 import { MaintenancesList } from './screens/Maintenances/List';
 import { BuildingsList } from './screens/Buildings/List';
+import { BuildingCreate } from './screens/Buildings/Create';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -31,7 +32,10 @@ const AppRoutes = () => (
 
           <Route path="/maintenances" element={<MaintenancesList />} />
 
-          <Route path="/buildings" element={<BuildingsList />} />
+          <Route path="/buildings" element={<Outlet />}>
+            <Route index element={<BuildingsList />} />
+            <Route path="create" element={<BuildingCreate />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -78,10 +78,23 @@ export const BuildingCardHeader = styled.div`
 `;
 
 export const BuildingCardHeaderInfo = styled.div`
+  > h5 {
+    display: -webkit-box;
+    max-width: 500px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   > p {
     font-weight: 500;
     color: ${theme.color.gray4};
     margin-top: ${theme.size.xxsm};
+    display: -webkit-box;
+    max-width: 500px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 `;
 

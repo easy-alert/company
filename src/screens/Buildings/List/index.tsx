@@ -1,3 +1,6 @@
+// LIBS
+import { useNavigate } from 'react-router-dom';
+
 // COMPONENTS
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { icon } from '../../../assets/icons/index';
@@ -7,6 +10,8 @@ import { Image } from '../../../components/Image';
 import * as Style from './styles';
 
 export const BuildingsList = () => {
+  const navigate = useNavigate();
+
   // FILTER
   // const [filter, setFilter] = useState<string>('');
 
@@ -16,8 +21,9 @@ export const BuildingsList = () => {
   // const offset = 20;
   const buildings = [
     {
-      name: 'Monte Ravello',
-      location: 'Rio Maina, Criciúma',
+      name: 'Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello',
+      location:
+        'Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello Monte Ravello',
       pending: 2,
       expired: 0,
       delayed: 10,
@@ -115,7 +121,7 @@ export const BuildingsList = () => {
           className="p2"
           icon={icon.plusWithBg}
           onClick={() => {
-            // setModalCreateCompanyAndOwnerIsOpen(true);
+            navigate('/buildings/create');
           }}
         />
       </Style.Header>

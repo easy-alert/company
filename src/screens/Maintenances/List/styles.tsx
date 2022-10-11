@@ -6,7 +6,7 @@ export const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${theme.size.md};
+  margin-bottom: ${theme.size.sm};
 
   @media (max-width: 900px) {
     height: fit-content;
