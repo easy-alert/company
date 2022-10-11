@@ -43,12 +43,6 @@ Qualquer configuração que necessite interferência do usuário acompanha o pre
   > Styles
 ```
 
-#### 🌎 Alterando .env 🌎
-
-```
-REACT_APP_API_URL=urlDaApi
-```
-
 ## ✒️ Desenvolvido por
 
 - [Ada Lovelace Software House](https://adasoftwarehouse.com.br)
