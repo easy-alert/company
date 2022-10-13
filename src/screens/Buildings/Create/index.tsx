@@ -116,9 +116,6 @@ export const BuildingCreate = () => {
           messages={messages}
           localizer={localizer}
           events={events}
-          startAccessor="start"
-          endAccessor="end"
-          defaultView="month"
           style={{ height: 660 }}
           showAllEvents
           onSelectEvent={onSelectEvent}
