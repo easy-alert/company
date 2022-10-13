@@ -57,6 +57,7 @@ export const CalendarWrapper = styled.div`
   .rbc-header {
     border-top: 1px solid #ddd;
     border-right: 1px solid #ddd;
+    pointer-events: none;
   }
 
   .rbc-row-bg {
