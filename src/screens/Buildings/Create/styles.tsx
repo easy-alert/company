@@ -13,7 +13,7 @@ export const Header = styled.header`
 export const CalendarWrapper = styled.div`
   min-width: 600px;
   width: 100%;
-  // ver pra scrollar só o calendário
+
   .rbc-btn-group {
     :last-child {
       > button {
@@ -31,6 +31,10 @@ export const CalendarWrapper = styled.div`
 
   .rbc-event {
     background-color: red;
+  }
+
+  .rbc-today {
+    background-color: #c2f0c2;
   }
 
   .rbc-date-cell {
