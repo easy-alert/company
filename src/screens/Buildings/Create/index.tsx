@@ -112,13 +112,13 @@ export const BuildingCreate = () => {
       <ReturnButton path="/buildings" />
       <Style.CalendarWrapper>
         <Calendar
-          culture="pt-BR"
           messages={messages}
           localizer={localizer}
           events={events}
           style={{ height: 660 }}
-          showAllEvents
           onSelectEvent={onSelectEvent}
+          culture="pt-BR"
+          showAllEvents
         />
       </Style.CalendarWrapper>
     </Style.Container>
