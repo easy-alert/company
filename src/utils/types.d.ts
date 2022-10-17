@@ -1,18 +1,27 @@
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  createdAt: string;
-  lastAccess: string;
-  isBlocked: boolean;
-  Permissions?: [
-    {
-      Permission: {
-        name: string;
-      };
-    },
-  ];
+export interface IAccount {
+  User: {
+    id: string;
+    lastAccess: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    Permissions?: [
+      {
+        Permission: {
+          name: string;
+        };
+      },
+    ];
+  };
+  Company: {
+    id: string;
+    name: string;
+    contactNumber: string;
+    CNPJ?: string;
+    CPF?: string;
+    createdAt: string;
+    image: string;
+  };
 }
 
 export interface IUploadFile {

@@ -5,25 +5,25 @@ import { useState } from 'react';
 import { setToken } from './utils/functions';
 
 // TYPES
-import { IUser } from '../../utils/types';
+import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
 import { ILoginRequestResponse } from './utils/types';
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [user, setUser] = useState<IUser | null>(null);
+  const [account, setAccount] = useState<IAccount | null>(null);
 
-  const signin = async ({ User, token }: ILoginRequestResponse) => {
-    setUser(User);
+  const signin = async ({ Account, token }: ILoginRequestResponse) => {
+    setAccount(Account);
     setToken({ token });
   };
 
   const signout = () => {
-    setUser(null);
+    setAccount(null);
     localStorage.removeItem('authToken');
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, signin, signout }}>
+    <AuthContext.Provider value={{ account, setAccount, signin, signout }}>
       {children}
     </AuthContext.Provider>
   );

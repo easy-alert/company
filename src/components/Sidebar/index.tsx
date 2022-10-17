@@ -23,7 +23,7 @@ export const Sidebar = ({ children }: ISidebar) => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    { icon: icon.gear, label: 'Conta', url: '/user' },
+    { icon: icon.gear, label: 'Conta', url: '/account' },
     { icon: icon.maintenances, label: 'Manutenções', url: '/maintenances' },
     { icon: icon.building, label: 'Edificações', url: '/buildings' },
 
@@ -32,7 +32,7 @@ export const Sidebar = ({ children }: ISidebar) => {
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
-      navigate('/user');
+      navigate('/account');
     }
   }, []);
 

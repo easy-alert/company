@@ -30,52 +30,16 @@ export const BuildingCreate = () => {
 
   const events = [
     {
-      id: 0,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 11 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 11 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
       id: 1,
       title: 'Board meeting',
-      start: new Date('Tue Oct 12 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 12 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
-      id: 2,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 13 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 13 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
-      id: 3,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 14 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 14 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
-      id: 4,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 15 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 15 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
-      id: 5,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 16 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 16 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-    },
-    {
-      id: 6,
-      title: 'Board meeting',
-      start: new Date('Tue Oct 17 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 17 2022 13:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      start: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      end: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
     },
     {
       id: 7,
       title: 'Board meeting aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       start: new Date('Tue Oct 18 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
-      end: new Date('Tue Oct 18 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      end: new Date('Tue Oct 19 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
     },
   ];
 
@@ -119,6 +83,7 @@ export const BuildingCreate = () => {
           onSelectEvent={onSelectEvent}
           culture="pt-BR"
           showAllEvents
+          allDayAccessor="id"
         />
       </Style.CalendarWrapper>
     </Style.Container>

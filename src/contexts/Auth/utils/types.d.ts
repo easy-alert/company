@@ -1,8 +1,8 @@
-import { IUser } from '../../../utils/types';
+import { IAccount } from '../../../utils/types';
 
 export interface IAuthContext {
-  user: IUser | null;
-  setUser: (setUser: IUser) => void;
+  account: IAccount | null;
+  setAccount: (setUser: IAccount) => void;
   signin: (ILoginRequestResponse) => void;
   signout: () => void;
 }
@@ -13,6 +13,6 @@ export interface ILoginRequest {
 }
 
 export interface ILoginRequestResponse {
-  User: IUser;
+  Account: IAccount;
   token: string;
 }

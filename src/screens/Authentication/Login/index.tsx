@@ -38,13 +38,13 @@ export const Login = () => {
         validationSchema={schema}
         onSubmit={async (data: IFormData) => {
           setOnQuery(true);
-          await Api.post('/auth/backoffice/login', {
+          await Api.post('/auth/login', {
             email: data.email,
             password: data.password,
           })
             .then((res) => {
               signin(res.data);
-              navigate('/user');
+              navigate('/account');
             })
             .catch((err) => {
               setOnQuery(false);
