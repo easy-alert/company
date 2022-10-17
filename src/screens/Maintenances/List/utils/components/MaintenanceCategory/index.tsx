@@ -18,7 +18,7 @@ import { ModalCreateMaintenance } from './utils/ModalCreateMaintenance';
 import { ModalEditCategory } from './utils/ModalEditCategory';
 
 // FUNCTIONS
-import { alphabeticalOrder, nestedObjectAlphabeticalOrder } from './utils/functions';
+import { alphabeticalOrder } from './utils/functions';
 
 // TYPES
 import { IMaintenanceCategory, ISortType } from './utils/types';
@@ -133,12 +133,11 @@ export const MaintenanceCategory = ({
                   highlighted={sortType.type === 'frequency'}
                   onClick={() => {
                     setSortType({ type: 'frequency' });
-                    nestedObjectAlphabeticalOrder({
+                    alphabeticalOrder({
                       category,
                       isSorted,
                       setIsSorted,
-                      toSortString: 'singularLabel',
-                      toSortObject: 'FrequencyTimeInterval',
+                      toSortString: 'frequency',
                     });
                   }}
                 >
