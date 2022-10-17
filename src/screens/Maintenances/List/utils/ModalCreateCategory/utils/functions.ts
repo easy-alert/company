@@ -13,7 +13,7 @@ export const requestCreateCategory = async ({
 }: IRequestCreateCategory) => {
   setOnQuery(true);
 
-  await Api.post('/backoffice/categories/create', {
+  await Api.post('/categories/create', {
     name: values.categoryName,
   })
     .then((res) => {

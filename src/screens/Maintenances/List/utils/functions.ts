@@ -8,7 +8,7 @@ export const requestCategories = async ({
   setCategories,
   filter = '',
 }: IRequestCategories) => {
-  await Api.get(`/backoffice/categories/list?search=${filter}`)
+  await Api.get(`/categories/list?search=${filter}`)
     .then((res) => {
       setCategories(res.data);
       if (setLoading) setLoading(false);

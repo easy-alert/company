@@ -20,7 +20,7 @@ export const requestEditMaintenance = async ({
 }: IRequestEditMaintenance) => {
   setOnQuery(true);
 
-  await Api.post('/backoffice/maintenances/edit', {
+  await Api.post('/maintenances/edit', {
     maintenanceId,
     element: values.element,
     activity: values.activity,
@@ -65,7 +65,7 @@ export const requestDeleteMaintenance = async ({
   setCategories,
 }: IDeleteMaintenance) => {
   setOnQuery(true);
-  await Api.delete('/backoffice/maintenances/delete', {
+  await Api.delete('/maintenances/delete', {
     data: {
       maintenanceId,
     },

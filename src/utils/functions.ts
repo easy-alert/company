@@ -122,7 +122,7 @@ export const catchHandler = (err: any) => {
 };
 
 export const requestListIntervals = async ({ setTimeIntervals }: IRequestListIntervals) => {
-  await Api.get('/time/interval/list', {})
+  await Api.get('/timeinterval/list')
     .then((res) => {
       setTimeIntervals(res.data);
     })

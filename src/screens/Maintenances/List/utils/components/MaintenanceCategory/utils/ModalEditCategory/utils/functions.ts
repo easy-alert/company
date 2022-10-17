@@ -18,7 +18,7 @@ export const requestEditCategory = async ({
   setOnQuery,
 }: IEditCategory) => {
   setOnQuery(true);
-  await Api.put('/backoffice/categories/edit', {
+  await Api.put('/categories/edit', {
     categoryId,
     name: values.categoryName,
   })
@@ -51,7 +51,7 @@ export const requestDeleteCategory = async ({
   setOnQuery,
 }: IDeleteCategory) => {
   setOnQuery(true);
-  await Api.delete('/backoffice/categories/delete', {
+  await Api.delete('/categories/delete', {
     data: {
       categoryId,
     },

@@ -19,7 +19,7 @@ export const requestCreateMaintenance = async ({
 }: IRequestCreateMaintenance) => {
   setOnQuery(true);
 
-  await Api.post('/backoffice/maintenances/create', {
+  await Api.post('/maintenances/create', {
     categoryId,
     element: values.element,
     activity: values.activity,
