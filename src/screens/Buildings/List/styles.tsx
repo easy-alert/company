@@ -43,21 +43,8 @@ export const SearchField = styled.div`
 
 export const GridContainer = styled.div`
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   grid-gap: ${theme.size.xsm};
-
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-
-  @media (max-width: 950px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media (max-width: 400px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 export const BuildingCard = styled.div`

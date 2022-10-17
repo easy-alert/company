@@ -22,6 +22,7 @@ export const Background = styled.div`
 
   > button {
     font-family: DM Sans;
+    font-size: 14px;
     width: fit-content;
     transition: 0.25s;
     border-radius: ${theme.size.xxsm};

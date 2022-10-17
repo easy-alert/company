@@ -14,6 +14,7 @@ export const requestCategories = async ({
       if (setLoading) setLoading(false);
     })
     .catch((err) => {
+      if (setLoading) setLoading(false);
       catchHandler(err);
     });
 };

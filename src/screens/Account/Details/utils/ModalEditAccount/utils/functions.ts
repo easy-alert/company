@@ -30,14 +30,14 @@ export const requestEditAccount = async ({
   }
 
   await Api.put('/account/edit', {
-    image: imageUrl,
     name: values.name,
     email: values.email,
+    password: values.password !== '' ? values.password : null,
+    image: imageUrl,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
     contactNumber: unMask(values.contactNumber),
-    password: values.password !== '' ? values.password : null,
   })
     .then((res) => {
       const updatedAccount: IAccount = {
@@ -52,10 +52,10 @@ export const requestEditAccount = async ({
         },
         User: {
           createdAt: account.User.createdAt,
-          email: account.User.email,
+          email: values.email,
           id: account.User.id,
           lastAccess: account.User.lastAccess,
-          name: account.User.name,
+          name: values.name,
           Permissions: account.User.Permissions,
         },
       };
