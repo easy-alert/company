@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // MAINTENANCES
-interface IMaintenanceHistory {
+interface IMaintenance {
   id: string;
   maintenanceId: string;
   element: string;
@@ -22,6 +22,7 @@ interface IMaintenanceHistory {
     pluralLabel: string;
     singularLabel: string;
   };
+  ownerCompanyId: string | null;
   delay: number;
   DelayTimeInterval: {
     name: string;
@@ -30,14 +31,8 @@ interface IMaintenanceHistory {
     singularLabel: string;
   };
   observation: string;
-  createdAt: string;
-  updatedAt: string;
 }
-interface IMaintenance {
-  id: string;
-  element: string;
-  MaintenancesHistory: IMaintenanceHistory[];
-}
+
 export interface ICategories {
   id: string;
   name: string;

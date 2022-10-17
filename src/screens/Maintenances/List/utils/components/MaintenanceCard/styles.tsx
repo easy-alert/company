@@ -15,8 +15,6 @@ export const ArrowContainer = styled.div`
   }
 `;
 
-export const CopyIcon = styled.div``;
-
 export const Arrow = styled.div<{ cardIsOpen: boolean }>`
   transition: 0.25s;
 

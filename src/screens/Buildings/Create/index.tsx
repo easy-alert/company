@@ -36,6 +36,24 @@ export const BuildingCreate = () => {
       end: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
     },
     {
+      id: 2,
+      title: 'Board meeting',
+      start: new Date('Tue Oct 18 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      end: new Date('Tue Oct 20 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+    },
+    {
+      id: 3,
+      title: 'Board meeting',
+      start: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      end: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+    },
+    {
+      id: 4,
+      title: 'Board meeting',
+      start: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+      end: new Date('Tue Oct 17 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),
+    },
+    {
       id: 7,
       title: 'Board meeting aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       start: new Date('Tue Oct 18 2022 19:31:46 GMT-0300 (Horário Padrão de Brasília)'),

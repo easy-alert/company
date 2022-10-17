@@ -13,32 +13,20 @@ export const alphabeticalOrder = ({
   if (defaultSortedColumn) {
     if (isSorted) {
       category.Maintenances.sort((a: any, b: any) =>
-        String(a.MaintenancesHistory[0][toSortString]).toLowerCase() <
-        String(b.MaintenancesHistory[0][toSortString]).toLowerCase()
-          ? -1
-          : 1,
+        String(a[toSortString]).toLowerCase() < String(b[toSortString]).toLowerCase() ? -1 : 1,
       );
     } else {
       category.Maintenances.sort((a: any, b: any) =>
-        String(a.MaintenancesHistory[0][toSortString]).toLowerCase() >
-        String(b.MaintenancesHistory[0][toSortString]).toLowerCase()
-          ? -1
-          : 1,
+        String(a[toSortString]).toLowerCase() > String(b[toSortString]).toLowerCase() ? -1 : 1,
       );
     }
   } else if (isSorted) {
     category.Maintenances.sort((a: any, b: any) =>
-      String(a.MaintenancesHistory[0][toSortString]).toLowerCase() >
-      String(b.MaintenancesHistory[0][toSortString]).toLowerCase()
-        ? -1
-        : 1,
+      String(a[toSortString]).toLowerCase() > String(b[toSortString]).toLowerCase() ? -1 : 1,
     );
   } else {
     category.Maintenances.sort((a: any, b: any) =>
-      String(a.MaintenancesHistory[0][toSortString]).toLowerCase() <
-      String(b.MaintenancesHistory[0][toSortString]).toLowerCase()
-        ? -1
-        : 1,
+      String(a[toSortString]).toLowerCase() < String(b[toSortString]).toLowerCase() ? -1 : 1,
     );
   }
 
@@ -56,30 +44,30 @@ export const nestedObjectAlphabeticalOrder = ({
   if (defaultSortedColumn) {
     if (isSorted) {
       category.Maintenances.sort((a: any, b: any) =>
-        String(a.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase() <
-        String(b.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase()
+        String(a[toSortObject][toSortString]).toLowerCase() <
+        String(b[toSortObject][toSortString]).toLowerCase()
           ? -1
           : 1,
       );
     } else {
       category.Maintenances.sort((a: any, b: any) =>
-        String(a.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase() >
-        String(b.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase()
+        String(a[toSortObject][toSortString]).toLowerCase() >
+        String(b[toSortObject][toSortString]).toLowerCase()
           ? -1
           : 1,
       );
     }
   } else if (isSorted) {
     category.Maintenances.sort((a: any, b: any) =>
-      String(a.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase() >
-      String(b.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase()
+      String(a[toSortObject][toSortString]).toLowerCase() >
+      String(b[toSortObject][toSortString]).toLowerCase()
         ? -1
         : 1,
     );
   } else {
     category.Maintenances.sort((a: any, b: any) =>
-      String(a.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase() <
-      String(b.MaintenancesHistory[0][toSortObject][toSortString]).toLowerCase()
+      String(a[toSortObject][toSortString]).toLowerCase() <
+      String(b[toSortObject][toSortString]).toLowerCase()
         ? -1
         : 1,
     );

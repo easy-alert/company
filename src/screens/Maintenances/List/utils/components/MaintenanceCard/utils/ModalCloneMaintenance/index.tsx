@@ -32,17 +32,17 @@ export const ModalCloneMaintenance = ({
     <Modal title="Clonar manutenção" setModal={setModal}>
       <Formik
         initialValues={{
-          element: maintenance.MaintenancesHistory[0].element,
-          activity: maintenance.MaintenancesHistory[0].activity,
-          frequency: String(maintenance.MaintenancesHistory[0].frequency),
-          frequencyTimeInterval: maintenance.MaintenancesHistory[0].FrequencyTimeInterval.id,
-          responsible: maintenance.MaintenancesHistory[0].responsible,
-          source: maintenance.MaintenancesHistory[0].source,
-          period: String(maintenance.MaintenancesHistory[0].period),
-          periodTimeInterval: maintenance.MaintenancesHistory[0].PeriodTimeInterval.id,
-          delay: String(maintenance.MaintenancesHistory[0].delay),
-          delayTimeInterval: maintenance.MaintenancesHistory[0].DelayTimeInterval.id,
-          observation: maintenance.MaintenancesHistory[0].observation ?? '',
+          element: maintenance.element,
+          activity: maintenance.activity,
+          frequency: String(maintenance.frequency),
+          frequencyTimeInterval: maintenance.FrequencyTimeInterval.id,
+          responsible: maintenance.responsible,
+          source: maintenance.source,
+          period: String(maintenance.period),
+          periodTimeInterval: maintenance.PeriodTimeInterval.id,
+          delay: String(maintenance.delay),
+          delayTimeInterval: maintenance.DelayTimeInterval.id,
+          observation: maintenance.observation ?? '',
         }}
         validationSchema={schemaCloneMaintenance}
         onSubmit={async (values) => {

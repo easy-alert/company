@@ -37,18 +37,17 @@ export const ModalEditMaintenance = ({
     <Modal title="Editar manutenção" setModal={setModal}>
       <Formik
         initialValues={{
-          element: selectedMaintenance.MaintenancesHistory[0].element,
-          activity: selectedMaintenance.MaintenancesHistory[0].activity,
-          frequency: String(selectedMaintenance.MaintenancesHistory[0].frequency),
-          frequencyTimeInterval:
-            selectedMaintenance.MaintenancesHistory[0].FrequencyTimeInterval.id,
-          responsible: selectedMaintenance.MaintenancesHistory[0].responsible,
-          source: selectedMaintenance.MaintenancesHistory[0].source,
-          period: String(selectedMaintenance.MaintenancesHistory[0].period),
-          periodTimeInterval: selectedMaintenance.MaintenancesHistory[0].PeriodTimeInterval.id,
-          delay: String(selectedMaintenance.MaintenancesHistory[0].delay),
-          delayTimeInterval: selectedMaintenance.MaintenancesHistory[0].DelayTimeInterval.id,
-          observation: selectedMaintenance.MaintenancesHistory[0].observation ?? '',
+          element: selectedMaintenance.element,
+          activity: selectedMaintenance.activity,
+          frequency: String(selectedMaintenance.frequency),
+          frequencyTimeInterval: selectedMaintenance.FrequencyTimeInterval.id,
+          responsible: selectedMaintenance.responsible,
+          source: selectedMaintenance.source,
+          period: String(selectedMaintenance.period),
+          periodTimeInterval: selectedMaintenance.PeriodTimeInterval.id,
+          delay: String(selectedMaintenance.delay),
+          delayTimeInterval: selectedMaintenance.DelayTimeInterval.id,
+          observation: selectedMaintenance.observation ?? '',
         }}
         validationSchema={schemaEditMaintenance}
         onSubmit={async (values) => {
