@@ -20,12 +20,3 @@ export interface ISortArray {
   toSortString: string;
   defaultSortedColumn?: boolean;
 }
-
-export interface INestedObjectSortArray {
-  category: ICategories;
-  isSorted: boolean;
-  setIsSorted: (setIsSorted: boolean) => void;
-  toSortString: string;
-  toSortObject: string;
-  defaultSortedColumn?: boolean;
-}

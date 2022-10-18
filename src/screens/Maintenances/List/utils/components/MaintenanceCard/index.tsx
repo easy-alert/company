@@ -123,15 +123,17 @@ export const MaintenanceCard = ({
                   </p>
                 </Style.PeriodIconWrapper>
               </Style.MaintenancesCardBottomPeriod>
-              <Style.MaintenancesCardGridMoreEditButton>
-                <Button
-                  label="Editar"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalEditMaintenanceOpen(true);
-                  }}
-                />
-              </Style.MaintenancesCardGridMoreEditButton>
+              {maintenance.ownerCompanyId && (
+                <Style.MaintenancesCardGridMoreEditButton>
+                  <Button
+                    label="Editar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalEditMaintenanceOpen(true);
+                    }}
+                  />
+                </Style.MaintenancesCardGridMoreEditButton>
+              )}
             </Style.MaintenancesMoreGrid>
           </Style.MaintenancesCardBottomContainer>
         </Style.MaintenancesCardContent>

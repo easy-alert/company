@@ -20,9 +20,11 @@ export const requestCreateCategory = async ({
       toast.dismiss();
 
       const tempCategory = categories;
+
       tempCategory.unshift({
         id: res.data.category.id,
         name: res.data.category.name,
+        ownerCompanyId: res.data.category.ownerCompanyId,
         Maintenances: [],
       });
 
