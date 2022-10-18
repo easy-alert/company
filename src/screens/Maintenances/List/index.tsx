@@ -97,10 +97,9 @@ export const MaintenancesList = () => {
 
           {categories?.length ? (
             <Style.CategoriesContainer>
-              {categories.map((category, i: number) => (
+              {categories.map((category) => (
                 <MaintenanceCategory
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={category.name + i}
+                  key={category.id}
                   category={category}
                   setCategories={setCategories}
                   categories={categories}

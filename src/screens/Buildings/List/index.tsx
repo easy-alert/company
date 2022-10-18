@@ -129,7 +129,7 @@ export const BuildingsList = () => {
       <Style.GridContainer>
         {buildings.map((building, i: number) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Style.BuildingCard key={i}>
+          <Style.BuildingCard key={building.name + String(i)}>
             <Style.BuildingCardHeader>
               <Style.BuildingCardHeaderInfo>
                 <h5>{building.name}</h5>

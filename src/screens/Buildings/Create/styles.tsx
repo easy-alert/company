@@ -52,7 +52,7 @@ export const CalendarWrapper = styled.div`
   }
 
   .rbc-allday-cell {
-    height: 550px;
+    min-height: 599px;
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
     box-sizing: border-box;

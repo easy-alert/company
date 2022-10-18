@@ -20,7 +20,7 @@ export const requestEditMaintenance = async ({
 }: IRequestEditMaintenance) => {
   setOnQuery(true);
 
-  await Api.post('/maintenances/edit', {
+  await Api.put('/maintenances/edit', {
     maintenanceId,
     element: values.element,
     activity: values.activity,
