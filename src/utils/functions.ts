@@ -116,7 +116,26 @@ export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
 export const capitalizeFirstLetter = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
-export const convertToUrlString = (value: string) => value.toLowerCase().replaceAll(' ', '-');
+export const convertToUrlString = (value: string) => {
+  let removeLastChar;
+
+  if (value.endsWith('-')) {
+    removeLastChar = false;
+  }
+
+  let formattedValue = value
+    .toLowerCase()
+    .replaceAll(' ', '-')
+    .split('')
+    .filter((c) => (c >= 'a' && c <= 'z') || c === '-')
+    .join('');
+
+  if (removeLastChar) {
+    formattedValue = formattedValue.substring(0, formattedValue.length - 1);
+  }
+
+  return formattedValue;
+};
 // #endregion
 
 // #region REQUESTS
