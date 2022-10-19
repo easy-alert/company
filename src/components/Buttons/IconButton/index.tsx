@@ -8,7 +8,7 @@ import { IIconButton } from './utils/types';
 
 export const IconButton = ({
   labelPos = 'left',
-  opacity = '1',
+  opacity,
   label,
   icon,
   gap = theme.size.xxsm,

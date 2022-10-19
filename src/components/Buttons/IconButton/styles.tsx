@@ -28,14 +28,11 @@ export const ContainerButton = styled.div<{
 
   ${({ gap }) => gap && `gap: ${gap};`}
 
-  ${({ opacity }) => opacity && `opacity:${opacity}; :hover { opacity: 1; }`}
+  ${({ opacity }) =>
+    opacity ? `opacity:${opacity}; :hover { opacity: 1; };` : ':hover { opacity: 0.7; };'}
   ${({ selected }) => selected && ' opacity: 1;'}
   ${({ labelPos }) => labelPos === 'top' && 'flex-direction:column-reverse;'}
   ${({ labelPos }) => labelPos === 'right' && 'flex-direction: row;'}
   ${({ labelPos }) => labelPos === 'left' && 'flex-direction: row-reverse;'}
   ${({ labelPos }) => labelPos === 'bottom' && 'flex-direction: column;'}
-
-  :hover {
-    opacity: 0.7;
-  }
 `;
