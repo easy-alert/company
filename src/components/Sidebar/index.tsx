@@ -95,9 +95,7 @@ export const Sidebar = ({ children }: ISidebar) => {
                   navigate(element.url);
                 }
               }}
-              selected={
-                window.location.pathname.startsWith(element.url) || element.url === '/login'
-              }
+              selected={window.location.pathname.startsWith(element.url)}
             />
           </React.Fragment>
         ))}
