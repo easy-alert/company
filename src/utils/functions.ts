@@ -1,16 +1,19 @@
+// #region IMPORTS
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Api } from '../services/api';
 import { IMask, IUploadFile, IRequestListIntervals } from './types';
+// #endregion
 
-// DATES
+// #region DATES
 export const dateFormatter = (date: string) =>
   new Date(date).toLocaleDateString('pt-BR', {
     timeZone: 'UTC',
   });
+// #endregion
 
-// UPLOADS
+// #region UPLOAD
 export async function uploadFile(file: any) {
   let response = {};
 
@@ -23,20 +26,22 @@ export async function uploadFile(file: any) {
 
   return response as IUploadFile;
 }
+// #endregion
 
-// ERRORS
+// #region ERRORS
 export const handleError = async ({ error }: { error: Error }) => {
   if (process.env.NODE_ENV !== 'development') {
     axios.post('https://ada-logs.herokuapp.com/api/logs/create', {
       projectName: 'EasyAlert',
       environment: window.location.host.includes('sandbox') ? 'Sandbox' : 'Production',
-      side: 'Company',
+      side: 'Backoffice',
       errorStack: error.stack,
     });
   }
 };
+// #endregion
 
-// MASKS
+// #region MASKS
 export const applyMask = ({
   mask,
   value,
@@ -106,12 +111,28 @@ export const applyMask = ({
   return Mask;
 };
 
+export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
+
 export const capitalizeFirstLetter = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
-export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
+export const convertToUrlString = (value: string) => {
+  let formattedValue = value
+    .toLowerCase()
+    .replaceAll(' ', '-')
+    .split('')
+    .filter((c) => (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c === '-')
+    .join('');
 
-// REQUESTS
+  if (formattedValue.endsWith('-')) {
+    formattedValue = formattedValue.substring(0, formattedValue.length - 1);
+  }
+
+  return formattedValue;
+};
+// #endregion
+
+// #region REQUESTS
 export const catchHandler = (err: any) => {
   toast.dismiss();
   if (err.response.data) {
@@ -130,3 +151,4 @@ export const requestListIntervals = async ({ setTimeIntervals }: IRequestListInt
       catchHandler(err);
     });
 };
+// #endregion

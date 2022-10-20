@@ -30,6 +30,7 @@ export const requestEditCategory = async ({
       categoriesEdit[index] = {
         id: categoryId,
         name: values.categoryName,
+        ownerCompanyId: categoriesEdit[index].ownerCompanyId,
         Maintenances: categoriesEdit[index].Maintenances,
       };
 

@@ -59,13 +59,15 @@ export const MaintenanceCategory = ({
           <Style.HeaderTitle>
             <Style.Container>
               <h5>{category.name}</h5>
-              <IconButton
-                size="16px"
-                icon={icon.edit}
-                onClick={() => {
-                  setModalEditCategoryOpen(true);
-                }}
-              />
+              {category.ownerCompanyId && (
+                <IconButton
+                  size="16px"
+                  icon={icon.edit}
+                  onClick={() => {
+                    setModalEditCategoryOpen(true);
+                  }}
+                />
+              )}
             </Style.Container>
 
             <IconButton
