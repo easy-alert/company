@@ -7,7 +7,7 @@
 // import startOfWeek from 'date-fns/startOfWeek';
 // import getDay from 'date-fns/getDay';
 // import ptBR from 'date-fns/locale/pt';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+// import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 // COMPONENTS
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';

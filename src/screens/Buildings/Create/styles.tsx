@@ -3,7 +3,7 @@ import { theme } from '../../../styles/theme';
 
 export const Container = styled.header`
   width: 100%;
-  overflow: auto;
+  /* overflow-y: auto; */
 `;
 
 export const Header = styled.header`

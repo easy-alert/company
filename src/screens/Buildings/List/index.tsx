@@ -1,5 +1,5 @@
 // LIBS
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // COMPONENTS
 import { IconButton } from '../../../components/Buttons/IconButton';
@@ -10,7 +10,7 @@ import { Image } from '../../../components/Image';
 import * as Style from './styles';
 
 export const BuildingsList = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // FILTER
   // const [filter, setFilter] = useState<string>('');
@@ -114,7 +114,7 @@ export const BuildingsList = () => {
             />
           </Style.SearchField>
         </Style.LeftSide>
-        <IconButton
+        {/* <IconButton
           hideLabelOnMedia
           fontWeight="500"
           label="Cadastrar"
@@ -123,7 +123,7 @@ export const BuildingsList = () => {
           onClick={() => {
             navigate('/buildings/create');
           }}
-        />
+        /> */}
       </Style.Header>
 
       <Style.GridContainer>
