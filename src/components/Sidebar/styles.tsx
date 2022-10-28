@@ -31,6 +31,7 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   align-items: center;
   padding: ${theme.size.sm} ${theme.size.xsm};
   min-width: 80px;
+  max-width: 80px;
   height: 100vh;
   border-radius: 0 ${theme.size.sm} ${theme.size.sm} 0;
   background-color: ${theme.color.primary};
@@ -38,7 +39,7 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   overflow: hidden;
   @media (max-width: 900px) {
     position: absolute;
-    transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-85px)')};
+    transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-80px)')};
     transition: 0.25s;
     z-index: 6;
   }
