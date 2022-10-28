@@ -116,20 +116,13 @@ export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
 export const capitalizeFirstLetter = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
-export const convertToUrlString = (value: string) => {
-  let formattedValue = value
-    .toLowerCase()
+export const convertToUrlString = (value: string) =>
+  value
+    .normalize('NFD')
+    .replaceAll(/[\u0300-\u036f]/g, '')
     .replaceAll(' ', '-')
-    .split('')
-    .filter((c) => (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c === '-')
-    .join('');
-
-  if (formattedValue.endsWith('-')) {
-    formattedValue = formattedValue.substring(0, formattedValue.length - 1);
-  }
-
-  return formattedValue;
-};
+    .replaceAll(/[^a-zA-Z0-9]/g, '-')
+    .toLowerCase();
 // #endregion
 
 // #region REQUESTS
