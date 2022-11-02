@@ -25,7 +25,7 @@ export const Sidebar = ({ children }: ISidebar) => {
   const SidebarContent: SidebarContentProps[] = [
     { icon: icon.gear, label: 'Conta', url: '/account' },
     { icon: icon.maintenances, label: 'Manutenções', url: '/maintenances' },
-    // { icon: icon.building, label: 'Edificações', url: '/buildings' },
+    { icon: icon.building, label: 'Edificações', url: '/buildings' },
 
     { icon: icon.power, label: 'Sair', url: '/login' },
   ];
