@@ -10,7 +10,6 @@ import { Login } from './screens/Authentication/Login';
 import { AccountDetails } from './screens/Account/Details';
 import { MaintenancesList } from './screens/Maintenances/List';
 import { BuildingsList } from './screens/Buildings/List';
-import { BuildingCreate } from './screens/Buildings/Create';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -34,7 +33,6 @@ const AppRoutes = () => (
 
           <Route path="/buildings" element={<Outlet />}>
             <Route index element={<BuildingsList />} />
-            <Route path="create" element={<BuildingCreate />} />
           </Route>
         </Route>
       </Routes>
