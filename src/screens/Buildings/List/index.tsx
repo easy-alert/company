@@ -1,7 +1,5 @@
-// LIBS
-// import { useNavigate } from 'react-router-dom';
-
 // COMPONENTS
+import { useState } from 'react';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { icon } from '../../../assets/icons/index';
 import { Image } from '../../../components/Image';
@@ -9,8 +7,11 @@ import { Image } from '../../../components/Image';
 // STYLES
 import * as Style from './styles';
 
+// MODALS
+import { ModalCreateBuilding } from './utils/ModalCreateBuilding';
+
 export const BuildingsList = () => {
-  // const navigate = useNavigate();
+  const [modalCreateBuildingOpen, setModalCreateBuildingOpen] = useState<boolean>(false);
 
   // FILTER
   // const [filter, setFilter] = useState<string>('');
@@ -65,6 +66,7 @@ export const BuildingsList = () => {
 
   return (
     <>
+      {modalCreateBuildingOpen && <ModalCreateBuilding setModal={setModalCreateBuildingOpen} />}
       <Style.Header>
         <Style.LeftSide>
           <h2>Edificações</h2>
@@ -114,16 +116,16 @@ export const BuildingsList = () => {
             />
           </Style.SearchField>
         </Style.LeftSide>
-        {/* <IconButton
+        <IconButton
           hideLabelOnMedia
           fontWeight="500"
           label="Cadastrar"
           className="p2"
           icon={icon.plusWithBg}
           onClick={() => {
-            navigate('/buildings/create');
+            setModalCreateBuildingOpen(true);
           }}
-        /> */}
+        />
       </Style.Header>
 
       <Style.GridContainer>
