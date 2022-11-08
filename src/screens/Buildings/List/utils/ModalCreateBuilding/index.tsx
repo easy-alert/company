@@ -7,13 +7,16 @@ import * as Style from './styles';
 import { Button } from '../../../../../components/Buttons/Button';
 import { FormikInput } from '../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../components/Modal';
+import { FormikSelect } from '../../../../../components/Form/FormikSelect';
+import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
+import { theme } from '../../../../../styles/theme';
 
 // TYPES
 import { IModalCreateBuilding } from './utils/types';
 
 // FUNCTIONS
 import { schemaModalCreateBuilding } from './utils/functions';
-import { FormikSelect } from '../../../../../components/Form/FormikSelect';
+import { applyMask } from '../../../../../utils/functions';
 
 export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -50,7 +53,7 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
           // });
         }}
       >
-        {({ errors, values, touched }) => (
+        {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
               <FormikInput
@@ -76,6 +79,10 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 value={values.cep}
                 error={touched.cep && errors.cep ? errors.cep : null}
                 placeholder="Ex: 88801-010"
+                maxLength={applyMask({ value: values.cep, mask: 'CEP' }).length}
+                onChange={(e) => {
+                  setFieldValue('cep', applyMask({ value: e.target.value, mask: 'CEP' }).value);
+                }}
               />
               <FormikInput
                 label="Estado"
@@ -115,9 +122,14 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 value={values.area}
                 error={touched.area && errors.area ? errors.area : null}
                 placeholder="Ex: 1.200,00"
-                maxLength={40}
+                maxLength={10}
+                onChange={(e) => {
+                  setFieldValue('area', applyMask({ value: e.target.value, mask: 'DEC' }).value);
+                }}
               />
               <FormikInput
+                max="9999-12-31"
+                typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
                 label="Data de entrega da edificação"
                 name="deliveryDate"
@@ -125,9 +137,11 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
               />
               <FormikInput
+                max="9999-12-31"
+                typeDatePlaceholderValue={values.warrantyExpiration}
                 type="date"
                 label="Término da garantia"
-                name="keepNotificationAfterWarrantyEnds"
+                name="warrantyExpiration"
                 value={values.warrantyExpiration}
                 error={
                   touched.warrantyExpiration && errors.warrantyExpiration
@@ -135,11 +149,11 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                     : null
                 }
               />
-              <FormikInput
+              <FormikCheckbox
+                name="keepNotificationAfterWarrantyEnds"
+                labelColor={theme.color.gray4}
                 type="checkbox"
                 label="Continuar notificando após término da garantia?"
-                name="keepNotificationAfterWarrantyEnds"
-                error={touched.name && errors.name ? errors.name : null}
               />
               <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>

@@ -14,7 +14,7 @@ export const Header = styled.header`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 30%;
+  width: 50%;
   > h2 {
     margin-right: ${theme.size.sm};
   }

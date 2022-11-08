@@ -82,8 +82,11 @@ export const schemaModalCreateBuilding = yup
     neighborhood: yup.string(),
     streetName: yup.string(),
     area: yup.string(),
-    deliveryDate: yup.date().required('A data de entrega deve ser preenchido.'),
-    warrantyExpiration: yup.date().required('O término da garantia deve ser preenchido.'),
+    deliveryDate: yup.date().required('A data de entrega deve ser preenchida.'),
+    warrantyExpiration: yup
+      .date()
+      .required('O término da garantia deve ser preenchido.')
+      .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de entrega.'),
     keepNotificationAfterWarrantyEnds: yup.boolean(),
   })
   .required();

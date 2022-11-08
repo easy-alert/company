@@ -2,10 +2,9 @@
 import { InputHTMLAttributes } from 'react';
 
 export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
+  label: string;
   labelColor?: string;
   errorColor?: string;
   error?: string | null | any;
-  passwordPlaceholder?: boolean;
-  typeDatePlaceholderValue?: string;
+  disable?: boolean;
 }

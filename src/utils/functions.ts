@@ -46,7 +46,7 @@ export const applyMask = ({
   mask,
   value,
 }: {
-  mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM';
+  mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM' | 'DEC';
   value: string;
 }) => {
   let Mask: IMask = { value: '', length: 0 };
@@ -95,6 +95,14 @@ export const applyMask = ({
           currency: 'BRL',
         }),
         length: 17,
+      };
+      break;
+    case 'DEC':
+      Mask = {
+        value: (Number(value.replace(/[^0-9]*/g, '')) / 100).toLocaleString('pt-br', {
+          minimumFractionDigits: 2,
+        }),
+        length: 0,
       };
       break;
 

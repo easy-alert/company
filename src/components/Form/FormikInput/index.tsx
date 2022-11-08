@@ -16,8 +16,9 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
     errorColor = theme.color.danger,
     name,
     error,
-    type,
+    type = 'text',
     passwordPlaceholder,
+    typeDatePlaceholderValue,
     ...rest
   },
   ref,
@@ -26,7 +27,8 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
     error={!!error}
     passwordPlaceholder={passwordPlaceholder}
     labelColor={labelColor}
-    isCheckbox={type === 'checkbox'}
+    typeDatePlaceholderValue={typeDatePlaceholderValue}
+    type={type}
   >
     {label && <h6>{label}</h6>}
     <Field type={type} id={name} name={name} ref={ref} {...rest} />

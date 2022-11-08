@@ -60,7 +60,7 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 1/6;
+  grid-area: 1/7;
 `;
 
 export const MaintenancesCardBottomPeriod = styled.div`
