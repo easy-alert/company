@@ -16,7 +16,7 @@ import { IModalCreateBuilding } from './utils/types';
 
 // FUNCTIONS
 import { schemaModalCreateBuilding } from './utils/functions';
-import { applyMask } from '../../../../../utils/functions';
+import { applyMask, requestAddressData } from '../../../../../utils/functions';
 
 export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -71,7 +71,10 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 selectPlaceholderValue={values.type}
                 error={touched.type && errors.type ? errors.type : null}
               >
-                <option value="">Selecione</option>
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+                <option value="1">1</option>
               </FormikSelect>
               <FormikInput
                 label="CEP"
@@ -82,6 +85,12 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 maxLength={applyMask({ value: values.cep, mask: 'CEP' }).length}
                 onChange={(e) => {
                   setFieldValue('cep', applyMask({ value: e.target.value, mask: 'CEP' }).value);
+                  if (
+                    e.target.value.length === 9 ||
+                    (e.target.value.length === 8 && !e.target.value.includes('-'))
+                  ) {
+                    requestAddressData({ cep: e.target.value, setFieldValue });
+                  }
                 }}
               />
               <FormikInput
