@@ -5,4 +5,9 @@ export const FormContainer = styled.div`
   button {
     margin-top: ${theme.size.xsm};
   }
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+  }
 `;

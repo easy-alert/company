@@ -74,56 +74,16 @@ export const requestEditAccount = async ({
 // YUP
 export const schemaModalCreateBuilding = yup
   .object({
-    image: yup
-      .mixed()
-      .nullable()
-      .notRequired()
-      .test(
-        'FileSize',
-        'O tamanho da imagem excedeu o limite.',
-        (value) => value.length || (value && value.size <= 5000000),
-      )
-      .test(
-        'FileType',
-        'Formato inválido.',
-        (value) =>
-          value.length ||
-          (value &&
-            (value.type === 'image/png' ||
-              value.type === 'image/jpeg' ||
-              value.type === 'image/jpg')),
-      ),
-
-    name: yup
-      .string()
-      .required('O nome deve ser preenchido.')
-      .min(3, 'O nome deve conter 3 ou mais caracteres.'),
-
-    email: yup
-      .string()
-      .email('Informe um e-mail válido.')
-      .required('O e-mail deve ser preenchido.'),
-
-    companyName: yup
-      .string()
-      .required('O nome da empresa deve ser preenchido.')
-      .min(3, 'O nome da empresa deve conter 3 ou mais caracteres.'),
-
-    contactNumber: yup
-      .string()
-      .required('O número de telefone deve ser preenchido.')
-      .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
-
-    CNPJ: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
-
-    password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
-
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'As senhas não coincidem.')
-      .when('password', {
-        is: (password: string) => password && password.length > 0,
-        then: yup.string().required('Confirme a nova senha.'),
-      }),
+    name: yup.string().required('O nome deve ser preenchido.'),
+    type: yup.string().required('O tipo deve ser selecionado.'),
+    cep: yup.string(),
+    city: yup.string(),
+    state: yup.string(),
+    neighborhood: yup.string(),
+    streetName: yup.string(),
+    area: yup.string(),
+    deliveryDate: yup.date().required('A data de entrega deve ser preenchido.'),
+    warrantyExpiration: yup.date().required('O término da garantia deve ser preenchido.'),
+    keepNotificationAfterWarrantyEnds: yup.boolean(),
   })
   .required();

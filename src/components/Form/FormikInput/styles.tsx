@@ -5,9 +5,11 @@ export const InputContainer = styled.div<{
   labelColor: string;
   error: boolean;
   passwordPlaceholder?: boolean;
+  isCheckbox: boolean;
 }>`
   display: flex;
   flex-direction: column;
+  ${({ isCheckbox }) => isCheckbox && `flex-direction:row-reverse; gap:${theme.size.xxsm};`}
   > h6 {
     color: ${({ labelColor }) => labelColor};
     margin-bottom: ${theme.size.xxsm};

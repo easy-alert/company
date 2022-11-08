@@ -74,16 +74,16 @@ export const MaintenanceCard = ({
               </p>
               <p className="p2">{maintenance.responsible}</p>
               <p className="p2">{maintenance.source}</p>
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setToCloneMaintenance(maintenance);
+                  setModalCloneMaintenanceOpen(true);
+                }}
+              >
+                <Image size="16px" img={icon.copy} />
+              </div>
               <Style.ArrowContainer>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setToCloneMaintenance(maintenance);
-                    setModalCloneMaintenanceOpen(true);
-                  }}
-                >
-                  <Image size="16px" img={icon.copy} />
-                </div>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
                   <Image img={icon.downArrow} size="16px" />
                 </Style.Arrow>
@@ -103,7 +103,7 @@ export const MaintenanceCard = ({
                 <Style.PeriodIconWrapper>
                   <Image img={icon.alert} size="16px" />
                   <p className="p2">
-                    <span>Período: </span>
+                    <span>Tempo para resposta: </span>
                     {`${maintenance.period} ${
                       maintenance.period > 1
                         ? maintenance.PeriodTimeInterval.pluralLabel

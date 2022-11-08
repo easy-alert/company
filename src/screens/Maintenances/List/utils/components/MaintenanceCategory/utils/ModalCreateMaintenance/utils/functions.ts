@@ -67,20 +67,20 @@ export const schemaCreateMaintenance = yup
 
     frequency: yup
       .string()
-      .required('A frequência deve ser preenchida.')
-      .matches(/^\d/, 'A frequência deve ser um número.')
+      .required('A periodicidade deve ser preenchida.')
+      .matches(/^\d/, 'A periodicidade deve ser um número.')
       .test(
         'greaterThanZero',
-        'A frequência deve ser maior que zero.',
+        'A periodicidade deve ser maior que zero.',
         (value) => Number(value) > 0,
       ),
 
     frequencyTimeInterval: yup
       .string()
-      .required('O intervalo da frequência deve ser preenchido.')
+      .required('O intervalo da periodicidade deve ser preenchido.')
       .test(
         'hasValue',
-        'O intervalo da frequência deve ser preenchido.',
+        'O intervalo da periodicidade deve ser preenchido.',
         (value) => value !== 'Selecione',
       ),
 
@@ -96,16 +96,20 @@ export const schemaCreateMaintenance = yup
 
     period: yup
       .string()
-      .required('O período deve ser preenchido.')
-      .matches(/^\d/, 'O período deve ser um número.')
-      .test('greaterThanZero', 'O período deve ser maior que zero.', (value) => Number(value) > 0),
+      .required('O tempo para resposta deve ser preenchido.')
+      .matches(/^\d/, 'O tempo para resposta deve ser um número.')
+      .test(
+        'greaterThanZero',
+        'O tempo para resposta deve ser maior que zero.',
+        (value) => Number(value) > 0,
+      ),
 
     periodTimeInterval: yup
       .string()
-      .required('O intervalo do período deve ser preenchido.')
+      .required('O intervalo do tempo para resposta deve ser preenchido.')
       .test(
         'hasValue',
-        'O intervalo do período deve ser preenchido.',
+        'O intervalo do tempo para resposta deve ser preenchido.',
         (value) => value !== 'Selecione',
       ),
 

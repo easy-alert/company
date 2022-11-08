@@ -13,6 +13,7 @@ import { IModalCreateBuilding } from './utils/types';
 
 // FUNCTIONS
 import { schemaModalCreateBuilding } from './utils/functions';
+import { FormikSelect } from '../../../../../components/Form/FormikSelect';
 
 export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -28,6 +29,7 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
           state: '',
           neighborhood: '',
           streetName: '',
+          area: '',
           deliveryDate: '',
           warrantyExpiration: '',
           keepNotificationAfterWarrantyEnds: false,
@@ -59,43 +61,44 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 placeholder="Ex: João Silva"
                 maxLength={40}
               />
-              <FormikInput
+              <FormikSelect
                 label="Tipo"
                 name="type"
                 value={values.type}
+                selectPlaceholderValue={values.type}
                 error={touched.type && errors.type ? errors.type : null}
-                placeholder="Ex: João Silva"
-                maxLength={40}
-              />
+              >
+                <option value="">Selecione</option>
+              </FormikSelect>
               <FormikInput
                 label="CEP"
                 name="cep"
                 value={values.cep}
                 error={touched.cep && errors.cep ? errors.cep : null}
-                placeholder="Ex: João Silva"
-              />
-              <FormikInput
-                label="Cidade"
-                name="city"
-                value={values.city}
-                error={touched.city && errors.city ? errors.city : null}
-                placeholder="Ex: João Silva"
-                maxLength={30}
+                placeholder="Ex: 88801-010"
               />
               <FormikInput
                 label="Estado"
                 name="state"
                 value={values.state}
                 error={touched.state && errors.state ? errors.state : null}
-                placeholder="Ex: João Silva"
+                placeholder="Ex: Santa Catarina"
                 maxLength={20}
+              />
+              <FormikInput
+                label="Cidade"
+                name="city"
+                value={values.city}
+                error={touched.city && errors.city ? errors.city : null}
+                placeholder="Ex: Criciúma"
+                maxLength={30}
               />
               <FormikInput
                 label="Bairro"
                 name="neighborhood"
                 value={values.neighborhood}
                 error={touched.neighborhood && errors.neighborhood ? errors.neighborhood : null}
-                placeholder="Ex: João Silva"
+                placeholder="Ex: Centro"
                 maxLength={20}
               />
               <FormikInput
@@ -103,15 +106,15 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 name="streetName"
                 value={values.streetName}
                 error={touched.streetName && errors.streetName ? errors.streetName : null}
-                placeholder="Ex: João Silva"
+                placeholder="Ex: Rua Henrique Lage"
                 maxLength={40}
               />
               <FormikInput
                 label="Área (m²)"
-                name="deliveryDate"
-                value={values.deliveryDate}
-                error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
-                placeholder="Ex: João Silva"
+                name="area"
+                value={values.area}
+                error={touched.area && errors.area ? errors.area : null}
+                placeholder="Ex: 1.200,00"
                 maxLength={40}
               />
               <FormikInput
@@ -136,7 +139,6 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 type="checkbox"
                 label="Continuar notificando após término da garantia?"
                 name="keepNotificationAfterWarrantyEnds"
-                value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
               />
               <Button center label="Salvar" type="submit" loading={onQuery} />

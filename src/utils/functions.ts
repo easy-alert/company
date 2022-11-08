@@ -34,7 +34,7 @@ export const handleError = async ({ error }: { error: Error }) => {
     axios.post('https://ada-logs.herokuapp.com/api/logs/create', {
       projectName: 'EasyAlert',
       environment: window.location.host.includes('sandbox') ? 'Sandbox' : 'Production',
-      side: 'Backoffice',
+      side: 'Company',
       errorStack: error.stack,
     });
   }

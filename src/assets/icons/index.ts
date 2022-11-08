@@ -30,6 +30,7 @@ import upTriangle from './upTriangle.svg';
 import gear from './gear.svg';
 import building from './building.svg';
 import copy from './copy.svg';
+import bell from './bell.svg';
 
 export const icon = {
   leftArrow,
@@ -64,4 +65,5 @@ export const icon = {
   gear,
   building,
   copy,
+  bell,
 };

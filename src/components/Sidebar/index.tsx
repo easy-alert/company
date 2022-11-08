@@ -23,10 +23,10 @@ export const Sidebar = ({ children }: ISidebar) => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    { icon: icon.gear, label: 'Conta', url: '/account' },
-    { icon: icon.maintenances, label: 'Manutenções', url: '/maintenances' },
-    { icon: icon.building, label: 'Edificações', url: '/buildings' },
-    { icon: icon.power, label: 'Sair', url: '/login' },
+    { icon: icon.bell, url: '/maintenances' },
+    { icon: icon.building, url: '/buildings' },
+    { icon: icon.gear, url: '/account' },
+    { icon: icon.power, url: '/login' },
   ];
 
   useEffect(() => {
@@ -79,7 +79,6 @@ export const Sidebar = ({ children }: ISidebar) => {
               className="p5"
               labelPos="bottom"
               opacity="0.5"
-              label={element.label}
               icon={element.icon}
               color={theme.color.white}
               gap="0px"

@@ -143,7 +143,7 @@ export const MaintenanceCategory = ({
                     });
                   }}
                 >
-                  <p className="p2">Frequência</p>
+                  <p className="p2">Periodicidade</p>
 
                   <Image
                     img={

@@ -14,7 +14,7 @@ export const SelectContainer = styled.div<{
   position: relative;
 
   ${({ selectPlaceholderValue }) =>
-    selectPlaceholderValue === 'Selecione'
+    selectPlaceholderValue === 'Selecione' || selectPlaceholderValue === ''
       ? `
       > select {
         border-color: ${theme.color.gray3};

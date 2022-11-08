@@ -7,4 +7,5 @@ export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
   errorColor?: string;
   error?: string | null | any;
   passwordPlaceholder?: boolean;
+  labelOpacity?: string;
 }
