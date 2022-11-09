@@ -18,6 +18,7 @@ export const theme = {
 
     infoL: '#B3DFFF',
 
+    gray0: '#FAFAFA',
     gray1: '#EDEDED',
     gray2: '#E6E6E6',
     gray3: '#D5D5D5',

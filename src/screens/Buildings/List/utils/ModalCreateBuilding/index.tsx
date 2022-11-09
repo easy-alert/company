@@ -15,7 +15,7 @@ import { theme } from '../../../../../styles/theme';
 import { IModalCreateBuilding } from './utils/types';
 
 // FUNCTIONS
-import { schemaModalCreateBuilding } from './utils/functions';
+import { requestCreateBuilding, schemaModalCreateBuilding } from './utils/functions';
 import { applyMask, requestAddressData } from '../../../../../utils/functions';
 
 export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
@@ -26,7 +26,7 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
       <Formik
         initialValues={{
           name: '',
-          type: '',
+          buildingTypeId: '',
           cep: '',
           city: '',
           state: '',
@@ -39,18 +39,7 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {
-          setOnQuery(true);
-          // eslint-disable-next-line no-console
-          console.log(values);
-          setOnQuery(false);
-          // await requestEditAccount({
-          //   values,
-          //   account,
-          //   setAccount,
-          //   navigate,
-          //   setOnQuery,
-          //   setModal,
-          // });
+          requestCreateBuilding({ setModal, setOnQuery, values });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -66,15 +55,19 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
               />
               <FormikSelect
                 label="Tipo"
-                name="type"
-                value={values.type}
-                selectPlaceholderValue={values.type}
-                error={touched.type && errors.type ? errors.type : null}
+                name="buildingTypeId"
+                value={values.buildingTypeId}
+                selectPlaceholderValue={values.buildingTypeId}
+                error={
+                  touched.buildingTypeId && errors.buildingTypeId ? errors.buildingTypeId : null
+                }
               >
                 <option value="" disabled hidden>
                   Selecione
                 </option>
-                <option value="1">1</option>
+                {/* TRAZER PELA ROTA */}
+                <option value="e65efd81-0efa-4529-8c66-fa7b0510d0b5">Casa</option>
+                <option value="4690e32f-29c8-4850-a0bc-ce347ad30b11">Prédio</option>
               </FormikSelect>
               <FormikInput
                 label="CEP"
@@ -137,16 +130,28 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
                 }}
               />
               <FormikInput
-                max="9999-12-31"
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
                 label="Data de entrega da edificação"
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
+                onChange={(e) => {
+                  setFieldValue('deliveryDate', e.target.value);
+
+                  if (String(new Date(e.target.value).getFullYear()).length === 4) {
+                    const deliveryDate = new Date(e.target.value);
+                    const warrantyYear = deliveryDate.getFullYear() + 5;
+                    const deliveryDatePlusFiveYears = deliveryDate.setFullYear(warrantyYear);
+                    const deliveryDatePlusFiveYearsString = new Date(deliveryDatePlusFiveYears)
+                      .toISOString()
+                      .split('T')[0];
+
+                    setFieldValue('warrantyExpiration', deliveryDatePlusFiveYearsString);
+                  }
+                }}
               />
               <FormikInput
-                max="9999-12-31"
                 typeDatePlaceholderValue={values.warrantyExpiration}
                 type="date"
                 label="Término da garantia"
@@ -161,7 +166,6 @@ export const ModalCreateBuilding = ({ setModal }: IModalCreateBuilding) => {
               <FormikCheckbox
                 name="keepNotificationAfterWarrantyEnds"
                 labelColor={theme.color.gray4}
-                type="checkbox"
                 label="Continuar notificando após término da garantia?"
               />
               <Button center label="Salvar" type="submit" loading={onQuery} />

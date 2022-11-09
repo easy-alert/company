@@ -247,16 +247,17 @@ export const requestListIntervals = async ({ setTimeIntervals }: IRequestListInt
 };
 
 export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
+  toast.dismiss();
   await axios
     .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
     .then((res) => {
       setFieldValue('city', res.data.city ?? '');
       setFieldValue('neighborhood', res.data.neighborhood ?? '');
       setFieldValue('streetName', res.data.street ?? '');
-      setFieldValue('state', convertStateAcronym(res.data.state) ?? '');
+      setFieldValue('state', res.data.state ? convertStateAcronym(res.data.state) : '');
     })
     .catch(() => {
-      toast.error('CEP inválido.');
+      toast.error('CEP não encontrado. Verifique o número ou digite o endereço.');
     });
 };
 

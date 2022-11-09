@@ -3,7 +3,7 @@ import { theme } from '../../../styles/theme';
 
 export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string }>`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: ${theme.size.xxsm};
   width: fit-content;
   transition: 0.25s;

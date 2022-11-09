@@ -7,9 +7,15 @@ import { Sidebar } from './components/Sidebar';
 // AUTHENTICATION
 import { Login } from './screens/Authentication/Login';
 
+// ACCOUNT
 import { AccountDetails } from './screens/Account/Details';
+
+// MAINTENANCES
 import { MaintenancesList } from './screens/Maintenances/List';
+
+// BUILDINGS
 import { BuildingsList } from './screens/Buildings/List';
+import { BuildingDetails } from './screens/Buildings/Details';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -33,6 +39,7 @@ const AppRoutes = () => (
 
           <Route path="/buildings" element={<Outlet />}>
             <Route index element={<BuildingsList />} />
+            <Route path="details" element={<BuildingDetails />} />
           </Route>
         </Route>
       </Routes>

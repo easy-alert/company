@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { IAccount } from '../../../../../../utils/types';
-
-interface IFormEditAccount {
-  image: string;
+interface ICreateBuilding {
   name: string;
-  email: string;
-  companyName: string;
-  contactNumber: string;
-  CPF: string;
-  CNPJ: string;
-  password: string;
+  buildingTypeId: string;
+  cep: string;
+  city: string;
+  state: string;
+  neighborhood: string;
+  streetName: string;
+  area: string;
+  deliveryDate: string;
+  warrantyExpiration: string;
+  keepNotificationAfterWarrantyEnds: boolean;
 }
 
 export interface IModalCreateBuilding {
@@ -17,11 +17,8 @@ export interface IModalCreateBuilding {
 }
 
 // REQUESTS
-export interface IRequestEditAccount {
-  values: IFormEditAccount;
-  account: IAccount;
-  setAccount: (setCompany: IAccount) => void;
+export interface IRequestCreateBuilding {
+  values: ICreateBuilding;
   setOnQuery: (setOnQuery: boolean) => void;
-  navigate: any;
   setModal: (setModal: boolean) => void;
 }
