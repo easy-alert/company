@@ -39,7 +39,7 @@ const AppRoutes = () => (
 
           <Route path="/buildings" element={<Outlet />}>
             <Route index element={<BuildingsList />} />
-            <Route path="details" element={<BuildingDetails />} />
+            <Route path="details/:buildingName" element={<BuildingDetails />} />
           </Route>
         </Route>
       </Routes>

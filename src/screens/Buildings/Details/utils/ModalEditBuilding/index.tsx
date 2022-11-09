@@ -12,39 +12,35 @@ import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
 import { theme } from '../../../../../styles/theme';
 
 // TYPES
-import { IModalCreateBuilding } from './utils/types';
+import { IModalEditBuilding } from './utils/types';
 
 // FUNCTIONS
-import { requestCreateBuilding, schemaModalCreateBuilding } from './utils/functions';
+import { requestEditBuilding, schemaModalEditBuilding } from './utils/functions';
 import { applyMask, convertToFormikDate, requestAddressData } from '../../../../../utils/functions';
 
-export const ModalCreateBuilding = ({
-  setModal,
-  page,
-  setBuildingList,
-  setCount,
-}: IModalCreateBuilding) => {
+export const ModalEditBuilding = ({ setModal, building, setBuilding }: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Modal title="Cadastrar edificação" setModal={setModal}>
       <Formik
         initialValues={{
-          name: '',
-          buildingTypeId: '',
-          cep: '',
-          city: '',
-          state: '',
-          neighborhood: '',
-          streetName: '',
-          area: '',
-          deliveryDate: '',
-          warrantyExpiration: '',
-          keepNotificationAfterWarrantyEnds: false,
+          id: building.id,
+          name: building.name,
+          buildingTypeId: building.buildingTypeId,
+          cep: building.cep ? applyMask({ mask: 'CEP', value: building.cep }).value : '',
+          city: building.city ?? '',
+          state: building.state ?? '',
+          neighborhood: building.neighborhood ?? '',
+          streetName: building.streetName ?? '',
+          area: building.area ? applyMask({ mask: 'DEC', value: building.area }).value : '',
+          deliveryDate: convertToFormikDate(building.deliveryDate),
+          warrantyExpiration: convertToFormikDate(building.warrantyExpiration),
+          keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
         }}
-        validationSchema={schemaModalCreateBuilding}
+        validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
-          requestCreateBuilding({ setModal, setOnQuery, values, page, setCount, setBuildingList });
+          requestEditBuilding({ setModal, setOnQuery, values, setBuilding });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -141,21 +137,6 @@ export const ModalCreateBuilding = ({
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
-                onChange={(e) => {
-                  setFieldValue('deliveryDate', e.target.value);
-
-                  if (String(new Date(e.target.value).getFullYear()).length === 4) {
-                    const deliveryDate = new Date(e.target.value);
-                    const warrantyYear = deliveryDate.getFullYear() + 5;
-                    const deliveryDatePlusFiveYears = deliveryDate.setFullYear(warrantyYear);
-                    const deliveryDatePlusFiveYearsString = String(deliveryDatePlusFiveYears);
-
-                    setFieldValue(
-                      'warrantyExpiration',
-                      convertToFormikDate(deliveryDatePlusFiveYearsString),
-                    );
-                  }
-                }}
               />
               <FormikInput
                 typeDatePlaceholderValue={values.warrantyExpiration}
@@ -174,7 +155,7 @@ export const ModalCreateBuilding = ({
                 labelColor={theme.color.gray4}
                 label="Continuar notificando após término da garantia?"
               />
-              <Button center label="Cadastrar" type="submit" loading={onQuery} />
+              <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}

@@ -218,7 +218,7 @@ export const ModalEditMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.ButtonContainer centerAlign={onQuery}>
+              <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
                     actionButtonBgColor={theme.color.primary}

@@ -63,7 +63,6 @@ export const MaintenanceCardFooterInfo = styled.div`
 export const BuildingCardWrapper = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: ${theme.size.sm};
 
   @media (max-width: 900px) {
     flex-direction: column;
@@ -75,11 +74,16 @@ export const BuildingCardColumn = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
+  width: 50%;
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
 `;
 
 export const BuildingCardData = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: ${theme.size.xxsm};
 
   > :first-child {

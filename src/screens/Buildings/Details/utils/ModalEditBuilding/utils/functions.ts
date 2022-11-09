@@ -6,36 +6,37 @@ import * as yup from 'yup';
 // FUNCTIONS
 import { Api } from '../../../../../../services/api';
 import { catchHandler, unMask } from '../../../../../../utils/functions';
-import { requestBuildingList } from '../../functions';
+import { requestBuildingDetails } from '../../functions';
 
 // TYPES
-import { IRequestCreateBuilding } from './types';
+import { IRequestEditBuilding } from './types';
 
-export const requestCreateBuilding = async ({
+export const requestEditBuilding = async ({
   values,
   setModal,
   setOnQuery,
-  page,
-  setBuildingList,
-  setCount,
-}: IRequestCreateBuilding) => {
+  setBuilding,
+}: IRequestEditBuilding) => {
   setOnQuery(true);
 
-  await Api.post('/buildings/create', {
-    name: values.name,
-    buildingTypeId: values.buildingTypeId,
-    cep: values.cep !== '' ? unMask(values.cep) : null,
-    city: values.city !== '' ? values.city : null,
-    state: values.state !== '' ? values.state : null,
-    neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
-    streetName: values.streetName !== '' ? values.streetName : null,
-    area: values.area !== '' ? unMask(values.area) : null,
-    deliveryDate: new Date(values.deliveryDate),
-    warrantyExpiration: new Date(values.warrantyExpiration),
-    keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
+  await Api.put('/buildings/edit', {
+    buildingId: values.id,
+    data: {
+      name: values.name,
+      buildingTypeId: values.buildingTypeId,
+      cep: values.cep !== '' ? unMask(values.cep) : null,
+      city: values.city !== '' ? values.city : null,
+      state: values.state !== '' ? values.state : null,
+      neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
+      streetName: values.streetName !== '' ? values.streetName : null,
+      area: values.area !== '' ? unMask(values.area) : null,
+      deliveryDate: new Date(values.deliveryDate),
+      warrantyExpiration: new Date(values.warrantyExpiration),
+      keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
+    },
   })
     .then((res) => {
-      requestBuildingList({ page, setBuildingList, setCount });
+      requestBuildingDetails({ buildingId: values.id, setBuilding });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
@@ -46,7 +47,7 @@ export const requestCreateBuilding = async ({
 };
 
 // YUP
-export const schemaModalCreateBuilding = yup
+export const schemaModalEditBuilding = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),

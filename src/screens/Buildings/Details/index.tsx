@@ -1,27 +1,60 @@
 // COMPONENTS
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { icon } from '../../../assets/icons';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
-import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
+import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
+// import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
+import { ModalEditBuilding } from './utils/ModalEditBuilding';
+
+// FUNCTIONS
+import { requestBuildingDetails } from './utils/functions';
 
 // STYLES
 import * as Style from './styles';
-import { theme } from '../../../styles/theme';
+// import { theme } from '../../../styles/theme';
+
+// TYPES
+import { IBuildingDetail } from './utils/types';
+import { applyMask, dateFormatter } from '../../../utils/functions';
 
 export const BuildingDetails = () => {
-  const oi = '';
-  // eslint-disable-next-line no-console
-  console.log(oi);
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const buildingId = state as string;
 
-  return (
+  const [loading, setLoading] = useState<boolean>(true);
+  const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
+
+  const [building, setBuilding] = useState<IBuildingDetail>();
+
+  useEffect(() => {
+    if (!state) {
+      navigate('/buildings');
+    } else {
+      requestBuildingDetails({ buildingId, setLoading, setBuilding });
+    }
+  }, []);
+
+  return loading ? (
+    <DotSpinLoading />
+  ) : (
     <>
+      {modalEditBuildingOpen && (
+        <ModalEditBuilding
+          setModal={setModalEditBuildingOpen}
+          building={building}
+          setBuilding={setBuilding}
+        />
+      )}
       <Style.Header>
         <h2>Detalhes de edificação</h2>
         <ReturnButton path="/buildings" />
       </Style.Header>
 
       <Style.CardWrapper>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Manutenções</h5>
           </Style.CardHeader>
@@ -45,7 +78,7 @@ export const BuildingDetails = () => {
               <p className="p5">Concluídas</p>
             </Style.MaintenanceCardFooterInfo>
           </Style.MaintenanceCardFooter>
-        </Style.Card>
+        </Style.Card> */}
 
         <Style.Card>
           <Style.CardHeader>
@@ -55,7 +88,7 @@ export const BuildingDetails = () => {
               label="Editar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                setModalEditBuildingOpen(true);
               }}
             />
           </Style.CardHeader>
@@ -63,64 +96,72 @@ export const BuildingDetails = () => {
             <Style.BuildingCardColumn>
               <Style.BuildingCardData>
                 <p className="p3">Nome:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.name}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Tipo:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.BuildingType.name}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">CEP:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">
+                  {building?.cep ? applyMask({ mask: 'CEP', value: building?.cep }).value : '-'}
+                </p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Cidade:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.city ?? '-'}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Data de entrega da edificação:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">
+                  {building?.deliveryDate ? dateFormatter(building?.deliveryDate!) : ''}
+                </p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Continuar notificando após término da garantia?:</p>
-                <p className="p3">Sim</p>
+                <p className="p3">{building?.keepNotificationAfterWarrantyEnds ? 'Sim' : 'Não'}</p>
               </Style.BuildingCardData>
             </Style.BuildingCardColumn>
 
             <Style.BuildingCardColumn>
               <Style.BuildingCardData>
                 <p className="p3">Estado:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.state ?? '-'}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Bairro:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.neighborhood ?? '-'}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Logradouro:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{building?.streetName ?? '-'}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Área:</p>
-                <p className="p3">1.200,00 m²</p>
+                <p className="p3">
+                  {building?.area
+                    ? `${applyMask({ mask: 'DEC', value: building?.area }).value} m²`
+                    : '-'}
+                </p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
                 <p className="p3">Término da garantia:</p>
-                <p className="p3">Monte Ravello</p>
+                <p className="p3">{dateFormatter(building?.warrantyExpiration!)}</p>
               </Style.BuildingCardData>
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Dados de notificação</h5>
             <IconButton
@@ -206,7 +247,7 @@ export const BuildingDetails = () => {
               }}
             />
           </Style.CardHeader>
-        </Style.Card>
+        </Style.Card> */}
       </Style.CardWrapper>
     </>
   );

@@ -6,7 +6,7 @@ export interface IBuildingList {
 }
 
 export interface IRequestBuildingList {
-  setBuildingList: (setCompanies: ICompany[]) => void;
+  setBuildingList: (setBuildingList: IBuildingList[]) => void;
   setLoading?: (setLoading: boolean) => void;
   setPage?: (setPage: number) => void;
   setCount: (setCount: number) => void;

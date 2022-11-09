@@ -16,6 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
+import { convertToUrlString } from '../../../utils/functions';
 
 export const BuildingsList = () => {
   const navigate = useNavigate();
@@ -40,7 +41,14 @@ export const BuildingsList = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalCreateBuildingOpen && <ModalCreateBuilding setModal={setModalCreateBuildingOpen} />}
+      {modalCreateBuildingOpen && (
+        <ModalCreateBuilding
+          setModal={setModalCreateBuildingOpen}
+          page={page}
+          setBuildingList={setBuildingList}
+          setCount={setCount}
+        />
+      )}
       <Style.Header>
         <Style.LeftSide>
           <h2>Edificações</h2>
@@ -110,21 +118,26 @@ export const BuildingsList = () => {
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
-                  navigate('/buildings/details');
+                  navigate(`/buildings/details/${convertToUrlString(building.name)}`, {
+                    state: building.id,
+                  });
                 }}
               >
                 <Style.BuildingCardHeader>
                   <Style.BuildingCardHeaderInfo>
                     <h5>{building.name}</h5>
                     <p className="p3">
-                      {building.neighborhood} {building.city}
+                      {building?.neighborhood}
+                      {building?.city && building?.neighborhood
+                        ? `, ${building?.city}`
+                        : building.city}
                     </p>
                   </Style.BuildingCardHeaderInfo>
 
                   <Image img={icon.rightArrow} size="16px" />
                 </Style.BuildingCardHeader>
 
-                <Style.BuildingCardFooter>
+                {/* <Style.BuildingCardFooter>
                   <Style.BuildingCardFooterInfo>
                     <h5 className="pending">0</h5>
                     <p className="p5">Pendentes</p>
@@ -139,7 +152,7 @@ export const BuildingsList = () => {
                     <h5 className="completed">0</h5>
                     <p className="p5">Concluídas</p>
                   </Style.BuildingCardFooterInfo>
-                </Style.BuildingCardFooter>
+                </Style.BuildingCardFooter> */}
               </Style.BuildingCard>
             ))}
           </Style.GridContainer>

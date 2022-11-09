@@ -11,6 +11,8 @@ export const dateFormatter = (date: string) =>
   new Date(date).toLocaleDateString('pt-BR', {
     timeZone: 'UTC',
   });
+
+export const convertToFormikDate = (date: string) => new Date(date).toISOString().split('T')[0];
 // #endregion
 
 // #region UPLOAD
