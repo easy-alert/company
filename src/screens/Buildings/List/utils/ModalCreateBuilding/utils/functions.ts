@@ -55,7 +55,7 @@ export const schemaModalCreateBuilding = yup
     state: yup.string(),
     neighborhood: yup.string(),
     streetName: yup.string(),
-    area: yup.string(),
+    area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),
     deliveryDate: yup.date().required('A data de entrega deve ser preenchida.'),
     warrantyExpiration: yup
       .date()

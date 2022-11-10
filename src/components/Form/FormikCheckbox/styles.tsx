@@ -11,6 +11,7 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
   > input {
     width: 16px;
     height: 16px;
+    accent-color: ${theme.color.primary};
   }
 
   ${({ disable }) =>

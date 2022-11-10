@@ -17,12 +17,20 @@ import * as Style from './styles';
 
 // TYPES
 import { IBuildingDetail } from './utils/types';
-import { applyMask, dateFormatter } from '../../../utils/functions';
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  dateFormatter,
+  requestBuldingTypes,
+} from '../../../utils/functions';
+import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const buildingId = state as string;
+
+  const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
@@ -33,6 +41,7 @@ export const BuildingDetails = () => {
     if (!state) {
       navigate('/buildings');
     } else {
+      requestBuldingTypes({ setBuildingTypes });
       requestBuildingDetails({ buildingId, setLoading, setBuilding });
     }
   }, []);
@@ -41,11 +50,12 @@ export const BuildingDetails = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalEditBuildingOpen && (
+      {modalEditBuildingOpen && building && (
         <ModalEditBuilding
           setModal={setModalEditBuildingOpen}
           building={building}
           setBuilding={setBuilding}
+          buildingTypes={buildingTypes}
         />
       )}
       <Style.Header>
@@ -101,9 +111,28 @@ export const BuildingDetails = () => {
 
               <Style.BuildingCardData>
                 <p className="p3">Tipo:</p>
-                <p className="p3">{building?.BuildingType.name}</p>
+                <p className="p3">{capitalizeFirstLetter(building?.BuildingType.name!)}</p>
               </Style.BuildingCardData>
 
+              <Style.BuildingCardData>
+                <p className="p3">Entrega da edificação:</p>
+                <p className="p3">
+                  {building?.deliveryDate ? dateFormatter(building?.deliveryDate!) : ''}
+                </p>
+              </Style.BuildingCardData>
+
+              <Style.BuildingCardData>
+                <p className="p3">Término da garantia:</p>
+                <p className="p3">{dateFormatter(building?.warrantyExpiration!)}</p>
+              </Style.BuildingCardData>
+
+              <Style.BuildingCardData>
+                <p className="p3">Notificar após garantia?</p>
+                <p className="p3">{building?.keepNotificationAfterWarrantyEnds ? 'Sim' : 'Não'}</p>
+              </Style.BuildingCardData>
+            </Style.BuildingCardColumn>
+
+            <Style.BuildingCardColumn>
               <Style.BuildingCardData>
                 <p className="p3">CEP:</p>
                 <p className="p3">
@@ -112,27 +141,12 @@ export const BuildingDetails = () => {
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
-                <p className="p3">Cidade:</p>
-                <p className="p3">{building?.city ?? '-'}</p>
-              </Style.BuildingCardData>
-
-              <Style.BuildingCardData>
-                <p className="p3">Data de entrega da edificação:</p>
+                <p className="p3">Local:</p>
                 <p className="p3">
-                  {building?.deliveryDate ? dateFormatter(building?.deliveryDate!) : ''}
+                  {!building?.city && !building?.state && '-'}
+                  {building?.city}
+                  {building?.city && building?.state ? `, ${building?.state}` : building?.state}
                 </p>
-              </Style.BuildingCardData>
-
-              <Style.BuildingCardData>
-                <p className="p3">Continuar notificando após término da garantia?:</p>
-                <p className="p3">{building?.keepNotificationAfterWarrantyEnds ? 'Sim' : 'Não'}</p>
-              </Style.BuildingCardData>
-            </Style.BuildingCardColumn>
-
-            <Style.BuildingCardColumn>
-              <Style.BuildingCardData>
-                <p className="p3">Estado:</p>
-                <p className="p3">{building?.state ?? '-'}</p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
@@ -152,11 +166,6 @@ export const BuildingDetails = () => {
                     ? `${applyMask({ mask: 'DEC', value: building?.area }).value} m²`
                     : '-'}
                 </p>
-              </Style.BuildingCardData>
-
-              <Style.BuildingCardData>
-                <p className="p3">Término da garantia:</p>
-                <p className="p3">{dateFormatter(building?.warrantyExpiration!)}</p>
               </Style.BuildingCardData>
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>

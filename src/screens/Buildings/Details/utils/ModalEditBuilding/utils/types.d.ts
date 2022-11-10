@@ -1,3 +1,6 @@
+import { IBuildingTypes } from '../../../../../../utils/types';
+import { IBuildingDetail } from '../../types';
+
 interface IEditBuilding {
   id: string;
   name: string;
@@ -17,6 +20,7 @@ export interface IModalEditBuilding {
   setModal: (setModal: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   building: IBuildingDetail;
+  buildingTypes: IBuildingTypes[];
 }
 
 // REQUESTS
@@ -25,4 +29,12 @@ export interface IRequestEditBuilding {
   setBuilding: (setBuilding: IBuildingDetail) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
+}
+
+export interface IRequestDeleteBuilding {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  navigate: any;
+  setOnQuery: (setOnQuery: boolean) => void;
+  setModal: (setModal: boolean) => void;
+  buildingId: string;
 }

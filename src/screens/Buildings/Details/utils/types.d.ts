@@ -12,6 +12,7 @@ export interface IBuildingDetail {
   keepNotificationAfterWarrantyEnds: boolean;
   BuildingType: {
     name: string;
+    id: string;
   };
 }
 

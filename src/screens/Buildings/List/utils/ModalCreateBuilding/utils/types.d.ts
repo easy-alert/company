@@ -1,4 +1,5 @@
 import { IBuildingList } from '../../types';
+import { IBuildingTypes } from '../../../../../../utils/types';
 
 interface ICreateBuilding {
   name: string;
@@ -19,6 +20,7 @@ export interface IModalCreateBuilding {
   page: number;
   setBuildingList: (setBuildingList: IBuildingList[]) => void;
   setCount: (setCount: number) => void;
+  buildingTypes: IBuildingTypes[];
 }
 
 // REQUESTS

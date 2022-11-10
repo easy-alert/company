@@ -16,13 +16,16 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { convertToUrlString } from '../../../utils/functions';
+import { convertToUrlString, requestBuldingTypes } from '../../../utils/functions';
+import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
   const navigate = useNavigate();
 
   const [modalCreateBuildingOpen, setModalCreateBuildingOpen] = useState<boolean>(false);
   const [buildingList, setBuildingList] = useState<IBuildingList[]>([]);
+
+  const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   // FILTER
   const [filter, setFilter] = useState<string>('');
@@ -34,6 +37,7 @@ export const BuildingsList = () => {
   const offset = 20;
 
   useEffect(() => {
+    requestBuldingTypes({ setBuildingTypes });
     requestBuildingList({ page, setBuildingList, setCount, filter, setLoading, setPage });
   }, []);
 
@@ -47,6 +51,7 @@ export const BuildingsList = () => {
           page={page}
           setBuildingList={setBuildingList}
           setCount={setCount}
+          buildingTypes={buildingTypes}
         />
       )}
       <Style.Header>

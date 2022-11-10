@@ -12,7 +12,9 @@ export const SelectContainer = styled.div<{
   }
   width: 100%;
   position: relative;
-
+  > select {
+    line-height: 17px;
+  }
   ${({ selectPlaceholderValue }) =>
     selectPlaceholderValue === 'Selecione' || selectPlaceholderValue === ''
       ? `

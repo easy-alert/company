@@ -3,7 +3,13 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Api } from '../services/api';
-import { IMask, IUploadFile, IRequestListIntervals, IRequestAddressData } from './types';
+import {
+  IMask,
+  IUploadFile,
+  IRequestListIntervals,
+  IRequestAddressData,
+  IRequestBuildingTypes,
+} from './types';
 // #endregion
 
 // #region DATES
@@ -242,6 +248,16 @@ export const requestListIntervals = async ({ setTimeIntervals }: IRequestListInt
   await Api.get('/timeinterval/list')
     .then((res) => {
       setTimeIntervals(res.data);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
+
+export const requestBuldingTypes = async ({ setBuildingTypes }: IRequestBuildingTypes) => {
+  await Api.get('/buildings/types/list')
+    .then((res) => {
+      setBuildingTypes(res.data);
     })
     .catch((err) => {
       catchHandler(err);

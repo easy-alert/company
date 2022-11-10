@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { Button } from '../../../../../components/Buttons/Button';
 import { FormikInput } from '../../../../../components/Form/FormikInput';
@@ -10,24 +11,39 @@ import { Modal } from '../../../../../components/Modal';
 import { FormikSelect } from '../../../../../components/Form/FormikSelect';
 import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
 import { theme } from '../../../../../styles/theme';
-
+import { PopoverButton } from '../../../../../components/Buttons/PopoverButton';
 // TYPES
 import { IModalEditBuilding } from './utils/types';
 
 // FUNCTIONS
-import { requestEditBuilding, schemaModalEditBuilding } from './utils/functions';
-import { applyMask, convertToFormikDate, requestAddressData } from '../../../../../utils/functions';
+import {
+  requestDeleteBuilding,
+  requestEditBuilding,
+  schemaModalEditBuilding,
+} from './utils/functions';
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  convertToFormikDate,
+  requestAddressData,
+} from '../../../../../utils/functions';
 
-export const ModalEditBuilding = ({ setModal, building, setBuilding }: IModalEditBuilding) => {
+export const ModalEditBuilding = ({
+  setModal,
+  building,
+  setBuilding,
+  buildingTypes,
+}: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
-    <Modal title="Cadastrar edificação" setModal={setModal}>
+    <Modal title="Editar edificação" setModal={setModal}>
       <Formik
         initialValues={{
           id: building.id,
           name: building.name,
-          buildingTypeId: building.buildingTypeId,
+          buildingTypeId: building.BuildingType.id,
           cep: building.cep ? applyMask({ mask: 'CEP', value: building.cep }).value : '',
           city: building.city ?? '',
           state: building.state ?? '',
@@ -66,9 +82,11 @@ export const ModalEditBuilding = ({ setModal, building, setBuilding }: IModalEdi
                 <option value="" disabled hidden>
                   Selecione
                 </option>
-                {/* TRAZER PELA ROTA */}
-                <option value="e65efd81-0efa-4529-8c66-fa7b0510d0b5">Casa</option>
-                <option value="4690e32f-29c8-4850-a0bc-ce347ad30b11">Prédio</option>
+                {buildingTypes.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {capitalizeFirstLetter(e.name)}
+                  </option>
+                ))}
               </FormikSelect>
               <FormikInput
                 label="CEP"
@@ -127,13 +145,22 @@ export const ModalEditBuilding = ({ setModal, building, setBuilding }: IModalEdi
                 placeholder="Ex: 1.200,00"
                 maxLength={10}
                 onChange={(e) => {
-                  setFieldValue('area', applyMask({ value: e.target.value, mask: 'DEC' }).value);
+                  if (/^\d/.test(e.target.value) || e.target.value === '') {
+                    if (e.target.value === '' || e.target.value === '0,0') {
+                      setFieldValue('area', '');
+                    } else {
+                      setFieldValue(
+                        'area',
+                        applyMask({ value: e.target.value, mask: 'DEC' }).value,
+                      );
+                    }
+                  }
                 }}
               />
               <FormikInput
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
-                label="Data de entrega da edificação"
+                label="Entrega da edificação"
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
@@ -153,9 +180,33 @@ export const ModalEditBuilding = ({ setModal, building, setBuilding }: IModalEdi
               <FormikCheckbox
                 name="keepNotificationAfterWarrantyEnds"
                 labelColor={theme.color.gray4}
-                label="Continuar notificando após término da garantia?"
+                label="Notificar após garantia?"
               />
-              <Button center label="Salvar" type="submit" loading={onQuery} />
+              <Style.ButtonContainer>
+                {!onQuery && (
+                  <PopoverButton
+                    actionButtonBgColor={theme.color.primary}
+                    borderless
+                    type="Button"
+                    label="Excluir"
+                    message={{
+                      title: 'Deseja excluir esta edificação?',
+                      content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                      contentColor: theme.color.danger,
+                    }}
+                    actionButtonClick={() => {
+                      requestDeleteBuilding({
+                        setModal,
+                        setOnQuery,
+                        buildingId: building.id,
+                        navigate,
+                      });
+                    }}
+                  />
+                )}
+
+                <Button label="Salvar" type="submit" loading={onQuery} />
+              </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>
         )}

@@ -9,7 +9,7 @@ import { catchHandler, unMask } from '../../../../../../utils/functions';
 import { requestBuildingDetails } from '../../functions';
 
 // TYPES
-import { IRequestEditBuilding } from './types';
+import { IRequestDeleteBuilding, IRequestEditBuilding } from './types';
 
 export const requestEditBuilding = async ({
   values,
@@ -46,6 +46,31 @@ export const requestEditBuilding = async ({
     });
 };
 
+export const requestDeleteBuilding = async ({
+  setModal,
+  setOnQuery,
+  buildingId,
+  navigate,
+}: IRequestDeleteBuilding) => {
+  setOnQuery(true);
+
+  await Api.delete('/buildings/delete', {
+    data: {
+      buildingId,
+    },
+  })
+    .then((res) => {
+      setModal(false);
+      navigate('/buildings', { replace: true });
+      toast.success(res.data.ServerMessage.message);
+      setOnQuery(false);
+    })
+    .catch((err) => {
+      setOnQuery(false);
+      catchHandler(err);
+    });
+};
+
 // YUP
 export const schemaModalEditBuilding = yup
   .object({
@@ -56,7 +81,7 @@ export const schemaModalEditBuilding = yup
     state: yup.string(),
     neighborhood: yup.string(),
     streetName: yup.string(),
-    area: yup.string(),
+    area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),
     deliveryDate: yup.date().required('A data de entrega deve ser preenchida.'),
     warrantyExpiration: yup
       .date()

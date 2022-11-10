@@ -45,6 +45,15 @@ export interface IRequestListIntervals {
   setTimeIntervals: (setTimeIntervals: ITimeInterval[]) => void;
 }
 
+export interface IBuildingTypes {
+  id: string;
+  name: string;
+}
+
+export interface IRequestBuildingTypes {
+  setBuildingTypes: (setBuildingTypes: IBuildingTypes[]) => void;
+}
+
 export interface IRequestAddressData {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFieldValue: any;
