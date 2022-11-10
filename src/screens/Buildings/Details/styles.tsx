@@ -104,8 +104,18 @@ export const MainContactTag = styled.div`
   }
 `;
 
-export const PhoneNumberWrapper = styled.div`
+export const TableDataWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
+  gap: ${theme.size.xxsm};
+`;
+
+export const NoDataContainer = styled.div`
+  width: 100%;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+    margin-bottom: ${theme.size.xlg};
+  }
 `;

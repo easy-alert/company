@@ -105,6 +105,6 @@ export const AppContent = styled.div`
   padding: 0 ${theme.size.md} ${theme.size.sm} ${theme.size.md};
 
   @media (max-width: 900px) {
-    padding: ${theme.size.sm};
+    padding: 0 ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
   }
 `;

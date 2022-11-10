@@ -97,10 +97,7 @@ export const ModalEditBuilding = ({
                 maxLength={applyMask({ value: values.cep, mask: 'CEP' }).length}
                 onChange={(e) => {
                   setFieldValue('cep', applyMask({ value: e.target.value, mask: 'CEP' }).value);
-                  if (
-                    e.target.value.length === 9 ||
-                    (e.target.value.length === 8 && !e.target.value.includes('-'))
-                  ) {
+                  if (applyMask({ value: e.target.value, mask: 'CEP' }).value.length === 9) {
                     requestAddressData({ cep: e.target.value, setFieldValue });
                   }
                 }}

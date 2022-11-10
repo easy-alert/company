@@ -7,6 +7,7 @@ export const Header = styled.header`
   justify-content: space-between;
   padding-top: ${theme.size.sm};
   margin-bottom: ${theme.size.sm};
+
   @media (max-width: 900px) {
     align-items: flex-start;
   }
@@ -51,7 +52,7 @@ export const GridContainer = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media (max-width: 650px) {
+  @media (max-width: 700px) {
     grid-template-columns: repeat(2, 1fr);
   }
 

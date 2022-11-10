@@ -5,15 +5,19 @@ import { icon } from '../../../assets/icons';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-// import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
+import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/ModalEditBuilding';
+import { Image } from '../../../components/Image';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { ModalCreateNotificationConfiguration } from './utils/ModalCreateNotificationConfiguration';
+import { ModalEditNotificationConfiguration } from './utils/ModalEditNotificationConfiguration';
 
 // FUNCTIONS
 import { requestBuildingDetails } from './utils/functions';
 
 // STYLES
 import * as Style from './styles';
-// import { theme } from '../../../styles/theme';
+import { theme } from '../../../styles/theme';
 
 // TYPES
 import { IBuildingDetail } from './utils/types';
@@ -30,12 +34,19 @@ export const BuildingDetails = () => {
   const { state } = useLocation();
   const buildingId = state as string;
 
+  const [building, setBuilding] = useState<IBuildingDetail>();
+
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
+
   const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
 
-  const [building, setBuilding] = useState<IBuildingDetail>();
+  const [modalCreateNotificationConfigurationOpen, setModalCreateNotificationConfigurationOpen] =
+    useState<boolean>(false);
+
+  const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (!state) {
@@ -58,6 +69,22 @@ export const BuildingDetails = () => {
           buildingTypes={buildingTypes}
         />
       )}
+
+      {modalCreateNotificationConfigurationOpen && building && (
+        <ModalCreateNotificationConfiguration
+          setModal={setModalCreateNotificationConfigurationOpen}
+          buildingId={building.id}
+          setBuilding={setBuilding}
+        />
+      )}
+
+      {modalEditNotificationConfigurationOpen && building && (
+        <ModalEditNotificationConfiguration
+          setModal={setModalEditNotificationConfigurationOpen}
+          buildingId={building.id}
+        />
+      )}
+
       <Style.Header>
         <h2>Detalhes de edificação</h2>
         <ReturnButton path="/buildings" />
@@ -170,68 +197,128 @@ export const BuildingDetails = () => {
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.CardHeader>
             <h5>Dados de notificação</h5>
             <IconButton
-              icon={icon.editWithBg}
-              label="Editar"
+              icon={icon.plusWithBg}
+              label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                setModalCreateNotificationConfigurationOpen(true);
               }}
             />
           </Style.CardHeader>
-          <NotificationTable
-            colsHeader={[
-              { label: 'Nome do responsável' },
-              { label: 'E-mail' },
-              { label: 'Função' },
-              { label: 'WhatsApp' },
-              { label: '' },
-            ]}
-          >
-            <NotificationTableContent
-              key="a"
-              onClick={() => {
-                //
-              }}
-              colsBody={[
-                {
-                  cell: 'Jorge Luiz Dutra Andrade',
-                  cssProps: { width: '25%', borderBottomLeftRadius: theme.size.xxsm },
-                },
-                { cell: 'jorgeluiz112233@gmail.com', cssProps: { width: '25%' } },
-                { cell: 'Auxiliar de auxiliar', cssProps: { width: '20%' } },
-                {
-                  cell: (
-                    <Style.PhoneNumberWrapper>
-                      (48) 99928-3494
-                      <Style.MainContactTag>
-                        <p className="p5">Principal</p>
-                      </Style.MainContactTag>
-                    </Style.PhoneNumberWrapper>
-                  ),
-                  cssProps: { width: '20%' },
-                },
-                {
-                  cell: (
-                    <IconButton
-                      size="16px"
-                      icon={icon.edit}
-                      label="Editar"
-                      onClick={() => {
-                        //
-                      }}
-                    />
-                  ),
-                  cssProps: { width: '10%', borderBottomRightRadius: theme.size.xxsm },
-                },
+          {building && building.NotificationConfiguration.length > 0 ? (
+            <NotificationTable
+              colsHeader={[
+                { label: 'Nome do responsável' },
+                { label: 'E-mail' },
+                { label: 'Função' },
+                { label: 'WhatsApp' },
+                { label: '' },
               ]}
-            />
-          </NotificationTable>
+            >
+              {building?.NotificationConfiguration.map((notificationRow) => (
+                <NotificationTableContent
+                  key={notificationRow.id}
+                  onClick={() => {
+                    //
+                  }}
+                  colsBody={[
+                    {
+                      cell: notificationRow.name,
+                      cssProps: { width: '25%', borderBottomLeftRadius: theme.size.xxsm },
+                    },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          {notificationRow.email}
+                          {notificationRow.isMain &&
+                            (notificationRow.emailIsConfirmed ? (
+                              <Image img={icon.checkedNoBg} size="16px" />
+                            ) : (
+                              <PopoverButton
+                                label="Reenviar"
+                                hiddenIconButtonLabel
+                                buttonIcon={icon.yellowAlert}
+                                buttonIconSize="16px"
+                                actionButtonBgColor={theme.color.primary}
+                                type="IconButton"
+                                message={{
+                                  title: 'Deseja reenviar o email de confirmação?',
+                                  content: '',
+                                  contentColor: theme.color.danger,
+                                }}
+                                actionButtonClick={() => {
+                                  //
+                                }}
+                              />
+                            ))}
+                        </Style.TableDataWrapper>
+                      ),
+                      cssProps: { width: '25%' },
+                    },
+                    { cell: notificationRow.role, cssProps: { width: '20%' } },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          {applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value}
+
+                          {notificationRow.isMain &&
+                            (notificationRow.contactNumberIsConfirmed ? (
+                              <Image img={icon.checkedNoBg} size="16px" />
+                            ) : (
+                              <PopoverButton
+                                label="Reenviar"
+                                hiddenIconButtonLabel
+                                buttonIcon={icon.yellowAlert}
+                                buttonIconSize="16px"
+                                actionButtonBgColor={theme.color.primary}
+                                type="IconButton"
+                                message={{
+                                  title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
+                                  content: '',
+                                  contentColor: theme.color.danger,
+                                }}
+                                actionButtonClick={() => {
+                                  //
+                                }}
+                              />
+                            ))}
+                          {notificationRow.isMain && (
+                            <Style.MainContactTag>
+                              <p className="p5">Principal</p>
+                            </Style.MainContactTag>
+                          )}
+                        </Style.TableDataWrapper>
+                      ),
+                      cssProps: { width: '20%' },
+                    },
+                    {
+                      cell: (
+                        <IconButton
+                          size="16px"
+                          icon={icon.edit}
+                          label="Editar"
+                          onClick={() => {
+                            setModalEditNotificationConfigurationOpen(true);
+                          }}
+                        />
+                      ),
+                      cssProps: { width: '10%', borderBottomRightRadius: theme.size.xxsm },
+                    },
+                  ]}
+                />
+              ))}
+            </NotificationTable>
+          ) : (
+            <Style.NoDataContainer>
+              <h5>Nenhum dado cadastrado.</h5>
+            </Style.NoDataContainer>
+          )}
         </Style.Card>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
