@@ -20,7 +20,7 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 
 // TYPES
-import { IBuildingDetail } from './utils/types';
+import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import {
   applyMask,
   capitalizeFirstLetter,
@@ -47,6 +47,9 @@ export const BuildingDetails = () => {
 
   const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
     useState<boolean>(false);
+
+  const [selectedNotificationRow, setSelectedNotificationRow] =
+    useState<INotificationConfiguration>();
 
   useEffect(() => {
     if (!state) {
@@ -78,10 +81,12 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalEditNotificationConfigurationOpen && building && (
+      {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
         <ModalEditNotificationConfiguration
           setModal={setModalEditNotificationConfigurationOpen}
           buildingId={building.id}
+          setBuilding={setBuilding}
+          selectedNotificationRow={selectedNotificationRow}
         />
       )}
 
@@ -302,6 +307,7 @@ export const BuildingDetails = () => {
                           icon={icon.edit}
                           label="Editar"
                           onClick={() => {
+                            setSelectedNotificationRow(notificationRow);
                             setModalEditNotificationConfigurationOpen(true);
                           }}
                         />

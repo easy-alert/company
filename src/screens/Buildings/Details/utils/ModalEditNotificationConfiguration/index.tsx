@@ -15,14 +15,18 @@ import { IModalEditNotificationConfiguration } from './utils/types';
 
 // FUNCTIONS
 import {
+  requestDeleteNotificationConfiguration,
   requestEditNotificationConfiguration,
   schemaEditNotificationConfiguration,
 } from './utils/functions';
 import { applyMask } from '../../../../../utils/functions';
+import { PopoverButton } from '../../../../../components/Buttons/PopoverButton';
 
 export const ModalEditNotificationConfiguration = ({
   setModal,
   buildingId,
+  setBuilding,
+  selectedNotificationRow,
 }: IModalEditNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -30,15 +34,23 @@ export const ModalEditNotificationConfiguration = ({
     <Modal title="Editar dados de notificação" setModal={setModal}>
       <Formik
         initialValues={{
-          name: '',
-          email: '',
-          role: '',
-          contactNumber: '',
-          isMain: false,
+          name: selectedNotificationRow.name,
+          email: selectedNotificationRow.email,
+          role: selectedNotificationRow.role,
+          contactNumber: applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber })
+            .value,
+          isMain: selectedNotificationRow.isMain,
         }}
         validationSchema={schemaEditNotificationConfiguration}
         onSubmit={async (values) => {
-          requestEditNotificationConfiguration({ buildingId, setModal, setOnQuery, values });
+          requestEditNotificationConfiguration({
+            buildingId,
+            buildingNotificationConfigurationId: selectedNotificationRow.id,
+            setModal,
+            setOnQuery,
+            values,
+            setBuilding,
+          });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -87,7 +99,29 @@ export const ModalEditNotificationConfiguration = ({
               <FormikCheckbox name="isMain" labelColor={theme.color.gray4} label="Principal" />
 
               <Style.ButtonContainer>
-                <Button label="Cadastrar" type="submit" loading={onQuery} />
+                {!onQuery && (
+                  <PopoverButton
+                    actionButtonBgColor={theme.color.primary}
+                    borderless
+                    type="Button"
+                    label="Excluir"
+                    message={{
+                      title: 'Deseja excluir este dado de notificação?',
+                      content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                      contentColor: theme.color.danger,
+                    }}
+                    actionButtonClick={() => {
+                      requestDeleteNotificationConfiguration({
+                        buildingNotificationConfigurationId: selectedNotificationRow.id,
+                        setModal,
+                        setOnQuery,
+                        setBuilding,
+                        buildingId,
+                      });
+                    }}
+                  />
+                )}
+                <Button label="Salvar" type="submit" loading={onQuery} />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

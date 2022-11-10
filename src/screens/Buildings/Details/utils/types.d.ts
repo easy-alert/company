@@ -1,4 +1,4 @@
-interface NotificationConfiguration {
+export interface INotificationConfiguration {
   id: string;
   name: string;
   email: string;
@@ -25,7 +25,7 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
-  NotificationConfiguration: NotificationConfiguration[];
+  NotificationConfiguration: INotificationConfiguration[];
 }
 
 export interface IRequestBuildingDetails {
