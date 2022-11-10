@@ -1,30 +1,12 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
-export const HeaderFill = styled.header`
-  padding-bottom: ${theme.size.sm};
-  background-color: ${theme.color.gray1};
-  height: ${theme.size.sm};
-  position: fixed;
-  top: 0;
-
-  width: 89%;
-
-  @media (max-width: 900px) {
-    height: fit-content;
-    align-items: flex-start;
-    top: 80px;
-    left: 0;
-    width: 100%;
-  }
-`;
-
 export const Header = styled.header`
   position: sticky;
   top: 0;
-  padding-bottom: ${theme.size.sm};
+  padding: ${theme.size.sm} 0;
   background-color: ${theme.color.gray1};
-
+  z-index: 1;
   width: 100%;
   display: flex;
   align-items: center;
@@ -122,5 +104,4 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: ${theme.size.sm};
 `;

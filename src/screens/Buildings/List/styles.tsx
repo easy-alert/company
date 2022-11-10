@@ -5,7 +5,8 @@ export const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  padding-top: ${theme.size.sm};
+  margin-bottom: ${theme.size.sm};
   @media (max-width: 900px) {
     align-items: flex-start;
   }

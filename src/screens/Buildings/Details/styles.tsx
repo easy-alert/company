@@ -7,6 +7,7 @@ export const Header = styled.div`
   }
 
   margin-bottom: ${theme.size.sm};
+  padding-top: ${theme.size.sm};
 `;
 
 export const CardWrapper = styled.div`
