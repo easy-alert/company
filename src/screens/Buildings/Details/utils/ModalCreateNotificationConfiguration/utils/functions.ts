@@ -23,8 +23,8 @@ export const requestCreateNotificationConfiguration = async ({
 
   await Api.post('/buildings/notifications/create', {
     link: phoneConfirmUrl,
-    buildingId,
     data: {
+      buildingId,
       name: values.name,
       email: values.email,
       role: values.role,
