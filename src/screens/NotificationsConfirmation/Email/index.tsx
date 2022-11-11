@@ -10,14 +10,14 @@ import { icon } from '../../../assets/icons';
 import { requestConfirmData } from '../utils/functions';
 import { query } from '../../../utils/functions';
 
-export const PhoneConfirm = () => {
+export const EmailConfirm = () => {
   const navigate = useNavigate();
   const token = query.get('token');
 
   return (
     <Style.Container>
       <img src={icon.logoTextBlack} alt="" />
-      <h3>Confirme seu número do WhatsApp</h3>
+      <h3>Confirme seu e-mail</h3>
       <Button
         label="Confirmar"
         onClick={() => {

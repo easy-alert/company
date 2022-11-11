@@ -19,6 +19,7 @@ import { BuildingDetails } from './screens/Buildings/Details';
 
 // NOTIFICATIONS CONFIRMATION
 import { PhoneConfirm } from './screens/NotificationsConfirmation/Phone';
+import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -46,6 +47,7 @@ const AppRoutes = () => (
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />
+        <Route path="/confirm/email" element={<EmailConfirm />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

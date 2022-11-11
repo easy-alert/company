@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { catchHandler } from '../../../../utils/functions';
+import { Api } from '../../../services/api';
+import { catchHandler } from '../../../utils/functions';
 import { IRequestConfirmPhone } from './types';
 
-export const requestConfirmPhone = async ({ token, navigate }: IRequestConfirmPhone) => {
+export const requestConfirmData = async ({ token, navigate }: IRequestConfirmPhone) => {
   await Api.post('/buildings/notifications/contactconfirm', {
     token,
   })
