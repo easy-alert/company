@@ -91,7 +91,11 @@ export const ModalCreateNotificationConfiguration = ({
                 }}
               />
 
-              <FormikCheckbox name="isMain" labelColor={theme.color.gray4} label="Principal" />
+              <FormikCheckbox
+                name="isMain"
+                labelColor={theme.color.gray4}
+                label="Contato principal"
+              />
 
               <Style.ButtonContainer>
                 <Button label="Cadastrar" type="submit" loading={onQuery} />

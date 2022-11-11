@@ -96,7 +96,11 @@ export const ModalEditNotificationConfiguration = ({
                 }}
               />
 
-              <FormikCheckbox name="isMain" labelColor={theme.color.gray4} label="Principal" />
+              <FormikCheckbox
+                name="isMain"
+                labelColor={theme.color.gray4}
+                label="Contato principal"
+              />
 
               <Style.ButtonContainer>
                 {!onQuery && (

@@ -299,7 +299,7 @@ export const BuildingDetails = () => {
                             ))}
                           {notificationRow.isMain && (
                             <Style.MainContactTag>
-                              <p className="p5">Principal</p>
+                              <p className="p5">Contato principal</p>
                             </Style.MainContactTag>
                           )}
                         </Style.TableDataWrapper>
