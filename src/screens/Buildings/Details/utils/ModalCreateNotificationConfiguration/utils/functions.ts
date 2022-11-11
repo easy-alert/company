@@ -24,11 +24,13 @@ export const requestCreateNotificationConfiguration = async ({
   await Api.post('/buildings/notifications/create', {
     link: phoneConfirmUrl,
     buildingId,
-    name: values.name,
-    email: values.email,
-    role: values.role,
-    contactNumber: unMask(values.contactNumber),
-    isMain: values.isMain,
+    data: {
+      name: values.name,
+      email: values.email,
+      role: values.role,
+      contactNumber: unMask(values.contactNumber),
+      isMain: values.isMain,
+    },
   })
     .then((res) => {
       requestBuildingDetails({ buildingId, setBuilding });
