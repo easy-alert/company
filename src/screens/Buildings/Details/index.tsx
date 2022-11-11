@@ -259,7 +259,10 @@ export const BuildingDetails = () => {
                                   contentColor: theme.color.danger,
                                 }}
                                 actionButtonClick={() => {
-                                  //
+                                  // requestResendEmailConfirmation({
+                                  //   buildingNotificationConfigurationId: notificationRow.id,
+                                  //   link: emailConfirmUrl,
+                                  // });
                                 }}
                               />
                             ))}
@@ -331,7 +334,7 @@ export const BuildingDetails = () => {
           )}
         </Style.Card>
         {/* <Style.Card>
-          <Style.CardHeader>
+          <Style.MaintenanceCardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
               icon={icon.editWithBg}
@@ -341,7 +344,7 @@ export const BuildingDetails = () => {
                 //
               }}
             />
-          </Style.CardHeader>
+          </Style.MaintenanceCardHeader>
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>
@@ -355,6 +358,9 @@ export const BuildingDetails = () => {
               }}
             />
           </Style.CardHeader>
+          <Style.NoDataContainer>
+            <h5>Nenhum anexo cadastrado.</h5>
+          </Style.NoDataContainer>
         </Style.Card> */}
       </Style.CardWrapper>
     </>
