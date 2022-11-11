@@ -7,6 +7,7 @@ export const Header = styled.div`
   }
 
   margin-bottom: ${theme.size.sm};
+  padding-top: ${theme.size.sm};
 `;
 
 export const CardWrapper = styled.div`
@@ -21,6 +22,10 @@ export const CardHeader = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-bottom: ${theme.size.sm};
+`;
+
+export const MaintenanceCardHeader = styled(CardHeader)`
+  margin-bottom: 0;
 `;
 
 export const Card = styled.div`
@@ -103,8 +108,18 @@ export const MainContactTag = styled.div`
   }
 `;
 
-export const PhoneNumberWrapper = styled.div`
+export const TableDataWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
+  gap: ${theme.size.xxsm};
+`;
+
+export const NoDataContainer = styled.div`
+  width: 100%;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+    margin-bottom: ${theme.size.xlg};
+  }
 `;

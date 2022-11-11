@@ -31,6 +31,8 @@ import gear from './gear.svg';
 import building from './building.svg';
 import copy from './copy.svg';
 import bell from './bell.svg';
+import yellowAlert from './yellowAlert.svg';
+import checkedNoBg from './checkedNoBg.svg';
 
 export const icon = {
   leftArrow,
@@ -66,4 +68,6 @@ export const icon = {
   building,
   copy,
   bell,
+  yellowAlert,
+  checkedNoBg,
 };

@@ -6,7 +6,6 @@ import { Formik, Form } from 'formik';
 // COMPONENTS
 import { Api } from '../../../services/api';
 import { Button } from '../../../components/Buttons/Button';
-import { Image } from '../../../components/Image';
 import { FormikInput } from '../../../components/Form/FormikInput';
 
 // STYLES
@@ -54,7 +53,7 @@ export const Login = () => {
       >
         {({ errors, values, touched }) => (
           <>
-            <Image img={icon.logoTextWhite} width="290px" height="65px" radius="0" />
+            <img src={icon.logoTextWhite} alt="" />
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>

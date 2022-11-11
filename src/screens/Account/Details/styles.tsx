@@ -5,6 +5,7 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   margin-bottom: ${theme.size.xsm};
+  padding-top: ${theme.size.sm};
 `;
 
 export const CardSection = styled.section`

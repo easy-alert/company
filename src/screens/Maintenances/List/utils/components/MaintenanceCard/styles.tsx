@@ -26,6 +26,7 @@ export const MaintenancesCard = styled.div`
   padding: ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
   background-color: ${theme.color.white};
+
   transition: 0.25s;
   :hover {
     cursor: pointer;

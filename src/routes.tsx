@@ -17,13 +17,16 @@ import { MaintenancesList } from './screens/Maintenances/List';
 import { BuildingsList } from './screens/Buildings/List';
 import { BuildingDetails } from './screens/Buildings/Details';
 
+// NOTIFICATIONS CONFIRMATION
+import { PhoneConfirm } from './screens/NotificationsConfirmation/Phone';
+import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-
         <Route path="*" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         <Route
           path="/"
@@ -42,6 +45,9 @@ const AppRoutes = () => (
             <Route path="details/:buildingName" element={<BuildingDetails />} />
           </Route>
         </Route>
+
+        <Route path="/confirm/phone" element={<PhoneConfirm />} />
+        <Route path="/confirm/email" element={<EmailConfirm />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

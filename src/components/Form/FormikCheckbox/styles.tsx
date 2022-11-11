@@ -7,7 +7,6 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
   gap: ${theme.size.xxsm};
   width: fit-content;
   transition: 0.25s;
-
   > input {
     width: 16px;
     height: 16px;

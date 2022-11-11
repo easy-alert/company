@@ -9,6 +9,12 @@ export const Background = styled.div`
   justify-content: center;
   padding: ${theme.size.sm} ${theme.size.md};
   background-color: #3f3e3e;
+
+  > img {
+    width: 100%;
+    max-width: 290px;
+    height: 65px;
+  }
 `;
 
 export const InputWrapper = styled.div`

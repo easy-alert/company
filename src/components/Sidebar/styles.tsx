@@ -102,9 +102,9 @@ export const AppContent = styled.div`
   margin: 0 auto;
   overflow: auto;
   max-width: 1920px;
-  padding: ${theme.size.sm} ${theme.size.md};
+  padding: 0 ${theme.size.md} ${theme.size.sm} ${theme.size.md};
 
   @media (max-width: 900px) {
-    padding: ${theme.size.sm};
+    padding: 0 ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
   }
 `;

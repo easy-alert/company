@@ -28,6 +28,8 @@ export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
   text-align: start;
   background-color: ${theme.color.gray0};
   border: 1px solid ${theme.color.gray3};
+  font-size: 12px;
+  line-height: 14px;
 
   :first-child {
     border-top-left-radius: ${theme.size.xxsm};
@@ -66,6 +68,9 @@ export const TableColBody = styled.td<{
   // COLOCAR ELLIPSIS
   border: 1px solid ${theme.color.gray3};
   border-top: 0;
+
+  font-size: 12px;
+  line-height: 14px;
 
   :not(:first-child) {
     border-left: none;

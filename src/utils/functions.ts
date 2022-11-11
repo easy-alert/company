@@ -279,4 +279,5 @@ export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddress
     });
 };
 
+export const query = new URLSearchParams(window.location.search);
 // #endregion

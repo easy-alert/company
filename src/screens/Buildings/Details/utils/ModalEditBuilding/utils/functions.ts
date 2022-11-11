@@ -76,7 +76,7 @@ export const schemaModalEditBuilding = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
-    cep: yup.string(),
+    cep: yup.string().min(9, 'Digite um CEP válido.'),
     city: yup.string(),
     state: yup.string(),
     neighborhood: yup.string(),

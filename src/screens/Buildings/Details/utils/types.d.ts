@@ -1,3 +1,14 @@
+export interface INotificationConfiguration {
+  id: string;
+  name: string;
+  email: string;
+  emailIsConfirmed: boolean;
+  contactNumber: string;
+  contactNumberIsConfirmed: boolean;
+  role: string;
+  isMain: boolean;
+}
+
 export interface IBuildingDetail {
   id: string;
   name: string;
@@ -14,10 +25,16 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
+  NotificationsConfigurations: INotificationConfiguration[];
 }
 
 export interface IRequestBuildingDetails {
   setLoading?: (setLoading: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   buildingId: string;
+}
+
+export interface IRequestResendPhoneConfirmation {
+  link: string;
+  buildingNotificationConfigurationId: string;
 }

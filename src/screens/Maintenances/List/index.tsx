@@ -48,7 +48,6 @@ export const MaintenancesList = () => {
         <DotSpinLoading />
       ) : (
         <>
-          <Style.HeaderFill />
           <Style.Header>
             <Style.LeftSide>
               <Style.HeaderTitle>
