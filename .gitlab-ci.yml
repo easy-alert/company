@@ -1,13 +1,16 @@
 image: node:16.13.0
 
 stages:
-  - build
-  - staging
-  - production
+  - staging_build
+  - production_build
+  - staging_deploy
+  - production_deploy
 
-build:
-  stage: build
+staging_build:
+  stage: staging_build
+  environment: review/develop
   script:
+    - printenv
     - yarn
     - yarn build
   artifacts:
@@ -16,11 +19,22 @@ build:
     expire_in: 1 hour
   only:
     - develop
+
+production_build:
+  stage: production_build
+  environment: production
+  script:
+    - yarn
+    - yarn build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+  only:
     - master
 
-
-staging:
-  stage: staging
+staging_deploy:
+  stage: staging_deploy
   environment: review/develop
   image: python:latest
   script:
@@ -32,8 +46,8 @@ staging:
   only:
     - develop
 
-production:
-  stage: production
+production_deploy:
+  stage: production_deploy
   environment: production
   image: python:latest
   script:
