@@ -1,12 +1,34 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
+export const HeaderFill = styled.header`
+  padding-bottom: ${theme.size.sm};
+  background-color: ${theme.color.gray1};
+  height: ${theme.size.sm};
+  position: fixed;
+  top: 0;
+
+  width: 89%;
+
+  @media (max-width: 900px) {
+    height: fit-content;
+    align-items: flex-start;
+    top: 80px;
+    left: 0;
+    width: 100%;
+  }
+`;
+
 export const Header = styled.header`
+  position: sticky;
+  top: 0;
+  padding-bottom: ${theme.size.sm};
+  background-color: ${theme.color.gray1};
+
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${theme.size.sm};
 
   @media (max-width: 900px) {
     height: fit-content;

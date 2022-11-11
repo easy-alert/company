@@ -3,7 +3,13 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Api } from '../services/api';
-import { IMask, IUploadFile, IRequestListIntervals } from './types';
+import {
+  IMask,
+  IUploadFile,
+  IRequestListIntervals,
+  IRequestAddressData,
+  IRequestBuildingTypes,
+} from './types';
 // #endregion
 
 // #region DATES
@@ -11,6 +17,8 @@ export const dateFormatter = (date: string) =>
   new Date(date).toLocaleDateString('pt-BR', {
     timeZone: 'UTC',
   });
+
+export const convertToFormikDate = (date: string) => new Date(date).toISOString().split('T')[0];
 // #endregion
 
 // #region UPLOAD
@@ -34,7 +42,7 @@ export const handleError = async ({ error }: { error: Error }) => {
     axios.post('https://ada-logs.herokuapp.com/api/logs/create', {
       projectName: 'EasyAlert',
       environment: window.location.host.includes('sandbox') ? 'Sandbox' : 'Production',
-      side: 'Backoffice',
+      side: 'Company',
       errorStack: error.stack,
     });
   }
@@ -46,7 +54,7 @@ export const applyMask = ({
   mask,
   value,
 }: {
-  mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM';
+  mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM' | 'DEC';
   value: string;
 }) => {
   let Mask: IMask = { value: '', length: 0 };
@@ -97,6 +105,14 @@ export const applyMask = ({
         length: 17,
       };
       break;
+    case 'DEC':
+      Mask = {
+        value: (Number(value.replace(/[^0-9]*/g, '')) / 100).toLocaleString('pt-br', {
+          minimumFractionDigits: 2,
+        }),
+        length: 0,
+      };
+      break;
 
     case 'NUM':
       Mask = {
@@ -109,6 +125,99 @@ export const applyMask = ({
       break;
   }
   return Mask;
+};
+
+export const convertStateAcronym = (UF: string) => {
+  let stateName = '';
+
+  switch (UF) {
+    case 'AC':
+      stateName = 'Acre';
+      break;
+    case 'AL':
+      stateName = 'Alagoas';
+      break;
+    case 'AP':
+      stateName = 'Amapá';
+      break;
+    case 'AM':
+      stateName = 'Amazonas';
+      break;
+    case 'BA':
+      stateName = 'Bahia';
+      break;
+    case 'CE':
+      stateName = 'Ceará';
+      break;
+    case 'ES':
+      stateName = 'Espírito Santo';
+      break;
+    case 'GO':
+      stateName = 'Goiás';
+      break;
+    case 'MA':
+      stateName = 'Maranhão';
+      break;
+    case 'MT':
+      stateName = 'Mato Grosso';
+      break;
+    case 'MS':
+      stateName = 'Mato Grosso do Sul';
+      break;
+    case 'MG':
+      stateName = 'Minas Gerais';
+      break;
+    case 'PA':
+      stateName = 'Pará';
+      break;
+    case 'PB':
+      stateName = 'Paraíba';
+      break;
+    case 'PR':
+      stateName = 'Paraná';
+      break;
+    case 'PE':
+      stateName = 'Pernambuco';
+      break;
+    case 'PI':
+      stateName = 'Piauí';
+      break;
+    case 'RJ':
+      stateName = 'Rio de Janeiro';
+      break;
+    case 'RN':
+      stateName = 'Rio Grande do Norte';
+      break;
+    case 'RS':
+      stateName = 'Rio Grande do Sul';
+      break;
+    case 'RO':
+      stateName = 'Rondônia';
+      break;
+    case 'RR':
+      stateName = 'Roraima';
+      break;
+    case 'SC':
+      stateName = 'Santa Catarina';
+      break;
+    case 'SP':
+      stateName = 'São Paulo';
+      break;
+    case 'SE':
+      stateName = 'Sergipe';
+      break;
+    case 'TO':
+      stateName = 'Tocantins';
+      break;
+    case 'DF':
+      stateName = 'Distrito Federal';
+      break;
+
+    default:
+      break;
+  }
+
+  return stateName;
 };
 
 export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
@@ -144,4 +253,30 @@ export const requestListIntervals = async ({ setTimeIntervals }: IRequestListInt
       catchHandler(err);
     });
 };
+
+export const requestBuldingTypes = async ({ setBuildingTypes }: IRequestBuildingTypes) => {
+  await Api.get('/buildings/types/list')
+    .then((res) => {
+      setBuildingTypes(res.data);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
+
+export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
+  toast.dismiss();
+  await axios
+    .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
+    .then((res) => {
+      setFieldValue('city', res.data.city ?? '');
+      setFieldValue('neighborhood', res.data.neighborhood ?? '');
+      setFieldValue('streetName', res.data.street ?? '');
+      setFieldValue('state', res.data.state ? convertStateAcronym(res.data.state) : '');
+    })
+    .catch(() => {
+      toast.error('CEP não encontrado. Verifique o número ou digite o endereço.');
+    });
+};
+
 // #endregion

@@ -86,7 +86,7 @@ export const ModalEditMaintenance = ({
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Frequência"
+                  label="Periodicidade"
                   name="frequency"
                   value={values.frequency}
                   error={touched.frequency && errors.frequency ? errors.frequency : null}
@@ -149,7 +149,7 @@ export const ModalEditMaintenance = ({
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Período"
+                  label="Tempo para resposta"
                   name="period"
                   value={values.period}
                   error={touched.period && errors.period ? errors.period : null}
@@ -218,7 +218,7 @@ export const ModalEditMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.ButtonContainer centerAlign={onQuery}>
+              <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
                     actionButtonBgColor={theme.color.primary}

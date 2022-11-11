@@ -5,63 +5,37 @@ import * as yup from 'yup';
 
 // FUNCTIONS
 import { Api } from '../../../../../../services/api';
-import { catchHandler, unMask, uploadFile } from '../../../../../../utils/functions';
+import { catchHandler, unMask } from '../../../../../../utils/functions';
+import { requestBuildingList } from '../../functions';
 
 // TYPES
-import { IAccount } from '../../../../../../utils/types';
-import { IRequestEditAccount } from './types';
+import { IRequestCreateBuilding } from './types';
 
-export const requestEditAccount = async ({
+export const requestCreateBuilding = async ({
   values,
   setModal,
-  account,
-  setAccount,
-  navigate,
   setOnQuery,
-}: IRequestEditAccount) => {
+  page,
+  setBuildingList,
+  setCount,
+}: IRequestCreateBuilding) => {
   setOnQuery(true);
-  let imageUrl: any;
 
-  if (!values.image.length) {
-    const { Location } = await uploadFile(values.image);
-    imageUrl = Location;
-  } else {
-    imageUrl = account.Company.image;
-  }
-
-  await Api.put('/account/edit', {
+  await Api.post('/buildings/create', {
     name: values.name,
-    email: values.email,
-    password: values.password !== '' ? values.password : null,
-    image: imageUrl,
-    companyName: values.companyName,
-    CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
-    CPF: values.CPF !== '' ? unMask(values.CPF) : null,
-    contactNumber: unMask(values.contactNumber),
+    buildingTypeId: values.buildingTypeId,
+    cep: values.cep !== '' ? unMask(values.cep) : null,
+    city: values.city !== '' ? values.city : null,
+    state: values.state !== '' ? values.state : null,
+    neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
+    streetName: values.streetName !== '' ? values.streetName : null,
+    area: values.area !== '' ? unMask(values.area) : null,
+    deliveryDate: new Date(values.deliveryDate),
+    warrantyExpiration: new Date(values.warrantyExpiration),
+    keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
   })
     .then((res) => {
-      const updatedAccount: IAccount = {
-        Company: {
-          contactNumber: values.contactNumber,
-          image: imageUrl,
-          name: values.companyName,
-          CNPJ: values.CNPJ,
-          CPF: values.CPF,
-          createdAt: account.Company.createdAt,
-          id: account.Company.id,
-        },
-        User: {
-          createdAt: account.User.createdAt,
-          email: values.email,
-          id: account.User.id,
-          lastAccess: account.User.lastAccess,
-          name: values.name,
-          Permissions: account.User.Permissions,
-        },
-      };
-
-      setAccount(updatedAccount);
-      navigate(window.location.pathname, { state: updatedAccount });
+      requestBuildingList({ page, setBuildingList, setCount });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
@@ -74,56 +48,19 @@ export const requestEditAccount = async ({
 // YUP
 export const schemaModalCreateBuilding = yup
   .object({
-    image: yup
-      .mixed()
-      .nullable()
-      .notRequired()
-      .test(
-        'FileSize',
-        'O tamanho da imagem excedeu o limite.',
-        (value) => value.length || (value && value.size <= 5000000),
-      )
-      .test(
-        'FileType',
-        'Formato inválido.',
-        (value) =>
-          value.length ||
-          (value &&
-            (value.type === 'image/png' ||
-              value.type === 'image/jpeg' ||
-              value.type === 'image/jpg')),
-      ),
-
-    name: yup
-      .string()
-      .required('O nome deve ser preenchido.')
-      .min(3, 'O nome deve conter 3 ou mais caracteres.'),
-
-    email: yup
-      .string()
-      .email('Informe um e-mail válido.')
-      .required('O e-mail deve ser preenchido.'),
-
-    companyName: yup
-      .string()
-      .required('O nome da empresa deve ser preenchido.')
-      .min(3, 'O nome da empresa deve conter 3 ou mais caracteres.'),
-
-    contactNumber: yup
-      .string()
-      .required('O número de telefone deve ser preenchido.')
-      .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
-
-    CNPJ: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
-
-    password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
-
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'As senhas não coincidem.')
-      .when('password', {
-        is: (password: string) => password && password.length > 0,
-        then: yup.string().required('Confirme a nova senha.'),
-      }),
+    name: yup.string().required('O nome deve ser preenchido.'),
+    buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
+    cep: yup.string(),
+    city: yup.string(),
+    state: yup.string(),
+    neighborhood: yup.string(),
+    streetName: yup.string(),
+    area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),
+    deliveryDate: yup.date().required('A data de entrega deve ser preenchida.'),
+    warrantyExpiration: yup
+      .date()
+      .required('O término da garantia deve ser preenchido.')
+      .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de entrega.'),
+    keepNotificationAfterWarrantyEnds: yup.boolean(),
   })
   .required();

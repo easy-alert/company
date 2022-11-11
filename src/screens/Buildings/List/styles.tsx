@@ -14,7 +14,7 @@ export const Header = styled.header`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 30%;
+  width: 50%;
   > h2 {
     margin-right: ${theme.size.sm};
   }
@@ -43,8 +43,20 @@ export const SearchField = styled.div`
 
 export const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: ${theme.size.xsm};
+
+  @media (max-width: 950px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 650px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 450px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 export const BuildingCard = styled.div`
@@ -62,6 +74,7 @@ export const BuildingCardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  height: 36px;
 `;
 
 export const BuildingCardHeaderInfo = styled.div`
@@ -114,10 +127,23 @@ export const BuildingCardFooterInfo = styled.div`
 `;
 
 export const PaginationFooter = styled.footer`
-  margin-top: 10px;
+  margin-top: 16px;
   padding-right: 16px;
   width: 100%;
   height: fit-content;
   display: flex;
   justify-content: flex-end;
+`;
+
+export const NoDataContainer = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 80%;
+  gap: ${theme.size.xxsm};
+  > h3 {
+    color: ${theme.color.gray4};
+    text-align: center;
+  }
 `;
