@@ -13,7 +13,7 @@ import { ModalCreateNotificationConfiguration } from './utils/ModalCreateNotific
 import { ModalEditNotificationConfiguration } from './utils/ModalEditNotificationConfiguration';
 
 // FUNCTIONS
-import { requestBuildingDetails } from './utils/functions';
+import { requestBuildingDetails, requestResendPhoneConfirmation } from './utils/functions';
 
 // STYLES
 import * as Style from './styles';
@@ -33,6 +33,9 @@ export const BuildingDetails = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const buildingId = state as string;
+
+  const phoneConfirmUrl = `${window.location.host}/confirm/phone`;
+  // const emailConfirmUrl = `${window.location.host}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 
@@ -214,7 +217,7 @@ export const BuildingDetails = () => {
               }}
             />
           </Style.CardHeader>
-          {building && building.NotificationConfiguration.length > 0 ? (
+          {building && building.NotificationsConfigurations.length > 0 ? (
             <NotificationTable
               colsHeader={[
                 { label: 'Nome do responsável' },
@@ -224,7 +227,7 @@ export const BuildingDetails = () => {
                 { label: '' },
               ]}
             >
-              {building?.NotificationConfiguration.map((notificationRow) => (
+              {building?.NotificationsConfigurations.map((notificationRow) => (
                 <NotificationTableContent
                   key={notificationRow.id}
                   onClick={() => {
@@ -287,7 +290,10 @@ export const BuildingDetails = () => {
                                   contentColor: theme.color.danger,
                                 }}
                                 actionButtonClick={() => {
-                                  //
+                                  requestResendPhoneConfirmation({
+                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    link: phoneConfirmUrl,
+                                  });
                                 }}
                               />
                             ))}

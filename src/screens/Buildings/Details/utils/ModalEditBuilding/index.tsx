@@ -67,7 +67,7 @@ export const ModalEditBuilding = ({
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
-                placeholder="Ex: João Silva"
+                placeholder="Ex: Monte Ravello"
                 maxLength={40}
               />
               <FormikSelect
@@ -182,7 +182,7 @@ export const ModalEditBuilding = ({
               <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
-                    actionButtonBgColor={theme.color.primary}
+                    actionButtonBgColor={theme.color.actionDanger}
                     borderless
                     type="Button"
                     label="Excluir"

@@ -86,7 +86,7 @@ export const ModalEditNotificationConfiguration = ({
                 name="contactNumber"
                 value={values.contactNumber}
                 error={touched.contactNumber && errors.contactNumber ? errors.contactNumber : null}
-                placeholder="Ex: (48) 00000-0000"
+                placeholder="Ex: (00) 00000-0000"
                 maxLength={applyMask({ value: values.contactNumber, mask: 'TEL' }).length}
                 onChange={(e) => {
                   setFieldValue(
@@ -101,7 +101,7 @@ export const ModalEditNotificationConfiguration = ({
               <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
-                    actionButtonBgColor={theme.color.primary}
+                    actionButtonBgColor={theme.color.actionDanger}
                     borderless
                     type="Button"
                     label="Excluir"

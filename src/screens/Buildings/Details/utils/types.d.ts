@@ -25,11 +25,16 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
-  NotificationConfiguration: INotificationConfiguration[];
+  NotificationsConfigurations: INotificationConfiguration[];
 }
 
 export interface IRequestBuildingDetails {
   setLoading?: (setLoading: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   buildingId: string;
+}
+
+export interface IRequestResendPhoneConfirmation {
+  link: string;
+  buildingNotificationConfigurationId: string;
 }
