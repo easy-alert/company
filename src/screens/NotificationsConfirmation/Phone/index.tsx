@@ -35,7 +35,7 @@ export const PhoneConfirm = () => {
         <>
           <Style.Content>
             <img src={icon.logoRed} alt="" />
-            <h2>Cadastro confirmado!</h2>
+            <h2>Cadastro de WhatsApp confirmado!</h2>
 
             <Style.ContentText>
               <p>Agora você é responsável pela edificação:</p>

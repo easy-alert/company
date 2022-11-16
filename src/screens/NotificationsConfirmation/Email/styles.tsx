@@ -21,7 +21,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 350px;
+  max-width: 400px;
   z-index: 2;
 
   text-align: center;
