@@ -6,11 +6,11 @@ import { IconButton } from '../../../components/Buttons/IconButton';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
-import { ModalEditBuilding } from './utils/ModalEditBuilding';
+import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { Image } from '../../../components/Image';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { ModalCreateNotificationConfiguration } from './utils/ModalCreateNotificationConfiguration';
-import { ModalEditNotificationConfiguration } from './utils/ModalEditNotificationConfiguration';
+import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
+import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 
 // FUNCTIONS
 import {
@@ -28,6 +28,7 @@ import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import {
   applyMask,
   capitalizeFirstLetter,
+  convertToUrlString,
   dateFormatter,
   requestBuldingTypes,
 } from '../../../utils/functions';
@@ -337,20 +338,23 @@ export const BuildingDetails = () => {
             </Style.NoDataContainer>
           )}
         </Style.Card>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.MaintenanceCardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
-              icon={icon.editWithBg}
-              label="Editar"
+              icon={icon.plusWithBg}
+              label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                // fazer um if pra se nao tiver nenhuma manutenção, mostrar cadastrar e depois editar
+                navigate(
+                  `/buildings/details/${convertToUrlString(building!.name)}/maintenances/add`,
+                );
               }}
             />
           </Style.MaintenanceCardHeader>
         </Style.Card>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton

@@ -2,11 +2,11 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
+import { Api } from '../../../../../../../services/api';
+import { unMask, catchHandler } from '../../../../../../../utils/functions';
+import { requestBuildingDetails } from '../../../functions';
 
 // FUNCTIONS
-import { Api } from '../../../../../../services/api';
-import { catchHandler, unMask } from '../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../functions';
 
 // TYPES
 import { IRequestDeleteBuilding, IRequestEditBuilding } from './types';

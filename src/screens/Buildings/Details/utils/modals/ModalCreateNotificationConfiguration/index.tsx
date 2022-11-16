@@ -4,48 +4,43 @@ import { useState } from 'react';
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import * as Style from './styles';
-import { Button } from '../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../components/Modal';
-import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
-import { theme } from '../../../../../styles/theme';
+import { Button } from '../../../../../../components/Buttons/Button';
+import { FormikInput } from '../../../../../../components/Form/FormikInput';
+import { Modal } from '../../../../../../components/Modal';
+import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
+import { theme } from '../../../../../../styles/theme';
 
 // TYPES
-import { IModalEditNotificationConfiguration } from './utils/types';
+import { IModalCreateNotificationConfiguration } from './utils/types';
 
 // FUNCTIONS
 import {
-  requestDeleteNotificationConfiguration,
-  requestEditNotificationConfiguration,
-  schemaEditNotificationConfiguration,
+  requestCreateNotificationConfiguration,
+  schemaCreateNotificationConfiguration,
 } from './utils/functions';
-import { applyMask } from '../../../../../utils/functions';
-import { PopoverButton } from '../../../../../components/Buttons/PopoverButton';
+import { applyMask } from '../../../../../../utils/functions';
 
-export const ModalEditNotificationConfiguration = ({
+export const ModalCreateNotificationConfiguration = ({
   setModal,
   buildingId,
   setBuilding,
-  selectedNotificationRow,
-}: IModalEditNotificationConfiguration) => {
+}: IModalCreateNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
-    <Modal title="Editar dados de notificação" setModal={setModal}>
+    <Modal title="Cadastrar dados de notificação" setModal={setModal}>
       <Formik
         initialValues={{
-          name: selectedNotificationRow.name,
-          email: selectedNotificationRow.email,
-          role: selectedNotificationRow.role,
-          contactNumber: applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber })
-            .value,
-          isMain: selectedNotificationRow.isMain,
+          name: '',
+          email: '',
+          role: '',
+          contactNumber: '',
+          isMain: false,
         }}
-        validationSchema={schemaEditNotificationConfiguration}
+        validationSchema={schemaCreateNotificationConfiguration}
         onSubmit={async (values) => {
-          requestEditNotificationConfiguration({
+          requestCreateNotificationConfiguration({
             buildingId,
-            buildingNotificationConfigurationId: selectedNotificationRow.id,
             setModal,
             setOnQuery,
             values,
@@ -103,29 +98,7 @@ export const ModalEditNotificationConfiguration = ({
               />
 
               <Style.ButtonContainer>
-                {!onQuery && (
-                  <PopoverButton
-                    actionButtonBgColor={theme.color.actionDanger}
-                    borderless
-                    type="Button"
-                    label="Excluir"
-                    message={{
-                      title: 'Deseja excluir este dado de notificação?',
-                      content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                      contentColor: theme.color.danger,
-                    }}
-                    actionButtonClick={() => {
-                      requestDeleteNotificationConfiguration({
-                        buildingNotificationConfigurationId: selectedNotificationRow.id,
-                        setModal,
-                        setOnQuery,
-                        setBuilding,
-                        buildingId,
-                      });
-                    }}
-                  />
-                )}
-                <Button label="Salvar" type="submit" loading={onQuery} />
+                <Button label="Cadastrar" type="submit" loading={onQuery} />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

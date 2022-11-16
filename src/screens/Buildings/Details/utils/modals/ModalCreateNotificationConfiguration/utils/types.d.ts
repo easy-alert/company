@@ -1,3 +1,5 @@
+import { IBuildingDetail } from '../../../types';
+
 interface ICreateNotificationConfiguration {
   name: string;
   email: string;

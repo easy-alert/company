@@ -1,4 +1,4 @@
-import { IBuildingDetail, INotificationConfiguration } from '../../types';
+import { IBuildingDetail, INotificationConfiguration } from '../../../types';
 
 interface IEditNotificationConfiguration {
   name: string;

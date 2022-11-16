@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as Style from './styles';
-import { Button } from '../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../components/Modal';
-import { FormikSelect } from '../../../../../components/Form/FormikSelect';
-import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
-import { theme } from '../../../../../styles/theme';
-import { PopoverButton } from '../../../../../components/Buttons/PopoverButton';
+import { Button } from '../../../../../../components/Buttons/Button';
+import { FormikInput } from '../../../../../../components/Form/FormikInput';
+import { Modal } from '../../../../../../components/Modal';
+import { FormikSelect } from '../../../../../../components/Form/FormikSelect';
+import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
+import { theme } from '../../../../../../styles/theme';
+import { PopoverButton } from '../../../../../../components/Buttons/PopoverButton';
 // TYPES
 import { IModalEditBuilding } from './utils/types';
 
@@ -26,7 +26,7 @@ import {
   capitalizeFirstLetter,
   convertToFormikDate,
   requestAddressData,
-} from '../../../../../utils/functions';
+} from '../../../../../../utils/functions';
 
 export const ModalEditBuilding = ({
   setModal,

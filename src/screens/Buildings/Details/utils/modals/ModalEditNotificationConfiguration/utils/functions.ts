@@ -4,28 +4,33 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 // FUNCTIONS
-import { Api } from '../../../../../../services/api';
-import { catchHandler, unMask } from '../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../functions';
+import { Api } from '../../../../../../../services/api';
+import { catchHandler, unMask } from '../../../../../../../utils/functions';
+import { requestBuildingDetails } from '../../../functions';
 
 // TYPES
-import { IRequestCreateNotificationConfiguration } from './types';
+import {
+  IRequestDeleteNotificationConfiguration,
+  IRequestEditNotificationConfiguration,
+} from './types';
 
-export const requestCreateNotificationConfiguration = async ({
+export const requestEditNotificationConfiguration = async ({
   values,
   setModal,
   setOnQuery,
   buildingId,
   setBuilding,
-}: IRequestCreateNotificationConfiguration) => {
+  buildingNotificationConfigurationId,
+}: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
   // como fica o link de email?
 
-  await Api.post('/buildings/notifications/create', {
+  await Api.put('/buildings/notifications/edit', {
     link: phoneConfirmUrl,
+    buildingNotificationConfigurationId,
+    buildingId,
     data: {
-      buildingId,
       name: values.name,
       email: values.email,
       role: values.role,
@@ -44,8 +49,33 @@ export const requestCreateNotificationConfiguration = async ({
     });
 };
 
+export const requestDeleteNotificationConfiguration = async ({
+  setModal,
+  setOnQuery,
+  buildingNotificationConfigurationId,
+  setBuilding,
+  buildingId,
+}: IRequestDeleteNotificationConfiguration) => {
+  setOnQuery(true);
+
+  await Api.delete('/buildings/notifications/delete', {
+    data: {
+      buildingNotificationConfigurationId,
+    },
+  })
+    .then((res) => {
+      requestBuildingDetails({ buildingId, setBuilding });
+      setModal(false);
+      toast.success(res.data.ServerMessage.message);
+    })
+    .catch((err) => {
+      setOnQuery(false);
+      catchHandler(err);
+    });
+};
+
 // YUP
-export const schemaCreateNotificationConfiguration = yup
+export const schemaEditNotificationConfiguration = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
     email: yup
