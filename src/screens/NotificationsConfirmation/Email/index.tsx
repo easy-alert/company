@@ -12,7 +12,7 @@ import { requestConfirmData, requestGetBuildingName } from '../utils/functions';
 import { query } from '../../../utils/functions';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 
-export const PhoneConfirm = () => {
+export const EmailConfirm = () => {
   const navigate = useNavigate();
   const token = query.get('token');
 
