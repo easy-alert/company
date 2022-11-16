@@ -34,7 +34,7 @@ export interface IRequestBuildingDetails {
   buildingId: string;
 }
 
-export interface IRequestResendPhoneConfirmation {
+export interface IRequestResendConfirmation {
   link: string;
   buildingNotificationConfigurationId: string;
 }

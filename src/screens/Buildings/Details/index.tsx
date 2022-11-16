@@ -13,7 +13,11 @@ import { ModalCreateNotificationConfiguration } from './utils/ModalCreateNotific
 import { ModalEditNotificationConfiguration } from './utils/ModalEditNotificationConfiguration';
 
 // FUNCTIONS
-import { requestBuildingDetails, requestResendPhoneConfirmation } from './utils/functions';
+import {
+  requestBuildingDetails,
+  requestResendEmailConfirmation,
+  requestResendPhoneConfirmation,
+} from './utils/functions';
 
 // STYLES
 import * as Style from './styles';
@@ -35,7 +39,7 @@ export const BuildingDetails = () => {
   const buildingId = state as string;
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  // const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 
@@ -254,15 +258,15 @@ export const BuildingDetails = () => {
                                 actionButtonBgColor={theme.color.primary}
                                 type="IconButton"
                                 message={{
-                                  title: 'Deseja reenviar o email de confirmação?',
+                                  title: 'Deseja reenviar o e-mail de confirmação?',
                                   content: '',
                                   contentColor: theme.color.danger,
                                 }}
                                 actionButtonClick={() => {
-                                  // requestResendEmailConfirmation({
-                                  //   buildingNotificationConfigurationId: notificationRow.id,
-                                  //   link: emailConfirmUrl,
-                                  // });
+                                  requestResendEmailConfirmation({
+                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    link: emailConfirmUrl,
+                                  });
                                 }}
                               />
                             ))}

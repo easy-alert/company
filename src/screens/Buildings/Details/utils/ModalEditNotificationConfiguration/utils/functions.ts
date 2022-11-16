@@ -24,6 +24,7 @@ export const requestEditNotificationConfiguration = async ({
 }: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
+  // como fica o link de email?
 
   await Api.put('/buildings/notifications/edit', {
     link: phoneConfirmUrl,
