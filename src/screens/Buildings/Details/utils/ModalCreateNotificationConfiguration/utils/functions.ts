@@ -20,6 +20,7 @@ export const requestCreateNotificationConfiguration = async ({
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
+  // como fica o link de email?
 
   await Api.post('/buildings/notifications/create', {
     link: phoneConfirmUrl,
