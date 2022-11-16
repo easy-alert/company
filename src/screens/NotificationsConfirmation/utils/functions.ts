@@ -1,19 +1,31 @@
-import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
-import { IRequestConfirmPhone } from './types';
+import { IRequestConfirmPhone, IRequestGetBuildingName } from './types';
 
-export const requestConfirmData = async ({ token, navigate }: IRequestConfirmPhone) => {
+export const requestConfirmData = async ({ token, setIsConfirmed }: IRequestConfirmPhone) => {
   await Api.post('/buildings/notifications/contactconfirm', {
     token,
   })
-    .then((res) => {
-      toast.success(res.data.ServerMessage.message);
+    .then(() => {
+      setIsConfirmed(true);
     })
     .catch((err) => {
       catchHandler(err);
+    });
+};
+
+export const requestGetBuildingName = async ({
+  setBuildingName,
+  setLoading,
+  token,
+}: IRequestGetBuildingName) => {
+  await Api.post('buildings/list/detailsforconfirm', { token })
+    .then((res) => {
+      setBuildingName(res.data.BuildingDetails.name);
+      setLoading(false);
     })
-    .finally(() => {
-      navigate('/login');
+    .catch((err) => {
+      setLoading(false);
+      catchHandler(err);
     });
 };
