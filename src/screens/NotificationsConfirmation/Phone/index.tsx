@@ -59,7 +59,7 @@ export const PhoneConfirm = () => {
           <h2>Confirmação de responsável</h2>
 
           <Style.ContentText>
-            <p>Seu e-mail foi cadastrado na Easy Alert para ser o responsável da edificação:</p>
+            <p>Seu WhatsApp foi cadastrado na Easy Alert para ser o responsável da edificação:</p>
             <span> {buildingName}</span>
             <p>Para confirmar seu cadastro clique no botão abaixo:</p>
           </Style.ContentText>
