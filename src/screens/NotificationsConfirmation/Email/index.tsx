@@ -35,10 +35,10 @@ export const EmailConfirm = () => {
         <>
           <Style.Content>
             <img src={icon.logoRed} alt="" />
-            <h2>Seu cadastro como responsável foi confirmado!</h2>
+            <h2>Cadastro confirmado!</h2>
 
             <Style.ContentText>
-              <p>Agora você é um responsável pela edificação:</p>
+              <p>Agora você é responsável pela edificação:</p>
               <span> {buildingName}</span>
             </Style.ContentText>
 
@@ -61,7 +61,7 @@ export const EmailConfirm = () => {
           <Style.ContentText>
             <p>Seu e-mail foi cadastrado na Easy Alert para ser o responsável da edificação:</p>
             <span> {buildingName}</span>
-            <p>Para confirmar seu cadastro como responsável clique no botão abaixo:</p>
+            <p>Para confirmar seu cadastro clique no botão abaixo:</p>
           </Style.ContentText>
 
           <Button
