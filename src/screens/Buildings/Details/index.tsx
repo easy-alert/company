@@ -34,8 +34,8 @@ export const BuildingDetails = () => {
   const { state } = useLocation();
   const buildingId = state as string;
 
-  const phoneConfirmUrl = `${window.location.host}/confirm/phone`;
-  // const emailConfirmUrl = `${window.location.host}/confirm/email`;
+  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
+  // const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 

@@ -23,7 +23,7 @@ export const requestEditNotificationConfiguration = async ({
   buildingNotificationConfigurationId,
 }: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
-  const phoneConfirmUrl = `${window.location.host}/confirm/phone`;
+  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
 
   await Api.put('/buildings/notifications/edit', {
     link: phoneConfirmUrl,
