@@ -24,7 +24,12 @@ export const requestEditNotificationConfiguration = async ({
 }: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  // como fica o link de email?
+
+  if (!values.email && !values.contactNumber) {
+    toast.error('E-mail ou WhatsApp obrigatório.');
+    setOnQuery(false);
+    return;
+  }
 
   await Api.put('/buildings/notifications/edit', {
     link: phoneConfirmUrl,
@@ -32,9 +37,9 @@ export const requestEditNotificationConfiguration = async ({
     buildingId,
     data: {
       name: values.name,
-      email: values.email,
+      email: values.email !== '' ? values.email : null,
+      contactNumber: values.contactNumber !== '' ? unMask(values.contactNumber) : null,
       role: values.role,
-      contactNumber: unMask(values.contactNumber),
       isMain: values.isMain,
     },
   })
@@ -78,15 +83,12 @@ export const requestDeleteNotificationConfiguration = async ({
 export const schemaEditNotificationConfiguration = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
-    email: yup
-      .string()
-      .email('Informe um e-mail válido.')
-      .required('O e-mail deve ser preenchido.'),
-    role: yup.string().required('A função deve ser preenchida'),
+    email: yup.string().email('Informe um e-mail válido.'),
     contactNumber: yup
       .string()
-      .required('O número de contato é obrigatório.')
       .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
+    role: yup.string().required('A função deve ser preenchida.'),
+
     isMain: yup.boolean(),
   })
   .required();

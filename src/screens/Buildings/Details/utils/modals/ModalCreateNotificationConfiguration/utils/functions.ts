@@ -20,16 +20,21 @@ export const requestCreateNotificationConfiguration = async ({
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  // como fica o link de email?
+
+  if (!values.email && !values.contactNumber) {
+    toast.error('E-mail ou WhatsApp obrigatório.');
+    setOnQuery(false);
+    return;
+  }
 
   await Api.post('/buildings/notifications/create', {
     link: phoneConfirmUrl,
     data: {
       buildingId,
       name: values.name,
-      email: values.email,
+      email: values.email !== '' ? values.email : null,
+      contactNumber: values.contactNumber !== '' ? unMask(values.contactNumber) : null,
       role: values.role,
-      contactNumber: unMask(values.contactNumber),
       isMain: values.isMain,
     },
   })
@@ -48,15 +53,11 @@ export const requestCreateNotificationConfiguration = async ({
 export const schemaCreateNotificationConfiguration = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
-    email: yup
-      .string()
-      .email('Informe um e-mail válido.')
-      .required('O e-mail deve ser preenchido.'),
-    role: yup.string().required('A função deve ser preenchida'),
+    email: yup.string().email('Informe um e-mail válido.'),
     contactNumber: yup
       .string()
-      .required('O número de contato é obrigatório.')
       .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
+    role: yup.string().required('A função deve ser preenchida.'),
     isMain: yup.boolean(),
   })
   .required();

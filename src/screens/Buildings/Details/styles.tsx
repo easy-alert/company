@@ -24,10 +24,6 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
-export const MaintenanceCardHeader = styled(CardHeader)`
-  margin-bottom: 0;
-`;
-
 export const Card = styled.div`
   width: 100%;
   background-color: ${theme.color.white};

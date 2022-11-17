@@ -33,6 +33,7 @@ import {
   requestBuldingTypes,
 } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
+import { Button } from '../../../components/Buttons/Button';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -246,8 +247,9 @@ export const BuildingDetails = () => {
                     {
                       cell: (
                         <Style.TableDataWrapper>
-                          {notificationRow.email}
+                          {notificationRow.email ?? '-'}
                           {notificationRow.isMain &&
+                            notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -279,9 +281,12 @@ export const BuildingDetails = () => {
                     {
                       cell: (
                         <Style.TableDataWrapper>
-                          {applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value}
+                          {notificationRow.contactNumber
+                            ? applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value
+                            : '-'}
 
                           {notificationRow.isMain &&
+                            notificationRow.contactNumber &&
                             (notificationRow.contactNumberIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -339,7 +344,7 @@ export const BuildingDetails = () => {
           )}
         </Style.Card>
         <Style.Card>
-          <Style.MaintenanceCardHeader>
+          <Style.CardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
               icon={icon.plusWithBg}
@@ -352,7 +357,11 @@ export const BuildingDetails = () => {
                 );
               }}
             />
-          </Style.MaintenanceCardHeader>
+          </Style.CardHeader>
+          <Button label="Visualizar" />
+          {/* <Style.NoDataContainer>
+            <h5>Nenhuma manutenção adicionada.</h5>
+          </Style.NoDataContainer> */}
         </Style.Card>
         {/* <Style.Card>
           <Style.CardHeader>

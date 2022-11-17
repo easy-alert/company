@@ -35,10 +35,11 @@ export const ModalEditNotificationConfiguration = ({
       <Formik
         initialValues={{
           name: selectedNotificationRow.name,
-          email: selectedNotificationRow.email,
+          email: selectedNotificationRow.email ?? '',
+          contactNumber: selectedNotificationRow.contactNumber
+            ? applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber }).value
+            : '',
           role: selectedNotificationRow.role,
-          contactNumber: applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber })
-            .value,
           isMain: selectedNotificationRow.isMain,
         }}
         validationSchema={schemaEditNotificationConfiguration}
@@ -73,14 +74,7 @@ export const ModalEditNotificationConfiguration = ({
                 placeholder="Ex: joaosilva@gmail.com"
                 maxLength={40}
               />
-              <FormikInput
-                label="Função"
-                name="role"
-                value={values.role}
-                error={touched.role && errors.role ? errors.role : null}
-                placeholder="Ex: Síndico"
-                maxLength={40}
-              />
+
               <FormikInput
                 label="WhatsApp"
                 name="contactNumber"
@@ -94,6 +88,15 @@ export const ModalEditNotificationConfiguration = ({
                     applyMask({ value: e.target.value, mask: 'TEL' }).value,
                   );
                 }}
+              />
+
+              <FormikInput
+                label="Função"
+                name="role"
+                value={values.role}
+                error={touched.role && errors.role ? errors.role : null}
+                placeholder="Ex: Síndico"
+                maxLength={40}
               />
 
               <FormikCheckbox

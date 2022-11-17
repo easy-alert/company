@@ -70,6 +70,7 @@ export const EmailConfirm = () => {
               requestConfirmData({
                 token: token!,
                 setIsConfirmed,
+                navigate,
               });
             }}
           />

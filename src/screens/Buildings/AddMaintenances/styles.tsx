@@ -9,8 +9,15 @@ export const Header = styled.header`
   z-index: 1;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+
+  > label {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xsm};
+    cursor: pointer;
+    color: ${theme.color.gray4};
+  }
 
   @media (max-width: 900px) {
     height: fit-content;
@@ -22,18 +29,24 @@ export const HeaderTitle = styled.div`
   display: flex;
   width: 100%;
   gap: ${theme.size.sm};
-
   @media (max-width: 900px) {
     flex-direction: column;
     gap: 0;
   }
 `;
 
+export const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
-
+  width: 100%;
+  margin-bottom: ${theme.size.sm};
   > h2 {
     margin-right: ${theme.size.sm};
   }
@@ -48,7 +61,8 @@ export const SearchField = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.xxsm};
-  width: 100%;
+  width: 50%;
+
   > input {
     height: 24px;
     width: 100%;

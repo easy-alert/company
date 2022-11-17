@@ -133,6 +133,13 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
+  input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    accent-color: ${theme.color.primary};
+    cursor: pointer;
+  }
+
   input[disabled],textarea[disabled],select[disabled] {
     cursor: not-allowed;
     background-color: ${theme.color.gray1};

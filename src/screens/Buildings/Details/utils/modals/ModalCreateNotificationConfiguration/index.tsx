@@ -69,14 +69,6 @@ export const ModalCreateNotificationConfiguration = ({
                 maxLength={40}
               />
               <FormikInput
-                label="Função"
-                name="role"
-                value={values.role}
-                error={touched.role && errors.role ? errors.role : null}
-                placeholder="Ex: Síndico"
-                maxLength={40}
-              />
-              <FormikInput
                 label="WhatsApp"
                 name="contactNumber"
                 value={values.contactNumber}
@@ -89,6 +81,14 @@ export const ModalCreateNotificationConfiguration = ({
                     applyMask({ value: e.target.value, mask: 'TEL' }).value,
                   );
                 }}
+              />
+              <FormikInput
+                label="Função"
+                name="role"
+                value={values.role}
+                error={touched.role && errors.role ? errors.role : null}
+                placeholder="Ex: Síndico"
+                maxLength={40}
               />
 
               <FormikCheckbox
