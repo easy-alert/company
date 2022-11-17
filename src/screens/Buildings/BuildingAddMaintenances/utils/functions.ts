@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
 import {
@@ -57,12 +58,12 @@ export const requestCategories = async ({
 
 export const requestAddMaintenancesToBuilding = async ({
   categories,
-}: // buildingId,
-// navigate,
-// setOnQuery,
-IRequestAddMaintenancesToBuilding) => {
-  // setOnQuery(true);
-  // toast.loading('Enviando...');
+  buildingId,
+  navigate,
+  setOnQuery,
+}: IRequestAddMaintenancesToBuilding) => {
+  setOnQuery(true);
+  toast.loading('Enviando...');
 
   const buildingMaintenances: any = [];
 
@@ -72,20 +73,21 @@ IRequestAddMaintenancesToBuilding) => {
     buildingMaintenances[i].Maintenances = selectedMaintenances;
   });
 
-  // const filteredBuildingMaintenances = buildingMaintenances.filter(
-  //   (e: any) => e.Maintenances.length > 0,
-  // );
+  const filteredBuildingMaintenances = buildingMaintenances.filter(
+    (e: any) => e.Maintenances.length > 0,
+  );
 
-  // console.log(buildingId, filteredBuildingMaintenances);
-
-  // await Api.post('', {})
-  //   .then((res) => {
-  //     toast.dismiss();
-  //     navigate(-1);
-  //     toast.success(res.data.ServerMessage.message);
-  //   })
-  //   .catch((err) => {
-  //     setOnQuery(false);
-  //     catchHandler(err);
-  //   });
+  await Api.post('/buildings/categories/create', {
+    buildingId,
+    data: filteredBuildingMaintenances,
+  })
+    .then((res) => {
+      toast.dismiss();
+      navigate(-1);
+      toast.success(res.data.ServerMessage.message);
+    })
+    .catch((err) => {
+      setOnQuery(false);
+      catchHandler(err);
+    });
 };

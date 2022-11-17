@@ -4,7 +4,9 @@ import { theme } from '../../../styles/theme';
 export const Header = styled.header`
   position: sticky;
   top: 0;
-  padding: ${theme.size.sm} 0;
+  padding-top: ${theme.size.sm};
+  padding-bottom: ${theme.size.xsm};
+
   background-color: ${theme.color.gray1};
   z-index: 1;
   width: 100%;
@@ -32,26 +34,14 @@ export const HeaderTitle = styled.div`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 50%;
+  width: 100%;
 
   > h2 {
     margin-right: ${theme.size.sm};
   }
 
   @media (max-width: 900px) {
-    width: 100%;
     align-items: flex-start;
-  }
-`;
-
-export const RightSide = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: ${theme.size.xsm};
-  width: 50%;
-  @media (max-width: 900px) {
-    height: 100%;
   }
 `;
 
@@ -59,7 +49,7 @@ export const SearchField = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.xxsm};
-  width: 100%;
+  width: 50%;
   > input {
     height: 24px;
     width: 100%;
@@ -104,4 +94,5 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  margin-top: ${theme.size.sm};
 `;

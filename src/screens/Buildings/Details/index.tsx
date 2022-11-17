@@ -360,7 +360,17 @@ export const BuildingDetails = () => {
               }}
             />
           </Style.CardHeader>
-          <Button label="Visualizar" />
+          <Button
+            label="Visualizar"
+            onClick={() => {
+              navigate(
+                `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
+                {
+                  state: buildingId,
+                },
+              );
+            }}
+          />
           {/* <Style.NoDataContainer>
             <h5>Nenhuma manutenção adicionada.</h5>
           </Style.NoDataContainer> */}

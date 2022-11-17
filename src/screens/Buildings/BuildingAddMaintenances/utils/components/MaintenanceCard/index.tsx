@@ -11,8 +11,6 @@ import * as Style from './styles';
 // TYPES
 import { IMaintenanceCard } from './utils/types';
 
-// MODALS
-
 export const MaintenanceCard = ({
   maintenance,
   categories,

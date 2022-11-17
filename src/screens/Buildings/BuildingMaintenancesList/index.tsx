@@ -15,15 +15,12 @@ import { ICategories } from './utils/types';
 
 // FUNCTIONS
 import { requestCategories } from './utils/functions';
-
-// MODALS
+import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 
 export const BuildingMaintenancesList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>('');
   const [categories, setCategories] = useState<ICategories[]>([]);
-
-  // MODALS
 
   useEffect(() => {
     requestCategories({ setLoading, setCategories });
@@ -36,7 +33,7 @@ export const BuildingMaintenancesList = () => {
       <Style.Header>
         <Style.LeftSide>
           <Style.HeaderTitle>
-            <h2>Manutenções</h2>
+            <h2>Manutenções a serem realizadas</h2>
             <Style.SearchField>
               <IconButton
                 icon={icon.search}
@@ -66,6 +63,7 @@ export const BuildingMaintenancesList = () => {
           </Style.HeaderTitle>
         </Style.LeftSide>
       </Style.Header>
+      <ReturnButton />
 
       {categories?.length ? (
         <Style.CategoriesContainer>
