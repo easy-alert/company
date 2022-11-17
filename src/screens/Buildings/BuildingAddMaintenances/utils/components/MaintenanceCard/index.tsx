@@ -13,7 +13,13 @@ import { IMaintenanceCard } from './utils/types';
 
 // MODALS
 
-export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
+export const MaintenanceCard = ({
+  maintenance,
+  categories,
+  setCategories,
+  categoryIndex,
+  maintenanceIndex,
+}: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
 
   return (
@@ -25,6 +31,21 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
       <Style.MaintenancesCardContent>
         <Style.MaintenancesCardTopContent>
           <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
+            <input
+              type="checkbox"
+              checked={maintenance.isSelected}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onChange={() => {
+                const updatedCategories = categories;
+
+                updatedCategories[categoryIndex].Maintenances[maintenanceIndex].isSelected =
+                  !maintenance.isSelected;
+
+                setCategories([...updatedCategories]);
+              }}
+            />
             <p className="p2">{maintenance.element}</p>
             <p className="p2">{maintenance.activity}</p>
             <p className="p2">
@@ -49,6 +70,8 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
         <Style.MaintenancesCardBottomContainer cardIsOpen={cardIsOpen}>
           <Style.Hr />
           <Style.MaintenancesMoreGrid>
+            <div />
+
             <p className="p2">
               <span>Observação: </span>
               {maintenance.observation ?? 'Nenhuma observação'}

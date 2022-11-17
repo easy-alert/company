@@ -5,6 +5,7 @@ export const Background = styled.div`
   width: fit-content;
   display: flex;
   align-items: center;
+  gap: ${theme.size.xxsm};
   cursor: pointer;
   transition: 0.25s;
   :hover {

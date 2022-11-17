@@ -11,27 +11,9 @@ export const Header = styled.header`
   display: flex;
   flex-direction: column;
 
-  > label {
-    display: flex;
-    align-items: center;
-    gap: ${theme.size.xsm};
-    cursor: pointer;
-    color: ${theme.color.gray4};
-  }
-
   @media (max-width: 900px) {
     height: fit-content;
     align-items: flex-start;
-  }
-`;
-
-export const HeaderTitle = styled.div`
-  display: flex;
-  width: 100%;
-  gap: ${theme.size.sm};
-  @media (max-width: 900px) {
-    flex-direction: column;
-    gap: 0;
   }
 `;
 
@@ -40,13 +22,14 @@ export const HeaderWrapper = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: ${theme.size.xsm};
 `;
 
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: ${theme.size.sm};
+
   > h2 {
     margin-right: ${theme.size.sm};
   }
@@ -54,22 +37,26 @@ export const LeftSide = styled.div`
   @media (max-width: 900px) {
     width: 100%;
     align-items: flex-start;
+    gap: ${theme.size.xsm};
+    flex-direction: column;
   }
 `;
 
-export const SearchField = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xxsm};
-  width: 50%;
+export const SelectWrapper = styled.div`
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: ${theme.size.md};
 
-  > input {
-    height: 24px;
-    width: 100%;
-    padding: 0;
-    background-color: transparent;
-    border: none !important;
-    outline: none;
+  > label {
+    margin-top: ${theme.size.xsm};
+
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xxsm};
+    cursor: pointer;
+    color: ${theme.color.gray4};
+    font-size: 14px;
+    line-height: 16px;
   }
 `;
 

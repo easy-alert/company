@@ -347,13 +347,15 @@ export const BuildingDetails = () => {
           <Style.CardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
-              icon={icon.plusWithBg}
-              label="Cadastrar"
+              icon={icon.editWithBg}
+              label="Editar"
               hideLabelOnMedia
               onClick={() => {
-                // fazer um if pra se nao tiver nenhuma manutenção, mostrar cadastrar e depois editar
                 navigate(
                   `/buildings/details/${convertToUrlString(building!.name)}/maintenances/add`,
+                  {
+                    state: buildingId,
+                  },
                 );
               }}
             />
