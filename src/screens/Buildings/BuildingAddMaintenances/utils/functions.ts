@@ -63,7 +63,7 @@ export const requestAddMaintenancesToBuilding = async ({
   setOnQuery,
 }: IRequestAddMaintenancesToBuilding) => {
   setOnQuery(true);
-  toast.loading('Enviando...');
+  toast.loading('Atualizando...');
 
   const buildingMaintenances: any = [];
 
