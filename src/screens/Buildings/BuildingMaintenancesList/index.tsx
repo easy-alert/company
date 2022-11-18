@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 // COMPONENTS
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Style from './styles';
-import { IconButton } from '../../../components/Buttons/IconButton';
+// import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
 import { icon } from '../../../assets/icons/index';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -24,7 +24,7 @@ export const BuildingMaintenancesList = () => {
   const buildingId = state as string;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string>('');
+  // const [filter, setFilter] = useState<string>('');
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export const BuildingMaintenancesList = () => {
           <Style.LeftSide>
             <Style.HeaderTitle>
               <h2>Manutenções a serem realizadas</h2>
-              <Style.SearchField>
+              {/* <Style.SearchField>
                 <IconButton
                   icon={icon.search}
                   size="16px"
@@ -69,7 +69,7 @@ export const BuildingMaintenancesList = () => {
                     }
                   }}
                 />
-              </Style.SearchField>
+              </Style.SearchField> */}
             </Style.HeaderTitle>
           </Style.LeftSide>
         </Style.HeaderWrapper>
