@@ -119,3 +119,24 @@ export const NoDataContainer = styled.div`
     margin-bottom: ${theme.size.xlg};
   }
 `;
+
+export const MatrixTagWrapper = styled.div`
+  margin-top: ${theme.size.xsm};
+  display: flex;
+  gap: ${theme.size.xsm};
+  flex-wrap: wrap;
+`;
+
+export const Tag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+  padding: 6px 12px;
+  background-color: ${theme.color.primaryL};
+  width: fit-content;
+  height: fit-content;
+  border-radius: ${theme.size.xxsm};
+  > p {
+    font-weight: 400;
+  }
+`;

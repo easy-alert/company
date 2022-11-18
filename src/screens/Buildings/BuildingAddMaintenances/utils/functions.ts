@@ -77,7 +77,7 @@ export const requestAddMaintenancesToBuilding = async ({
     (e: any) => e.Maintenances.length > 0,
   );
 
-  await Api.post('/buildings/categories/create', {
+  await Api.post('/buildings/maintenances/create', {
     buildingId,
     data: filteredBuildingMaintenances,
   })

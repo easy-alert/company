@@ -38,3 +38,7 @@ export interface IRequestResendConfirmation {
   link: string;
   buildingNotificationConfigurationId: string;
 }
+
+export interface IRequestFileUpload {
+  event: React.ChangeEvent<HTMLInputElement>;
+}

@@ -11,20 +11,15 @@ import { Image } from '../../../components/Image';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
+import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 
 // FUNCTIONS
 import {
   requestBuildingDetails,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
+  insertMiddleEllipsis,
 } from './utils/functions';
-
-// STYLES
-import * as Style from './styles';
-import { theme } from '../../../styles/theme';
-
-// TYPES
-import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import {
   applyMask,
   capitalizeFirstLetter,
@@ -32,6 +27,13 @@ import {
   dateFormatter,
   requestBuldingTypes,
 } from '../../../utils/functions';
+
+// STYLES
+import * as Style from './styles';
+import { theme } from '../../../styles/theme';
+
+// TYPES
+import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 
@@ -56,6 +58,8 @@ export const BuildingDetails = () => {
 
   const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
     useState<boolean>(false);
+
+  const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -98,6 +102,8 @@ export const BuildingDetails = () => {
           selectedNotificationRow={selectedNotificationRow}
         />
       )}
+
+      {modalAddFilesOpen && <ModalAddFiles setModal={setModalAddFilesOpen} />}
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
@@ -375,7 +381,7 @@ export const BuildingDetails = () => {
             <h5>Nenhuma manutenção adicionada.</h5>
           </Style.NoDataContainer> */}
         </Style.Card>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton
@@ -383,14 +389,30 @@ export const BuildingDetails = () => {
               label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                setModalAddFilesOpen(true);
               }}
             />
           </Style.CardHeader>
-          <Style.NoDataContainer>
+          <Style.MatrixTagWrapper>
+            <Style.Tag>
+              <Image size="16px" img={icon.paperBlack} />
+              <p title="arquivo de manutenção de coisas.jpg" className="p3">
+                {insertMiddleEllipsis('arquivo de manutenção de coisas.jpg')}
+              </p>
+              <IconButton
+                size="16px"
+                icon={icon.xBlack}
+                onClick={() => {
+                  //
+                }}
+              />
+            </Style.Tag>
+          </Style.MatrixTagWrapper>
+
+          {/* <Style.NoDataContainer>
             <h5>Nenhum anexo cadastrado.</h5>
-          </Style.NoDataContainer>
-        </Style.Card> */}
+          </Style.NoDataContainer> */}
+        </Style.Card>
       </Style.CardWrapper>
     </>
   );
