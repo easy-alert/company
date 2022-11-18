@@ -92,6 +92,13 @@ export const BuildingCardData = styled.div`
   }
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+  justify-content: flex-end;
+`;
+
 export const MainContactTag = styled.div`
   padding: 2px 4px;
   border-radius: 2px;

@@ -15,11 +15,11 @@ import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { ICategories } from './utils/types';
 
 // FUNCTIONS
-import { requestAddMaintenancesToBuilding, requestCategories } from './utils/functions';
+import { requestManageBuildingMaintenances, requestCategories } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
 
-export const BuildingAddMaintenances = () => {
+export const BuildingManageMaintenances = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const buildingId = state as string;
@@ -56,7 +56,7 @@ export const BuildingAddMaintenances = () => {
               label="Salvar"
               hideLabelOnMedia
               onClick={() => {
-                requestAddMaintenancesToBuilding({ categories, buildingId, navigate, setOnQuery });
+                requestManageBuildingMaintenances({ categories, buildingId, navigate, setOnQuery });
               }}
             />
           )}
@@ -69,7 +69,6 @@ export const BuildingAddMaintenances = () => {
           <option value="" disabled hidden>
             Selecione
           </option>
-          <option value="1">Um</option>
         </Select>
 
         <label htmlFor="selectAll">

@@ -88,7 +88,7 @@ export interface IRequestCategories {
 }
 
 // REQUESTS
-export interface IRequestAddMaintenancesToBuilding {
+export interface IRequestManageBuildingMaintenances {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   navigate: any;
   categories: ICategories[];

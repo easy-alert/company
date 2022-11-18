@@ -1,9 +1,14 @@
 import styled from 'styled-components';
 import { theme } from '../../../../../../styles/theme';
 
+export const Container = styled.div`
+  button {
+    margin-top: ${theme.size.sm};
+  }
+`;
+
 export const DragAndDropZone = styled.div`
   margin-top: ${theme.size.xxsm};
-  margin-bottom: ${theme.size.xsm};
   width: 100%;
   border: 1px dashed ${theme.color.gray4};
   padding: ${theme.size.sm} ${theme.size.md};
@@ -27,11 +32,10 @@ export const Content = styled.div`
 `;
 
 export const MatrixTagWrapper = styled.div`
-  margin-top: ${theme.size.xsm};
-  margin-bottom: ${theme.size.xsm};
   display: flex;
   gap: ${theme.size.xsm};
   flex-wrap: wrap;
+  margin-top: ${theme.size.xsm};
 `;
 
 export const Tag = styled.div`

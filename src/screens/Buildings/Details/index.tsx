@@ -316,26 +316,28 @@ export const BuildingDetails = () => {
                                 }}
                               />
                             ))}
-                          {notificationRow.isMain && (
-                            <Style.MainContactTag>
-                              <p className="p5">Contato principal</p>
-                            </Style.MainContactTag>
-                          )}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '20%' },
                     },
                     {
                       cell: (
-                        <IconButton
-                          size="16px"
-                          icon={icon.edit}
-                          label="Editar"
-                          onClick={() => {
-                            setSelectedNotificationRow(notificationRow);
-                            setModalEditNotificationConfigurationOpen(true);
-                          }}
-                        />
+                        <Style.ButtonWrapper>
+                          {notificationRow.isMain && (
+                            <Style.MainContactTag>
+                              <p className="p5">Contato principal</p>
+                            </Style.MainContactTag>
+                          )}
+                          <IconButton
+                            size="16px"
+                            icon={icon.edit}
+                            label="Editar"
+                            onClick={() => {
+                              setSelectedNotificationRow(notificationRow);
+                              setModalEditNotificationConfigurationOpen(true);
+                            }}
+                          />
+                        </Style.ButtonWrapper>
                       ),
                       cssProps: { width: '10%', borderBottomRightRadius: theme.size.xxsm },
                     },
@@ -358,7 +360,7 @@ export const BuildingDetails = () => {
               hideLabelOnMedia
               onClick={() => {
                 navigate(
-                  `/buildings/details/${convertToUrlString(building!.name)}/maintenances/add`,
+                  `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
                   {
                     state: buildingId,
                   },

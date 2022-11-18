@@ -6,7 +6,7 @@ import { catchHandler } from '../../../../utils/functions';
 import {
   ICategories,
   ICategoriesResData,
-  IRequestAddMaintenancesToBuilding,
+  IRequestManageBuildingMaintenances,
   IRequestCategories,
 } from './types';
 
@@ -56,12 +56,12 @@ export const requestCategories = async ({
     });
 };
 
-export const requestAddMaintenancesToBuilding = async ({
+export const requestManageBuildingMaintenances = async ({
   categories,
   buildingId,
   navigate,
   setOnQuery,
-}: IRequestAddMaintenancesToBuilding) => {
+}: IRequestManageBuildingMaintenances) => {
   setOnQuery(true);
   toast.loading('Atualizando...');
 
@@ -77,7 +77,7 @@ export const requestAddMaintenancesToBuilding = async ({
     (e: any) => e.Maintenances.length > 0,
   );
 
-  await Api.post('/buildings/maintenances/create', {
+  await Api.put('/buildings/maintenances/edit', {
     buildingId,
     data: filteredBuildingMaintenances,
   })

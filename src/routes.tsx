@@ -16,7 +16,7 @@ import { MaintenancesList } from './screens/Maintenances/List';
 // BUILDINGS
 import { BuildingsList } from './screens/Buildings/List';
 import { BuildingDetails } from './screens/Buildings/Details';
-import { BuildingAddMaintenances } from './screens/Buildings/BuildingAddMaintenances';
+import { BuildingManageMaintenances } from './screens/Buildings/BuildingManageMaintenances';
 import { BuildingMaintenancesList } from './screens/Buildings/BuildingMaintenancesList';
 
 // NOTIFICATIONS CONFIRMATION
@@ -46,8 +46,8 @@ const AppRoutes = () => (
             <Route index element={<BuildingsList />} />
             <Route path="details/:buildingName" element={<BuildingDetails />} />
             <Route
-              path="details/:buildingName/maintenances/add"
-              element={<BuildingAddMaintenances />}
+              path="details/:buildingName/maintenances/manage"
+              element={<BuildingManageMaintenances />}
             />
             <Route
               path="details/:buildingName/maintenances/list"
