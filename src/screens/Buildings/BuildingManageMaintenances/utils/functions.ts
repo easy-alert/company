@@ -3,13 +3,19 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestManageBuildingMaintenances, IRequestListCategoriesToManage } from './types';
+import {
+  IRequestManageBuildingMaintenances,
+  IRequestListCategoriesToManage,
+  IRequestBuldingListForSelect,
+} from './types';
 
 export const requestListCategoriesToManage = async ({
   setLoading,
   setCategories,
   buildingId,
 }: IRequestListCategoriesToManage) => {
+  setLoading(true);
+
   await Api.post(`/buildings/maintenances/list`, {
     buildingId,
   })
@@ -55,6 +61,18 @@ export const requestManageBuildingMaintenances = async ({
     })
     .catch((err) => {
       setOnQuery(false);
+      catchHandler(err);
+    });
+};
+
+export const requestBuldingListForSelect = async ({
+  setBuildingListForSelect,
+}: IRequestBuldingListForSelect) => {
+  await Api.get('/buildings/listforselect')
+    .then((res) => {
+      setBuildingListForSelect(res.data);
+    })
+    .catch((err) => {
       catchHandler(err);
     });
 };

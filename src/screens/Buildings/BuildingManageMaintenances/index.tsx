@@ -12,12 +12,13 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
 // TYPES
-import { ICategories } from './utils/types';
+import { IBuildingListForSelect, ICategories } from './utils/types';
 
 // FUNCTIONS
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
+  requestBuldingListForSelect,
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
@@ -32,6 +33,8 @@ export const BuildingManageMaintenances = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<ICategories[]>([]);
 
+  const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
+
   const isAllCategoriesSelected = categories.every((element) =>
     element.Maintenances.every((e) => e.isSelected === true),
   );
@@ -40,6 +43,7 @@ export const BuildingManageMaintenances = () => {
     if (!state) {
       navigate('/buildings');
     } else {
+      requestBuldingListForSelect({ setBuildingListForSelect });
       requestListCategoriesToManage({ setLoading, setCategories, buildingId });
     }
   }, []);
@@ -68,10 +72,25 @@ export const BuildingManageMaintenances = () => {
       </Style.Header>
 
       <Style.SelectWrapper>
-        <Select label="Copiar manutenções de:" selectPlaceholderValue=" ">
+        <Select
+          label="Copiar manutenções de:"
+          selectPlaceholderValue=" "
+          onChange={(e) => {
+            requestListCategoriesToManage({
+              setLoading,
+              setCategories,
+              buildingId: e.target.value,
+            });
+          }}
+        >
           <option value="" disabled hidden>
-            Selecione
+            Não copiar
           </option>
+          {buildingListForSelect.map((element) => (
+            <option key={element.id} value={element.id}>
+              {element.name}
+            </option>
+          ))}
         </Select>
 
         <label htmlFor="selectAll">

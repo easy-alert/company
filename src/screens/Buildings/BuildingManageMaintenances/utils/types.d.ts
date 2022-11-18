@@ -53,3 +53,11 @@ export interface IRequestManageBuildingMaintenances {
   buildingId: string;
   setOnQuery: (setOnQuery: boolean) => void;
 }
+
+export interface IBuildingListForSelect {
+  id: string;
+  name: string;
+}
+export interface IRequestBuldingListForSelect {
+  setBuildingListForSelect: (setBuildingListForSelect: IBuildingListForSelect[]) => void;
+}
