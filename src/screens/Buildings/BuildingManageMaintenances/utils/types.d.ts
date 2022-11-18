@@ -84,7 +84,6 @@ export interface ICategoriesResData {
 export interface IRequestCategories {
   setLoading: (setLoading: boolean) => void;
   setCategories: (setCategories: ICategories[]) => void;
-  filter?: string;
 }
 
 // REQUESTS

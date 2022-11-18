@@ -6,10 +6,9 @@ import { IRequestAddedMaintenances } from './types';
 export const requestAddedMaintenances = async ({
   setLoading,
   setAddedMaintenances,
-  filter = '',
   buildingId,
 }: IRequestAddedMaintenances) => {
-  await Api.get(`/buildings/list/details/${buildingId}/maintenances?search=${filter}`)
+  await Api.get(`/buildings/list/details/${buildingId}/maintenances`)
     .then((res) => {
       setAddedMaintenances(res.data);
       if (setLoading) setLoading(false);

@@ -24,7 +24,6 @@ export const BuildingMaintenancesList = () => {
   const buildingId = state as string;
 
   const [loading, setLoading] = useState<boolean>(true);
-  // const [filter, setFilter] = useState<string>('');
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
   useEffect(() => {
@@ -44,32 +43,6 @@ export const BuildingMaintenancesList = () => {
           <Style.LeftSide>
             <Style.HeaderTitle>
               <h2>Manutenções a serem realizadas</h2>
-              {/* <Style.SearchField>
-                <IconButton
-                  icon={icon.search}
-                  size="16px"
-                  onClick={() => {
-                    requestAddedMaintenances({ setAddedMaintenances, filter, buildingId });
-                  }}
-                />
-                <input
-                  type="text"
-                  maxLength={40}
-                  placeholder="Procurar"
-                  value={filter}
-                  onChange={(evt) => {
-                    setFilter(evt.target.value);
-                    if (evt.target.value === '') {
-                      requestAddedMaintenances({ setAddedMaintenances, filter: '', buildingId });
-                    }
-                  }}
-                  onKeyUp={(evt) => {
-                    if (evt.key === 'Enter') {
-                      requestAddedMaintenances({ setAddedMaintenances, filter, buildingId });
-                    }
-                  }}
-                />
-              </Style.SearchField> */}
             </Style.HeaderTitle>
           </Style.LeftSide>
         </Style.HeaderWrapper>

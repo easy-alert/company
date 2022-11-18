@@ -10,12 +10,8 @@ import {
   IRequestCategories,
 } from './types';
 
-export const requestCategories = async ({
-  setLoading,
-  setCategories,
-  filter = '',
-}: IRequestCategories) => {
-  await Api.get(`/categories/list?search=${filter}`)
+export const requestCategories = async ({ setLoading, setCategories }: IRequestCategories) => {
+  await Api.get(`/categories/list`)
     .then((res: ICategoriesResData) => {
       const updatedCategories: ICategories[] = [];
 

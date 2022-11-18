@@ -44,6 +44,5 @@ export interface AddedMaintenances {
 export interface IRequestAddedMaintenances {
   setLoading?: (setLoading: boolean) => void;
   setAddedMaintenances: (setAddedMaintenances: AddedMaintenances[]) => void;
-  filter?: string;
   buildingId: string;
 }
