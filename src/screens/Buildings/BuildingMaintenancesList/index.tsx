@@ -31,39 +31,41 @@ export const BuildingMaintenancesList = () => {
   ) : (
     <>
       <Style.Header>
-        <Style.LeftSide>
-          <Style.HeaderTitle>
-            <h2>Manutenções a serem realizadas</h2>
-            <Style.SearchField>
-              <IconButton
-                icon={icon.search}
-                size="16px"
-                onClick={() => {
-                  requestCategories({ setCategories, filter });
-                }}
-              />
-              <input
-                type="text"
-                maxLength={40}
-                placeholder="Procurar"
-                value={filter}
-                onChange={(evt) => {
-                  setFilter(evt.target.value);
-                  if (evt.target.value === '') {
-                    requestCategories({ setCategories, filter: '' });
-                  }
-                }}
-                onKeyUp={(evt) => {
-                  if (evt.key === 'Enter') {
+        <Style.HeaderWrapper>
+          <Style.LeftSide>
+            <Style.HeaderTitle>
+              <h2>Manutenções a serem realizadas</h2>
+              <Style.SearchField>
+                <IconButton
+                  icon={icon.search}
+                  size="16px"
+                  onClick={() => {
                     requestCategories({ setCategories, filter });
-                  }
-                }}
-              />
-            </Style.SearchField>
-          </Style.HeaderTitle>
-        </Style.LeftSide>
+                  }}
+                />
+                <input
+                  type="text"
+                  maxLength={40}
+                  placeholder="Procurar"
+                  value={filter}
+                  onChange={(evt) => {
+                    setFilter(evt.target.value);
+                    if (evt.target.value === '') {
+                      requestCategories({ setCategories, filter: '' });
+                    }
+                  }}
+                  onKeyUp={(evt) => {
+                    if (evt.key === 'Enter') {
+                      requestCategories({ setCategories, filter });
+                    }
+                  }}
+                />
+              </Style.SearchField>
+            </Style.HeaderTitle>
+          </Style.LeftSide>
+        </Style.HeaderWrapper>
+        <ReturnButton />
       </Style.Header>
-      <ReturnButton />
 
       {categories?.length ? (
         <Style.CategoriesContainer>

@@ -4,20 +4,25 @@ import { theme } from '../../../styles/theme';
 export const Header = styled.header`
   position: sticky;
   top: 0;
-  padding-top: ${theme.size.sm};
-  padding-bottom: ${theme.size.xsm};
-
+  padding: ${theme.size.sm} 0;
   background-color: ${theme.color.gray1};
   z-index: 1;
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
 
   @media (max-width: 900px) {
     height: fit-content;
     align-items: flex-start;
   }
+`;
+
+export const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: ${theme.size.xsm};
 `;
 
 export const HeaderTitle = styled.div`
@@ -94,5 +99,4 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  margin-top: ${theme.size.sm};
 `;
