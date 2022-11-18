@@ -11,6 +11,7 @@ import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 import { insertMiddleEllipsis } from '../../functions';
 import { IconButton } from '../../../../../../components/Buttons/IconButton';
+import { Button } from '../../../../../../components/Buttons/Button';
 
 export const ModalAddFiles = ({ setModal }: IModalAddFiles) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -44,6 +45,7 @@ export const ModalAddFiles = ({ setModal }: IModalAddFiles) => {
             </Style.Tag>
           ))}
         </Style.MatrixTagWrapper>
+        <Button label="Cadastrar" center />
       </>
     </Modal>
   );

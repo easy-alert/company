@@ -131,7 +131,7 @@ export const Tag = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.xsm};
-  padding: 6px 12px;
+  padding: 4px 12px;
   background-color: ${theme.color.primaryL};
   width: fit-content;
   height: fit-content;
