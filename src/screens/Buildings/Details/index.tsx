@@ -377,9 +377,6 @@ export const BuildingDetails = () => {
               );
             }}
           />
-          {/* <Style.NoDataContainer>
-            <h5>Nenhuma manutenção adicionada.</h5>
-          </Style.NoDataContainer> */}
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>

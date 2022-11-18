@@ -14,17 +14,19 @@ import { IconButton } from '../../../../../../components/Buttons/IconButton';
 import { Button } from '../../../../../../components/Buttons/Button';
 
 export const ModalAddFiles = ({ setModal }: IModalAddFiles) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({ multiple: false });
 
   return (
     <Modal title="Cadastrar anexos" setModal={setModal}>
       <>
         <h6>Anexar</h6>
+
         <Style.DragAndDropZone {...getRootProps({ className: 'dropzone' })}>
           <input {...getInputProps()} />
+
           <Style.Content>
             <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-            <p className="p2">Clique ou arraste para enviar arquivos.</p>
+            <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
           </Style.Content>
         </Style.DragAndDropZone>
 
