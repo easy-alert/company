@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestCategories } from './types';
+import { IRequestAddedMaintenances } from './types';
 
-export const requestCategories = async ({
+export const requestAddedMaintenances = async ({
   setLoading,
-  setCategories,
+  setAddedMaintenances,
   filter = '',
-}: IRequestCategories) => {
-  await Api.get(`/categories/list?search=${filter}`)
+  buildingId,
+}: IRequestAddedMaintenances) => {
+  await Api.get(`/buildings/list/details/${buildingId}/maintenances?search=${filter}`)
     .then((res) => {
-      setCategories(res.data);
+      setAddedMaintenances(res.data);
       if (setLoading) setLoading(false);
     })
     .catch((err) => {

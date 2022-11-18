@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ICategories } from '../../../types';
+import { AddedMaintenances } from '../../../types';
 
 export interface IMaintenanceCategory {
-  category: ICategories;
+  data: AddedMaintenances;
 }
 
 export interface ISortType {

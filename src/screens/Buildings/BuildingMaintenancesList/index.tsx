@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 // COMPONENTS
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
@@ -11,19 +12,27 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
 // TYPES
-import { ICategories } from './utils/types';
+import { AddedMaintenances } from './utils/types';
 
 // FUNCTIONS
-import { requestCategories } from './utils/functions';
+import { requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 
 export const BuildingMaintenancesList = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const buildingId = state as string;
+
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>('');
-  const [categories, setCategories] = useState<ICategories[]>([]);
+  const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
   useEffect(() => {
-    requestCategories({ setLoading, setCategories });
+    if (!state) {
+      navigate('/buildings');
+    } else {
+      requestAddedMaintenances({ setLoading, setAddedMaintenances, buildingId });
+    }
   }, []);
 
   return loading ? (
@@ -40,7 +49,7 @@ export const BuildingMaintenancesList = () => {
                   icon={icon.search}
                   size="16px"
                   onClick={() => {
-                    requestCategories({ setCategories, filter });
+                    requestAddedMaintenances({ setAddedMaintenances, filter, buildingId });
                   }}
                 />
                 <input
@@ -51,12 +60,12 @@ export const BuildingMaintenancesList = () => {
                   onChange={(evt) => {
                     setFilter(evt.target.value);
                     if (evt.target.value === '') {
-                      requestCategories({ setCategories, filter: '' });
+                      requestAddedMaintenances({ setAddedMaintenances, filter: '', buildingId });
                     }
                   }}
                   onKeyUp={(evt) => {
                     if (evt.key === 'Enter') {
-                      requestCategories({ setCategories, filter });
+                      requestAddedMaintenances({ setAddedMaintenances, filter, buildingId });
                     }
                   }}
                 />
@@ -67,10 +76,10 @@ export const BuildingMaintenancesList = () => {
         <ReturnButton />
       </Style.Header>
 
-      {categories?.length ? (
+      {addedMaintenances?.length ? (
         <Style.CategoriesContainer>
-          {categories.map((category) => (
-            <MaintenanceCategory key={category.id} category={category} />
+          {addedMaintenances.map((element) => (
+            <MaintenanceCategory key={element.Category.id} data={element} />
           ))}
         </Style.CategoriesContainer>
       ) : (

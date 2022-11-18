@@ -18,7 +18,7 @@ import { alphabeticalOrder } from './utils/functions';
 // TYPES
 import { IMaintenanceCategory, ISortType } from './utils/types';
 
-export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
+export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
 
@@ -27,13 +27,13 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
       <Style.HeaderCategory>
         <Style.HeaderTitle>
           <Style.Container>
-            <h5>{category.name}</h5>
+            <h5>{data.Category.name}</h5>
           </Style.Container>
         </Style.HeaderTitle>
       </Style.HeaderCategory>
 
       <Style.MaintenancesContainer>
-        {category.Maintenances.length ? (
+        {data.Maintenances.length ? (
           <Style.MaintenancesHeader>
             <Style.MaintenancesGrid>
               <Style.SortHeader
@@ -41,7 +41,7 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
                 onClick={() => {
                   setSortType({ type: 'element' });
                   alphabeticalOrder({
-                    category,
+                    category: data.Category,
                     isSorted,
                     setIsSorted,
                     toSortString: 'element',
@@ -65,7 +65,7 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
                 onClick={() => {
                   setSortType({ type: 'activity' });
                   alphabeticalOrder({
-                    category,
+                    category: data.Category,
                     isSorted,
                     setIsSorted,
                     toSortString: 'activity',
@@ -86,7 +86,7 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
                 onClick={() => {
                   setSortType({ type: 'frequency' });
                   alphabeticalOrder({
-                    category,
+                    category: data.Category,
                     isSorted,
                     setIsSorted,
                     toSortString: 'frequency',
@@ -108,7 +108,7 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
                 onClick={() => {
                   setSortType({ type: 'responsible' });
                   alphabeticalOrder({
-                    category,
+                    category: data.Category,
                     isSorted,
                     setIsSorted,
                     toSortString: 'responsible',
@@ -132,7 +132,7 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
                 onClick={() => {
                   setSortType({ type: 'source' });
                   alphabeticalOrder({
-                    category,
+                    category: data.Category,
                     isSorted,
                     setIsSorted,
                     toSortString: 'source',
@@ -153,8 +153,8 @@ export const MaintenanceCategory = ({ category }: IMaintenanceCategory) => {
           </p>
         )}
 
-        {category.Maintenances.map((maintenance) => (
-          <MaintenanceCard maintenance={maintenance} key={maintenance.id} />
+        {data.Maintenances.map((maintenance) => (
+          <MaintenanceCard maintenance={maintenance} key={maintenance.Maintenance.id} />
         ))}
       </Style.MaintenancesContainer>
     </Style.Background>
