@@ -3,47 +3,18 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import {
-  ICategories,
-  ICategoriesResData,
-  IRequestManageBuildingMaintenances,
-  IRequestCategories,
-} from './types';
+import { IRequestManageBuildingMaintenances, IRequestListCategoriesToManage } from './types';
 
-export const requestCategories = async ({ setLoading, setCategories }: IRequestCategories) => {
-  await Api.get(`/categories/list`)
-    .then((res: ICategoriesResData) => {
-      const updatedCategories: ICategories[] = [];
-
-      res.data.forEach((category, i: number) => {
-        updatedCategories.push({
-          id: category.id,
-          name: category.name,
-          ownerCompanyId: category.ownerCompanyId,
-          Maintenances: [],
-        });
-
-        category.Maintenances.forEach((maintenance) => {
-          updatedCategories[i].Maintenances.push({
-            isSelected: false,
-            activity: maintenance.activity,
-            delay: maintenance.delay,
-            DelayTimeInterval: maintenance.DelayTimeInterval,
-            element: maintenance.element,
-            frequency: maintenance.frequency,
-            FrequencyTimeInterval: maintenance.FrequencyTimeInterval,
-            id: maintenance.id,
-            observation: maintenance.observation,
-            ownerCompanyId: maintenance.ownerCompanyId,
-            period: maintenance.period,
-            PeriodTimeInterval: maintenance.PeriodTimeInterval,
-            responsible: maintenance.responsible,
-            source: maintenance.source,
-          });
-        });
-      });
-
-      setCategories([...updatedCategories]);
+export const requestListCategoriesToManage = async ({
+  setLoading,
+  setCategories,
+  buildingId,
+}: IRequestListCategoriesToManage) => {
+  await Api.post(`/buildings/maintenances/list`, {
+    buildingId,
+  })
+    .then((res) => {
+      setCategories(res.data.CategoriesData);
       setLoading(false);
     })
     .catch((err) => {

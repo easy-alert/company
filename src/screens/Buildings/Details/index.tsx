@@ -16,9 +16,9 @@ import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 // FUNCTIONS
 import {
   requestBuildingDetails,
-  requestResendEmailConfirmation,
+  // requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
-  insertMiddleEllipsis,
+  // insertMiddleEllipsis,
 } from './utils/functions';
 import {
   applyMask,
@@ -43,7 +43,7 @@ export const BuildingDetails = () => {
   const buildingId = state as string;
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+  // const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 
@@ -254,7 +254,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.TableDataWrapper>
                           {notificationRow.email ?? '-'}
-                          {notificationRow.isMain &&
+                          {/* {notificationRow.isMain &&
                             notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
@@ -278,7 +278,7 @@ export const BuildingDetails = () => {
                                   });
                                 }}
                               />
-                            ))}
+                            ))} */}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '25%' },
@@ -380,7 +380,7 @@ export const BuildingDetails = () => {
             }}
           />
         </Style.Card>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton
@@ -408,10 +408,10 @@ export const BuildingDetails = () => {
             </Style.Tag>
           </Style.MatrixTagWrapper>
 
-          {/* <Style.NoDataContainer>
+          <Style.NoDataContainer>
             <h5>Nenhum anexo cadastrado.</h5>
-          </Style.NoDataContainer> */}
-        </Style.Card>
+          </Style.NoDataContainer>
+        </Style.Card> */}
       </Style.CardWrapper>
     </>
   );

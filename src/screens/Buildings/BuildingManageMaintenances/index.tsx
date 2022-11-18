@@ -15,7 +15,10 @@ import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { ICategories } from './utils/types';
 
 // FUNCTIONS
-import { requestManageBuildingMaintenances, requestCategories } from './utils/functions';
+import {
+  requestManageBuildingMaintenances,
+  requestListCategoriesToManage,
+} from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
 
@@ -37,7 +40,7 @@ export const BuildingManageMaintenances = () => {
     if (!state) {
       navigate('/buildings');
     } else {
-      requestCategories({ setLoading, setCategories });
+      requestListCategoriesToManage({ setLoading, setCategories, buildingId });
     }
   }, []);
 
