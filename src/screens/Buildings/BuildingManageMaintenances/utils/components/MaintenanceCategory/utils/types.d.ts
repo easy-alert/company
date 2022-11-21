@@ -5,7 +5,9 @@ export interface IMaintenanceCategory {
   category: ICategories;
   categories: ICategories[];
   setCategories: (setCategories: ICategories[]) => void;
-  categoryIndex: nuumber;
+  categoryIndex: number;
+  toCopyBuilding: string;
+  setToCopyBuilding: (setToCopyBuilding: string) => void;
 }
 
 export interface ISortType {

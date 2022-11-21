@@ -61,7 +61,8 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 1/7;
+  // estranho esse 1/8
+  grid-area: 1/8;
 `;
 
 export const MaintenancesCardBottomPeriod = styled.div`
@@ -111,7 +112,6 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
 
 export const MaintenancesMoreGrid = styled.div`
   overflow: hidden;
-
   display: grid;
   width: 100%;
   grid-template-rows: 1fr;

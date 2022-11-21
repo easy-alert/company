@@ -41,6 +41,7 @@ export interface ICategories {
 // REQUESTS
 export interface IRequestListCategoriesToManage {
   setLoading: (setLoading: boolean) => void;
+  setTableLoading?: (setTableLoading: boolean) => void;
   setCategories: (setCategories: ICategories[]) => void;
   buildingId: string;
 }

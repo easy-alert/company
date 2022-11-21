@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 // LIBS
 import { useEffect, useState } from 'react';
 
@@ -22,6 +21,7 @@ import {
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
+import { DotLoading } from '../../../components/Loadings/DotLoading';
 
 export const BuildingManageMaintenances = () => {
   const navigate = useNavigate();
@@ -31,13 +31,20 @@ export const BuildingManageMaintenances = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [tableloading, setTableLoading] = useState<boolean>(false);
+
   const [categories, setCategories] = useState<ICategories[]>([]);
+
+  const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
 
   const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
 
   const isAllCategoriesSelected = categories.every((element) =>
     element.Maintenances.every((e) => e.isSelected === true),
   );
+
+  const hasSomeMaintenance = categories.some((element) => element.Maintenances.length > 0);
 
   useEffect(() => {
     if (!state) {
@@ -57,7 +64,7 @@ export const BuildingManageMaintenances = () => {
           <Style.LeftSide>
             <h2>Manutenções a serem realizadas</h2>
           </Style.LeftSide>
-          {!onQuery && (
+          {!onQuery && categories.length > 0 && hasSomeMaintenance && (
             <IconButton
               icon={icon.checked}
               label="Salvar"
@@ -70,77 +77,94 @@ export const BuildingManageMaintenances = () => {
         </Style.HeaderWrapper>
         <ReturnButton />
       </Style.Header>
+      {categories.length > 0 && hasSomeMaintenance ? (
+        <>
+          <Style.SelectWrapper>
+            <Select
+              label="Copiar manutenções de:"
+              value={toCopyBuilding}
+              selectPlaceholderValue=" "
+              onChange={(e) => {
+                setToCopyBuilding(e.target.value);
+                const toCopyBuildingId = e.target.value !== '' ? e.target.value : buildingId;
+                requestListCategoriesToManage({
+                  setLoading,
+                  setCategories,
+                  buildingId: toCopyBuildingId,
+                  setTableLoading,
+                });
+              }}
+            >
+              <option value="">Não copiar</option>
+              {buildingListForSelect.map((element) => (
+                <option key={element.id} value={element.id}>
+                  {element.name}
+                </option>
+              ))}
+            </Select>
 
-      <Style.SelectWrapper>
-        <Select
-          label="Copiar manutenções de:"
-          selectPlaceholderValue=" "
-          onChange={(e) => {
-            requestListCategoriesToManage({
-              setLoading,
-              setCategories,
-              buildingId: e.target.value,
-            });
-          }}
-        >
-          <option value="" disabled hidden>
-            Não copiar
-          </option>
-          {buildingListForSelect.map((element) => (
-            <option key={element.id} value={element.id}>
-              {element.name}
-            </option>
-          ))}
-        </Select>
-
-        <label htmlFor="selectAll">
-          <input
-            type="checkbox"
-            id="selectAll"
-            name="selectAll"
-            checked={isAllCategoriesSelected}
-            onChange={() => {
-              const updatedCategories = categories;
-
-              if (isAllCategoriesSelected) {
-                for (let i = 0; i < updatedCategories.length; i += 1) {
-                  for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
-                    updatedCategories[i].Maintenances[j].isSelected = false;
+            <label htmlFor="selectAll">
+              <input
+                type="checkbox"
+                id="selectAll"
+                name="selectAll"
+                checked={isAllCategoriesSelected}
+                onChange={() => {
+                  if (toCopyBuilding !== '') {
+                    setToCopyBuilding('');
                   }
-                }
-              } else {
-                for (let i = 0; i < updatedCategories.length; i += 1) {
-                  for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
-                    updatedCategories[i].Maintenances[j].isSelected = true;
+
+                  const updatedCategories = categories;
+
+                  if (isAllCategoriesSelected) {
+                    for (let i = 0; i < updatedCategories.length; i += 1) {
+                      for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
+                        updatedCategories[i].Maintenances[j].isSelected = false;
+                      }
+                    }
+                  } else {
+                    for (let i = 0; i < updatedCategories.length; i += 1) {
+                      for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
+                        updatedCategories[i].Maintenances[j].isSelected = true;
+                      }
+                    }
                   }
-                }
-              }
 
-              setCategories([...updatedCategories]);
-            }}
-          />
-          {isAllCategoriesSelected
-            ? 'Desselecionar todas as manutenções'
-            : 'Selecionar todas as manutenções'}
-        </label>
-      </Style.SelectWrapper>
-
-      {categories?.length ? (
-        <Style.CategoriesContainer>
-          {categories.map((category, categoryIndex: number) => (
-            <MaintenanceCategory
-              key={category.id}
-              category={category}
-              categories={categories}
-              setCategories={setCategories}
-              categoryIndex={categoryIndex}
-            />
-          ))}
-        </Style.CategoriesContainer>
+                  setCategories([...updatedCategories]);
+                }}
+              />
+              {isAllCategoriesSelected
+                ? 'Desselecionar todas as manutenções'
+                : 'Selecionar todas as manutenções'}
+            </label>
+          </Style.SelectWrapper>
+          {tableloading ? (
+            <Style.TableLoadingContainer>
+              <DotLoading label="Carregando tabela..." />
+            </Style.TableLoadingContainer>
+          ) : (
+            <Style.CategoriesContainer>
+              {categories.map(
+                (category, categoryIndex: number) =>
+                  category.Maintenances.length > 0 && (
+                    <MaintenanceCategory
+                      key={category.id}
+                      category={category}
+                      categories={categories}
+                      setCategories={setCategories}
+                      categoryIndex={categoryIndex}
+                      setToCopyBuilding={setToCopyBuilding}
+                      toCopyBuilding={toCopyBuilding}
+                    />
+                  ),
+              )}
+            </Style.CategoriesContainer>
+          )}
+        </>
       ) : (
         <Style.NoMaintenancesContainer>
           <Image img={icon.paper} size="80px" radius="0" />
-          <h3>Nenhuma categoria encontrada.</h3>
+          <h3>Nenhuma categoria ou manutenção encontrada.</h3>
         </Style.NoMaintenancesContainer>
       )}
     </>

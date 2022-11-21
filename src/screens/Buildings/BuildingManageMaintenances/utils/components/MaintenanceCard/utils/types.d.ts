@@ -6,4 +6,6 @@ export interface IMaintenanceCard {
   setCategories: (setCategories: ICategories[]) => void;
   categoryIndex: number;
   maintenanceIndex: number;
+  toCopyBuilding: string;
+  setToCopyBuilding: (setToCopyBuilding: string) => void;
 }

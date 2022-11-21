@@ -13,18 +13,21 @@ export const requestListCategoriesToManage = async ({
   setLoading,
   setCategories,
   buildingId,
+  setTableLoading,
 }: IRequestListCategoriesToManage) => {
-  setLoading(true);
+  if (setTableLoading) setTableLoading(true);
 
   await Api.post(`/buildings/maintenances/list`, {
     buildingId,
   })
     .then((res) => {
-      setCategories(res.data.CategoriesData);
+      setCategories(res.data);
       setLoading(false);
+      if (setTableLoading) setTableLoading(false);
     })
     .catch((err) => {
       setLoading(false);
+      if (setTableLoading) setTableLoading(false);
       catchHandler(err);
     });
 };

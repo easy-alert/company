@@ -7,7 +7,7 @@ export const Background = styled.div`
   gap: ${theme.size.xxsm};
 
   @media (max-width: 1100px) {
-    min-width: 960px;
+    min-width: 1100px;
   }
 `;
 

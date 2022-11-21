@@ -22,6 +22,8 @@ export const MaintenanceCategory = ({
   categories,
   setCategories,
   categoryIndex,
+  toCopyBuilding,
+  setToCopyBuilding,
 }: IMaintenanceCategory) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
@@ -37,6 +39,10 @@ export const MaintenanceCategory = ({
               type="checkbox"
               checked={isAllMaintenancesSelected}
               onChange={() => {
+                if (toCopyBuilding !== '') {
+                  setToCopyBuilding('');
+                }
+
                 const updatedCategories = categories;
 
                 if (isAllMaintenancesSelected) {
@@ -195,6 +201,8 @@ export const MaintenanceCategory = ({
             setCategories={setCategories}
             categoryIndex={categoryIndex}
             maintenanceIndex={maintenanceIndex}
+            setToCopyBuilding={setToCopyBuilding}
+            toCopyBuilding={toCopyBuilding}
           />
         ))}
       </Style.MaintenancesContainer>

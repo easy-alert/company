@@ -7,7 +7,7 @@ export const Background = styled.div`
   gap: ${theme.size.xxsm};
 
   @media (max-width: 1100px) {
-    min-width: 960px;
+    min-width: 1100px;
   }
 `;
 
@@ -22,6 +22,7 @@ export const HeaderTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
 export const Container = styled.div`
   display: flex;
   align-items: center;
@@ -31,7 +32,6 @@ export const Container = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   align-items: flex-start;
-
   gap: ${theme.size.xsm};
   width: 100%;
   max-width: 400px;

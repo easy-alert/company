@@ -17,6 +17,8 @@ export const MaintenanceCard = ({
   setCategories,
   categoryIndex,
   maintenanceIndex,
+  setToCopyBuilding,
+  toCopyBuilding,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
 
@@ -36,6 +38,10 @@ export const MaintenanceCard = ({
                 e.stopPropagation();
               }}
               onChange={() => {
+                if (toCopyBuilding !== '') {
+                  setToCopyBuilding('');
+                }
+
                 const updatedCategories = categories;
 
                 updatedCategories[categoryIndex].Maintenances[maintenanceIndex].isSelected =

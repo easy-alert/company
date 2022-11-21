@@ -74,6 +74,13 @@ export const CreateMaintenancesContainerContent = styled.div`
   gap: ${theme.size.xsm};
 `;
 
+export const TableLoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70%;
+`;
+
 export const NoMaintenancesContainer = styled.div`
   display: flex;
   align-items: center;
