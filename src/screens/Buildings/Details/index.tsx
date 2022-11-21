@@ -51,6 +51,10 @@ export const BuildingDetails = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
+
+  const [totalMaintenacesCount, setTotalMaintenacesCount] = useState<number>(0);
+
   const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
 
   const [modalCreateNotificationConfigurationOpen, setModalCreateNotificationConfigurationOpen] =
@@ -69,7 +73,13 @@ export const BuildingDetails = () => {
       navigate('/buildings');
     } else {
       requestBuldingTypes({ setBuildingTypes });
-      requestBuildingDetails({ buildingId, setLoading, setBuilding });
+      requestBuildingDetails({
+        buildingId,
+        setLoading,
+        setBuilding,
+        setUsedMaintenancesCount,
+        setTotalMaintenacesCount,
+      });
     }
   }, []);
 
@@ -353,7 +363,9 @@ export const BuildingDetails = () => {
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>
-            <h5>Manutenções a serem realizadas</h5>
+            <h5>
+              Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenacesCount})
+            </h5>
             <IconButton
               icon={icon.editWithBg}
               label="Editar"

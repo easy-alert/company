@@ -60,5 +60,6 @@ export interface IBuildingListForSelect {
   name: string;
 }
 export interface IRequestBuldingListForSelect {
+  buildingId: string;
   setBuildingListForSelect: (setBuildingListForSelect: IBuildingListForSelect[]) => void;
 }
