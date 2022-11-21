@@ -21,6 +21,8 @@ export const requestEditNotificationConfiguration = async ({
   buildingId,
   setBuilding,
   buildingNotificationConfigurationId,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
@@ -44,7 +46,12 @@ export const requestEditNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({ buildingId, setBuilding });
+      requestBuildingDetails({
+        buildingId,
+        setBuilding,
+        setTotalMaintenacesCount,
+        setUsedMaintenancesCount,
+      });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
@@ -60,6 +67,8 @@ export const requestDeleteNotificationConfiguration = async ({
   buildingNotificationConfigurationId,
   setBuilding,
   buildingId,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IRequestDeleteNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -69,7 +78,12 @@ export const requestDeleteNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({ buildingId, setBuilding });
+      requestBuildingDetails({
+        buildingId,
+        setBuilding,
+        setTotalMaintenacesCount,
+        setUsedMaintenancesCount,
+      });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })

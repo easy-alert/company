@@ -16,6 +16,8 @@ export const requestEditBuilding = async ({
   setModal,
   setOnQuery,
   setBuilding,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IRequestEditBuilding) => {
   setOnQuery(true);
 
@@ -36,7 +38,12 @@ export const requestEditBuilding = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({ buildingId: values.id, setBuilding });
+      requestBuildingDetails({
+        buildingId: values.id,
+        setBuilding,
+        setTotalMaintenacesCount,
+        setUsedMaintenancesCount,
+      });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
