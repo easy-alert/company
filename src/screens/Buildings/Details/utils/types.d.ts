@@ -32,6 +32,8 @@ export interface IRequestBuildingDetails {
   setLoading?: (setLoading: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   buildingId: string;
+  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
+  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
 }
 
 export interface IRequestResendConfirmation {
