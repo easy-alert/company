@@ -70,6 +70,7 @@ export const PhoneConfirm = () => {
               requestConfirmData({
                 token: token!,
                 setIsConfirmed,
+                navigate,
               });
             }}
           />

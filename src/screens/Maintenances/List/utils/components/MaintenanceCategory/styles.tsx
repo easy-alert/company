@@ -7,7 +7,7 @@ export const Background = styled.div`
   gap: ${theme.size.xxsm};
 
   @media (max-width: 1100px) {
-    min-width: 960px;
+    min-width: 1100px;
   }
 `;
 
@@ -22,6 +22,7 @@ export const HeaderTitle = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
 export const Container = styled.div`
   display: flex;
   align-items: center;
@@ -31,7 +32,6 @@ export const Container = styled.div`
 export const FormContainer = styled.div`
   display: flex;
   align-items: flex-start;
-
   gap: ${theme.size.xsm};
   width: 100%;
   max-width: 400px;
@@ -61,7 +61,7 @@ export const MaintenancesGrid = styled.div`
   grid-template-rows: 1fr;
   align-items: center;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 250px minmax(250px, 1fr) 0.5fr 0.7fr 0.6fr 0.05fr 0.1fr;
+  grid-template-columns: 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr 0.1fr;
 `;
 
 export const SortHeader = styled.div<{ highlighted: boolean }>`

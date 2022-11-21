@@ -6,18 +6,27 @@ import { IconButton } from '../../../components/Buttons/IconButton';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
-import { ModalEditBuilding } from './utils/ModalEditBuilding';
+import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { Image } from '../../../components/Image';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { ModalCreateNotificationConfiguration } from './utils/ModalCreateNotificationConfiguration';
-import { ModalEditNotificationConfiguration } from './utils/ModalEditNotificationConfiguration';
+import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
+import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
+import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 
 // FUNCTIONS
 import {
   requestBuildingDetails,
-  requestResendEmailConfirmation,
+  // requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
+  // insertMiddleEllipsis,
 } from './utils/functions';
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  convertToUrlString,
+  dateFormatter,
+  requestBuldingTypes,
+} from '../../../utils/functions';
 
 // STYLES
 import * as Style from './styles';
@@ -25,13 +34,8 @@ import { theme } from '../../../styles/theme';
 
 // TYPES
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  dateFormatter,
-  requestBuldingTypes,
-} from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
+import { Button } from '../../../components/Buttons/Button';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -39,7 +43,7 @@ export const BuildingDetails = () => {
   const buildingId = state as string;
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+  // const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 
@@ -54,6 +58,8 @@ export const BuildingDetails = () => {
 
   const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
     useState<boolean>(false);
+
+  const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -96,6 +102,8 @@ export const BuildingDetails = () => {
           selectedNotificationRow={selectedNotificationRow}
         />
       )}
+
+      {modalAddFilesOpen && <ModalAddFiles setModal={setModalAddFilesOpen} />}
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
@@ -245,8 +253,9 @@ export const BuildingDetails = () => {
                     {
                       cell: (
                         <Style.TableDataWrapper>
-                          {notificationRow.email}
-                          {notificationRow.isMain &&
+                          {notificationRow.email ?? '-'}
+                          {/* {notificationRow.isMain &&
+                            notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -269,7 +278,7 @@ export const BuildingDetails = () => {
                                   });
                                 }}
                               />
-                            ))}
+                            ))} */}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '25%' },
@@ -278,9 +287,12 @@ export const BuildingDetails = () => {
                     {
                       cell: (
                         <Style.TableDataWrapper>
-                          {applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value}
+                          {notificationRow.contactNumber
+                            ? applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value
+                            : '-'}
 
                           {notificationRow.isMain &&
+                            notificationRow.contactNumber &&
                             (notificationRow.contactNumberIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -304,26 +316,28 @@ export const BuildingDetails = () => {
                                 }}
                               />
                             ))}
-                          {notificationRow.isMain && (
-                            <Style.MainContactTag>
-                              <p className="p5">Contato principal</p>
-                            </Style.MainContactTag>
-                          )}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '20%' },
                     },
                     {
                       cell: (
-                        <IconButton
-                          size="16px"
-                          icon={icon.edit}
-                          label="Editar"
-                          onClick={() => {
-                            setSelectedNotificationRow(notificationRow);
-                            setModalEditNotificationConfigurationOpen(true);
-                          }}
-                        />
+                        <Style.ButtonWrapper>
+                          {notificationRow.isMain && (
+                            <Style.MainContactTag>
+                              <p className="p5">Contato principal</p>
+                            </Style.MainContactTag>
+                          )}
+                          <IconButton
+                            size="16px"
+                            icon={icon.edit}
+                            label="Editar"
+                            onClick={() => {
+                              setSelectedNotificationRow(notificationRow);
+                              setModalEditNotificationConfigurationOpen(true);
+                            }}
+                          />
+                        </Style.ButtonWrapper>
                       ),
                       cssProps: { width: '10%', borderBottomRightRadius: theme.size.xxsm },
                     },
@@ -337,20 +351,36 @@ export const BuildingDetails = () => {
             </Style.NoDataContainer>
           )}
         </Style.Card>
-        {/* <Style.Card>
-          <Style.MaintenanceCardHeader>
+        <Style.Card>
+          <Style.CardHeader>
             <h5>Manutenções a serem realizadas (0/20)</h5>
             <IconButton
               icon={icon.editWithBg}
               label="Editar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                navigate(
+                  `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
+                  {
+                    state: buildingId,
+                  },
+                );
               }}
             />
-          </Style.MaintenanceCardHeader>
+          </Style.CardHeader>
+          <Button
+            label="Visualizar"
+            onClick={() => {
+              navigate(
+                `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
+                {
+                  state: buildingId,
+                },
+              );
+            }}
+          />
         </Style.Card>
-        <Style.Card>
+        {/* <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton
@@ -358,10 +388,26 @@ export const BuildingDetails = () => {
               label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
-                //
+                setModalAddFilesOpen(true);
               }}
             />
           </Style.CardHeader>
+          <Style.MatrixTagWrapper>
+            <Style.Tag>
+              <Image size="16px" img={icon.paperBlack} />
+              <p title="arquivo de manutenção de coisas.jpg" className="p3">
+                {insertMiddleEllipsis('arquivo de manutenção de coisas.jpg')}
+              </p>
+              <IconButton
+                size="16px"
+                icon={icon.xBlack}
+                onClick={() => {
+                  //
+                }}
+              />
+            </Style.Tag>
+          </Style.MatrixTagWrapper>
+
           <Style.NoDataContainer>
             <h5>Nenhum anexo cadastrado.</h5>
           </Style.NoDataContainer>

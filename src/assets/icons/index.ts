@@ -34,6 +34,9 @@ import bell from './bell.svg';
 import yellowAlert from './yellowAlert.svg';
 import checkedNoBg from './checkedNoBg.svg';
 import confirmedContactLogo from './confirmedContactLogo.svg';
+import xBlack from './xBlack.svg';
+import paperBlack from './paperBlack.svg';
+import addFile from './addFile.svg';
 
 export const icon = {
   leftArrow,
@@ -72,4 +75,7 @@ export const icon = {
   yellowAlert,
   checkedNoBg,
   confirmedContactLogo,
+  xBlack,
+  paperBlack,
+  addFile,
 };

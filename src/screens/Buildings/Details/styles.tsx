@@ -24,10 +24,6 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
-export const MaintenanceCardHeader = styled(CardHeader)`
-  margin-bottom: 0;
-`;
-
 export const Card = styled.div`
   width: 100%;
   background-color: ${theme.color.white};
@@ -96,6 +92,13 @@ export const BuildingCardData = styled.div`
   }
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+  justify-content: flex-end;
+`;
+
 export const MainContactTag = styled.div`
   padding: 2px 4px;
   border-radius: 2px;
@@ -121,5 +124,26 @@ export const NoDataContainer = styled.div`
     color: ${theme.color.gray4};
     text-align: center;
     margin-bottom: ${theme.size.xlg};
+  }
+`;
+
+export const MatrixTagWrapper = styled.div`
+  margin-top: ${theme.size.xsm};
+  display: flex;
+  gap: ${theme.size.xsm};
+  flex-wrap: wrap;
+`;
+
+export const Tag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+  padding: 4px 12px;
+  background-color: ${theme.color.primaryL};
+  width: fit-content;
+  height: fit-content;
+  border-radius: ${theme.size.xxsm};
+  > p {
+    font-weight: 400;
   }
 `;

@@ -2,7 +2,11 @@ import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { IRequestConfirmPhone, IRequestGetBuildingName } from './types';
 
-export const requestConfirmData = async ({ token, setIsConfirmed }: IRequestConfirmPhone) => {
+export const requestConfirmData = async ({
+  token,
+  setIsConfirmed,
+  navigate,
+}: IRequestConfirmPhone) => {
   await Api.post('/buildings/notifications/contactconfirm', {
     token,
   })
@@ -11,6 +15,7 @@ export const requestConfirmData = async ({ token, setIsConfirmed }: IRequestConf
     })
     .catch((err) => {
       catchHandler(err);
+      navigate('/login');
     });
 };
 

@@ -22,7 +22,7 @@ export default createGlobalStyle`
 
   body {
     background-color: ${theme.color.gray1};
-    color: ${theme.color.gray5};
+    color: ${theme.color.black};
   }
 
   h1 {
@@ -130,6 +130,13 @@ export default createGlobalStyle`
   }
   input[type=file],
   input[type=file]::-webkit-file-upload-button {
+    cursor: pointer;
+  }
+
+  input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    accent-color: ${theme.color.primary};
     cursor: pointer;
   }
 
