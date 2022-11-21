@@ -70,8 +70,9 @@ export const requestManageBuildingMaintenances = async ({
 
 export const requestBuldingListForSelect = async ({
   setBuildingListForSelect,
+  buildingId,
 }: IRequestBuldingListForSelect) => {
-  await Api.get('/buildings/listforselect')
+  await Api.get(`/buildings/listforselect/${buildingId}`)
     .then((res) => {
       setBuildingListForSelect(res.data);
     })

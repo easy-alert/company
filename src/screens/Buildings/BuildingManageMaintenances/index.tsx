@@ -50,7 +50,7 @@ export const BuildingManageMaintenances = () => {
     if (!state) {
       navigate('/buildings');
     } else {
-      requestBuldingListForSelect({ setBuildingListForSelect });
+      requestBuldingListForSelect({ setBuildingListForSelect, buildingId });
       requestListCategoriesToManage({ setLoading, setCategories, buildingId });
     }
   }, []);
@@ -64,7 +64,7 @@ export const BuildingManageMaintenances = () => {
           <Style.LeftSide>
             <h2>Manutenções a serem realizadas</h2>
           </Style.LeftSide>
-          {!onQuery && categories.length > 0 && hasSomeMaintenance && (
+          {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
             <IconButton
               icon={icon.checked}
               label="Salvar"
@@ -102,41 +102,42 @@ export const BuildingManageMaintenances = () => {
                 </option>
               ))}
             </Select>
+            {!tableloading && (
+              <label htmlFor="selectAll">
+                <input
+                  type="checkbox"
+                  id="selectAll"
+                  name="selectAll"
+                  checked={isAllCategoriesSelected}
+                  onChange={() => {
+                    if (toCopyBuilding !== '') {
+                      setToCopyBuilding('');
+                    }
 
-            <label htmlFor="selectAll">
-              <input
-                type="checkbox"
-                id="selectAll"
-                name="selectAll"
-                checked={isAllCategoriesSelected}
-                onChange={() => {
-                  if (toCopyBuilding !== '') {
-                    setToCopyBuilding('');
-                  }
+                    const updatedCategories = categories;
 
-                  const updatedCategories = categories;
-
-                  if (isAllCategoriesSelected) {
-                    for (let i = 0; i < updatedCategories.length; i += 1) {
-                      for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
-                        updatedCategories[i].Maintenances[j].isSelected = false;
+                    if (isAllCategoriesSelected) {
+                      for (let i = 0; i < updatedCategories.length; i += 1) {
+                        for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
+                          updatedCategories[i].Maintenances[j].isSelected = false;
+                        }
+                      }
+                    } else {
+                      for (let i = 0; i < updatedCategories.length; i += 1) {
+                        for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
+                          updatedCategories[i].Maintenances[j].isSelected = true;
+                        }
                       }
                     }
-                  } else {
-                    for (let i = 0; i < updatedCategories.length; i += 1) {
-                      for (let j = 0; j < updatedCategories[i].Maintenances.length; j += 1) {
-                        updatedCategories[i].Maintenances[j].isSelected = true;
-                      }
-                    }
-                  }
 
-                  setCategories([...updatedCategories]);
-                }}
-              />
-              {isAllCategoriesSelected
-                ? 'Desselecionar todas as manutenções'
-                : 'Selecionar todas as manutenções'}
-            </label>
+                    setCategories([...updatedCategories]);
+                  }}
+                />
+                {isAllCategoriesSelected
+                  ? 'Desselecionar todas as manutenções'
+                  : 'Selecionar todas as manutenções'}
+              </label>
+            )}
           </Style.SelectWrapper>
           {tableloading ? (
             <Style.TableLoadingContainer>
