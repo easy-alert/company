@@ -353,7 +353,7 @@ export const BuildingDetails = () => {
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>
-            <h5>Manutenções a serem realizadas (0/20)</h5>
+            <h5>Manutenções a serem realizadas</h5>
             <IconButton
               icon={icon.editWithBg}
               label="Editar"
