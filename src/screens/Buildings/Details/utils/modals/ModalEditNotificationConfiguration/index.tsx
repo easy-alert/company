@@ -27,6 +27,8 @@ export const ModalEditNotificationConfiguration = ({
   buildingId,
   setBuilding,
   selectedNotificationRow,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IModalEditNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -51,6 +53,8 @@ export const ModalEditNotificationConfiguration = ({
             setOnQuery,
             values,
             setBuilding,
+            setTotalMaintenacesCount,
+            setUsedMaintenancesCount,
           });
         }}
       >
@@ -124,6 +128,8 @@ export const ModalEditNotificationConfiguration = ({
                         setOnQuery,
                         setBuilding,
                         buildingId,
+                        setTotalMaintenacesCount,
+                        setUsedMaintenancesCount,
                       });
                     }}
                   />

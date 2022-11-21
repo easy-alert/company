@@ -33,6 +33,8 @@ export const ModalEditBuilding = ({
   building,
   setBuilding,
   buildingTypes,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -56,7 +58,14 @@ export const ModalEditBuilding = ({
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
-          requestEditBuilding({ setModal, setOnQuery, values, setBuilding });
+          requestEditBuilding({
+            setModal,
+            setOnQuery,
+            values,
+            setBuilding,
+            setTotalMaintenacesCount,
+            setUsedMaintenancesCount,
+          });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (

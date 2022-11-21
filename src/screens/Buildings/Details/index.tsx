@@ -93,6 +93,8 @@ export const BuildingDetails = () => {
           building={building}
           setBuilding={setBuilding}
           buildingTypes={buildingTypes}
+          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
         />
       )}
 
@@ -101,6 +103,8 @@ export const BuildingDetails = () => {
           setModal={setModalCreateNotificationConfigurationOpen}
           buildingId={building.id}
           setBuilding={setBuilding}
+          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
         />
       )}
 
@@ -110,6 +114,8 @@ export const BuildingDetails = () => {
           buildingId={building.id}
           setBuilding={setBuilding}
           selectedNotificationRow={selectedNotificationRow}
+          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
         />
       )}
 

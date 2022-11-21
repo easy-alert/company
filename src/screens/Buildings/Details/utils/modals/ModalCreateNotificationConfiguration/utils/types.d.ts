@@ -12,6 +12,8 @@ export interface IModalCreateNotificationConfiguration {
   setModal: (setModal: boolean) => void;
   buildingId: string;
   setBuilding: (setBuilding: IBuildingDetail) => void;
+  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
+  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
 }
 
 // REQUESTS
@@ -21,4 +23,6 @@ export interface IRequestCreateNotificationConfiguration {
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
+  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
+  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
 }

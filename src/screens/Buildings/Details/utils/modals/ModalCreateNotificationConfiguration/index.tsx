@@ -24,6 +24,8 @@ export const ModalCreateNotificationConfiguration = ({
   setModal,
   buildingId,
   setBuilding,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IModalCreateNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -45,6 +47,8 @@ export const ModalCreateNotificationConfiguration = ({
             setOnQuery,
             values,
             setBuilding,
+            setTotalMaintenacesCount,
+            setUsedMaintenancesCount,
           });
         }}
       >

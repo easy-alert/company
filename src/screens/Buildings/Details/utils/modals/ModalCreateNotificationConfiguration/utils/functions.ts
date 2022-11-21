@@ -17,6 +17,8 @@ export const requestCreateNotificationConfiguration = async ({
   setOnQuery,
   buildingId,
   setBuilding,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
@@ -39,7 +41,12 @@ export const requestCreateNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({ buildingId, setBuilding });
+      requestBuildingDetails({
+        buildingId,
+        setBuilding,
+        setTotalMaintenacesCount,
+        setUsedMaintenancesCount,
+      });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
