@@ -47,11 +47,11 @@ export const BuildingsList = () => {
     <>
       {modalCreateBuildingOpen && (
         <ModalCreateBuilding
-          setModal={setModalCreateBuildingOpen}
           page={page}
-          setBuildingList={setBuildingList}
           setCount={setCount}
           buildingTypes={buildingTypes}
+          setBuildingList={setBuildingList}
+          setModal={setModalCreateBuildingOpen}
         />
       )}
       <Style.Header>
