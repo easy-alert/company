@@ -22,8 +22,8 @@ export interface IModalEditNotificationConfiguration {
 // REQUESTS
 export interface IRequestEditNotificationConfiguration {
   values: IEditNotificationConfiguration;
-  buildingNotificationConfigurationId: string;
   buildingId: string;
+  buildingNotificationConfigurationId: string;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
