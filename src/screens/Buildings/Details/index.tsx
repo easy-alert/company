@@ -270,7 +270,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.TableDataWrapper>
                           {notificationRow.email ?? '-'}
-                          {/* {notificationRow.isMain &&
+                          {notificationRow.isMain &&
                             notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
@@ -288,13 +288,13 @@ export const BuildingDetails = () => {
                                   contentColor: theme.color.danger,
                                 }}
                                 actionButtonClick={() => {
-                                  requestResendEmailConfirmation({
-                                    buildingNotificationConfigurationId: notificationRow.id,
-                                    link: emailConfirmUrl,
-                                  });
+                                  // requestResendEmailConfirmation({
+                                  //   buildingNotificationConfigurationId: notificationRow.id,
+                                  //   link: emailConfirmUrl,
+                                  // });
                                 }}
                               />
-                            ))} */}
+                            ))}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '25%' },
