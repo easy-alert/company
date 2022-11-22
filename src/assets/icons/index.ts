@@ -37,6 +37,7 @@ import confirmedContactLogo from './confirmedContactLogo.svg';
 import xBlack from './xBlack.svg';
 import paperBlack from './paperBlack.svg';
 import addFile from './addFile.svg';
+import download from './download.svg';
 
 export const icon = {
   leftArrow,
@@ -78,4 +79,5 @@ export const icon = {
   xBlack,
   paperBlack,
   addFile,
+  download,
 };

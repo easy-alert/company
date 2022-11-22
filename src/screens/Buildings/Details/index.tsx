@@ -16,9 +16,9 @@ import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 // FUNCTIONS
 import {
   requestBuildingDetails,
+  requestDeleteAnnex,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
-  // insertMiddleEllipsis,
 } from './utils/functions';
 import {
   applyMask,
@@ -50,6 +50,8 @@ export const BuildingDetails = () => {
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [deleteAnnexOnQuery, setDeleteAnnexOnQuery] = useState<boolean>(false);
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
@@ -123,7 +125,15 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddFilesOpen && <ModalAddFiles setModal={setModalAddFilesOpen} />}
+      {modalAddFilesOpen && (
+        <ModalAddFiles
+          setModal={setModalAddFilesOpen}
+          buildingId={buildingId}
+          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
+          setBuilding={setBuilding}
+        />
+      )}
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
@@ -402,38 +412,53 @@ export const BuildingDetails = () => {
             }}
           />
         </Style.Card>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
+              size="24px"
               hideLabelOnMedia
               onClick={() => {
                 setModalAddFilesOpen(true);
               }}
             />
           </Style.CardHeader>
-          <Style.MatrixTagWrapper>
-            <Style.Tag>
-              <Image size="16px" img={icon.paperBlack} />
-              <p title="arquivo de manutenção de coisas.jpg" className="p3">
-                {insertMiddleEllipsis('arquivo de manutenção de coisas.jpg')}
-              </p>
-              <IconButton
-                size="16px"
-                icon={icon.xBlack}
-                onClick={() => {
-                  //
-                }}
-              />
-            </Style.Tag>
-          </Style.MatrixTagWrapper>
-
-          <Style.NoDataContainer>
-            <h5>Nenhum anexo cadastrado.</h5>
-          </Style.NoDataContainer>
-        </Style.Card> */}
+          {building && building?.Annexes.length > 0 ? (
+            <Style.MatrixTagWrapper>
+              {building.Annexes.map((element) => (
+                <Style.Tag key={element.id}>
+                  <a href={element.url} download target="_blank" rel="noreferrer">
+                    <p title={element.name} className="p3">
+                      {element.name}
+                    </p>
+                    <Image size="16px" img={icon.download} />
+                  </a>
+                  <IconButton
+                    disabled={deleteAnnexOnQuery}
+                    size="16px"
+                    icon={icon.xBlack}
+                    onClick={() => {
+                      requestDeleteAnnex({
+                        annexeId: element.id,
+                        setDeleteAnnexOnQuery,
+                        buildingId,
+                        setBuilding,
+                        setTotalMaintenacesCount,
+                        setUsedMaintenancesCount,
+                      });
+                    }}
+                  />
+                </Style.Tag>
+              ))}
+            </Style.MatrixTagWrapper>
+          ) : (
+            <Style.NoDataContainer>
+              <h5>Nenhum anexo cadastrado.</h5>
+            </Style.NoDataContainer>
+          )}
+        </Style.Card>
       </Style.CardWrapper>
     </>
   );

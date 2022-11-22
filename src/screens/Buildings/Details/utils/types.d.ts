@@ -9,6 +9,12 @@ export interface INotificationConfiguration {
   isMain: boolean;
 }
 
+interface Annex {
+  name: string;
+  id: string;
+  url: string;
+}
+
 export interface IBuildingDetail {
   id: string;
   name: string;
@@ -25,6 +31,7 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
+  Annexes: Annex[];
   NotificationsConfigurations: INotificationConfiguration[];
 }
 
@@ -41,6 +48,11 @@ export interface IRequestResendConfirmation {
   buildingNotificationConfigurationId: string;
 }
 
-export interface IRequestFileUpload {
-  event: React.ChangeEvent<HTMLInputElement>;
+export interface IRequestDeleteAnnex {
+  annexeId: string;
+  setDeleteAnnexOnQuery: (setDeleteAnnexOnQuery: boolean) => void;
+  setBuilding: (setBuilding: IBuildingDetail) => void;
+  buildingId: string;
+  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
+  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
 }

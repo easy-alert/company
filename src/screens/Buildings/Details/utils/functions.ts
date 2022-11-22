@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestBuildingDetails, IRequestFileUpload, IRequestResendConfirmation } from './types';
+import { IRequestBuildingDetails, IRequestDeleteAnnex, IRequestResendConfirmation } from './types';
 
 export const requestBuildingDetails = async ({
   setLoading,
@@ -62,33 +62,34 @@ export const requestResendEmailConfirmation = async ({
     });
 };
 
-export const requestFileUpload = async ({ event }: IRequestFileUpload) => {
-  const { files } = event.currentTarget;
-  const formData = new FormData();
+export const requestDeleteAnnex = async ({
+  annexeId,
+  setDeleteAnnexOnQuery,
+  buildingId,
+  setBuilding,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
+}: IRequestDeleteAnnex) => {
+  toast.loading('Excluindo anexo...');
+  setDeleteAnnexOnQuery(true);
 
-  if (files) {
-    for (let i = 0; i < files.length; i += 1) {
-      formData.append('files', files[i]);
-    }
-  }
-
-  // toast.loading('Enviando...');
-
-  // await Api.post('', {
-  //   files
-  // })
-  //   .then((res) => {
-  //     toast.dismiss();
-  //     toast.success(res.data.ServerMessage.message);
-  //   })
-  //   .catch((err) => {
-  //     catchHandler(err);
-  //   });
-};
-
-export const insertMiddleEllipsis = (string: string) => {
-  if (string.length > 20) {
-    return `${string.substring(0, 20)}...${string.substring(string.length - 4, string.length)}`;
-  }
-  return string;
+  await Api.delete('/buildings/annexes/delete', {
+    data: {
+      annexeId,
+    },
+  })
+    .then((res) => {
+      toast.dismiss();
+      toast.success(res.data.ServerMessage.message);
+      setDeleteAnnexOnQuery(false);
+      requestBuildingDetails({
+        buildingId,
+        setBuilding,
+        setTotalMaintenacesCount,
+        setUsedMaintenancesCount,
+      });
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
 };
