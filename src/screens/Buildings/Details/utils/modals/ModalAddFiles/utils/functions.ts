@@ -26,11 +26,12 @@ export const requestRegisterBuildingFile = async ({
 
   setOnQuery(true);
 
-  const { Location: fileUrl } = await uploadFile(files[0]);
+  const { Location: fileUrl, originalname: originalName } = await uploadFile(files[0]);
 
   await Api.post('/buildings/annexes/create', {
     name: fileName,
     url: fileUrl,
+    originalName,
     buildingId,
   })
     .then((res) => {

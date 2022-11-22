@@ -13,6 +13,7 @@ interface Annex {
   name: string;
   id: string;
   url: string;
+  originalName: string;
 }
 
 export interface IBuildingDetail {

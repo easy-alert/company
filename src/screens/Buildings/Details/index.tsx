@@ -430,7 +430,7 @@ export const BuildingDetails = () => {
               {building.Annexes.map((element) => (
                 <Style.Tag key={element.id}>
                   <a href={element.url} download target="_blank" rel="noreferrer">
-                    <p title={element.name} className="p3">
+                    <p title={element.originalName} className="p3">
                       {element.name}
                     </p>
                     <Image size="16px" img={icon.download} />
