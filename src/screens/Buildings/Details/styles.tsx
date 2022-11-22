@@ -142,16 +142,20 @@ export const Tag = styled.div`
   width: fit-content;
   height: fit-content;
   border-radius: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
 
   > a {
     display: flex;
     align-items: center;
-    gap: ${theme.size.xsm};
+    gap: ${theme.size.xxsm};
     color: ${theme.color.black};
-    margin-right: 12px;
 
     > p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-weight: 400;
+      max-width: 185px;
     }
 
     transition: 0.25s;
