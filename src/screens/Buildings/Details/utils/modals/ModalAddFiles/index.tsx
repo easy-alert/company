@@ -10,13 +10,24 @@ import { Image } from '../../../../../../components/Image';
 // STYLES
 import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
-import { insertMiddleEllipsis } from '../../functions';
-import { IconButton } from '../../../../../../components/Buttons/IconButton';
 import { Button } from '../../../../../../components/Buttons/Button';
+import { Input } from '../../../../../../components/Inputs/Input';
+import { requestRegisterBuildingFile } from './utils/functions';
+import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
-export const ModalAddFiles = ({ setModal }: IModalAddFiles) => {
+export const ModalAddFiles = ({
+  setModal,
+  buildingId,
+  setBuilding,
+  setTotalMaintenacesCount,
+  setUsedMaintenancesCount,
+}: IModalAddFiles) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [files, setFiles] = useState<any[]>([]);
+
+  const [fileName, setFileName] = useState<string>('');
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -24,45 +35,61 @@ export const ModalAddFiles = ({ setModal }: IModalAddFiles) => {
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      setFiles([...files, acceptedFiles[0]]);
+      setFiles(acceptedFiles);
     }
   }, [acceptedFiles]);
 
   return (
     <Modal title="Cadastrar anexos" setModal={setModal}>
       <Style.Container>
-        <h6>Anexar</h6>
+        <Input
+          label="Nome do anexo"
+          value={fileName}
+          placeholder="Ex: Foto do Edifício"
+          onChange={(e) => {
+            setFileName(e.target.value);
+          }}
+        />
+        <h6>Anexo</h6>
+        {files.length === 0 ? (
+          <Style.DragAndDropZone {...getRootProps({ className: 'dropzone' })}>
+            <input {...getInputProps()} />
 
-        <Style.DragAndDropZone {...getRootProps({ className: 'dropzone' })}>
-          <input {...getInputProps()} />
-
-          <Style.Content>
-            <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-            <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-          </Style.Content>
-        </Style.DragAndDropZone>
-        {files.length > 0 && (
-          <Style.MatrixTagWrapper>
-            {files.map((file, i: number) => (
-              <Style.Tag key={file.name + String(i)}>
-                <Image size="16px" img={icon.paperBlack} />
-                <p title={file.name} className="p3">
-                  {insertMiddleEllipsis(file.name)}
-                </p>
-                <IconButton
-                  size="16px"
-                  icon={icon.xBlack}
-                  onClick={() => {
-                    const updatedFiles = files;
-                    files.splice(i, 1);
-                    setFiles([...updatedFiles]);
-                  }}
-                />
-              </Style.Tag>
-            ))}
-          </Style.MatrixTagWrapper>
+            <Style.Content>
+              <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+              <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+            </Style.Content>
+          </Style.DragAndDropZone>
+        ) : (
+          <Style.FileZone>
+            <p className="p2">{files[0]?.name}</p>
+            <IconButton
+              icon={icon.x}
+              size="24px"
+              onClick={() => {
+                setFiles([]);
+              }}
+            />
+          </Style.FileZone>
         )}
-        <Button label="Cadastrar" center />
+
+        <Button
+          loading={onQuery}
+          label="Cadastrar"
+          center
+          onClick={() => {
+            requestRegisterBuildingFile({
+              files,
+              fileName,
+              setOnQuery,
+              buildingId,
+              setBuilding,
+              setTotalMaintenacesCount,
+              setUsedMaintenancesCount,
+              setModal,
+            });
+          }}
+        />
       </Style.Container>
     </Modal>
   );

@@ -137,13 +137,26 @@ export const MatrixTagWrapper = styled.div`
 export const Tag = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.xsm};
   padding: 4px 12px;
   background-color: ${theme.color.primaryL};
   width: fit-content;
   height: fit-content;
   border-radius: ${theme.size.xxsm};
-  > p {
-    font-weight: 400;
+
+  > a {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xsm};
+    color: ${theme.color.black};
+    margin-right: 12px;
+
+    > p {
+      font-weight: 400;
+    }
+
+    transition: 0.25s;
+    :hover {
+      opacity: 0.7;
+    }
   }
 `;

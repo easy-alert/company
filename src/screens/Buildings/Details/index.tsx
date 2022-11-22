@@ -18,7 +18,6 @@ import {
   requestBuildingDetails,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
-  // insertMiddleEllipsis,
 } from './utils/functions';
 import {
   applyMask,
@@ -123,7 +122,15 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddFilesOpen && <ModalAddFiles setModal={setModalAddFilesOpen} />}
+      {modalAddFilesOpen && (
+        <ModalAddFiles
+          setModal={setModalAddFilesOpen}
+          buildingId={buildingId}
+          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
+          setBuilding={setBuilding}
+        />
+      )}
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
@@ -402,12 +409,13 @@ export const BuildingDetails = () => {
             }}
           />
         </Style.Card>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.CardHeader>
             <h5>Anexos</h5>
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
+              size="24px"
               hideLabelOnMedia
               onClick={() => {
                 setModalAddFilesOpen(true);
@@ -416,10 +424,18 @@ export const BuildingDetails = () => {
           </Style.CardHeader>
           <Style.MatrixTagWrapper>
             <Style.Tag>
-              <Image size="16px" img={icon.paperBlack} />
-              <p title="arquivo de manutenção de coisas.jpg" className="p3">
-                {insertMiddleEllipsis('arquivo de manutenção de coisas.jpg')}
-              </p>
+              <a
+                href="https://larguei.s3.us-west-2.amazonaws.com/checked-1669139792929.svg"
+                download
+                target="_blank"
+                rel="noreferrer"
+              >
+                {/* <Image size="16px" img={icon.paperBlack} /> */}
+                <p title="arquivo de manutenção de coisas.jpg" className="p3">
+                  nome
+                </p>
+                <Image size="16px" img={icon.download} />
+              </a>
               <IconButton
                 size="16px"
                 icon={icon.xBlack}
@@ -430,10 +446,10 @@ export const BuildingDetails = () => {
             </Style.Tag>
           </Style.MatrixTagWrapper>
 
-          <Style.NoDataContainer>
+          {/* <Style.NoDataContainer>
             <h5>Nenhum anexo cadastrado.</h5>
-          </Style.NoDataContainer>
-        </Style.Card> */}
+          </Style.NoDataContainer> */}
+        </Style.Card>
       </Style.CardWrapper>
     </>
   );
