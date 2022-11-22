@@ -19,18 +19,20 @@ export const requestCreateNotificationConfiguration = async ({
   setBuilding,
   setTotalMaintenacesCount,
   setUsedMaintenancesCount,
+  phoneConfirmUrl,
+  emailConfirmUrl,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
-  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
 
-  if (!values.email && !values.contactNumber) {
+  if (values.email === '' && values.contactNumber === '') {
     toast.error('E-mail ou WhatsApp obrigatório.');
     setOnQuery(false);
     return;
   }
 
   await Api.post('/buildings/notifications/create', {
-    link: phoneConfirmUrl,
+    linkEmail: emailConfirmUrl,
+    linkPhone: phoneConfirmUrl,
     data: {
       buildingId,
       name: values.name,

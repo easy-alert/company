@@ -15,18 +15,22 @@ export interface IModalEditNotificationConfiguration {
   selectedNotificationRow: INotificationConfiguration;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  phoneConfirmUrl: string;
+  emailConfirmUrl: string;
 }
 
 // REQUESTS
 export interface IRequestEditNotificationConfiguration {
   values: IEditNotificationConfiguration;
-  buildingNotificationConfigurationId: string;
   buildingId: string;
+  buildingNotificationConfigurationId: string;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  phoneConfirmUrl: string;
+  emailConfirmUrl: string;
 }
 
 export interface IRequestDeleteNotificationConfiguration {

@@ -5,10 +5,7 @@ export const Background = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
-
-  @media (max-width: 1100px) {
-    min-width: 1100px;
-  }
+  min-width: 1000px;
 `;
 
 export const HeaderCategory = styled.div`

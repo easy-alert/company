@@ -16,7 +16,7 @@ import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 // FUNCTIONS
 import {
   requestBuildingDetails,
-  // requestResendEmailConfirmation,
+  requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
   // insertMiddleEllipsis,
 } from './utils/functions';
@@ -43,7 +43,7 @@ export const BuildingDetails = () => {
   const buildingId = state as string;
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  // const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
 
@@ -105,6 +105,8 @@ export const BuildingDetails = () => {
           setBuilding={setBuilding}
           setTotalMaintenacesCount={setTotalMaintenacesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
+          emailConfirmUrl={emailConfirmUrl}
+          phoneConfirmUrl={phoneConfirmUrl}
         />
       )}
 
@@ -116,6 +118,8 @@ export const BuildingDetails = () => {
           selectedNotificationRow={selectedNotificationRow}
           setTotalMaintenacesCount={setTotalMaintenacesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
+          emailConfirmUrl={emailConfirmUrl}
+          phoneConfirmUrl={phoneConfirmUrl}
         />
       )}
 
@@ -270,7 +274,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.TableDataWrapper>
                           {notificationRow.email ?? '-'}
-                          {/* {notificationRow.isMain &&
+                          {notificationRow.isMain &&
                             notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
@@ -294,7 +298,7 @@ export const BuildingDetails = () => {
                                   });
                                 }}
                               />
-                            ))} */}
+                            ))}
                         </Style.TableDataWrapper>
                       ),
                       cssProps: { width: '25%' },
