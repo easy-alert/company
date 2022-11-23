@@ -68,11 +68,13 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                 <Image img={icon.alert} size="16px" />
                 <p className="p2">
                   <span>Delay: </span>
-                  {`${maintenance.Maintenance.delay} ${
-                    maintenance.Maintenance.delay > 1
-                      ? maintenance.Maintenance.DelayTimeInterval.pluralLabel
-                      : maintenance.Maintenance.DelayTimeInterval.singularLabel
-                  }`}
+                  {maintenance.Maintenance.delay > 0
+                    ? `${maintenance.Maintenance.delay} ${
+                        maintenance.Maintenance.delay > 1
+                          ? maintenance.Maintenance.DelayTimeInterval.pluralLabel
+                          : maintenance.Maintenance.DelayTimeInterval.singularLabel
+                      }`
+                    : '-'}
                 </p>
               </Style.PeriodIconWrapper>
             </Style.MaintenancesCardBottomPeriod>

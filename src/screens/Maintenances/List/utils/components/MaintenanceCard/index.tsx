@@ -75,6 +75,7 @@ export const MaintenanceCard = ({
               <p className="p2">{maintenance.responsible}</p>
               <p className="p2">{maintenance.source}</p>
               <div
+                className="copyIcon"
                 onClick={(e) => {
                   e.stopPropagation();
                   setToCloneMaintenance(maintenance);
@@ -115,11 +116,13 @@ export const MaintenanceCard = ({
                   <Image img={icon.alert} size="16px" />
                   <p className="p2">
                     <span>Delay: </span>
-                    {`${maintenance.delay} ${
-                      maintenance.delay > 1
-                        ? maintenance.DelayTimeInterval.pluralLabel
-                        : maintenance.DelayTimeInterval.singularLabel
-                    }`}
+                    {maintenance.delay > 0
+                      ? `${maintenance.delay} ${
+                          maintenance.delay > 1
+                            ? maintenance.DelayTimeInterval.pluralLabel
+                            : maintenance.DelayTimeInterval.singularLabel
+                        }`
+                      : '-'}
                   </p>
                 </Style.PeriodIconWrapper>
               </Style.MaintenancesCardBottomPeriod>

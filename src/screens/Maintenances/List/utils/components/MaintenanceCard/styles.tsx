@@ -108,6 +108,11 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
       opacity: 0.7;
     }
   }
+
+  .copyIcon {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 export const MaintenancesMoreGrid = styled.div`
