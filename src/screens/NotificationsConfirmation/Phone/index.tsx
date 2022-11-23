@@ -41,13 +41,6 @@ export const PhoneConfirm = () => {
               <p>Agora você é responsável pela edificação:</p>
               <span> {buildingName}</span>
             </Style.ContentText>
-
-            <Button
-              label="Fazer login"
-              onClick={() => {
-                navigate('/login');
-              }}
-            />
           </Style.Content>
           <Style.ImageContainer>
             <img src={icon.confirmedContactLogo} alt="" />
