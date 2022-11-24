@@ -81,12 +81,13 @@ export const requestDeleteAnnex = async ({
     .then((res) => {
       toast.dismiss();
       toast.success(res.data.ServerMessage.message);
-      setDeleteAnnexOnQuery(false);
       requestBuildingDetails({
         buildingId,
         setBuilding,
         setTotalMaintenacesCount,
         setUsedMaintenancesCount,
+      }).then(() => {
+        setDeleteAnnexOnQuery(false);
       });
     })
     .catch((err) => {

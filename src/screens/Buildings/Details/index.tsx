@@ -35,7 +35,6 @@ import { theme } from '../../../styles/theme';
 // TYPES
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
-import { Button } from '../../../components/Buttons/Button';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -382,35 +381,52 @@ export const BuildingDetails = () => {
           )}
         </Style.Card>
         <Style.Card>
-          <Style.CardHeader>
+          <Style.MaintenanceCardHeader>
             <h5>
               Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenacesCount})
             </h5>
-            <IconButton
-              icon={icon.editWithBg}
-              label="Editar"
-              hideLabelOnMedia
-              onClick={() => {
-                navigate(
-                  `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
-                  {
-                    state: buildingId,
-                  },
-                );
-              }}
-            />
-          </Style.CardHeader>
-          <Button
-            label="Visualizar"
-            onClick={() => {
-              navigate(
-                `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
-                {
-                  state: buildingId,
-                },
-              );
-            }}
-          />
+            <Style.ButtonWrapper>
+              {/* <Button
+                label="Visualizar"
+                onClick={() => {
+                  navigate(
+                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
+                    {
+                      state: buildingId,
+                    },
+                  );
+                }}
+              /> */}
+
+              <IconButton
+                icon={icon.listWithBg}
+                label="Visualizar"
+                hideLabelOnMedia
+                onClick={() => {
+                  navigate(
+                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
+                    {
+                      state: buildingId,
+                    },
+                  );
+                }}
+              />
+
+              <IconButton
+                icon={icon.editWithBg}
+                label="Editar"
+                hideLabelOnMedia
+                onClick={() => {
+                  navigate(
+                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
+                    {
+                      state: buildingId,
+                    },
+                  );
+                }}
+              />
+            </Style.ButtonWrapper>
+          </Style.MaintenanceCardHeader>
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>

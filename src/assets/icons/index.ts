@@ -38,6 +38,7 @@ import xBlack from './xBlack.svg';
 import paperBlack from './paperBlack.svg';
 import addFile from './addFile.svg';
 import download from './download.svg';
+import listWithBg from './listWithBg.svg';
 
 export const icon = {
   leftArrow,
@@ -80,4 +81,5 @@ export const icon = {
   paperBlack,
   addFile,
   download,
+  listWithBg,
 };

@@ -24,6 +24,13 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
+export const MaintenanceCardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 export const Card = styled.div`
   width: 100%;
   background-color: ${theme.color.white};

@@ -12,7 +12,7 @@ import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { Input } from '../../../../../../components/Inputs/Input';
-import { requestRegisterBuildingFile } from './utils/functions';
+import { insertMiddleEllipsis, requestRegisterBuildingFile } from './utils/functions';
 import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
 export const ModalAddFiles = ({
@@ -62,7 +62,7 @@ export const ModalAddFiles = ({
           </Style.DragAndDropZone>
         ) : (
           <Style.FileZone>
-            <p className="p2">{files[0]?.name}</p>
+            <p className="p2">{insertMiddleEllipsis(files[0]?.name)}</p>
             <IconButton
               icon={icon.x}
               size="24px"

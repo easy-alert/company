@@ -78,7 +78,7 @@ export const MaintenanceCard = ({
 
             <p className="p2">
               <span>Observação: </span>
-              {maintenance.observation ?? 'Nenhuma observação'}
+              {maintenance.observation ?? '-'}
             </p>
 
             <Style.MaintenancesCardBottomPeriod>
