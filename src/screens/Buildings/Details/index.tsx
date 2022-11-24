@@ -406,7 +406,7 @@ export const BuildingDetails = () => {
                   navigate(
                     `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
                     {
-                      state: buildingId,
+                      state: { buildingId, buildingName: building!.name },
                     },
                   );
                 }}

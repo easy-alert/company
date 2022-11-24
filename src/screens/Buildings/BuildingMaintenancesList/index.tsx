@@ -17,11 +17,13 @@ import { AddedMaintenances } from './utils/types';
 // FUNCTIONS
 import { requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
+import { IconButton } from '../../../components/Buttons/IconButton';
+import { convertToUrlString } from '../../../utils/functions';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const buildingId = state as string;
+  const building = state as { buildingId: string; buildingName: string };
 
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
@@ -30,7 +32,11 @@ export const BuildingMaintenancesList = () => {
     if (!state) {
       navigate('/buildings');
     } else {
-      requestAddedMaintenances({ setLoading, setAddedMaintenances, buildingId });
+      requestAddedMaintenances({
+        setLoading,
+        setAddedMaintenances,
+        buildingId: building.buildingId,
+      });
     }
   }, []);
 
@@ -45,6 +51,21 @@ export const BuildingMaintenancesList = () => {
               <h2>Manutenções a serem realizadas</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
+          <IconButton
+            icon={icon.editWithBg}
+            label="Editar"
+            hideLabelOnMedia
+            onClick={() => {
+              navigate(
+                `/buildings/details/${convertToUrlString(
+                  building.buildingName,
+                )}/maintenances/manage`,
+                {
+                  state: building.buildingId,
+                },
+              );
+            }}
+          />
         </Style.HeaderWrapper>
         <ReturnButton />
       </Style.Header>

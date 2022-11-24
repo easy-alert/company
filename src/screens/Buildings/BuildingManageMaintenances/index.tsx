@@ -81,6 +81,7 @@ export const BuildingManageMaintenances = () => {
         <>
           <Style.SelectWrapper>
             <Select
+              disabled={tableloading}
               label="Copiar manutenções de:"
               value={toCopyBuilding}
               selectPlaceholderValue=" "
@@ -141,7 +142,7 @@ export const BuildingManageMaintenances = () => {
           </Style.SelectWrapper>
           {tableloading ? (
             <Style.TableLoadingContainer>
-              <DotLoading label="Carregando tabela..." />
+              <DotLoading label="Carregando tabela" />
             </Style.TableLoadingContainer>
           ) : (
             <Style.CategoriesContainer>

@@ -171,7 +171,7 @@ export default createGlobalStyle`
     appearance: none;
     font-weight: 400;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 17px;
     font-style: normal;
     outline: none;
     width: 100%;
