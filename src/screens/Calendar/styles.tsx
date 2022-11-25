@@ -51,6 +51,10 @@ export const CalendarWrapper = styled.div`
 
   .rbc-today {
     background-color: transparent;
+    > button {
+      color: ${theme.color.primary};
+      font-weight: 700;
+    }
   }
 
   .rbc-current {
