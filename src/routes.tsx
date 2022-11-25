@@ -23,6 +23,9 @@ import { BuildingMaintenancesList } from './screens/Buildings/BuildingMaintenanc
 import { PhoneConfirm } from './screens/NotificationsConfirmation/Phone';
 import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 
+// CALENDAR
+import { MaintenancesCalendar } from './screens/Calendar';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
@@ -54,6 +57,8 @@ const AppRoutes = () => (
               element={<BuildingMaintenancesList />}
             />
           </Route>
+
+          <Route path="/calendar" element={<MaintenancesCalendar />} />
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />

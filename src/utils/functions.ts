@@ -231,7 +231,9 @@ export const convertToUrlString = (value: string) =>
     .replaceAll(/[\u0300-\u036f]/g, '')
     .replaceAll(' ', '-')
     .replaceAll(/[^a-zA-Z0-9-]/g, '')
-    .toLowerCase();
+    .toLowerCase()
+    .replaceAll('--', '-')
+    .replaceAll('---', '-');
 // #endregion
 
 // #region REQUESTS
