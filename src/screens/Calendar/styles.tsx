@@ -7,7 +7,15 @@ export const Container = styled.header`
 `;
 
 export const Header = styled.header`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
   margin-bottom: ${theme.size.sm};
+
+  > select {
+    background-color: transparent;
+    max-width: 300px;
+  }
 `;
 
 export const CalendarWrapper = styled.div`
@@ -36,7 +44,14 @@ export const CalendarWrapper = styled.div`
   }
 
   .rbc-today {
-    background-color: #c2f0c2;
+    background-color: transparent;
+  }
+
+  .rbc-current {
+    > button {
+      color: ${theme.color.primary};
+      font-weight: 700;
+    }
   }
 
   .rbc-date-cell {
