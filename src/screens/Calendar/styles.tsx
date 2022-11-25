@@ -16,6 +16,12 @@ export const Header = styled.header`
     background-color: transparent;
     max-width: 300px;
   }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${theme.size.xxsm};
+  }
 `;
 
 export const CalendarWrapper = styled.div`
