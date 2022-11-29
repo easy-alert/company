@@ -10,10 +10,12 @@ export const SelectWrapper = styled.div`
   gap: ${theme.size.xsm};
 `;
 
-export const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div<{ buttonsAlign: boolean }>`
   margin-top: ${theme.size.xsm};
   display: flex;
   align-items: center;
   justify-content: center;
   gap: ${theme.size.sm};
+
+  ${({ buttonsAlign }) => buttonsAlign && 'margin-left: 20px;'}
 `;
