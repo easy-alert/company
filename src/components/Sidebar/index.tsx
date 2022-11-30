@@ -23,6 +23,7 @@ export const Sidebar = ({ children }: ISidebar) => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
+    { icon: icon.calendar, url: '/calendar' },
     { icon: icon.bell, url: '/maintenances' },
     { icon: icon.building, url: '/buildings' },
     { icon: icon.gear, url: '/account' },

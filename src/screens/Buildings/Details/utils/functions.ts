@@ -86,7 +86,7 @@ export const requestDeleteAnnex = async ({
         setBuilding,
         setTotalMaintenacesCount,
         setUsedMaintenancesCount,
-      }).then(() => {
+      }).finally(() => {
         setDeleteAnnexOnQuery(false);
       });
     })
