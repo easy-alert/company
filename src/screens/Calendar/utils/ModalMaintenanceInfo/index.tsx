@@ -8,7 +8,7 @@ import * as Style from './styles';
 import { IModalMaintenanceInfo } from './utils/types';
 
 export const ModalMaintenanceInfo = ({ setModal, eventId }: IModalMaintenanceInfo) => (
-  <Modal title="Info" setModal={setModal}>
+  <Modal title="Detalhes" setModal={setModal}>
     <Style.Container>
       <h1>{eventId}</h1>
     </Style.Container>

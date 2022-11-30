@@ -39,55 +39,13 @@ export const MaintenancesCalendar = () => {
           title="Line 1&#10;Line 2&#10;Line 3"
         >
           <div className="ellipsis" style={{ fontSize: '18px' }}>
-            linha 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Prédio 1
           </div>
           <div className="ellipsis" style={{ fontSize: '14px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Categoria 1
           </div>
           <div className="ellipsis" style={{ fontSize: '12px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Vencida',
-    },
-    {
-      id: 2,
-      title: (
-        <div
-          title="Line 1&#10;Line 2&#10;Line 3"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            linha 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Pendente',
-    },
-    {
-      id: 3,
-      title: (
-        <div
-          title="Line 1&#10;Line 2&#10;Line 3"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            linha 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Manutenção 1
           </div>
         </div>
       ),
@@ -96,25 +54,25 @@ export const MaintenancesCalendar = () => {
       status: 'Concluída',
     },
     {
-      id: 4,
+      id: 2,
       title: (
         <div
           title="Line 1&#10;Line 2&#10;Line 3"
         >
           <div className="ellipsis" style={{ fontSize: '18px' }}>
-            linha 1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Prédio 2
           </div>
           <div className="ellipsis" style={{ fontSize: '14px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Categoria 2
           </div>
           <div className="ellipsis" style={{ fontSize: '12px' }}>
-            1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Manutenção 2
           </div>
         </div>
       ),
       start: new Date(),
       end: new Date(),
-      status: 'Feita em atraso',
+      status: 'Vencida',
     },
   ];
 
@@ -180,10 +138,10 @@ export const MaintenancesCalendar = () => {
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
-          <select>
+          {/* <select>
             <option value="">Todas</option>
             <option value="Prédio 1">Prédio 1</option>
-          </select>
+          </select> */}
         </Style.Header>
         <Style.CalendarWrapper>
           <Calendar
