@@ -28,6 +28,10 @@ export const CalendarWrapper = styled.div`
   min-width: 700px;
   width: 100%;
 
+  background-color: ${theme.color.white};
+  padding: ${theme.size.md};
+  border-radius: ${theme.size.xsm};
+
   .ellipsis {
     white-space: nowrap;
     overflow: hidden;
@@ -53,14 +57,14 @@ export const CalendarWrapper = styled.div`
     background-color: transparent;
     > button {
       color: ${theme.color.primary};
-      font-weight: 700;
+      font-weight: 900;
     }
   }
 
   .rbc-current {
     > button {
       color: ${theme.color.primary};
-      font-weight: 700;
+      font-weight: 900;
     }
   }
 
@@ -83,6 +87,7 @@ export const CalendarWrapper = styled.div`
     overflow-y: scroll;
     scrollbar-width: none;
     scrollbar-color: transparent;
+
     ::-webkit-scrollbar {
       width: 0;
       background: transparent;
@@ -90,20 +95,21 @@ export const CalendarWrapper = styled.div`
   }
 
   .rbc-allday-cell {
-    min-height: 599px;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-
     box-sizing: border-box;
+    min-height: 598px;
+  }
+
+  .rbc-time-header-cell {
+    border-top: 1px solid #ddd;
   }
 
   .rbc-header {
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
     pointer-events: none;
+    font-weight: 400;
   }
 
-  .rbc-row-bg {
+  .rbc-time-header-content {
     border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
   }
 `;
