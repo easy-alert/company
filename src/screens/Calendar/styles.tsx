@@ -112,4 +112,8 @@ export const CalendarWrapper = styled.div`
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
   }
+
+  .rbc-event {
+    padding: ${theme.size.xxsm};
+  }
 `;
