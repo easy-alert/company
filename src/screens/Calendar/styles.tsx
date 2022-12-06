@@ -24,13 +24,18 @@ export const Header = styled.header`
   }
 `;
 
-export const CalendarWrapper = styled.div`
-  min-width: 700px;
+export const CalendarScroll = styled.div`
   width: 100%;
+  display: flex;
+  overflow-x: auto;
+`;
 
+export const CalendarWrapper = styled.div`
+  width: 100%;
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
   border-radius: ${theme.size.xsm};
+  min-width: 800px;
 
   .ellipsis {
     white-space: nowrap;
@@ -115,5 +120,13 @@ export const CalendarWrapper = styled.div`
 
   .rbc-event {
     padding: ${theme.size.xxsm};
+  }
+
+  .rbc-btn-group {
+    :first-child {
+      > button {
+        background-color: transparent;
+      }
+    }
   }
 `;

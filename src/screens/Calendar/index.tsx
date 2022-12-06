@@ -143,20 +143,22 @@ export const MaintenancesCalendar = () => {
             <option value="Prédio 1">Prédio 1</option>
           </select>
         </Style.Header>
-        <Style.CalendarWrapper>
-          <Calendar
-            eventPropGetter={eventPropGetter}
-            tooltipAccessor={() => ''}
-            localizer={localizer}
-            messages={messages}
-            events={events}
-            style={{ height: 660 }}
-            onSelectEvent={onSelectEvent}
-            culture="pt-BR"
-            showAllEvents
-            allDayAccessor="id"
-          />
-        </Style.CalendarWrapper>
+        <Style.CalendarScroll>
+          <Style.CalendarWrapper>
+            <Calendar
+              eventPropGetter={eventPropGetter}
+              tooltipAccessor={() => ''}
+              localizer={localizer}
+              messages={messages}
+              events={events}
+              style={{ height: 660 }}
+              onSelectEvent={onSelectEvent}
+              culture="pt-BR"
+              showAllEvents
+              allDayAccessor="id"
+            />
+          </Style.CalendarWrapper>
+        </Style.CalendarScroll>
       </Style.Container>
     </>
   );
