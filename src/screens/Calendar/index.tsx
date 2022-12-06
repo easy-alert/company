@@ -31,50 +31,25 @@ export const MaintenancesCalendar = () => {
     locales,
   });
 
-  const events = [
-    {
-      id: 1,
-      title: (
-        <div
-          title="Line 1&#10;Line 2&#10;Line 3"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            Prédio 1
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            Categoria 1
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            Manutenção 1
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Concluída',
-    },
-    {
-      id: 2,
-      title: (
-        <div
-          title="Line 1&#10;Line 2&#10;Line 3"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            Prédio 2
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            Categoria 2
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            Manutenção 2
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Vencida',
-    },
-  ];
+  const messages = {
+    date: 'Data',
+    time: 'Tempo',
+    event: 'Evento',
+    allDay: 'Dia todo',
+    week: 'Semana',
+    work_week: 'Semana de trabalho',
+    day: 'Dia',
+    month: 'Mês',
+    previous: 'Anterior',
+    next: 'Próximo',
+    yesterday: 'Ontem',
+    tomorrow: 'Amanhã',
+    today: 'Hoje',
+    agenda: 'Agenda',
+    noEventsInRange: 'Nenhum evento encontrado.',
+
+    showMore: (total: any) => `+${total}`,
+  };
 
   const eventPropGetter = useCallback(
     (event: any) => ({
@@ -105,25 +80,50 @@ export const MaintenancesCalendar = () => {
     [],
   );
 
-  const messages = {
-    date: 'Data',
-    time: 'Tempo',
-    event: 'Evento',
-    allDay: 'Dia todo',
-    week: 'Semana',
-    work_week: 'Semana de trabalho',
-    day: 'Dia',
-    month: 'Mês',
-    previous: 'Anterior',
-    next: 'Próximo',
-    yesterday: 'Ontem',
-    tomorrow: 'Amanhã',
-    today: 'Hoje',
-    agenda: 'Agenda',
-    noEventsInRange: 'Nenhum evento encontrado.',
-
-    showMore: (total: any) => `+${total}`,
-  };
+  const events = [
+    {
+      id: 'Prédio 1',
+      title: (
+        <div
+          title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
+        >
+          <div className="ellipsis" style={{ fontSize: '18px' }}>
+            Prédio 1
+          </div>
+          <div className="ellipsis" style={{ fontSize: '14px' }}>
+            Categoria 1
+          </div>
+          <div className="ellipsis" style={{ fontSize: '12px' }}>
+            Manutenção 1
+          </div>
+        </div>
+      ),
+      start: new Date(),
+      end: new Date(),
+      status: 'Concluída',
+    },
+    {
+      id: 'Prédio 2',
+      title: (
+        <div
+          title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
+        >
+          <div className="ellipsis" style={{ fontSize: '18px' }}>
+            Prédio 2
+          </div>
+          <div className="ellipsis" style={{ fontSize: '14px' }}>
+            Categoria 2
+          </div>
+          <div className="ellipsis" style={{ fontSize: '12px' }}>
+            Manutenção 2
+          </div>
+        </div>
+      ),
+      start: new Date(),
+      end: new Date(),
+      status: 'Vencida',
+    },
+  ];
 
   const onSelectEvent = useCallback((calEvent: any) => {
     setEventId(calEvent.id);
@@ -138,10 +138,10 @@ export const MaintenancesCalendar = () => {
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
-          {/* <select>
+          <select>
             <option value="">Todas</option>
             <option value="Prédio 1">Prédio 1</option>
-          </select> */}
+          </select>
         </Style.Header>
         <Style.CalendarWrapper>
           <Calendar
