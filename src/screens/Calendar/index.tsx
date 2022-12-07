@@ -100,7 +100,6 @@ export const MaintenancesCalendar = () => {
   }, []);
 
   // tentar cancelar a requisição anterior se fizer outra por cima, pra ele pode ficar navegando no calendário
-  // ver o loading
   useEffect(() => {
     setMaintenances([
       {
@@ -148,7 +147,7 @@ export const MaintenancesCalendar = () => {
     ]);
 
     setTimeout(() => {
-      setLoading(false);
+      // setLoading(false);
     }, 1000);
   }, []);
 
