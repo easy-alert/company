@@ -1,7 +1,7 @@
 export interface IAccount {
   User: {
     id: string;
-    lastAccess: string;
+    lastAcess: string;
     name: string;
     email: string;
     createdAt: string;

@@ -22,6 +22,8 @@ export const MaintenancesCalendar = () => {
 
   const [maintenances, setMaintenances] = useState<any>([]);
 
+  // const [calendarType, setCalendarType] = useState<'Month' | 'Week'>('Month');
+
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
 
   const locales = {
@@ -99,7 +101,8 @@ export const MaintenancesCalendar = () => {
     console.log('navegou');
   }, []);
 
-  // tentar cancelar a requisição anterior se fizer outra por cima, pra ele pode ficar navegando no calendário
+  // mudar array conforme a visualização
+  // ao clicar no a fazer ou vencidas do mes, navegar pra visualização de semana
   useEffect(() => {
     setMaintenances([
       {
@@ -146,8 +149,25 @@ export const MaintenancesCalendar = () => {
       },
     ]);
 
+    // setMaintenances([
+    //   {
+    //     id: 'Prédio 1',
+    //     title: '5 a fazer',
+    //     start: new Date(),
+    //     end: new Date(),
+    //     status: 'Concluída',
+    //   },
+    //   {
+    //     id: 'Prédio 2',
+    //     title: '5 vencidas',
+    //     start: new Date(),
+    //     end: new Date(),
+    //     status: 'Vencida',
+    //   },
+    // ]);
+
     setTimeout(() => {
-      // setLoading(false);
+      setLoading(false);
     }, 1000);
   }, []);
 
