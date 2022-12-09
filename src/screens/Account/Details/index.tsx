@@ -82,7 +82,7 @@ export const AccountDetails = () => {
         <Style.Card>
           <h6>Último acesso</h6>
           <p className="p2">
-            {account?.User.lastAcess ? dateFormatter(account?.User.lastAcess) : '-'}
+            {account?.User.lastAccess ? dateFormatter(account?.User.lastAccess) : '-'}
           </p>
         </Style.Card>
       </Style.CardSection>

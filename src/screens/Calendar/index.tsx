@@ -9,22 +9,31 @@ import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+// STYLES
+import * as Style from './styles';
+
 // MODALS
 import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
 
-// STYLES
-import * as Style from './styles';
+// FUNCTIONS
+import { requestCalendarData } from './utils/functions';
 
 export const MaintenancesCalendar = () => {
   const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [maintenances, setMaintenances] = useState<any>([]);
+  const [maintenancesWeekView, setMaintenancesWeekView] = useState<any>([]);
 
-  // const [calendarType, setCalendarType] = useState<'Month' | 'Week'>('Month');
+  const [maintenancesMonthView, setMaintenancesMonthView] = useState<any>([]);
+
+  const [maintenancesDisplay, setMaintenancesDisplay] = useState<any>([]);
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+
+  const [calendarType, setCalendarType] = useState<
+    'month' | 'week' | 'work_week' | 'day' | 'agenda'
+  >('month');
 
   const locales = {
     'pt-BR': ptBR,
@@ -87,88 +96,41 @@ export const MaintenancesCalendar = () => {
     [],
   );
 
-  const onSelectEvent = useCallback((maintenance: any) => {
-    setSelectedMaintenanceId(maintenance.id);
-    setModalMaintenanceInfoOpen(true);
-  }, []);
+  const onSelectEvent = useCallback(
+    (maintenance: any) => {
+      if (calendarType === 'month') {
+        setMaintenancesDisplay([...maintenancesWeekView]);
+        setCalendarType('week');
+      } else {
+        setSelectedMaintenanceId(maintenance.id);
+        setModalMaintenanceInfoOpen(true);
+      }
+    },
+    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
+  );
 
-  const onNavigate = useCallback(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    // eslint-disable-next-line no-console
-    console.log('navegou');
-  }, []);
+  const onView = useCallback(
+    (newView: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
+      if (newView === 'month') {
+        setCalendarType('month');
+        setMaintenancesDisplay([...maintenancesMonthView]);
+      } else {
+        setCalendarType('week');
+        setMaintenancesDisplay([...maintenancesWeekView]);
+      }
 
-  // mudar array conforme a visualização
-  // ao clicar no a fazer ou vencidas do mes, navegar pra visualização de semana
+      setCalendarType(newView);
+    },
+    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
+  );
+
   useEffect(() => {
-    setMaintenances([
-      {
-        id: 'Prédio 1',
-        title: (
-          <div
-            title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
-          >
-            <div className="ellipsis" style={{ fontSize: '18px' }}>
-              Prédio 1
-            </div>
-            <div className="ellipsis" style={{ fontSize: '14px' }}>
-              Categoria 1
-            </div>
-            <div className="ellipsis" style={{ fontSize: '12px' }}>
-              Manutenção 1
-            </div>
-          </div>
-        ),
-        start: new Date(),
-        end: new Date(),
-        status: 'Concluída',
-      },
-      {
-        id: 'Prédio 2',
-        title: (
-          <div
-            title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
-          >
-            <div className="ellipsis" style={{ fontSize: '18px' }}>
-              Prédio 2
-            </div>
-            <div className="ellipsis" style={{ fontSize: '14px' }}>
-              Categoria 2
-            </div>
-            <div className="ellipsis" style={{ fontSize: '12px' }}>
-              Manutenção 2
-            </div>
-          </div>
-        ),
-        start: new Date(),
-        end: new Date(),
-        status: 'Vencida',
-      },
-    ]);
-
-    // setMaintenances([
-    //   {
-    //     id: 'Prédio 1',
-    //     title: '5 a fazer',
-    //     start: new Date(),
-    //     end: new Date(),
-    //     status: 'Concluída',
-    //   },
-    //   {
-    //     id: 'Prédio 2',
-    //     title: '5 vencidas',
-    //     start: new Date(),
-    //     end: new Date(),
-    //     status: 'Vencida',
-    //   },
-    // ]);
-
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    requestCalendarData({
+      setLoading,
+      setMaintenancesWeekView,
+      setMaintenancesMonthView,
+      setMaintenancesDisplay,
+    });
   }, []);
 
   return (
@@ -193,15 +155,16 @@ export const MaintenancesCalendar = () => {
             <Calendar
               eventPropGetter={eventPropGetter}
               tooltipAccessor={() => ''}
+              view={calendarType}
+              onView={onView}
               localizer={localizer}
               messages={messages}
-              events={maintenances}
               style={{ height: 660 }}
               onSelectEvent={onSelectEvent}
-              onNavigate={onNavigate}
               culture="pt-BR"
-              showAllEvents
               allDayAccessor="id"
+              showAllEvents
+              events={maintenancesDisplay}
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>
