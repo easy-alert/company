@@ -16,7 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { convertToUrlString, requestBuldingTypes } from '../../../utils/functions';
+import { requestBuldingTypes } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
@@ -123,7 +123,7 @@ export const BuildingsList = () => {
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
-                  navigate(`/buildings/details/${convertToUrlString(building.name)}`, {
+                  navigate(`/buildings/details/${building.id}`, {
                     state: building.id,
                   });
                 }}

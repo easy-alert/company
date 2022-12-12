@@ -18,7 +18,6 @@ import { AddedMaintenances } from './utils/types';
 import { requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { IconButton } from '../../../components/Buttons/IconButton';
-import { convertToUrlString } from '../../../utils/functions';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
@@ -56,14 +55,9 @@ export const BuildingMaintenancesList = () => {
             label="Editar"
             hideLabelOnMedia
             onClick={() => {
-              navigate(
-                `/buildings/details/${convertToUrlString(
-                  building.buildingName,
-                )}/maintenances/manage`,
-                {
-                  state: building.buildingId,
-                },
-              );
+              navigate(`/buildings/details/${building.buildingId}/maintenances/manage`, {
+                state: building.buildingId,
+              });
             }}
           />
         </Style.HeaderWrapper>

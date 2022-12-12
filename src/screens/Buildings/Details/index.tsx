@@ -23,7 +23,6 @@ import {
 import {
   applyMask,
   capitalizeFirstLetter,
-  convertToUrlString,
   dateFormatter,
   requestBuldingTypes,
 } from '../../../utils/functions';
@@ -386,29 +385,14 @@ export const BuildingDetails = () => {
               Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenacesCount})
             </h5>
             <Style.ButtonWrapper>
-              {/* <Button
-                label="Visualizar"
-                onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
-                    {
-                      state: buildingId,
-                    },
-                  );
-                }}
-              /> */}
-
               <IconButton
                 icon={icon.listWithBg}
                 label="Visualizar"
                 hideLabelOnMedia
                 onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
-                    {
-                      state: { buildingId, buildingName: building!.name },
-                    },
-                  );
+                  navigate(`/buildings/details/${building?.id}/maintenances/list`, {
+                    state: { buildingId, buildingName: building!.name },
+                  });
                 }}
               />
 
@@ -417,12 +401,9 @@ export const BuildingDetails = () => {
                 label="Editar"
                 hideLabelOnMedia
                 onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
-                    {
-                      state: buildingId,
-                    },
-                  );
+                  navigate(`/buildings/details/${building?.id}/maintenances/manage`, {
+                    state: buildingId,
+                  });
                 }}
               />
             </Style.ButtonWrapper>
