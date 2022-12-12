@@ -13,7 +13,6 @@ export const Header = styled.header`
   margin-bottom: ${theme.size.sm};
 
   > select {
-    background-color: transparent;
     max-width: 300px;
   }
 
@@ -128,32 +127,6 @@ export const CalendarWrapper = styled.div`
       > button {
         background-color: transparent;
       }
-    }
-  }
-`;
-
-export const SmallDotSpinLoading = styled.div`
-  display: none;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid transparent;
-  border-top: 3px solid ${theme.color.primary};
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  animation: spin 0.8s linear infinite;
-  display: flex;
-
-  position: absolute;
-  top: 32px;
-  left: 270px;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
     }
   }
 `;

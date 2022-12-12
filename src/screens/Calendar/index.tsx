@@ -17,6 +17,7 @@ import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
 
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
+import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 
 export const MaintenancesCalendar = () => {
   const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
@@ -72,24 +73,28 @@ export const MaintenancesCalendar = () => {
       ...(event.status === 'Vencida' && {
         style: {
           backgroundColor: 'red',
+          color: 'purple',
         },
       }),
 
       ...(event.status === 'Pendente' && {
         style: {
           backgroundColor: 'yellow',
+          color: 'purple',
         },
       }),
 
       ...(event.status === 'Concluída' && {
         style: {
           backgroundColor: 'green',
+          color: 'purple',
         },
       }),
 
       ...(event.status === 'Feita em atraso' && {
         style: {
           backgroundColor: 'brown',
+          color: 'purple',
         },
       }),
     }),
@@ -133,7 +138,9 @@ export const MaintenancesCalendar = () => {
     });
   }, []);
 
-  return (
+  return loading ? (
+    <DotSpinLoading />
+  ) : (
     <>
       {modalMaintenanceInfoOpen && selectedMaintenanceId && (
         <ModalMaintenanceInfo
@@ -151,7 +158,6 @@ export const MaintenancesCalendar = () => {
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper>
-            {loading && <Style.SmallDotSpinLoading />}
             <Calendar
               eventPropGetter={eventPropGetter}
               tooltipAccessor={() => ''}
