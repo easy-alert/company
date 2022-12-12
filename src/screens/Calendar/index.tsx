@@ -73,28 +73,28 @@ export const MaintenancesCalendar = () => {
       ...(event.status === 'Vencida' && {
         style: {
           backgroundColor: 'red',
-          color: 'purple',
+          color: 'white',
         },
       }),
 
       ...(event.status === 'Pendente' && {
         style: {
           backgroundColor: 'yellow',
-          color: 'purple',
+          color: 'black',
         },
       }),
 
       ...(event.status === 'Concluída' && {
         style: {
           backgroundColor: 'green',
-          color: 'purple',
+          color: 'black',
         },
       }),
 
       ...(event.status === 'Feita em atraso' && {
         style: {
           backgroundColor: 'brown',
-          color: 'purple',
+          color: 'black',
         },
       }),
     }),

@@ -34,7 +34,7 @@ ${e.id}
           ),
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Concluída',
+          status: 'Vencida',
         }),
       );
       setMaintenancesWeekView([...maintenancesWeekMap]);
@@ -45,7 +45,7 @@ ${e.id}
           title: '8 a fazer',
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Concluída',
+          status: 'Vencida',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);
