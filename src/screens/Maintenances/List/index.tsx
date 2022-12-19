@@ -110,7 +110,7 @@ export const MaintenancesList = () => {
           ) : (
             <Style.NoMaintenancesContainer>
               <Image img={icon.paper} size="80px" radius="0" />
-              <h3>Nenhuma categoria encontrada.</h3>
+              <h3>Nenhuma categoria ou manutenção encontrada.</h3>
             </Style.NoMaintenancesContainer>
           )}
         </>
