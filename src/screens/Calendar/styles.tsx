@@ -66,7 +66,7 @@ export const CalendarWrapper = styled.div`
     }
   }
 
-  .rbc-current {
+  .rbc-now {
     > button {
       color: ${theme.color.primary};
       font-weight: 900;
