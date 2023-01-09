@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../styles/theme';
 
 export const Container = styled.header`
@@ -29,7 +29,7 @@ export const CalendarScroll = styled.div`
   overflow-x: auto;
 `;
 
-export const CalendarWrapper = styled.div`
+export const CalendarWrapper = styled.div<{ view: string }>`
   width: 100%;
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
@@ -122,17 +122,21 @@ export const CalendarWrapper = styled.div`
     padding: ${theme.size.xxsm};
   }
 
-  .rbc-button-link {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    text-align: right;
-    padding-right: 6px;
-  }
+  ${({ view }) =>
+    view === 'month' &&
+    css`
+      .rbc-button-link {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        text-align: right;
+        padding-right: 6px;
+      }
 
-  .rbc-date-cell {
-    padding-right: 0;
-  }
+      .rbc-date-cell {
+        padding-right: 0;
+      }
+    `}
 
   .rbc-btn-group {
     :first-child {

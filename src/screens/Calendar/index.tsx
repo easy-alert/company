@@ -154,7 +154,7 @@ export const MaintenancesCalendar = () => {
           </select>
         </Style.Header>
         <Style.CalendarScroll>
-          <Style.CalendarWrapper>
+          <Style.CalendarWrapper view={calendarType}>
             <Calendar
               eventPropGetter={eventPropGetter}
               tooltipAccessor={() => ''}
