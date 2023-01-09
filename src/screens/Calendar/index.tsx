@@ -103,10 +103,7 @@ export const MaintenancesCalendar = () => {
 
   const onSelectEvent = useCallback(
     (maintenance: any) => {
-      if (calendarType === 'month') {
-        setMaintenancesDisplay([...maintenancesWeekView]);
-        setCalendarType('week');
-      } else {
+      if (calendarType === 'week') {
         setSelectedMaintenanceId(maintenance.id);
         setModalMaintenanceInfoOpen(true);
       }
@@ -171,6 +168,7 @@ export const MaintenancesCalendar = () => {
               allDayAccessor="id"
               showAllEvents
               events={maintenancesDisplay}
+              drilldownView="week"
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>

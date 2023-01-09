@@ -74,7 +74,7 @@ export const CalendarWrapper = styled.div`
   }
 
   .rbc-date-cell {
-    pointer-events: none;
+    /* pointer-events: none; */
   }
   .rbc-time-header-gutter {
     padding: 0;
@@ -120,6 +120,18 @@ export const CalendarWrapper = styled.div`
 
   .rbc-event {
     padding: ${theme.size.xxsm};
+  }
+
+  .rbc-button-link {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    text-align: right;
+    padding-right: 6px;
+  }
+
+  .rbc-date-cell {
+    padding-right: 0;
   }
 
   .rbc-btn-group {
