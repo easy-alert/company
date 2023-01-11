@@ -20,6 +20,8 @@ import { requestCalendarData } from './utils/functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 
 export const MaintenancesCalendar = () => {
+  const [date, setDate] = useState(new Date());
+
   const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,28 +74,32 @@ export const MaintenancesCalendar = () => {
     (event: any) => ({
       ...(event.status === 'Vencida' && {
         style: {
-          backgroundColor: 'red',
-          color: 'white',
+          background:
+            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
+          color: 'black',
         },
       }),
 
       ...(event.status === 'Pendente' && {
         style: {
-          backgroundColor: 'yellow',
+          backgroundColor:
+            'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
 
       ...(event.status === 'Concluída' && {
         style: {
-          backgroundColor: 'green',
+          backgroundColor:
+            'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
 
       ...(event.status === 'Feita em atraso' && {
         style: {
-          backgroundColor: 'brown',
+          backgroundColor:
+            'linear-gradient(90deg, rgba(230,102,102,1) 0%, rgba(230,102,102,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
@@ -106,9 +112,13 @@ export const MaintenancesCalendar = () => {
       if (calendarType === 'week') {
         setSelectedMaintenanceId(maintenance.id);
         setModalMaintenanceInfoOpen(true);
+      } else {
+        setDate(maintenance.start);
+        setMaintenancesDisplay([...maintenancesWeekView]);
+        setCalendarType('week');
       }
     },
-    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
+    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay, date, setDate],
   );
 
   const onView = useCallback(
@@ -125,6 +135,8 @@ export const MaintenancesCalendar = () => {
     },
     [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
   );
+
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useEffect(() => {
     requestCalendarData({
@@ -156,13 +168,15 @@ export const MaintenancesCalendar = () => {
         <Style.CalendarScroll>
           <Style.CalendarWrapper view={calendarType}>
             <Calendar
+              date={date}
+              onNavigate={onNavigate}
               eventPropGetter={eventPropGetter}
               tooltipAccessor={() => ''}
               view={calendarType}
               onView={onView}
               localizer={localizer}
               messages={messages}
-              style={{ height: 660 }}
+              style={{ height: 760 }}
               onSelectEvent={onSelectEvent}
               culture="pt-BR"
               allDayAccessor="id"

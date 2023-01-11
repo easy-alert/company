@@ -73,9 +73,6 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     }
   }
 
-  .rbc-date-cell {
-    /* pointer-events: none; */
-  }
   .rbc-time-header-gutter {
     padding: 0;
   }
@@ -87,8 +84,12 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     display: none;
   }
 
+  .rbc-month-view {
+    border-radius: ${theme.size.xsm};
+  }
+
   .rbc-row-content {
-    max-height: 599px;
+    height: 698px;
     overflow-y: scroll;
     scrollbar-width: none;
     scrollbar-color: transparent;
@@ -106,6 +107,8 @@ export const CalendarWrapper = styled.div<{ view: string }>`
 
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
+    border-radius: ${theme.size.xsm};
+    margin-bottom: ${theme.size.xsm};
   }
 
   .rbc-header {
@@ -116,10 +119,23 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-time-header-content {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
+    border-radius: ${theme.size.xsm};
   }
 
   .rbc-event {
-    padding: ${theme.size.xxsm};
+    padding: ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.sm};
+    font-size: 12px;
+    line-height: 14px;
+    border-radius: 3px;
+
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
+  }
+
+  .rbc-row-content,
+  .rbc-row-content-scroll-container {
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.size.xsm};
   }
 
   ${({ view }) =>
@@ -144,5 +160,9 @@ export const CalendarWrapper = styled.div<{ view: string }>`
         background-color: transparent;
       }
     }
+  }
+
+  .rbc-off-range-bg {
+    background-color: #ededed80;
   }
 `;

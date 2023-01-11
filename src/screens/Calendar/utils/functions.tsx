@@ -1,5 +1,6 @@
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
+import { EventTag } from './EventTag';
 import { IRequestCalendarData } from './types';
 
 export const requestCalendarData = async ({
@@ -15,20 +16,28 @@ export const requestCalendarData = async ({
           id: 'Prédio 1',
           title: (
             <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px',
+                paddingTop: '4px',
+                paddingBottom: '4px',
+              }}
               title={`
 PREDIO
 mesakeoaske
 ${e.id}
             `}
             >
-              <div className="ellipsis" style={{ fontSize: '18px' }}>
-                PREDIO
+              <EventTag status="Vencida" />
+              <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '16px' }}>
+                Edificação
               </div>
-              <div className="ellipsis" style={{ fontSize: '14px' }}>
-                CATEGORIA
+              <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '14px' }}>
+                Categoria
               </div>
-              <div className="ellipsis" style={{ fontSize: '12px' }}>
-                {e.element}
+              <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '12px' }}>
+                Periodicidade
               </div>
             </div>
           ),
