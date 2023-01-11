@@ -91,8 +91,8 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-row-content {
     height: 698px;
     overflow-y: scroll;
-    scrollbar-width: none;
     scrollbar-color: transparent;
+    scrollbar-width: none;
     padding-top: ${theme.size.xsm};
 
     ::-webkit-scrollbar {
