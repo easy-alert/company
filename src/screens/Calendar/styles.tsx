@@ -93,6 +93,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     overflow-y: scroll;
     scrollbar-width: none;
     scrollbar-color: transparent;
+    padding-top: ${theme.size.xsm};
 
     ::-webkit-scrollbar {
       width: 0;
@@ -102,14 +103,12 @@ export const CalendarWrapper = styled.div<{ view: string }>`
 
   .rbc-allday-cell {
     box-sizing: border-box;
-    min-height: 598px;
+    min-height: 698px;
   }
 
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
     border-radius: ${theme.size.xsm};
-    /* margin-bottom: ${theme.size.xsm}; */
-    /* ajustar */
   }
 
   .rbc-header {
