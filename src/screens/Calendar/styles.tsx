@@ -108,7 +108,8 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
     border-radius: ${theme.size.xsm};
-    margin-bottom: ${theme.size.xsm};
+    /* margin-bottom: ${theme.size.xsm}; */
+    /* ajustar */
   }
 
   .rbc-header {

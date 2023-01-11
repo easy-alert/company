@@ -29,7 +29,12 @@ mesakeoaske
 ${e.id}
             `}
             >
-              <EventTag status="Pendente" />
+              {/* if pra se for feita em atraso, mostrar o concluída */}
+              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                <EventTag status="Concluída" />
+                <EventTag status="Feita em atraso" />
+              </div>
+
               <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '16px' }}>
                 Edificação
               </div>
@@ -43,7 +48,7 @@ ${e.id}
           ),
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Pendente',
+          status: 'Feita em atraso',
         }),
       );
       setMaintenancesWeekView([...maintenancesWeekMap]);
@@ -54,7 +59,7 @@ ${e.id}
           title: '8 a fazer',
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Pendente',
+          status: 'Feita em atraso',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);
