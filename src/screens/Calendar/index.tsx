@@ -72,7 +72,7 @@ export const MaintenancesCalendar = () => {
 
   const eventPropGetter = useCallback(
     (event: any) => ({
-      ...(event.status === 'Vencida' && {
+      ...(event.status === 'Pendente' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
@@ -80,26 +80,18 @@ export const MaintenancesCalendar = () => {
         },
       }),
 
-      ...(event.status === 'Pendente' && {
+      ...(event.status === 'Vencida' && {
         style: {
-          backgroundColor:
+          background:
             'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
 
-      ...(event.status === 'Concluída' && {
+      ...((event.status === 'Concluída' || event.status === 'Feita em atraso') && {
         style: {
-          backgroundColor:
+          background:
             'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
-          color: 'black',
-        },
-      }),
-
-      ...(event.status === 'Feita em atraso' && {
-        style: {
-          backgroundColor:
-            'linear-gradient(90deg, rgba(230,102,102,1) 0%, rgba(230,102,102,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),

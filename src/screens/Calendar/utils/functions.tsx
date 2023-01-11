@@ -29,7 +29,7 @@ mesakeoaske
 ${e.id}
             `}
             >
-              <EventTag status="Vencida" />
+              <EventTag status="Pendente" />
               <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '16px' }}>
                 Edificação
               </div>
@@ -43,7 +43,7 @@ ${e.id}
           ),
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Vencida',
+          status: 'Pendente',
         }),
       );
       setMaintenancesWeekView([...maintenancesWeekMap]);
@@ -54,7 +54,7 @@ ${e.id}
           title: '8 a fazer',
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Vencida',
+          status: 'Pendente',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);
