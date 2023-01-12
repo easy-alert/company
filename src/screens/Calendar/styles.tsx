@@ -46,7 +46,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-btn-group {
     :last-child {
       > button {
-        :nth-child(2) {
+        :nth-child(6) {
           border-radius: 0px 4px 4px 0px;
         }
 
@@ -157,4 +157,47 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-off-range-bg {
     background-color: #ededed80;
   }
+
+  /* change weekends background */
+  /* .rbc-time-header-cell > :nth-child(6),
+  .rbc-time-header-cell > :last-child,
+  .rbc-month-header > :nth-child(6),
+  .rbc-month-header > :last-child {
+    background-color: #ededed !important;
+  }
+
+  .rbc-time-header-cell > :last-child,
+  .rbc-month-header > :last-child {
+    border-top-right-radius: ${theme.size.xsm};
+  }
+
+  .rbc-row-bg > :nth-child(6),
+  .rbc-row-bg > :last-child {
+    background-color: #ededed !important;
+  } */
+
+  /* ***********************************************************************  */
+
+  /* hide weekend */
+  /* .rbc-time-header-cell > :nth-child(6),
+  .rbc-time-header-cell > :last-child,
+  .rbc-month-header > :nth-child(6),
+  .rbc-month-header > :last-child {
+    display: none;
+  }
+
+  .rbc-row-bg > :nth-child(6),
+  .rbc-row-bg > :last-child {
+    display: none;
+  }
+
+  .rbc-row > .rbc-date-cell:nth-child(6),
+  .rbc-row > .rbc-date-cell:last-child {
+    display: none;
+  }
+
+  .rbc-row-segment {
+    flex-basis: 20% !important;
+    max-width: 20% !important;
+  } */
 `;

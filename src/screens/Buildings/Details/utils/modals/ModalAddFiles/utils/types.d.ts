@@ -3,7 +3,7 @@ export interface IModalAddFiles {
   buildingId: string;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
 export interface IRequestRegisterBuildingFile {
@@ -14,6 +14,6 @@ export interface IRequestRegisterBuildingFile {
   setOnQuery: (setOnQuery: boolean) => void;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   setModal: (setModal: boolean) => void;
 }

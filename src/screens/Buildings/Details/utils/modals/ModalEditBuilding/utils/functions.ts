@@ -16,7 +16,7 @@ export const requestEditBuilding = async ({
   setModal,
   setOnQuery,
   setBuilding,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IRequestEditBuilding) => {
   setOnQuery(true);
@@ -41,7 +41,7 @@ export const requestEditBuilding = async ({
       requestBuildingDetails({
         buildingId: values.id,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
       setModal(false);

@@ -2,6 +2,7 @@
 // LIBS
 import { useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import { useKeyPressEvent } from 'react-use';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
@@ -116,19 +117,29 @@ export const MaintenancesCalendar = () => {
   const onView = useCallback(
     (newView: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
       if (newView === 'month') {
-        setCalendarType('month');
         setMaintenancesDisplay([...maintenancesMonthView]);
+        setCalendarType('month');
       } else {
-        setCalendarType('week');
         setMaintenancesDisplay([...maintenancesWeekView]);
+        setCalendarType('week');
       }
-
-      setCalendarType(newView);
     },
     [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
   );
 
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
+
+  useKeyPressEvent('w', () => {
+    if (!modalMaintenanceInfoOpen) {
+      onView('week');
+    }
+  });
+
+  useKeyPressEvent('m', () => {
+    if (!modalMaintenanceInfoOpen) {
+      onView('month');
+    }
+  });
 
   useEffect(() => {
     requestCalendarData({

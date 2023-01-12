@@ -8,13 +8,13 @@ export const requestBuildingDetails = async ({
   buildingId,
   setBuilding,
   setUsedMaintenancesCount,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
 }: IRequestBuildingDetails) => {
   await Api.get(`/buildings/list/details/${buildingId}`)
     .then((res) => {
       setBuilding(res.data.BuildingDetails);
       setUsedMaintenancesCount(res.data.usedMaintenancesCount);
-      setTotalMaintenacesCount(res.data.totalMaintenacesCount);
+      setTotalMaintenancesCount(res.data.totalMaintenancesCount);
 
       if (setLoading) setLoading(false);
     })
@@ -67,7 +67,7 @@ export const requestDeleteAnnex = async ({
   setDeleteAnnexOnQuery,
   buildingId,
   setBuilding,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IRequestDeleteAnnex) => {
   toast.loading('Excluindo anexo...');
@@ -84,7 +84,7 @@ export const requestDeleteAnnex = async ({
       requestBuildingDetails({
         buildingId,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       }).finally(() => {
         setDeleteAnnexOnQuery(false);

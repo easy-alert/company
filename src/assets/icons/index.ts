@@ -30,7 +30,6 @@ import upTriangle from './upTriangle.svg';
 import gear from './gear.svg';
 import building from './building.svg';
 import copy from './copy.svg';
-import bell from './bell.svg';
 import yellowAlert from './yellowAlert.svg';
 import checkedNoBg from './checkedNoBg.svg';
 import confirmedContactLogo from './confirmedContactLogo.svg';
@@ -74,7 +73,6 @@ export const icon = {
   gear,
   building,
   copy,
-  bell,
   yellowAlert,
   checkedNoBg,
   confirmedContactLogo,
