@@ -72,18 +72,18 @@ export const MaintenancesCalendar = () => {
 
   const eventPropGetter = useCallback(
     (event: any) => ({
-      ...(event.status === 'Pendente' && {
-        style: {
-          background:
-            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
-          color: 'black',
-        },
-      }),
-
       ...(event.status === 'Vencida' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
+          color: 'black',
+        },
+      }),
+
+      ...(event.status === 'Pendente' && {
+        style: {
+          background:
+            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
