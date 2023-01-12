@@ -59,7 +59,7 @@ ${e.id}
           title: '8 a fazer',
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Feita em atraso',
+          status: 'Pendente',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);

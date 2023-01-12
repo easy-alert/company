@@ -89,11 +89,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   }
 
   .rbc-row-content {
-    height: 698px;
+    height: 706px;
     overflow-y: scroll;
     scrollbar-color: transparent;
     scrollbar-width: none;
-    padding-top: ${theme.size.xsm};
 
     ::-webkit-scrollbar {
       width: 0;
@@ -103,7 +102,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
 
   .rbc-allday-cell {
     box-sizing: border-box;
-    min-height: 698px;
+    min-height: 706px;
   }
 
   .rbc-time-header-cell {
@@ -123,19 +122,12 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   }
 
   .rbc-event {
+    margin-top: ${theme.size.xsm};
     padding: ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.sm};
     font-size: 12px;
     line-height: 14px;
     border-radius: 3px;
-
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
-  }
-
-  .rbc-row-content,
-  .rbc-row-content-scroll-container {
-    display: flex;
-    flex-direction: column;
-    gap: ${theme.size.xsm};
   }
 
   ${({ view }) =>

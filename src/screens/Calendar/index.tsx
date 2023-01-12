@@ -75,7 +75,7 @@ export const MaintenancesCalendar = () => {
       ...(event.status === 'Pendente' && {
         style: {
           background:
-            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
+            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
@@ -83,7 +83,7 @@ export const MaintenancesCalendar = () => {
       ...(event.status === 'Vencida' && {
         style: {
           background:
-            'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
+            'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
@@ -91,7 +91,7 @@ export const MaintenancesCalendar = () => {
       ...((event.status === 'Concluída' || event.status === 'Feita em atraso') && {
         style: {
           background:
-            'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 5%, rgba(250,250,250,1) 5%, rgba(250,250,250,1) 100%)',
+            'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
           color: 'black',
         },
       }),
@@ -168,7 +168,7 @@ export const MaintenancesCalendar = () => {
               onView={onView}
               localizer={localizer}
               messages={messages}
-              style={{ height: 760 }}
+              style={{ height: 768 }}
               onSelectEvent={onSelectEvent}
               culture="pt-BR"
               allDayAccessor="id"
