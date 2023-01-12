@@ -13,7 +13,7 @@ export const requestCalendarData = async ({
     .then((res) => {
       const maintenancesWeekMap = res.data.Dates.map(
         (e: { id: string; element: string; date: string }) => ({
-          id: 'Prédio 1',
+          id: e.id,
           title: (
             <div
               style={{
@@ -24,9 +24,9 @@ export const requestCalendarData = async ({
                 paddingBottom: '4px',
               }}
               title={`
-PREDIO
-mesakeoaske
-${e.id}
+Edificação
+Categoria
+Periodicidade
             `}
             >
               {/* if pra se for feita em atraso, mostrar o concluída */}
@@ -56,10 +56,10 @@ ${e.id}
       const maintenancesMonthMap = res.data.Dates.map(
         (e: { id: string; element: string; date: string }) => ({
           id: 'Prédio 1',
-          title: '8 a fazer',
+          title: '10 concluídas',
           start: new Date(e.date),
           end: new Date(e.date),
-          status: 'Pendente',
+          status: 'Concluída',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);
