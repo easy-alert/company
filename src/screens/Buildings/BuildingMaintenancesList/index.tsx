@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 
 // COMPONENTS
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Style from './styles';
-// import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
 import { icon } from '../../../assets/icons/index';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -18,26 +17,20 @@ import { AddedMaintenances } from './utils/types';
 import { requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { IconButton } from '../../../components/Buttons/IconButton';
-import { convertToUrlString } from '../../../utils/functions';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const building = state as { buildingId: string; buildingName: string };
+  const { buildingId } = useParams();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
   useEffect(() => {
-    if (!state) {
-      navigate('/buildings');
-    } else {
-      requestAddedMaintenances({
-        setLoading,
-        setAddedMaintenances,
-        buildingId: building.buildingId,
-      });
-    }
+    requestAddedMaintenances({
+      setLoading,
+      setAddedMaintenances,
+      buildingId: buildingId!,
+    });
   }, []);
 
   return loading ? (
@@ -56,18 +49,11 @@ export const BuildingMaintenancesList = () => {
             label="Editar"
             hideLabelOnMedia
             onClick={() => {
-              navigate(
-                `/buildings/details/${convertToUrlString(
-                  building.buildingName,
-                )}/maintenances/manage`,
-                {
-                  state: building.buildingId,
-                },
-              );
+              navigate(`/buildings/details/${buildingId}/maintenances/manage`);
             }}
           />
         </Style.HeaderWrapper>
-        <ReturnButton />
+        <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
 
       {addedMaintenances?.length ? (
@@ -79,7 +65,7 @@ export const BuildingMaintenancesList = () => {
       ) : (
         <Style.NoMaintenancesContainer>
           <Image img={icon.paper} size="80px" radius="0" />
-          <h3>Nenhuma categoria encontrada.</h3>
+          <h3>Nenhuma categoria ou manutenção encontrada.</h3>
         </Style.NoMaintenancesContainer>
       )}
     </>

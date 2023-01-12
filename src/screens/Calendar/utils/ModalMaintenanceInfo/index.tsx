@@ -7,10 +7,13 @@ import * as Style from './styles';
 // TYPES
 import { IModalMaintenanceInfo } from './utils/types';
 
-export const ModalMaintenanceInfo = ({ setModal, eventId }: IModalMaintenanceInfo) => (
-  <Modal title="Detalhes" setModal={setModal}>
+export const ModalMaintenanceInfo = ({
+  setModal,
+  selectedMaintenanceId,
+}: IModalMaintenanceInfo) => (
+  <Modal title="Detalhes de manutenção" setModal={setModal}>
     <Style.Container>
-      <h5>{eventId}</h5>
+      <h5>{selectedMaintenanceId}</h5>
     </Style.Container>
   </Modal>
 );

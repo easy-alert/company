@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // LIBS
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -9,15 +9,34 @@ import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-// MODALS
-import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
-
 // STYLES
 import * as Style from './styles';
 
+// MODALS
+import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
+
+// FUNCTIONS
+import { requestCalendarData } from './utils/functions';
+import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
+
 export const MaintenancesCalendar = () => {
+  const [date, setDate] = useState(new Date());
+
   const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
-  const [eventId, setEventId] = useState<string>('');
+
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [maintenancesWeekView, setMaintenancesWeekView] = useState<any>([]);
+
+  const [maintenancesMonthView, setMaintenancesMonthView] = useState<any>([]);
+
+  const [maintenancesDisplay, setMaintenancesDisplay] = useState<any>([]);
+
+  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+
+  const [calendarType, setCalendarType] = useState<
+    'month' | 'week' | 'work_week' | 'day' | 'agenda'
+  >('month');
 
   const locales = {
     'pt-BR': ptBR,
@@ -53,87 +72,82 @@ export const MaintenancesCalendar = () => {
 
   const eventPropGetter = useCallback(
     (event: any) => ({
-      ...(event.status === 'Vencida' && {
-        style: {
-          backgroundColor: 'red',
-        },
-      }),
-
       ...(event.status === 'Pendente' && {
         style: {
-          backgroundColor: 'yellow',
+          background:
+            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
+          color: 'black',
         },
       }),
 
-      ...(event.status === 'Concluída' && {
+      ...(event.status === 'Vencida' && {
         style: {
-          backgroundColor: 'green',
+          background:
+            'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
+          color: 'black',
         },
       }),
 
-      ...(event.status === 'Feita em atraso' && {
+      ...((event.status === 'Concluída' || event.status === 'Feita em atraso') && {
         style: {
-          backgroundColor: 'brown',
+          background:
+            'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
+          color: 'black',
         },
       }),
     }),
     [],
   );
 
-  const events = [
-    {
-      id: 'Prédio 1',
-      title: (
-        <div
-          title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            Prédio 1
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            Categoria 1
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            Manutenção 1
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Concluída',
+  const onSelectEvent = useCallback(
+    (maintenance: any) => {
+      if (calendarType === 'week') {
+        setSelectedMaintenanceId(maintenance.id);
+        setModalMaintenanceInfoOpen(true);
+      } else {
+        setDate(maintenance.start);
+        setMaintenancesDisplay([...maintenancesWeekView]);
+        setCalendarType('week');
+      }
     },
-    {
-      id: 'Prédio 2',
-      title: (
-        <div
-          title="Prédio 1&#10;Categoria 1&#10;Manutenção 1"
-        >
-          <div className="ellipsis" style={{ fontSize: '18px' }}>
-            Prédio 2
-          </div>
-          <div className="ellipsis" style={{ fontSize: '14px' }}>
-            Categoria 2
-          </div>
-          <div className="ellipsis" style={{ fontSize: '12px' }}>
-            Manutenção 2
-          </div>
-        </div>
-      ),
-      start: new Date(),
-      end: new Date(),
-      status: 'Vencida',
-    },
-  ];
+    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay, date, setDate],
+  );
 
-  const onSelectEvent = useCallback((calEvent: any) => {
-    setEventId(calEvent.id);
-    setModalMaintenanceInfoOpen(true);
+  const onView = useCallback(
+    (newView: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
+      if (newView === 'month') {
+        setCalendarType('month');
+        setMaintenancesDisplay([...maintenancesMonthView]);
+      } else {
+        setCalendarType('week');
+        setMaintenancesDisplay([...maintenancesWeekView]);
+      }
+
+      setCalendarType(newView);
+    },
+    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
+  );
+
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
+
+  useEffect(() => {
+    requestCalendarData({
+      setLoading,
+      setMaintenancesWeekView,
+      setMaintenancesMonthView,
+      setMaintenancesDisplay,
+    });
   }, []);
 
-  return (
+  return loading ? (
+    <DotSpinLoading />
+  ) : (
     <>
-      {modalMaintenanceInfoOpen && eventId && (
-        <ModalMaintenanceInfo setModal={setModalMaintenanceInfoOpen} eventId={eventId} />
+      {modalMaintenanceInfoOpen && selectedMaintenanceId && (
+        <ModalMaintenanceInfo
+          setModal={setModalMaintenanceInfoOpen}
+          selectedMaintenanceId={selectedMaintenanceId}
+        />
       )}
       <Style.Container>
         <Style.Header>
@@ -143,20 +157,27 @@ export const MaintenancesCalendar = () => {
             <option value="Prédio 1">Prédio 1</option>
           </select>
         </Style.Header>
-        <Style.CalendarWrapper>
-          <Calendar
-            eventPropGetter={eventPropGetter}
-            tooltipAccessor={() => ''}
-            localizer={localizer}
-            messages={messages}
-            events={events}
-            style={{ height: 660 }}
-            onSelectEvent={onSelectEvent}
-            culture="pt-BR"
-            showAllEvents
-            allDayAccessor="id"
-          />
-        </Style.CalendarWrapper>
+        <Style.CalendarScroll>
+          <Style.CalendarWrapper view={calendarType}>
+            <Calendar
+              date={date}
+              onNavigate={onNavigate}
+              eventPropGetter={eventPropGetter}
+              tooltipAccessor={() => ''}
+              view={calendarType}
+              onView={onView}
+              localizer={localizer}
+              messages={messages}
+              style={{ height: 768 }}
+              onSelectEvent={onSelectEvent}
+              culture="pt-BR"
+              allDayAccessor="id"
+              showAllEvents
+              events={maintenancesDisplay}
+              drilldownView="week"
+            />
+          </Style.CalendarWrapper>
+        </Style.CalendarScroll>
       </Style.Container>
     </>
   );

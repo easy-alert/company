@@ -47,13 +47,16 @@ const AppRoutes = () => (
 
           <Route path="/buildings" element={<Outlet />}>
             <Route index element={<BuildingsList />} />
-            <Route path="details/:buildingName" element={<BuildingDetails />} />
+
+            <Route path="details/:buildingId" element={<BuildingDetails />} />
+
             <Route
-              path="details/:buildingName/maintenances/manage"
+              path="details/:buildingId/maintenances/manage"
               element={<BuildingManageMaintenances />}
             />
+
             <Route
-              path="details/:buildingName/maintenances/list"
+              path="details/:buildingId/maintenances/list"
               element={<BuildingMaintenancesList />}
             />
           </Route>

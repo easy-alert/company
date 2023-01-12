@@ -1,6 +1,6 @@
 // COMPONENTS
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { icon } from '../../../assets/icons';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
@@ -23,7 +23,6 @@ import {
 import {
   applyMask,
   capitalizeFirstLetter,
-  convertToUrlString,
   dateFormatter,
   requestBuldingTypes,
 } from '../../../utils/functions';
@@ -38,8 +37,7 @@ import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const buildingId = state as string;
+  const { buildingId } = useParams();
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
   const emailConfirmUrl = `${window.location.origin}/confirm/email`;
@@ -70,18 +68,15 @@ export const BuildingDetails = () => {
     useState<INotificationConfiguration>();
 
   useEffect(() => {
-    if (!state) {
-      navigate('/buildings');
-    } else {
-      requestBuldingTypes({ setBuildingTypes });
+    requestBuldingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
-        buildingId,
+        buildingId: buildingId!,
         setLoading,
         setBuilding,
         setUsedMaintenancesCount,
         setTotalMaintenacesCount,
       });
-    }
+    });
   }, []);
 
   return loading ? (
@@ -124,10 +119,10 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddFilesOpen && (
+      {modalAddFilesOpen && building && (
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
-          buildingId={buildingId}
+          buildingId={building.id}
           setTotalMaintenacesCount={setTotalMaintenacesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
@@ -187,7 +182,11 @@ export const BuildingDetails = () => {
 
               <Style.BuildingCardData>
                 <p className="p3">Tipo:</p>
-                <p className="p3">{capitalizeFirstLetter(building?.BuildingType.name!)}</p>
+                <p className="p3">
+                  {building?.BuildingType.name
+                    ? capitalizeFirstLetter(building.BuildingType.name)
+                    : '-'}
+                </p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
@@ -199,7 +198,9 @@ export const BuildingDetails = () => {
 
               <Style.BuildingCardData>
                 <p className="p3">Término da garantia:</p>
-                <p className="p3">{dateFormatter(building?.warrantyExpiration!)}</p>
+                <p className="p3">
+                  {building?.warrantyExpiration ? dateFormatter(building.warrantyExpiration) : '-'}
+                </p>
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
@@ -386,29 +387,14 @@ export const BuildingDetails = () => {
               Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenacesCount})
             </h5>
             <Style.ButtonWrapper>
-              {/* <Button
-                label="Visualizar"
-                onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
-                    {
-                      state: buildingId,
-                    },
-                  );
-                }}
-              /> */}
-
               <IconButton
                 icon={icon.listWithBg}
                 label="Visualizar"
                 hideLabelOnMedia
                 onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/list`,
-                    {
-                      state: { buildingId, buildingName: building!.name },
-                    },
-                  );
+                  if (building?.id) {
+                    navigate(`/buildings/details/${building?.id}/maintenances/list`);
+                  }
                 }}
               />
 
@@ -417,12 +403,9 @@ export const BuildingDetails = () => {
                 label="Editar"
                 hideLabelOnMedia
                 onClick={() => {
-                  navigate(
-                    `/buildings/details/${convertToUrlString(building!.name)}/maintenances/manage`,
-                    {
-                      state: buildingId,
-                    },
-                  );
+                  if (building?.id) {
+                    navigate(`/buildings/details/${building?.id}/maintenances/manage`);
+                  }
                 }}
               />
             </Style.ButtonWrapper>
@@ -459,7 +442,7 @@ export const BuildingDetails = () => {
                       requestDeleteAnnex({
                         annexeId: element.id,
                         setDeleteAnnexOnQuery,
-                        buildingId,
+                        buildingId: building.id,
                         setBuilding,
                         setTotalMaintenacesCount,
                         setUsedMaintenancesCount,

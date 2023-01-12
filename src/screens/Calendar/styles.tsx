@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../styles/theme';
 
 export const Container = styled.header`
@@ -13,7 +13,6 @@ export const Header = styled.header`
   margin-bottom: ${theme.size.sm};
 
   > select {
-    background-color: transparent;
     max-width: 300px;
   }
 
@@ -24,13 +23,19 @@ export const Header = styled.header`
   }
 `;
 
-export const CalendarWrapper = styled.div`
-  min-width: 700px;
+export const CalendarScroll = styled.div`
   width: 100%;
+  display: flex;
+  overflow-x: auto;
+`;
 
+export const CalendarWrapper = styled.div<{ view: string }>`
+  width: 100%;
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
   border-radius: ${theme.size.xsm};
+  min-width: 800px;
+  position: relative;
 
   .ellipsis {
     white-space: nowrap;
@@ -61,16 +66,13 @@ export const CalendarWrapper = styled.div`
     }
   }
 
-  .rbc-current {
+  .rbc-now {
     > button {
       color: ${theme.color.primary};
       font-weight: 900;
     }
   }
 
-  .rbc-date-cell {
-    pointer-events: none;
-  }
   .rbc-time-header-gutter {
     padding: 0;
   }
@@ -82,11 +84,15 @@ export const CalendarWrapper = styled.div`
     display: none;
   }
 
+  .rbc-month-view {
+    border-radius: ${theme.size.xsm};
+  }
+
   .rbc-row-content {
-    max-height: 599px;
+    height: 706px;
     overflow-y: scroll;
-    scrollbar-width: none;
     scrollbar-color: transparent;
+    scrollbar-width: none;
 
     ::-webkit-scrollbar {
       width: 0;
@@ -96,11 +102,12 @@ export const CalendarWrapper = styled.div`
 
   .rbc-allday-cell {
     box-sizing: border-box;
-    min-height: 598px;
+    min-height: 706px;
   }
 
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
+    border-radius: ${theme.size.xsm};
   }
 
   .rbc-header {
@@ -111,9 +118,43 @@ export const CalendarWrapper = styled.div`
   .rbc-time-header-content {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
+    border-radius: ${theme.size.xsm};
   }
 
   .rbc-event {
-    padding: ${theme.size.xxsm};
+    margin-top: ${theme.size.xsm};
+    padding: ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.sm};
+    font-size: 12px;
+    line-height: 14px;
+    border-radius: 3px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
+  }
+
+  ${({ view }) =>
+    view === 'month' &&
+    css`
+      .rbc-button-link {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        text-align: right;
+        padding-right: 6px;
+      }
+
+      .rbc-date-cell {
+        padding-right: 0;
+      }
+    `}
+
+  .rbc-btn-group {
+    :first-child {
+      > button {
+        background-color: transparent;
+      }
+    }
+  }
+
+  .rbc-off-range-bg {
+    background-color: #ededed80;
   }
 `;

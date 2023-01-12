@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // COMPONENTS
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Style from './styles';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
@@ -25,8 +25,7 @@ import { DotLoading } from '../../../components/Loadings/DotLoading';
 
 export const BuildingManageMaintenances = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const buildingId = state as string;
+  const { buildingId } = useParams();
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -47,12 +46,9 @@ export const BuildingManageMaintenances = () => {
   const hasSomeMaintenance = categories.some((element) => element.Maintenances.length > 0);
 
   useEffect(() => {
-    if (!state) {
-      navigate('/buildings');
-    } else {
-      requestBuldingListForSelect({ setBuildingListForSelect, buildingId });
-      requestListCategoriesToManage({ setLoading, setCategories, buildingId });
-    }
+    requestBuldingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
+      requestListCategoriesToManage({ setLoading, setCategories, buildingId: buildingId! });
+    });
   }, []);
 
   return loading ? (
@@ -70,12 +66,17 @@ export const BuildingManageMaintenances = () => {
               label="Salvar"
               hideLabelOnMedia
               onClick={() => {
-                requestManageBuildingMaintenances({ categories, buildingId, navigate, setOnQuery });
+                requestManageBuildingMaintenances({
+                  categories,
+                  buildingId: buildingId!,
+                  navigate,
+                  setOnQuery,
+                });
               }}
             />
           )}
         </Style.HeaderWrapper>
-        <ReturnButton />
+        <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
       {categories.length > 0 && hasSomeMaintenance ? (
         <>
@@ -91,7 +92,7 @@ export const BuildingManageMaintenances = () => {
                 requestListCategoriesToManage({
                   setLoading,
                   setCategories,
-                  buildingId: toCopyBuildingId,
+                  buildingId: toCopyBuildingId!,
                   setTableLoading,
                 });
               }}
