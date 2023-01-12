@@ -10,7 +10,7 @@ export const requestRegisterBuildingFile = async ({
   setOnQuery,
   buildingId,
   setBuilding,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   setModal,
 }: IRequestRegisterBuildingFile) => {
@@ -38,7 +38,7 @@ export const requestRegisterBuildingFile = async ({
       requestBuildingDetails({
         buildingId,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
       setModal(false);

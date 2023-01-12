@@ -21,7 +21,7 @@ export const requestEditNotificationConfiguration = async ({
   buildingId,
   setBuilding,
   buildingNotificationConfigurationId,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   emailConfirmUrl,
   phoneConfirmUrl,
@@ -51,7 +51,7 @@ export const requestEditNotificationConfiguration = async ({
       requestBuildingDetails({
         buildingId,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
       setModal(false);
@@ -69,7 +69,7 @@ export const requestDeleteNotificationConfiguration = async ({
   buildingNotificationConfigurationId,
   setBuilding,
   buildingId,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IRequestDeleteNotificationConfiguration) => {
   setOnQuery(true);
@@ -83,7 +83,7 @@ export const requestDeleteNotificationConfiguration = async ({
       requestBuildingDetails({
         buildingId,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
       setModal(false);

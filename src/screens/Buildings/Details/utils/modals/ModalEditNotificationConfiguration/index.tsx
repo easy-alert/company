@@ -27,7 +27,7 @@ export const ModalEditNotificationConfiguration = ({
   buildingId,
   setBuilding,
   selectedNotificationRow,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   emailConfirmUrl,
   phoneConfirmUrl,
@@ -55,7 +55,7 @@ export const ModalEditNotificationConfiguration = ({
             setOnQuery,
             values,
             setBuilding,
-            setTotalMaintenacesCount,
+            setTotalMaintenancesCount,
             setUsedMaintenancesCount,
             emailConfirmUrl,
             phoneConfirmUrl,
@@ -132,7 +132,7 @@ export const ModalEditNotificationConfiguration = ({
                         setOnQuery,
                         setBuilding,
                         buildingId,
-                        setTotalMaintenacesCount,
+                        setTotalMaintenancesCount,
                         setUsedMaintenancesCount,
                       });
                     }}

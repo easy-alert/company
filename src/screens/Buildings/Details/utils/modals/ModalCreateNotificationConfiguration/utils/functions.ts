@@ -17,7 +17,7 @@ export const requestCreateNotificationConfiguration = async ({
   setOnQuery,
   buildingId,
   setBuilding,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   phoneConfirmUrl,
   emailConfirmUrl,
@@ -46,7 +46,7 @@ export const requestCreateNotificationConfiguration = async ({
       requestBuildingDetails({
         buildingId,
         setBuilding,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
       setModal(false);

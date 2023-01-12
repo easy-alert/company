@@ -52,7 +52,7 @@ export const BuildingDetails = () => {
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
-  const [totalMaintenacesCount, setTotalMaintenacesCount] = useState<number>(0);
+  const [totalMaintenancesCount, setTotalMaintenancesCount] = useState<number>(0);
 
   const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
 
@@ -74,7 +74,7 @@ export const BuildingDetails = () => {
         setLoading,
         setBuilding,
         setUsedMaintenancesCount,
-        setTotalMaintenacesCount,
+        setTotalMaintenancesCount,
       });
     });
   }, []);
@@ -89,7 +89,7 @@ export const BuildingDetails = () => {
           building={building}
           setBuilding={setBuilding}
           buildingTypes={buildingTypes}
-          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
         />
       )}
@@ -99,7 +99,7 @@ export const BuildingDetails = () => {
           setModal={setModalCreateNotificationConfigurationOpen}
           buildingId={building.id}
           setBuilding={setBuilding}
-          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
@@ -112,7 +112,7 @@ export const BuildingDetails = () => {
           buildingId={building.id}
           setBuilding={setBuilding}
           selectedNotificationRow={selectedNotificationRow}
-          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
@@ -123,7 +123,7 @@ export const BuildingDetails = () => {
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
           buildingId={building.id}
-          setTotalMaintenacesCount={setTotalMaintenacesCount}
+          setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
         />
@@ -384,7 +384,7 @@ export const BuildingDetails = () => {
         <Style.Card>
           <Style.MaintenanceCardHeader>
             <h5>
-              Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenacesCount})
+              Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenancesCount})
             </h5>
             <Style.ButtonWrapper>
               <IconButton
@@ -444,7 +444,7 @@ export const BuildingDetails = () => {
                         setDeleteAnnexOnQuery,
                         buildingId: building.id,
                         setBuilding,
-                        setTotalMaintenacesCount,
+                        setTotalMaintenancesCount,
                         setUsedMaintenancesCount,
                       });
                     }}

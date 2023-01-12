@@ -22,7 +22,7 @@ export interface IModalEditBuilding {
   building: IBuildingDetail;
   buildingTypes: IBuildingTypes[];
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
 // REQUESTS
@@ -32,7 +32,7 @@ export interface IRequestEditBuilding {
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
 export interface IRequestDeleteBuilding {

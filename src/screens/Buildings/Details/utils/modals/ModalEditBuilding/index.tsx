@@ -33,7 +33,7 @@ export const ModalEditBuilding = ({
   building,
   setBuilding,
   buildingTypes,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -63,7 +63,7 @@ export const ModalEditBuilding = ({
             setOnQuery,
             values,
             setBuilding,
-            setTotalMaintenacesCount,
+            setTotalMaintenancesCount,
             setUsedMaintenancesCount,
           });
         }}

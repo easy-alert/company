@@ -19,7 +19,7 @@ export const ModalAddFiles = ({
   setModal,
   buildingId,
   setBuilding,
-  setTotalMaintenacesCount,
+  setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IModalAddFiles) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +84,7 @@ export const ModalAddFiles = ({
               setOnQuery,
               buildingId,
               setBuilding,
-              setTotalMaintenacesCount,
+              setTotalMaintenancesCount,
               setUsedMaintenancesCount,
               setModal,
             });

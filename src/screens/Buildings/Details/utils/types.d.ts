@@ -41,7 +41,7 @@ export interface IRequestBuildingDetails {
   setBuilding: (setBuilding: IBuildingDetail) => void;
   buildingId: string;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
 export interface IRequestResendConfirmation {
@@ -55,5 +55,5 @@ export interface IRequestDeleteAnnex {
   setBuilding: (setBuilding: IBuildingDetail) => void;
   buildingId: string;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenacesCount: (setTotalMaintenacesCount: number) => void;
+  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
