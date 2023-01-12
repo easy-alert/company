@@ -130,6 +130,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
   }
 
+  .rbc-row-segment {
+    padding: 0 ${theme.size.xxsm};
+  }
+
   ${({ view }) =>
     view === 'month' &&
     css`

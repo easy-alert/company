@@ -16,7 +16,11 @@ export const ModalMaintenanceInfo = ({
   <Modal title="Detalhes de manutenção" setModal={setModal}>
     <Style.Container>
       <h3>{selectedMaintenanceId}</h3>
-      <EventTag status="Concluída" />
+      <Style.TagWrapper>
+        {/* if pra se for feita em atraso, mostrar o concluída */}
+        <EventTag status="Concluída" />
+        <EventTag status="Feita em atraso" />
+      </Style.TagWrapper>
       <Style.Content>
         <Style.Row>
           <h6>Categoria</h6>

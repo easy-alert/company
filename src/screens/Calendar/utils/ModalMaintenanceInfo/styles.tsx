@@ -17,6 +17,12 @@ export const Content = styled.div`
   gap: ${theme.size.xsm};
 `;
 
+export const TagWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+`;
+
 export const Row = styled.div`
   display: flex;
   flex-direction: column;
