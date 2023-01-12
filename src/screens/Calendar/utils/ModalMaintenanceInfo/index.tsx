@@ -11,7 +11,7 @@ export const ModalMaintenanceInfo = ({
   setModal,
   selectedMaintenanceId,
 }: IModalMaintenanceInfo) => (
-  <Modal title="Detalhes" setModal={setModal}>
+  <Modal title="Detalhes de manutenção" setModal={setModal}>
     <Style.Container>
       <h5>{selectedMaintenanceId}</h5>
     </Style.Container>
