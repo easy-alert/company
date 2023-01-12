@@ -15,6 +15,7 @@ export const DragAndDropZone = styled.div`
   margin-top: ${theme.size.xxsm};
   width: 100%;
   border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
   height: 82px;
 
