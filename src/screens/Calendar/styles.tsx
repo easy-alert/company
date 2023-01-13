@@ -34,7 +34,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
   border-radius: ${theme.size.xsm};
-  min-width: 800px;
+  min-width: 850px;
   position: relative;
 
   .ellipsis {
@@ -156,6 +156,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
         background-color: transparent;
       }
     }
+  }
+
+  .rbc-selected {
+    background-color: red;
   }
 
   .rbc-off-range-bg {

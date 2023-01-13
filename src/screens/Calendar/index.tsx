@@ -165,7 +165,6 @@ export const MaintenancesCalendar = () => {
           <h2>Calendário</h2>
           <select>
             <option value="">Todas</option>
-            <option value="Prédio 1">Prédio 1</option>
           </select>
         </Style.Header>
         <Style.CalendarScroll>

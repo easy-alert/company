@@ -35,13 +35,13 @@ Periodicidade
                 <EventTag status="Feita em atraso" />
               </div>
 
-              <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '16px' }}>
+              <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
                 Edificação
               </div>
-              <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '14px' }}>
+              <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
                 Categoria
               </div>
-              <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '12px' }}>
+              <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
                 Periodicidade
               </div>
             </div>
