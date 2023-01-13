@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from '../../../../styles/theme';
 
 export const Container = styled.div`
@@ -17,7 +17,7 @@ export const Content = styled.div`
   gap: ${theme.size.xsm};
 `;
 
-export const TagWrapper = styled.div`
+export const StatusTagWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.xsm};
@@ -29,7 +29,7 @@ export const Row = styled.div`
   gap: ${theme.size.xxsm};
 `;
 
-export const DragAndDropZone = styled.div<{ onFileQuery: boolean }>`
+export const DragAndDropZoneFile = styled.div`
   margin-top: ${theme.size.xxsm};
   width: 100%;
   border: 1px dashed ${theme.color.gray4};
@@ -41,15 +41,8 @@ export const DragAndDropZone = styled.div<{ onFileQuery: boolean }>`
   :hover {
     opacity: 0.7;
   }
-
-  ${({ onFileQuery }) =>
-    onFileQuery &&
-    css`
-      opacity: 0.5;
-      pointer-events: none;
-    `}
 `;
-export const DragAndDropContent = styled.div`
+export const DragAndDropFileContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,10 +53,10 @@ export const DragAndDropContent = styled.div`
   }
 `;
 
-export const FileRow = styled.div`
+export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   gap: ${theme.size.xsm};
   margin-top: ${theme.size.xxsm};
 `;
@@ -87,12 +80,64 @@ export const Tag = styled.div`
   }
 `;
 
-export const LoadingTag = styled.div`
+export const ImageTag = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  > img {
+    border-top-left-radius: ${theme.size.xxsm};
+    border-top-right-radius: ${theme.size.xxsm};
+    width: 132px;
+    height: 108px;
+  }
+
+  > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    background-color: ${theme.color.gray1};
+    padding: ${theme.size.xsm};
+    border-bottom-left-radius: ${theme.size.xxsm};
+    border-bottom-right-radius: ${theme.size.xxsm};
+    height: 28px;
+    width: 132px;
+  }
+`;
+
+export const FileLoadingTag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
   background-color: ${theme.color.primaryL};
-  width: 125px;
   border-radius: ${theme.size.xxsm};
+  width: 130px;
+`;
+
+export const ImageLoadingTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
+  height: 136px;
+  width: 132px;
+`;
+
+export const DragAndDropZoneImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
+  height: 136px;
+  width: 132px;
+  cursor: pointer;
+  transition: 0.25s;
+  :hover {
+    opacity: 0.7;
+  }
 `;

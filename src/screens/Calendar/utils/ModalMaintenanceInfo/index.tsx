@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 // LIBS
 import { useDropzone } from 'react-dropzone';
 
@@ -15,7 +16,7 @@ import * as Style from './styles';
 import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IFiles, IModalMaintenanceInfo } from './utils/types';
+import { IFileAndImage, IModalMaintenanceInfo } from './utils/types';
 import { IconButton } from '../../../../components/Buttons/IconButton';
 import { uploadFile } from '../../../../utils/functions';
 
@@ -23,18 +24,32 @@ export const ModalMaintenanceInfo = ({
   setModal,
   selectedMaintenanceId,
 }: IModalMaintenanceInfo) => {
+  const [files, setFiles] = useState<IFileAndImage[]>([]);
+  const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: false,
+    disabled: onFileQuery,
   });
 
-  const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [files, setFiles] = useState<IFiles[]>([]);
+  const [images, setImages] = useState<IFileAndImage[]>([]);
+  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
+  const {
+    acceptedFiles: acceptedImages,
+    getRootProps: getRootPropsImages,
+    getInputProps: getInputPropsImages,
+  } = useDropzone({
+    multiple: false,
+    accept: {
+      'image/png': ['.png'],
+      'image/jpg': ['.jpg'],
+      'image/jpeg': ['.jpeg'],
+    },
+    disabled: onImageQuery,
+  });
 
   useEffect(() => {
     if (acceptedFiles.length > 0) {
-      const upload = async () => {
+      const uploadAcceptedFiles = async () => {
         setOnFileQuery(true);
 
         const { Location: fileUrl, originalname: originalName } = await uploadFile(
@@ -49,19 +64,40 @@ export const ModalMaintenanceInfo = ({
         setOnFileQuery(false);
       };
 
-      upload();
+      uploadAcceptedFiles();
     }
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    if (acceptedImages.length > 0) {
+      const uploadAcceptedImages = async () => {
+        setOnImageQuery(true);
+
+        const { Location: fileUrl, originalname: originalName } = await uploadFile(
+          acceptedImages[0],
+        );
+
+        setImages((prevState) => {
+          let newState = [...prevState];
+          newState = [...newState, { name: originalName, url: fileUrl }];
+          return newState;
+        });
+        setOnImageQuery(false);
+      };
+
+      uploadAcceptedImages();
+    }
+  }, [acceptedImages]);
 
   return (
     <Modal title="Detalhes de manutenção" setModal={setModal}>
       <Style.Container>
         <h3>{selectedMaintenanceId}</h3>
-        <Style.TagWrapper>
+        <Style.StatusTagWrapper>
           {/* if pra se for feita em atraso, mostrar o concluída */}
           <EventTag status="Concluída" />
           <EventTag status="Feita em atraso" />
-        </Style.TagWrapper>
+        </Style.StatusTagWrapper>
         <Style.Content>
           <Style.Row>
             <h6>Categoria</h6>
@@ -91,21 +127,17 @@ export const ModalMaintenanceInfo = ({
           </Style.Row>
           <Style.Row>
             <h6>Anexar</h6>
-            <Style.DragAndDropZone
-              {...getRootProps({ className: 'dropzone' })}
-              onFileQuery={onFileQuery}
-            >
+            <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
 
-              <Style.DragAndDropContent>
+              <Style.DragAndDropFileContent>
                 <Image img={icon.addFile} width="60px" height="48px" radius="0" />
                 <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-              </Style.DragAndDropContent>
-            </Style.DragAndDropZone>
+              </Style.DragAndDropFileContent>
+            </Style.DragAndDropZoneFile>
 
-            <Style.FileRow>
+            <Style.FileAndImageRow>
               {files.map((e, i: number) => (
-                // eslint-disable-next-line react/no-array-index-key
                 <Style.Tag title={e.name} key={i}>
                   <p className="p3">{e.name}</p>
                   <IconButton
@@ -122,18 +154,39 @@ export const ModalMaintenanceInfo = ({
                 </Style.Tag>
               ))}
               {onFileQuery && (
-                <Style.LoadingTag>
+                <Style.FileLoadingTag>
                   <DotLoading />
-                </Style.LoadingTag>
+                </Style.FileLoadingTag>
               )}
-            </Style.FileRow>
+            </Style.FileAndImageRow>
           </Style.Row>
           <Style.Row>
             <h6>Imagens</h6>
-            <p className="p2">2</p>
+
+            <Style.FileAndImageRow>
+              {images.map((e, i: number) => (
+                <Style.ImageTag key={i}>
+                  <img src={e.url} alt="" />
+                  <p title={e.name} className="p6">
+                    {e.name}
+                  </p>
+                </Style.ImageTag>
+              ))}
+
+              {onImageQuery && (
+                <Style.ImageLoadingTag>
+                  <DotLoading />
+                </Style.ImageLoadingTag>
+              )}
+
+              <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
+                <input {...getInputPropsImages()} />
+                <Image img={icon.addImage} width="50px" height="48px" radius="0" />
+              </Style.DragAndDropZoneImage>
+            </Style.FileAndImageRow>
           </Style.Row>
         </Style.Content>
-        <Button label="Enviar relato" center disable={onFileQuery} />
+        <Button label="Enviar relato" center disable={onFileQuery || onImageQuery} />
       </Style.Container>
     </Modal>
   );

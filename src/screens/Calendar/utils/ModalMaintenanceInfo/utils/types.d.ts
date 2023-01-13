@@ -3,7 +3,7 @@ export interface IModalMaintenanceInfo {
   selectedMaintenanceId: string;
 }
 
-export interface IFiles {
+export interface IFileAndImage {
   name: string;
   url: string;
 }
