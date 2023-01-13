@@ -46,8 +46,16 @@ Periodicidade
               </div>
             </div>
           ),
-          start: new Date(new Date(e.date).toUTCString()),
-          end: new Date(new Date(e.date).toUTCString()),
+          start: new Date(
+            new Date(e.date).getUTCFullYear(),
+            new Date(e.date).getUTCMonth(),
+            new Date(e.date).getUTCDate(),
+          ),
+          end: new Date(
+            new Date(e.date).getUTCFullYear(),
+            new Date(e.date).getUTCMonth(),
+            new Date(e.date).getUTCDate(),
+          ),
           status: 'Feita em atraso',
         }),
       );
@@ -57,8 +65,16 @@ Periodicidade
         (e: { id: string; element: string; date: string }) => ({
           id: 'Prédio 1',
           title: '10 concluídas',
-          start: new Date(new Date(e.date).toUTCString()),
-          end: new Date(new Date(e.date).toUTCString()),
+          start: new Date(
+            new Date(e.date).getUTCFullYear(),
+            new Date(e.date).getUTCMonth(),
+            new Date(e.date).getUTCDate(),
+          ),
+          end: new Date(
+            new Date(e.date).getUTCFullYear(),
+            new Date(e.date).getUTCMonth(),
+            new Date(e.date).getUTCDate(),
+          ),
           status: 'Concluída',
         }),
       );
