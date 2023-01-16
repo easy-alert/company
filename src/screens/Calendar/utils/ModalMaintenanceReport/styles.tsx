@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../../../styles/theme';
 
 export const Container = styled.div`
@@ -23,10 +23,21 @@ export const StatusTagWrapper = styled.div`
   gap: ${theme.size.xsm};
 `;
 
-export const Row = styled.div`
+export const Row = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: default;
+      pointer-events: none;
+
+      :hover {
+        opacity: 1;
+      }
+    `}
 `;
 
 export const DragAndDropZoneFile = styled.div`
@@ -83,6 +94,7 @@ export const Tag = styled.div`
 export const ImageTag = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
 
   > img {
     border-top-left-radius: ${theme.size.xxsm};
@@ -102,6 +114,23 @@ export const ImageTag = styled.div`
     border-bottom-right-radius: ${theme.size.xxsm};
     height: 28px;
     width: 132px;
+  }
+`;
+
+export const IconButtonHover = styled.div`
+  position: absolute;
+  height: 136px;
+  width: 132px;
+  background-color: ${`${theme.color.gray3}B3`};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: ${theme.size.xxsm};
+  opacity: 0;
+
+  transition: 0.25s;
+  :hover {
+    opacity: 1;
   }
 `;
 

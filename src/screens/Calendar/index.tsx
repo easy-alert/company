@@ -14,7 +14,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // MODALS
-import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
+import { ModalMaintenanceReport } from './utils/ModalMaintenanceReport';
 
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
@@ -23,7 +23,7 @@ import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
-  const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
+  const [modalMaintenanceReportOpen, setModalMaintenanceReportOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -104,7 +104,7 @@ export const MaintenancesCalendar = () => {
     (maintenance: any) => {
       if (calendarType === 'week') {
         setSelectedMaintenanceId(maintenance.id);
-        setModalMaintenanceInfoOpen(true);
+        setModalMaintenanceReportOpen(true);
       } else {
         setDate(maintenance.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
@@ -130,13 +130,13 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalMaintenanceInfoOpen) {
+    if (!modalMaintenanceReportOpen) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalMaintenanceInfoOpen) {
+    if (!modalMaintenanceReportOpen) {
       onView('month');
     }
   });
@@ -154,9 +154,9 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalMaintenanceInfoOpen && selectedMaintenanceId && (
-        <ModalMaintenanceInfo
-          setModal={setModalMaintenanceInfoOpen}
+      {modalMaintenanceReportOpen && selectedMaintenanceId && (
+        <ModalMaintenanceReport
+          setModal={setModalMaintenanceReportOpen}
           selectedMaintenanceId={selectedMaintenanceId}
         />
       )}

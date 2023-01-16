@@ -12,8 +12,9 @@ export const requestCalendarData = async ({
   await Api.get('calendars/list')
     .then((res) => {
       const maintenancesWeekMap = res.data.Dates.map(
-        (e: { id: string; element: string; date: string }) => ({
-          id: e.id,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (e: any) => ({
+          id: e.Maintenance.id,
           title: (
             <div
               style={{
@@ -47,14 +48,14 @@ Periodicidade
             </div>
           ),
           start: new Date(
-            new Date(e.date).getUTCFullYear(),
-            new Date(e.date).getUTCMonth(),
-            new Date(e.date).getUTCDate(),
+            new Date(e.notificationDate).getUTCFullYear(),
+            new Date(e.notificationDate).getUTCMonth(),
+            new Date(e.notificationDate).getUTCDate(),
           ),
           end: new Date(
-            new Date(e.date).getUTCFullYear(),
-            new Date(e.date).getUTCMonth(),
-            new Date(e.date).getUTCDate(),
+            new Date(e.notificationDate).getUTCFullYear(),
+            new Date(e.notificationDate).getUTCMonth(),
+            new Date(e.notificationDate).getUTCDate(),
           ),
           status: 'Feita em atraso',
         }),
@@ -62,18 +63,18 @@ Periodicidade
       setMaintenancesWeekView([...maintenancesWeekMap]);
 
       const maintenancesMonthMap = res.data.Dates.map(
-        (e: { id: string; element: string; date: string }) => ({
+        (e: { id: string; element: string; notificationDate: string }) => ({
           id: 'Prédio 1',
           title: '10 concluídas',
           start: new Date(
-            new Date(e.date).getUTCFullYear(),
-            new Date(e.date).getUTCMonth(),
-            new Date(e.date).getUTCDate(),
+            new Date(e.notificationDate).getUTCFullYear(),
+            new Date(e.notificationDate).getUTCMonth(),
+            new Date(e.notificationDate).getUTCDate(),
           ),
           end: new Date(
-            new Date(e.date).getUTCFullYear(),
-            new Date(e.date).getUTCMonth(),
-            new Date(e.date).getUTCDate(),
+            new Date(e.notificationDate).getUTCFullYear(),
+            new Date(e.notificationDate).getUTCMonth(),
+            new Date(e.notificationDate).getUTCDate(),
           ),
           status: 'Concluída',
         }),

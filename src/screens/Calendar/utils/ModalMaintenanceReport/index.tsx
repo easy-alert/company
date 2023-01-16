@@ -16,14 +16,14 @@ import * as Style from './styles';
 import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IFileAndImage, IModalMaintenanceInfo } from './utils/types';
+import { IFileAndImage, IModalMaintenanceReport } from './utils/types';
 import { IconButton } from '../../../../components/Buttons/IconButton';
 import { uploadFile } from '../../../../utils/functions';
 
-export const ModalMaintenanceInfo = ({
+export const ModalMaintenanceReport = ({
   setModal,
   selectedMaintenanceId,
-}: IModalMaintenanceInfo) => {
+}: IModalMaintenanceReport) => {
   const [files, setFiles] = useState<IFileAndImage[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -125,7 +125,7 @@ export const ModalMaintenanceInfo = ({
           <Style.Row>
             <Input label="Observações" placeholder="Digite aqui" maxLength={50} />
           </Style.Row>
-          <Style.Row>
+          <Style.Row disabled={onFileQuery}>
             <h6>Anexar</h6>
             <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
@@ -160,7 +160,7 @@ export const ModalMaintenanceInfo = ({
               )}
             </Style.FileAndImageRow>
           </Style.Row>
-          <Style.Row>
+          <Style.Row disabled={onImageQuery}>
             <h6>Imagens</h6>
 
             <Style.FileAndImageRow>
@@ -170,6 +170,18 @@ export const ModalMaintenanceInfo = ({
                   <p title={e.name} className="p6">
                     {e.name}
                   </p>
+                  <Style.IconButtonHover>
+                    <IconButton
+                      icon={icon.trashWithBg}
+                      onClick={() => {
+                        setImages((prevState) => {
+                          const newState = [...prevState];
+                          newState.splice(i, 1);
+                          return newState;
+                        });
+                      }}
+                    />
+                  </Style.IconButtonHover>
                 </Style.ImageTag>
               ))}
 

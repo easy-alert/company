@@ -1,4 +1,4 @@
-export interface IModalMaintenanceInfo {
+export interface IModalMaintenanceReport {
   setModal: (setModal: boolean) => void;
   selectedMaintenanceId: string;
 }
