@@ -32,8 +32,8 @@ Periodicidade
             >
               {/* if pra se for feita em atraso, mostrar o concluída */}
               <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                <EventTag status="Concluída" />
-                <EventTag status="Feita em atraso" />
+                <EventTag status="completed" />
+                <EventTag status="overdue" />
               </div>
 
               <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
@@ -57,7 +57,7 @@ Periodicidade
             new Date(e.notificationDate).getUTCMonth(),
             new Date(e.notificationDate).getUTCDate(),
           ),
-          status: 'Feita em atraso',
+          status: 'overdue',
         }),
       );
       setMaintenancesWeekView([...maintenancesWeekMap]);
@@ -76,7 +76,7 @@ Periodicidade
             new Date(e.notificationDate).getUTCMonth(),
             new Date(e.notificationDate).getUTCDate(),
           ),
-          status: 'Concluída',
+          status: 'completed',
         }),
       );
       setMaintenancesMonthView([...maintenancesMonthMap]);

@@ -13,22 +13,22 @@ export const TagContainer = styled.div<IEventTag>`
   }
 
   ${({ status }) =>
-    status === 'Concluída' &&
+    status === 'completed' &&
     css`
       background-color: ${theme.color.success};
     `}
   ${({ status }) =>
-    status === 'Feita em atraso' &&
+    status === 'overdue' &&
     css`
       background-color: ${theme.color.primaryM};
     `}
     ${({ status }) =>
-    status === 'Pendente' &&
+    status === 'pending' &&
     css`
       background-color: ${theme.color.warning};
     `}
     ${({ status }) =>
-    status === 'Vencida' &&
+    status === 'expired' &&
     css`
       background-color: ${theme.color.actionDanger};
     `};

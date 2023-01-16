@@ -95,8 +95,8 @@ export const ModalMaintenanceReport = ({
         <h3>{selectedMaintenanceId}</h3>
         <Style.StatusTagWrapper>
           {/* if pra se for feita em atraso, mostrar o concluída */}
-          <EventTag status="Concluída" />
-          <EventTag status="Feita em atraso" />
+          <EventTag status="completed" />
+          <EventTag status="overdue" />
         </Style.StatusTagWrapper>
         <Style.Content>
           <Style.Row>

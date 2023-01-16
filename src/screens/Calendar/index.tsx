@@ -19,6 +19,7 @@ import { ModalMaintenanceReport } from './utils/ModalMaintenanceReport';
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
+import { ICalendarView } from './utils/types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -27,11 +28,11 @@ export const MaintenancesCalendar = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [maintenancesWeekView, setMaintenancesWeekView] = useState<any>([]);
+  const [maintenancesWeekView, setMaintenancesWeekView] = useState<ICalendarView[]>([]);
 
-  const [maintenancesMonthView, setMaintenancesMonthView] = useState<any>([]);
+  const [maintenancesMonthView, setMaintenancesMonthView] = useState<ICalendarView[]>([]);
 
-  const [maintenancesDisplay, setMaintenancesDisplay] = useState<any>([]);
+  const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
 
@@ -73,7 +74,7 @@ export const MaintenancesCalendar = () => {
 
   const eventPropGetter = useCallback(
     (event: any) => ({
-      ...(event.status === 'Vencida' && {
+      ...(event.status === 'expired' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
@@ -81,7 +82,7 @@ export const MaintenancesCalendar = () => {
         },
       }),
 
-      ...(event.status === 'Pendente' && {
+      ...(event.status === 'pending' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
@@ -89,7 +90,7 @@ export const MaintenancesCalendar = () => {
         },
       }),
 
-      ...((event.status === 'Concluída' || event.status === 'Feita em atraso') && {
+      ...((event.status === 'completed' || event.status === 'overdue') && {
         style: {
           background:
             'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
