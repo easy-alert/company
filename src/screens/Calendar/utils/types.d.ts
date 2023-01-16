@@ -1,10 +1,9 @@
-import { IEventTag } from './EventTag/types';
-
-export interface ICalendarView extends IEventTag {
+export interface ICalendarView {
   start: Date;
   end: Date;
   id: string;
   title: string | JSX.Element;
+  status: 'expired' | 'pending' | 'completed' | 'overdue';
 }
 
 export interface IRequestCalendarData {
@@ -15,7 +14,28 @@ export interface IRequestCalendarData {
 }
 
 export interface IRequestCalendarDataResData {
-  MaintenancesStatus: {
-    name: string;
+  data: {
+    Dates: [
+      {
+        MaintenancesStatus: {
+          name: 'expired' | 'pending' | 'completed' | 'overdue';
+          pluralLabel: string;
+          singularLabel: string;
+        };
+        Building: {
+          name: string;
+        };
+        Maintenance: {
+          frequency: number;
+          element: string;
+          id: string;
+          FrequencyTimeInterval: {
+            pluralLabel: string;
+            singularLabel: string;
+          };
+        };
+        notificationDate: Date;
+      },
+    ];
   };
 }
