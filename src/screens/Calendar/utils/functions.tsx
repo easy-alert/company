@@ -1,7 +1,7 @@
+import { IRequestCalendarData } from './types';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { EventTag } from './EventTag';
-import { IRequestCalendarData } from './types';
 
 export const requestCalendarData = async ({
   setMaintenancesWeekView,
