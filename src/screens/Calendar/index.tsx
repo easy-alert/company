@@ -14,7 +14,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // MODALS
-import { ModalMaintenanceReport } from './utils/ModalMaintenanceReport';
+import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
 
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
@@ -24,7 +24,8 @@ import { ICalendarView } from './utils/types';
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
-  const [modalMaintenanceReportOpen, setModalMaintenanceReportOpen] = useState<boolean>(false);
+  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
+    useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -35,6 +36,8 @@ export const MaintenancesCalendar = () => {
   const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string>('');
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
@@ -102,12 +105,13 @@ export const MaintenancesCalendar = () => {
   );
 
   const onSelectEvent = useCallback(
-    (maintenance: any) => {
+    (event: any) => {
       if (calendarType === 'week') {
-        setSelectedMaintenanceId(maintenance.id);
-        setModalMaintenanceReportOpen(true);
+        setSelectedMaintenanceId(event.id);
+        setSelectedBuildingId(event.buildingId);
+        setModalSendMaintenanceReportOpen(true);
       } else {
-        setDate(maintenance.start);
+        setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
         setCalendarType('week');
       }
@@ -131,13 +135,13 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen) {
       onView('month');
     }
   });
@@ -155,10 +159,11 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalMaintenanceReportOpen && selectedMaintenanceId && (
-        <ModalMaintenanceReport
-          setModal={setModalMaintenanceReportOpen}
+      {modalSendMaintenanceReportOpen && selectedMaintenanceId && selectedBuildingId && (
+        <ModalSendMaintenanceReport
+          setModal={setModalSendMaintenanceReportOpen}
           selectedMaintenanceId={selectedMaintenanceId}
+          selectedBuildingId={selectedBuildingId}
         />
       )}
       <Style.Container>

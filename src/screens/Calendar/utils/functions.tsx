@@ -13,6 +13,7 @@ export const requestCalendarData = async ({
     .then((res: IRequestCalendarDataResData) => {
       const maintenancesWeekMap: ICalendarView[] = res.data.Dates.map((e) => ({
         id: e.Maintenance.id,
+        buildingId: e.Building.id,
         title: (
           <div
             style={{
@@ -26,7 +27,7 @@ export const requestCalendarData = async ({
             title={`
 ${e.Building.name}
 ${e.Maintenance.element}
-${e.Maintenance.frequency}${' '}${
+A cada ${e.Maintenance.frequency}${' '}${
               e.Maintenance.frequency > 1
                 ? e.Maintenance.FrequencyTimeInterval.pluralLabel
                 : e.Maintenance.FrequencyTimeInterval.singularLabel
@@ -46,7 +47,7 @@ ${e.Maintenance.frequency}${' '}${
               {e.Maintenance.element}
             </div>
             <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
-              {e.Maintenance.frequency}{' '}
+              A cada {e.Maintenance.frequency}{' '}
               {e.Maintenance.frequency > 1
                 ? e.Maintenance.FrequencyTimeInterval.pluralLabel
                 : e.Maintenance.FrequencyTimeInterval.singularLabel}
@@ -69,6 +70,7 @@ ${e.Maintenance.frequency}${' '}${
 
       const maintenancesMonthMap: ICalendarView[] = res.data.Dates.map((e) => ({
         id: e.Maintenance.id,
+        buildingId: e.Building.id,
         title: 'Contagem',
         start: new Date(
           new Date(e.notificationDate).getUTCFullYear(),

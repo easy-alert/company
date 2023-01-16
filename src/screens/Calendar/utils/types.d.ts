@@ -2,6 +2,7 @@ export interface ICalendarView {
   start: Date;
   end: Date;
   id: string;
+  buildingId: string;
   title: string | JSX.Element;
   status: 'expired' | 'pending' | 'completed' | 'overdue';
 }
@@ -24,6 +25,7 @@ export interface IRequestCalendarDataResData {
         };
         Building: {
           name: string;
+          id: string;
         };
         Maintenance: {
           frequency: number;

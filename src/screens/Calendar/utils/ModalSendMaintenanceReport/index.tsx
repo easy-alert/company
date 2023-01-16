@@ -16,14 +16,15 @@ import * as Style from './styles';
 import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IFileAndImage, IModalMaintenanceReport } from './utils/types';
+import { IFileAndImage, IModalSendMaintenanceReport } from './utils/types';
 import { IconButton } from '../../../../components/Buttons/IconButton';
 import { uploadFile } from '../../../../utils/functions';
 
-export const ModalMaintenanceReport = ({
+export const ModalSendMaintenanceReport = ({
   setModal,
   selectedMaintenanceId,
-}: IModalMaintenanceReport) => {
+  selectedBuildingId,
+}: IModalSendMaintenanceReport) => {
   const [files, setFiles] = useState<IFileAndImage[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
@@ -93,6 +94,7 @@ export const ModalMaintenanceReport = ({
     <Modal title="Detalhes de manutenção" setModal={setModal}>
       <Style.Container>
         <h3>{selectedMaintenanceId}</h3>
+        <h3>{selectedBuildingId}</h3>
         <Style.StatusTagWrapper>
           {/* if overdue && eventtag completed */}
           <EventTag status="completed" />

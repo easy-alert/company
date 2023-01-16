@@ -41,7 +41,6 @@ export const Row = styled.div<{ disabled?: boolean }>`
 `;
 
 export const DragAndDropZoneFile = styled.div`
-  margin-top: ${theme.size.xxsm};
   width: 100%;
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
@@ -69,7 +68,6 @@ export const FileAndImageRow = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: ${theme.size.xsm};
-  margin-top: ${theme.size.xxsm};
 `;
 
 export const Tag = styled.div`
@@ -119,7 +117,7 @@ export const ImageTag = styled.div`
 
 export const IconButtonHover = styled.div`
   position: absolute;
-  height: 136px;
+  height: 108px;
   width: 132px;
   background-color: ${`${theme.color.gray3}B3`};
   display: flex;
