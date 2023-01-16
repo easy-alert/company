@@ -138,29 +138,31 @@ export const ModalSendMaintenanceReport = ({
               </Style.DragAndDropFileContent>
             </Style.DragAndDropZoneFile>
 
-            <Style.FileAndImageRow>
-              {files.map((e, i: number) => (
-                <Style.Tag title={e.name} key={i}>
-                  <p className="p3">{e.name}</p>
-                  <IconButton
-                    size="16px"
-                    icon={icon.xBlack}
-                    onClick={() => {
-                      setFiles((prevState) => {
-                        const newState = [...prevState];
-                        newState.splice(i, 1);
-                        return newState;
-                      });
-                    }}
-                  />
-                </Style.Tag>
-              ))}
-              {onFileQuery && (
-                <Style.FileLoadingTag>
-                  <DotLoading />
-                </Style.FileLoadingTag>
-              )}
-            </Style.FileAndImageRow>
+            {(files.length > 0 || onFileQuery) && (
+              <Style.FileAndImageRow>
+                {files.map((e, i: number) => (
+                  <Style.Tag title={e.name} key={i}>
+                    <p className="p3">{e.name}</p>
+                    <IconButton
+                      size="16px"
+                      icon={icon.xBlack}
+                      onClick={() => {
+                        setFiles((prevState) => {
+                          const newState = [...prevState];
+                          newState.splice(i, 1);
+                          return newState;
+                        });
+                      }}
+                    />
+                  </Style.Tag>
+                ))}
+                {onFileQuery && (
+                  <Style.FileLoadingTag>
+                    <DotLoading />
+                  </Style.FileLoadingTag>
+                )}
+              </Style.FileAndImageRow>
+            )}
           </Style.Row>
           <Style.Row disabled={onImageQuery}>
             <h6>Imagens</h6>

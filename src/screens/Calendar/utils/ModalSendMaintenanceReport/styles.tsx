@@ -68,6 +68,7 @@ export const FileAndImageRow = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: ${theme.size.xsm};
+  margin-top: ${theme.size.xxsm};
 `;
 
 export const Tag = styled.div`
