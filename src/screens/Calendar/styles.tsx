@@ -88,6 +88,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     border-radius: ${theme.size.xsm};
   }
 
+  /* .rbc-header::first-letter {
+    text-transform: uppercase;
+  } */
+
   .rbc-row-content {
     height: 706px;
     overflow-y: scroll;
@@ -128,6 +132,15 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     line-height: 14px;
     border-radius: 3px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
+
+    :focus {
+      outline: none;
+    }
+
+    transition: 0.25s;
+    :hover {
+      opacity: 0.8;
+    }
   }
 
   .rbc-row-segment {
