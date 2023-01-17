@@ -16,28 +16,39 @@ export interface IRequestCalendarData {
 
 export interface IRequestCalendarDataResData {
   data: {
-    Dates: [
-      {
-        MaintenancesStatus: {
-          name: 'expired' | 'pending' | 'completed' | 'overdue';
-          pluralLabel: string;
-          singularLabel: string;
-        };
-        Building: {
-          name: string;
-          id: string;
-        };
-        Maintenance: {
-          frequency: number;
-          element: string;
-          id: string;
-          FrequencyTimeInterval: {
+    Dates: {
+      Weeks: [
+        {
+          MaintenancesStatus: {
+            name: 'expired' | 'pending' | 'completed' | 'overdue';
             pluralLabel: string;
             singularLabel: string;
           };
-        };
-        notificationDate: Date;
-      },
-    ];
+          Building: {
+            name: string;
+            id: string;
+          };
+          Maintenance: {
+            frequency: number;
+            element: string;
+            id: string;
+            FrequencyTimeInterval: {
+              pluralLabel: string;
+              singularLabel: string;
+            };
+          };
+          notificationDate: Date;
+        },
+      ];
+      Months: [
+        {
+          id: string;
+          date: string;
+          completed: number;
+          expired: number;
+          pending: number;
+        },
+      ];
+    };
   };
 }

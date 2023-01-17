@@ -46,7 +46,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-btn-group {
     :last-child {
       > button {
-        :nth-child(6) {
+        :nth-child(2) {
           border-radius: 0px 4px 4px 0px;
         }
 

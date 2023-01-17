@@ -72,7 +72,7 @@ export const ModalEditBuilding = ({
           <Style.FormContainer>
             <Form>
               <FormikInput
-                label="Nome"
+                label="Nome *"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
@@ -80,7 +80,7 @@ export const ModalEditBuilding = ({
                 maxLength={40}
               />
               <FormikSelect
-                label="Tipo"
+                label="Tipo *"
                 name="buildingTypeId"
                 value={values.buildingTypeId}
                 selectPlaceholderValue={values.buildingTypeId}
@@ -166,7 +166,7 @@ export const ModalEditBuilding = ({
               <FormikInput
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
-                label="Entrega da edificação"
+                label="Entrega da edificação *"
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
@@ -174,7 +174,7 @@ export const ModalEditBuilding = ({
               <FormikInput
                 typeDatePlaceholderValue={values.warrantyExpiration}
                 type="date"
-                label="Término da garantia"
+                label="Término da garantia *"
                 name="warrantyExpiration"
                 value={values.warrantyExpiration}
                 error={

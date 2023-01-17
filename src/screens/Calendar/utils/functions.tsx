@@ -1,7 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-param-reassign */
 import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { EventTag } from './EventTag';
+
+// const createMonthView = (status) => {
+//   switch (status) {
+//     case 'completed':
+//       break;
+
+//     default:
+//       break;
+//   }
+// };
 
 export const requestCalendarData = async ({
   setMaintenancesWeekView,
@@ -11,7 +23,7 @@ export const requestCalendarData = async ({
 }: IRequestCalendarData) => {
   await Api.get('calendars/list')
     .then((res: IRequestCalendarDataResData) => {
-      const maintenancesWeekMap: ICalendarView[] = res.data.Dates.map((e) => ({
+      const maintenancesWeekMap: ICalendarView[] = res.data.Dates.Weeks.map((e) => ({
         id: e.Maintenance.id,
         buildingId: e.Building.id,
         title: (
@@ -68,22 +80,71 @@ A cada ${e.Maintenance.frequency}${' '}${
       }));
       setMaintenancesWeekView([...maintenancesWeekMap]);
 
-      const maintenancesMonthMap: ICalendarView[] = res.data.Dates.map((e) => ({
-        id: e.Maintenance.id,
-        buildingId: e.Building.id,
-        title: 'Contagem',
-        start: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
-        end: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
-        status: e.MaintenancesStatus.name,
-      }));
+      const maintenancesMonthMap: ICalendarView[] = [];
+
+      for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
+        if (res.data.Dates.Months[i].completed > 0) {
+          maintenancesMonthMap.push({
+            id: String(res.data.Dates.Months[i].id),
+            buildingId: 'tirar',
+            title: `${res.data.Dates.Months[i].completed} ${
+              res.data.Dates.Months[i].completed > 1 ? 'concluídas' : 'concluída'
+            }`,
+            start: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            end: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            status: 'completed',
+          });
+        }
+
+        if (res.data.Dates.Months[i].pending > 0) {
+          maintenancesMonthMap.push({
+            id: String(res.data.Dates.Months[i].id),
+            buildingId: 'tirar',
+            title: `${res.data.Dates.Months[i].pending} a fazer`,
+            start: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            end: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            status: 'pending',
+          });
+        }
+
+        if (res.data.Dates.Months[i].expired > 0) {
+          maintenancesMonthMap.push({
+            id: String(res.data.Dates.Months[i].id),
+            buildingId: 'tirar',
+            title: `${res.data.Dates.Months[i].expired} ${
+              res.data.Dates.Months[i].expired > 1 ? 'vencidas' : 'vencida'
+            }`,
+            start: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            end: new Date(
+              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
+              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
+              new Date(res.data.Dates.Months[i].date).getUTCDate(),
+            ),
+            status: 'expired',
+          });
+        }
+      }
+
       setMaintenancesMonthView([...maintenancesMonthMap]);
       setMaintenancesDisplay([...maintenancesMonthMap]);
 
