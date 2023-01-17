@@ -23,7 +23,6 @@ import { uploadFile } from '../../../../utils/functions';
 export const ModalSendMaintenanceReport = ({
   setModal,
   selectedMaintenanceId,
-  selectedBuildingId,
 }: IModalSendMaintenanceReport) => {
   const [files, setFiles] = useState<IFileAndImage[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
@@ -94,7 +93,6 @@ export const ModalSendMaintenanceReport = ({
     <Modal title="Detalhes de manutenção" setModal={setModal}>
       <Style.Container>
         <h3>{selectedMaintenanceId}</h3>
-        <h3>{selectedBuildingId}</h3>
         <Style.StatusTagWrapper>
           {/* if overdue && eventtag completed */}
           <EventTag status="completed" />

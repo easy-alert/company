@@ -37,8 +37,6 @@ export const MaintenancesCalendar = () => {
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
 
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string>('');
-
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
@@ -108,7 +106,6 @@ export const MaintenancesCalendar = () => {
     (event: any) => {
       if (calendarType === 'week') {
         setSelectedMaintenanceId(event.id);
-        setSelectedBuildingId(event.buildingId);
         setModalSendMaintenanceReportOpen(true);
       } else {
         setDate(event.start);
@@ -116,7 +113,16 @@ export const MaintenancesCalendar = () => {
         setCalendarType('week');
       }
     },
-    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay, date, setDate],
+    [
+      calendarType,
+      setCalendarType,
+      maintenancesDisplay,
+      setMaintenancesDisplay,
+      date,
+      setDate,
+      selectedMaintenanceId,
+      setSelectedMaintenanceId,
+    ],
   );
 
   const onView = useCallback(
@@ -159,11 +165,10 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && selectedMaintenanceId && selectedBuildingId && (
+      {modalSendMaintenanceReportOpen && selectedMaintenanceId && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
           selectedMaintenanceId={selectedMaintenanceId}
-          selectedBuildingId={selectedBuildingId}
         />
       )}
       <Style.Container>

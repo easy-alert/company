@@ -2,7 +2,6 @@ export interface ICalendarView {
   start: Date;
   end: Date;
   id: string;
-  buildingId: string;
   title: string | JSX.Element;
   status: 'expired' | 'pending' | 'completed' | 'overdue';
 }

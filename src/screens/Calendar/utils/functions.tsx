@@ -25,7 +25,6 @@ export const requestCalendarData = async ({
     .then((res: IRequestCalendarDataResData) => {
       const maintenancesWeekMap: ICalendarView[] = res.data.Dates.Weeks.map((e) => ({
         id: e.Maintenance.id,
-        buildingId: e.Building.id,
         title: (
           <div
             style={{
@@ -83,12 +82,11 @@ A cada ${e.Maintenance.frequency}${' '}${
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
-        if (res.data.Dates.Months[i].completed > 0) {
+        if (res.data.Dates.Months[i].expired > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
-            buildingId: 'tirar',
-            title: `${res.data.Dates.Months[i].completed} ${
-              res.data.Dates.Months[i].completed > 1 ? 'concluídas' : 'concluída'
+            title: `${res.data.Dates.Months[i].expired} ${
+              res.data.Dates.Months[i].expired > 1 ? 'vencidas' : 'vencida'
             }`,
             start: new Date(
               new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
@@ -100,14 +98,12 @@ A cada ${e.Maintenance.frequency}${' '}${
               new Date(res.data.Dates.Months[i].date).getUTCMonth(),
               new Date(res.data.Dates.Months[i].date).getUTCDate(),
             ),
-            status: 'completed',
+            status: 'expired',
           });
         }
-
         if (res.data.Dates.Months[i].pending > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
-            buildingId: 'tirar',
             title: `${res.data.Dates.Months[i].pending} a fazer`,
             start: new Date(
               new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
@@ -123,12 +119,11 @@ A cada ${e.Maintenance.frequency}${' '}${
           });
         }
 
-        if (res.data.Dates.Months[i].expired > 0) {
+        if (res.data.Dates.Months[i].completed > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
-            buildingId: 'tirar',
-            title: `${res.data.Dates.Months[i].expired} ${
-              res.data.Dates.Months[i].expired > 1 ? 'vencidas' : 'vencida'
+            title: `${res.data.Dates.Months[i].completed} ${
+              res.data.Dates.Months[i].completed > 1 ? 'concluídas' : 'concluída'
             }`,
             start: new Date(
               new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
@@ -140,7 +135,7 @@ A cada ${e.Maintenance.frequency}${' '}${
               new Date(res.data.Dates.Months[i].date).getUTCMonth(),
               new Date(res.data.Dates.Months[i].date).getUTCDate(),
             ),
-            status: 'expired',
+            status: 'completed',
           });
         }
       }
