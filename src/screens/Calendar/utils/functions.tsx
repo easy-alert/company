@@ -5,16 +5,6 @@ import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { EventTag } from './EventTag';
 
-// const createMonthView = (status) => {
-//   switch (status) {
-//     case 'completed':
-//       break;
-
-//     default:
-//       break;
-//   }
-// };
-
 export const requestCalendarData = async ({
   setMaintenancesWeekView,
   setMaintenancesMonthView,
@@ -23,7 +13,11 @@ export const requestCalendarData = async ({
 }: IRequestCalendarData) => {
   await Api.get('calendars/list')
     .then((res: IRequestCalendarDataResData) => {
-      const maintenancesWeekMap: ICalendarView[] = res.data.Dates.Weeks.map((e) => ({
+      const orderArray = res.data.Dates.Weeks.sort((a, b) =>
+        b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
+      );
+
+      const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
         id: e.Maintenance.id,
         title: (
           <div
