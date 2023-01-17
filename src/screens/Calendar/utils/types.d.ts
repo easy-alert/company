@@ -11,6 +11,8 @@ export interface IRequestCalendarData {
   setMaintenancesMonthView: (setMaintenancesMonthView: ICalendarView[]) => void;
   setMaintenancesDisplay: (setMaintenancesDisplay: ICalendarView[]) => void;
   setLoading: (setLoading: boolean) => void;
+  setYearChangeLoading: (setYearChangeLoading: boolean) => void;
+  currentYear: number;
 }
 
 export interface IRequestCalendarDataResData {

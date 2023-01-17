@@ -222,3 +222,25 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     max-width: 20% !important;
   } */
 `;
+
+export const YearLoading = styled.div`
+  position: absolute;
+  left: 270px;
+  top: 27px;
+
+  border: 4px solid ${theme.color.primaryL};
+  border-top: 4px solid ${theme.color.primary};
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.5s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;

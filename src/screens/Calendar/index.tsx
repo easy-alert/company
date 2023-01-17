@@ -29,6 +29,8 @@ export const MaintenancesCalendar = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [yearChangeloading, setYearChangeLoading] = useState<boolean>(true);
+
   const [maintenancesWeekView, setMaintenancesWeekView] = useState<ICalendarView[]>([]);
 
   const [maintenancesMonthView, setMaintenancesMonthView] = useState<ICalendarView[]>([]);
@@ -40,6 +42,8 @@ export const MaintenancesCalendar = () => {
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
+
+  const currentYear = date.getFullYear();
 
   const locales = {
     'pt-BR': ptBR,
@@ -158,8 +162,10 @@ export const MaintenancesCalendar = () => {
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
+      currentYear,
+      setYearChangeLoading,
     });
-  }, []);
+  }, [currentYear]);
 
   return loading ? (
     <DotSpinLoading />
@@ -180,6 +186,7 @@ export const MaintenancesCalendar = () => {
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper view={calendarType}>
+            {yearChangeloading && <Style.YearLoading />}
             <Calendar
               date={date}
               onNavigate={onNavigate}

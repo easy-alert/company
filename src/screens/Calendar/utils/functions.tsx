@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-param-reassign */
 import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
@@ -10,8 +9,12 @@ export const requestCalendarData = async ({
   setMaintenancesWeekView,
   setMaintenancesDisplay,
   setLoading,
+  currentYear,
+  setYearChangeLoading,
 }: IRequestCalendarData) => {
-  await Api.get('calendars/list')
+  setYearChangeLoading(true);
+
+  await Api.get(`calendars/list/${String(currentYear)}`)
     .then((res: IRequestCalendarDataResData) => {
       const orderArray = res.data.Dates.Weeks.sort((a, b) =>
         b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
@@ -136,11 +139,12 @@ A cada ${e.Maintenance.frequency}${' '}${
 
       setMaintenancesMonthView([...maintenancesMonthMap]);
       setMaintenancesDisplay([...maintenancesMonthMap]);
-
-      setLoading(false);
     })
     .catch((err) => {
-      setLoading(false);
       catchHandler(err);
+    })
+    .finally(() => {
+      setYearChangeLoading(false);
+      setLoading(false);
     });
 };
