@@ -6,8 +6,8 @@ import { catchHandler } from '../../../utils/functions';
 import { EventTag } from './EventTag';
 
 export const requestCalendarData = async ({
-  setMaintenancesWeekView,
   setMaintenancesMonthView,
+  setMaintenancesWeekView,
   setMaintenancesDisplay,
   setLoading,
 }: IRequestCalendarData) => {
