@@ -25,8 +25,8 @@ export const requestCalendarData = async ({
               display: 'flex',
               flexDirection: 'column',
               gap: '4px',
-              paddingTop: '4px',
               paddingBottom: '4px',
+              paddingTop: '4px',
             }}
             // desalinhado de propósito, para ficar alinhado no tooltip
             title={`
