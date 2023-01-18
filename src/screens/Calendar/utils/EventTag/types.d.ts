@@ -1,3 +1,3 @@
 export interface IEventTag {
-  status: 'Vencida' | 'Pendente' | 'Concluída' | 'Feita em atraso';
+  status: 'expired' | 'pending' | 'completed' | 'overdue';
 }

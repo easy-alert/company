@@ -17,8 +17,7 @@ export const DragAndDropZone = styled.div`
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
-  height: 82px;
-
+  overflow: hidden;
   cursor: pointer;
   transition: 0.25s;
   :hover {

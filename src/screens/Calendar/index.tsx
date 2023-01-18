@@ -14,30 +14,36 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // MODALS
-import { ModalMaintenanceInfo } from './utils/ModalMaintenanceInfo';
+import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
 
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
+import { ICalendarView } from './utils/types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
-  const [modalMaintenanceInfoOpen, setModalMaintenanceInfoOpen] = useState<boolean>(false);
+  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
+    useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [maintenancesWeekView, setMaintenancesWeekView] = useState<any>([]);
+  const [yearChangeloading, setYearChangeLoading] = useState<boolean>(false);
 
-  const [maintenancesMonthView, setMaintenancesMonthView] = useState<any>([]);
+  const [maintenancesWeekView, setMaintenancesWeekView] = useState<ICalendarView[]>([]);
 
-  const [maintenancesDisplay, setMaintenancesDisplay] = useState<any>([]);
+  const [maintenancesMonthView, setMaintenancesMonthView] = useState<ICalendarView[]>([]);
+
+  const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
+
+  const currentYear = date.getFullYear();
 
   const locales = {
     'pt-BR': ptBR,
@@ -73,7 +79,7 @@ export const MaintenancesCalendar = () => {
 
   const eventPropGetter = useCallback(
     (event: any) => ({
-      ...(event.status === 'Vencida' && {
+      ...(event.status === 'expired' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
@@ -81,7 +87,7 @@ export const MaintenancesCalendar = () => {
         },
       }),
 
-      ...(event.status === 'Pendente' && {
+      ...(event.status === 'pending' && {
         style: {
           background:
             'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
@@ -89,7 +95,7 @@ export const MaintenancesCalendar = () => {
         },
       }),
 
-      ...((event.status === 'Concluída' || event.status === 'Feita em atraso') && {
+      ...((event.status === 'completed' || event.status === 'overdue') && {
         style: {
           background:
             'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
@@ -101,17 +107,26 @@ export const MaintenancesCalendar = () => {
   );
 
   const onSelectEvent = useCallback(
-    (maintenance: any) => {
+    (event: any) => {
       if (calendarType === 'week') {
-        setSelectedMaintenanceId(maintenance.id);
-        setModalMaintenanceInfoOpen(true);
+        setSelectedMaintenanceId(event.id);
+        // setModalSendMaintenanceReportOpen(true);
       } else {
-        setDate(maintenance.start);
+        setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
         setCalendarType('week');
       }
     },
-    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay, date, setDate],
+    [
+      calendarType,
+      setCalendarType,
+      maintenancesDisplay,
+      setMaintenancesDisplay,
+      date,
+      setDate,
+      selectedMaintenanceId,
+      setSelectedMaintenanceId,
+    ],
   );
 
   const onView = useCallback(
@@ -130,13 +145,13 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalMaintenanceInfoOpen) {
+    if (!modalSendMaintenanceReportOpen) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalMaintenanceInfoOpen) {
+    if (!modalSendMaintenanceReportOpen) {
       onView('month');
     }
   });
@@ -147,16 +162,18 @@ export const MaintenancesCalendar = () => {
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
+      currentYear,
+      setYearChangeLoading,
     });
-  }, []);
+  }, [currentYear]);
 
   return loading ? (
     <DotSpinLoading />
   ) : (
     <>
-      {modalMaintenanceInfoOpen && selectedMaintenanceId && (
-        <ModalMaintenanceInfo
-          setModal={setModalMaintenanceInfoOpen}
+      {modalSendMaintenanceReportOpen && selectedMaintenanceId && (
+        <ModalSendMaintenanceReport
+          setModal={setModalSendMaintenanceReportOpen}
           selectedMaintenanceId={selectedMaintenanceId}
         />
       )}
@@ -165,11 +182,11 @@ export const MaintenancesCalendar = () => {
           <h2>Calendário</h2>
           <select>
             <option value="">Todas</option>
-            <option value="Prédio 1">Prédio 1</option>
           </select>
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper view={calendarType}>
+            {yearChangeloading && <Style.YearLoading />}
             <Calendar
               date={date}
               onNavigate={onNavigate}

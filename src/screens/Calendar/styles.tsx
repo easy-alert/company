@@ -34,7 +34,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
   border-radius: ${theme.size.xsm};
-  min-width: 800px;
+  min-width: 850px;
   position: relative;
 
   .ellipsis {
@@ -46,7 +46,7 @@ export const CalendarWrapper = styled.div<{ view: string }>`
   .rbc-btn-group {
     :last-child {
       > button {
-        :nth-child(6) {
+        :nth-child(2) {
           border-radius: 0px 4px 4px 0px;
         }
 
@@ -88,6 +88,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     border-radius: ${theme.size.xsm};
   }
 
+  /* .rbc-header::first-letter {
+    text-transform: uppercase;
+  } */
+
   .rbc-row-content {
     height: 706px;
     overflow-y: scroll;
@@ -128,6 +132,19 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     line-height: 14px;
     border-radius: 3px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
+
+    :focus {
+      outline: none;
+    }
+
+    transition: 0.25s;
+    :hover {
+      opacity: 0.8;
+    }
+  }
+
+  .rbc-row-segment {
+    padding: 0 ${theme.size.xxsm};
   }
 
   ${({ view }) =>
@@ -152,6 +169,10 @@ export const CalendarWrapper = styled.div<{ view: string }>`
         background-color: transparent;
       }
     }
+  }
+
+  .rbc-selected {
+    background-color: red;
   }
 
   .rbc-off-range-bg {
@@ -200,4 +221,26 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     flex-basis: 20% !important;
     max-width: 20% !important;
   } */
+`;
+
+export const YearLoading = styled.div`
+  position: absolute;
+  left: 270px;
+  top: 27px;
+
+  border: 4px solid ${theme.color.primaryL};
+  border-top: 4px solid ${theme.color.primary};
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.5s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
