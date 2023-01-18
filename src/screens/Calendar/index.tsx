@@ -29,7 +29,7 @@ export const MaintenancesCalendar = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [yearChangeloading, setYearChangeLoading] = useState<boolean>(true);
+  const [yearChangeloading, setYearChangeLoading] = useState<boolean>(false);
 
   const [maintenancesWeekView, setMaintenancesWeekView] = useState<ICalendarView[]>([]);
 

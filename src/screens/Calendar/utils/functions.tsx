@@ -16,66 +16,6 @@ export const requestCalendarData = async ({
 
   await Api.get(`calendars/list/${String(currentYear)}`)
     .then((res: IRequestCalendarDataResData) => {
-      const orderArray = res.data.Dates.Weeks.sort((a, b) =>
-        b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
-      );
-
-      const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
-        id: e.Maintenance.id,
-        title: (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              paddingTop: '4px',
-              paddingBottom: '4px',
-            }}
-            // desalinhado de propósito, para ficar alinhado no tooltip
-            title={`
-${e.Building.name}
-${e.Maintenance.element}
-A cada ${e.Maintenance.frequency}${' '}${
-              e.Maintenance.frequency > 1
-                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
-                : e.Maintenance.FrequencyTimeInterval.singularLabel
-            }
-
-            `}
-          >
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-              {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
-              <EventTag status={e.MaintenancesStatus.name} />
-            </div>
-
-            <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
-              {e.Building.name}
-            </div>
-            <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
-              {e.Maintenance.element}
-            </div>
-            <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
-              A cada {e.Maintenance.frequency}{' '}
-              {e.Maintenance.frequency > 1
-                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
-                : e.Maintenance.FrequencyTimeInterval.singularLabel}
-            </div>
-          </div>
-        ),
-        start: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
-        end: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
-        status: e.MaintenancesStatus.name,
-      }));
-      setMaintenancesWeekView([...maintenancesWeekMap]);
-
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
@@ -139,6 +79,66 @@ A cada ${e.Maintenance.frequency}${' '}${
 
       setMaintenancesMonthView([...maintenancesMonthMap]);
       setMaintenancesDisplay([...maintenancesMonthMap]);
+
+      const orderArray = res.data.Dates.Weeks.sort((a, b) =>
+        b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
+      );
+
+      const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
+        id: e.Maintenance.id,
+        title: (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              paddingTop: '4px',
+              paddingBottom: '4px',
+            }}
+            // desalinhado de propósito, para ficar alinhado no tooltip
+            title={`
+${e.Building.name}
+${e.Maintenance.element}
+A cada ${e.Maintenance.frequency}${' '}${
+              e.Maintenance.frequency > 1
+                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
+                : e.Maintenance.FrequencyTimeInterval.singularLabel
+            }
+
+            `}
+          >
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
+              <EventTag status={e.MaintenancesStatus.name} />
+            </div>
+
+            <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
+              {e.Building.name}
+            </div>
+            <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
+              {e.Maintenance.element}
+            </div>
+            <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
+              A cada {e.Maintenance.frequency}{' '}
+              {e.Maintenance.frequency > 1
+                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
+                : e.Maintenance.FrequencyTimeInterval.singularLabel}
+            </div>
+          </div>
+        ),
+        start: new Date(
+          new Date(e.notificationDate).getUTCFullYear(),
+          new Date(e.notificationDate).getUTCMonth(),
+          new Date(e.notificationDate).getUTCDate(),
+        ),
+        end: new Date(
+          new Date(e.notificationDate).getUTCFullYear(),
+          new Date(e.notificationDate).getUTCMonth(),
+          new Date(e.notificationDate).getUTCDate(),
+        ),
+        status: e.MaintenancesStatus.name,
+      }));
+      setMaintenancesWeekView([...maintenancesWeekMap]);
     })
     .catch((err) => {
       catchHandler(err);
