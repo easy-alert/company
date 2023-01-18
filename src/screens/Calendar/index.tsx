@@ -110,7 +110,7 @@ export const MaintenancesCalendar = () => {
     (event: any) => {
       if (calendarType === 'week') {
         setSelectedMaintenanceId(event.id);
-        setModalSendMaintenanceReportOpen(true);
+        // setModalSendMaintenanceReportOpen(true);
       } else {
         setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
