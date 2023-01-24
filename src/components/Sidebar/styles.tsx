@@ -36,7 +36,8 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   border-radius: 0 12px 12px 0;
   background-color: ${theme.color.primary};
   text-align: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   @media (max-width: 900px) {
     position: absolute;
     transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-80px)')};
