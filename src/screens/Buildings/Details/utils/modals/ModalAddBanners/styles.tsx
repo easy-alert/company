@@ -11,11 +11,21 @@ export const Container = styled.div`
   gap: ${theme.size.xsm};
 `;
 
-export const DragAndDropWrapper = styled.div``;
+export const DragAndDropGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.size.xsm};
+`;
+
+export const DragAndDropWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
+`;
 
 export const DragAndDropZone = styled.div`
-  margin-top: ${theme.size.xxsm};
   width: 100%;
+  height: 202px;
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
@@ -27,17 +37,26 @@ export const DragAndDropZone = styled.div`
   }
 `;
 
-export const FileZone = styled.div`
-  margin-top: ${theme.size.xxsm};
-`;
-
 export const Content = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${theme.size.sm};
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
 
   > p {
     color: ${theme.color.gray4};
   }
+`;
+
+export const ImageLoading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
+  height: 202px;
+  width: 202px;
 `;

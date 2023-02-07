@@ -8,16 +8,16 @@ import { IImage, IModalAddBanners } from './utils/types';
 import { Image } from '../../../../../../components/Image';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { Input } from '../../../../../../components/Inputs/Input';
-import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
 // STYLES
 import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 
 // FUNCTIONS
-import { insertMiddleEllipsis, requestRegisterBuildingFile } from './utils/functions';
+import { requestRegisterBuildingFile } from './utils/functions';
 import { uploadFile } from '../../../../../../utils/functions';
 import { ImagePreview } from '../../../../../../components/ImagePreview';
+import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
 export const ModalAddBanners = ({
   setModal,
@@ -50,7 +50,7 @@ export const ModalAddBanners = ({
     disabled: onWebQuery,
   });
 
-  const [mobileBanner, setMobileBanner] = useState<File[]>([]);
+  const [mobileBanner, setMobileBanner] = useState<IImage[]>([]);
   const {
     acceptedFiles: acceptedMobile,
     getRootProps: getRootPropsMobile,
@@ -84,6 +84,27 @@ export const ModalAddBanners = ({
     }
   }, [acceptedWeb]);
 
+  useEffect(() => {
+    if (acceptedMobile.length > 0) {
+      const uploadAcceptedMobile = async () => {
+        setMobileOnQuery(true);
+
+        const { Location: fileUrl, originalname: originalName } = await uploadFile(
+          acceptedMobile[0],
+        );
+
+        setMobileBanner((prevState) => {
+          let newState = [...prevState];
+          newState = [...newState, { name: originalName, url: fileUrl }];
+          return newState;
+        });
+        setMobileOnQuery(false);
+      };
+
+      uploadAcceptedMobile();
+    }
+  }, [acceptedMobile]);
+
   return (
     <Modal title="Cadastrar banners" setModal={setModal}>
       <Style.Container>
@@ -106,53 +127,67 @@ export const ModalAddBanners = ({
           }}
         />
 
-        <Style.DragAndDropWrapper>
-          <h6>Banner web</h6>
-          {webBanner.length === 0 ? (
-            <Style.DragAndDropZone {...getRootPropsWeb({ className: 'dropzone' })}>
-              <input {...getInputPropsWeb()} />
+        <Style.DragAndDropGrid>
+          <Style.DragAndDropWrapper>
+            <h6>Banner web</h6>
+            {webBanner.length === 0 &&
+              (onWebQuery ? (
+                <Style.ImageLoading>
+                  <DotLoading />
+                </Style.ImageLoading>
+              ) : (
+                <Style.DragAndDropZone {...getRootPropsWeb({ className: 'dropzone' })}>
+                  <input {...getInputPropsWeb()} />
 
-              <Style.Content>
-                <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-              </Style.Content>
-            </Style.DragAndDropZone>
-          ) : (
-            <Style.FileZone>
+                  <Style.Content>
+                    <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                    <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                  </Style.Content>
+                </Style.DragAndDropZone>
+              ))}
+            {webBanner.length > 0 && (
               <ImagePreview
                 src={webBanner[0].url}
                 imageCustomName={webBanner[0].name}
-                height="200px"
-                width="200px"
+                height="202px"
+                width="202px"
+                onTrashClick={() => {
+                  setWebBanner([]);
+                }}
               />
-            </Style.FileZone>
-          )}
-        </Style.DragAndDropWrapper>
+            )}
+          </Style.DragAndDropWrapper>
 
-        <Style.DragAndDropWrapper>
-          <h6>Banner mobile</h6>
-          {mobileBanner.length === 0 ? (
-            <Style.DragAndDropZone {...getRootPropsMobile({ className: 'dropzone' })}>
-              <input {...getInputPropsMobile()} />
+          <Style.DragAndDropWrapper>
+            <h6>Banner mobile</h6>
+            {mobileBanner.length === 0 &&
+              (onMobileQuery ? (
+                <Style.ImageLoading>
+                  <DotLoading />
+                </Style.ImageLoading>
+              ) : (
+                <Style.DragAndDropZone {...getRootPropsMobile({ className: 'dropzone' })}>
+                  <input {...getInputPropsMobile()} />
 
-              <Style.Content>
-                <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-              </Style.Content>
-            </Style.DragAndDropZone>
-          ) : (
-            <Style.FileZone>
-              <p className="p2">{insertMiddleEllipsis(mobileBanner[0]?.name)}</p>
-              <IconButton
-                icon={icon.x}
-                size="24px"
-                onClick={() => {
+                  <Style.Content>
+                    <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                    <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                  </Style.Content>
+                </Style.DragAndDropZone>
+              ))}
+            {mobileBanner.length > 0 && (
+              <ImagePreview
+                src={mobileBanner[0].url}
+                imageCustomName={mobileBanner[0].name}
+                height="202px"
+                width="202px"
+                onTrashClick={() => {
                   setMobileBanner([]);
                 }}
               />
-            </Style.FileZone>
-          )}
-        </Style.DragAndDropWrapper>
+            )}
+          </Style.DragAndDropWrapper>
+        </Style.DragAndDropGrid>
         <Button
           loading={onQuery}
           label="Cadastrar"

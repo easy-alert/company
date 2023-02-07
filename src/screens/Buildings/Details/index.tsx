@@ -294,8 +294,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.TableDataWrapper>
                           {notificationRow.email ?? '-'}
-                          {notificationRow.isMain &&
-                            notificationRow.email &&
+                          {notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
