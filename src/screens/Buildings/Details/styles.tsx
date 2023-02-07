@@ -38,14 +38,20 @@ export const Card = styled.div`
   padding: ${theme.size.sm};
 `;
 
+export const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const MaintenanceCardFooter = styled.div`
   display: grid;
   grid-template-columns: repeat(4, fit-content(100%));
   grid-gap: ${theme.size.sm};
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, fit-content(100%));
-  }
 `;
 
 export const MaintenanceCardFooterInfo = styled.div`

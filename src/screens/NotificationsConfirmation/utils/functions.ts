@@ -6,7 +6,10 @@ export const requestConfirmData = async ({
   token,
   setIsConfirmed,
   navigate,
+  setOnQuery,
 }: IRequestConfirmPhone) => {
+  setOnQuery(true);
+
   await Api.post('/buildings/notifications/contactconfirm', {
     token,
   })
@@ -16,6 +19,9 @@ export const requestConfirmData = async ({
     .catch((err) => {
       catchHandler(err);
       navigate('/login');
+    })
+    .finally(() => {
+      setOnQuery(false);
     });
 };
 

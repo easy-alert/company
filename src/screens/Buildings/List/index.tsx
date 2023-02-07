@@ -119,7 +119,6 @@ export const BuildingsList = () => {
         <>
           <Style.GridContainer>
             {buildingList.map((building) => (
-              // eslint-disable-next-line react/no-array-index-key
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
@@ -142,22 +141,22 @@ export const BuildingsList = () => {
                   <Image img={icon.rightArrow} size="16px" />
                 </Style.BuildingCardHeader>
 
-                {/* <Style.BuildingCardFooter>
-                  <Style.BuildingCardFooterInfo>
-                    <h5 className="pending">0</h5>
-                    <p className="p5">Pendentes</p>
-
-                    <h5 className="delayed">0</h5>
-                    <p className="p5">Feitas em atraso</p>
-                  </Style.BuildingCardFooterInfo>
+                <Style.BuildingCardFooter>
                   <Style.BuildingCardFooterInfo>
                     <h5 className="expired">0</h5>
                     <p className="p5">Vencidas</p>
+                  </Style.BuildingCardFooterInfo>
 
+                  <Style.BuildingCardFooterInfo>
+                    <h5 className="pending">0</h5>
+                    <p className="p5">Pendentes</p>
+                  </Style.BuildingCardFooterInfo>
+
+                  <Style.BuildingCardFooterInfo>
                     <h5 className="completed">0</h5>
                     <p className="p5">Concluídas</p>
                   </Style.BuildingCardFooterInfo>
-                </Style.BuildingCardFooter> */}
+                </Style.BuildingCardFooter>
               </Style.BuildingCard>
             ))}
           </Style.GridContainer>

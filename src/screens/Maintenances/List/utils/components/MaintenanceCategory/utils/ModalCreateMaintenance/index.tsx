@@ -40,7 +40,7 @@ export const ModalCreateMaintenance = ({
           period: '',
           periodTimeInterval: 'Selecione',
           delay: '0',
-          delayTimeInterval: 'Selecione',
+          delayTimeInterval: timeIntervals[0].id,
           observation: '',
         }}
         validationSchema={schemaCreateMaintenance}

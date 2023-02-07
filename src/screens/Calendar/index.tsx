@@ -121,7 +121,7 @@ export const MaintenancesCalendar = () => {
     (event: any) => {
       if (calendarType === 'week') {
         setSelectedMaintenanceId(event.id);
-        // setModalSendMaintenanceReportOpen(true);
+        setModalSendMaintenanceReportOpen(true);
       } else {
         setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
@@ -156,13 +156,13 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalSendMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalSendMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
       onView('month');
     }
   });
@@ -199,24 +199,25 @@ export const MaintenancesCalendar = () => {
           <Style.CalendarWrapper
             view={calendarType}
             disableCalendarNextButton={disableCalendarNextButton}
+            yearChangeloading={yearChangeloading}
           >
             {yearChangeloading && <Style.YearLoading />}
             <Calendar
               date={date}
               onNavigate={onNavigate}
               eventPropGetter={eventPropGetter}
-              tooltipAccessor={() => ''}
               view={calendarType}
               onView={onView}
               localizer={localizer}
               messages={messages}
               style={{ height: 768 }}
               onSelectEvent={onSelectEvent}
+              events={maintenancesDisplay}
+              tooltipAccessor={() => ''}
               culture="pt-BR"
               allDayAccessor="id"
-              showAllEvents
-              events={maintenancesDisplay}
               drilldownView="week"
+              showAllEvents
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>

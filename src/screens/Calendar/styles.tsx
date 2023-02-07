@@ -29,11 +29,15 @@ export const CalendarScroll = styled.div`
   overflow-x: auto;
 `;
 
-export const CalendarWrapper = styled.div<{ view: string; disableCalendarNextButton: boolean }>`
+export const CalendarWrapper = styled.div<{
+  view: string;
+  disableCalendarNextButton: boolean;
+  yearChangeloading: boolean;
+}>`
   width: 100%;
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
-  border-radius: ${theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
   min-width: 850px;
   position: relative;
 
@@ -59,12 +63,20 @@ export const CalendarWrapper = styled.div<{ view: string; disableCalendarNextBut
   }
 
   .rbc-btn-group {
+    ${({ yearChangeloading }) =>
+      yearChangeloading &&
+      css`
+        opacity: 0.7;
+        pointer-events: none;
+      `}
+  }
+
+  .rbc-btn-group {
     > :nth-child(3) {
       ${({ disableCalendarNextButton }) =>
         disableCalendarNextButton &&
         css`
           opacity: 0.7;
-          cursor: not-allowed;
           pointer-events: none;
         `}
     }

@@ -68,7 +68,6 @@ export const FileAndImageRow = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: ${theme.size.xsm};
-  margin-top: ${theme.size.xxsm};
 `;
 
 export const Tag = styled.div`
@@ -87,49 +86,6 @@ export const Tag = styled.div`
     text-overflow: ellipsis;
     font-weight: 400;
     max-width: 154px;
-  }
-`;
-
-export const ImageTag = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  > img {
-    border-top-left-radius: ${theme.size.xxsm};
-    border-top-right-radius: ${theme.size.xxsm};
-    width: 132px;
-    height: 108px;
-  }
-
-  > p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 400;
-    background-color: ${theme.color.gray1};
-    padding: ${theme.size.xsm};
-    border-bottom-left-radius: ${theme.size.xxsm};
-    border-bottom-right-radius: ${theme.size.xxsm};
-    height: 28px;
-    width: 132px;
-  }
-`;
-
-export const IconButtonHover = styled.div`
-  position: absolute;
-  height: 108px;
-  width: 132px;
-  background-color: ${`${theme.color.gray3}B3`};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: ${theme.size.xxsm};
-  opacity: 0;
-
-  transition: 0.25s;
-  :hover {
-    opacity: 1;
   }
 `;
 

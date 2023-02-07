@@ -18,6 +18,8 @@ export const PhoneConfirm = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [buildingName, setBuildingName] = useState<string>('');
 
@@ -58,12 +60,14 @@ export const PhoneConfirm = () => {
           </Style.ContentText>
 
           <Button
+            loading={onQuery}
             label="Confirmar"
             onClick={() => {
               requestConfirmData({
                 token: token!,
                 setIsConfirmed,
                 navigate,
+                setOnQuery,
               });
             }}
           />

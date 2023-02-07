@@ -13,6 +13,9 @@ export const requestCalendarData = async ({
   setYearChangeLoading,
 }: IRequestCalendarData) => {
   setYearChangeLoading(true);
+  setMaintenancesMonthView([]);
+  setMaintenancesWeekView([]);
+  setMaintenancesDisplay([]);
 
   await Api.get(`calendars/list/${String(yearToRequest)}`)
     .then((res: IRequestCalendarDataResData) => {

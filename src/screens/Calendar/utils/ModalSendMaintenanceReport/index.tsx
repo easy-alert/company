@@ -10,6 +10,8 @@ import { Modal } from '../../../../components/Modal';
 import { EventTag } from '../EventTag';
 import { Image } from '../../../../components/Image';
 import { DotLoading } from '../../../../components/Loadings/DotLoading';
+import { ImagePreview } from '../../../../components/ImagePreview';
+import { IconButton } from '../../../../components/Buttons/IconButton';
 
 // STYLES
 import * as Style from './styles';
@@ -17,7 +19,8 @@ import { icon } from '../../../../assets/icons';
 
 // TYPES
 import { IFileAndImage, IModalSendMaintenanceReport } from './utils/types';
-import { IconButton } from '../../../../components/Buttons/IconButton';
+
+// FUNCTIONS
 import { uploadFile } from '../../../../utils/functions';
 
 export const ModalSendMaintenanceReport = ({
@@ -122,9 +125,8 @@ export const ModalSendMaintenanceReport = ({
             <h6>Prazo da manutenção</h6>
             <p className="p2">20/01/2023</p>
           </Style.Row>
-          <Style.Row>
-            <Input label="Observações" placeholder="Digite aqui" maxLength={50} />
-          </Style.Row>
+          <Input label="Custo" placeholder="Ex: R$ 100,00" maxLength={10} />
+          <Input label="Observações" placeholder="Digite aqui" maxLength={50} />
           <Style.Row disabled={onFileQuery}>
             <h6>Anexar</h6>
             <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
@@ -167,24 +169,22 @@ export const ModalSendMaintenanceReport = ({
 
             <Style.FileAndImageRow>
               {images.map((e, i: number) => (
-                <Style.ImageTag key={i}>
-                  <img src={e.url} alt="" />
-                  <p title={e.name} className="p6">
-                    {e.name}
-                  </p>
-                  <Style.IconButtonHover>
-                    <IconButton
-                      icon={icon.trashWithBg}
-                      onClick={() => {
-                        setImages((prevState) => {
-                          const newState = [...prevState];
-                          newState.splice(i, 1);
-                          return newState;
-                        });
-                      }}
-                    />
-                  </Style.IconButtonHover>
-                </Style.ImageTag>
+                <ImagePreview
+                  key={e.name + i}
+                  width="132px"
+                  height="136px"
+                  imageCustomName={e.name}
+                  imageOriginalName={e.name}
+                  src={e.url}
+                  downloadUrl={e.url}
+                  onTrashClick={() => {
+                    setImages((prevState) => {
+                      const newState = [...prevState];
+                      newState.splice(i, 1);
+                      return newState;
+                    });
+                  }}
+                />
               ))}
 
               {onImageQuery && (
