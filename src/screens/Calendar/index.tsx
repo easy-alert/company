@@ -43,7 +43,20 @@ export const MaintenancesCalendar = () => {
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
 
-  const currentYear = date.getFullYear();
+  const calendarYear = new Date(date).getFullYear();
+
+  const currentYear = new Date().getFullYear();
+
+  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
+
+  const YearOffset = 4;
+
+  const YearLimitForRequest = new Date().getFullYear() + YearOffset;
+
+  const disableCalendarNextButton =
+    YearLimitForRequest === new Date(date).getFullYear() &&
+    new Date(date).getMonth() === 11 &&
+    new Date(date).getDate() > 20;
 
   const locales = {
     'pt-BR': ptBR,
@@ -162,10 +175,10 @@ export const MaintenancesCalendar = () => {
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
-      currentYear,
+      yearToRequest,
       setYearChangeLoading,
     });
-  }, [currentYear]);
+  }, [yearToRequest]);
 
   return loading ? (
     <DotSpinLoading />
@@ -185,7 +198,10 @@ export const MaintenancesCalendar = () => {
           </select>
         </Style.Header>
         <Style.CalendarScroll>
-          <Style.CalendarWrapper view={calendarType}>
+          <Style.CalendarWrapper
+            view={calendarType}
+            disableCalendarNextButton={disableCalendarNextButton}
+          >
             {yearChangeloading && <Style.YearLoading />}
             <Calendar
               date={date}
