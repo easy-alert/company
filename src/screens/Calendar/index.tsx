@@ -54,9 +54,7 @@ export const MaintenancesCalendar = () => {
   const YearLimitForRequest = new Date().getFullYear() + YearOffset;
 
   const disableCalendarNextButton =
-    YearLimitForRequest === new Date(date).getFullYear() &&
-    new Date(date).getMonth() === 11 &&
-    new Date(date).getDate() > 20;
+    YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
 
   const locales = {
     'pt-BR': ptBR,
