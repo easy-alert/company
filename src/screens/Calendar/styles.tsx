@@ -29,7 +29,7 @@ export const CalendarScroll = styled.div`
   overflow-x: auto;
 `;
 
-export const CalendarWrapper = styled.div<{ view: string }>`
+export const CalendarWrapper = styled.div<{ view: string; disableCalendarNextButton: boolean }>`
   width: 100%;
   background-color: ${theme.color.white};
   padding: ${theme.size.md};
@@ -55,6 +55,18 @@ export const CalendarWrapper = styled.div<{ view: string }>`
           display: none;
         }
       }
+    }
+  }
+
+  .rbc-btn-group {
+    > :nth-child(3) {
+      ${({ disableCalendarNextButton }) =>
+        disableCalendarNextButton &&
+        css`
+          opacity: 0.7;
+          cursor: not-allowed;
+          pointer-events: none;
+        `}
     }
   }
 
@@ -131,15 +143,14 @@ export const CalendarWrapper = styled.div<{ view: string }>`
     font-size: 12px;
     line-height: 14px;
     border-radius: 3px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.08));
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+
+    :hover {
+      opacity: 0.8;
+    }
 
     :focus {
       outline: none;
-    }
-
-    transition: 0.25s;
-    :hover {
-      opacity: 0.8;
     }
   }
 

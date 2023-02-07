@@ -33,8 +33,13 @@ export const FileZone = styled.div`
   height: 82px;
   display: flex;
   align-items: center;
+  gap: ${theme.size.md};
   justify-content: space-between;
   overflow: hidden;
+
+  > p {
+    word-break: break-all;
+  }
 `;
 
 export const Content = styled.div`

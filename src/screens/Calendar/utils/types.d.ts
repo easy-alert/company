@@ -12,7 +12,7 @@ export interface IRequestCalendarData {
   setMaintenancesDisplay: (setMaintenancesDisplay: ICalendarView[]) => void;
   setLoading: (setLoading: boolean) => void;
   setYearChangeLoading: (setYearChangeLoading: boolean) => void;
-  currentYear: number;
+  yearToRequest: number;
 }
 
 export interface IRequestCalendarDataResData {

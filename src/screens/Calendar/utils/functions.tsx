@@ -9,12 +9,12 @@ export const requestCalendarData = async ({
   setMaintenancesWeekView,
   setMaintenancesDisplay,
   setLoading,
-  currentYear,
+  yearToRequest,
   setYearChangeLoading,
 }: IRequestCalendarData) => {
   setYearChangeLoading(true);
 
-  await Api.get(`calendars/list/${String(currentYear)}`)
+  await Api.get(`calendars/list/${String(yearToRequest)}`)
     .then((res: IRequestCalendarDataResData) => {
       const maintenancesMonthMap: ICalendarView[] = [];
 

@@ -239,7 +239,7 @@ export const convertToUrlString = (value: string) =>
 // #region REQUESTS
 export const catchHandler = (err: any) => {
   toast.dismiss();
-  if (err.response.data) {
+  if (err.response) {
     toast.error(err.response.data.ServerMessage.message);
   } else {
     toast.error('Erro de comunicação');
