@@ -189,9 +189,10 @@ export const ModalAddBanners = ({
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
         <Button
-          loading={onQuery}
-          label="Cadastrar"
           center
+          loading={onQuery}
+          disable={onMobileQuery || onWebQuery}
+          label="Cadastrar"
           onClick={() => {
             requestRegisterBuildingFile({
               files: acceptedWeb,

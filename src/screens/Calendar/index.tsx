@@ -49,7 +49,7 @@ export const MaintenancesCalendar = () => {
 
   const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
 
-  const YearOffset = 4;
+  const YearOffset = 2;
 
   const YearLimitForRequest = new Date().getFullYear() + YearOffset;
 

@@ -248,8 +248,8 @@ export const CalendarWrapper = styled.div<{
 
 export const YearLoading = styled.div`
   position: absolute;
-  left: 270px;
-  top: 27px;
+  left: 268px;
+  top: 28px;
 
   border: 4px solid ${theme.color.primaryL};
   border-top: 4px solid ${theme.color.primary};
