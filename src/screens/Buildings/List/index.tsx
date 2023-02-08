@@ -122,9 +122,7 @@ export const BuildingsList = () => {
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
-                  navigate(`/buildings/details/${building.id}`, {
-                    state: building.id,
-                  });
+                  navigate(`/buildings/details/${building.id}`);
                 }}
               >
                 <Style.BuildingCardHeader>

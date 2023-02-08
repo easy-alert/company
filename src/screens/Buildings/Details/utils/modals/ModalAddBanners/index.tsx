@@ -140,8 +140,8 @@ export const ModalAddBanners = ({
                   <input {...getInputPropsWeb()} />
 
                   <Style.Content>
-                    <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                    <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                    <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                    <p className="p2">Clique ou arraste para enviar sua imagem.</p>
                   </Style.Content>
                 </Style.DragAndDropZone>
               ))}
@@ -170,8 +170,8 @@ export const ModalAddBanners = ({
                   <input {...getInputPropsMobile()} />
 
                   <Style.Content>
-                    <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                    <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                    <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                    <p className="p2">Clique ou arraste para enviar sua imagem.</p>
                   </Style.Content>
                 </Style.DragAndDropZone>
               ))}

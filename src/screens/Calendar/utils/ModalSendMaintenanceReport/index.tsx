@@ -195,7 +195,7 @@ export const ModalSendMaintenanceReport = ({
 
               <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
                 <input {...getInputPropsImages()} />
-                <Image img={icon.addImage} width="50px" height="48px" radius="0" />
+                <Image img={icon.addImage} width="48px" height="46px" radius="0" />
               </Style.DragAndDropZoneImage>
             </Style.FileAndImageRow>
           </Style.Row>

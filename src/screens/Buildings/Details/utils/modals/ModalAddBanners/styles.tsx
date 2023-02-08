@@ -44,6 +44,7 @@ export const Content = styled.div`
   justify-content: center;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+  text-align: center;
 
   > p {
     color: ${theme.color.gray4};
