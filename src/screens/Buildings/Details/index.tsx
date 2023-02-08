@@ -154,19 +154,26 @@ export const BuildingDetails = () => {
             <h5>Manutenções</h5>
           </Style.CardHeader>
           <Style.MaintenanceCardFooter>
+            {/* Não fiz .map pra facilitar a estilização */}
             <Style.MaintenanceCardFooterInfo>
-              <h5 className="expired">0</h5>
-              <p className="p5">Vencidas</p>
+              <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel ?? '')}
+              </p>
             </Style.MaintenanceCardFooterInfo>
 
             <Style.MaintenanceCardFooterInfo>
-              <h5 className="pending">0</h5>
-              <p className="p5">Pendentes</p>
+              <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel ?? '')}
+              </p>
             </Style.MaintenanceCardFooterInfo>
 
             <Style.MaintenanceCardFooterInfo>
-              <h5 className="completed">0</h5>
-              <p className="p5">Concluídas</p>
+              <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel ?? '')}
+              </p>
             </Style.MaintenanceCardFooterInfo>
           </Style.MaintenanceCardFooter>
         </Style.Card>

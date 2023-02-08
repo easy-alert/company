@@ -6,6 +6,11 @@ export interface ICalendarView {
   status: 'expired' | 'pending' | 'completed' | 'overdue';
 }
 
+export interface IBuildingOptions {
+  name: string;
+  id: string;
+}
+
 export interface IRequestCalendarData {
   setMaintenancesWeekView: (setMaintenancesWeekView: ICalendarView[]) => void;
   setMaintenancesMonthView: (setMaintenancesMonthView: ICalendarView[]) => void;
@@ -13,10 +18,15 @@ export interface IRequestCalendarData {
   setLoading: (setLoading: boolean) => void;
   setYearChangeLoading: (setYearChangeLoading: boolean) => void;
   yearToRequest: number;
+  setBuildingOptions: React.Dispatch<React.SetStateAction<IBuildingOptions[]>>;
+  buildingId: string;
+  calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 }
 
 export interface IRequestCalendarDataResData {
   data: {
+    Filter: IBuildingOptions[];
+
     Dates: {
       Weeks: [
         {

@@ -16,6 +16,13 @@ interface Annex {
   originalName: string;
 }
 
+interface MaintenanceCount {
+  name: string;
+  pluralLabel: string;
+  singularLabel: string;
+  count: number;
+}
+
 export interface IBuildingDetail {
   id: string;
   name: string;
@@ -34,6 +41,7 @@ export interface IBuildingDetail {
   };
   Annexes: Annex[];
   NotificationsConfigurations: INotificationConfiguration[];
+  MaintenancesCount: MaintenanceCount[];
 }
 
 export interface IRequestBuildingDetails {

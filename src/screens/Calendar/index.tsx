@@ -19,7 +19,7 @@ import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
 // FUNCTIONS
 import { requestCalendarData } from './utils/functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { ICalendarView } from './utils/types';
+import { IBuildingOptions, ICalendarView } from './utils/types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -55,6 +55,10 @@ export const MaintenancesCalendar = () => {
 
   const disableCalendarNextButton =
     YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
+
+  const [buildingId, setBuildingId] = useState<string>('');
+
+  const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
 
   const locales = {
     'pt-BR': ptBR,
@@ -175,8 +179,11 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       yearToRequest,
       setYearChangeLoading,
+      setBuildingOptions,
+      buildingId,
+      calendarType,
     });
-  }, [yearToRequest]);
+  }, [yearToRequest, buildingId]);
 
   return loading ? (
     <DotSpinLoading />
@@ -191,8 +198,19 @@ export const MaintenancesCalendar = () => {
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
-          <select>
+          <select
+            value={buildingId}
+            disabled={yearChangeloading}
+            onChange={(e) => {
+              setBuildingId(e.target.value);
+            }}
+          >
             <option value="">Todas</option>
+            {buildingOptions.map((building) => (
+              <option value={building.id} key={building.id}>
+                {building.name}
+              </option>
+            ))}
           </select>
         </Style.Header>
         <Style.CalendarScroll>

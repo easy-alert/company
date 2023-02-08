@@ -11,14 +11,19 @@ export const requestCalendarData = async ({
   setLoading,
   yearToRequest,
   setYearChangeLoading,
+  setBuildingOptions,
+  buildingId,
+  calendarType,
 }: IRequestCalendarData) => {
   setYearChangeLoading(true);
   setMaintenancesMonthView([]);
   setMaintenancesWeekView([]);
   setMaintenancesDisplay([]);
 
-  await Api.get(`calendars/list/${String(yearToRequest)}`)
+  await Api.get(`calendars/list/${String(yearToRequest)}?buildingId=${buildingId}`)
     .then((res: IRequestCalendarDataResData) => {
+      setBuildingOptions(res.data.Filter);
+
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
@@ -81,7 +86,6 @@ export const requestCalendarData = async ({
       }
 
       setMaintenancesMonthView([...maintenancesMonthMap]);
-      setMaintenancesDisplay([...maintenancesMonthMap]);
 
       const orderArray = res.data.Dates.Weeks.sort((a, b) =>
         b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
@@ -142,6 +146,14 @@ A cada ${e.Maintenance.frequency}${' '}${
         status: e.MaintenancesStatus.name,
       }));
       setMaintenancesWeekView([...maintenancesWeekMap]);
+
+      if (calendarType === 'week') {
+        setMaintenancesDisplay([...maintenancesWeekMap]);
+      }
+
+      if (calendarType === 'month') {
+        setMaintenancesDisplay([...maintenancesMonthMap]);
+      }
     })
     .catch((err) => {
       catchHandler(err);
