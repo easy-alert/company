@@ -16,6 +16,8 @@ import { IModalMaintenanceDetails } from './types';
 // FUNCTIONS
 import { requestMaintenanceDetails } from './functions';
 import { IMaintenance } from '../../types';
+import { applyMask } from '../../../../utils/functions';
+import { ImagePreview } from '../../../../components/ImagePreview';
 
 export const ModalMaintenanceDetails = ({
   setModal,
@@ -59,9 +61,60 @@ export const ModalMaintenanceDetails = ({
               <h6>Responsável</h6>
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
-          </Style.Content>
 
-          {maintenance.MaintenanceReport.length > 0 && 'TEM REPORTS'}
+            {maintenance.MaintenanceReport.length > 0 && (
+              <>
+                <Style.Row>
+                  <h6>Custo</h6>
+                  <p className="p2">
+                    {
+                      applyMask({
+                        mask: 'BRL',
+                        value: String(maintenance.MaintenanceReport[0].cost),
+                      }).value
+                    }
+                  </p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Observações</h6>
+                  <p className="p2">{maintenance.MaintenanceReport[0].observation ?? '-'}</p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Anexos</h6>
+                  {/* {maintenance.MaintenanceReport[0].ReportAnnexes.map((annex) => (
+                    <Style.Tag key={annex.id}>
+                      <a
+                        title={annex.originalName}
+                        href={annex.url}
+                        download
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <p className="p3">{annex.name}</p>
+                        <Image size="16px" img={icon.download} />
+                      </a>
+                    </Style.Tag>
+                  ))} */}
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Anexos</h6>
+                  {maintenance.MaintenanceReport[0].ReportImages.map((image, i: number) => (
+                    <ImagePreview
+                      key={image.name + i}
+                      src={image.url}
+                      downloadUrl={image.url}
+                      imageCustomName={image.name}
+                      width="132px"
+                      height="136px"
+                    />
+                  ))}
+                </Style.Row>
+              </>
+            )}
+          </Style.Content>
 
           <Button
             label="Fechar"

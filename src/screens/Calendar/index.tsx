@@ -129,11 +129,12 @@ export const MaintenancesCalendar = () => {
       if (calendarType === 'week') {
         setSelectedMaintenanceHistoryId(event.id);
 
-        if (event.status === 'completed' || event.status === 'overdue' || event.isFuture) {
+        if (
+          (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
+          event.id
+        ) {
           setModalMaintenanceDetailsOpen(true);
-        }
-
-        if (!event.isFuture) {
+        } else if (!event.isFuture && event.id) {
           setModalSendMaintenanceReportOpen(true);
         }
       } else {

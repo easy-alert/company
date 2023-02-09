@@ -232,7 +232,6 @@ export const ModalSendMaintenanceReport = ({
                     imageCustomName={e.name}
                     imageOriginalName={e.name}
                     src={e.url}
-                    downloadUrl={e.url}
                     onTrashClick={() => {
                       setImages((prevState) => {
                         const newState = [...prevState];
