@@ -7,6 +7,6 @@ export interface IModalMaintenanceDetails {
 
 export interface IRequestMaintenanceDetails {
   maintenanceHistoryId: string;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMaintenance: React.Dispatch<React.SetStateAction<IMaintenance>>;
 }

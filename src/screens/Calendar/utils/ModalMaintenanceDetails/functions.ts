@@ -5,7 +5,7 @@ import { IRequestMaintenanceDetails } from './types';
 export const requestMaintenanceDetails = async ({
   maintenanceHistoryId,
   setMaintenance,
-  setLoading,
+  setModalLoading,
 }: IRequestMaintenanceDetails) => {
   await Api.get(`maintenances/list/details/${maintenanceHistoryId}`)
     .then((res) => {
@@ -15,6 +15,6 @@ export const requestMaintenanceDetails = async ({
       catchHandler(err);
     })
     .finally(() => {
-      setLoading(false);
+      setModalLoading(false);
     });
 };

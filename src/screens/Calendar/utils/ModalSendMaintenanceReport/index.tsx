@@ -30,6 +30,15 @@ import { requestSendReport } from './functions';
 export const ModalSendMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
+  buildingId,
+  calendarType,
+  setBuildingOptions,
+  setLoading,
+  setMaintenancesDisplay,
+  setMaintenancesMonthView,
+  setMaintenancesWeekView,
+  setYearChangeLoading,
+  yearToRequest,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
@@ -38,7 +47,9 @@ export const ModalSendMaintenanceReport = ({
     observation: '',
   });
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
@@ -106,12 +117,12 @@ export const ModalSendMaintenanceReport = ({
   }, [acceptedImages]);
 
   useEffect(() => {
-    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setLoading });
+    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setModalLoading });
   }, []);
 
   return (
     <Modal title="Enviar relato" setModal={setModal}>
-      {loading ? (
+      {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
         </Style.LoadingContainer>
@@ -249,13 +260,24 @@ export const ModalSendMaintenanceReport = ({
             label="Enviar relato"
             center
             disable={onFileQuery || onImageQuery}
+            loading={onQuery}
             onClick={() => {
               requestSendReport({
+                setOnQuery,
                 maintenanceHistoryId,
                 maintenanceReport,
                 setModal,
                 files,
                 images,
+                buildingId,
+                calendarType,
+                setBuildingOptions,
+                setLoading,
+                setMaintenancesDisplay,
+                setMaintenancesMonthView,
+                setMaintenancesWeekView,
+                setYearChangeLoading,
+                yearToRequest,
               });
             }}
           />

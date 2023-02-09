@@ -21,17 +21,17 @@ export const ModalMaintenanceDetails = ({
   setModal,
   maintenanceHistoryId,
 }: IModalMaintenanceDetails) => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
   useEffect(() => {
-    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setLoading });
+    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setModalLoading });
   }, []);
 
   return (
     <Modal title="Detalhes de manutenção" setModal={setModal}>
-      {loading ? (
+      {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
         </Style.LoadingContainer>
