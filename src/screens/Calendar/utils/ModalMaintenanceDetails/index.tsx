@@ -6,9 +6,11 @@ import { Button } from '../../../../components/Buttons/Button';
 import { Modal } from '../../../../components/Modal';
 import { EventTag } from '../EventTag';
 import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
+import { Image } from '../../../../components/Image';
 
 // STYLES
 import * as Style from './styles';
+import { icon } from '../../../../assets/icons';
 
 // TYPES
 import { IModalMaintenanceDetails } from './types';
@@ -83,34 +85,46 @@ export const ModalMaintenanceDetails = ({
 
                 <Style.Row>
                   <h6>Anexos</h6>
-                  {/* {maintenance.MaintenanceReport[0].ReportAnnexes.map((annex) => (
-                    <Style.Tag key={annex.id}>
-                      <a
-                        title={annex.originalName}
-                        href={annex.url}
-                        download
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <p className="p3">{annex.name}</p>
-                        <Image size="16px" img={icon.download} />
-                      </a>
-                    </Style.Tag>
-                  ))} */}
+                  <Style.FileAndImageRow>
+                    {maintenance.MaintenanceReport[0].ReportAnnexes.length > 0 ? (
+                      maintenance.MaintenanceReport[0].ReportAnnexes.map((annex, i: number) => (
+                        <Style.Tag key={annex.name + i}>
+                          <a
+                            title={annex.originalName}
+                            href={annex.url}
+                            download
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <p className="p3">{annex.name}</p>
+                            <Image size="16px" img={icon.download} />
+                          </a>
+                        </Style.Tag>
+                      ))
+                    ) : (
+                      <p className="p2">Nenhum anexo enviado</p>
+                    )}
+                  </Style.FileAndImageRow>
                 </Style.Row>
 
                 <Style.Row>
-                  <h6>Anexos</h6>
-                  {maintenance.MaintenanceReport[0].ReportImages.map((image, i: number) => (
-                    <ImagePreview
-                      key={image.name + i}
-                      src={image.url}
-                      downloadUrl={image.url}
-                      imageCustomName={image.name}
-                      width="132px"
-                      height="136px"
-                    />
-                  ))}
+                  <h6>Imagens</h6>
+                  <Style.FileAndImageRow>
+                    {maintenance.MaintenanceReport[0].ReportImages.length > 0 ? (
+                      maintenance.MaintenanceReport[0].ReportImages.map((image, i: number) => (
+                        <ImagePreview
+                          key={image.name + i}
+                          src={image.url}
+                          downloadUrl={image.url}
+                          imageCustomName={image.name}
+                          width="132px"
+                          height="136px"
+                        />
+                      ))
+                    ) : (
+                      <p className="p2">Nenhuma imagem enviada</p>
+                    )}
+                  </Style.FileAndImageRow>
                 </Style.Row>
               </>
             )}

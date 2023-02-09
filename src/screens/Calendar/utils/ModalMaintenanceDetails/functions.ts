@@ -9,8 +9,6 @@ export const requestMaintenanceDetails = async ({
 }: IRequestMaintenanceDetails) => {
   await Api.get(`maintenances/list/details/${maintenanceHistoryId}`)
     .then((res) => {
-      console.log(res.data);
-
       setMaintenance(res.data);
     })
     .catch((err) => {
