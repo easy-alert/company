@@ -222,6 +222,8 @@ export const convertStateAcronym = (UF: string) => {
 
 export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '');
 
+export const unMaskBRL = (value: string) => value.replace(/[^0-9]/g, '');
+
 export const capitalizeFirstLetter = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 

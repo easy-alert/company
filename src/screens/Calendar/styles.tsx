@@ -194,9 +194,10 @@ export const CalendarWrapper = styled.div<{
     }
   }
 
-  .rbc-selected {
+  /* nao lembro o que era esse */
+  /* .rbc-selected {
     background-color: red;
-  }
+  } */
 
   .rbc-off-range-bg {
     background-color: #ededed80;

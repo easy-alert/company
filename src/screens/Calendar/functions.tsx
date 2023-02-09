@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
-import { Api } from '../../../services/api';
-import { catchHandler } from '../../../utils/functions';
-import { EventTag } from './EventTag';
+import { Api } from '../../services/api';
+import { catchHandler } from '../../utils/functions';
+import { EventTag } from './utils/EventTag';
 
 export const requestCalendarData = async ({
   setMaintenancesMonthView,
@@ -92,7 +92,7 @@ export const requestCalendarData = async ({
       );
 
       const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
-        id: e.Maintenance.id,
+        id: e.id,
         title: (
           <div
             style={{
@@ -144,6 +144,7 @@ A cada ${e.Maintenance.frequency}${' '}${
           new Date(e.notificationDate).getUTCDate(),
         ),
         status: e.MaintenancesStatus.name,
+        isFuture: e.isFuture,
       }));
       setMaintenancesWeekView([...maintenancesWeekMap]);
 

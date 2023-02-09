@@ -15,17 +15,20 @@ import * as Style from './styles';
 
 // MODALS
 import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
+import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
 
 // FUNCTIONS
-import { requestCalendarData } from './utils/functions';
+import { requestCalendarData } from './functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { IBuildingOptions, ICalendarView } from './utils/types';
+import { IBuildingOptions, ICalendarView } from './types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
     useState<boolean>(false);
+
+  const [modalMaintenanceDetailsOpen, setModalMaintenanceDetailsOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,7 +40,7 @@ export const MaintenancesCalendar = () => {
 
   const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
-  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+  const [selectedMaintenanceHistoryId, setSelectedMaintenanceHistoryId] = useState<string>('');
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
@@ -124,8 +127,15 @@ export const MaintenancesCalendar = () => {
   const onSelectEvent = useCallback(
     (event: any) => {
       if (calendarType === 'week') {
-        setSelectedMaintenanceId(event.id);
-        setModalSendMaintenanceReportOpen(true);
+        setSelectedMaintenanceHistoryId(event.id);
+
+        if (event.status === 'completed' || event.status === 'overdue' || event.isFuture) {
+          setModalMaintenanceDetailsOpen(true);
+        }
+
+        if (!event.isFuture) {
+          setModalSendMaintenanceReportOpen(true);
+        }
       } else {
         setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
@@ -139,8 +149,8 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       date,
       setDate,
-      selectedMaintenanceId,
-      setSelectedMaintenanceId,
+      selectedMaintenanceHistoryId,
+      setSelectedMaintenanceHistoryId,
     ],
   );
 
@@ -189,18 +199,33 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && selectedMaintenanceId && (
+      {modalSendMaintenanceReportOpen && selectedMaintenanceHistoryId && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
-          selectedMaintenanceId={selectedMaintenanceId}
+          maintenanceHistoryId={selectedMaintenanceHistoryId}
+          setLoading={setLoading}
+          setMaintenancesWeekView={setMaintenancesWeekView}
+          setMaintenancesMonthView={setMaintenancesMonthView}
+          setMaintenancesDisplay={setMaintenancesDisplay}
+          yearToRequest={yearToRequest}
+          setYearChangeLoading={setYearChangeLoading}
+          setBuildingOptions={setBuildingOptions}
+          buildingId={buildingId}
+          calendarType={calendarType}
+        />
+      )}
+      {modalMaintenanceDetailsOpen && selectedMaintenanceHistoryId && (
+        <ModalMaintenanceDetails
+          setModal={setModalMaintenanceDetailsOpen}
+          maintenanceHistoryId={selectedMaintenanceHistoryId}
         />
       )}
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
           <select
-            value={buildingId}
             disabled={yearChangeloading}
+            value={buildingId}
             onChange={(e) => {
               setBuildingId(e.target.value);
             }}

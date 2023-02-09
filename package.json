@@ -26,6 +26,7 @@
     "react-toastify": "^9.0.7",
     "react-use": "^17.4.0",
     "styled-components": "^5.3.5",
+    "vite-plugin-checker": "^0.5.5",
     "yup": "^0.32.11"
   },
   "devDependencies": {
