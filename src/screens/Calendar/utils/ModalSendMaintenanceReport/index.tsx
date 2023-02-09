@@ -10,28 +10,55 @@ import { Modal } from '../../../../components/Modal';
 import { EventTag } from '../EventTag';
 import { Image } from '../../../../components/Image';
 import { DotLoading } from '../../../../components/Loadings/DotLoading';
+import { ImagePreview } from '../../../../components/ImagePreview';
+import { IconButton } from '../../../../components/Buttons/IconButton';
+import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
 
 // STYLES
 import * as Style from './styles';
 import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IFileAndImage, IModalSendMaintenanceReport } from './utils/types';
-import { IconButton } from '../../../../components/Buttons/IconButton';
-import { uploadFile } from '../../../../utils/functions';
+import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
+import { AnnexesAndImages, IMaintenance } from '../../types';
+
+// FUNCTIONS
+import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
+import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
+import { requestSendReport } from './functions';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
-  selectedMaintenanceId,
+  maintenanceHistoryId,
+  buildingId,
+  calendarType,
+  setBuildingOptions,
+  setLoading,
+  setMaintenancesDisplay,
+  setMaintenancesMonthView,
+  setMaintenancesWeekView,
+  setYearChangeLoading,
+  yearToRequest,
 }: IModalSendMaintenanceReport) => {
-  const [files, setFiles] = useState<IFileAndImage[]>([]);
+  const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+
+  const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
+    cost: 'R$ 0,00',
+    observation: '',
+  });
+
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     disabled: onFileQuery,
   });
 
-  const [images, setImages] = useState<IFileAndImage[]>([]);
+  const [images, setImages] = useState<AnnexesAndImages[]>([]);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const {
     acceptedFiles: acceptedImages,
@@ -58,7 +85,7 @@ export const ModalSendMaintenanceReport = ({
 
         setFiles((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { name: originalName, url: fileUrl }];
+          newState = [...newState, { originalName, name: originalName, url: fileUrl }];
           return newState;
         });
         setOnFileQuery(false);
@@ -79,7 +106,7 @@ export const ModalSendMaintenanceReport = ({
 
         setImages((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { name: originalName, url: fileUrl }];
+          newState = [...newState, { originalName, name: originalName, url: fileUrl }];
           return newState;
         });
         setOnImageQuery(false);
@@ -89,119 +116,172 @@ export const ModalSendMaintenanceReport = ({
     }
   }, [acceptedImages]);
 
+  useEffect(() => {
+    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setModalLoading });
+  }, []);
+
   return (
-    <Modal title="Detalhes de manutenção" setModal={setModal}>
-      <Style.Container>
-        <h3>{selectedMaintenanceId}</h3>
-        <Style.StatusTagWrapper>
-          {/* if overdue && eventtag completed */}
-          <EventTag status="completed" />
-          <EventTag status="overdue" />
-        </Style.StatusTagWrapper>
-        <Style.Content>
-          <Style.Row>
-            <h6>Categoria</h6>
-            <p className="p2">Sistemas Hidrossanitários</p>
-          </Style.Row>
-          <Style.Row>
-            <h6>Elemento</h6>
-            <p className="p2">Tubulações</p>
-          </Style.Row>
-          <Style.Row>
-            <h6>Responsável</h6>
-            <p className="p2">Equipe de manutenção local</p>
-          </Style.Row>
-          <Style.Row>
-            <h6>Atividade</h6>
-            <p className="p2">
-              Verificar as tubulações de água potável e servida para detectar obstruções, falhas,
-              entupimentos e problemas de fixação. Reconstruir a sua integridade, se necessário.
-            </p>
-          </Style.Row>
-          <Style.Row>
-            <h6>Prazo da manutenção</h6>
-            <p className="p2">20/01/2023</p>
-          </Style.Row>
-          <Style.Row>
-            <Input label="Observações" placeholder="Digite aqui" maxLength={50} />
-          </Style.Row>
-          <Style.Row disabled={onFileQuery}>
-            <h6>Anexar</h6>
-            <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-              <input {...getInputProps()} />
+    <Modal title="Enviar relato" setModal={setModal}>
+      {modalLoading ? (
+        <Style.LoadingContainer>
+          <DotSpinLoading />
+        </Style.LoadingContainer>
+      ) : (
+        <Style.Container>
+          <h3>{maintenance?.Building.name}</h3>
+          <Style.StatusTagWrapper>
+            {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
+            <EventTag status={maintenance?.MaintenancesStatus.name} />
+          </Style.StatusTagWrapper>
+          <Style.Content>
+            <Style.Row>
+              <h6>Categoria</h6>
+              <p className="p2">{maintenance.Maintenance.Category.name}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Elemento</h6>
+              <p className="p2">{maintenance.Maintenance.element}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Atividade</h6>
+              <p className="p2">{maintenance.Maintenance.element}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Responsável</h6>
+              <p className="p2">{maintenance.Maintenance.responsible}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Data de entrega</h6>
+              <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
+            </Style.Row>
 
-              <Style.DragAndDropFileContent>
-                <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-              </Style.DragAndDropFileContent>
-            </Style.DragAndDropZoneFile>
+            <Input
+              label="Custo"
+              placeholder="Ex: R$ 100,00"
+              maxLength={25}
+              value={maintenanceReport.cost}
+              onChange={(e) => {
+                setMaintenanceReport((prevState) => {
+                  const newState = { ...prevState };
+                  newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
+                  return newState;
+                });
+              }}
+            />
 
-            {(files.length > 0 || onFileQuery) && (
-              <Style.FileAndImageRow>
-                {files.map((e, i: number) => (
-                  <Style.Tag title={e.name} key={i}>
-                    <p className="p3">{e.name}</p>
-                    <IconButton
-                      size="16px"
-                      icon={icon.xBlack}
-                      onClick={() => {
-                        setFiles((prevState) => {
-                          const newState = [...prevState];
-                          newState.splice(i, 1);
-                          return newState;
-                        });
-                      }}
-                    />
-                  </Style.Tag>
-                ))}
-                {onFileQuery && (
-                  <Style.FileLoadingTag>
-                    <DotLoading />
-                  </Style.FileLoadingTag>
-                )}
-              </Style.FileAndImageRow>
-            )}
-          </Style.Row>
-          <Style.Row disabled={onImageQuery}>
-            <h6>Imagens</h6>
+            <Input
+              label="Observações"
+              placeholder="Digite aqui"
+              maxLength={50}
+              value={maintenanceReport.observation}
+              onChange={(e) => {
+                setMaintenanceReport((prevState) => {
+                  const newState = { ...prevState };
+                  newState.observation = e.target.value;
+                  return newState;
+                });
+              }}
+            />
 
-            <Style.FileAndImageRow>
-              {images.map((e, i: number) => (
-                <Style.ImageTag key={i}>
-                  <img src={e.url} alt="" />
-                  <p title={e.name} className="p6">
-                    {e.name}
-                  </p>
-                  <Style.IconButtonHover>
-                    <IconButton
-                      icon={icon.trashWithBg}
-                      onClick={() => {
-                        setImages((prevState) => {
-                          const newState = [...prevState];
-                          newState.splice(i, 1);
-                          return newState;
-                        });
-                      }}
-                    />
-                  </Style.IconButtonHover>
-                </Style.ImageTag>
-              ))}
+            <Style.Row disabled={onFileQuery}>
+              <h6>Anexar</h6>
+              <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                <input {...getInputProps()} />
 
-              {onImageQuery && (
-                <Style.ImageLoadingTag>
-                  <DotLoading />
-                </Style.ImageLoadingTag>
+                <Style.DragAndDropFileContent>
+                  <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                  <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                </Style.DragAndDropFileContent>
+              </Style.DragAndDropZoneFile>
+
+              {(files.length > 0 || onFileQuery) && (
+                <Style.FileAndImageRow>
+                  {files.map((e, i: number) => (
+                    <Style.Tag title={e.name} key={i}>
+                      <p className="p3">{e.name}</p>
+                      <IconButton
+                        size="16px"
+                        icon={icon.xBlack}
+                        onClick={() => {
+                          setFiles((prevState) => {
+                            const newState = [...prevState];
+                            newState.splice(i, 1);
+                            return newState;
+                          });
+                        }}
+                      />
+                    </Style.Tag>
+                  ))}
+                  {onFileQuery && (
+                    <Style.FileLoadingTag>
+                      <DotLoading />
+                    </Style.FileLoadingTag>
+                  )}
+                </Style.FileAndImageRow>
               )}
+            </Style.Row>
+            <Style.Row disabled={onImageQuery}>
+              <h6>Imagens</h6>
 
-              <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
-                <input {...getInputPropsImages()} />
-                <Image img={icon.addImage} width="50px" height="48px" radius="0" />
-              </Style.DragAndDropZoneImage>
-            </Style.FileAndImageRow>
-          </Style.Row>
-        </Style.Content>
-        <Button label="Enviar relato" center disable={onFileQuery || onImageQuery} />
-      </Style.Container>
+              <Style.FileAndImageRow>
+                {images.map((e, i: number) => (
+                  <ImagePreview
+                    key={e.name + i}
+                    width="132px"
+                    height="136px"
+                    imageCustomName={e.name}
+                    imageOriginalName={e.name}
+                    src={e.url}
+                    onTrashClick={() => {
+                      setImages((prevState) => {
+                        const newState = [...prevState];
+                        newState.splice(i, 1);
+                        return newState;
+                      });
+                    }}
+                  />
+                ))}
+
+                {onImageQuery && (
+                  <Style.ImageLoadingTag>
+                    <DotLoading />
+                  </Style.ImageLoadingTag>
+                )}
+
+                <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
+                  <input {...getInputPropsImages()} />
+                  <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                </Style.DragAndDropZoneImage>
+              </Style.FileAndImageRow>
+            </Style.Row>
+          </Style.Content>
+          <Button
+            label="Enviar relato"
+            center
+            disable={onFileQuery || onImageQuery}
+            loading={onQuery}
+            onClick={() => {
+              requestSendReport({
+                setOnQuery,
+                maintenanceHistoryId,
+                maintenanceReport,
+                setModal,
+                files,
+                images,
+                buildingId,
+                calendarType,
+                setBuildingOptions,
+                setLoading,
+                setMaintenancesDisplay,
+                setMaintenancesMonthView,
+                setMaintenancesWeekView,
+                setYearChangeLoading,
+                yearToRequest,
+              });
+            }}
+          />
+        </Style.Container>
+      )}
     </Modal>
   );
 };

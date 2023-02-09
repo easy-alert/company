@@ -103,6 +103,7 @@ export const BuildingCardHeaderInfo = styled.div`
 export const BuildingCardFooter = styled.div`
   margin-top: ${theme.size.sm};
   display: flex;
+  align-items: flex-start;
   gap: ${theme.size.sm};
 `;
 
@@ -113,13 +114,9 @@ export const BuildingCardFooterInfo = styled.div`
   .expired {
     color: ${theme.color.actionDanger};
   }
-  .delayed {
-    margin-top: ${theme.size.xsm};
-    color: ${theme.color.orange1};
-  }
+
   .completed {
     color: ${theme.color.success};
-    margin-top: ${theme.size.xsm};
   }
 
   > p {

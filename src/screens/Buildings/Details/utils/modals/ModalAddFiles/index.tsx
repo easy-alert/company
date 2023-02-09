@@ -22,7 +22,6 @@ export const ModalAddFiles = ({
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IModalAddFiles) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [files, setFiles] = useState<any[]>([]);
 
   const [fileName, setFileName] = useState<string>('');
@@ -44,6 +43,7 @@ export const ModalAddFiles = ({
       <Style.Container>
         <Input
           label="Nome do anexo"
+          maxLength={50}
           value={fileName}
           placeholder="Ex: Foto do Edifício"
           onChange={(e) => {

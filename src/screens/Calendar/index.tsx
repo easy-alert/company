@@ -15,17 +15,20 @@ import * as Style from './styles';
 
 // MODALS
 import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
+import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
 
 // FUNCTIONS
-import { requestCalendarData } from './utils/functions';
+import { requestCalendarData } from './functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { ICalendarView } from './utils/types';
+import { IBuildingOptions, ICalendarView } from './types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
     useState<boolean>(false);
+
+  const [modalMaintenanceDetailsOpen, setModalMaintenanceDetailsOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,7 +40,7 @@ export const MaintenancesCalendar = () => {
 
   const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
-  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+  const [selectedMaintenanceHistoryId, setSelectedMaintenanceHistoryId] = useState<string>('');
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
@@ -49,12 +52,16 @@ export const MaintenancesCalendar = () => {
 
   const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
 
-  const YearOffset = 4;
+  const YearOffset = 2;
 
   const YearLimitForRequest = new Date().getFullYear() + YearOffset;
 
   const disableCalendarNextButton =
     YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
+
+  const [buildingId, setBuildingId] = useState<string>('');
+
+  const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
 
   const locales = {
     'pt-BR': ptBR,
@@ -120,8 +127,16 @@ export const MaintenancesCalendar = () => {
   const onSelectEvent = useCallback(
     (event: any) => {
       if (calendarType === 'week') {
-        setSelectedMaintenanceId(event.id);
-        // setModalSendMaintenanceReportOpen(true);
+        setSelectedMaintenanceHistoryId(event.id);
+
+        if (
+          (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
+          event.id
+        ) {
+          setModalMaintenanceDetailsOpen(true);
+        } else if (!event.isFuture && event.id) {
+          setModalSendMaintenanceReportOpen(true);
+        }
       } else {
         setDate(event.start);
         setMaintenancesDisplay([...maintenancesWeekView]);
@@ -135,8 +150,8 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       date,
       setDate,
-      selectedMaintenanceId,
-      setSelectedMaintenanceId,
+      selectedMaintenanceHistoryId,
+      setSelectedMaintenanceHistoryId,
     ],
   );
 
@@ -156,13 +171,13 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalSendMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalSendMaintenanceReportOpen) {
+    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
       onView('month');
     }
   });
@@ -175,48 +190,78 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       yearToRequest,
       setYearChangeLoading,
+      setBuildingOptions,
+      buildingId,
+      calendarType,
     });
-  }, [yearToRequest]);
+  }, [yearToRequest, buildingId]);
 
   return loading ? (
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && selectedMaintenanceId && (
+      {modalSendMaintenanceReportOpen && selectedMaintenanceHistoryId && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
-          selectedMaintenanceId={selectedMaintenanceId}
+          maintenanceHistoryId={selectedMaintenanceHistoryId}
+          setLoading={setLoading}
+          setMaintenancesWeekView={setMaintenancesWeekView}
+          setMaintenancesMonthView={setMaintenancesMonthView}
+          setMaintenancesDisplay={setMaintenancesDisplay}
+          yearToRequest={yearToRequest}
+          setYearChangeLoading={setYearChangeLoading}
+          setBuildingOptions={setBuildingOptions}
+          buildingId={buildingId}
+          calendarType={calendarType}
+        />
+      )}
+      {modalMaintenanceDetailsOpen && selectedMaintenanceHistoryId && (
+        <ModalMaintenanceDetails
+          setModal={setModalMaintenanceDetailsOpen}
+          maintenanceHistoryId={selectedMaintenanceHistoryId}
         />
       )}
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
-          <select>
+          <select
+            disabled={yearChangeloading}
+            value={buildingId}
+            onChange={(e) => {
+              setBuildingId(e.target.value);
+            }}
+          >
             <option value="">Todas</option>
+            {buildingOptions.map((building) => (
+              <option value={building.id} key={building.id}>
+                {building.name}
+              </option>
+            ))}
           </select>
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper
             view={calendarType}
             disableCalendarNextButton={disableCalendarNextButton}
+            yearChangeloading={yearChangeloading}
           >
             {yearChangeloading && <Style.YearLoading />}
             <Calendar
               date={date}
               onNavigate={onNavigate}
               eventPropGetter={eventPropGetter}
-              tooltipAccessor={() => ''}
               view={calendarType}
               onView={onView}
               localizer={localizer}
               messages={messages}
               style={{ height: 768 }}
               onSelectEvent={onSelectEvent}
+              events={maintenancesDisplay}
+              tooltipAccessor={() => ''}
               culture="pt-BR"
               allDayAccessor="id"
-              showAllEvents
-              events={maintenancesDisplay}
               drilldownView="week"
+              showAllEvents
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>

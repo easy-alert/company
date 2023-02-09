@@ -12,6 +12,8 @@ import { PopoverButton } from '../../../components/Buttons/PopoverButton';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
+import { ModalAddBanners } from './utils/modals/ModalAddBanners';
+import { ImagePreview } from '../../../components/ImagePreview';
 
 // FUNCTIONS
 import {
@@ -63,6 +65,8 @@ export const BuildingDetails = () => {
     useState<boolean>(false);
 
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
+
+  const [modalAddBannersOpen, setModalAddBannersOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -129,37 +133,50 @@ export const BuildingDetails = () => {
         />
       )}
 
+      {modalAddBannersOpen && building && (
+        <ModalAddBanners
+          setModal={setModalAddBannersOpen}
+          buildingId={building.id}
+          setTotalMaintenancesCount={setTotalMaintenancesCount}
+          setUsedMaintenancesCount={setUsedMaintenancesCount}
+          setBuilding={setBuilding}
+        />
+      )}
+
       <Style.Header>
         <h2>Detalhes de edificação</h2>
         <ReturnButton path="/buildings" />
       </Style.Header>
 
       <Style.CardWrapper>
-        {/* <Style.Card>
+        <Style.Card>
           <Style.CardHeader>
             <h5>Manutenções</h5>
           </Style.CardHeader>
           <Style.MaintenanceCardFooter>
+            {/* Não fiz .map pra facilitar a estilização */}
             <Style.MaintenanceCardFooterInfo>
-              <h5 className="pending">0</h5>
-              <p className="p5">Pendentes</p>
-            </Style.MaintenanceCardFooterInfo>
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="expired">0</h5>
-              <p className="p5">Vencidas</p>
-            </Style.MaintenanceCardFooterInfo>
-
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="delayed">0</h5>
-              <p className="p5">Feitas em atraso</p>
+              <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel ?? '')}
+              </p>
             </Style.MaintenanceCardFooterInfo>
 
             <Style.MaintenanceCardFooterInfo>
-              <h5 className="completed">0</h5>
-              <p className="p5">Concluídas</p>
+              <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel ?? '')}
+              </p>
+            </Style.MaintenanceCardFooterInfo>
+
+            <Style.MaintenanceCardFooterInfo>
+              <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+              <p className="p5">
+                {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel ?? '')}
+              </p>
             </Style.MaintenanceCardFooterInfo>
           </Style.MaintenanceCardFooter>
-        </Style.Card> */}
+        </Style.Card>
 
         <Style.Card>
           <Style.CardHeader>
@@ -284,8 +301,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.TableDataWrapper>
                           {notificationRow.email ?? '-'}
-                          {notificationRow.isMain &&
-                            notificationRow.email &&
+                          {notificationRow.email &&
                             (notificationRow.emailIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -411,57 +427,93 @@ export const BuildingDetails = () => {
             </Style.ButtonWrapper>
           </Style.MaintenanceCardHeader>
         </Style.Card>
-        <Style.Card>
-          <Style.CardHeader>
-            <h5>Anexos</h5>
-            <IconButton
-              icon={icon.plusWithBg}
-              label="Cadastrar"
-              size="24px"
-              hideLabelOnMedia
-              onClick={() => {
-                setModalAddFilesOpen(true);
-              }}
-            />
-          </Style.CardHeader>
-          {building && building?.Annexes.length > 0 ? (
-            <Style.MatrixTagWrapper>
-              {building.Annexes.map((element) => (
-                <Style.Tag key={element.id}>
-                  <a
-                    title={element.originalName}
-                    href={element.url}
-                    download
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <p className="p3">{element.name}</p>
-                    <Image size="16px" img={icon.download} />
-                  </a>
-                  <IconButton
-                    disabled={deleteAnnexOnQuery}
-                    size="16px"
-                    icon={icon.xBlack}
-                    onClick={() => {
-                      requestDeleteAnnex({
-                        annexeId: element.id,
-                        setDeleteAnnexOnQuery,
-                        buildingId: building.id,
-                        setBuilding,
-                        setTotalMaintenancesCount,
-                        setUsedMaintenancesCount,
-                      });
-                    }}
+
+        <Style.CardGrid>
+          <Style.Card>
+            <Style.CardHeader>
+              <h5>Anexos</h5>
+              <IconButton
+                icon={icon.plusWithBg}
+                label="Cadastrar"
+                size="24px"
+                hideLabelOnMedia
+                onClick={() => {
+                  setModalAddFilesOpen(true);
+                }}
+              />
+            </Style.CardHeader>
+            {building && building?.Annexes.length > 0 ? (
+              <Style.MatrixTagWrapper>
+                {building.Annexes.map((element) => (
+                  <Style.Tag key={element.id}>
+                    <a
+                      title={element.originalName}
+                      href={element.url}
+                      download
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <p className="p3">{element.name}</p>
+                      <Image size="16px" img={icon.download} />
+                    </a>
+                    <IconButton
+                      disabled={deleteAnnexOnQuery}
+                      size="16px"
+                      icon={icon.xBlack}
+                      onClick={() => {
+                        requestDeleteAnnex({
+                          annexeId: element.id,
+                          setDeleteAnnexOnQuery,
+                          buildingId: building.id,
+                          setBuilding,
+                          setTotalMaintenancesCount,
+                          setUsedMaintenancesCount,
+                        });
+                      }}
+                    />
+                  </Style.Tag>
+                ))}
+              </Style.MatrixTagWrapper>
+            ) : (
+              <Style.NoDataContainer>
+                <h5>Nenhum anexo cadastrado.</h5>
+              </Style.NoDataContainer>
+            )}
+          </Style.Card>
+          <Style.Card>
+            <Style.CardHeader>
+              <h5>Banners</h5>
+              <IconButton
+                icon={icon.plusWithBg}
+                label="Cadastrar"
+                size="24px"
+                hideLabelOnMedia
+                onClick={() => {
+                  setModalAddBannersOpen(true);
+                }}
+              />
+            </Style.CardHeader>
+            {building && building?.Annexes.length > 0 ? (
+              <Style.MatrixTagWrapper>
+                {building.Annexes.map((element) => (
+                  <ImagePreview
+                    key={element.id}
+                    width="164px"
+                    height="167px"
+                    downloadUrl={element.url}
+                    src={element.url}
+                    imageCustomName={element.name}
+                    imageOriginalName={element.originalName}
                   />
-                </Style.Tag>
-              ))}
-            </Style.MatrixTagWrapper>
-          ) : (
-            <Style.NoDataContainer>
-              <h5>Nenhum anexo cadastrado.</h5>
-            </Style.NoDataContainer>
-          )}
-        </Style.Card>
+                ))}
+              </Style.MatrixTagWrapper>
+            ) : (
+              <Style.NoDataContainer>
+                <h5>Nenhum banner cadastrado.</h5>
+              </Style.NoDataContainer>
+            )}
+          </Style.Card>
+        </Style.CardGrid>
       </Style.CardWrapper>
     </>
   );

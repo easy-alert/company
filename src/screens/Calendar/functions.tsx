@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
-import { Api } from '../../../services/api';
-import { catchHandler } from '../../../utils/functions';
-import { EventTag } from './EventTag';
+import { Api } from '../../services/api';
+import { catchHandler } from '../../utils/functions';
+import { EventTag } from './utils/EventTag';
 
 export const requestCalendarData = async ({
   setMaintenancesMonthView,
@@ -11,11 +11,19 @@ export const requestCalendarData = async ({
   setLoading,
   yearToRequest,
   setYearChangeLoading,
+  setBuildingOptions,
+  buildingId,
+  calendarType,
 }: IRequestCalendarData) => {
   setYearChangeLoading(true);
+  // setMaintenancesMonthView([]);
+  // setMaintenancesWeekView([]);
+  // setMaintenancesDisplay([]);
 
-  await Api.get(`calendars/list/${String(yearToRequest)}`)
+  await Api.get(`calendars/list/${String(yearToRequest)}?buildingId=${buildingId}`)
     .then((res: IRequestCalendarDataResData) => {
+      setBuildingOptions(res.data.Filter);
+
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
@@ -78,14 +86,13 @@ export const requestCalendarData = async ({
       }
 
       setMaintenancesMonthView([...maintenancesMonthMap]);
-      setMaintenancesDisplay([...maintenancesMonthMap]);
 
       const orderArray = res.data.Dates.Weeks.sort((a, b) =>
         b.MaintenancesStatus.singularLabel.localeCompare(a.MaintenancesStatus.singularLabel),
       );
 
       const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
-        id: e.Maintenance.id,
+        id: e.id,
         title: (
           <div
             style={{
@@ -137,8 +144,17 @@ A cada ${e.Maintenance.frequency}${' '}${
           new Date(e.notificationDate).getUTCDate(),
         ),
         status: e.MaintenancesStatus.name,
+        isFuture: e.isFuture,
       }));
       setMaintenancesWeekView([...maintenancesWeekMap]);
+
+      if (calendarType === 'week') {
+        setMaintenancesDisplay([...maintenancesWeekMap]);
+      }
+
+      if (calendarType === 'month') {
+        setMaintenancesDisplay([...maintenancesMonthMap]);
+      }
     })
     .catch((err) => {
       catchHandler(err);

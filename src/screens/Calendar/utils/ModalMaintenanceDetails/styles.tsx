@@ -68,6 +68,10 @@ export const FileAndImageRow = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   gap: ${theme.size.xsm};
+
+  > .p2 {
+    opacity: 0.7;
+  }
 `;
 
 export const Tag = styled.div`
@@ -80,12 +84,24 @@ export const Tag = styled.div`
   border-radius: ${theme.size.xxsm};
   gap: ${theme.size.xsm};
 
-  > p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 400;
-    max-width: 154px;
+  > a {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xxsm};
+    color: ${theme.color.black};
+
+    > p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 400;
+      max-width: 185px;
+    }
+
+    transition: 0.25s;
+    :hover {
+      opacity: 0.7;
+    }
   }
 `;
 
@@ -130,5 +146,5 @@ export const LoadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 600px;
+  min-height: 400px;
 `;

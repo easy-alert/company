@@ -16,7 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { requestBuldingTypes } from '../../../utils/functions';
+import { capitalizeFirstLetter, requestBuldingTypes } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
@@ -119,13 +119,10 @@ export const BuildingsList = () => {
         <>
           <Style.GridContainer>
             {buildingList.map((building) => (
-              // eslint-disable-next-line react/no-array-index-key
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
-                  navigate(`/buildings/details/${building.id}`, {
-                    state: building.id,
-                  });
+                  navigate(`/buildings/details/${building.id}`);
                 }}
               >
                 <Style.BuildingCardHeader>
@@ -142,22 +139,29 @@ export const BuildingsList = () => {
                   <Image img={icon.rightArrow} size="16px" />
                 </Style.BuildingCardHeader>
 
-                {/* <Style.BuildingCardFooter>
+                <Style.BuildingCardFooter>
+                  {/* Não fiz .map pra facilitar a estilização */}
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="pending">0</h5>
-                    <p className="p5">Pendentes</p>
-
-                    <h5 className="delayed">0</h5>
-                    <p className="p5">Feitas em atraso</p>
+                    <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                    <p className="p5">
+                      {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)}
+                    </p>
                   </Style.BuildingCardFooterInfo>
+
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="expired">0</h5>
-                    <p className="p5">Vencidas</p>
-
-                    <h5 className="completed">0</h5>
-                    <p className="p5">Concluídas</p>
+                    <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+                    <p className="p5">
+                      {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)}
+                    </p>
                   </Style.BuildingCardFooterInfo>
-                </Style.BuildingCardFooter> */}
+
+                  <Style.BuildingCardFooterInfo>
+                    <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                    <p className="p5">
+                      {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)}
+                    </p>
+                  </Style.BuildingCardFooterInfo>
+                </Style.BuildingCardFooter>
               </Style.BuildingCard>
             ))}
           </Style.GridContainer>
