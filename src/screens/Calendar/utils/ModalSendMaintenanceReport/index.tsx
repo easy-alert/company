@@ -144,7 +144,7 @@ export const ModalSendMaintenanceReport = ({
             </Style.Row>
             <Style.Row>
               <h6>Atividade</h6>
-              <p className="p2">{maintenance.Maintenance.element}</p>
+              <p className="p2">{maintenance.Maintenance.activity}</p>
             </Style.Row>
             <Style.Row>
               <h6>Responsável</h6>
