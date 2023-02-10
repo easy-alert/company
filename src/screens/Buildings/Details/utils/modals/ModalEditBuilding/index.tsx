@@ -51,7 +51,7 @@ export const ModalEditBuilding = ({
           state: building.state ?? '',
           neighborhood: building.neighborhood ?? '',
           streetName: building.streetName ?? '',
-          area: building.area ? applyMask({ mask: 'DEC', value: building.area }).value : '',
+          area: '',
           deliveryDate: convertToFormikDate(building.deliveryDate),
           warrantyExpiration: convertToFormikDate(building.warrantyExpiration),
           keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
@@ -143,26 +143,7 @@ export const ModalEditBuilding = ({
                 placeholder="Ex: Rua Henrique Lage"
                 maxLength={40}
               />
-              <FormikInput
-                label="Área (m²)"
-                name="area"
-                value={values.area}
-                error={touched.area && errors.area ? errors.area : null}
-                placeholder="Ex: 1.200,00"
-                maxLength={10}
-                onChange={(e) => {
-                  if (/^\d/.test(e.target.value) || e.target.value === '') {
-                    if (e.target.value === '' || e.target.value === '0,0') {
-                      setFieldValue('area', '');
-                    } else {
-                      setFieldValue(
-                        'area',
-                        applyMask({ value: e.target.value, mask: 'DEC' }).value,
-                      );
-                    }
-                  }
-                }}
-              />
+
               <FormikInput
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"

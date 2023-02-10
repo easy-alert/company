@@ -13,7 +13,6 @@ import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreate
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalAddBanners } from './utils/modals/ModalAddBanners';
-import { ImagePreview } from '../../../components/ImagePreview';
 
 // FUNCTIONS
 import {
@@ -252,15 +251,6 @@ export const BuildingDetails = () => {
                 <p className="p3">Logradouro:</p>
                 <p className="p3">{building?.streetName ?? '-'}</p>
               </Style.BuildingCardData>
-
-              <Style.BuildingCardData>
-                <p className="p3">Área:</p>
-                <p className="p3">
-                  {building?.area
-                    ? `${applyMask({ mask: 'DEC', value: building?.area }).value} m²`
-                    : '-'}
-                </p>
-              </Style.BuildingCardData>
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>
@@ -480,7 +470,7 @@ export const BuildingDetails = () => {
               </Style.NoDataContainer>
             )}
           </Style.Card>
-          <Style.Card>
+          {/* <Style.Card>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
@@ -512,7 +502,7 @@ export const BuildingDetails = () => {
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card>
+          </Style.Card> */}
         </Style.CardGrid>
       </Style.CardWrapper>
     </>

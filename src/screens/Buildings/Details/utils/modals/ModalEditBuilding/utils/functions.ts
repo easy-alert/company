@@ -31,7 +31,7 @@ export const requestEditBuilding = async ({
       state: values.state !== '' ? values.state : null,
       neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
       streetName: values.streetName !== '' ? values.streetName : null,
-      area: values.area !== '' ? unMask(values.area) : null,
+      area: null,
       deliveryDate: new Date(values.deliveryDate),
       warrantyExpiration: new Date(values.warrantyExpiration),
       keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
