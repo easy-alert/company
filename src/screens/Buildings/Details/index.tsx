@@ -13,7 +13,7 @@ import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreate
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalAddBanners } from './utils/modals/ModalAddBanners';
-// import { ImagePreview } from '../../../components/ImagePreview';
+import { ImagePreview } from '../../../components/ImagePreview';
 
 // FUNCTIONS
 import {
@@ -480,7 +480,7 @@ export const BuildingDetails = () => {
               </Style.NoDataContainer>
             )}
           </Style.Card>
-          {/* <Style.Card>
+          <Style.Card>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
@@ -512,7 +512,7 @@ export const BuildingDetails = () => {
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card> */}
+          </Style.Card>
         </Style.CardGrid>
       </Style.CardWrapper>
     </>
