@@ -144,21 +144,27 @@ export const BuildingsList = () => {
                   <Style.BuildingCardFooterInfo>
                     <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
                     <p className="p5">
-                      {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)}
+                      {building?.MaintenancesCount[0].count > 1
+                        ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
+                        : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
                     </p>
                   </Style.BuildingCardFooterInfo>
 
                   <Style.BuildingCardFooterInfo>
                     <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
                     <p className="p5">
-                      {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)}
+                      {building?.MaintenancesCount[1].count > 1
+                        ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
+                        : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
                     </p>
                   </Style.BuildingCardFooterInfo>
 
                   <Style.BuildingCardFooterInfo>
                     <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
                     <p className="p5">
-                      {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)}
+                      {building?.MaintenancesCount[2].count > 1
+                        ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
+                        : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
                     </p>
                   </Style.BuildingCardFooterInfo>
                 </Style.BuildingCardFooter>

@@ -149,34 +149,42 @@ export const BuildingDetails = () => {
       </Style.Header>
 
       <Style.CardWrapper>
-        <Style.Card>
-          <Style.CardHeader>
-            <h5>Manutenções</h5>
-          </Style.CardHeader>
-          <Style.MaintenanceCardFooter>
-            {/* Não fiz .map pra facilitar a estilização */}
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
+        {building?.MaintenancesCount && (
+          <Style.Card>
+            <Style.CardHeader>
+              <h5>Manutenções</h5>
+            </Style.CardHeader>
+            <Style.MaintenanceCardFooter>
+              {/* Não fiz .map pra facilitar a estilização */}
+              <Style.MaintenanceCardFooterInfo>
+                <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                <p className="p5">
+                  {building?.MaintenancesCount[0].count > 1
+                    ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
+                    : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
+                </p>
+              </Style.MaintenanceCardFooterInfo>
 
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
+              <Style.MaintenanceCardFooterInfo>
+                <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+                <p className="p5">
+                  {building?.MaintenancesCount[1].count > 1
+                    ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
+                    : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
+                </p>
+              </Style.MaintenanceCardFooterInfo>
 
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
-          </Style.MaintenanceCardFooter>
-        </Style.Card>
+              <Style.MaintenanceCardFooterInfo>
+                <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                <p className="p5">
+                  {building?.MaintenancesCount[2].count > 1
+                    ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
+                    : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
+                </p>
+              </Style.MaintenanceCardFooterInfo>
+            </Style.MaintenanceCardFooter>
+          </Style.Card>
+        )}
 
         <Style.Card>
           <Style.CardHeader>
