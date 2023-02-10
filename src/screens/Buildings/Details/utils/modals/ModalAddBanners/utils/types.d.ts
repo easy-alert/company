@@ -6,7 +6,7 @@ export interface IModalAddBanners {
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
-export interface IRequestRegisterBuildingFile {
+export interface IRequestRegisterBuildingBanners {
   files: any;
   fileName: string;
   buildingId: string;

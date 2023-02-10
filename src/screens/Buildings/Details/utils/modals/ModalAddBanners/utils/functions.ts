@@ -2,9 +2,9 @@ import { toast } from 'react-toastify';
 import { Api } from '../../../../../../../services/api';
 import { catchHandler, uploadFile } from '../../../../../../../utils/functions';
 import { requestBuildingDetails } from '../../../functions';
-import { IRequestRegisterBuildingFile } from './types';
+import { IRequestRegisterBuildingBanners } from './types';
 
-export const requestRegisterBuildingFile = async ({
+export const requestRegisterBuildingBanners = async ({
   files,
   fileName,
   setOnQuery,
@@ -13,7 +13,7 @@ export const requestRegisterBuildingFile = async ({
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   setModal,
-}: IRequestRegisterBuildingFile) => {
+}: IRequestRegisterBuildingBanners) => {
   if (fileName === '') {
     toast.error('O nome do anexo é obrigatório.');
     return;
@@ -48,11 +48,4 @@ export const requestRegisterBuildingFile = async ({
       setOnQuery(false);
       catchHandler(err);
     });
-};
-
-export const insertMiddleEllipsis = (string: string) => {
-  if (string.length > 30) {
-    return `${string.substring(0, 30)}...${string.substring(string.length - 10, string.length)}`;
-  }
-  return string;
 };

@@ -14,7 +14,7 @@ import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 
 // FUNCTIONS
-import { requestRegisterBuildingFile } from './utils/functions';
+import { requestRegisterBuildingBanners } from './utils/functions';
 import { uploadFile } from '../../../../../../utils/functions';
 import { ImagePreview } from '../../../../../../components/ImagePreview';
 import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
@@ -194,8 +194,8 @@ export const ModalAddBanners = ({
           disable={onMobileQuery || onWebQuery}
           label="Cadastrar"
           onClick={() => {
-            requestRegisterBuildingFile({
-              files: acceptedWeb,
+            requestRegisterBuildingBanners({
+              files: [],
               fileName,
               setOnQuery,
               buildingId,
