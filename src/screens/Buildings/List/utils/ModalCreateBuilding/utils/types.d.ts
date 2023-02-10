@@ -9,7 +9,6 @@ interface ICreateBuilding {
   state: string;
   neighborhood: string;
   streetName: string;
-  area: string;
   deliveryDate: string;
   warrantyExpiration: string;
   keepNotificationAfterWarrantyEnds: boolean;

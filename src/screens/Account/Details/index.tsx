@@ -78,13 +78,6 @@ export const AccountDetails = () => {
           <h6>Data de cadastro</h6>
           <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
         </Style.Card>
-
-        <Style.Card>
-          <h6>Último acesso</h6>
-          <p className="p2">
-            {account?.User.lastAccess ? dateFormatter(account?.User.lastAccess) : '-'}
-          </p>
-        </Style.Card>
       </Style.CardSection>
 
       <Style.Footer>
