@@ -26,7 +26,7 @@ export const ModalManageBanners = ({
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
 }: IModalAddBanners) => {
-  const [fileName, setFileName] = useState<string>('');
+  const [bannerName, setBannerName] = useState<string>('');
   const [bannerLink, setBannerLink] = useState<string>('');
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -111,10 +111,10 @@ export const ModalManageBanners = ({
         <Input
           label="Nome do banner"
           maxLength={50}
-          value={fileName}
+          value={bannerName}
           placeholder="Ex: Foto do Edifício"
           onChange={(e) => {
-            setFileName(e.target.value);
+            setBannerName(e.target.value);
           }}
         />
         <Input
@@ -195,14 +195,16 @@ export const ModalManageBanners = ({
           label="Cadastrar"
           onClick={() => {
             requestRegisterBuildingBanners({
-              files: [],
-              fileName,
               setOnQuery,
               buildingId,
               setBuilding,
               setTotalMaintenancesCount,
               setUsedMaintenancesCount,
               setModal,
+              bannerLink,
+              bannerName,
+              mobileBanner,
+              webBanner,
             });
           }}
         />

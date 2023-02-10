@@ -16,6 +16,14 @@ interface Annex {
   originalName: string;
 }
 
+interface Banner {
+  bannerName: string;
+  originalName: string;
+  redirectUrl: string;
+  type: 'Web' | 'Mobile';
+  url: string;
+}
+
 interface MaintenanceCount {
   name: string;
   pluralLabel: string;
@@ -41,6 +49,7 @@ export interface IBuildingDetail {
   Annexes: Annex[];
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
+  Banners: Banner[];
 }
 
 export interface IRequestBuildingDetails {

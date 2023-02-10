@@ -1,38 +1,56 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../../services/api';
-import { catchHandler, uploadFile } from '../../../../../../../utils/functions';
+import { catchHandler } from '../../../../../../../utils/functions';
 import { requestBuildingDetails } from '../../../functions';
-import { IRequestRegisterBuildingBanners } from './types';
+import { IData, IRequestRegisterBuildingBanners } from './types';
 
 export const requestRegisterBuildingBanners = async ({
-  files,
-  fileName,
   setOnQuery,
   buildingId,
   setBuilding,
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
   setModal,
+  bannerLink,
+  bannerName,
+  webBanner,
+  mobileBanner,
 }: IRequestRegisterBuildingBanners) => {
-  if (fileName === '') {
-    toast.error('O nome do anexo é obrigatório.');
+  if (!bannerName) {
+    toast.error('Verifique a informação: nome do banner e tente novamente.');
     return;
   }
 
-  if (files.length === 0) {
-    toast.error('O anexo é obrigatório.');
+  if (!bannerLink) {
+    toast.error('Verifique a informação: link do banner e tente novamente.');
     return;
   }
 
   setOnQuery(true);
 
-  const { Location: fileUrl, originalname: originalName } = await uploadFile(files[0]);
+  const data: IData[] = [];
 
-  await Api.post('/buildings/annexes/create', {
-    name: fileName,
-    url: fileUrl,
-    originalName,
-    buildingId,
+  data.push(
+    {
+      buildingId,
+      bannerName: bannerName !== '' ? bannerName : null,
+      redirectUrl: bannerLink !== '' ? bannerLink : null,
+      type: 'Web',
+      url: webBanner[0]?.url,
+      originalName: webBanner[0]?.name,
+    },
+    {
+      buildingId,
+      bannerName: bannerName !== '' ? bannerName : null,
+      redirectUrl: bannerLink !== '' ? bannerLink : null,
+      type: 'Mobile',
+      url: mobileBanner[0]?.url,
+      originalName: mobileBanner[0]?.name,
+    },
+  );
+
+  await Api.post('/buildings/banners/change', {
+    data,
   })
     .then((res) => {
       requestBuildingDetails({

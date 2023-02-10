@@ -474,7 +474,7 @@ export const BuildingDetails = () => {
                 ))}
               </Style.MatrixTagWrapper>
             ) : (
-              <Style.NoDataContainer>
+              <Style.NoDataContainer className="bottom">
                 <h5>Nenhum anexo cadastrado.</h5>
               </Style.NoDataContainer>
             )}
@@ -483,8 +483,8 @@ export const BuildingDetails = () => {
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
-                icon={icon.plusWithBg}
-                label="Cadastrar"
+                icon={building && building?.Banners.length > 0 ? icon.editWithBg : icon.plusWithBg}
+                label={building && building?.Banners.length > 0 ? 'Editar' : 'Cadastrar'}
                 size="24px"
                 hideLabelOnMedia
                 onClick={() => {
@@ -492,22 +492,23 @@ export const BuildingDetails = () => {
                 }}
               />
             </Style.CardHeader>
-            {building && building?.Annexes.length > 0 ? (
+            {building && building?.Banners.length > 0 ? (
               <Style.MatrixTagWrapper>
-                {building.Annexes.map((element) => (
+                {building.Banners.map((element, i: number) => (
                   <ImagePreview
-                    key={element.id}
-                    width="164px"
-                    height="167px"
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={element.url + i}
+                    width="50%"
+                    height="50%"
                     downloadUrl={element.url}
                     src={element.url}
-                    imageCustomName={element.name}
+                    imageCustomName={`${element.bannerName} ${element.type}`}
                     imageOriginalName={element.originalName}
                   />
                 ))}
               </Style.MatrixTagWrapper>
             ) : (
-              <Style.NoDataContainer>
+              <Style.NoDataContainer className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}

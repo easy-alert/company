@@ -36,6 +36,13 @@ export const Card = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
+
+  .bottom {
+    height: calc(100% - 40px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const CardGrid = styled.div`
@@ -144,7 +151,6 @@ export const MatrixTagWrapper = styled.div`
   margin-top: ${theme.size.xsm};
   display: flex;
   gap: ${theme.size.xsm};
-  flex-wrap: wrap;
 `;
 
 export const Tag = styled.div`
