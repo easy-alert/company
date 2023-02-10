@@ -140,6 +140,7 @@ export const BuildingDetails = () => {
           setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
+          currentBanners={building?.Banners}
         />
       )}
 

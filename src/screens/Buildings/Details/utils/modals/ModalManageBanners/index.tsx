@@ -25,7 +25,9 @@ export const ModalManageBanners = ({
   setBuilding,
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
+  currentBanners,
 }: IModalAddBanners) => {
+  // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
   const [bannerName, setBannerName] = useState<string>('');
   const [bannerLink, setBannerLink] = useState<string>('');
 
@@ -104,6 +106,24 @@ export const ModalManageBanners = ({
       uploadAcceptedMobile();
     }
   }, [acceptedMobile]);
+
+  useEffect(() => {
+    if (currentBanners.length > 0) {
+      setBannerName(currentBanners[0].bannerName);
+      setBannerLink(currentBanners[0].redirectUrl);
+
+      currentBanners.forEach((banner) => {
+        if (banner.type === 'Web') {
+          setWebBanner([{ name: banner.originalName, url: banner.url }]);
+        }
+
+        if (banner.type === 'Mobile') {
+          setMobileBanner([{ name: banner.originalName, url: banner.url }]);
+        }
+      });
+    }
+  }, []);
+  // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
 
   return (
     <Modal title="Cadastrar banners" setModal={setModal}>

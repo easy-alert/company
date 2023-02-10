@@ -1,9 +1,12 @@
+import { Banner } from '../../../types';
+
 export interface IModalAddBanners {
   setModal: (setModal: boolean) => void;
   buildingId: string;
   setBuilding: (setBuilding: IBuildingDetail) => void;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  currentBanners: Banner[];
 }
 
 export interface IImage {
