@@ -9,10 +9,11 @@ import { NotificationTable, NotificationTableContent } from './utils/components/
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { Image } from '../../../components/Image';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { ImagePreview } from '../../../components/ImagePreview';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
-import { ModalAddBanners } from './utils/modals/ModalAddBanners';
+import { ModalManageBanners } from './utils/modals/ModalManageBanners';
 
 // FUNCTIONS
 import {
@@ -65,7 +66,7 @@ export const BuildingDetails = () => {
 
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
-  const [modalAddBannersOpen, setModalAddBannersOpen] = useState<boolean>(false);
+  const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -132,9 +133,9 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddBannersOpen && building && (
-        <ModalAddBanners
-          setModal={setModalAddBannersOpen}
+      {modalManageBannersOpen && building && (
+        <ModalManageBanners
+          setModal={setModalManageBannersOpen}
           buildingId={building.id}
           setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
@@ -470,7 +471,7 @@ export const BuildingDetails = () => {
               </Style.NoDataContainer>
             )}
           </Style.Card>
-          {/* <Style.Card>
+          <Style.Card>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
@@ -479,7 +480,7 @@ export const BuildingDetails = () => {
                 size="24px"
                 hideLabelOnMedia
                 onClick={() => {
-                  setModalAddBannersOpen(true);
+                  setModalManageBannersOpen(true);
                 }}
               />
             </Style.CardHeader>
@@ -502,7 +503,7 @@ export const BuildingDetails = () => {
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card> */}
+          </Style.Card>
         </Style.CardGrid>
       </Style.CardWrapper>
     </>

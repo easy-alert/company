@@ -19,7 +19,7 @@ import { uploadFile } from '../../../../../../utils/functions';
 import { ImagePreview } from '../../../../../../components/ImagePreview';
 import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
-export const ModalAddBanners = ({
+export const ModalManageBanners = ({
   setModal,
   buildingId,
   setBuilding,
