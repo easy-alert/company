@@ -35,7 +35,7 @@ export const ImagePreview = ({
       <Style.ActionsHover>
         {onTrashClick && (
           <IconButton
-            icon={icon.trashWithBg}
+            icon={icon.trashWithPrimaryBg}
             size="24px"
             onClick={() => {
               onTrashClick();
