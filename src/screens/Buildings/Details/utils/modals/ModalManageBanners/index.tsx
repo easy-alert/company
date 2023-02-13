@@ -126,7 +126,7 @@ export const ModalManageBanners = ({
   // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
 
   return (
-    <Modal title="Cadastrar banners" setModal={setModal}>
+    <Modal title="Gerenciar banners" setModal={setModal}>
       <Style.Container>
         <Input
           label="Nome do banner"
@@ -166,15 +166,17 @@ export const ModalManageBanners = ({
                 </Style.DragAndDropZone>
               ))}
             {webBanner.length > 0 && (
-              <ImagePreview
-                src={webBanner[0].url}
-                imageCustomName={webBanner[0].name}
-                height="202px"
-                width="202px"
-                onTrashClick={() => {
-                  setWebBanner([]);
-                }}
-              />
+              <Style.ImagePreviewWrapper>
+                <ImagePreview
+                  src={webBanner[0].url}
+                  imageCustomName={webBanner[0].name}
+                  height="202px"
+                  width="100%"
+                  onTrashClick={() => {
+                    setWebBanner([]);
+                  }}
+                />
+              </Style.ImagePreviewWrapper>
             )}
           </Style.DragAndDropWrapper>
 
@@ -196,15 +198,17 @@ export const ModalManageBanners = ({
                 </Style.DragAndDropZone>
               ))}
             {mobileBanner.length > 0 && (
-              <ImagePreview
-                src={mobileBanner[0].url}
-                imageCustomName={mobileBanner[0].name}
-                height="202px"
-                width="202px"
-                onTrashClick={() => {
-                  setMobileBanner([]);
-                }}
-              />
+              <Style.ImagePreviewWrapper>
+                <ImagePreview
+                  src={mobileBanner[0].url}
+                  imageCustomName={mobileBanner[0].name}
+                  height="202px"
+                  width="100%"
+                  onTrashClick={() => {
+                    setMobileBanner([]);
+                  }}
+                />
+              </Style.ImagePreviewWrapper>
             )}
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
@@ -212,7 +216,7 @@ export const ModalManageBanners = ({
           center
           loading={onQuery}
           disable={onMobileQuery || onWebQuery}
-          label="Cadastrar"
+          label="Salvar"
           onClick={() => {
             requestRegisterBuildingBanners({
               setOnQuery,

@@ -30,27 +30,31 @@ export const requestRegisterBuildingBanners = async ({
 
   const data: IData[] = [];
 
-  data.push(
-    {
+  if (webBanner.length > 0) {
+    data.push({
       buildingId,
       bannerName: bannerName !== '' ? bannerName : null,
       redirectUrl: bannerLink !== '' ? bannerLink : null,
       type: 'Web',
       url: webBanner[0]?.url,
       originalName: webBanner[0]?.name,
-    },
-    {
+    });
+  }
+
+  if (mobileBanner.length > 0) {
+    data.push({
       buildingId,
       bannerName: bannerName !== '' ? bannerName : null,
       redirectUrl: bannerLink !== '' ? bannerLink : null,
       type: 'Mobile',
       url: mobileBanner[0]?.url,
       originalName: mobileBanner[0]?.name,
-    },
-  );
+    });
+  }
 
   await Api.post('/buildings/banners/change', {
     data,
+    buildingId,
   })
     .then((res) => {
       requestBuildingDetails({

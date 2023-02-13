@@ -5,9 +5,6 @@ export const Container = styled.div<{ height: string; width: string }>`
   height: ${({ height }) => height};
   width: ${({ width }) => width};
 
-  max-width: 300px;
-  max-height: 300px;
-
   display: flex;
   flex-direction: column;
   position: relative;

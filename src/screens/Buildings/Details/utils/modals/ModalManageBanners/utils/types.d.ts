@@ -31,7 +31,7 @@ export interface IData {
   buildingId: string;
   redirectUrl: string | null;
   bannerName: string | null;
-  originalName: string;
-  type: 'Web' | 'Mobile';
-  url: string;
+  originalName: string | null;
+  type: 'Web' | 'Mobile' | null;
+  url: string | null;
 }
