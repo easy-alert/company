@@ -8,6 +8,8 @@ import { IImage, IModalAddBanners } from './utils/types';
 import { Image } from '../../../../../../components/Image';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { Input } from '../../../../../../components/Inputs/Input';
+import { ImagePreview } from '../../../../../../components/ImagePreview';
+import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
 // STYLES
 import * as Style from './styles';
@@ -16,8 +18,6 @@ import { icon } from '../../../../../../assets/icons';
 // FUNCTIONS
 import { requestRegisterBuildingBanners } from './utils/functions';
 import { uploadFile } from '../../../../../../utils/functions';
-import { ImagePreview } from '../../../../../../components/ImagePreview';
-import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
 export const ModalManageBanners = ({
   setModal,
