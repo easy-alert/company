@@ -14,6 +14,7 @@ import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreate
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalManageBanners } from './utils/modals/ModalManageBanners';
+import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 
 // FUNCTIONS
 import {
@@ -68,6 +69,8 @@ export const BuildingDetails = () => {
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
   const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
+
+  const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -145,6 +148,10 @@ export const BuildingDetails = () => {
         />
       )}
 
+      {modalPrintQRCodeOpen && building && (
+        <ModalPrintQRCode setModal={setModalPrintQRCodeOpen} buildingName={building?.name} />
+      )}
+
       <Style.Header>
         <h2>Detalhes de edificação</h2>
         <ReturnButton path="/buildings" />
@@ -192,7 +199,12 @@ export const BuildingDetails = () => {
                   window.open(`http://localhost:3000/maintenancesplan/${buildingId}`, '_blank');
                 }}
               />
-              <Button label="QR Code" />
+              <Button
+                label="QR Code"
+                onClick={() => {
+                  setModalPrintQRCodeOpen(true);
+                }}
+              />
             </Style.ButtonContainer>
           </Style.FirstCard>
         )}
