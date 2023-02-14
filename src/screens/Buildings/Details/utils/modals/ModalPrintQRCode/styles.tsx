@@ -7,7 +7,7 @@ export const Container = styled.div`
   gap: ${theme.size.sm};
   height: 75vh;
 
-  > :nth-child(2) {
+  > :last-child {
     margin-left: auto;
   }
 
