@@ -499,6 +499,8 @@ export const BuildingDetails = () => {
                   <ImagePreview
                     // eslint-disable-next-line react/no-array-index-key
                     key={element.url + i}
+                    maxHeight="300px"
+                    maxWidth="300px"
                     width="50%"
                     height="50%"
                     downloadUrl={element.url}

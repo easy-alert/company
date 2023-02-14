@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-export const Container = styled.div<{ height: string; width: string }>`
+export const Container = styled.div<{
+  height: string;
+  width: string;
+  maxHeight: string;
+  maxWidth: string;
+}>`
   height: ${({ height }) => height};
   width: ${({ width }) => width};
+
+  max-height: ${({ maxHeight }) => maxHeight};
+  max-width: ${({ maxWidth }) => maxWidth};
 
   display: flex;
   flex-direction: column;
