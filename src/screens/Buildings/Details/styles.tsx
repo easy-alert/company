@@ -24,12 +24,6 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
-export const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
-`;
-
 export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -45,6 +39,12 @@ export const FirstCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 600px) {
+    align-items: flex-start;
+    gap: ${theme.size.sm};
+    flex-direction: column;
+  }
 `;
 
 export const CardHeaderLeftSide = styled.div`

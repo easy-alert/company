@@ -10,4 +10,8 @@ export const Container = styled.div`
   > :nth-child(2) {
     margin-left: auto;
   }
+
+  @media (max-width: 900px) {
+    min-height: 90vh;
+  }
 `;

@@ -149,7 +149,11 @@ export const BuildingDetails = () => {
       )}
 
       {modalPrintQRCodeOpen && building && (
-        <ModalPrintQRCode setModal={setModalPrintQRCodeOpen} buildingName={building?.name} />
+        <ModalPrintQRCode
+          setModal={setModalPrintQRCodeOpen}
+          buildingName={building?.name}
+          buildingId={building.id}
+        />
       )}
 
       <Style.Header>
@@ -192,7 +196,7 @@ export const BuildingDetails = () => {
                 </Style.MaintenanceCardFooterInfo>
               </Style.MaintenanceCardFooter>
             </Style.CardHeaderLeftSide>
-            <Style.ButtonContainer>
+            <Style.ButtonWrapper>
               <Button
                 label="Manutenções"
                 onClick={() => {
@@ -205,7 +209,7 @@ export const BuildingDetails = () => {
                   setModalPrintQRCodeOpen(true);
                 }}
               />
-            </Style.ButtonContainer>
+            </Style.ButtonWrapper>
           </Style.FirstCard>
         )}
 
