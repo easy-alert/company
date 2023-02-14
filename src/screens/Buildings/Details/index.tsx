@@ -36,6 +36,7 @@ import { theme } from '../../../styles/theme';
 // TYPES
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
+import { Button } from '../../../components/Buttons/Button';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -151,40 +152,49 @@ export const BuildingDetails = () => {
 
       <Style.CardWrapper>
         {building?.MaintenancesCount && (
-          <Style.Card>
-            <Style.CardHeader>
+          <Style.FirstCard>
+            <Style.CardHeaderLeftSide>
               <h5>Manutenções</h5>
-            </Style.CardHeader>
-            <Style.MaintenanceCardFooter>
-              {/* Não fiz .map pra facilitar a estilização */}
-              <Style.MaintenanceCardFooterInfo>
-                <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
-                <p className="p5">
-                  {building?.MaintenancesCount[0].count > 1
-                    ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
-                    : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
-                </p>
-              </Style.MaintenanceCardFooterInfo>
+              <Style.MaintenanceCardFooter>
+                {/* Não fiz .map pra facilitar a estilização */}
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[0].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
 
-              <Style.MaintenanceCardFooterInfo>
-                <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
-                <p className="p5">
-                  {building?.MaintenancesCount[1].count > 1
-                    ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
-                    : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
-                </p>
-              </Style.MaintenanceCardFooterInfo>
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[1].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
 
-              <Style.MaintenanceCardFooterInfo>
-                <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
-                <p className="p5">
-                  {building?.MaintenancesCount[2].count > 1
-                    ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
-                    : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
-                </p>
-              </Style.MaintenanceCardFooterInfo>
-            </Style.MaintenanceCardFooter>
-          </Style.Card>
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[2].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
+              </Style.MaintenanceCardFooter>
+            </Style.CardHeaderLeftSide>
+            <Style.ButtonContainer>
+              <Button
+                label="Manutenções"
+                onClick={() => {
+                  window.open(`http://localhost:3000/maintenancesplan/${buildingId}`, '_blank');
+                }}
+              />
+              <Button label="QR Code" />
+            </Style.ButtonContainer>
+          </Style.FirstCard>
         )}
 
         <Style.Card>

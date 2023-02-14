@@ -24,11 +24,33 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+`;
+
 export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+`;
+
+export const FirstCard = styled.div`
+  width: 100%;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CardHeaderLeftSide = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.sm};
 `;
 
 export const Card = styled.div`
