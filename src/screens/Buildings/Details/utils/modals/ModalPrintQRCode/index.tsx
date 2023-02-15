@@ -20,6 +20,9 @@ import { useAuthContext } from '../../../../../../contexts/Auth/UseAuthContext';
 // TYPES
 import { IModalPrintQRCode } from './utils/types';
 
+// FUNCTIONS
+import { manageClientUrl } from '../../functions';
+
 // STYLES
 import * as Style from './styles';
 import { image } from '../../../../../../assets/images';
@@ -123,7 +126,7 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
     <Modal bodyWidth="60vw" title="QR Code para impressão" setModal={setModal}>
       <Style.Container>
         <QRCodeCanvas
-          value={`http://localhost:3001/maintenancesplan/${buildingId}`}
+          value={manageClientUrl(window.location.origin) + buildingId}
           style={{ display: 'none' }}
           size={300}
           bgColor="transparent"

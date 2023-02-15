@@ -18,6 +18,7 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 
 // FUNCTIONS
 import {
+  manageClientUrl,
   requestBuildingDetails,
   requestDeleteAnnex,
   requestResendEmailConfirmation,
@@ -200,7 +201,7 @@ export const BuildingDetails = () => {
               <Button
                 label="Manutenções"
                 onClick={() => {
-                  window.open(`http://localhost:3001/maintenancesplan/${buildingId}`, '_blank');
+                  window.open(manageClientUrl(window.location.origin) + buildingId, '_blank');
                 }}
               />
               <Button
