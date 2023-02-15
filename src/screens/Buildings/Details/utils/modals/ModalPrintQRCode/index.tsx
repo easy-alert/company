@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Modal } from '../../../../../../components/Modal';
 import { Button } from '../../../../../../components/Buttons/Button';
+import { useAuthContext } from '../../../../../../contexts/Auth/UseAuthContext';
 
 // TYPES
 import { IModalPrintQRCode } from './utils/types';
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: '40px 0',
-    position: 'relative',
   },
   wrapper: {
     display: 'flex',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     height: '100%',
   },
-  image: {
+  qrCode: {
     width: '250px',
     height: '250px',
   },
@@ -47,13 +47,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    padding: '0 90px',
+    padding: '0 80px',
     textAlign: 'center',
     marginBottom: '70px',
     fontSize: '20px',
   },
   buildingName: {
     marginTop: '70px',
+    fontSize: '20px',
   },
   backgroundImage: {
     position: 'absolute',
@@ -71,22 +72,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const PDF = ({ qrCodeDataUri, buildingName }: { qrCodeDataUri: any; buildingName: string }) => (
-  <Document>
+const PDF = ({
+  qrCodePng,
+  buildingName,
+  companyImage,
+  setLoading,
+}: {
+  qrCodePng: any;
+  buildingName: string;
+  companyImage: string;
+  setLoading: any;
+}) => (
+  <Document
+    onRender={() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }}
+  >
     <Page size="A4" style={styles.page}>
       <Image src={image.backgroundForPDF} style={styles.backgroundImage} fixed />
       <View style={styles.wrapper}>
-        <Image
-          src="https://larguei.s3.us-west-2.amazonaws.com/image_3%201-1676404181033.png"
-          style={styles.companyLogo}
-        />
+        <Image src={companyImage} style={styles.companyLogo} />
 
         <View style={styles.middle}>
           <Text style={styles.text}>
             A manutenção e o cuidado com o condomínio garantem a tranquilidade. Com o app Easy
             Alert, fica muito mais fácil mantê-lo em ordem!
           </Text>
-          <Image src={qrCodeDataUri} style={styles.image} />
+          <Image src={qrCodePng} style={styles.qrCode} />
           <Text style={styles.buildingName}>{buildingName}</Text>
         </View>
         <Image src={image.logoForPDF} style={styles.easyAlertLogo} />
@@ -96,33 +110,48 @@ const PDF = ({ qrCodeDataUri, buildingName }: { qrCodeDataUri: any; buildingName
 );
 
 export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalPrintQRCode) => {
-  const [qrCodeBase64, setQrCodeBase64] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [qrCodePng, setQrCodePng] = useState<any>();
+  const { account } = useAuthContext();
 
   useEffect(() => {
-    const qrCodeCanvas = document.querySelector('canvas');
-    setQrCodeBase64(qrCodeCanvas?.toDataURL('image/png'));
+    const qrCodeCanvasSelector = document.querySelector('canvas');
+    setQrCodePng(qrCodeCanvasSelector?.toDataURL('image/png'));
   }, []);
 
   return (
     <Modal bodyWidth="60vw" title="QR Code para impressão" setModal={setModal}>
       <Style.Container>
         <QRCodeCanvas
-          value={buildingId}
+          value={`http://localhost:3001/maintenancesplan/${buildingId}`}
           style={{ display: 'none' }}
-          size={500}
+          size={300}
           bgColor="transparent"
         />
 
         <PDFViewer style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
-          <PDF qrCodeDataUri={qrCodeBase64} buildingName={buildingName} />
+          <PDF
+            qrCodePng={qrCodePng}
+            buildingName={buildingName}
+            companyImage={account?.Company.image!}
+            setLoading={setLoading}
+          />
         </PDFViewer>
-
-        <PDFDownloadLink
-          document={<PDF qrCodeDataUri={qrCodeBase64} buildingName={buildingName} />}
-          fileName={`QR Code ${buildingName}`}
-        >
-          <Button label="Imprimir" />
-        </PDFDownloadLink>
+        {!loading && (
+          <PDFDownloadLink
+            document={
+              <PDF
+                qrCodePng={qrCodePng}
+                buildingName={buildingName}
+                companyImage={account?.Company.image!}
+                setLoading={setLoading}
+              />
+            }
+            fileName={`QR Code ${buildingName}`}
+          >
+            <Button label="Imprimir" />
+          </PDFDownloadLink>
+        )}
       </Style.Container>
     </Modal>
   );

@@ -200,7 +200,7 @@ export const BuildingDetails = () => {
               <Button
                 label="Manutenções"
                 onClick={() => {
-                  window.open(`http://localhost:3000/maintenancesplan/${buildingId}`, '_blank');
+                  window.open(`http://localhost:3001/maintenancesplan/${buildingId}`, '_blank');
                 }}
               />
               <Button
