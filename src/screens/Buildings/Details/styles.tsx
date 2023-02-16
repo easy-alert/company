@@ -69,11 +69,11 @@ export const Card = styled.div`
 
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   gap: ${theme.size.xsm};
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 `;
 
@@ -172,6 +172,7 @@ export const NoDataContainer = styled.div`
 export const MatrixTagWrapper = styled.div`
   margin-top: ${theme.size.xsm};
   display: flex;
+  flex-wrap: wrap;
   gap: ${theme.size.xsm};
 `;
 

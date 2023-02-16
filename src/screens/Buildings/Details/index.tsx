@@ -526,10 +526,8 @@ export const BuildingDetails = () => {
                   <ImagePreview
                     // eslint-disable-next-line react/no-array-index-key
                     key={element.url + i}
-                    maxHeight="300px"
-                    maxWidth="300px"
-                    width="50%"
-                    height="50%"
+                    width="250px"
+                    height="250px"
                     downloadUrl={element.url}
                     src={element.url}
                     imageCustomName={`${element.bannerName} ${element.type}`}
