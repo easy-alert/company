@@ -15,7 +15,7 @@ export const ImgHolder = styled.div<ImageProps>`
   justify-content: center;
 
   > img {
-    object-fit: contain;
+    object-fit: cover;
     ${({ radius }) => radius && `border-radius:${radius};`}
     ${({ size }) =>
       size && ` min-width:${size}; width: ${size}; min-height: ${size};  height: ${size};`}

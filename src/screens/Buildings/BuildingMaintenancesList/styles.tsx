@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const Header = styled.header`
+  position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
   padding: ${theme.size.sm} 0;
