@@ -102,7 +102,7 @@ export const ModalMaintenanceDetails = ({
                         </Style.Tag>
                       ))
                     ) : (
-                      <p className="p2">Nenhum anexo enviado</p>
+                      <p className="p2">Nenhum anexo enviado.</p>
                     )}
                   </Style.FileAndImageRow>
                 </Style.Row>
@@ -122,7 +122,7 @@ export const ModalMaintenanceDetails = ({
                         />
                       ))
                     ) : (
-                      <p className="p2">Nenhuma imagem enviada</p>
+                      <p className="p2">Nenhuma imagem enviada.</p>
                     )}
                   </Style.FileAndImageRow>
                 </Style.Row>
