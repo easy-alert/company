@@ -152,7 +152,7 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
             <Style.Row>
-              <h6>Data de entrega</h6>
+              <h6>Data de vencimento</h6>
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
 
