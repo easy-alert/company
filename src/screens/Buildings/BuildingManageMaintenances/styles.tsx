@@ -102,4 +102,11 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
 `;
