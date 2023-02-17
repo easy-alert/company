@@ -16,6 +16,7 @@ export const Background = styled.div`
   background-color: ${theme.color.gray2};
 
   > img {
+    width: 100%;
     max-width: 400px;
   }
 

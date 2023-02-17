@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const Header = styled.header`
+  position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
   padding: ${theme.size.sm} 0;
@@ -101,4 +102,11 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
 `;

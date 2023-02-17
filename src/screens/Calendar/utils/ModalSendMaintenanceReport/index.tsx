@@ -26,6 +26,7 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
 import { requestSendReport } from './functions';
+import { TextArea } from '../../../../components/Inputs/TextArea';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -151,7 +152,7 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
             <Style.Row>
-              <h6>Data de entrega</h6>
+              <h6>Data de vencimento</h6>
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
 
@@ -169,10 +170,10 @@ export const ModalSendMaintenanceReport = ({
               }}
             />
 
-            <Input
+            <TextArea
               label="Observações"
               placeholder="Digite aqui"
-              maxLength={50}
+              maxLength={300}
               value={maintenanceReport.observation}
               onChange={(e) => {
                 setMaintenanceReport((prevState) => {

@@ -1,9 +1,18 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-export const Container = styled.div<{ height: string; width: string }>`
+export const Container = styled.div<{
+  height: string;
+  width: string;
+  maxHeight: string;
+  maxWidth: string;
+}>`
   height: ${({ height }) => height};
   width: ${({ width }) => width};
+
+  max-height: ${({ maxHeight }) => maxHeight};
+  max-width: ${({ maxWidth }) => maxWidth};
+
   display: flex;
   flex-direction: column;
   position: relative;
@@ -11,7 +20,7 @@ export const Container = styled.div<{ height: string; width: string }>`
   > img {
     border-radius: ${theme.size.xxsm} ${theme.size.xxsm} 0 0;
     height: calc(100% - 44px);
-    object-fit: cover;
+    object-fit: contain;
     width: 100%;
   }
 `;

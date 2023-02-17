@@ -15,6 +15,10 @@ export const DragAndDropGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${theme.size.xsm};
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const DragAndDropWrapper = styled.div`
@@ -22,6 +26,8 @@ export const DragAndDropWrapper = styled.div`
   flex-direction: column;
   gap: ${theme.size.xxsm};
 `;
+
+export const ImagePreviewWrapper = styled.div``;
 
 export const DragAndDropZone = styled.div`
   width: 100%;
@@ -59,5 +65,5 @@ export const ImageLoading = styled.div`
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
   height: 202px;
-  width: 202px;
+  width: 100%;
 `;

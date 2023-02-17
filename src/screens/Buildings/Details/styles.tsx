@@ -31,20 +31,49 @@ export const MaintenanceCardHeader = styled.div`
   width: 100%;
 `;
 
+export const FirstCard = styled.div`
+  width: 100%;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (max-width: 600px) {
+    align-items: flex-start;
+    gap: ${theme.size.sm};
+    flex-direction: column;
+  }
+`;
+
+export const CardHeaderLeftSide = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.sm};
+`;
+
 export const Card = styled.div`
   width: 100%;
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
+
+  .bottom {
+    height: calc(100% - 40px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   gap: ${theme.size.xsm};
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 `;
 
@@ -143,8 +172,8 @@ export const NoDataContainer = styled.div`
 export const MatrixTagWrapper = styled.div`
   margin-top: ${theme.size.xsm};
   display: flex;
-  gap: ${theme.size.xsm};
   flex-wrap: wrap;
+  gap: ${theme.size.xsm};
 `;
 
 export const Tag = styled.div`

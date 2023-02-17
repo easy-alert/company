@@ -154,7 +154,7 @@ export const CalendarWrapper = styled.div<{
     padding: ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.sm};
     font-size: 12px;
     line-height: 14px;
-    border-radius: 3px;
+    border-radius: ${theme.size.xxsm};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
 
     :hover {

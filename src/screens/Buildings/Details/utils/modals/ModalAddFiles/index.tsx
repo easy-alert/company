@@ -4,16 +4,20 @@ import { useDropzone } from 'react-dropzone';
 // COMPONENTS
 import { useEffect, useState } from 'react';
 import { Modal } from '../../../../../../components/Modal';
-import { IModalAddFiles } from './utils/types';
 import { Image } from '../../../../../../components/Image';
+import { Button } from '../../../../../../components/Buttons/Button';
+import { Input } from '../../../../../../components/Inputs/Input';
+import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
 // STYLES
 import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { Input } from '../../../../../../components/Inputs/Input';
+
+// TYPES
+import { IModalAddFiles } from './utils/types';
+
+// FUNCTIONS
 import { insertMiddleEllipsis, requestRegisterBuildingFile } from './utils/functions';
-import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
 export const ModalAddFiles = ({
   setModal,

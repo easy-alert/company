@@ -8,25 +8,27 @@ import { IImage, IModalAddBanners } from './utils/types';
 import { Image } from '../../../../../../components/Image';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { Input } from '../../../../../../components/Inputs/Input';
+import { ImagePreview } from '../../../../../../components/ImagePreview';
+import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
 // STYLES
 import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 
 // FUNCTIONS
-import { requestRegisterBuildingFile } from './utils/functions';
+import { requestRegisterBuildingBanners } from './utils/functions';
 import { uploadFile } from '../../../../../../utils/functions';
-import { ImagePreview } from '../../../../../../components/ImagePreview';
-import { DotLoading } from '../../../../../../components/Loadings/DotLoading';
 
-export const ModalAddBanners = ({
+export const ModalManageBanners = ({
   setModal,
   buildingId,
   setBuilding,
   setTotalMaintenancesCount,
   setUsedMaintenancesCount,
+  currentBanners,
 }: IModalAddBanners) => {
-  const [fileName, setFileName] = useState<string>('');
+  // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
+  const [bannerName, setBannerName] = useState<string>('');
   const [bannerLink, setBannerLink] = useState<string>('');
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -105,16 +107,34 @@ export const ModalAddBanners = ({
     }
   }, [acceptedMobile]);
 
+  useEffect(() => {
+    if (currentBanners.length > 0) {
+      setBannerName(currentBanners[0].bannerName);
+      setBannerLink(currentBanners[0].redirectUrl);
+
+      currentBanners.forEach((banner) => {
+        if (banner.type === 'Web') {
+          setWebBanner([{ name: banner.originalName, url: banner.url }]);
+        }
+
+        if (banner.type === 'Mobile') {
+          setMobileBanner([{ name: banner.originalName, url: banner.url }]);
+        }
+      });
+    }
+  }, []);
+  // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
+
   return (
-    <Modal title="Cadastrar banners" setModal={setModal}>
+    <Modal title="Gerenciar banners" setModal={setModal}>
       <Style.Container>
         <Input
           label="Nome do banner"
           maxLength={50}
-          value={fileName}
+          value={bannerName}
           placeholder="Ex: Foto do Edifício"
           onChange={(e) => {
-            setFileName(e.target.value);
+            setBannerName(e.target.value);
           }}
         />
         <Input
@@ -146,15 +166,17 @@ export const ModalAddBanners = ({
                 </Style.DragAndDropZone>
               ))}
             {webBanner.length > 0 && (
-              <ImagePreview
-                src={webBanner[0].url}
-                imageCustomName={webBanner[0].name}
-                height="202px"
-                width="202px"
-                onTrashClick={() => {
-                  setWebBanner([]);
-                }}
-              />
+              <Style.ImagePreviewWrapper>
+                <ImagePreview
+                  src={webBanner[0].url}
+                  imageCustomName={webBanner[0].name}
+                  height="202px"
+                  width="100%"
+                  onTrashClick={() => {
+                    setWebBanner([]);
+                  }}
+                />
+              </Style.ImagePreviewWrapper>
             )}
           </Style.DragAndDropWrapper>
 
@@ -176,15 +198,17 @@ export const ModalAddBanners = ({
                 </Style.DragAndDropZone>
               ))}
             {mobileBanner.length > 0 && (
-              <ImagePreview
-                src={mobileBanner[0].url}
-                imageCustomName={mobileBanner[0].name}
-                height="202px"
-                width="202px"
-                onTrashClick={() => {
-                  setMobileBanner([]);
-                }}
-              />
+              <Style.ImagePreviewWrapper>
+                <ImagePreview
+                  src={mobileBanner[0].url}
+                  imageCustomName={mobileBanner[0].name}
+                  height="202px"
+                  width="100%"
+                  onTrashClick={() => {
+                    setMobileBanner([]);
+                  }}
+                />
+              </Style.ImagePreviewWrapper>
             )}
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
@@ -192,17 +216,19 @@ export const ModalAddBanners = ({
           center
           loading={onQuery}
           disable={onMobileQuery || onWebQuery}
-          label="Cadastrar"
+          label="Salvar"
           onClick={() => {
-            requestRegisterBuildingFile({
-              files: acceptedWeb,
-              fileName,
+            requestRegisterBuildingBanners({
               setOnQuery,
               buildingId,
               setBuilding,
               setTotalMaintenancesCount,
               setUsedMaintenancesCount,
               setModal,
+              bannerLink,
+              bannerName,
+              mobileBanner,
+              webBanner,
             });
           }}
         />

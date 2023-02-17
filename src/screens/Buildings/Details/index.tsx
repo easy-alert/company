@@ -9,13 +9,16 @@ import { NotificationTable, NotificationTableContent } from './utils/components/
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { Image } from '../../../components/Image';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { ImagePreview } from '../../../components/ImagePreview';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
-import { ModalAddBanners } from './utils/modals/ModalAddBanners';
+import { ModalManageBanners } from './utils/modals/ModalManageBanners';
+import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 
 // FUNCTIONS
 import {
+  manageClientUrl,
   requestBuildingDetails,
   requestDeleteAnnex,
   requestResendEmailConfirmation,
@@ -35,6 +38,7 @@ import { theme } from '../../../styles/theme';
 // TYPES
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
+import { Button } from '../../../components/Buttons/Button';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -65,7 +69,9 @@ export const BuildingDetails = () => {
 
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
-  const [modalAddBannersOpen, setModalAddBannersOpen] = useState<boolean>(false);
+  const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
+
+  const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -132,13 +138,22 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddBannersOpen && building && (
-        <ModalAddBanners
-          setModal={setModalAddBannersOpen}
+      {modalManageBannersOpen && building && (
+        <ModalManageBanners
+          setModal={setModalManageBannersOpen}
           buildingId={building.id}
           setTotalMaintenancesCount={setTotalMaintenancesCount}
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
+          currentBanners={building?.Banners}
+        />
+      )}
+
+      {modalPrintQRCodeOpen && building && (
+        <ModalPrintQRCode
+          setModal={setModalPrintQRCodeOpen}
+          buildingName={building?.name}
+          buildingId={building.id}
         />
       )}
 
@@ -148,34 +163,56 @@ export const BuildingDetails = () => {
       </Style.Header>
 
       <Style.CardWrapper>
-        <Style.Card>
-          <Style.CardHeader>
-            <h5>Manutenções</h5>
-          </Style.CardHeader>
-          <Style.MaintenanceCardFooter>
-            {/* Não fiz .map pra facilitar a estilização */}
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
+        {building?.MaintenancesCount && (
+          <Style.FirstCard>
+            <Style.CardHeaderLeftSide>
+              <h5>Manutenções</h5>
+              <Style.MaintenanceCardFooter>
+                {/* Não fiz .map pra facilitar a estilização */}
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[0].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
 
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[1].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
 
-            <Style.MaintenanceCardFooterInfo>
-              <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
-              <p className="p5">
-                {capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel ?? '')}
-              </p>
-            </Style.MaintenanceCardFooterInfo>
-          </Style.MaintenanceCardFooter>
-        </Style.Card>
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                  <p className="p5">
+                    {building?.MaintenancesCount[2].count > 1
+                      ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
+                      : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
+                  </p>
+                </Style.MaintenanceCardFooterInfo>
+              </Style.MaintenanceCardFooter>
+            </Style.CardHeaderLeftSide>
+            <Style.ButtonWrapper>
+              <Button
+                label="Manutenções"
+                onClick={() => {
+                  window.open(manageClientUrl(window.location.origin) + buildingId, '_blank');
+                }}
+              />
+              <Button
+                label="QR Code"
+                onClick={() => {
+                  setModalPrintQRCodeOpen(true);
+                }}
+              />
+            </Style.ButtonWrapper>
+          </Style.FirstCard>
+        )}
 
         <Style.Card>
           <Style.CardHeader>
@@ -465,44 +502,45 @@ export const BuildingDetails = () => {
                 ))}
               </Style.MatrixTagWrapper>
             ) : (
-              <Style.NoDataContainer>
+              <Style.NoDataContainer className="bottom">
                 <h5>Nenhum anexo cadastrado.</h5>
               </Style.NoDataContainer>
             )}
           </Style.Card>
-          {/* <Style.Card>
+          <Style.Card>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
-                icon={icon.plusWithBg}
-                label="Cadastrar"
+                icon={building && building?.Banners.length > 0 ? icon.editWithBg : icon.plusWithBg}
+                label={building && building?.Banners.length > 0 ? 'Editar' : 'Cadastrar'}
                 size="24px"
                 hideLabelOnMedia
                 onClick={() => {
-                  setModalAddBannersOpen(true);
+                  setModalManageBannersOpen(true);
                 }}
               />
             </Style.CardHeader>
-            {building && building?.Annexes.length > 0 ? (
+            {building && building?.Banners.length > 0 ? (
               <Style.MatrixTagWrapper>
-                {building.Annexes.map((element) => (
+                {building.Banners.map((element, i: number) => (
                   <ImagePreview
-                    key={element.id}
-                    width="164px"
-                    height="167px"
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={element.url + i}
+                    width="200px"
+                    height="200px"
                     downloadUrl={element.url}
                     src={element.url}
-                    imageCustomName={element.name}
+                    imageCustomName={`${element.bannerName} ${element.type}`}
                     imageOriginalName={element.originalName}
                   />
                 ))}
               </Style.MatrixTagWrapper>
             ) : (
-              <Style.NoDataContainer>
+              <Style.NoDataContainer className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card> */}
+          </Style.Card>
         </Style.CardGrid>
       </Style.CardWrapper>
     </>
