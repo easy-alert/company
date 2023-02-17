@@ -1,6 +1,6 @@
 // LIBS
 import pdfMake from 'pdfmake/build/pdfmake';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // COMPONENTS
 import { Modal } from '../../../../../../components/Modal';
@@ -27,6 +27,8 @@ pdfMake.fonts = {
 
 export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalPrintQRCode) => {
   const { account } = useAuthContext();
+
+  const [fakeLoading, setFakeLoading] = useState<boolean>(true);
 
   const docDefinition = {
     background: [{ image: 'background' }],
@@ -97,6 +99,11 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
 
   useEffect(() => {
     createPdf();
+
+    const timer = setTimeout(() => {
+      setFakeLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -104,8 +111,8 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
       <Style.Container>
         <Style.PDFContainer id="iframeContainer" />
         <Style.ButtonContainer>
-          <Button label="Download" onClick={downloadPDF} />
-          <Button label="Imprimir" onClick={printPDF} />
+          <Button disable={fakeLoading} label="Download" onClick={downloadPDF} />
+          <Button disable={fakeLoading} label="Imprimir" onClick={printPDF} />
         </Style.ButtonContainer>
       </Style.Container>
     </Modal>
