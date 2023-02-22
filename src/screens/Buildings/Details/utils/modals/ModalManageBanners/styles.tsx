@@ -13,11 +13,11 @@ export const Container = styled.div`
 
 export const DragAndDropGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   gap: ${theme.size.xsm};
 
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 `;
 

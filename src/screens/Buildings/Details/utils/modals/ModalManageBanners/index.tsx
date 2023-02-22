@@ -129,7 +129,7 @@ export const ModalManageBanners = ({
     <Modal title="Gerenciar banners" setModal={setModal}>
       <Style.Container>
         <Input
-          label="Nome do banner"
+          label="Nome do banner *"
           maxLength={50}
           value={bannerName}
           placeholder="Ex: Foto do Edifício"

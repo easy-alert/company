@@ -13,7 +13,6 @@ import { IModalPrintQRCode } from './utils/types';
 // STYLES
 import * as Style from './styles';
 import { image } from '../../../../../../assets/images';
-import { manageClientUrl } from '../../functions';
 
 pdfMake.fonts = {
   Roboto: {
@@ -45,7 +44,7 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
         text: 'A manutenção e o cuidado com o condomínio garantem a tranquilidade. Com o app Easy Alert, fica muito mais fácil mantê-lo em ordem!',
       },
       {
-        qr: manageClientUrl() + buildingId,
+        qr: import.meta.env.VITE_CLIENT_URL + buildingId,
         background: '#F2EAEA',
         fit: 250,
         margin: [0, 68, 0, 68],
