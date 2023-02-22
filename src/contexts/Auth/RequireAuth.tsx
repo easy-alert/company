@@ -24,7 +24,11 @@ export const RequireAuth = () => {
   };
 
   useEffect(() => {
-    validateToken();
+    if (localStorage.getItem('authToken')) {
+      validateToken();
+    } else {
+      navigate('/login');
+    }
   }, []);
 
   return loading ? <DotLoading label="Verificando credenciais" /> : <Outlet />;

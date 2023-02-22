@@ -7,18 +7,31 @@ import { Sidebar } from './components/Sidebar';
 // AUTHENTICATION
 import { Login } from './screens/Authentication/Login';
 
+// ACCOUNT
 import { AccountDetails } from './screens/Account/Details';
+
+// MAINTENANCES
 import { MaintenancesList } from './screens/Maintenances/List';
+
+// BUILDINGS
 import { BuildingsList } from './screens/Buildings/List';
-import { BuildingCreate } from './screens/Buildings/Create';
+import { BuildingDetails } from './screens/Buildings/Details';
+import { BuildingManageMaintenances } from './screens/Buildings/BuildingManageMaintenances';
+import { BuildingMaintenancesList } from './screens/Buildings/BuildingMaintenancesList';
+
+// NOTIFICATIONS CONFIRMATION
+import { PhoneConfirm } from './screens/NotificationsConfirmation/Phone';
+import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
+
+// CALENDAR
+import { MaintenancesCalendar } from './screens/Calendar';
 
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-
         <Route path="*" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
         <Route
           path="/"
@@ -34,9 +47,25 @@ const AppRoutes = () => (
 
           <Route path="/buildings" element={<Outlet />}>
             <Route index element={<BuildingsList />} />
-            <Route path="create" element={<BuildingCreate />} />
+
+            <Route path="details/:buildingId" element={<BuildingDetails />} />
+
+            <Route
+              path="details/:buildingId/maintenances/manage"
+              element={<BuildingManageMaintenances />}
+            />
+
+            <Route
+              path="details/:buildingId/maintenances/list"
+              element={<BuildingMaintenancesList />}
+            />
           </Route>
+
+          <Route path="/calendar" element={<MaintenancesCalendar />} />
         </Route>
+
+        <Route path="/confirm/phone" element={<PhoneConfirm />} />
+        <Route path="/confirm/email" element={<EmailConfirm />} />
       </Routes>
     </BrowserRouter>
   </AuthProvider>

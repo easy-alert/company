@@ -90,7 +90,9 @@ export const LoadingWrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: ${theme.size.xsm};
-
   opacity: 0.7;
+
+  > h4 {
+    margin-bottom: ${theme.size.xsm};
+  }
 `;

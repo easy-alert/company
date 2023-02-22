@@ -27,18 +27,20 @@ export const MobileBackground = styled.div<{ animate: boolean }>`
 export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.md};
+  gap: ${theme.size.xlg};
   align-items: center;
   padding: ${theme.size.sm} ${theme.size.xsm};
   min-width: 80px;
+  max-width: 80px;
   height: 100vh;
-  border-radius: 0 ${theme.size.sm} ${theme.size.sm} 0;
+  border-radius: 0 12px 12px 0;
   background-color: ${theme.color.primary};
   text-align: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   @media (max-width: 900px) {
     position: absolute;
-    transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-85px)')};
+    transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-80px)')};
     transition: 0.25s;
     z-index: 6;
   }
@@ -54,7 +56,7 @@ export const SidebarBodyMobile = styled.div`
   padding: ${theme.size.xsm} 28px;
   width: 100%;
   min-height: 80px;
-  border-radius: 0rem 0rem ${theme.size.sm} ${theme.size.sm};
+  border-radius: 0rem 0rem 12px 12px;
   background-color: ${theme.color.primary};
   overflow: hidden;
   @media (min-width: 900px) {
@@ -92,16 +94,18 @@ export const Hr = styled.div`
   height: 1px;
   width: 100%;
   background-color: ${theme.color.white};
+  margin-top: -${theme.size.sm};
 `;
+
 export const AppContent = styled.div`
   width: 100%;
   height: 100vh;
   margin: 0 auto;
   overflow: auto;
   max-width: 1920px;
-  padding: ${theme.size.sm} ${theme.size.md};
+  padding: 0 ${theme.size.md} ${theme.size.sm} ${theme.size.md};
 
   @media (max-width: 900px) {
-    padding: ${theme.size.sm};
+    padding: 0 ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
   }
 `;

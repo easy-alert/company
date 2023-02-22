@@ -70,7 +70,7 @@ export const ModalEditMaintenance = ({
                 name="element"
                 value={values.element}
                 error={touched.element && errors.element ? errors.element : null}
-                placeholder="Rejuntamento e vedações"
+                placeholder="Ex: Rejuntamento e vedações"
                 height="60px"
                 maxLength={150}
               />
@@ -80,17 +80,17 @@ export const ModalEditMaintenance = ({
                 name="activity"
                 value={values.activity}
                 error={touched.activity && errors.activity ? errors.activity : null}
-                placeholder="Verificar sua integridade e reconstruir os rejuntamentos internos e externos dos pisos"
+                placeholder="Ex: Verificar sua integridade e reconstruir os rejuntamentos internos e externos dos pisos"
                 height="82px"
                 maxLength={180}
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Frequência"
+                  label="Periodicidade"
                   name="frequency"
                   value={values.frequency}
                   error={touched.frequency && errors.frequency ? errors.frequency : null}
-                  placeholder="1"
+                  placeholder="Ex: 1"
                   maxLength={4}
                   onChange={(e) => {
                     setFieldValue(
@@ -126,7 +126,7 @@ export const ModalEditMaintenance = ({
                 name="responsible"
                 value={values.responsible}
                 error={touched.responsible && errors.responsible ? errors.responsible : null}
-                placeholder="Equipe de manutenção local"
+                placeholder="Ex: Equipe de manutenção local"
                 maxLength={40}
               />
 
@@ -135,7 +135,7 @@ export const ModalEditMaintenance = ({
                 name="source"
                 value={values.source}
                 error={touched.source && errors.source ? errors.source : null}
-                placeholder="NBR 5674:2012"
+                placeholder="Ex: NBR 5674:2012"
                 maxLength={40}
               />
 
@@ -144,16 +144,16 @@ export const ModalEditMaintenance = ({
                 name="observation"
                 value={values.observation}
                 error={touched.observation && errors.observation ? errors.observation : null}
-                placeholder="Atenção no acabamento"
+                placeholder="Ex: Atenção no acabamento"
                 maxLength={55}
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Período"
+                  label="Tempo para resposta"
                   name="period"
                   value={values.period}
                   error={touched.period && errors.period ? errors.period : null}
-                  placeholder="10"
+                  placeholder="Ex: 10"
                   maxLength={4}
                   onChange={(e) => {
                     setFieldValue(
@@ -190,7 +190,7 @@ export const ModalEditMaintenance = ({
                   name="delay"
                   value={values.delay}
                   error={touched.delay && errors.delay ? errors.delay : null}
-                  placeholder="1"
+                  placeholder="Ex: 1"
                   maxLength={4}
                   onChange={(e) => {
                     setFieldValue('delay', applyMask({ mask: 'NUM', value: e.target.value }).value);
@@ -218,10 +218,10 @@ export const ModalEditMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.ButtonContainer centerAlign={onQuery}>
+              <Style.ButtonContainer buttonsAlign={!onQuery}>
                 {!onQuery && (
                   <PopoverButton
-                    actionButtonBgColor={theme.color.primary}
+                    actionButtonBgColor={theme.color.actionDanger}
                     borderless
                     type="Button"
                     label="Excluir"
@@ -242,7 +242,7 @@ export const ModalEditMaintenance = ({
                     }}
                   />
                 )}
-                <Button label="Editar" type="submit" loading={onQuery} />
+                <Button label="Salvar" type="submit" loading={onQuery} />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

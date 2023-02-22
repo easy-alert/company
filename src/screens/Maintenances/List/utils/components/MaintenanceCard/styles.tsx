@@ -6,13 +6,6 @@ export const ArrowContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: ${theme.size.xsm};
-
-  > :first-child {
-    transition: 0.25s;
-    :hover {
-      opacity: 0.7;
-    }
-  }
 `;
 
 export const Arrow = styled.div<{ cardIsOpen: boolean }>`
@@ -33,6 +26,7 @@ export const MaintenancesCard = styled.div`
   padding: ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
   background-color: ${theme.color.white};
+
   transition: 0.25s;
   :hover {
     cursor: pointer;
@@ -67,7 +61,8 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 1/6;
+  // estranho esse 1/8
+  grid-area: 1/8;
 `;
 
 export const MaintenancesCardBottomPeriod = styled.div`
@@ -95,7 +90,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   grid-template-rows: 1fr;
   overflow: hidden;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 250px minmax(250px, 1fr) 0.5fr 0.7fr 0.6fr 0.1fr;
+  grid-template-columns: 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr 0.1fr;
 
   > p {
     line-height: 17px;
@@ -106,16 +101,27 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
     -webkit-line-clamp: ${({ cardIsOpen }) => (cardIsOpen ? 6 : 4)};
     -webkit-box-orient: vertical;
   }
+
+  > div {
+    transition: 0.25s;
+    :hover {
+      opacity: 0.7;
+    }
+  }
+
+  .copyIcon {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 export const MaintenancesMoreGrid = styled.div`
   overflow: hidden;
-
   display: grid;
   width: 100%;
   grid-template-rows: 1fr;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 250px minmax(250px, 1fr) 0.5fr 0.7fr 0.6fr 0.1fr;
+  grid-template-columns: 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr 0.1fr;
 
   span {
     color: ${theme.color.primary};

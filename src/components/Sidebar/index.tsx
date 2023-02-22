@@ -2,11 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// COMPONENTS
-import { theme } from '../../styles/theme';
+// STYLES
 import * as Style from './styles';
-
-// ICONS
 import { icon } from '../../assets/icons/index';
 
 // COMPONENTS
@@ -23,11 +20,11 @@ export const Sidebar = ({ children }: ISidebar) => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    { icon: icon.gear, label: 'Conta', url: '/account' },
-    { icon: icon.maintenances, label: 'Manutenções', url: '/maintenances' },
-    { icon: icon.building, label: 'Edificações', url: '/buildings' },
-
-    { icon: icon.power, label: 'Sair', url: '/login' },
+    { icon: icon.calendar, url: '/calendar' },
+    { icon: icon.maintenances, url: '/maintenances' },
+    { icon: icon.building, url: '/buildings' },
+    { icon: icon.gear, url: '/account' },
+    { icon: icon.power, url: '/login' },
   ];
 
   useEffect(() => {
@@ -76,16 +73,13 @@ export const Sidebar = ({ children }: ISidebar) => {
           <React.Fragment key={element.url}>
             {i === SidebarContent.length - 1 && <Style.Spacer />}
             <IconButton
-              fontWeight="400"
-              className="p5"
-              labelPos="bottom"
               opacity="0.5"
-              label={element.label}
               icon={element.icon}
-              color={theme.color.white}
-              gap="0px"
               onClick={() => {
-                if (openSidebar) {
+                const checkKeyPress = window.event as KeyboardEvent;
+                if (checkKeyPress?.ctrlKey) {
+                  window.open(element.url, '_blank');
+                } else if (openSidebar) {
                   setAnimate(false);
                   setTimeout(() => {
                     setOpenSidebar(false);
@@ -93,6 +87,17 @@ export const Sidebar = ({ children }: ISidebar) => {
                   }, 125);
                 } else {
                   navigate(element.url);
+                }
+              }}
+              onAuxClick={() => {
+                if (openSidebar) {
+                  setAnimate(false);
+                  setTimeout(() => {
+                    setOpenSidebar(false);
+                    window.open(element.url, '_blank');
+                  }, 125);
+                } else {
+                  window.open(element.url, '_blank');
                 }
               }}
               selected={window.location.pathname.startsWith(element.url)}

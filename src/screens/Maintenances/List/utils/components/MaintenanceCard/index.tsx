@@ -74,16 +74,17 @@ export const MaintenanceCard = ({
               </p>
               <p className="p2">{maintenance.responsible}</p>
               <p className="p2">{maintenance.source}</p>
+              <div
+                className="copyIcon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setToCloneMaintenance(maintenance);
+                  setModalCloneMaintenanceOpen(true);
+                }}
+              >
+                <Image size="16px" img={icon.copy} />
+              </div>
               <Style.ArrowContainer>
-                <div
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setToCloneMaintenance(maintenance);
-                    setModalCloneMaintenanceOpen(true);
-                  }}
-                >
-                  <Image size="16px" img={icon.copy} />
-                </div>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
                   <Image img={icon.downArrow} size="16px" />
                 </Style.Arrow>
@@ -96,14 +97,14 @@ export const MaintenanceCard = ({
             <Style.MaintenancesMoreGrid>
               <p className="p2">
                 <span>Observação: </span>
-                {maintenance.observation ?? 'Nenhuma observação'}
+                {maintenance.observation ?? '-'}
               </p>
 
               <Style.MaintenancesCardBottomPeriod>
                 <Style.PeriodIconWrapper>
                   <Image img={icon.alert} size="16px" />
                   <p className="p2">
-                    <span>Período: </span>
+                    <span>Tempo para resposta: </span>
                     {`${maintenance.period} ${
                       maintenance.period > 1
                         ? maintenance.PeriodTimeInterval.pluralLabel
@@ -115,11 +116,13 @@ export const MaintenanceCard = ({
                   <Image img={icon.alert} size="16px" />
                   <p className="p2">
                     <span>Delay: </span>
-                    {`${maintenance.delay} ${
-                      maintenance.delay > 1
-                        ? maintenance.DelayTimeInterval.pluralLabel
-                        : maintenance.DelayTimeInterval.singularLabel
-                    }`}
+                    {maintenance.delay > 0
+                      ? `${maintenance.delay} ${
+                          maintenance.delay > 1
+                            ? maintenance.DelayTimeInterval.pluralLabel
+                            : maintenance.DelayTimeInterval.singularLabel
+                        }`
+                      : '-'}
                   </p>
                 </Style.PeriodIconWrapper>
               </Style.MaintenancesCardBottomPeriod>

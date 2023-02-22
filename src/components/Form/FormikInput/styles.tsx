@@ -5,6 +5,8 @@ export const InputContainer = styled.div<{
   labelColor: string;
   error: boolean;
   passwordPlaceholder?: boolean;
+  typeDatePlaceholderValue?: string;
+  type?: string;
 }>`
   display: flex;
   flex-direction: column;
@@ -13,6 +15,20 @@ export const InputContainer = styled.div<{
     margin-bottom: ${theme.size.xxsm};
   }
   width: 100%;
+
+  input::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+  }
+
+  ${({ typeDatePlaceholderValue, type }) =>
+    type === 'date' &&
+    typeDatePlaceholderValue === '' &&
+    `
+      > input {
+        border-color: ${theme.color.gray3};
+        color: #757575
+      }
+      `}
 
   // CÓDIGOS PARA PLACEHOLDER DE SENHA FICAR PRETO E SUMIR NO FOCUS,
   // APENAS PARA O VISUAL ↓↓↓↓↓↓↓↓↓↓↓↓↓↓

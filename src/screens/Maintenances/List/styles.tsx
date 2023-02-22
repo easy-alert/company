@@ -2,11 +2,16 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const Header = styled.header`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  padding: ${theme.size.sm} 0;
+  background-color: ${theme.color.gray1};
+  z-index: 1;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: ${theme.size.sm};
 
   @media (max-width: 900px) {
     height: fit-content;
@@ -100,5 +105,11 @@ export const CategoriesContainer = styled.div`
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: ${theme.size.sm};
+
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
 `;

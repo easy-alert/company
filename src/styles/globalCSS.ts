@@ -22,7 +22,7 @@ export default createGlobalStyle`
 
   body {
     background-color: ${theme.color.gray1};
-    color: ${theme.color.gray5};
+    color: ${theme.color.black};
   }
 
   h1 {
@@ -77,7 +77,7 @@ export default createGlobalStyle`
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 17px;
   }
   .p3{
     font-style: normal;
@@ -133,6 +133,13 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
+  input[type=checkbox] {
+    width: 16px;
+    height: 16px;
+    accent-color: ${theme.color.primary};
+    cursor: pointer;
+  }
+
   input[disabled],textarea[disabled],select[disabled] {
     cursor: not-allowed;
     background-color: ${theme.color.gray1};
@@ -164,7 +171,7 @@ export default createGlobalStyle`
     appearance: none;
     font-weight: 400;
     font-size: 14px;
-    line-height: 16px;
+    line-height: 17px;
     font-style: normal;
     outline: none;
     width: 100%;

@@ -30,6 +30,18 @@ import upTriangle from './upTriangle.svg';
 import gear from './gear.svg';
 import building from './building.svg';
 import copy from './copy.svg';
+import yellowAlert from './yellowAlert.svg';
+import checkedNoBg from './checkedNoBg.svg';
+import confirmedContactLogo from './confirmedContactLogo.svg';
+import xBlack from './xBlack.svg';
+import paperBlack from './paperBlack.svg';
+import addFile from './addFile.svg';
+import download from './download.svg';
+import listWithBg from './listWithBg.svg';
+import calendar from './calendar.svg';
+import addImage from './addImage.svg';
+import downloadRedBg from './downloadRedBg.svg';
+import trashWithPrimaryBg from './trashWithPrimaryBg.svg';
 
 export const icon = {
   leftArrow,
@@ -64,4 +76,16 @@ export const icon = {
   gear,
   building,
   copy,
+  yellowAlert,
+  checkedNoBg,
+  confirmedContactLogo,
+  xBlack,
+  paperBlack,
+  addFile,
+  download,
+  listWithBg,
+  calendar,
+  addImage,
+  downloadRedBg,
+  trashWithPrimaryBg,
 };

@@ -1,13 +1,16 @@
 image: node:16.13.0
 
 stages:
-  - build
-  - staging
-  - production
+  - staging_build
+  - production_build
+  - staging_deploy
+  - production_deploy
 
-build:
-  stage: build
+staging_build:
+  stage: staging_build
+  environment: review/develop
   script:
+    - printenv
     - yarn
     - yarn build
   artifacts:
@@ -16,11 +19,22 @@ build:
     expire_in: 1 hour
   only:
     - develop
+
+production_build:
+  stage: production_build
+  environment: production
+  script:
+    - yarn
+    - yarn build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+  only:
     - master
 
-
-staging:
-  stage: staging
+staging_deploy:
+  stage: staging_deploy
   environment: review/develop
   image: python:latest
   script:
@@ -29,11 +43,12 @@ staging:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws s3 rm s3://$S3_BUCKET --recursive
     - aws s3 sync ./dist s3://$S3_BUCKET --acl public-read
+    - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
   only:
     - develop
 
-production:
-  stage: production
+production_deploy:
+  stage: production_deploy
   environment: production
   image: python:latest
   script:
@@ -42,5 +57,6 @@ production:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws s3 rm s3://$S3_BUCKET --recursive
     - aws s3 sync ./dist s3://$S3_BUCKET --acl public-read
+    - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
   only:
     - master
