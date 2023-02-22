@@ -139,9 +139,9 @@ export const ModalManageBanners = ({
         />
         <Input
           label="Link do banner"
-          maxLength={50}
+          maxLength={300}
           value={bannerLink ?? ''}
-          placeholder="Ex: easyalert.com.br"
+          placeholder="Ex: https://easyalert.com.br"
           onChange={(e) => {
             setBannerLink(e.target.value);
           }}

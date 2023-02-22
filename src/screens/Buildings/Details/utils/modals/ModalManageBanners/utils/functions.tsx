@@ -21,16 +21,14 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
-  let url: URL | null = null;
-
-  try {
-    url = new URL(bannerLink);
-  } catch (error) {
-    url = null;
-  }
-
-  if (!url) {
-    toast.error('Informe um link de banner válido.');
+  if (bannerLink && !bannerLink.startsWith('https://') && !bannerLink.startsWith('http://')) {
+    toast.error(
+      <div>
+        Informe um link válido.
+        <br />
+        Ex: https://easyalert.com.br
+      </div>,
+    );
     return;
   }
 
