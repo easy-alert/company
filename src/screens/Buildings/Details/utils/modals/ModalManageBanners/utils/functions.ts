@@ -26,8 +26,6 @@ export const requestRegisterBuildingBanners = async ({
   try {
     url = new URL(bannerLink);
   } catch (error) {
-    console.log(error);
-
     url = null;
   }
 
