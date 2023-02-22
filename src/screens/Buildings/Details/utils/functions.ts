@@ -94,18 +94,3 @@ export const requestDeleteAnnex = async ({
       catchHandler(err);
     });
 };
-
-export const manageClientUrl = () => {
-  if (window.location.origin.includes('localhost')) {
-    return import.meta.env.VITE_CLIENT_LOCALHOST_URL;
-  }
-  if (window.location.origin.includes('sandbox')) {
-    return import.meta.env.VITE_CLIENT_SANDBOX_URL;
-  }
-
-  if (window.location.origin.includes('production')) {
-    return import.meta.env.VITE_CLIENT_PRODUCTION_URL;
-  }
-
-  return null;
-};

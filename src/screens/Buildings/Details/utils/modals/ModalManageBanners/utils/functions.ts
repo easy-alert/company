@@ -21,11 +21,6 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
-  if (!bannerLink) {
-    toast.error('Verifique a informação: link do banner e tente novamente.');
-    return;
-  }
-
   setOnQuery(true);
 
   const data: IData[] = [];
