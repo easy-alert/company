@@ -201,7 +201,7 @@ export const BuildingDetails = () => {
               <Button
                 label="Manutenções"
                 onClick={() => {
-                  window.open(manageClientUrl(window.location.origin) + buildingId, '_blank');
+                  window.open(manageClientUrl() + buildingId, '_blank');
                 }}
               />
               <Button
