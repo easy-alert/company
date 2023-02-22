@@ -43,6 +43,7 @@ staging_deploy:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws s3 rm s3://$S3_BUCKET --recursive
     - aws s3 sync ./dist s3://$S3_BUCKET --acl public-read
+    - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
   only:
     - develop
 
@@ -56,5 +57,6 @@ production_deploy:
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws s3 rm s3://$S3_BUCKET --recursive
     - aws s3 sync ./dist s3://$S3_BUCKET --acl public-read
+    - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths '/*'
   only:
     - master
