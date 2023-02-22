@@ -21,6 +21,21 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
+  let url: URL | null = null;
+
+  try {
+    url = new URL(bannerLink);
+  } catch (error) {
+    console.log(error);
+
+    url = null;
+  }
+
+  if (!url) {
+    toast.error('Informe um link de banner válido.');
+    return;
+  }
+
   setOnQuery(true);
 
   const data: IData[] = [];
