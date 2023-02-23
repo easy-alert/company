@@ -213,7 +213,7 @@ export const ModalCloneMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Button center label="Criar clone" type="submit" loading={onQuery} />
+              <Button center label="Clonar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}
