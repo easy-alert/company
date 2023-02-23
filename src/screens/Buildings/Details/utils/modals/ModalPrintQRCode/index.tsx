@@ -44,7 +44,9 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
         text: 'A manutenção e o cuidado com o condomínio garantem a tranquilidade. Com o app Easy Alert, fica muito mais fácil mantê-lo em ordem!',
       },
       {
-        qr: import.meta.env.VITE_CLIENT_URL + buildingId,
+        qr:
+          (import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan/') +
+          buildingId,
         background: '#F2EAEA',
         fit: 250,
         margin: [0, 68, 0, 68],
