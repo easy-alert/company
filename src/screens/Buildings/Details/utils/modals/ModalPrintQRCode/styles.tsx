@@ -10,7 +10,11 @@ export const Container = styled.div`
   justify-content: space-between;
   flex-direction: column;
   text-align: center;
-  min-height: 1122px;
+
+  height: 100vh; /* Use 100% here to support printing more than a single page*/
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
 
   > img {
     object-fit: contain;

@@ -17,6 +17,7 @@ import { Button } from '../../../../../../components/Buttons/Button';
 export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalPrintQRCode) => {
   const { account } = useAuthContext();
   const componentRef = useRef(null);
+
   return (
     <Modal bodyWidth="60vw" title="QR Code para impressão" setModal={setModal}>
       <>

@@ -27,7 +27,7 @@ import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 import { MaintenancesCalendar } from './screens/Calendar';
 
 // TERMS OF USE
-import { TermsOfUse } from './screens/TermsOfUser';
+import { TermsOfUse } from './screens/TermsOfUse';
 
 const AppRoutes = () => (
   <AuthProvider>
