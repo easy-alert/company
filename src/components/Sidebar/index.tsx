@@ -29,7 +29,7 @@ export const Sidebar = ({ children }: ISidebar) => {
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
-      navigate('/account');
+      navigate('/calendar');
     }
   }, []);
 

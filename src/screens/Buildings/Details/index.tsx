@@ -201,8 +201,9 @@ export const BuildingDetails = () => {
                 label="Manutenções"
                 onClick={() => {
                   window.open(
-                    (import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan/') +
-                      buildingId,
+                    `${
+                      import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan/'
+                    }/${buildingId}`,
                     '_blank',
                   );
                 }}

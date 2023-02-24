@@ -28,10 +28,9 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
               Alert, fica muito mais fácil mantê-lo em ordem!
             </h2>
             <QRCodeSVG
-              value={
-                (import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan/') +
-                buildingId
-              }
+              value={`${
+                import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan/'
+              }/${buildingId}`}
               bgColor="#F2EAEA"
               size={300}
             />
