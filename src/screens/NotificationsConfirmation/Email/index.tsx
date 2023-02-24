@@ -1,5 +1,5 @@
 // STYLES
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import * as Style from './styles';
 
@@ -34,20 +34,15 @@ export const EmailConfirm = () => {
   ) : (
     <Style.Container>
       {isConfirmed ? (
-        <>
-          <Style.Content>
-            <img src={icon.logoRed} alt="" />
-            <h2>Cadastro de e-mail confirmado!</h2>
+        <Style.Content>
+          <img src={icon.logoRed} alt="" />
+          <h2>Cadastro de e-mail confirmado!</h2>
 
-            <Style.ContentText>
-              <p>Agora você é responsável pela edificação:</p>
-              <span> {buildingName}</span>
-            </Style.ContentText>
-          </Style.Content>
-          <Style.ImageContainer>
-            <img src={icon.confirmedContactLogo} alt="" />
-          </Style.ImageContainer>
-        </>
+          <Style.ContentText>
+            <p>Agora você é responsável pela edificação:</p>
+            <span> {buildingName}</span>
+          </Style.ContentText>
+        </Style.Content>
       ) : (
         <Style.Content>
           <img src={icon.logoRed} alt="" />
@@ -59,18 +54,28 @@ export const EmailConfirm = () => {
             <p>Para confirmar seu cadastro clique no botão abaixo:</p>
           </Style.ContentText>
 
-          <Button
-            loading={onQuery}
-            label="Confirmar"
-            onClick={() => {
-              requestConfirmData({
-                token: token!,
-                setIsConfirmed,
-                navigate,
-                setOnQuery,
-              });
-            }}
-          />
+          <Style.BottomContainer>
+            <Button
+              loading={onQuery}
+              label="Confirmar"
+              onClick={() => {
+                requestConfirmData({
+                  token: token!,
+                  setIsConfirmed,
+                  navigate,
+                  setOnQuery,
+                });
+              }}
+            />
+
+            <span>
+              Ao clicar em confirmar, você concorda com os{' '}
+              <Link target="_blank" rel="noopener noreferrer" to="/terms">
+                Termos de Uso
+              </Link>
+              .
+            </span>
+          </Style.BottomContainer>
         </Style.Content>
       )}
     </Style.Container>

@@ -26,12 +26,17 @@ import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 // CALENDAR
 import { MaintenancesCalendar } from './screens/Calendar';
 
+// TERMS OF USE
+import { TermsOfUse } from './screens/TermsOfUser';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="*" element={<Login />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/terms" element={<TermsOfUse />} />
 
         <Route
           path="/"
