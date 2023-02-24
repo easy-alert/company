@@ -32,6 +32,7 @@ export const ImagePreviewWrapper = styled.div``;
 export const DragAndDropZone = styled.div`
   width: 100%;
   height: 202px;
+  max-width: 500px;
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
@@ -66,4 +67,5 @@ export const ImageLoading = styled.div`
   border-radius: ${theme.size.xxsm};
   height: 202px;
   width: 100%;
+  max-width: 500px;
 `;

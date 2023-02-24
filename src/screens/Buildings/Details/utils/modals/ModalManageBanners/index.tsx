@@ -213,7 +213,7 @@ export const ModalManageBanners = ({
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
         <p className="p3" style={{ opacity: 0.7 }}>
-          Dimensões recomendadas: 1300 x 300 pixels.
+          Dimensões recomendadas: 1850 x 430 pixels.
         </p>
         <Button
           center
