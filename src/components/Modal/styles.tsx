@@ -41,7 +41,7 @@ export const Background = styled.div`
 
 export const Body = styled.div<{ bodyWidth?: string }>`
   width: ${({ bodyWidth }) => bodyWidth ?? '460px'};
-  margin-top: ${theme.size.xxlg};
+  margin: ${theme.size.xxlg} 0;
 
   animation: fade-in-scale 0.25s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   @keyframes fade-in-scale {
@@ -63,7 +63,7 @@ export const Body = styled.div<{ bodyWidth?: string }>`
     min-height: 100vh;
     border-radius: 0px;
     overflow-y: scroll;
-    margin-top: 0px;
+    margin: 0px;
   }
 `;
 
