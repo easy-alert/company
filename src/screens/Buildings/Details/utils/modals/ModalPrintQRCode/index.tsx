@@ -41,7 +41,7 @@ export const ModalPrintQRCode = ({ setModal, buildingName, buildingId }: IModalP
         </Style.Container>
         <ReactToPrint
           // eslint-disable-next-line react/no-unstable-nested-components
-          trigger={() => <Button style={{ marginTop: '24px' }} label="Imprimir" center />}
+          trigger={() => <Button style={{ marginTop: '16px' }} label="Imprimir" center />}
           content={() => componentRef.current}
           documentTitle={`QR Code ${buildingName}`}
         />
