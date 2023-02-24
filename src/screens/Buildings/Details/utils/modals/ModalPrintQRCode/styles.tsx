@@ -1,43 +1,43 @@
 import styled from 'styled-components';
-import { theme } from '../../../../../../styles/theme';
+import bg from '../../../../../../assets/images/backgroundForPDF.png';
 
 export const Container = styled.div`
+  overflow: hidden;
+  background: url(${bg}) no-repeat;
+  background-size: cover;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   flex-direction: column;
-  gap: ${theme.size.sm};
-  height: 75vh;
+  text-align: center;
+  min-height: 1122px;
+
+  > img {
+    object-fit: contain;
+    max-height: 200px;
+    min-height: 100px;
+  }
+
+  > :first-child {
+    margin-top: 50px;
+  }
 
   > :last-child {
-    margin-left: auto;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 90vh;
+    margin-bottom: 50px;
   }
 `;
 
-export const LoadingContainer = styled.div`
-  min-height: 600px;
+export const Middle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
+  flex-direction: column;
+  gap: 70px;
 
-export const PDFContainer = styled.div`
-  width: 100%;
-  height: 100%;
-
-  > iframe {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    height: 100%;
-    max-height: 850px;
+  > h2 {
+    font-weight: 400;
+    width: 640px;
+    font-size: 26px;
+    line-height: 28px;
   }
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.size.sm};
 `;
