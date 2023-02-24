@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     height: 48,
   },
   companyLogo: {
-    width: 212,
+    height: 100,
     objectFit: 'contain,',
   },
   backgroundImage: {
@@ -48,6 +48,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  QRCode: {
+    width: 280,
+    height: 280,
   },
 });
 
@@ -69,14 +73,18 @@ const MyDocument = ({
   >
     <Page size="A4" style={styles.page}>
       <PDFImage src={image.backgroundForPDF} style={styles.backgroundImage} fixed />
-      <PDFImage src={companyImage} style={styles.companyLogo} />
+      {companyImage ? (
+        <PDFImage src={companyImage} style={styles.companyLogo} />
+      ) : (
+        <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
+      )}
       <View style={styles.mainMessageView}>
         <Text>A manutenção e o cuidado com o condomínio</Text>
         <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
         <Text>muito mais fácil mantê-lo em ordem!</Text>
       </View>
       {QRCodePNG ? (
-        <PDFImage src={QRCodePNG} style={styles.companyLogo} />
+        <PDFImage src={QRCodePNG} style={styles.QRCode} />
       ) : (
         <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
       )}
@@ -94,10 +102,6 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
 
   const [QRCodePNG, setQRCodePNG] = useState<string>('');
 
-  const companyImage = new Image();
-  companyImage.crossOrigin = 'anonymous';
-  companyImage.src = account?.Company.image!;
-
   useEffect(() => {
     const canvas: any = document.getElementById('QRCode');
     const teste = canvas.toDataURL('image/png');
@@ -105,8 +109,9 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
   }, []);
 
   return (
-    <Modal bodyWidth="60vw" title="QR Code para impressão" setModal={setModal}>
+    <Modal bodyWidth="60vw" title="QR Code" setModal={setModal}>
       <>
+        {loading && <Style.SmallLoading />}
         <Style.HideQRCode>
           <QRCodeCanvas
             id="QRCode"
@@ -121,7 +126,7 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
         <Style.Container>
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
             <MyDocument
-              companyImage={companyImage.src}
+              companyImage={account?.Company.image!}
               buildingName={buildingName}
               QRCodePNG={QRCodePNG}
               setLoading={setLoading}
@@ -130,7 +135,7 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
           <PDFDownloadLink
             document={
               <MyDocument
-                companyImage={companyImage.src}
+                companyImage={account?.Company.image!}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
                 setLoading={setLoading}

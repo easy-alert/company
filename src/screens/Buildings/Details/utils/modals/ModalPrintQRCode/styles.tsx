@@ -18,4 +18,27 @@ export const Container = styled.div`
 export const HideQRCode = styled.div`
   position: absolute;
   z-index: -1;
+  overflow: hidden;
+`;
+
+export const SmallLoading = styled.div`
+  position: absolute;
+  left: 125px;
+  top: 24px;
+
+  border: 4px solid ${theme.color.primaryL};
+  border-top: 4px solid ${theme.color.primary};
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.5s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
