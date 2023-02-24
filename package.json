@@ -10,6 +10,7 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.1.6",
     "@types/react-big-calendar": "^0.38.2",
     "axios": "^1.2.4",
     "date-fns": "^2.29.3",
