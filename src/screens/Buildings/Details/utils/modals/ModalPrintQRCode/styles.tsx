@@ -4,40 +4,41 @@ import { theme } from '../../../../../../styles/theme';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.sm};
-  height: 75vh;
+  gap: ${theme.size.xsm};
+  position: relative;
+  background-color: ${theme.color.white};
+  z-index: 1;
 
   > :last-child {
+    margin-top: ${theme.size.xsm};
     margin-left: auto;
   }
+`;
 
-  @media (max-width: 900px) {
-    min-height: 90vh;
+export const HideQRCode = styled.div`
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+`;
+
+export const SmallLoading = styled.div`
+  position: absolute;
+  left: 125px;
+  top: 24px;
+
+  border: 4px solid ${theme.color.primaryL};
+  border-top: 4px solid ${theme.color.primary};
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.5s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
-`;
-
-export const LoadingContainer = styled.div`
-  min-height: 600px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const PDFContainer = styled.div`
-  width: 100%;
-  height: 100%;
-
-  > iframe {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    height: 100%;
-    max-height: 850px;
-  }
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.size.sm};
 `;

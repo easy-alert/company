@@ -200,7 +200,12 @@ export const BuildingDetails = () => {
               <Button
                 label="Manutenções"
                 onClick={() => {
-                  window.open(import.meta.env.VITE_CLIENT_URL + buildingId, '_blank');
+                  window.open(
+                    `${
+                      import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan'
+                    }/${buildingId}`,
+                    '_blank',
+                  );
                 }}
               />
               <Button

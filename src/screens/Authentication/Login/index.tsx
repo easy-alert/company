@@ -43,7 +43,7 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/account');
+              navigate('/calendar');
             })
             .catch((err) => {
               setOnQuery(false);

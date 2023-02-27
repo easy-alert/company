@@ -21,6 +21,17 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
+  if (bannerLink && !bannerLink.startsWith('https://') && !bannerLink.startsWith('http://')) {
+    toast.error(
+      <div>
+        Informe um link válido.
+        <br />
+        Ex: https://easyalert.com.br
+      </div>,
+    );
+    return;
+  }
+
   setOnQuery(true);
 
   const data: IData[] = [];

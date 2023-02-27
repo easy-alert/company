@@ -37,7 +37,7 @@ export const ModalCloneMaintenance = ({
           frequency: String(maintenance.frequency),
           frequencyTimeInterval: maintenance.FrequencyTimeInterval.id,
           responsible: maintenance.responsible,
-          source: maintenance.source,
+          source: `${maintenance.source} [adaptada]`,
           period: String(maintenance.period),
           periodTimeInterval: maintenance.PeriodTimeInterval.id,
           delay: String(maintenance.delay),
@@ -213,7 +213,7 @@ export const ModalCloneMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Button center label="Criar clone" type="submit" loading={onQuery} />
+              <Button center label="Clonar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}

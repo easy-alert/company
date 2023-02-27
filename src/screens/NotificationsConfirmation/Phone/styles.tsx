@@ -21,7 +21,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
   z-index: 2;
 
   text-align: center;
@@ -77,5 +77,23 @@ export const ImageContainer = styled.div`
 
   @media (max-width: 900px) {
     display: none;
+  }
+`;
+
+export const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: ${theme.size.sm};
+
+  span {
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  a {
+    color: ${theme.color.primary};
+    font-weight: 500;
   }
 `;

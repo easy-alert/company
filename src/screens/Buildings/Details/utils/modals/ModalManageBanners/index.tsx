@@ -139,9 +139,9 @@ export const ModalManageBanners = ({
         />
         <Input
           label="Link do banner"
-          maxLength={50}
-          value={bannerLink}
-          placeholder="Ex: easyalert.com.br"
+          maxLength={300}
+          value={bannerLink ?? ''}
+          placeholder="Ex: https://easyalert.com.br"
           onChange={(e) => {
             setBannerLink(e.target.value);
           }}
@@ -212,6 +212,9 @@ export const ModalManageBanners = ({
             )}
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
+        <p className="p3" style={{ opacity: 0.7 }}>
+          Dimensões recomendadas: 1850 x 430 pixels.
+        </p>
         <Button
           center
           loading={onQuery}
