@@ -63,7 +63,7 @@ export const Login = () => {
                     errorColor={theme.color.white}
                     name="email"
                     label="E-mail"
-                    placeholder="Ex: joao.silva@ada.com.br"
+                    placeholder="Insira seu e-mail"
                     value={values.email}
                     error={touched.email && errors.email ? errors.email : null}
                   />
