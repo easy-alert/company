@@ -74,7 +74,10 @@ const MyDocument = ({
     <Page size="A4" style={styles.page}>
       <PDFImage src={image.backgroundForPDF} style={styles.backgroundImage} fixed />
       {companyImage ? (
-        <PDFImage src={companyImage} style={styles.companyLogo} />
+        <PDFImage
+          src={`${companyImage}?noCache=${Math.random().toString()}`}
+          style={styles.companyLogo}
+        />
       ) : (
         <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
       )}
@@ -104,8 +107,8 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
 
   useEffect(() => {
     const canvas: any = document.getElementById('QRCode');
-    const teste = canvas.toDataURL('image/png');
-    setQRCodePNG(teste);
+    const QRCodeURL = canvas.toDataURL('image/png');
+    setQRCodePNG(QRCodeURL);
   }, []);
 
   return (
