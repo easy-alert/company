@@ -142,7 +142,7 @@ export const BuildingsList = () => {
                 <Style.BuildingCardFooter>
                   {/* Não fiz .map pra facilitar a estilização */}
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                    <h5 className="completed">{building?.MaintenancesCount[0].count}</h5>
                     <p className="p5">
                       {building?.MaintenancesCount[0].count > 1
                         ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
@@ -160,7 +160,7 @@ export const BuildingsList = () => {
                   </Style.BuildingCardFooterInfo>
 
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                    <h5 className="expired">{building?.MaintenancesCount[2].count}</h5>
                     <p className="p5">
                       {building?.MaintenancesCount[2].count > 1
                         ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
