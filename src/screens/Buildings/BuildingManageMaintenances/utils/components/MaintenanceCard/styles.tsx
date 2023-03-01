@@ -64,20 +64,9 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   grid-area: 1/7;
 `;
 
-export const MaintenancesCardBottomPeriod = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.size.xxsm};
-
-  > p {
-    display: flex;
-    gap: ${theme.size.xxsm};
-  }
-`;
-
 export const PeriodIconWrapper = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: ${theme.size.xxsm};
 `;
 
@@ -111,7 +100,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
 
 export const MaintenancesMoreGrid = styled.div`
   overflow: hidden;
-
+  place-items: start;
   display: grid;
   width: 100%;
   grid-template-rows: 1fr;

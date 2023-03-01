@@ -81,32 +81,31 @@ export const MaintenanceCard = ({
               {maintenance.observation ?? '-'}
             </p>
 
-            <Style.MaintenancesCardBottomPeriod>
-              <Style.PeriodIconWrapper>
-                <Image img={icon.alert} size="16px" />
-                <p className="p2">
-                  <span>Prazo para execução: </span>
-                  {`${maintenance.period} ${
-                    maintenance.period > 1
-                      ? maintenance.PeriodTimeInterval.pluralLabel
-                      : maintenance.PeriodTimeInterval.singularLabel
-                  }`}
-                </p>
-              </Style.PeriodIconWrapper>
-              <Style.PeriodIconWrapper>
-                <Image img={icon.alert} size="16px" />
-                <p className="p2">
-                  <span>Delay: </span>
-                  {maintenance.delay > 0
-                    ? `${maintenance.delay} ${
-                        maintenance.delay > 1
-                          ? maintenance.DelayTimeInterval.pluralLabel
-                          : maintenance.DelayTimeInterval.singularLabel
-                      }`
-                    : '-'}
-                </p>
-              </Style.PeriodIconWrapper>
-            </Style.MaintenancesCardBottomPeriod>
+            <Style.PeriodIconWrapper>
+              <Image img={icon.alert} size="16px" />
+              <p className="p2">
+                <span>Prazo para execução: </span>
+                {`${maintenance.period} ${
+                  maintenance.period > 1
+                    ? maintenance.PeriodTimeInterval.pluralLabel
+                    : maintenance.PeriodTimeInterval.singularLabel
+                }`}
+              </p>
+            </Style.PeriodIconWrapper>
+            <Style.PeriodIconWrapper>
+              <Image img={icon.alert} size="16px" />
+              <p className="p2">
+                <span>Delay: </span>
+                {maintenance.delay > 0
+                  ? `${maintenance.delay} ${
+                      maintenance.delay > 1
+                        ? maintenance.DelayTimeInterval.pluralLabel
+                        : maintenance.DelayTimeInterval.singularLabel
+                    }`
+                  : '-'}
+              </p>
+            </Style.PeriodIconWrapper>
+            <div style={{ height: '32px' }} />
           </Style.MaintenancesMoreGrid>
         </Style.MaintenancesCardBottomContainer>
       </Style.MaintenancesCardContent>
