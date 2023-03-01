@@ -144,7 +144,7 @@ export const ModalCloneMaintenance = ({
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Tempo para resposta"
+                  label="Prazo para execução"
                   name="period"
                   value={values.period}
                   error={touched.period && errors.period ? errors.period : null}
