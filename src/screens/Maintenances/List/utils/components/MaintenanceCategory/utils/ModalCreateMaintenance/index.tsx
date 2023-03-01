@@ -95,7 +95,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.frequencyTimeInterval}
                   name="frequencyTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.frequencyTimeInterval && errors.frequencyTimeInterval
                       ? errors.frequencyTimeInterval
@@ -158,7 +158,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.periodTimeInterval && errors.periodTimeInterval
                       ? errors.periodTimeInterval
@@ -192,7 +192,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.delayTimeInterval}
                   name="delayTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.delayTimeInterval && errors.delayTimeInterval
                       ? errors.delayTimeInterval

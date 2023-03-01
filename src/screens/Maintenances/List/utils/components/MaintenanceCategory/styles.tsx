@@ -18,6 +18,10 @@ export const HeaderTitle = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  > :last-child {
+    padding-right: 4px;
+  }
 `;
 
 export const Container = styled.div`
