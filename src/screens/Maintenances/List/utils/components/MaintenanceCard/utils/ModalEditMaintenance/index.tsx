@@ -7,8 +7,12 @@ import { Button } from '../../../../../../../../components/Buttons/Button';
 import { FormikTextArea } from '../../../../../../../../components/Form/FormikTextArea';
 import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../../../../components/Modal';
-import * as Style from './styles';
 import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
+import { Image } from '../../../../../../../../components/Image';
+
+// STYLES
+import * as Style from './styles';
+import { icon } from '../../../../../../../../assets/icons';
 
 // FUNCTIONS
 import {
@@ -185,17 +189,24 @@ export const ModalEditMaintenance = ({
                 </FormikSelect>
               </Style.SelectWrapper>
               <Style.SelectWrapper>
-                <FormikInput
-                  label="Delay"
-                  name="delay"
-                  value={values.delay}
-                  error={touched.delay && errors.delay ? errors.delay : null}
-                  placeholder="Ex: 1"
-                  maxLength={4}
-                  onChange={(e) => {
-                    setFieldValue('delay', applyMask({ mask: 'NUM', value: e.target.value }).value);
-                  }}
-                />
+                <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
+                  <FormikInput
+                    label="Delay"
+                    name="delay"
+                    value={values.delay}
+                    error={touched.delay && errors.delay ? errors.delay : null}
+                    placeholder="Ex: 1"
+                    maxLength={4}
+                    onChange={(e) => {
+                      setFieldValue(
+                        'delay',
+                        applyMask({ mask: 'NUM', value: e.target.value }).value,
+                      );
+                    }}
+                  />
+                  <Image img={icon.alert} size="16px" />
+                </Style.DelayIcon>
+
                 <FormikSelect
                   selectPlaceholderValue={values.delayTimeInterval}
                   name="delayTimeInterval"
