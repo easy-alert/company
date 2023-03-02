@@ -41,7 +41,7 @@ export const BuildingMaintenancesList = () => {
         <Style.HeaderWrapper>
           <Style.LeftSide>
             <Style.HeaderTitle>
-              <h2>Manutenções a serem realizadas</h2>
+              <h2>Plano de manutenções</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
           <IconButton

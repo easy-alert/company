@@ -58,7 +58,7 @@ export const BuildingManageMaintenances = () => {
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
-            <h2>Manutenções a serem realizadas</h2>
+            <h2>Plano de manutenções</h2>
           </Style.LeftSide>
           {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
             <IconButton
