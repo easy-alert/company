@@ -401,7 +401,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.ButtonWrapper>
                           {notificationRow.isMain && (
-                            <Style.MainContactTag>
+                            <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
                               <p className="p5">Contato principal</p>
                             </Style.MainContactTag>
                           )}
