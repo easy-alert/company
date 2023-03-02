@@ -191,7 +191,7 @@ export const ModalSendMaintenanceReport = ({
 
                 <Style.DragAndDropFileContent>
                   <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                  <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+                  <p className="p2">TIRAR A MENSAGEM!!! enviar seu arquivo.</p>
                 </Style.DragAndDropFileContent>
               </Style.DragAndDropZoneFile>
 

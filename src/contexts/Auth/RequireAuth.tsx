@@ -7,7 +7,7 @@ import { Api } from '../../services/api';
 import { AuthContext } from './AuthContext';
 
 // COMPONENTS
-import { DotLoading } from '../../components/Loadings/DotLoading';
+import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 
 export const RequireAuth = () => {
   const { setAccount } = useContext(AuthContext);
@@ -31,5 +31,5 @@ export const RequireAuth = () => {
     }
   }, []);
 
-  return loading ? <DotLoading label="Verificando credenciais" /> : <Outlet />;
+  return loading ? <DotSpinLoading label="Verificando credenciais" /> : <Outlet />;
 };

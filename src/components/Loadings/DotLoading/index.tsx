@@ -10,9 +10,7 @@ export const DotLoading = ({ label, bgColor = theme.color.primary }: IDotLoading
   <LoadingContainer bgColor={bgColor}>
     <LoadingWrapper>
       {label && <h4>{label}</h4>}
-      <div>
-        <div className="dot-pulse" />
-      </div>
+      <div className="dot-pulse" />
     </LoadingWrapper>
   </LoadingContainer>
 );
