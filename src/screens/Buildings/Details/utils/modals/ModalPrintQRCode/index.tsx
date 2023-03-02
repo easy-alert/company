@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 212,
-    height: 48,
+    width: 169,
+    height: 38,
   },
   companyLogo: {
     height: 100,

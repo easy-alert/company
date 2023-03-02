@@ -297,7 +297,7 @@ export const BuildingDetails = () => {
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>
-            <h5>Dados de notificação</h5>
+            <h5>Responsáveis de manutenção</h5>
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"

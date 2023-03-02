@@ -32,7 +32,7 @@ export const ModalCreateNotificationConfiguration = ({
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
-    <Modal title="Cadastrar dados de notificação" setModal={setModal}>
+    <Modal title="Cadastrar responsável de manutenção" setModal={setModal}>
       <Formik
         initialValues={{
           name: '',

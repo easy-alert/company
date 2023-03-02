@@ -35,7 +35,7 @@ export const ModalEditNotificationConfiguration = ({
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
-    <Modal title="Editar dados de notificação" setModal={setModal}>
+    <Modal title="Editar responsável de manutenção" setModal={setModal}>
       <Formik
         initialValues={{
           name: selectedNotificationRow.name,
