@@ -50,9 +50,9 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   flex-direction: column;
   gap: ${theme.size.xsm};
   overflow: hidden;
-  transition: max-height 0.25s;
+  transition: max-height 0.15s;
 
-  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 80px;` : `max-height: 0px; `)};
+  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 150px;` : `max-height: 0px; `)};
 `;
 
 export const MaintenancesCardGridMoreEditButton = styled.div`
@@ -61,7 +61,16 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 1/7;
+  grid-area: 3/7;
+`;
+
+export const MaintenancesCardGridMoreOptionsButton = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: ${theme.size.xsm};
+  justify-content: flex-end;
+  grid-area: 3/6;
 `;
 
 export const PeriodIconWrapper = styled.div`
@@ -78,7 +87,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   grid-template-rows: 1fr;
   overflow: hidden;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 0.1fr;
 
   > p {
     line-height: 17px;
@@ -99,13 +108,12 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
 `;
 
 export const MaintenancesMoreGrid = styled.div`
-  overflow: hidden;
-  place-items: start;
+  align-items: flex-start;
   display: grid;
   width: 100%;
-  grid-template-rows: 1fr;
-  grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-gap: ${theme.size.xsm} ${theme.size.sm};
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 0.1fr;
 
   span {
     color: ${theme.color.primary};
@@ -115,4 +123,10 @@ export const MaintenancesMoreGrid = styled.div`
     overflow: hidden;
     word-wrap: break-word;
   }
+`;
+
+export const AdditionalInformationsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
 `;

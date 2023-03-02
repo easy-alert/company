@@ -1,4 +1,4 @@
-import { IMaintenance, ICategories } from '../../../types';
+import { IMaintenance, ICategories } from '../../types';
 
 export interface IMaintenanceCard {
   maintenance: IMaintenance;

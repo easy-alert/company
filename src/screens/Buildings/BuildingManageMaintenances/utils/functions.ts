@@ -14,6 +14,7 @@ export const requestListCategoriesToManage = async ({
   setCategories,
   buildingId,
   setTableLoading,
+  setBuildingName,
 }: IRequestListCategoriesToManage) => {
   if (setTableLoading) setTableLoading(true);
 
@@ -21,7 +22,8 @@ export const requestListCategoriesToManage = async ({
     buildingId,
   })
     .then((res) => {
-      setCategories(res.data);
+      setCategories(res.data.CategoriesData);
+      setBuildingName(res.data.buildingName);
       setLoading(false);
       if (setTableLoading) setTableLoading(false);
     })

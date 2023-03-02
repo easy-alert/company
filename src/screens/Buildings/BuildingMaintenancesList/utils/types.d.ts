@@ -38,6 +38,9 @@ export interface AddedMaintenances {
     name: string;
   };
   Maintenances: IMaintenance[];
+  Building: {
+    name: string;
+  };
 }
 
 // REQUESTS

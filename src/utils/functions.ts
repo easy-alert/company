@@ -9,6 +9,7 @@ import {
   IRequestListIntervals,
   IRequestAddressData,
   IRequestBuildingTypes,
+  IIncreaseDaysInDate,
 } from './types';
 // #endregion
 
@@ -17,6 +18,9 @@ export const dateFormatter = (date: string) =>
   new Date(date).toLocaleDateString('pt-BR', {
     timeZone: 'UTC',
   });
+
+export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
+  new Date(date.setDate(date.getDate() + daysToIncrease)).toISOString().split('T')[0];
 
 export const convertToFormikDate = (date: string) => new Date(date).toISOString().split('T')[0];
 // #endregion

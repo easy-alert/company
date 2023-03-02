@@ -52,7 +52,7 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   overflow: hidden;
   transition: max-height 0.25s;
 
-  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 80px;` : `max-height: 0px; `)};
+  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 100px;` : `max-height: 0px; `)};
 `;
 
 export const MaintenancesCardGridMoreEditButton = styled.div`
@@ -100,7 +100,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
 
 export const MaintenancesMoreGrid = styled.div`
   overflow: hidden;
-  place-items: start;
+  align-items: flex-start;
   display: grid;
   width: 100%;
   grid-template-rows: 1fr;

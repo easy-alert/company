@@ -37,6 +37,8 @@ export const BuildingManageMaintenances = () => {
 
   const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
 
+  const [buildingName, setBuildingName] = useState<string>('');
+
   const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
 
   const isAllCategoriesSelected = categories.every((element) =>
@@ -47,7 +49,12 @@ export const BuildingManageMaintenances = () => {
 
   useEffect(() => {
     requestBuldingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
-      requestListCategoriesToManage({ setLoading, setCategories, buildingId: buildingId! });
+      requestListCategoriesToManage({
+        setLoading,
+        setCategories,
+        buildingId: buildingId!,
+        setBuildingName,
+      });
     });
   }, []);
 
@@ -58,7 +65,7 @@ export const BuildingManageMaintenances = () => {
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
-            <h2>Plano de manutenções</h2>
+            <h2>{buildingName} / Plano de manutenções</h2>
           </Style.LeftSide>
           {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
             <IconButton
@@ -94,6 +101,7 @@ export const BuildingManageMaintenances = () => {
                   setCategories,
                   buildingId: toCopyBuildingId!,
                   setTableLoading,
+                  setBuildingName,
                 });
               }}
             >
