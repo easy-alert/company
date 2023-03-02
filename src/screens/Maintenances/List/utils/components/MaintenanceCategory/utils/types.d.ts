@@ -5,7 +5,7 @@ import { ITimeInterval } from '../../../../../../../utils/types';
 export interface IMaintenanceCategory {
   category: ICategories;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   timeIntervals: ITimeInterval[];
 }
 

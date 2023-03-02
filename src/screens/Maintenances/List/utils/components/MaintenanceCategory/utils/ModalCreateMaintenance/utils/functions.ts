@@ -77,10 +77,10 @@ export const schemaCreateMaintenance = yup
 
     frequencyTimeInterval: yup
       .string()
-      .required('O intervalo da periodicidade deve ser preenchido.')
+      .required('A unidade da periodicidade deve ser preenchida.')
       .test(
         'hasValue',
-        'O intervalo da periodicidade deve ser preenchido.',
+        'A unidade da periodicidade deve ser preenchida.',
         (value) => value !== 'Selecione',
       ),
 
@@ -96,20 +96,20 @@ export const schemaCreateMaintenance = yup
 
     period: yup
       .string()
-      .required('O tempo para resposta deve ser preenchido.')
-      .matches(/^\d/, 'O tempo para resposta deve ser um número.')
+      .required('O prazo para execução deve ser preenchido.')
+      .matches(/^\d/, 'O prazo para execução deve ser um número.')
       .test(
         'greaterThanZero',
-        'O tempo para resposta deve ser maior que zero.',
+        'O prazo para execução deve ser maior que zero.',
         (value) => Number(value) > 0,
       ),
 
     periodTimeInterval: yup
       .string()
-      .required('O intervalo do tempo para resposta deve ser preenchido.')
+      .required('A unidade do prazo para execução deve ser preenchida.')
       .test(
         'hasValue',
-        'O intervalo do tempo para resposta deve ser preenchido.',
+        'A unidade do prazo para execução deve ser preenchida.',
         (value) => value !== 'Selecione',
       ),
 
@@ -120,10 +120,10 @@ export const schemaCreateMaintenance = yup
 
     delayTimeInterval: yup
       .string()
-      .required('O intervalo do delay deve ser preenchido.')
+      .required('A unidade do delay deve ser preenchida.')
       .test(
         'hasValue',
-        'O intervalo do delay deve ser preenchido.',
+        'A unidade do delay deve ser preenchida.',
         (value) => value !== 'Selecione',
       ),
 

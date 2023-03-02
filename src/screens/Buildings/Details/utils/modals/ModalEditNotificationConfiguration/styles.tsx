@@ -16,3 +16,13 @@ export const ButtonContainer = styled.div`
   gap: ${theme.size.sm};
   width: 100%;
 `;
+
+export const MainContactObservation = styled.div`
+  display: flex;
+  gap: ${theme.size.xxsm};
+  align-items: flex-start;
+
+  > p {
+    color: ${theme.color.gray4};
+  }
+`;

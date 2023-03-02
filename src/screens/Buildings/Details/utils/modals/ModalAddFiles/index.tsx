@@ -61,7 +61,7 @@ export const ModalAddFiles = ({
 
             <Style.Content>
               <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-              <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
+              <p className="p2" />
             </Style.Content>
           </Style.DragAndDropZone>
         ) : (

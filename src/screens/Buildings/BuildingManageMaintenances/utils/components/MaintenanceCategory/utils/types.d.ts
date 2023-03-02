@@ -4,7 +4,7 @@ import { ICategories } from '../../../types';
 export interface IMaintenanceCategory {
   category: ICategories;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   categoryIndex: number;
   toCopyBuilding: string;
   setToCopyBuilding: (setToCopyBuilding: string) => void;

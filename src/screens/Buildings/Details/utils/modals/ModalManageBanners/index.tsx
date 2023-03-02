@@ -161,7 +161,6 @@ export const ModalManageBanners = ({
 
                   <Style.Content>
                     <Image img={icon.addImage} width="48px" height="46px" radius="0" />
-                    <p className="p2">Clique ou arraste para enviar sua imagem.</p>
                   </Style.Content>
                 </Style.DragAndDropZone>
               ))}
@@ -193,7 +192,6 @@ export const ModalManageBanners = ({
 
                   <Style.Content>
                     <Image img={icon.addImage} width="48px" height="46px" radius="0" />
-                    <p className="p2">Clique ou arraste para enviar sua imagem.</p>
                   </Style.Content>
                 </Style.DragAndDropZone>
               ))}

@@ -169,7 +169,7 @@ export const BuildingDetails = () => {
               <Style.MaintenanceCardFooter>
                 {/* Não fiz .map pra facilitar a estilização */}
                 <Style.MaintenanceCardFooterInfo>
-                  <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                  <h5 className="completed">{building?.MaintenancesCount[0].count}</h5>
                   <p className="p5">
                     {building?.MaintenancesCount[0].count > 1
                       ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
@@ -187,7 +187,7 @@ export const BuildingDetails = () => {
                 </Style.MaintenanceCardFooterInfo>
 
                 <Style.MaintenanceCardFooterInfo>
-                  <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                  <h5 className="expired">{building?.MaintenancesCount[2].count}</h5>
                   <p className="p5">
                     {building?.MaintenancesCount[2].count > 1
                       ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
@@ -297,7 +297,7 @@ export const BuildingDetails = () => {
         </Style.Card>
         <Style.Card>
           <Style.CardHeader>
-            <h5>Dados de notificação</h5>
+            <h5>Responsáveis de manutenção</h5>
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
@@ -401,7 +401,7 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.ButtonWrapper>
                           {notificationRow.isMain && (
-                            <Style.MainContactTag>
+                            <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
                               <p className="p5">Contato principal</p>
                             </Style.MainContactTag>
                           )}
@@ -431,7 +431,7 @@ export const BuildingDetails = () => {
         <Style.Card>
           <Style.MaintenanceCardHeader>
             <h5>
-              Manutenções a serem realizadas ({usedMaintenancesCount}/{totalMaintenancesCount})
+              Plano de manutenções ({usedMaintenancesCount}/{totalMaintenancesCount})
             </h5>
             <Style.ButtonWrapper>
               <IconButton

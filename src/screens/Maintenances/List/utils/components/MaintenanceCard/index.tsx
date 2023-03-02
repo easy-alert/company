@@ -100,34 +100,32 @@ export const MaintenanceCard = ({
                 {maintenance.observation ?? '-'}
               </p>
 
-              <Style.MaintenancesCardBottomPeriod>
-                <Style.PeriodIconWrapper>
-                  <Image img={icon.alert} size="16px" />
-                  <p className="p2">
-                    <span>Tempo para resposta: </span>
-                    {`${maintenance.period} ${
-                      maintenance.period > 1
-                        ? maintenance.PeriodTimeInterval.pluralLabel
-                        : maintenance.PeriodTimeInterval.singularLabel
-                    }`}
-                  </p>
-                </Style.PeriodIconWrapper>
-                <Style.PeriodIconWrapper>
-                  <Image img={icon.alert} size="16px" />
-                  <p className="p2">
-                    <span>Delay: </span>
-                    {maintenance.delay > 0
-                      ? `${maintenance.delay} ${
-                          maintenance.delay > 1
-                            ? maintenance.DelayTimeInterval.pluralLabel
-                            : maintenance.DelayTimeInterval.singularLabel
-                        }`
-                      : '-'}
-                  </p>
-                </Style.PeriodIconWrapper>
-              </Style.MaintenancesCardBottomPeriod>
-              {maintenance.ownerCompanyId && (
-                <Style.MaintenancesCardGridMoreEditButton>
+              <Style.PeriodIconWrapper>
+                <Image img={icon.alert} size="16px" />
+                <p className="p2">
+                  <span>Prazo para execução: </span>
+                  {`${maintenance.period} ${
+                    maintenance.period > 1
+                      ? maintenance.PeriodTimeInterval.pluralLabel
+                      : maintenance.PeriodTimeInterval.singularLabel
+                  }`}
+                </p>
+              </Style.PeriodIconWrapper>
+              <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
+                <Image img={icon.alert} size="16px" />
+                <p className="p2">
+                  <span>Delay: </span>
+                  {maintenance.delay > 0
+                    ? `${maintenance.delay} ${
+                        maintenance.delay > 1
+                          ? maintenance.DelayTimeInterval.pluralLabel
+                          : maintenance.DelayTimeInterval.singularLabel
+                      }`
+                    : '-'}
+                </p>
+              </Style.PeriodIconWrapper>
+              <Style.MaintenancesCardGridMoreEditButton>
+                {maintenance.ownerCompanyId ? (
                   <Button
                     label="Editar"
                     onClick={(e) => {
@@ -135,8 +133,10 @@ export const MaintenanceCard = ({
                       setModalEditMaintenanceOpen(true);
                     }}
                   />
-                </Style.MaintenancesCardGridMoreEditButton>
-              )}
+                ) : (
+                  <div style={{ height: '32px' }} />
+                )}
+              </Style.MaintenancesCardGridMoreEditButton>
             </Style.MaintenancesMoreGrid>
           </Style.MaintenancesCardBottomContainer>
         </Style.MaintenancesCardContent>
