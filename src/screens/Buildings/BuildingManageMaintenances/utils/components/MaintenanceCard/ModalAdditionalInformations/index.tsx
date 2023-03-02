@@ -9,13 +9,18 @@ import { FormikInput } from '../../../../../../../components/Form/FormikInput';
 import * as Style from './styles';
 
 // FUNCTIONS
-import { schemaAdditionalInformations } from './functions';
+import { handleAdditionalInformations, schemaAdditionalInformations } from './functions';
 
 // TYPES
 import { IModalAdditionalInformations } from './types';
 import { increaseDaysInDate } from '../../../../../../../utils/functions';
 
-export const ModalAdditionalInformations = ({ setModal }: IModalAdditionalInformations) => (
+export const ModalAdditionalInformations = ({
+  setModal,
+  setCategories,
+  categoryIndex,
+  maintenanceIndex,
+}: IModalAdditionalInformations) => (
   <Modal title="Informações adicionais" setModal={setModal}>
     <Formik
       initialValues={{
@@ -25,25 +30,30 @@ export const ModalAdditionalInformations = ({ setModal }: IModalAdditionalInform
         firstNotificationDate: '',
       }}
       validationSchema={schemaAdditionalInformations}
-      onSubmit={async (values) => {
-        console.log(values);
-
-        // await requestEditAccount({
-        //   values,
-        //   account,
-        //   setAccount,
-        //   navigate,
-        //   setOnQuery,
-        //   setModal,
-        // });
+      onSubmit={(values) => {
+        handleAdditionalInformations({
+          setCategories,
+          values,
+          categoryIndex,
+          maintenanceIndex,
+          setModal,
+        });
       }}
     >
-      {({ errors, values, touched }) => (
+      {({ errors, values, touched, setFieldValue, setTouched }) => (
         <Form>
           <Style.Wrapper>
             <FormikCheckbox
               label="Informar data da última conclusão"
               name="hasLastResolutionDate"
+              onChange={() => {
+                setFieldValue('hasLastResolutionDate', !values.hasLastResolutionDate);
+
+                if (values.lastResolutionDate) {
+                  setTouched({ lastResolutionDate: false });
+                  setFieldValue('lastResolutionDate', '');
+                }
+              }}
             />
             <FormikInput
               max={new Date().toISOString().split('T')[0]}
@@ -64,6 +74,14 @@ export const ModalAdditionalInformations = ({ setModal }: IModalAdditionalInform
             <FormikCheckbox
               label="Informar data da primeira notificação"
               name="hasFirstNotificationDate"
+              onChange={() => {
+                setFieldValue('hasFirstNotificationDate', !values.hasFirstNotificationDate);
+
+                if (values.firstNotificationDate) {
+                  setTouched({ firstNotificationDate: false });
+                  setFieldValue('firstNotificationDate', '');
+                }
+              }}
             />
             <FormikInput
               min={increaseDaysInDate({ date: new Date(), daysToIncrease: 2 })}
@@ -80,7 +98,13 @@ export const ModalAdditionalInformations = ({ setModal }: IModalAdditionalInform
               maxLength={40}
             />
           </Style.Wrapper>
-          <Button style={{ marginTop: '8px' }} center label="Salvar" type="submit" />
+          <Button
+            disable={!values.hasFirstNotificationDate && !values.hasLastResolutionDate}
+            style={{ marginTop: '8px' }}
+            center
+            label="Salvar"
+            type="submit"
+          />
         </Form>
       )}
     </Formik>

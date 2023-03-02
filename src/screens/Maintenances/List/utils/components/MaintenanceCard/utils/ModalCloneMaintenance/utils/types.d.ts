@@ -4,7 +4,7 @@ import { ITimeInterval } from '../../../../../../../../../utils/types';
 export interface IModalCreateMaintenance {
   categoryId: string;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   timeIntervals: ITimeInterval[];
   setModal: (setModal: boolean) => void;
   maintenance: IMaintenance;
@@ -12,7 +12,7 @@ export interface IModalCreateMaintenance {
 
 export interface IRequestCreateMaintenance {
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setModal: (setModal: boolean) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   categoryId: string;

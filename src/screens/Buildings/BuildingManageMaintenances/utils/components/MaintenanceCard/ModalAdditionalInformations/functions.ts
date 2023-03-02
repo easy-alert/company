@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { IHandleAdditionalInformations } from './types';
 
 export const schemaAdditionalInformations = yup
   .object({
@@ -15,3 +16,24 @@ export const schemaAdditionalInformations = yup
     }),
   })
   .required();
+
+export const handleAdditionalInformations = ({
+  setCategories,
+  values,
+  categoryIndex,
+  maintenanceIndex,
+  setModal,
+}: IHandleAdditionalInformations) => {
+  setCategories((prevState) => {
+    const newState = [...prevState];
+
+    newState[categoryIndex].Maintenances[maintenanceIndex].lastResolutionDate =
+      values.lastResolutionDate;
+
+    newState[categoryIndex].Maintenances[maintenanceIndex].firstNotificationDate =
+      values.firstNotificationDate;
+
+    return newState;
+  });
+  setModal(false);
+};

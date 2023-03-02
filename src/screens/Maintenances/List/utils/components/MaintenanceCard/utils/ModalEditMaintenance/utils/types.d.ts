@@ -5,7 +5,7 @@ export interface IModalEditMaintenance {
   selectedMaintenance: IMaintenance;
   timeIntervals: ITimeInterval[];
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   categoryId: string;
   setModal: (setModal: boolean) => void;
 }
@@ -29,7 +29,7 @@ export interface IRequestEditMaintenance {
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
 }
 
 export interface IDeleteMaintenance {
@@ -38,5 +38,5 @@ export interface IDeleteMaintenance {
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
 }

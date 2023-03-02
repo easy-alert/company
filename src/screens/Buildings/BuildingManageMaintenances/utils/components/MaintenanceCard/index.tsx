@@ -12,6 +12,7 @@ import { ModalAdditionalInformations } from './ModalAdditionalInformations';
 
 // TYPES
 import { IMaintenanceCard } from './types';
+import { dateFormatter } from '../../../../../../utils/functions';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -28,7 +29,12 @@ export const MaintenanceCard = ({
   return (
     <>
       {modalAdditionalInformations && (
-        <ModalAdditionalInformations setModal={setModalAdditionalInformations} />
+        <ModalAdditionalInformations
+          setModal={setModalAdditionalInformations}
+          setCategories={setCategories}
+          categoryIndex={categoryIndex}
+          maintenanceIndex={maintenanceIndex}
+        />
       )}
 
       <Style.MaintenancesCard
@@ -126,18 +132,22 @@ export const MaintenanceCard = ({
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />
-              <Style.AdditionalInformationsWrapper>
-                <p className="p2">
-                  <span>Última conclusão: </span>
-                  data
-                </p>
-              </Style.AdditionalInformationsWrapper>
-              <Style.AdditionalInformationsWrapper>
-                <p className="p2">
-                  <span>Primeira notificação: </span>
-                  data
-                </p>
-              </Style.AdditionalInformationsWrapper>
+              {maintenance.lastResolutionDate && (
+                <Style.AdditionalInformationsWrapper>
+                  <p className="p2">
+                    <span>Última conclusão: </span>
+                    {dateFormatter(maintenance.lastResolutionDate)}
+                  </p>
+                </Style.AdditionalInformationsWrapper>
+              )}
+              {maintenance.firstNotificationDate && (
+                <Style.AdditionalInformationsWrapper>
+                  <p className="p2">
+                    <span>Primeira notificação: </span>
+                    {dateFormatter(maintenance.firstNotificationDate)}
+                  </p>
+                </Style.AdditionalInformationsWrapper>
+              )}
             </Style.MaintenancesMoreGrid>
           </Style.MaintenancesCardBottomContainer>
         </Style.MaintenancesCardContent>
