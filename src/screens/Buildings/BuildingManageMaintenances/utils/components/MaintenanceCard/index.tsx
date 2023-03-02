@@ -132,19 +132,19 @@ export const MaintenanceCard = ({
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />
-              {maintenance.lastResolutionDate && (
+              {maintenance.resolutionDate && (
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
                     <span>Última conclusão: </span>
-                    {dateFormatter(maintenance.lastResolutionDate)}
+                    {dateFormatter(maintenance.resolutionDate)}
                   </p>
                 </Style.AdditionalInformationsWrapper>
               )}
-              {maintenance.firstNotificationDate && (
+              {maintenance.notificationDate && (
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
                     <span>Primeira notificação: </span>
-                    {dateFormatter(maintenance.firstNotificationDate)}
+                    {dateFormatter(maintenance.notificationDate)}
                   </p>
                 </Style.AdditionalInformationsWrapper>
               )}

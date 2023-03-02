@@ -29,8 +29,8 @@ interface IMaintenance {
     singularLabel: string;
   };
   observation: string;
-  lastResolutionDate: string;
-  firstNotificationDate: string;
+  resolutionDate: string | null;
+  notificationDate: string | null;
 }
 
 export interface ICategories {

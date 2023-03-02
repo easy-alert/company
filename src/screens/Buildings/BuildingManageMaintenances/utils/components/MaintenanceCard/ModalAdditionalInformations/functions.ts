@@ -27,11 +27,11 @@ export const handleAdditionalInformations = ({
   setCategories((prevState) => {
     const newState = [...prevState];
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].lastResolutionDate =
-      values.lastResolutionDate;
+    newState[categoryIndex].Maintenances[maintenanceIndex].resolutionDate =
+      values.lastResolutionDate !== '' ? values.lastResolutionDate : null;
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].firstNotificationDate =
-      values.firstNotificationDate;
+    newState[categoryIndex].Maintenances[maintenanceIndex].notificationDate =
+      values.firstNotificationDate !== '' ? values.firstNotificationDate : null;
 
     return newState;
   });
