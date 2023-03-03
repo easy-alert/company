@@ -88,8 +88,8 @@ export const BuildingDetails = () => {
 
       if (query.get('flow') === '1') {
         setModalCreateNotificationConfigurationOpen(true);
-        navigate(`/buildings/details/${buildingId}?flow=2`);
         query.set('flow', '2');
+        navigate(`/buildings/details/${buildingId}?flow=2`);
       }
     });
   }, []);
