@@ -1,4 +1,5 @@
 import { IMaintenance, ICategories } from '../../types';
+import { ITimeInterval } from '../../../../../../utils/types';
 
 export interface IMaintenanceCard {
   maintenance: IMaintenance;
@@ -8,4 +9,6 @@ export interface IMaintenanceCard {
   maintenanceIndex: number;
   toCopyBuilding: string;
   setToCopyBuilding: (setToCopyBuilding: string) => void;
+  timeIntervals: ITimeInterval[];
+  categoryId: string;
 }

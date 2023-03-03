@@ -17,11 +17,14 @@ import { IBuildingListForSelect, ICategories } from './utils/types';
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
-  requestBuldingListForSelect,
+  requestBuildingListForSelect,
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
 import { DotLoading } from '../../../components/Loadings/DotLoading';
+import { ITimeInterval } from '../../../utils/types';
+import { query, requestListIntervals } from '../../../utils/functions';
+import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
 
 export const BuildingManageMaintenances = () => {
   const navigate = useNavigate();
@@ -47,8 +50,14 @@ export const BuildingManageMaintenances = () => {
 
   const hasSomeMaintenance = categories.some((element) => element.Maintenances.length > 0);
 
+  const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
+
+  const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
+
   useEffect(() => {
-    requestBuldingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
+    query.delete('flow');
+    requestListIntervals({ setTimeIntervals });
+    requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
       requestListCategoriesToManage({
         setLoading,
         setCategories,
@@ -62,30 +71,49 @@ export const BuildingManageMaintenances = () => {
     <DotSpinLoading />
   ) : (
     <>
+      {modalCreateCategoryOpen && (
+        <ModalCreateCategory
+          setModal={setModalCreateCategoryOpen}
+          categories={categories}
+          setCategories={setCategories}
+        />
+      )}
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
             <h2>{buildingName} / Plano de manutenções</h2>
           </Style.LeftSide>
-          {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
+          <Style.RightSide>
             <IconButton
-              icon={icon.checked}
-              label="Salvar"
               hideLabelOnMedia
+              fontWeight="500"
+              label="Criar categoria"
+              className="p2"
+              icon={icon.plusWithBg}
               onClick={() => {
-                requestManageBuildingMaintenances({
-                  categories,
-                  buildingId: buildingId!,
-                  navigate,
-                  setOnQuery,
-                });
+                setModalCreateCategoryOpen(true);
               }}
             />
-          )}
+            {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
+              <IconButton
+                icon={icon.checked}
+                label="Salvar"
+                hideLabelOnMedia
+                onClick={() => {
+                  requestManageBuildingMaintenances({
+                    categories,
+                    buildingId: buildingId!,
+                    navigate,
+                    setOnQuery,
+                  });
+                }}
+              />
+            )}
+          </Style.RightSide>
         </Style.HeaderWrapper>
         <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
-      {categories.length > 0 && hasSomeMaintenance ? (
+      {categories.length > 0 ? (
         <>
           <Style.SelectWrapper>
             <Select
@@ -155,20 +183,18 @@ export const BuildingManageMaintenances = () => {
             </Style.TableLoadingContainer>
           ) : (
             <Style.CategoriesContainer>
-              {categories.map(
-                (category, categoryIndex: number) =>
-                  category.Maintenances.length > 0 && (
-                    <MaintenanceCategory
-                      key={category.id}
-                      category={category}
-                      categories={categories}
-                      setCategories={setCategories}
-                      categoryIndex={categoryIndex}
-                      setToCopyBuilding={setToCopyBuilding}
-                      toCopyBuilding={toCopyBuilding}
-                    />
-                  ),
-              )}
+              {categories.map((category, categoryIndex: number) => (
+                <MaintenanceCategory
+                  key={category.id}
+                  category={category}
+                  categories={categories}
+                  setCategories={setCategories}
+                  categoryIndex={categoryIndex}
+                  setToCopyBuilding={setToCopyBuilding}
+                  toCopyBuilding={toCopyBuilding}
+                  timeIntervals={timeIntervals}
+                />
+              ))}
             </Style.CategoriesContainer>
           )}
         </>

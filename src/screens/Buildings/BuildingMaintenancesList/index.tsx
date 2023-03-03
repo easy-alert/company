@@ -25,11 +25,14 @@ export const BuildingMaintenancesList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
+  const [buildingName, setBuildingName] = useState<string>('');
+
   useEffect(() => {
     requestAddedMaintenances({
       setLoading,
       setAddedMaintenances,
       buildingId: buildingId!,
+      setBuildingName,
     });
   }, []);
 
@@ -41,7 +44,7 @@ export const BuildingMaintenancesList = () => {
         <Style.HeaderWrapper>
           <Style.LeftSide>
             <Style.HeaderTitle>
-              <h2>{addedMaintenances[0].Building.name} / Plano de manutenções</h2>
+              <h2>{buildingName} / Plano de manutenções</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
           <IconButton

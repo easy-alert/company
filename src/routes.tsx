@@ -26,6 +26,9 @@ import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 // CALENDAR
 import { MaintenancesCalendar } from './screens/Calendar';
 
+// REPORT
+import { CreateReport } from './screens/Reports/Create';
+
 // TERMS OF USE
 import { TermsOfUse } from './screens/TermsOfUse';
 
@@ -67,6 +70,8 @@ const AppRoutes = () => (
           </Route>
 
           <Route path="/calendar" element={<MaintenancesCalendar />} />
+
+          <Route path="report/create" element={<CreateReport />} />
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />

@@ -70,7 +70,9 @@ const MyDocument = ({
 }) => (
   <Document
     onRender={() => {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2500);
     }}
   >
     <Page size="A4" style={styles.page}>
@@ -86,11 +88,7 @@ const MyDocument = ({
         <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
         <Text>muito mais fácil mantê-lo em ordem!</Text>
       </View>
-      {QRCodePNG ? (
-        <PDFImage src={QRCodePNG} style={styles.QRCode} />
-      ) : (
-        <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
-      )}
+      <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={styles.QRCode} />}</Text>
 
       <Text style={styles.mainMessageView}>{buildingName}</Text>
       <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
@@ -145,7 +143,9 @@ const MyDocumentSquare = ({
 }) => (
   <Document
     onRender={() => {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2500);
     }}
   >
     <Page size={[595.28, 595.28]} style={stylesSquare.page}>
@@ -161,11 +161,7 @@ const MyDocumentSquare = ({
         <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
         <Text>muito mais fácil mantê-lo em ordem!</Text>
       </View>
-      {QRCodePNG ? (
-        <PDFImage src={QRCodePNG} style={stylesSquare.QRCode} />
-      ) : (
-        <PDFImage src={image.logoForPDF} style={stylesSquare.easyAlertLogo} />
-      )}
+      <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={stylesSquare.QRCode} />}</Text>
 
       <Text style={stylesSquare.mainMessageView}>{buildingName}</Text>
       <PDFImage src={image.logoForPDF} style={stylesSquare.easyAlertLogo} />

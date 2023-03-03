@@ -27,7 +27,8 @@ import {
   applyMask,
   capitalizeFirstLetter,
   dateFormatter,
-  requestBuldingTypes,
+  query,
+  requestBuildingTypes,
 } from '../../../utils/functions';
 
 // STYLES
@@ -76,7 +77,7 @@ export const BuildingDetails = () => {
     useState<INotificationConfiguration>();
 
   useEffect(() => {
-    requestBuldingTypes({ setBuildingTypes }).then(() => {
+    requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
         buildingId: buildingId!,
         setLoading,
@@ -84,8 +85,21 @@ export const BuildingDetails = () => {
         setUsedMaintenancesCount,
         setTotalMaintenancesCount,
       });
+
+      if (query.get('flow') === '1') {
+        setModalCreateNotificationConfigurationOpen(true);
+        query.set('flow', '2');
+        navigate(`/buildings/details/${buildingId}?flow=2`);
+      }
     });
   }, []);
+
+  useEffect(() => {
+    if (!modalCreateNotificationConfigurationOpen && query.get('flow') === '2') {
+      query.delete('flow');
+      navigate(`/buildings/details/${buildingId}/maintenances/manage`);
+    }
+  }, [modalCreateNotificationConfigurationOpen]);
 
   return loading ? (
     <DotSpinLoading />

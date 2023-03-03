@@ -9,10 +9,13 @@ import { Button } from '../../../../../../components/Buttons/Button';
 import { Image } from '../../../../../../components/Image';
 import * as Style from './styles';
 import { ModalAdditionalInformations } from './ModalAdditionalInformations';
+import { ModalEditMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalEditMaintenance';
 
 // TYPES
 import { IMaintenanceCard } from './types';
 import { dateFormatter } from '../../../../../../utils/functions';
+import { IMaintenance } from '../../types';
+import { ModalCloneMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalCloneMaintenance';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -22,12 +25,38 @@ export const MaintenanceCard = ({
   maintenanceIndex,
   setToCopyBuilding,
   toCopyBuilding,
+  categoryId,
+  timeIntervals,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalAdditionalInformations, setModalAdditionalInformations] = useState<boolean>(false);
+  const [modalEditMaintenanceOpen, setModalEditMaintenanceOpen] = useState<boolean>(false);
+  const [modalCloneMaintenanceOpen, setModalCloneMaintenanceOpen] = useState<boolean>(false);
+
+  const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
   return (
     <>
+      {modalEditMaintenanceOpen && (
+        <ModalEditMaintenance
+          setModal={setModalEditMaintenanceOpen}
+          selectedMaintenance={maintenance}
+          timeIntervals={timeIntervals}
+          categories={categories}
+          categoryId={categoryId}
+          setCategories={setCategories}
+        />
+      )}
+      {modalCloneMaintenanceOpen && toCloneMaintenance && (
+        <ModalCloneMaintenance
+          setModal={setModalCloneMaintenanceOpen}
+          categoryId={categoryId}
+          categories={categories}
+          setCategories={setCategories}
+          timeIntervals={timeIntervals}
+          maintenance={toCloneMaintenance}
+        />
+      )}
       {modalAdditionalInformations && (
         <ModalAdditionalInformations
           setModal={setModalAdditionalInformations}
@@ -47,7 +76,7 @@ export const MaintenanceCard = ({
             <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
               <input
                 type="checkbox"
-                checked={maintenance.isSelected}
+                checked={maintenance.isSelected ?? false}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -77,6 +106,16 @@ export const MaintenanceCard = ({
               <p className="p2">{maintenance.responsible}</p>
               <p className="p2">{maintenance.source}</p>
 
+              <div
+                className="copyIcon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setToCloneMaintenance(maintenance);
+                  setModalCloneMaintenanceOpen(true);
+                }}
+              >
+                <Image size="16px" img={icon.copy} />
+              </div>
               <Style.ArrowContainer>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
                   <Image img={icon.downArrow} size="16px" />
@@ -102,6 +141,7 @@ export const MaintenanceCard = ({
                     : maintenance.PeriodTimeInterval.singularLabel
                 }`}
               </p>
+
               <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
                 <Image img={icon.alert} size="16px" />
                 <p className="p2">
@@ -116,19 +156,33 @@ export const MaintenanceCard = ({
                 </p>
               </Style.PeriodIconWrapper>
               <div />
+              <div />
+
               <Style.MaintenancesCardGridMoreOptionsButton>
-                <Button
-                  style={{ whiteSpace: 'nowrap' }}
-                  label="+ Opções"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalAdditionalInformations(true);
-                  }}
-                />
+                <div>
+                  <Button
+                    style={{ whiteSpace: 'nowrap' }}
+                    label="+ Opções"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalAdditionalInformations(true);
+                    }}
+                  />
+                </div>
               </Style.MaintenancesCardGridMoreOptionsButton>
               <div />
+
               <Style.MaintenancesCardGridMoreEditButton>
-                <Button label="Editar" />
+                <div>
+                  <Button
+                    disable={!maintenance.ownerCompanyId}
+                    label="Editar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalEditMaintenanceOpen(true);
+                    }}
+                  />
+                </div>
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />

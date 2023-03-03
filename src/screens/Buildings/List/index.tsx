@@ -16,7 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { capitalizeFirstLetter, requestBuldingTypes } from '../../../utils/functions';
+import { capitalizeFirstLetter, requestBuildingTypes } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
@@ -37,7 +37,7 @@ export const BuildingsList = () => {
   const offset = 20;
 
   useEffect(() => {
-    requestBuldingTypes({ setBuildingTypes });
+    requestBuildingTypes({ setBuildingTypes });
     requestBuildingList({ page, setBuildingList, setCount, filter, setLoading, setPage });
   }, []);
 
@@ -46,13 +46,7 @@ export const BuildingsList = () => {
   ) : (
     <>
       {modalCreateBuildingOpen && (
-        <ModalCreateBuilding
-          page={page}
-          setCount={setCount}
-          buildingTypes={buildingTypes}
-          setBuildingList={setBuildingList}
-          setModal={setModalCreateBuildingOpen}
-        />
+        <ModalCreateBuilding buildingTypes={buildingTypes} setModal={setModalCreateBuildingOpen} />
       )}
       <Style.Header>
         <Style.LeftSide>
@@ -172,26 +166,24 @@ export const BuildingsList = () => {
             ))}
           </Style.GridContainer>
 
-          {count > offset && (
-            <Style.PaginationFooter>
-              <Pagination
-                totalCountOfRegister={count}
-                currentPage={page}
-                registerPerPage={offset}
-                // eslint-disable-next-line no-shadow
-                onPageChange={(page) => {
-                  setPage(page);
-                  requestBuildingList({
-                    setBuildingList,
-                    setLoading,
-                    page,
-                    setCount,
-                    filter,
-                  });
-                }}
-              />
-            </Style.PaginationFooter>
-          )}
+          <Style.PaginationFooter>
+            <Pagination
+              totalCountOfRegister={count}
+              currentPage={page}
+              registerPerPage={offset}
+              // eslint-disable-next-line no-shadow
+              onPageChange={(page) => {
+                setPage(page);
+                requestBuildingList({
+                  setBuildingList,
+                  setLoading,
+                  page,
+                  setCount,
+                  filter,
+                });
+              }}
+            />
+          </Style.PaginationFooter>
         </>
       ) : (
         <Style.NoDataContainer>

@@ -29,8 +29,9 @@ interface IMaintenance {
     singularLabel: string;
   };
   observation: string;
-  resolutionDate: string | null;
-  notificationDate: string | null;
+  resolutionDate?: string | null;
+  notificationDate?: string | null;
+  isSelected?: boolean;
 }
 
 export interface ICategories {
@@ -62,7 +63,7 @@ export interface IBuildingListForSelect {
   id: string;
   name: string;
 }
-export interface IRequestBuldingListForSelect {
+export interface IRequestBuildingListForSelect {
   buildingId: string;
   setBuildingListForSelect: (setBuildingListForSelect: IBuildingListForSelect[]) => void;
 }

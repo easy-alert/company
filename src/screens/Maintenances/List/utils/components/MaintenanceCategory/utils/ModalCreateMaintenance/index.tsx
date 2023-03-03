@@ -185,6 +185,7 @@ export const ModalCreateMaintenance = ({
                 <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
                   <FormikInput
                     label="Delay"
+                    name="delay"
                     value={values.delay}
                     error={touched.delay && errors.delay ? errors.delay : null}
                     placeholder="Ex: 1"
