@@ -113,7 +113,7 @@ export const BuildingManageMaintenances = () => {
         </Style.HeaderWrapper>
         <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
-      {categories.length > 0 && hasSomeMaintenance ? (
+      {categories.length > 0 ? (
         <>
           <Style.SelectWrapper>
             <Select
