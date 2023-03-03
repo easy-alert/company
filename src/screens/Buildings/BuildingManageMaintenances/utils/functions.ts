@@ -23,7 +23,7 @@ export const requestListCategoriesToManage = async ({
   })
     .then((res) => {
       setCategories(res.data.CategoriesData);
-      setBuildingName(res.data.buildingName);
+      setBuildingName(res.data.building.name);
       setLoading(false);
       if (setTableLoading) setTableLoading(false);
     })
