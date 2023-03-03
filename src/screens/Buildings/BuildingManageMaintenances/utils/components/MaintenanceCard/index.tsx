@@ -159,26 +159,30 @@ export const MaintenanceCard = ({
               <div />
 
               <Style.MaintenancesCardGridMoreOptionsButton>
-                <Button
-                  style={{ whiteSpace: 'nowrap' }}
-                  label="+ Opções"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalAdditionalInformations(true);
-                  }}
-                />
+                <div>
+                  <Button
+                    style={{ whiteSpace: 'nowrap' }}
+                    label="+ Opções"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalAdditionalInformations(true);
+                    }}
+                  />
+                </div>
               </Style.MaintenancesCardGridMoreOptionsButton>
               <div />
 
               <Style.MaintenancesCardGridMoreEditButton>
-                <Button
-                  disable={!maintenance.ownerCompanyId}
-                  label="Editar"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalEditMaintenanceOpen(true);
-                  }}
-                />
+                <div>
+                  <Button
+                    disable={!maintenance.ownerCompanyId}
+                    label="Editar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalEditMaintenanceOpen(true);
+                    }}
+                  />
+                </div>
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />

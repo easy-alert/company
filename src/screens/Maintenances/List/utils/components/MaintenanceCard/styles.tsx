@@ -62,6 +62,13 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   gap: ${theme.size.xsm};
   justify-content: flex-end;
   grid-area: 1/7;
+  height: 100%;
+
+  > div {
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+  }
 `;
 
 export const PeriodIconWrapper = styled.div`
