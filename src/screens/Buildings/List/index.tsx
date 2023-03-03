@@ -166,26 +166,24 @@ export const BuildingsList = () => {
             ))}
           </Style.GridContainer>
 
-          {count > offset && (
-            <Style.PaginationFooter>
-              <Pagination
-                totalCountOfRegister={count}
-                currentPage={page}
-                registerPerPage={offset}
-                // eslint-disable-next-line no-shadow
-                onPageChange={(page) => {
-                  setPage(page);
-                  requestBuildingList({
-                    setBuildingList,
-                    setLoading,
-                    page,
-                    setCount,
-                    filter,
-                  });
-                }}
-              />
-            </Style.PaginationFooter>
-          )}
+          <Style.PaginationFooter>
+            <Pagination
+              totalCountOfRegister={count}
+              currentPage={page}
+              registerPerPage={offset}
+              // eslint-disable-next-line no-shadow
+              onPageChange={(page) => {
+                setPage(page);
+                requestBuildingList({
+                  setBuildingList,
+                  setLoading,
+                  page,
+                  setCount,
+                  filter,
+                });
+              }}
+            />
+          </Style.PaginationFooter>
         </>
       ) : (
         <Style.NoDataContainer>
