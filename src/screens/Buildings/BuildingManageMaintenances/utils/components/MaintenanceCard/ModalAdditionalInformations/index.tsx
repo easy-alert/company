@@ -84,7 +84,7 @@ export const ModalAdditionalInformations = ({
               }}
             />
             <FormikInput
-              min={increaseDaysInDate({ date: new Date(), daysToIncrease: 2 })}
+              min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
               disabled={!values.hasFirstNotificationDate}
               name="firstNotificationDate"
               type="date"
