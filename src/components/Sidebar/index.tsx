@@ -23,6 +23,7 @@ export const Sidebar = ({ children }: ISidebar) => {
     { icon: icon.calendar, url: '/calendar' },
     { icon: icon.maintenances, url: '/maintenances' },
     { icon: icon.building, url: '/buildings' },
+    { icon: icon.report, url: '/report/create' },
     { icon: icon.gear, url: '/account' },
     { icon: icon.power, url: '/login' },
   ];

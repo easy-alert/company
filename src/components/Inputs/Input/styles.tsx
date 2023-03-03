@@ -1,13 +1,23 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<{ typeDatePlaceholderValue?: string; type?: string }>`
   display: flex;
   flex-direction: column;
   > h6 {
     margin-bottom: ${theme.size.xxsm};
   }
   width: 100%;
+
+  ${({ typeDatePlaceholderValue, type }) =>
+    type === 'date' &&
+    typeDatePlaceholderValue === '' &&
+    `
+      > input {
+        border-color: ${theme.color.gray3};
+        color: #757575
+      }
+      `}
 `;
 
 export const ErrorMessage = styled.div`
