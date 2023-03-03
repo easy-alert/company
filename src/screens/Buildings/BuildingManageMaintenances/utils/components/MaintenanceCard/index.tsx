@@ -76,7 +76,7 @@ export const MaintenanceCard = ({
             <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
               <input
                 type="checkbox"
-                checked={maintenance.isSelected}
+                checked={maintenance.isSelected ?? false}
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
