@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const ContainerButton = styled.div<{
   labelPos?: string;
@@ -28,6 +28,15 @@ export const ContainerButton = styled.div<{
 
   ${({ gap }) => gap && `gap: ${gap};`}
 
+  ${({ disable }) =>
+    disable &&
+    css`
+      opacity: 0.4 !important;
+      :hover {
+        opacity: 0.4 !important;
+      }
+      cursor: not-allowed;
+    `}
   ${({ opacity }) =>
     opacity ? `opacity:${opacity}; :hover { opacity: 1; };` : ':hover { opacity: 0.7; };'}
   ${({ selected }) => selected && ' opacity: 1;'}
