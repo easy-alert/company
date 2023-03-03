@@ -46,13 +46,7 @@ export const BuildingsList = () => {
   ) : (
     <>
       {modalCreateBuildingOpen && (
-        <ModalCreateBuilding
-          page={page}
-          setCount={setCount}
-          buildingTypes={buildingTypes}
-          setBuildingList={setBuildingList}
-          setModal={setModalCreateBuildingOpen}
-        />
+        <ModalCreateBuilding buildingTypes={buildingTypes} setModal={setModalCreateBuildingOpen} />
       )}
       <Style.Header>
         <Style.LeftSide>

@@ -23,7 +23,7 @@ import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
 import { DotLoading } from '../../../components/Loadings/DotLoading';
 import { ITimeInterval } from '../../../utils/types';
-import { requestListIntervals } from '../../../utils/functions';
+import { query, requestListIntervals } from '../../../utils/functions';
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
 
 export const BuildingManageMaintenances = () => {
@@ -55,6 +55,7 @@ export const BuildingManageMaintenances = () => {
   const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    query.delete('flow');
     requestListIntervals({ setTimeIntervals });
     requestBuldingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
       requestListCategoriesToManage({

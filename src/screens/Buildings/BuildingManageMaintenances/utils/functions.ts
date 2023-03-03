@@ -61,7 +61,7 @@ export const requestManageBuildingMaintenances = async ({
   })
     .then((res) => {
       toast.dismiss();
-      navigate(-1);
+      navigate(`/buildings/details/${buildingId}`);
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {

@@ -27,6 +27,7 @@ import {
   applyMask,
   capitalizeFirstLetter,
   dateFormatter,
+  query,
   requestBuldingTypes,
 } from '../../../utils/functions';
 
@@ -84,8 +85,21 @@ export const BuildingDetails = () => {
         setUsedMaintenancesCount,
         setTotalMaintenancesCount,
       });
+
+      if (query.get('flow') === '1') {
+        setModalCreateNotificationConfigurationOpen(true);
+        navigate(`/buildings/details/${buildingId}?flow=2`);
+        query.set('flow', '2');
+      }
     });
   }, []);
+
+  useEffect(() => {
+    if (!modalCreateNotificationConfigurationOpen && query.get('flow') === '2') {
+      query.delete('flow');
+      navigate(`/buildings/details/${buildingId}/maintenances/manage`);
+    }
+  }, [modalCreateNotificationConfigurationOpen]);
 
   return loading ? (
     <DotSpinLoading />

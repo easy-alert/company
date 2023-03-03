@@ -5,8 +5,7 @@ import * as yup from 'yup';
 
 // FUNCTIONS
 import { Api } from '../../../../../../services/api';
-import { catchHandler, unMask } from '../../../../../../utils/functions';
-import { requestBuildingList } from '../../functions';
+import { catchHandler, query, unMask } from '../../../../../../utils/functions';
 
 // TYPES
 import { IRequestCreateBuilding } from './types';
@@ -15,9 +14,7 @@ export const requestCreateBuilding = async ({
   values,
   setModal,
   setOnQuery,
-  page,
-  setBuildingList,
-  setCount,
+  navigate,
 }: IRequestCreateBuilding) => {
   setOnQuery(true);
 
@@ -35,9 +32,10 @@ export const requestCreateBuilding = async ({
     keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
   })
     .then((res) => {
-      requestBuildingList({ page, setBuildingList, setCount });
       setModal(false);
       toast.success(res.data.ServerMessage.message);
+      query.set('flow', '1');
+      navigate(`/buildings/details/${res.data.building.id}?flow=1`);
     })
     .catch((err) => {
       setOnQuery(false);

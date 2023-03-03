@@ -102,7 +102,7 @@ export const schemaEditNotificationConfiguration = yup
     email: yup.string().email('Informe um e-mail válido.'),
     contactNumber: yup
       .string()
-      .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
+      .min(15, 'O número do WhatsApp deve conter no mínimo 15 caracteres.'),
     role: yup.string().required('A função deve ser preenchida.'),
 
     isMain: yup.boolean(),
