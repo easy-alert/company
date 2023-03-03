@@ -6,7 +6,7 @@ import { catchHandler } from '../../../../utils/functions';
 import {
   IRequestManageBuildingMaintenances,
   IRequestListCategoriesToManage,
-  IRequestBuldingListForSelect,
+  IRequestBuildingListForSelect,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
@@ -70,10 +70,10 @@ export const requestManageBuildingMaintenances = async ({
     });
 };
 
-export const requestBuldingListForSelect = async ({
+export const requestBuildingListForSelect = async ({
   setBuildingListForSelect,
   buildingId,
-}: IRequestBuldingListForSelect) => {
+}: IRequestBuildingListForSelect) => {
   await Api.get(`/buildings/listforselect/${buildingId}`)
     .then((res) => {
       setBuildingListForSelect(res.data);

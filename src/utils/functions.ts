@@ -262,7 +262,7 @@ export const requestListIntervals = async ({ setTimeIntervals }: IRequestListInt
     });
 };
 
-export const requestBuldingTypes = async ({ setBuildingTypes }: IRequestBuildingTypes) => {
+export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildingTypes) => {
   await Api.get('/buildings/types/list')
     .then((res) => {
       setBuildingTypes(res.data);

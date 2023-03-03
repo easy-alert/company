@@ -28,7 +28,7 @@ import {
   capitalizeFirstLetter,
   dateFormatter,
   query,
-  requestBuldingTypes,
+  requestBuildingTypes,
 } from '../../../utils/functions';
 
 // STYLES
@@ -77,7 +77,7 @@ export const BuildingDetails = () => {
     useState<INotificationConfiguration>();
 
   useEffect(() => {
-    requestBuldingTypes({ setBuildingTypes }).then(() => {
+    requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
         buildingId: buildingId!,
         setLoading,

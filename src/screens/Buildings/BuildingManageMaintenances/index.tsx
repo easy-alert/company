@@ -17,7 +17,7 @@ import { IBuildingListForSelect, ICategories } from './utils/types';
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
-  requestBuldingListForSelect,
+  requestBuildingListForSelect,
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
@@ -57,7 +57,7 @@ export const BuildingManageMaintenances = () => {
   useEffect(() => {
     query.delete('flow');
     requestListIntervals({ setTimeIntervals });
-    requestBuldingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
+    requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
       requestListCategoriesToManage({
         setLoading,
         setCategories,

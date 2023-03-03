@@ -16,7 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { capitalizeFirstLetter, requestBuldingTypes } from '../../../utils/functions';
+import { capitalizeFirstLetter, requestBuildingTypes } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
@@ -37,7 +37,7 @@ export const BuildingsList = () => {
   const offset = 20;
 
   useEffect(() => {
-    requestBuldingTypes({ setBuildingTypes });
+    requestBuildingTypes({ setBuildingTypes });
     requestBuildingList({ page, setBuildingList, setCount, filter, setLoading, setPage });
   }, []);
 
