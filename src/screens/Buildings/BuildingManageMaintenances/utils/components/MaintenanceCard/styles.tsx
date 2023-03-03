@@ -61,7 +61,7 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 3/7;
+  grid-area: 3/8;
 `;
 
 export const MaintenancesCardGridMoreOptionsButton = styled.div`
@@ -70,7 +70,7 @@ export const MaintenancesCardGridMoreOptionsButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 3/6;
+  grid-area: 3/7;
 `;
 
 export const PeriodIconWrapper = styled.div`
@@ -87,7 +87,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   grid-template-rows: 1fr;
   overflow: hidden;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 0.1fr;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 95px 60px;
 
   > p {
     line-height: 17px;
@@ -105,6 +105,11 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
       opacity: 0.7;
     }
   }
+
+  .copyIcon {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
 
 export const MaintenancesMoreGrid = styled.div`
@@ -114,7 +119,7 @@ export const MaintenancesMoreGrid = styled.div`
   grid-template-rows: auto;
 
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 0.1fr;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 95px 72px;
 
   span {
     color: ${theme.color.primary};
