@@ -1,6 +1,14 @@
 // COMPONENTS
 import { useState } from 'react';
-import { Page, Text, Document, StyleSheet, View, PDFDownloadLink } from '@react-pdf/renderer';
+import {
+  Page,
+  Text,
+  Document,
+  StyleSheet,
+  View,
+  PDFDownloadLink,
+  PDFViewer,
+} from '@react-pdf/renderer';
 import { Modal } from '../../../../components/Modal';
 import { Button } from '../../../../components/Buttons/Button';
 
@@ -41,7 +49,9 @@ const MyDocument = ({
   </Document>
 );
 
-export const ModalPrintReport = ({ setModal, buildingName }: IModalPrintQRCode) => {
+export const ModalPrintReport = ({ setModal, maintenances }: IModalPrintQRCode) => {
+  console.log(maintenances);
+
   const [loading, setLoading] = useState<boolean>(true);
 
   return (
@@ -50,10 +60,12 @@ export const ModalPrintReport = ({ setModal, buildingName }: IModalPrintQRCode) 
         {loading && <Style.SmallLoading />}
 
         <Style.Container>
-          <MyDocument setLoading={setLoading} />
+          <PDFViewer style={{ width: '100%', height: '60vh' }}>
+            <MyDocument setLoading={setLoading} />
+          </PDFViewer>
           <PDFDownloadLink
             document={<MyDocument setLoading={setLoading} />}
-            fileName={`Relatório ${buildingName}`}
+            fileName="Relatório nome"
           >
             <Button label="Download" disable={loading} />
           </PDFDownloadLink>

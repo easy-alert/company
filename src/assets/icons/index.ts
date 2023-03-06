@@ -44,6 +44,7 @@ import downloadRedBg from './downloadRedBg.svg';
 import trashWithPrimaryBg from './trashWithPrimaryBg.svg';
 import report from './report.svg';
 import downloadRed from './downloadRed.svg';
+import pdfLogo from './pdfLogo.svg';
 
 export const icon = {
   leftArrow,
@@ -92,4 +93,5 @@ export const icon = {
   trashWithPrimaryBg,
   report,
   downloadRed,
+  pdfLogo,
 };

@@ -20,6 +20,7 @@ import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
+import { ModalPrintReport } from './ModalPrintReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -37,6 +38,8 @@ export const CreateReport = () => {
 
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
+  const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -47,17 +50,21 @@ export const CreateReport = () => {
           maintenanceHistoryId={maintenceHistoryId}
         />
       )}
+      {modalPrintReportOpen && (
+        <ModalPrintReport setModal={setModalPrintReportOpen} maintenances={maintenances} />
+      )}
 
       <s.Container>
         <s.Header>
           <h2>Relatórios</h2>
+
           <IconButton
-            icon={icon.downloadRed}
-            label="Baixar"
+            icon={icon.pdfLogo}
+            label="Exportar"
             color={theme.color.primary}
-            size="16px"
+            size="20px"
             onClick={() => {
-              //
+              setModalPrintReportOpen(true);
             }}
           />
         </s.Header>
