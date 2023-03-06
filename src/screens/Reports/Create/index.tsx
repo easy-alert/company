@@ -61,7 +61,7 @@ export const CreateReport = () => {
       <s.Container>
         <s.Header>
           <h2>Relatórios</h2>
-          {/*
+
           <IconButton
             icon={icon.pdfLogo}
             label="Exportar"
@@ -70,7 +70,8 @@ export const CreateReport = () => {
             onClick={() => {
               setModalPrintReportOpen(true);
             }}
-          /> */}
+            disabled={maintenances.length === 0}
+          />
         </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
