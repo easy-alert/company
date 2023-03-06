@@ -5,7 +5,6 @@ import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
 export const requestReportsData = async ({
   setOnQuery,
   setCounts,
-  setFiltersOptions,
   setMaintenances,
   setLoading,
   filters,
@@ -26,7 +25,6 @@ export const requestReportsData = async ({
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
-      setFiltersOptions(res.data.filters);
       setCounts(res.data.counts);
     })
     .catch((err) => {

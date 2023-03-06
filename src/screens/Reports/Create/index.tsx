@@ -89,7 +89,6 @@ export const CreateReport = () => {
                 setCounts,
                 setMaintenances,
                 setLoading,
-                setFiltersOptions,
                 filters: {
                   buildingId: values.buildingId,
                   categoryId: values.categoryId,
@@ -187,7 +186,7 @@ export const CreateReport = () => {
                 </s.FiltersGrid>
 
                 <s.ButtonContainer>
-                  <Button borderless label="Limpar filtros" type="reset" />
+                  {/* <Button borderless label="Limpar filtros" type="reset" /> */}
                   <Button label="Filtrar" type="submit" loading={onQuery} />
                 </s.ButtonContainer>
               </Form>
@@ -195,7 +194,7 @@ export const CreateReport = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {!onQuery && maintenances.length > 0 && (
+        {!onQuery && maintenances.length > 0 ? (
           <>
             <s.CountContainer>
               <s.Counts>
@@ -220,6 +219,7 @@ export const CreateReport = () => {
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>
+
             <ReportDataTable
               colsHeader={[
                 { label: 'Data de notificação' },
@@ -264,6 +264,10 @@ export const CreateReport = () => {
               ))}
             </ReportDataTable>
           </>
+        ) : (
+          <s.NoMaintenanceCard>
+            <h4>Nenhuma manutenção encontrada.</h4>
+          </s.NoMaintenanceCard>
         )}
       </s.Container>
     </>

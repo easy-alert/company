@@ -47,7 +47,6 @@ export interface IMaintenanceReport {
 export interface IRequestReportsData {
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setFiltersOptions: React.Dispatch<React.SetStateAction<IFiltersOptions | undefined>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
   setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceRepor | undefined>>;
 
