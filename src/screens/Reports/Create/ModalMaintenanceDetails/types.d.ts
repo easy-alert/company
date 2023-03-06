@@ -9,7 +9,7 @@ export interface IModalAdditionalInformations {
 
 export interface IModalMaintenanceDetails {
   setModal: (setModal: boolean) => void;
-  modalAdditionalInformations: IModalAdditionalInformations;
+  maintenanceHistoryId: string;
 }
 
 export interface IRequestMaintenanceDetails {

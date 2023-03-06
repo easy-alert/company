@@ -131,6 +131,8 @@ export const requestCalendarData = async ({
         ),
         status: e.MaintenancesStatus.name,
         isFuture: e.isFuture,
+        expectedDueDate: e.expectedDueDate,
+        expectedNotificationDate: e.expectedNotificationDate,
       }));
       setMaintenancesWeekView([...maintenancesWeekMap]);
 

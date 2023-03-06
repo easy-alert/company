@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../../../../components/Buttons/Button';
 import { Modal } from '../../../../components/Modal';
-import { EventTag } from '../EventTag';
+
 import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
 import { Image } from '../../../../components/Image';
 
@@ -17,13 +17,15 @@ import { IModalMaintenanceDetails } from './types';
 
 // FUNCTIONS
 import { requestMaintenanceDetails } from './functions';
-import { IMaintenance } from '../../types';
+
 import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { ImagePreview } from '../../../../components/ImagePreview';
+import { EventTag } from '../../../Calendar/utils/EventTag';
+import { IMaintenance } from '../../../Calendar/types';
 
 export const ModalMaintenanceDetails = ({
   setModal,
-  modalAdditionalInformations,
+  maintenanceHistoryId,
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
@@ -31,7 +33,7 @@ export const ModalMaintenanceDetails = ({
 
   useEffect(() => {
     requestMaintenanceDetails({
-      maintenanceHistoryId: modalAdditionalInformations.id,
+      maintenanceHistoryId,
       setMaintenance,
       setModalLoading,
     });
@@ -81,33 +83,15 @@ export const ModalMaintenanceDetails = ({
               <p className="p2">{maintenance.Maintenance.observation}</p>
             </Style.Row>
 
-            {modalAdditionalInformations.isFuture ? (
-              <>
-                <Style.Row>
-                  <h6>Data de notificação prevista</h6>
-                  <p className="p2">
-                    {dateFormatter(modalAdditionalInformations.expectedNotificationDate)}
-                  </p>
-                </Style.Row>
+            <Style.Row>
+              <h6>Data de notificação</h6>
+              <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
+            </Style.Row>
 
-                <Style.Row>
-                  <h6>Data de vencimento prevista</h6>
-                  <p className="p2">{dateFormatter(modalAdditionalInformations.expectedDueDate)}</p>
-                </Style.Row>
-              </>
-            ) : (
-              <>
-                <Style.Row>
-                  <h6>Data de notificação</h6>
-                  <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
-                </Style.Row>
-
-                <Style.Row>
-                  <h6>Data de vencimento</h6>
-                  <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
-                </Style.Row>
-              </>
-            )}
+            <Style.Row>
+              <h6>Data de vencimento</h6>
+              <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
+            </Style.Row>
 
             {maintenance.resolutionDate && (
               <Style.Row>

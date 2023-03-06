@@ -4,11 +4,20 @@ export interface ICalendarView {
   id: string;
   title: string | JSX.Element;
   status: 'expired' | 'pending' | 'completed' | 'overdue';
+  expectedDueDate?: string;
+  expectedNotificationDate?: string;
 }
 
 export interface IBuildingOptions {
   name: string;
   id: string;
+}
+
+export interface IModalAdditionalInformations {
+  id: string;
+  isFuture: boolean;
+  expectedNotificationDate: string;
+  expectedDueDate: string;
 }
 
 export interface IRequestCalendarData {
@@ -51,6 +60,8 @@ export interface IRequestCalendarDataResData {
           notificationDate: Date;
           isFuture: boolean;
           id: string;
+          expectedDueDate: string;
+          expectedNotificationDate: string;
         },
       ];
       Months: [
@@ -94,14 +105,18 @@ export interface Category {
 
 export interface Maintenance {
   Category: Category;
-  element: string;
   activity: string;
+  element: string;
+  observation: string;
   responsible: string;
+  source: string;
 }
 
 export interface IMaintenance {
   id: string;
   dueDate: string;
+  resolutionDate: string;
+  notificationDate: string;
   MaintenanceReport: MaintenanceReport[];
   MaintenancesStatus: MaintenancesStatus;
   Building: Building;

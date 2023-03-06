@@ -1,8 +1,8 @@
-import { IMaintenance, AnnexesAndImages } from '../../types';
+import { IMaintenance, AnnexesAndImages, IModalAdditionalInformations } from '../../types';
 
 export interface IModalSendMaintenanceReport {
   setModal: (setModal: boolean) => void;
-  maintenanceHistoryId: string;
+  modalAdditionalInformations: IModalAdditionalInformations;
   setMaintenancesWeekView: (setMaintenancesWeekView: ICalendarView[]) => void;
   setMaintenancesMonthView: (setMaintenancesMonthView: ICalendarView[]) => void;
   setMaintenancesDisplay: (setMaintenancesDisplay: ICalendarView[]) => void;
