@@ -18,7 +18,7 @@ import { IModalMaintenanceDetails } from './types';
 // FUNCTIONS
 import { requestMaintenanceDetails } from './functions';
 import { IMaintenance } from '../../types';
-import { applyMask } from '../../../../utils/functions';
+import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { ImagePreview } from '../../../../components/ImagePreview';
 
 export const ModalMaintenanceDetails = ({
@@ -51,18 +51,48 @@ export const ModalMaintenanceDetails = ({
               <h6>Categoria</h6>
               <p className="p2">{maintenance.Maintenance.Category.name}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Elemento</h6>
               <p className="p2">{maintenance.Maintenance.element}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Atividade</h6>
               <p className="p2">{maintenance.Maintenance.activity}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Responsável</h6>
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
+
+            <Style.Row>
+              <h6>Fonte</h6>
+              <p className="p2">{maintenance.Maintenance.source}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Observação da manutenção</h6>
+              <p className="p2">{maintenance.Maintenance.observation}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Data de notificação</h6>
+              <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Data de vencimento</h6>
+              <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
+            </Style.Row>
+
+            {maintenance.resolutionDate && (
+              <Style.Row>
+                <h6>Data de conclusão</h6>
+                <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+              </Style.Row>
+            )}
 
             {maintenance.MaintenanceReport.length > 0 && (
               <>
@@ -79,7 +109,7 @@ export const ModalMaintenanceDetails = ({
                 </Style.Row>
 
                 <Style.Row>
-                  <h6>Observações</h6>
+                  <h6>Observação do relato</h6>
                   <p className="p2">{maintenance.MaintenanceReport[0].observation ?? '-'}</p>
                 </Style.Row>
 

@@ -152,6 +152,18 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
             <Style.Row>
+              <h6>Fonte</h6>
+              <p className="p2">{maintenance.Maintenance.source}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Observação da manutenção</h6>
+              <p className="p2">{maintenance.Maintenance.observation}</p>
+            </Style.Row>
+            <Style.Row>
+              <h6>Data de notificação</h6>
+              <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
+            </Style.Row>
+            <Style.Row>
               <h6>Data de vencimento</h6>
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
