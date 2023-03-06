@@ -111,6 +111,7 @@ export const BuildingCardFooterInfo = styled.div`
   .pending {
     color: ${theme.color.warning};
   }
+
   .expired {
     color: ${theme.color.actionDanger};
   }
