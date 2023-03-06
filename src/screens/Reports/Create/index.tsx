@@ -237,12 +237,17 @@ export const CreateReport = () => {
                 <ReportDataTableContent
                   key={maintenance.activity + i}
                   colsBody={[
+                    { cell: dateFormatter(maintenance.notificationDate) },
+                    {
+                      cell: maintenance.resolutionDate
+                        ? dateFormatter(maintenance.resolutionDate)
+                        : '-',
+                    },
                     { cell: maintenance.buildingName },
                     { cell: maintenance.categoryName },
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: dateFormatter(maintenance.notificationDate) },
                     { cell: <EventTag status={maintenance.status} /> },
                     {
                       cell:
