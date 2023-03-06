@@ -35,13 +35,13 @@ export interface IMaintenanceReport {
   activity: string;
   buildingName: string;
   categoryName: string;
-  cost: numnber | null;
+  cost: number | null;
   element: string;
   maintenanceHistoryId: string;
   notificationDate: string;
   resolutionDate: string | null;
-  responsible: tring | null;
-  status: tring | string;
+  responsible: string | null;
+  status: 'completed' | 'expired' | 'pending' | 'overdue';
 }
 
 export interface IRequestReportsData {
