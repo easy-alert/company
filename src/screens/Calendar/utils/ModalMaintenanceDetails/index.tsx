@@ -23,14 +23,18 @@ import { ImagePreview } from '../../../../components/ImagePreview';
 
 export const ModalMaintenanceDetails = ({
   setModal,
-  maintenanceHistoryId,
+  modalAdditionalInformations,
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
   useEffect(() => {
-    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setModalLoading });
+    requestMaintenanceDetails({
+      maintenanceHistoryId: modalAdditionalInformations.id,
+      setMaintenance,
+      setModalLoading,
+    });
   }, []);
 
   return (
@@ -77,15 +81,33 @@ export const ModalMaintenanceDetails = ({
               <p className="p2">{maintenance.Maintenance.observation}</p>
             </Style.Row>
 
-            <Style.Row>
-              <h6>Data de notificação</h6>
-              <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
-            </Style.Row>
+            {modalAdditionalInformations.isFuture ? (
+              <>
+                <Style.Row>
+                  <h6>Data de notificação prevista</h6>
+                  <p className="p2">
+                    {dateFormatter(modalAdditionalInformations.expectedNotificationDate)}
+                  </p>
+                </Style.Row>
 
-            <Style.Row>
-              <h6>Data de vencimento</h6>
-              <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
-            </Style.Row>
+                <Style.Row>
+                  <h6>Data de vencimento prevista</h6>
+                  <p className="p2">{dateFormatter(modalAdditionalInformations.expectedDueDate)}</p>
+                </Style.Row>
+              </>
+            ) : (
+              <>
+                <Style.Row>
+                  <h6>Data de notificação</h6>
+                  <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Data de vencimento</h6>
+                  <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
+                </Style.Row>
+              </>
+            )}
 
             {maintenance.resolutionDate && (
               <Style.Row>

@@ -30,7 +30,6 @@ import { TextArea } from '../../../../components/Inputs/TextArea';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
-  maintenanceHistoryId,
   buildingId,
   calendarType,
   setBuildingOptions,
@@ -40,6 +39,7 @@ export const ModalSendMaintenanceReport = ({
   setMaintenancesWeekView,
   setYearChangeLoading,
   yearToRequest,
+  modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
@@ -118,7 +118,11 @@ export const ModalSendMaintenanceReport = ({
   }, [acceptedImages]);
 
   useEffect(() => {
-    requestMaintenanceDetails({ maintenanceHistoryId, setMaintenance, setModalLoading });
+    requestMaintenanceDetails({
+      maintenanceHistoryId: modalAdditionalInformations.id,
+      setMaintenance,
+      setModalLoading,
+    });
   }, []);
 
   return (
@@ -275,7 +279,7 @@ export const ModalSendMaintenanceReport = ({
             onClick={() => {
               requestSendReport({
                 setOnQuery,
-                maintenanceHistoryId,
+                maintenanceHistoryId: modalAdditionalInformations.id,
                 maintenanceReport,
                 setModal,
                 files,

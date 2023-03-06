@@ -20,7 +20,7 @@ import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
 // FUNCTIONS
 import { requestCalendarData } from './functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { IBuildingOptions, ICalendarView } from './types';
+import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -40,7 +40,13 @@ export const MaintenancesCalendar = () => {
 
   const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
 
-  const [selectedMaintenanceHistoryId, setSelectedMaintenanceHistoryId] = useState<string>('');
+  const [modalAdditionalInformations, setModalAdditionalInformations] =
+    useState<IModalAdditionalInformations>({
+      id: '',
+      expectedNotificationDate: '',
+      expectedDueDate: '',
+      isFuture: false,
+    });
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
@@ -127,7 +133,12 @@ export const MaintenancesCalendar = () => {
   const onSelectEvent = useCallback(
     (event: any) => {
       if (calendarType === 'week') {
-        setSelectedMaintenanceHistoryId(event.id);
+        setModalAdditionalInformations({
+          id: event.id,
+          expectedNotificationDate: event.expectedNotificationDate,
+          isFuture: event.isFuture,
+          expectedDueDate: event.expectedDueDate,
+        });
 
         if (
           (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
@@ -150,8 +161,8 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       date,
       setDate,
-      selectedMaintenanceHistoryId,
-      setSelectedMaintenanceHistoryId,
+      modalAdditionalInformations,
+      setModalAdditionalInformations,
     ],
   );
 
@@ -200,10 +211,10 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && selectedMaintenanceHistoryId && (
+      {modalSendMaintenanceReportOpen && modalAdditionalInformations.id && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
-          maintenanceHistoryId={selectedMaintenanceHistoryId}
+          modalAdditionalInformations={modalAdditionalInformations}
           setLoading={setLoading}
           setMaintenancesWeekView={setMaintenancesWeekView}
           setMaintenancesMonthView={setMaintenancesMonthView}
@@ -215,10 +226,10 @@ export const MaintenancesCalendar = () => {
           calendarType={calendarType}
         />
       )}
-      {modalMaintenanceDetailsOpen && selectedMaintenanceHistoryId && (
+      {modalMaintenanceDetailsOpen && modalAdditionalInformations.id && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetailsOpen}
-          maintenanceHistoryId={selectedMaintenanceHistoryId}
+          modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
       <Style.Container>
