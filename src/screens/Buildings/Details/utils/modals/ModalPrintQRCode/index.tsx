@@ -16,7 +16,7 @@ import { Button } from '../../../../../../components/Buttons/Button';
 import { useAuthContext } from '../../../../../../contexts/Auth/UseAuthContext';
 
 // TYPES
-import { IModalPrintQRCode } from './utils/types';
+import { IModalPrintQRCode } from './types';
 
 // STYLES
 import * as Style from './styles';
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 169,
-    height: 38,
+    width: 152,
+    height: 34,
   },
   companyLogo: {
     height: 100,
@@ -84,9 +84,7 @@ const MyDocument = ({
         />
       )}
       <View style={styles.mainMessageView}>
-        <Text>A manutenção e o cuidado com o condomínio</Text>
-        <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
-        <Text>muito mais fácil mantê-lo em ordem!</Text>
+        <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
       </View>
       <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={styles.QRCode} />}</Text>
 
@@ -106,8 +104,8 @@ const stylesSquare = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 169,
-    height: 38,
+    width: 152,
+    height: 34,
   },
   companyLogo: {
     height: 80,
@@ -157,9 +155,7 @@ const MyDocumentSquare = ({
         />
       )}
       <View style={stylesSquare.mainMessageView}>
-        <Text>A manutenção e o cuidado com o condomínio</Text>
-        <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
-        <Text>muito mais fácil mantê-lo em ordem!</Text>
+        <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
       </View>
       <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={stylesSquare.QRCode} />}</Text>
 
