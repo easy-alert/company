@@ -1,59 +1,267 @@
+/* eslint-disable react/no-array-index-key */
 // LIBS
 
 // COMPONENTS
+import { Form, Formik } from 'formik';
+import { useEffect, useState } from 'react';
 import { IconButton } from '../../../components/Buttons/IconButton';
-import { Select } from '../../../components/Inputs/Select';
 import { Button } from '../../../components/Buttons/Button';
-import { Input } from '../../../components/Inputs/Input';
+import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 
 // STYLES
 import { icon } from '../../../assets/icons';
-import * as Style from './styles';
+import * as s from './styles';
 import { theme } from '../../../styles/theme';
+import { FormikInput } from '../../../components/Form/FormikInput';
+import { FormikSelect } from '../../../components/Form/FormikSelect';
+import { requestReportsData } from './functions';
+import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
+import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
+import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
+import { EventTag } from '../../Calendar/utils/EventTag';
+import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 
-export const CreateReport = () => (
-  <Style.Container>
-    <Style.Header>
-      <h2>Relatórios</h2>
-      <IconButton
-        icon={icon.downloadRed}
-        label="Baixar"
-        color={theme.color.primary}
-        size="16px"
-        onClick={() => {
-          //
-        }}
-      />
-    </Style.Header>
-    <Style.FiltersAndCount>
-      <h5>Filtros</h5>
-      <Style.FiltersGrid>
-        <Select label="Edificação" />
-        <Select label="Categoria" />
-        <Select label="Responsável" />
-        <Input type="date" typeDatePlaceholderValue="" label="Data de notificação inicial" />
-        <Input type="date" typeDatePlaceholderValue="" label="Data de notificação final" />
-        <Select label="Status" />
-      </Style.FiltersGrid>
-      <Style.TagWrapper>
-        <Style.Tag>
-          <p className="p5" title="teste">
-            monte monte monte monte monte monte monte monte monte monte monte monte monte monte
-            monte monte monte
-          </p>
+export const CreateReport = () => {
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [counts, setCounts] = useState<ICounts>({
+    completed: 0,
+    expired: 0,
+    pending: 0,
+    totalCost: 0,
+  });
+  const [maintenances, setMaintenances] = useState<IMaintenanceReport[]>([]);
+  const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+
+  const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
+
+  useEffect(() => {
+    requestReportsData({
+      setOnQuery,
+      setCounts,
+      setMaintenances,
+      setFiltersOptions,
+      setLoading,
+      filters: {
+        buildingId: ' ',
+        categoryId: ' ',
+        endDate: ' ',
+        maintenanceStatusId: ' ',
+        responsibleSyndicId: ' ',
+        startDate: ' ',
+      },
+    });
+  }, []);
+  return loading ? (
+    <DotSpinLoading />
+  ) : (
+    <>
+      {modalMaintenanceDetails && (
+        <ModalMaintenanceDetails
+          setModal={setModalMaintenanceDetails}
+          maintenanceHistoryId={maintenceHistoryId}
+        />
+      )}
+
+      <s.Container>
+        <s.Header>
+          <h2>Relatórios</h2>
           <IconButton
-            icon={icon.xBlack}
-            size="12px"
+            icon={icon.downloadRed}
+            label="Baixar"
+            color={theme.color.primary}
+            size="16px"
             onClick={() => {
               //
             }}
           />
-        </Style.Tag>
-      </Style.TagWrapper>
-      <Style.ButtonContainer>
-        <Button borderless label="Limpar filtros" />
-        <Button label="Filtrar" />
-      </Style.ButtonContainer>
-    </Style.FiltersAndCount>
-  </Style.Container>
-);
+        </s.Header>
+        <s.FiltersContainer>
+          <h5>Filtros</h5>
+          <Formik
+            initialValues={{
+              maintenanceStatusId: ' ',
+              buildingId: ' ',
+              categoryId: ' ',
+              responsibleSyndicId: ' ',
+              startDate: '',
+              endDate: '',
+            }}
+            onSubmit={async (values) => {
+              await requestReportsData({
+                setOnQuery,
+                setCounts,
+                setMaintenances,
+                setLoading,
+                setFiltersOptions,
+                filters: {
+                  buildingId: values.buildingId,
+                  categoryId: values.categoryId,
+                  maintenanceStatusId: values.maintenanceStatusId,
+                  responsibleSyndicId: values.responsibleSyndicId,
+                  startDate: values.startDate,
+                  endDate: values.endDate,
+                },
+              });
+            }}
+          >
+            {({ errors, values, touched }) => (
+              <Form>
+                <s.FiltersGrid>
+                  <FormikSelect
+                    selectPlaceholderValue={values.buildingId}
+                    name="buildingId"
+                    label="Edificação"
+                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
+                  >
+                    <option value=" ">Todos</option>
+
+                    {filtersOptions?.buildings.map((building) => (
+                      <option key={building.id} value={building.id}>
+                        {building.name}
+                      </option>
+                    ))}
+                  </FormikSelect>
+
+                  <FormikSelect
+                    selectPlaceholderValue={values.categoryId}
+                    name="categoryId"
+                    label="Categoria"
+                    error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
+                  >
+                    <option value=" ">Todos</option>
+                    {filtersOptions?.categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </FormikSelect>
+
+                  <FormikSelect
+                    selectPlaceholderValue={values.responsibleSyndicId}
+                    name="responsibleSyndicId"
+                    label="Responsável"
+                    error={
+                      touched.responsibleSyndicId && errors.responsibleSyndicId
+                        ? errors.responsibleSyndicId
+                        : null
+                    }
+                  >
+                    <option value=" ">Todos</option>
+                    {filtersOptions?.responsibles.map((responsible) => (
+                      <option key={responsible.id} value={responsible.id}>
+                        {responsible.name}
+                      </option>
+                    ))}
+                  </FormikSelect>
+
+                  <FormikInput
+                    label="Data de notificação inicial"
+                    name="startDate"
+                    type="date"
+                    value={values.startDate}
+                    error={touched.startDate && errors.startDate ? errors.startDate : null}
+                  />
+
+                  <FormikInput
+                    label="Data de notificação final"
+                    name="endDate"
+                    type="date"
+                    value={values.endDate}
+                    error={touched.endDate && errors.endDate ? errors.endDate : null}
+                  />
+
+                  <FormikSelect
+                    selectPlaceholderValue={values.maintenanceStatusId}
+                    name="maintenanceStatusId"
+                    label="Status"
+                    error={
+                      touched.maintenanceStatusId && errors.maintenanceStatusId
+                        ? errors.maintenanceStatusId
+                        : null
+                    }
+                  >
+                    <option value=" ">Todos</option>
+                    {filtersOptions?.status.map((status) => (
+                      <option key={status.id} value={status.id}>
+                        {capitalizeFirstLetter(status.pluralLabel)}
+                      </option>
+                    ))}
+                  </FormikSelect>
+                </s.FiltersGrid>
+
+                <s.ButtonContainer>
+                  <Button borderless label="Limpar filtros" type="reset" />
+                  <Button label="Filtrar" type="submit" loading={onQuery} />
+                </s.ButtonContainer>
+              </Form>
+            )}
+          </Formik>
+        </s.FiltersContainer>
+        <s.CountContainer>
+          <s.Counts>
+            {/* Não fiz .map pra facilitar a estilização */}
+            <s.CountsInfo>
+              <h5 className="completed">{counts.completed}</h5>
+              <p className="p5">{counts.completed > 1 ? 'Concluída' : 'Concluídas'}</p>
+            </s.CountsInfo>
+
+            <s.CountsInfo>
+              <h5 className="pending">{counts.pending}</h5>
+              <p className="p5">{counts.pending > 1 ? 'Pendente' : 'Pendentes'}</p>
+            </s.CountsInfo>
+
+            <s.CountsInfo>
+              <h5 className="expired">{counts.expired}</h5>
+              <p className="p5">{counts.expired > 1 ? 'Vencida' : 'Vencidas'}</p>
+            </s.CountsInfo>
+          </s.Counts>
+
+          <p className="p4">
+            Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
+          </p>
+        </s.CountContainer>
+
+        {!onQuery && maintenances.length > 0 && (
+          <ReportDataTable
+            colsHeader={[
+              { label: 'Categoria' },
+              { label: 'Elemento' },
+              { label: 'Atividade' },
+              { label: 'Responsável' },
+              { label: 'Data ' },
+              { label: 'Status' },
+              { label: 'Valor' },
+            ]}
+          >
+            {maintenances?.map((maintenance, i) => (
+              <ReportDataTableContent
+                key={maintenance.activity + i}
+                colsBody={[
+                  { cell: maintenance.categoryName },
+                  { cell: maintenance.element },
+                  { cell: maintenance.activity },
+                  { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
+                  { cell: dateFormatter(maintenance.notificationDate) },
+                  { cell: <EventTag status={maintenance.status} /> },
+                  {
+                    cell:
+                      maintenance.cost !== null
+                        ? applyMask({ mask: 'BRL', value: String(maintenance.cost) }).value
+                        : '-',
+                  },
+                ]}
+                onClick={() => {
+                  setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
+                  setModalMaintenanceDetails(true);
+                }}
+              />
+            ))}
+          </ReportDataTable>
+        )}
+      </s.Container>
+    </>
+  );
+};
