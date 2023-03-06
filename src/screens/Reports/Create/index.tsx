@@ -3,7 +3,7 @@
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -23,7 +23,7 @@ import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [counts, setCounts] = useState<ICounts>({
     completed: 0,
@@ -37,23 +37,6 @@ export const CreateReport = () => {
 
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
-  useEffect(() => {
-    requestReportsData({
-      setOnQuery,
-      setCounts,
-      setMaintenances,
-      setFiltersOptions,
-      setLoading,
-      filters: {
-        buildingId: ' ',
-        categoryId: ' ',
-        endDate: ' ',
-        maintenanceStatusId: ' ',
-        responsibleSyndicId: ' ',
-        startDate: ' ',
-      },
-    });
-  }, []);
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -200,66 +183,71 @@ export const CreateReport = () => {
             )}
           </Formik>
         </s.FiltersContainer>
-        <s.CountContainer>
-          <s.Counts>
-            {/* Não fiz .map pra facilitar a estilização */}
-            <s.CountsInfo>
-              <h5 className="completed">{counts.completed}</h5>
-              <p className="p5">{counts.completed > 1 ? 'Concluída' : 'Concluídas'}</p>
-            </s.CountsInfo>
-
-            <s.CountsInfo>
-              <h5 className="pending">{counts.pending}</h5>
-              <p className="p5">{counts.pending > 1 ? 'Pendente' : 'Pendentes'}</p>
-            </s.CountsInfo>
-
-            <s.CountsInfo>
-              <h5 className="expired">{counts.expired}</h5>
-              <p className="p5">{counts.expired > 1 ? 'Vencida' : 'Vencidas'}</p>
-            </s.CountsInfo>
-          </s.Counts>
-
-          <p className="p4">
-            Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
-          </p>
-        </s.CountContainer>
 
         {!onQuery && maintenances.length > 0 && (
-          <ReportDataTable
-            colsHeader={[
-              { label: 'Categoria' },
-              { label: 'Elemento' },
-              { label: 'Atividade' },
-              { label: 'Responsável' },
-              { label: 'Data ' },
-              { label: 'Status' },
-              { label: 'Valor' },
-            ]}
-          >
-            {maintenances?.map((maintenance, i) => (
-              <ReportDataTableContent
-                key={maintenance.activity + i}
-                colsBody={[
-                  { cell: maintenance.categoryName },
-                  { cell: maintenance.element },
-                  { cell: maintenance.activity },
-                  { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                  { cell: dateFormatter(maintenance.notificationDate) },
-                  { cell: <EventTag status={maintenance.status} /> },
-                  {
-                    cell:
-                      maintenance.cost !== null
-                        ? applyMask({ mask: 'BRL', value: String(maintenance.cost) }).value
-                        : '-',
-                  },
-                ]}
-                onClick={() => {
-                  setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
-                  setModalMaintenanceDetails(true);
-                }}
-              />
-            ))}
-          </ReportDataTable>
+          <>
+            <s.CountContainer>
+              <s.Counts>
+                {/* Não fiz .map pra facilitar a estilização */}
+                <s.CountsInfo>
+                  <h5 className="completed">{counts.completed}</h5>
+                  <p className="p5">{counts.completed > 1 ? 'Concluídas' : 'Concluída'}</p>
+                </s.CountsInfo>
+
+                <s.CountsInfo>
+                  <h5 className="pending">{counts.pending}</h5>
+                  <p className="p5">{counts.pending > 1 ? 'Pendentes' : 'Pendente'}</p>
+                </s.CountsInfo>
+
+                <s.CountsInfo>
+                  <h5 className="expired">{counts.expired}</h5>
+                  <p className="p5">{counts.expired > 1 ? 'Vencidas' : 'Vencida'}</p>
+                </s.CountsInfo>
+              </s.Counts>
+
+              <p className="p4">
+                Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
+              </p>
+            </s.CountContainer>
+            <ReportDataTable
+              colsHeader={[
+                { label: 'Data de notificação' },
+                { label: 'Data de resolução' },
+                { label: 'Edificação' },
+                { label: 'Categoria' },
+                { label: 'Elemento' },
+                { label: 'Atividade' },
+                { label: 'Responsável' },
+                { label: 'Status' },
+                { label: 'Valor' },
+              ]}
+            >
+              {maintenances?.map((maintenance, i) => (
+                <ReportDataTableContent
+                  key={maintenance.activity + i}
+                  colsBody={[
+                    { cell: maintenance.buildingName },
+                    { cell: maintenance.categoryName },
+                    { cell: maintenance.element },
+                    { cell: maintenance.activity },
+                    { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
+                    { cell: dateFormatter(maintenance.notificationDate) },
+                    { cell: <EventTag status={maintenance.status} /> },
+                    {
+                      cell:
+                        maintenance.cost !== null
+                          ? applyMask({ mask: 'BRL', value: String(maintenance.cost) }).value
+                          : '-',
+                    },
+                  ]}
+                  onClick={() => {
+                    setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
+                    setModalMaintenanceDetails(true);
+                  }}
+                />
+              ))}
+            </ReportDataTable>
+          </>
         )}
       </s.Container>
     </>

@@ -25,7 +25,6 @@ export const requestReportsData = async ({
     `/buildings/reports/list?maintenanceStatusId=${filtersProcessed.maintenanceStatusId}&buildingId=${filtersProcessed.buildingId}&categoryId=${filtersProcessed.categoryId}&responsibleSyndicId=${filtersProcessed.responsibleSyndicId}&startDate=${filtersProcessed.startDate}&endDate=${filtersProcessed.endDate}`,
   )
     .then((res) => {
-      console.log(res.data);
       setMaintenances(res.data.maintenances);
       setFiltersOptions(res.data.filters);
       setCounts(res.data.counts);
