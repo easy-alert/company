@@ -73,3 +73,9 @@ export const CountContainer = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
+export const NoMaintenanceCard = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;

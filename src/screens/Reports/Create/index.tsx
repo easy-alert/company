@@ -3,7 +3,7 @@
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -14,7 +14,7 @@ import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { requestReportsData } from './functions';
+import { requestReportsData, requestReportsDataForSelect } from './functions';
 import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
@@ -40,6 +40,10 @@ export const CreateReport = () => {
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    requestReportsDataForSelect({ setFiltersOptions, setLoading });
+  }, []);
+
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -57,7 +61,7 @@ export const CreateReport = () => {
       <s.Container>
         <s.Header>
           <h2>Relatórios</h2>
-
+          {/*
           <IconButton
             icon={icon.pdfLogo}
             label="Exportar"
@@ -66,7 +70,7 @@ export const CreateReport = () => {
             onClick={() => {
               setModalPrintReportOpen(true);
             }}
-          />
+          /> */}
         </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
@@ -85,7 +89,6 @@ export const CreateReport = () => {
                 setCounts,
                 setMaintenances,
                 setLoading,
-                setFiltersOptions,
                 filters: {
                   buildingId: values.buildingId,
                   categoryId: values.categoryId,
@@ -183,7 +186,7 @@ export const CreateReport = () => {
                 </s.FiltersGrid>
 
                 <s.ButtonContainer>
-                  <Button borderless label="Limpar filtros" type="reset" />
+                  {/* <Button borderless label="Limpar filtros" type="reset" /> */}
                   <Button label="Filtrar" type="submit" loading={onQuery} />
                 </s.ButtonContainer>
               </Form>
@@ -191,7 +194,7 @@ export const CreateReport = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {!onQuery && maintenances.length > 0 && (
+        {!onQuery && maintenances.length > 0 ? (
           <>
             <s.CountContainer>
               <s.Counts>
@@ -216,6 +219,7 @@ export const CreateReport = () => {
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>
+
             <ReportDataTable
               colsHeader={[
                 { label: 'Data de notificação' },
@@ -233,12 +237,17 @@ export const CreateReport = () => {
                 <ReportDataTableContent
                   key={maintenance.activity + i}
                   colsBody={[
+                    { cell: dateFormatter(maintenance.notificationDate) },
+                    {
+                      cell: maintenance.resolutionDate
+                        ? dateFormatter(maintenance.resolutionDate)
+                        : '-',
+                    },
                     { cell: maintenance.buildingName },
                     { cell: maintenance.categoryName },
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: dateFormatter(maintenance.notificationDate) },
                     { cell: <EventTag status={maintenance.status} /> },
                     {
                       cell:
@@ -255,6 +264,10 @@ export const CreateReport = () => {
               ))}
             </ReportDataTable>
           </>
+        ) : (
+          <s.NoMaintenanceCard>
+            <h4>Nenhuma manutenção encontrada.</h4>
+          </s.NoMaintenanceCard>
         )}
       </s.Container>
     </>

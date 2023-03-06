@@ -29,7 +29,6 @@ export const TableRow = styled.tr<{ bgColor?: string }>`
 export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
   color: ${theme.color.gray4};
   text-align: start;
-  background-color: red;
   :first-child {
     padding-left: ${theme.size.sm};
   }
@@ -46,11 +45,23 @@ export const TableColBody = styled.td<{
   cssOnMedia: any;
 }>`
   height: ${theme.size.xxlg};
+  padding-inline: 8px;
+  overflow-wrap: break-word;
   text-align: start;
 
-  :first-of-type {
+  :nth-child(1) {
+    min-width: 105px;
     border-radius: ${theme.size.xxsm} 0px 0px ${theme.size.xxsm};
     padding-left: ${theme.size.sm};
+  }
+
+  :nth-child(5) {
+    min-width: 200px;
+    max-width: 200px;
+  }
+  :nth-child(6) {
+    min-width: 200px;
+    max-width: 200px;
   }
 
   :last-of-type {

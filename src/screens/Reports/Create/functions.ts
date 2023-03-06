@@ -1,11 +1,10 @@
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
-import { IRequestReportsData } from './types';
+import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
 
 export const requestReportsData = async ({
   setOnQuery,
   setCounts,
-  setFiltersOptions,
   setMaintenances,
   setLoading,
   filters,
@@ -26,7 +25,6 @@ export const requestReportsData = async ({
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
-      setFiltersOptions(res.data.filters);
       setCounts(res.data.counts);
     })
     .catch((err) => {
@@ -35,5 +33,21 @@ export const requestReportsData = async ({
     .finally(() => {
       setLoading(false);
       setOnQuery(false);
+    });
+};
+
+export const requestReportsDataForSelect = async ({
+  setFiltersOptions,
+  setLoading,
+}: IRequestReportsDataForSelect) => {
+  await Api.get(`/buildings/reports/listforselect`)
+    .then((res) => {
+      setFiltersOptions(res.data.filters);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    })
+    .finally(() => {
+      setLoading(false);
     });
 };
