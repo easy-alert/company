@@ -1,8 +1,15 @@
 import { IMaintenance } from '../../types';
 
+export interface IModalAdditionalInformations {
+  id: string;
+  isFuture: boolean;
+  expectedNotificationDate: string;
+  expectedDueDate: string;
+}
+
 export interface IModalMaintenanceDetails {
   setModal: (setModal: boolean) => void;
-  maintenanceHistoryId: string;
+  modalAdditionalInformations: IModalAdditionalInformations;
 }
 
 export interface IRequestMaintenanceDetails {

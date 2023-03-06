@@ -249,14 +249,14 @@ export const CalendarWrapper = styled.div<{
 
 export const YearLoading = styled.div`
   position: absolute;
-  left: 268px;
-  top: 28px;
+  left: 260px;
+  top: 19px;
 
   border: 4px solid ${theme.color.primaryL};
   border-top: 4px solid ${theme.color.primary};
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 25px;
+  height: 25px;
   animation: spin 0.5s linear infinite;
 
   @keyframes spin {
