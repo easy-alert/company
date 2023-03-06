@@ -29,7 +29,6 @@ export const TableRow = styled.tr<{ bgColor?: string }>`
 export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
   color: ${theme.color.gray4};
   text-align: start;
-  background-color: red;
   :first-child {
     padding-left: ${theme.size.sm};
   }

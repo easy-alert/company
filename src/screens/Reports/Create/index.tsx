@@ -3,7 +3,7 @@
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -14,7 +14,7 @@ import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { requestReportsData } from './functions';
+import { requestReportsData, requestReportsDataForSelect } from './functions';
 import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
@@ -39,6 +39,10 @@ export const CreateReport = () => {
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    requestReportsDataForSelect({ setFiltersOptions, setLoading });
+  }, []);
 
   return loading ? (
     <DotSpinLoading />

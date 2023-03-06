@@ -1,6 +1,6 @@
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
-import { IRequestReportsData } from './types';
+import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
 
 export const requestReportsData = async ({
   setOnQuery,
@@ -35,5 +35,21 @@ export const requestReportsData = async ({
     .finally(() => {
       setLoading(false);
       setOnQuery(false);
+    });
+};
+
+export const requestReportsDataForSelect = async ({
+  setFiltersOptions,
+  setLoading,
+}: IRequestReportsDataForSelect) => {
+  await Api.get(`/buildings/reports/listforselect`)
+    .then((res) => {
+      setFiltersOptions(res.data.filters);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    })
+    .finally(() => {
+      setLoading(false);
     });
 };

@@ -53,3 +53,8 @@ export interface IRequestReportsData {
 
   filters: IReportsFilters;
 }
+
+export interface IRequestReportsDataForSelect {
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setFiltersOptions: React.Dispatch<React.SetStateAction<IFiltersOptions | undefined>>;
+}
