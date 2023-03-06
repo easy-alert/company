@@ -5,8 +5,7 @@ export const Background = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
-
-  min-width: 1000px;
+  min-width: 1100px;
 `;
 
 export const HeaderCategory = styled.div`
@@ -59,7 +58,7 @@ export const MaintenancesGrid = styled.div`
   grid-template-rows: 1fr;
   align-items: center;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 95px 60px;
 `;
 
 export const SortHeader = styled.div<{ highlighted: boolean }>`

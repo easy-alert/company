@@ -28,6 +28,8 @@ interface IMaintenance {
     singularLabel: string;
   };
   observation: string;
+  resolutionDate?: string | null;
+  notificationDate?: string | null;
 }
 
 export interface ICategories {
@@ -40,6 +42,6 @@ export interface ICategories {
 // REQUESTS
 export interface IRequestCategories {
   setLoading?: (setLoading: boolean) => void;
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   filter?: string;
 }

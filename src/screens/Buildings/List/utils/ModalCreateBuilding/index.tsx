@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { Button } from '../../../../../components/Buttons/Button';
 import { FormikInput } from '../../../../../components/Form/FormikInput';
@@ -22,14 +23,10 @@ import {
   requestAddressData,
 } from '../../../../../utils/functions';
 
-export const ModalCreateBuilding = ({
-  setModal,
-  page,
-  setBuildingList,
-  setCount,
-  buildingTypes,
-}: IModalCreateBuilding) => {
+export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   return (
     <Modal title="Cadastrar edificação" setModal={setModal}>
@@ -48,7 +45,7 @@ export const ModalCreateBuilding = ({
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {
-          requestCreateBuilding({ setModal, setOnQuery, values, page, setCount, setBuildingList });
+          requestCreateBuilding({ setModal, setOnQuery, values, navigate });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (

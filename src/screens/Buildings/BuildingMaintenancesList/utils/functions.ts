@@ -7,10 +7,12 @@ export const requestAddedMaintenances = async ({
   setLoading,
   setAddedMaintenances,
   buildingId,
+  setBuildingName,
 }: IRequestAddedMaintenances) => {
   await Api.get(`/buildings/list/details/${buildingId}/maintenances`)
     .then((res) => {
-      setAddedMaintenances(res.data);
+      setBuildingName(res.data.buildingName);
+      setAddedMaintenances(res.data.BuildingMaintenances);
       if (setLoading) setLoading(false);
     })
     .catch((err) => {

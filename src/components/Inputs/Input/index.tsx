@@ -6,12 +6,12 @@ import { IInput } from './utils/types';
 import { InputContainer } from './styles';
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
-  { label, name, ...rest },
+  { label, name, type = 'text', typeDatePlaceholderValue, ...rest },
   ref,
 ) => (
-  <InputContainer>
+  <InputContainer typeDatePlaceholderValue={typeDatePlaceholderValue} type={type}>
     <h6>{label}</h6>
-    <input id={name} name={name} ref={ref} {...rest} />
+    <input id={name} type={type} name={name} ref={ref} {...rest} />
   </InputContainer>
 );
 export const Input = forwardRef(InputBase);

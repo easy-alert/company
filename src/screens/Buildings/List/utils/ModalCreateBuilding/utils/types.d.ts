@@ -1,4 +1,3 @@
-import { IBuildingList } from '../../types';
 import { IBuildingTypes } from '../../../../../../utils/types';
 
 interface ICreateBuilding {
@@ -16,9 +15,6 @@ interface ICreateBuilding {
 
 export interface IModalCreateBuilding {
   setModal: (setModal: boolean) => void;
-  page: number;
-  setBuildingList: (setBuildingList: IBuildingList[]) => void;
-  setCount: (setCount: number) => void;
   buildingTypes: IBuildingTypes[];
 }
 
@@ -27,7 +23,5 @@ export interface IRequestCreateBuilding {
   values: ICreateBuilding;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
-  page: number;
-  setBuildingList: (setBuildingList: IBuildingList[]) => void;
-  setCount: (setCount: number) => void;
+  navigate: any;
 }

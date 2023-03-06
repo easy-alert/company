@@ -18,8 +18,8 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
     error,
     max,
     type = 'text',
-    passwordPlaceholder,
     typeDatePlaceholderValue,
+    passwordPlaceholder,
     ...rest
   },
   ref,

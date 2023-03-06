@@ -16,7 +16,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 // TYPES
 import { IBuildingList } from './utils/types';
 import { Pagination } from '../../../components/Pagination';
-import { capitalizeFirstLetter, requestBuldingTypes } from '../../../utils/functions';
+import { capitalizeFirstLetter, requestBuildingTypes } from '../../../utils/functions';
 import { IBuildingTypes } from '../../../utils/types';
 
 export const BuildingsList = () => {
@@ -37,7 +37,7 @@ export const BuildingsList = () => {
   const offset = 20;
 
   useEffect(() => {
-    requestBuldingTypes({ setBuildingTypes });
+    requestBuildingTypes({ setBuildingTypes });
     requestBuildingList({ page, setBuildingList, setCount, filter, setLoading, setPage });
   }, []);
 
@@ -46,13 +46,7 @@ export const BuildingsList = () => {
   ) : (
     <>
       {modalCreateBuildingOpen && (
-        <ModalCreateBuilding
-          page={page}
-          setCount={setCount}
-          buildingTypes={buildingTypes}
-          setBuildingList={setBuildingList}
-          setModal={setModalCreateBuildingOpen}
-        />
+        <ModalCreateBuilding buildingTypes={buildingTypes} setModal={setModalCreateBuildingOpen} />
       )}
       <Style.Header>
         <Style.LeftSide>
@@ -142,7 +136,7 @@ export const BuildingsList = () => {
                 <Style.BuildingCardFooter>
                   {/* Não fiz .map pra facilitar a estilização */}
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="expired">{building?.MaintenancesCount[0].count}</h5>
+                    <h5 className="completed">{building?.MaintenancesCount[0].count}</h5>
                     <p className="p5">
                       {building?.MaintenancesCount[0].count > 1
                         ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
@@ -160,7 +154,7 @@ export const BuildingsList = () => {
                   </Style.BuildingCardFooterInfo>
 
                   <Style.BuildingCardFooterInfo>
-                    <h5 className="completed">{building?.MaintenancesCount[2].count}</h5>
+                    <h5 className="expired">{building?.MaintenancesCount[2].count}</h5>
                     <p className="p5">
                       {building?.MaintenancesCount[2].count > 1
                         ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
@@ -171,6 +165,7 @@ export const BuildingsList = () => {
               </Style.BuildingCard>
             ))}
           </Style.GridContainer>
+
           <Style.PaginationFooter>
             <Pagination
               totalCountOfRegister={count}

@@ -36,7 +36,7 @@ export const CalendarWrapper = styled.div<{
 }>`
   width: 100%;
   background-color: ${theme.color.white};
-  padding: ${theme.size.md};
+  padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
   min-width: 850px;
   position: relative;
@@ -109,7 +109,7 @@ export const CalendarWrapper = styled.div<{
   }
 
   .rbc-month-view {
-    border-radius: ${theme.size.xsm};
+    border-radius: ${theme.size.xxsm};
   }
 
   /* .rbc-header::first-letter {
@@ -135,7 +135,7 @@ export const CalendarWrapper = styled.div<{
 
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
-    border-radius: ${theme.size.xsm};
+    border-radius: ${theme.size.xxsm};
   }
 
   .rbc-header {
@@ -146,7 +146,7 @@ export const CalendarWrapper = styled.div<{
   .rbc-time-header-content {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    border-radius: ${theme.size.xsm};
+    border-radius: ${theme.size.xxsm};
   }
 
   .rbc-event {

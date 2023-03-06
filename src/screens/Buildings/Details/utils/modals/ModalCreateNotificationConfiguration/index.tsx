@@ -3,12 +3,16 @@ import { useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
-import * as Style from './styles';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { FormikInput } from '../../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../../components/Modal';
 import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
 import { theme } from '../../../../../../styles/theme';
+import { Image } from '../../../../../../components/Image';
+
+// STYLES
+import * as Style from './styles';
+import { icon } from '../../../../../../assets/icons';
 
 // TYPES
 import { IModalCreateNotificationConfiguration } from './utils/types';
@@ -32,7 +36,7 @@ export const ModalCreateNotificationConfiguration = ({
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
-    <Modal title="Cadastrar dados de notificação" setModal={setModal}>
+    <Modal title="Cadastrar responsável de manutenção" setModal={setModal}>
       <Formik
         initialValues={{
           name: '',
@@ -104,6 +108,10 @@ export const ModalCreateNotificationConfiguration = ({
                 labelColor={theme.color.gray4}
                 label="Contato principal"
               />
+              <Style.MainContactObservation>
+                <Image img={icon.alert} size="16px" />
+                <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
+              </Style.MainContactObservation>
 
               <Style.ButtonContainer>
                 <Button label="Cadastrar" type="submit" loading={onQuery} />

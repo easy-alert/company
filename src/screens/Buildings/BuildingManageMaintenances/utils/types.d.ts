@@ -29,6 +29,9 @@ interface IMaintenance {
     singularLabel: string;
   };
   observation: string;
+  resolutionDate?: string | null;
+  notificationDate?: string | null;
+  isSelected?: boolean;
 }
 
 export interface ICategories {
@@ -42,8 +45,9 @@ export interface ICategories {
 export interface IRequestListCategoriesToManage {
   setLoading: (setLoading: boolean) => void;
   setTableLoading?: (setTableLoading: boolean) => void;
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   buildingId: string;
+  setBuildingName: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // REQUESTS
@@ -59,7 +63,7 @@ export interface IBuildingListForSelect {
   id: string;
   name: string;
 }
-export interface IRequestBuldingListForSelect {
+export interface IRequestBuildingListForSelect {
   buildingId: string;
   setBuildingListForSelect: (setBuildingListForSelect: IBuildingListForSelect[]) => void;
 }

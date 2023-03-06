@@ -7,7 +7,11 @@ import { Button } from '../../../../../../../../components/Buttons/Button';
 import { FormikTextArea } from '../../../../../../../../components/Form/FormikTextArea';
 import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../../../../components/Modal';
+import { Image } from '../../../../../../../../components/Image';
+
+// STYLES
 import * as Style from './styles';
+import { icon } from '../../../../../../../../assets/icons';
 
 // TYPES
 import { IModalCreateMaintenance } from './utils/types';
@@ -95,7 +99,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.frequencyTimeInterval}
                   name="frequencyTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.frequencyTimeInterval && errors.frequencyTimeInterval
                       ? errors.frequencyTimeInterval
@@ -142,7 +146,7 @@ export const ModalCreateMaintenance = ({
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Tempo para resposta"
+                  label="Prazo para execução"
                   name="period"
                   value={values.period}
                   error={touched.period && errors.period ? errors.period : null}
@@ -158,7 +162,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.periodTimeInterval && errors.periodTimeInterval
                       ? errors.periodTimeInterval
@@ -178,21 +182,27 @@ export const ModalCreateMaintenance = ({
                 </FormikSelect>
               </Style.SelectWrapper>
               <Style.SelectWrapper>
-                <FormikInput
-                  label="Delay"
-                  name="delay"
-                  value={values.delay}
-                  error={touched.delay && errors.delay ? errors.delay : null}
-                  placeholder="Ex: 1"
-                  maxLength={4}
-                  onChange={(e) => {
-                    setFieldValue('delay', applyMask({ mask: 'NUM', value: e.target.value }).value);
-                  }}
-                />
+                <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
+                  <FormikInput
+                    label="Delay"
+                    name="delay"
+                    value={values.delay}
+                    error={touched.delay && errors.delay ? errors.delay : null}
+                    placeholder="Ex: 1"
+                    maxLength={4}
+                    onChange={(e) => {
+                      setFieldValue(
+                        'delay',
+                        applyMask({ mask: 'NUM', value: e.target.value }).value,
+                      );
+                    }}
+                  />
+                  <Image img={icon.alert} size="16px" />
+                </Style.DelayIcon>
                 <FormikSelect
                   selectPlaceholderValue={values.delayTimeInterval}
                   name="delayTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.delayTimeInterval && errors.delayTimeInterval
                       ? errors.delayTimeInterval

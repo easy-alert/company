@@ -2,7 +2,7 @@ import { ICategories } from '../../types';
 
 export interface IModalCreateCategory {
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setModal: (setModal: boolean) => void;
 }
 
@@ -14,7 +14,7 @@ export interface IFormDataCategory {
 export interface IRequestCreateCategory {
   values: IFormDataCategory;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
 }

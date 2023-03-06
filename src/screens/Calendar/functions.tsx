@@ -99,17 +99,6 @@ export const requestCalendarData = async ({
               paddingTop: '4px',
               paddingBottom: '4px',
             }}
-            // desalinhado de propósito, para ficar alinhado no tooltip
-            title={`
-${e.Building.name}
-${e.Maintenance.element}
-A cada ${e.Maintenance.frequency}${' '}${
-              e.Maintenance.frequency > 1
-                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
-                : e.Maintenance.FrequencyTimeInterval.singularLabel
-            }
-
-            `}
           >
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}

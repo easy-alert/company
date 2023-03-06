@@ -7,13 +7,13 @@ import { icon } from '../../assets/icons';
 import { IModal } from './utils/types';
 import { theme } from '../../styles/theme';
 import { IconButton } from '../Buttons/IconButton';
+import { query } from '../../utils/functions';
 
 export const Modal = ({ children, setModal, title, bodyWidth }: IModal) => (
   <Style.Background
     id="background"
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onMouseDown={(evt: any) => {
-      if (evt.target.id === 'background') setModal(false);
+      if (evt.target.id === 'background' && !query.get('flow')) setModal(false);
     }}
   >
     <Style.Body bodyWidth={bodyWidth}>

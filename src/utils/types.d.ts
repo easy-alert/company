@@ -59,3 +59,8 @@ export interface IRequestAddressData {
   setFieldValue: any;
   cep: string;
 }
+
+export interface IIncreaseDaysInDate {
+  daysToIncrease: number;
+  date: Date;
+}

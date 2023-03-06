@@ -50,5 +50,13 @@ export const Content = styled.div`
 
   > p {
     color: ${theme.color.gray4};
+
+    ::after {
+      content: 'Clique para selecionar seu arquivo ou arraste e solte aqui.';
+
+      @media (max-width: 900px) {
+        content: 'Clique aqui para enviar seu arquivo.';
+      }
+    }
   }
 `;

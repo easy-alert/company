@@ -6,7 +6,7 @@ import { catchHandler } from '../../../../utils/functions';
 import {
   IRequestManageBuildingMaintenances,
   IRequestListCategoriesToManage,
-  IRequestBuldingListForSelect,
+  IRequestBuildingListForSelect,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
@@ -14,6 +14,7 @@ export const requestListCategoriesToManage = async ({
   setCategories,
   buildingId,
   setTableLoading,
+  setBuildingName,
 }: IRequestListCategoriesToManage) => {
   if (setTableLoading) setTableLoading(true);
 
@@ -21,7 +22,8 @@ export const requestListCategoriesToManage = async ({
     buildingId,
   })
     .then((res) => {
-      setCategories(res.data);
+      setBuildingName(res.data.buildingName);
+      setCategories(res.data.CategoriesData);
       setLoading(false);
       if (setTableLoading) setTableLoading(false);
     })
@@ -59,7 +61,7 @@ export const requestManageBuildingMaintenances = async ({
   })
     .then((res) => {
       toast.dismiss();
-      navigate(-1);
+      navigate(`/buildings/details/${buildingId}`);
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {
@@ -68,10 +70,10 @@ export const requestManageBuildingMaintenances = async ({
     });
 };
 
-export const requestBuldingListForSelect = async ({
+export const requestBuildingListForSelect = async ({
   setBuildingListForSelect,
   buildingId,
-}: IRequestBuldingListForSelect) => {
+}: IRequestBuildingListForSelect) => {
   await Api.get(`/buildings/listforselect/${buildingId}`)
     .then((res) => {
       setBuildingListForSelect(res.data);

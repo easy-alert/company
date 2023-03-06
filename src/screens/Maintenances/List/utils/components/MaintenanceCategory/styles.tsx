@@ -18,6 +18,10 @@ export const HeaderTitle = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+
+  > :last-child {
+    padding-right: 4px;
+  }
 `;
 
 export const Container = styled.div`
@@ -58,7 +62,7 @@ export const MaintenancesGrid = styled.div`
   grid-template-rows: 1fr;
   align-items: center;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 250px minmax(250px, 1fr) minmax(100px, 0.6fr) minmax(100px, 0.7fr) 0.6fr 0.1fr 0.1fr;
+  grid-template-columns: 230px minmax(280px, 0.55fr) 0.5fr 0.5fr 0.5fr 0.1fr 0.1fr;
 `;
 
 export const SortHeader = styled.div<{ highlighted: boolean }>`

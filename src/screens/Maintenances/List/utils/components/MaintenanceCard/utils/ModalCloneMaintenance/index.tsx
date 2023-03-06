@@ -97,7 +97,7 @@ export const ModalCloneMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.frequencyTimeInterval}
                   name="frequencyTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.frequencyTimeInterval && errors.frequencyTimeInterval
                       ? errors.frequencyTimeInterval
@@ -144,7 +144,7 @@ export const ModalCloneMaintenance = ({
               />
               <Style.SelectWrapper>
                 <FormikInput
-                  label="Tempo para resposta"
+                  label="Prazo para execução"
                   name="period"
                   value={values.period}
                   error={touched.period && errors.period ? errors.period : null}
@@ -160,7 +160,7 @@ export const ModalCloneMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.periodTimeInterval && errors.periodTimeInterval
                       ? errors.periodTimeInterval
@@ -194,7 +194,7 @@ export const ModalCloneMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.delayTimeInterval}
                   name="delayTimeInterval"
-                  label="Intervalo"
+                  label="Unidade"
                   error={
                     touched.delayTimeInterval && errors.delayTimeInterval
                       ? errors.delayTimeInterval

@@ -21,6 +21,7 @@ import { IModalPrintQRCode } from './utils/types';
 // STYLES
 import * as Style from './styles';
 import { image } from '../../../../../../assets/images';
+import { Select } from '../../../../../../components/Inputs/Select';
 
 const styles = StyleSheet.create({
   page: {
@@ -32,8 +33,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 212,
-    height: 48,
+    width: 169,
+    height: 38,
   },
   companyLogo: {
     height: 100,
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     position: 'absolute',
     height: '100vh',
+    width: '100%',
   },
   mainMessageView: {
     fontSize: 20,
@@ -50,8 +52,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   QRCode: {
-    width: 280,
-    height: 280,
+    width: 270,
+    height: 270,
   },
 });
 
@@ -68,29 +70,101 @@ const MyDocument = ({
 }) => (
   <Document
     onRender={() => {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2500);
     }}
   >
     <Page size="A4" style={styles.page}>
       <PDFImage src={image.backgroundForPDF} style={styles.backgroundImage} fixed />
-      {companyImage ? (
-        <PDFImage src={companyImage} style={styles.companyLogo} />
-      ) : (
-        <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
+      {companyImage && (
+        <PDFImage
+          src={`${companyImage}?noCache=${Math.random().toString()}`}
+          style={styles.companyLogo}
+        />
       )}
       <View style={styles.mainMessageView}>
         <Text>A manutenção e o cuidado com o condomínio</Text>
         <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
         <Text>muito mais fácil mantê-lo em ordem!</Text>
       </View>
-      {QRCodePNG ? (
-        <PDFImage src={QRCodePNG} style={styles.QRCode} />
-      ) : (
-        <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
-      )}
+      <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={styles.QRCode} />}</Text>
 
-      <Text>{buildingName}</Text>
+      <Text style={styles.mainMessageView}>{buildingName}</Text>
       <PDFImage src={image.logoForPDF} style={styles.easyAlertLogo} />
+    </Page>
+  </Document>
+);
+
+const stylesSquare = StyleSheet.create({
+  page: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '40px 0',
+    position: 'relative',
+  },
+  easyAlertLogo: {
+    width: 169,
+    height: 38,
+  },
+  companyLogo: {
+    height: 80,
+    objectFit: 'contain,',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    height: '100vh',
+    width: '100%',
+  },
+  mainMessageView: {
+    fontSize: 18,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  QRCode: {
+    width: 200,
+    height: 200,
+  },
+});
+
+const MyDocumentSquare = ({
+  companyImage,
+  buildingName,
+  QRCodePNG,
+  setLoading,
+}: {
+  companyImage: string;
+  buildingName: string;
+  QRCodePNG: string;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => (
+  <Document
+    onRender={() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2500);
+    }}
+  >
+    <Page size={[595.28, 595.28]} style={stylesSquare.page}>
+      <PDFImage src={image.backgroundForPDF} style={stylesSquare.backgroundImage} fixed />
+      {companyImage && (
+        <PDFImage
+          src={`${companyImage}?noCache=${Math.random().toString()}`}
+          style={stylesSquare.companyLogo}
+        />
+      )}
+      <View style={stylesSquare.mainMessageView}>
+        <Text>A manutenção e o cuidado com o condomínio</Text>
+        <Text>garantem a tranquilidade. Com o app Easy Alert, fica</Text>
+        <Text>muito mais fácil mantê-lo em ordem!</Text>
+      </View>
+      <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={stylesSquare.QRCode} />}</Text>
+
+      <Text style={stylesSquare.mainMessageView}>{buildingName}</Text>
+      <PDFImage src={image.logoForPDF} style={stylesSquare.easyAlertLogo} />
     </Page>
   </Document>
 );
@@ -100,12 +174,14 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [pdfSize, setPdfSize] = useState<'A4' | 'Quadrado'>('A4');
+
   const [QRCodePNG, setQRCodePNG] = useState<string>('');
 
   useEffect(() => {
     const canvas: any = document.getElementById('QRCode');
-    const teste = canvas.toDataURL('image/png');
-    setQRCodePNG(teste);
+    const QRCodeURL = canvas.toDataURL('image/png');
+    setQRCodePNG(QRCodeURL);
   }, []);
 
   return (
@@ -124,22 +200,54 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
         </Style.HideQRCode>
 
         <Style.Container>
+          <Select
+            disabled={loading}
+            label="Formato"
+            style={{ maxWidth: '150px' }}
+            selectPlaceholderValue=" "
+            value={pdfSize}
+            onChange={(e) => {
+              setLoading(true);
+              setPdfSize(e.target.value as 'A4' | 'Quadrado');
+            }}
+          >
+            <option value="A4">A4</option>
+            <option value="Quadrado">Quadrado</option>
+          </Select>
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
-            <MyDocument
-              companyImage={account?.Company.image!}
-              buildingName={buildingName}
-              QRCodePNG={QRCodePNG}
-              setLoading={setLoading}
-            />
-          </PDFViewer>
-          <PDFDownloadLink
-            document={
+            {pdfSize === 'A4' ? (
               <MyDocument
                 companyImage={account?.Company.image!}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
                 setLoading={setLoading}
               />
+            ) : (
+              <MyDocumentSquare
+                companyImage={account?.Company.image!}
+                buildingName={buildingName}
+                QRCodePNG={QRCodePNG}
+                setLoading={setLoading}
+              />
+            )}
+          </PDFViewer>
+          <PDFDownloadLink
+            document={
+              pdfSize === 'A4' ? (
+                <MyDocument
+                  companyImage={account?.Company.image!}
+                  buildingName={buildingName}
+                  QRCodePNG={QRCodePNG}
+                  setLoading={setLoading}
+                />
+              ) : (
+                <MyDocumentSquare
+                  companyImage={account?.Company.image!}
+                  buildingName={buildingName}
+                  QRCodePNG={QRCodePNG}
+                  setLoading={setLoading}
+                />
+              )
             }
             fileName={`QR Code ${buildingName}`}
           >

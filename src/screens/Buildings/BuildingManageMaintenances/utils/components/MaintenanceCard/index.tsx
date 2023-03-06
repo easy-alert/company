@@ -5,11 +5,17 @@ import { useState } from 'react';
 
 // COMPONENTS
 import { icon } from '../../../../../../assets/icons';
+import { Button } from '../../../../../../components/Buttons/Button';
 import { Image } from '../../../../../../components/Image';
 import * as Style from './styles';
+import { ModalAdditionalInformations } from './ModalAdditionalInformations';
+import { ModalEditMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalEditMaintenance';
 
 // TYPES
-import { IMaintenanceCard } from './utils/types';
+import { IMaintenanceCard } from './types';
+import { dateFormatter } from '../../../../../../utils/functions';
+import { IMaintenance } from '../../types';
+import { ModalCloneMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalCloneMaintenance';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -19,81 +25,124 @@ export const MaintenanceCard = ({
   maintenanceIndex,
   setToCopyBuilding,
   toCopyBuilding,
+  categoryId,
+  timeIntervals,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
+  const [modalAdditionalInformations, setModalAdditionalInformations] = useState<boolean>(false);
+  const [modalEditMaintenanceOpen, setModalEditMaintenanceOpen] = useState<boolean>(false);
+  const [modalCloneMaintenanceOpen, setModalCloneMaintenanceOpen] = useState<boolean>(false);
+
+  const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
   return (
-    <Style.MaintenancesCard
-      onClick={() => {
-        setCardIsOpen((prevState) => !prevState);
-      }}
-    >
-      <Style.MaintenancesCardContent>
-        <Style.MaintenancesCardTopContent>
-          <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
-            <input
-              type="checkbox"
-              checked={maintenance.isSelected}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              onChange={() => {
-                if (toCopyBuilding !== '') {
-                  setToCopyBuilding('');
-                }
+    <>
+      {modalEditMaintenanceOpen && (
+        <ModalEditMaintenance
+          setModal={setModalEditMaintenanceOpen}
+          selectedMaintenance={maintenance}
+          timeIntervals={timeIntervals}
+          categories={categories}
+          categoryId={categoryId}
+          setCategories={setCategories}
+        />
+      )}
+      {modalCloneMaintenanceOpen && toCloneMaintenance && (
+        <ModalCloneMaintenance
+          setModal={setModalCloneMaintenanceOpen}
+          categoryId={categoryId}
+          categories={categories}
+          setCategories={setCategories}
+          timeIntervals={timeIntervals}
+          maintenance={toCloneMaintenance}
+        />
+      )}
+      {modalAdditionalInformations && (
+        <ModalAdditionalInformations
+          setModal={setModalAdditionalInformations}
+          setCategories={setCategories}
+          categoryIndex={categoryIndex}
+          maintenanceIndex={maintenanceIndex}
+        />
+      )}
 
-                const updatedCategories = categories;
+      <Style.MaintenancesCard
+        onClick={() => {
+          setCardIsOpen((prevState) => !prevState);
+        }}
+      >
+        <Style.MaintenancesCardContent>
+          <Style.MaintenancesCardTopContent>
+            <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
+              <input
+                type="checkbox"
+                checked={maintenance.isSelected ?? false}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                onChange={() => {
+                  if (toCopyBuilding !== '') {
+                    setToCopyBuilding('');
+                  }
 
-                updatedCategories[categoryIndex].Maintenances[maintenanceIndex].isSelected =
-                  !maintenance.isSelected;
+                  const updatedCategories = categories;
 
-                setCategories([...updatedCategories]);
-              }}
-            />
-            <p className="p2">{maintenance.element}</p>
-            <p className="p2">{maintenance.activity}</p>
-            <p className="p2">
-              A cada{' '}
-              {`${maintenance.frequency} ${
-                maintenance.frequency > 1
-                  ? maintenance.FrequencyTimeInterval.pluralLabel
-                  : maintenance.FrequencyTimeInterval.singularLabel
-              }`}
-            </p>
-            <p className="p2">{maintenance.responsible}</p>
-            <p className="p2">{maintenance.source}</p>
+                  updatedCategories[categoryIndex].Maintenances[maintenanceIndex].isSelected =
+                    !maintenance.isSelected;
 
-            <Style.ArrowContainer>
-              <Style.Arrow cardIsOpen={cardIsOpen}>
-                <Image img={icon.downArrow} size="16px" />
-              </Style.Arrow>
-            </Style.ArrowContainer>
-          </Style.MaintenancesGrid>
-        </Style.MaintenancesCardTopContent>
+                  setCategories([...updatedCategories]);
+                }}
+              />
+              <p className="p2">{maintenance.element}</p>
+              <p className="p2">{maintenance.activity}</p>
+              <p className="p2">
+                A cada{' '}
+                {`${maintenance.frequency} ${
+                  maintenance.frequency > 1
+                    ? maintenance.FrequencyTimeInterval.pluralLabel
+                    : maintenance.FrequencyTimeInterval.singularLabel
+                }`}
+              </p>
+              <p className="p2">{maintenance.responsible}</p>
+              <p className="p2">{maintenance.source}</p>
 
-        <Style.MaintenancesCardBottomContainer cardIsOpen={cardIsOpen}>
-          <Style.Hr />
-          <Style.MaintenancesMoreGrid>
-            <div />
+              <div
+                className="copyIcon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setToCloneMaintenance(maintenance);
+                  setModalCloneMaintenanceOpen(true);
+                }}
+              >
+                <Image size="16px" img={icon.copy} />
+              </div>
+              <Style.ArrowContainer>
+                <Style.Arrow cardIsOpen={cardIsOpen}>
+                  <Image img={icon.downArrow} size="16px" />
+                </Style.Arrow>
+              </Style.ArrowContainer>
+            </Style.MaintenancesGrid>
+          </Style.MaintenancesCardTopContent>
 
-            <p className="p2">
-              <span>Observação: </span>
-              {maintenance.observation ?? '-'}
-            </p>
+          <Style.MaintenancesCardBottomContainer cardIsOpen={cardIsOpen}>
+            <Style.Hr />
+            <Style.MaintenancesMoreGrid>
+              <div />
 
-            <Style.MaintenancesCardBottomPeriod>
-              <Style.PeriodIconWrapper>
-                <Image img={icon.alert} size="16px" />
-                <p className="p2">
-                  <span>Tempo para resposta: </span>
-                  {`${maintenance.period} ${
-                    maintenance.period > 1
-                      ? maintenance.PeriodTimeInterval.pluralLabel
-                      : maintenance.PeriodTimeInterval.singularLabel
-                  }`}
-                </p>
-              </Style.PeriodIconWrapper>
-              <Style.PeriodIconWrapper>
+              <p className="p2">
+                <span>Observação: </span>
+                {maintenance.observation ?? '-'}
+              </p>
+              <p className="p2">
+                <span>Prazo para execução: </span>
+                {`${maintenance.period} ${
+                  maintenance.period > 1
+                    ? maintenance.PeriodTimeInterval.pluralLabel
+                    : maintenance.PeriodTimeInterval.singularLabel
+                }`}
+              </p>
+
+              <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
                 <Image img={icon.alert} size="16px" />
                 <p className="p2">
                   <span>Delay: </span>
@@ -106,10 +155,57 @@ export const MaintenanceCard = ({
                     : '-'}
                 </p>
               </Style.PeriodIconWrapper>
-            </Style.MaintenancesCardBottomPeriod>
-          </Style.MaintenancesMoreGrid>
-        </Style.MaintenancesCardBottomContainer>
-      </Style.MaintenancesCardContent>
-    </Style.MaintenancesCard>
+              <div />
+              <div />
+
+              <Style.MaintenancesCardGridMoreOptionsButton>
+                <div>
+                  <Button
+                    style={{ whiteSpace: 'nowrap' }}
+                    label="+ Opções"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalAdditionalInformations(true);
+                    }}
+                  />
+                </div>
+              </Style.MaintenancesCardGridMoreOptionsButton>
+              <div />
+
+              <Style.MaintenancesCardGridMoreEditButton>
+                <div>
+                  <Button
+                    disable={!maintenance.ownerCompanyId}
+                    label="Editar"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalEditMaintenanceOpen(true);
+                    }}
+                  />
+                </div>
+              </Style.MaintenancesCardGridMoreEditButton>
+              <div />
+              <div />
+              {maintenance.resolutionDate && (
+                <Style.AdditionalInformationsWrapper>
+                  <p className="p2">
+                    <span>Última conclusão: </span>
+                    {dateFormatter(maintenance.resolutionDate)}
+                  </p>
+                </Style.AdditionalInformationsWrapper>
+              )}
+              {maintenance.notificationDate && (
+                <Style.AdditionalInformationsWrapper>
+                  <p className="p2">
+                    <span>Primeira notificação: </span>
+                    {dateFormatter(maintenance.notificationDate)}
+                  </p>
+                </Style.AdditionalInformationsWrapper>
+              )}
+            </Style.MaintenancesMoreGrid>
+          </Style.MaintenancesCardBottomContainer>
+        </Style.MaintenancesCardContent>
+      </Style.MaintenancesCard>
+    </>
   );
 };

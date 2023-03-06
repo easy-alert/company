@@ -9,14 +9,14 @@ export interface IEditCategory {
   values: IFormDataEditCategory;
   setModal: (setModal: boolean) => void;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setOnQuery: (setOnQuery: boolean) => void;
 }
 
 export interface IDeleteCategory {
   categoryId: string;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setOnQuery: (setOnQuery: boolean) => void;
 }
 
@@ -24,6 +24,6 @@ export interface IModalCreateMaintenance {
   categoryId: string;
   categoryName: string;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setModal: (setModal: boolean) => void;
 }

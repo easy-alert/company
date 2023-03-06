@@ -186,40 +186,39 @@ export const ModalSendMaintenanceReport = ({
 
             <Style.Row disabled={onFileQuery}>
               <h6>Anexar</h6>
-              <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                <input {...getInputProps()} />
+              <Style.FileRow>
+                <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                  <input {...getInputProps()} />
 
-                <Style.DragAndDropFileContent>
                   <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                  <p className="p2">Clique ou arraste para enviar seu arquivo.</p>
-                </Style.DragAndDropFileContent>
-              </Style.DragAndDropZoneFile>
+                </Style.DragAndDropZoneFile>
 
-              {(files.length > 0 || onFileQuery) && (
-                <Style.FileAndImageRow>
-                  {files.map((e, i: number) => (
-                    <Style.Tag title={e.name} key={i}>
-                      <p className="p3">{e.name}</p>
-                      <IconButton
-                        size="16px"
-                        icon={icon.xBlack}
-                        onClick={() => {
-                          setFiles((prevState) => {
-                            const newState = [...prevState];
-                            newState.splice(i, 1);
-                            return newState;
-                          });
-                        }}
-                      />
-                    </Style.Tag>
-                  ))}
-                  {onFileQuery && (
-                    <Style.FileLoadingTag>
-                      <DotLoading />
-                    </Style.FileLoadingTag>
-                  )}
-                </Style.FileAndImageRow>
-              )}
+                {(files.length > 0 || onFileQuery) && (
+                  <Style.FileAndImageRow>
+                    {files.map((e, i: number) => (
+                      <Style.Tag title={e.name} key={i}>
+                        <p className="p3">{e.name}</p>
+                        <IconButton
+                          size="16px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setFiles((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </Style.Tag>
+                    ))}
+                    {onFileQuery && (
+                      <Style.FileLoadingTag>
+                        <DotLoading />
+                      </Style.FileLoadingTag>
+                    )}
+                  </Style.FileAndImageRow>
+                )}
+              </Style.FileRow>
             </Style.Row>
             <Style.Row disabled={onImageQuery}>
               <h6>Imagens</h6>

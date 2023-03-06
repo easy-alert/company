@@ -29,6 +29,9 @@ interface IMaintenance {
       singularLabel: string;
     };
     observation: string;
+    resolutionDate?: string | null;
+    notificationDate?: string | null;
+    isSelected?: boolean;
   };
 }
 
@@ -38,6 +41,9 @@ export interface AddedMaintenances {
     name: string;
   };
   Maintenances: IMaintenance[];
+  Building: {
+    name: string;
+  };
 }
 
 // REQUESTS
@@ -45,4 +51,5 @@ export interface IRequestAddedMaintenances {
   setLoading?: (setLoading: boolean) => void;
   setAddedMaintenances: (setAddedMaintenances: AddedMaintenances[]) => void;
   buildingId: string;
+  setBuildingName: React.Dispatch<React.SetStateAction<string>>;
 }

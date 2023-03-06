@@ -23,7 +23,6 @@ export const IconButton = ({
   disabled = false,
 }: IIconButton) => (
   <ContainerButton
-    style={{ pointerEvents: disabled ? 'none' : 'auto' }}
     hideLabelOnMedia={hideLabelOnMedia}
     labelPos={labelPos}
     selected={selected}
@@ -33,7 +32,9 @@ export const IconButton = ({
     fontWeight={fontWeight}
     disable={disabled}
     onClick={() => {
-      onClick();
+      if (!disabled) {
+        onClick();
+      }
     }}
     onAuxClick={() => {
       if (onAuxClick) onAuxClick();

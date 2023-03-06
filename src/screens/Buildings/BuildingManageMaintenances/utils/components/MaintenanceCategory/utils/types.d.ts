@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICategories } from '../../../types';
+import { ITimeInterval } from '../../../../../../../utils/types';
 
 export interface IMaintenanceCategory {
   category: ICategories;
   categories: ICategories[];
-  setCategories: (setCategories: ICategories[]) => void;
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   categoryIndex: number;
   toCopyBuilding: string;
   setToCopyBuilding: (setToCopyBuilding: string) => void;
+  timeIntervals: ITimeInterval[];
 }
 
 export interface ISortType {
