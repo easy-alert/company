@@ -45,10 +45,8 @@ export const requestManageBuildingMaintenances = async ({
 
   const buildingMaintenances: any = [];
 
-  categories.forEach((category, i: number) => {
-    buildingMaintenances.push({ categoryId: category.id, Maintenances: [] });
-    const selectedMaintenances = category.Maintenances.filter((e) => e.isSelected === true);
-    buildingMaintenances[i].Maintenances = selectedMaintenances;
+  categories.forEach((category) => {
+    buildingMaintenances.push({ categoryId: category.id, Maintenances: category.Maintenances });
   });
 
   const filteredBuildingMaintenances = buildingMaintenances.filter(
