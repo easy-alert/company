@@ -147,3 +147,14 @@ export const NoDataContainer = styled.footer`
     text-align: center;
   }
 `;
+
+export const Content = styled.div`
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (max-width: 900px) {
+    height: calc(100vh - 184px);
+  }
+`;
