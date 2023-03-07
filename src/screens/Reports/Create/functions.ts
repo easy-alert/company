@@ -50,10 +50,10 @@ export const schemaReportFilter = yup
     buildingId: yup.string(),
     categoryId: yup.string(),
     responsibleSyndicId: yup.string(),
-    // startDate: yup.date().required('A data inicial é obrigatória.'),
-    // endDate: yup
-    //   .date()
-    //   .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
-    //   .required('A data final é obrigatória.'),
+    startDate: yup.date().required('A data inicial é obrigatória.'),
+    endDate: yup
+      .date()
+      .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+      .required('A data final é obrigatória.'),
   })
   .required();
