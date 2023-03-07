@@ -24,7 +24,7 @@ import { ModalPrintReport } from './ModalPrintReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [counts, setCounts] = useState<ICounts>({
     completed: 0,
@@ -83,10 +83,10 @@ export const CreateReport = () => {
           <h5>Filtros</h5>
           <Formik
             initialValues={{
-              maintenanceStatusId: ' ',
-              buildingId: ' ',
-              categoryId: ' ',
-              responsibleSyndicId: ' ',
+              maintenanceStatusId: '',
+              buildingId: '',
+              categoryId: '',
+              responsibleSyndicId: '',
               startDate: '',
               endDate: '',
             }}
@@ -143,7 +143,7 @@ export const CreateReport = () => {
                     label="Edificação"
                     error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
 
                     {filtersOptions?.buildings.map((building) => (
                       <option key={building.id} value={building.id}>
@@ -158,7 +158,7 @@ export const CreateReport = () => {
                     label="Categoria"
                     error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -176,7 +176,7 @@ export const CreateReport = () => {
                         : null
                     }
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.responsibles.map((responsible) => (
                       <option key={responsible.id} value={responsible.id}>
                         {responsible.name}
@@ -210,7 +210,7 @@ export const CreateReport = () => {
                         : null
                     }
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.status.map((status) => (
                       <option key={status.id} value={status.id}>
                         {capitalizeFirstLetter(status.pluralLabel)}

@@ -12,17 +12,8 @@ export const requestReportsData = async ({
 }: IRequestReportsData) => {
   setOnQuery(true);
 
-  const filtersProcessed = {
-    maintenanceStatusId: filters.maintenanceStatusId,
-    buildingId: filters.buildingId,
-    categoryId: filters.categoryId,
-    responsibleSyndicId: filters.responsibleSyndicId,
-    startDate: filters.startDate !== '' ? filters.startDate : ' ',
-    endDate: filters.endDate !== '' ? filters.endDate : ' ',
-  };
-
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusId=${filtersProcessed.maintenanceStatusId}&buildingId=${filtersProcessed.buildingId}&categoryId=${filtersProcessed.categoryId}&responsibleSyndicId=${filtersProcessed.responsibleSyndicId}&startDate=${filtersProcessed.startDate}&endDate=${filtersProcessed.endDate}`,
+    `/buildings/reports/list?maintenanceStatusId=${filters.maintenanceStatusId}&buildingId=${filters.buildingId}&categoryId=${filters.categoryId}&responsibleSyndicId=${filters.responsibleSyndicId}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
@@ -59,10 +50,10 @@ export const schemaReportFilter = yup
     buildingId: yup.string(),
     categoryId: yup.string(),
     responsibleSyndicId: yup.string(),
-    startDate: yup.date().required('A data inicial é obrigatória.'),
-    endDate: yup
-      .date()
-      .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
-      .required('A data final é obrigatória.'),
+    // startDate: yup.date().required('A data inicial é obrigatória.'),
+    // endDate: yup
+    //   .date()
+    //   .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+    //   .required('A data final é obrigatória.'),
   })
   .required();
