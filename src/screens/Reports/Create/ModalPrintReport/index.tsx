@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   page: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     padding: 24,
     fontSize: 8,
     color: theme.color.gray5,
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '8px 0',
+    gap: '0 8px',
   },
   section1: {
     flexGrow: 1,
@@ -61,23 +63,23 @@ const styles = StyleSheet.create({
   },
   section3: {
     flexGrow: 1,
-    width: 106,
+    width: 80,
   },
   section4: {
     flexGrow: 1,
-    width: 106,
+    width: 100,
   },
   section5: {
     flexGrow: 1,
-    width: 133,
+    width: 130,
   },
   section6: {
     flexGrow: 1,
-    width: 133,
+    width: 120,
   },
   section7: {
     flexGrow: 1,
-    width: 73,
+    width: 80,
   },
   section8: {
     flexGrow: 1,
@@ -164,12 +166,12 @@ const MyDocument = ({
           <View fixed style={styles.header}>
             <Image source={companyImage} style={styles.companyLogo} />
             <View style={styles.headerDiv}>
-              <Text>Edificação: Monte Rav</Text>
-              <Text>Responsável: Jorge Luiz Andrade Fagundes</Text>
+              <Text>Edificação: {`${filterforPDF.buildingName ?? 'Todas'}`}</Text>
+              <Text>Responsável: {`${filterforPDF.responsibleUserName ?? 'Todos'}`}</Text>
               <Text>ID: {randomNumber()}</Text>
             </View>
             <View style={styles.headerDiv}>
-              <Text>Categoria: Sistemas hidrossanitários</Text>
+              <Text>Categoria: {`${filterforPDF.categoryName ?? 'Todas'}`}</Text>
               <Text>
                 Período:{' '}
                 {filterforPDF.startDate && filterforPDF.endDate
@@ -180,7 +182,9 @@ const MyDocument = ({
               </Text>
             </View>
             <View style={styles.headerDiv}>
-              <Text>Status: Pendente, ablalbal ,blalbalbl</Text>
+              <Text>
+                Status: {`${filterforPDF.status ? getStatusName(filterforPDF.status) : 'Todos'}`}
+              </Text>
               <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
             </View>
           </View>
@@ -269,9 +273,7 @@ const MyDocument = ({
         <View fixed style={styles.footer}>
           <Image source={image.logoForPDF} style={styles.easyAlertLogo} />
           <Text
-            render={({ pageNumber, totalPages }) =>
-              `${totalPages === 1 ? '' : `Página ${pageNumber} de ${totalPages}`}`
-            }
+            render={({ pageNumber, totalPages }) => `${`Página ${pageNumber} de ${totalPages}`}`}
           />
         </View>
       </Page>

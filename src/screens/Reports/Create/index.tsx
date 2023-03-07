@@ -93,8 +93,27 @@ export const CreateReport = () => {
             onSubmit={async (values) => {
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
+
+                const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
+                if (building) newState.buildingName = building?.name;
+
+                const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
+                if (category) newState.categoryName = category?.name;
+
+                const responsible = filtersOptions?.responsibles.find(
+                  (e) => e.id === values.responsibleSyndicId,
+                );
+                if (responsible) newState.responsibleUserName = responsible?.name;
+
                 newState.startDate = values.startDate;
+
                 newState.endDate = values.endDate;
+
+                const status = filtersOptions?.status.find(
+                  (e) => e.id === values.maintenanceStatusId,
+                );
+                if (status) newState.status = status?.name;
+
                 return newState;
               });
 
@@ -229,7 +248,7 @@ export const CreateReport = () => {
                 </s.CountsInfo>
               </s.Counts>
 
-              <p className="p4">
+              <p className="p3">
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>
