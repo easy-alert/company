@@ -109,7 +109,7 @@ const stylesSquare = StyleSheet.create({
   },
   companyLogo: {
     height: 80,
-    objectFit: 'contain,',
+    objectFit: 'contain',
   },
   backgroundImage: {
     position: 'absolute',
@@ -119,6 +119,7 @@ const stylesSquare = StyleSheet.create({
   mainMessageView: {
     fontSize: 18,
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },

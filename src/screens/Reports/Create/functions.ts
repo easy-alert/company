@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
@@ -51,3 +52,17 @@ export const requestReportsDataForSelect = async ({
       setLoading(false);
     });
 };
+
+export const schemaReportFilter = yup
+  .object({
+    maintenanceStatusId: yup.string(),
+    buildingId: yup.string(),
+    categoryId: yup.string(),
+    responsibleSyndicId: yup.string(),
+    startDate: yup.date().required('A data inicial é obrigatória.'),
+    endDate: yup
+      .date()
+      .min(yup.ref('startDate'), 'A data final deve ser menor que a inicial.')
+      .required('A data final é obrigatória.'),
+  })
+  .required();

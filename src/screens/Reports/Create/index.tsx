@@ -14,8 +14,8 @@ import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { requestReportsData, requestReportsDataForSelect } from './functions';
-import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
+import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
+import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
@@ -40,6 +40,8 @@ export const CreateReport = () => {
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
+  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
+
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
   }, []);
@@ -55,13 +57,17 @@ export const CreateReport = () => {
         />
       )}
       {modalPrintReportOpen && (
-        <ModalPrintReport setModal={setModalPrintReportOpen} maintenances={maintenances} />
+        <ModalPrintReport
+          setModal={setModalPrintReportOpen}
+          maintenances={maintenances}
+          filterforPDF={filterforPDF}
+        />
       )}
 
       <s.Container>
         <s.Header>
           <h2>Relatórios</h2>
-          {/*
+
           <IconButton
             icon={icon.pdfLogo}
             label="Exportar"
@@ -70,7 +76,8 @@ export const CreateReport = () => {
             onClick={() => {
               setModalPrintReportOpen(true);
             }}
-          /> */}
+            disabled={maintenances.length === 0}
+          />
         </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
@@ -83,7 +90,34 @@ export const CreateReport = () => {
               startDate: '',
               endDate: '',
             }}
+            validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
+              setFilterForPDF((prevState) => {
+                const newState = { ...prevState };
+
+                const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
+                if (building) newState.buildingName = building?.name;
+
+                const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
+                if (category) newState.categoryName = category?.name;
+
+                const responsible = filtersOptions?.responsibles.find(
+                  (e) => e.id === values.responsibleSyndicId,
+                );
+                if (responsible) newState.responsibleUserName = responsible?.name;
+
+                newState.startDate = values.startDate;
+
+                newState.endDate = values.endDate;
+
+                const status = filtersOptions?.status.find(
+                  (e) => e.id === values.maintenanceStatusId,
+                );
+                if (status) newState.status = status?.name;
+
+                return newState;
+              });
+
               await requestReportsData({
                 setOnQuery,
                 setCounts,
@@ -215,7 +249,7 @@ export const CreateReport = () => {
                 </s.CountsInfo>
               </s.Counts>
 
-              <p className="p4">
+              <p className="p3">
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>

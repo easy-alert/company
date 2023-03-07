@@ -78,4 +78,5 @@ export const NoMaintenanceCard = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
+  color: ${theme.color.gray4};
 `;
