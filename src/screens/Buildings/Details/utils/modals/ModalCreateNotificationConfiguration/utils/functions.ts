@@ -21,6 +21,7 @@ export const requestCreateNotificationConfiguration = async ({
   setUsedMaintenancesCount,
   phoneConfirmUrl,
   emailConfirmUrl,
+  setFieldValue,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -49,8 +50,18 @@ export const requestCreateNotificationConfiguration = async ({
         setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
-      setModal(false);
       toast.success(res.data.ServerMessage.message);
+
+      if (values.createAgain) {
+        setFieldValue('name', '');
+        setFieldValue('email', '');
+        setFieldValue('role', '');
+        setFieldValue('contactNumber', '');
+        setFieldValue('isMain', false);
+        setOnQuery(false);
+      } else {
+        setModal(false);
+      }
     })
     .catch((err) => {
       setOnQuery(false);
