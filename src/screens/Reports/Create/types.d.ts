@@ -7,6 +7,15 @@ export interface IReportsFilters {
   endDate: string;
 }
 
+export interface IFilterforPDF {
+  buildingName: string;
+  responsibleUserName: string;
+  categoryName: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+}
+
 interface IFilterData {
   id: string;
   name: string;

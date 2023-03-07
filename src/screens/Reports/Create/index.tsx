@@ -15,7 +15,7 @@ import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect } from './functions';
-import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
+import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
@@ -40,6 +40,8 @@ export const CreateReport = () => {
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
+  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
+
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
   }, []);
@@ -55,7 +57,11 @@ export const CreateReport = () => {
         />
       )}
       {modalPrintReportOpen && (
-        <ModalPrintReport setModal={setModalPrintReportOpen} maintenances={maintenances} />
+        <ModalPrintReport
+          setModal={setModalPrintReportOpen}
+          maintenances={maintenances}
+          filterforPDF={filterforPDF}
+        />
       )}
 
       <s.Container>
@@ -85,6 +91,13 @@ export const CreateReport = () => {
               endDate: '',
             }}
             onSubmit={async (values) => {
+              setFilterForPDF((prevState) => {
+                const newState = { ...prevState };
+                newState.startDate = values.startDate;
+                newState.endDate = values.endDate;
+                return newState;
+              });
+
               await requestReportsData({
                 setOnQuery,
                 setCounts,

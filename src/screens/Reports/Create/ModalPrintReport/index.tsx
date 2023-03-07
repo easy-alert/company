@@ -16,7 +16,7 @@ import { Button } from '../../../../components/Buttons/Button';
 
 // TYPES
 import { IModalPrintQRCode } from './types';
-import { IMaintenanceReport } from '../types';
+import { IFilterforPDF, IMaintenanceReport } from '../types';
 
 // STYLES
 import * as Style from './styles';
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 24,
     fontSize: 8,
+    color: theme.color.gray5,
   },
   tableHeader: {
     display: 'flex',
@@ -93,14 +94,31 @@ const styles = StyleSheet.create({
   },
 
   companyLogo: {
-    height: 32,
+    height: 40,
+    width: 60,
     objectFit: 'contain',
   },
   easyAlertLogo: {
     width: 85,
     height: 19,
   },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 16,
+    marginBottom: 24,
+  },
+
+  headerDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 4,
+    width: 400,
+  },
   footer: {
+    marginTop: 24,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -112,10 +130,12 @@ const MyDocument = ({
   setLoading,
   maintenances,
   companyImage,
+  filterforPDF,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   maintenances: IMaintenanceReport[];
   companyImage: string;
+  filterforPDF: IFilterforPDF;
 }) => {
   const randomNumber = () => {
     let result = '';
@@ -139,9 +159,36 @@ const MyDocument = ({
     >
       <Page size="A4" style={styles.page} orientation="landscape">
         <View>
-          <View fixed>
-            <Text>ID: {randomNumber()}</Text>
+          <View fixed style={styles.header}>
             <Image source={companyImage} style={styles.companyLogo} />
+            <View style={styles.headerDiv}>
+              <Text>
+                Edificação: Monte Ravello, Hub SmartHome, Vicente de Paula Monte Ravello, Hub
+                SmartHome, Vicente de Paula Monte Ravello, Hub SmartHome, Vicente de Paula Monte
+                Ravello, Hub SmartHome, Vicente de Paula Monte Ravello, Hub SmartHome, Vicente de
+                Paula
+              </Text>
+              <Text>Responsável: Jorge Luiz Andrade Fagundes</Text>
+              <Text>ID: {randomNumber()}</Text>
+            </View>
+            <View style={styles.headerDiv}>
+              <Text>
+                Categoria: Sistemas hidrossanitários Sistemas hidrossanitários Sistemas
+                hidrossanitários Sistemas hidrossanitários Sistemas hidrossanitários{' '}
+              </Text>
+              <Text>
+                Período:{' '}
+                {filterforPDF.startDate && filterforPDF.endDate
+                  ? `${dateFormatter(filterforPDF.startDate)} a ${dateFormatter(
+                      filterforPDF.endDate,
+                    )}`
+                  : 'Todos'}
+              </Text>
+            </View>
+            <View style={styles.headerDiv}>
+              <Text>Status: Pendente, ablalbal ,blalbalbl</Text>
+              <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
+            </View>
           </View>
           <View style={styles.tableHeader} fixed>
             <View style={styles.section1}>
@@ -238,7 +285,7 @@ const MyDocument = ({
   );
 };
 
-export const ModalPrintReport = ({ setModal, maintenances }: IModalPrintQRCode) => {
+export const ModalPrintReport = ({ setModal, maintenances, filterforPDF }: IModalPrintQRCode) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { account } = useAuthContext();
 
@@ -253,6 +300,7 @@ export const ModalPrintReport = ({ setModal, maintenances }: IModalPrintQRCode) 
               setLoading={setLoading}
               maintenances={maintenances}
               companyImage={account?.Company.image!}
+              filterforPDF={filterforPDF}
             />
           </PDFViewer>
           <PDFDownloadLink
@@ -261,9 +309,10 @@ export const ModalPrintReport = ({ setModal, maintenances }: IModalPrintQRCode) 
                 setLoading={setLoading}
                 maintenances={maintenances}
                 companyImage={account?.Company.image!}
+                filterforPDF={filterforPDF}
               />
             }
-            fileName="Relatório nome"
+            fileName={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
           >
             <Button label="Download" disable={loading} />
           </PDFDownloadLink>
