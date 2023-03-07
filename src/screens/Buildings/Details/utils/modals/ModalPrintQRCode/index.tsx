@@ -189,7 +189,7 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
           <QRCodeCanvas
             id="QRCode"
             value={`${
-              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan'
+              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'
             }/${buildingId}`}
             bgColor="#F2EAEA"
             size={300}

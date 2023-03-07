@@ -216,7 +216,7 @@ export const BuildingDetails = () => {
                 onClick={() => {
                   window.open(
                     `${
-                      import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/maintenancesplan'
+                      import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'
                     }/${buildingId}`,
                     '_blank',
                   );
