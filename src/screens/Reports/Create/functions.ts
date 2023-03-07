@@ -62,7 +62,7 @@ export const schemaReportFilter = yup
     startDate: yup.date().required('A data inicial é obrigatória.'),
     endDate: yup
       .date()
-      .min(yup.ref('startDate'), 'A data final deve ser menor que a inicial.')
+      .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
       .required('A data final é obrigatória.'),
   })
   .required();
