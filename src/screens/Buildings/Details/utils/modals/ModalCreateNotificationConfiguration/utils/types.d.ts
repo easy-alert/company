@@ -6,6 +6,7 @@ interface ICreateNotificationConfiguration {
   role: string;
   contactNumber: string;
   isMain: boolean;
+  createAgain: boolean;
 }
 
 export interface IModalCreateNotificationConfiguration {
@@ -29,4 +30,6 @@ export interface IRequestCreateNotificationConfiguration {
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
+  setFieldValue: any;
+  resetForm: any;
 }

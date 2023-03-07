@@ -158,7 +158,9 @@ export const MaintenanceCard = ({
               <div />
               <div />
 
-              <Style.MaintenancesCardGridMoreOptionsButton>
+              <div />
+
+              <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
                     style={{ whiteSpace: 'nowrap' }}
@@ -168,12 +170,6 @@ export const MaintenanceCard = ({
                       setModalAdditionalInformations(true);
                     }}
                   />
-                </div>
-              </Style.MaintenancesCardGridMoreOptionsButton>
-              <div />
-
-              <Style.MaintenancesCardGridMoreEditButton>
-                <div>
                   <Button
                     disable={!maintenance.ownerCompanyId}
                     label="Editar"

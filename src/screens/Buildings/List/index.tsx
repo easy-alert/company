@@ -110,7 +110,7 @@ export const BuildingsList = () => {
       </Style.Header>
 
       {buildingList.length > 0 ? (
-        <>
+        <Style.Content>
           <Style.GridContainer>
             {buildingList.map((building) => (
               <Style.BuildingCard
@@ -184,7 +184,7 @@ export const BuildingsList = () => {
               }}
             />
           </Style.PaginationFooter>
-        </>
+        </Style.Content>
       ) : (
         <Style.NoDataContainer>
           <Image img={icon.paper} size="80px" radius="0" />

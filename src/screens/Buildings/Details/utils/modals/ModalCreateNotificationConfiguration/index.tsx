@@ -44,9 +44,10 @@ export const ModalCreateNotificationConfiguration = ({
           role: '',
           contactNumber: '',
           isMain: false,
+          createAgain: false,
         }}
         validationSchema={schemaCreateNotificationConfiguration}
-        onSubmit={async (values) => {
+        onSubmit={async (values, actions) => {
           requestCreateNotificationConfiguration({
             buildingId,
             setModal,
@@ -57,6 +58,8 @@ export const ModalCreateNotificationConfiguration = ({
             setUsedMaintenancesCount,
             emailConfirmUrl,
             phoneConfirmUrl,
+            setFieldValue: actions.setFieldValue,
+            resetForm: actions.resetForm,
           });
         }}
       >
@@ -102,16 +105,22 @@ export const ModalCreateNotificationConfiguration = ({
                 placeholder="Ex: Síndico"
                 maxLength={40}
               />
+              <Style.MainContactObservation>
+                <Image img={icon.alert} size="16px" />
+                <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
+              </Style.MainContactObservation>
 
               <FormikCheckbox
                 name="isMain"
                 labelColor={theme.color.gray4}
                 label="Contato principal"
               />
-              <Style.MainContactObservation>
-                <Image img={icon.alert} size="16px" />
-                <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
-              </Style.MainContactObservation>
+
+              <FormikCheckbox
+                name="createAgain"
+                labelColor={theme.color.gray4}
+                label="Salvar e criar outro"
+              />
 
               <Style.ButtonContainer>
                 <Button label="Cadastrar" type="submit" loading={onQuery} />

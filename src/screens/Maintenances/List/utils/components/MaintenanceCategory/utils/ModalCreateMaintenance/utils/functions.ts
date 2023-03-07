@@ -16,6 +16,9 @@ export const requestCreateMaintenance = async ({
   categories,
   setCategories,
   setOnQuery,
+  defaultDelayIntervalId,
+  resetForm,
+  setFieldValue,
 }: IRequestCreateMaintenance) => {
   setOnQuery(true);
 
@@ -42,9 +45,16 @@ export const requestCreateMaintenance = async ({
 
       setCategories([...categoriesEdit]);
 
-      setModal(false);
-
       toast.success(res.data.ServerMessage.message);
+
+      if (values.createAgain) {
+        resetForm();
+        setFieldValue('delayTimeInterval', defaultDelayIntervalId);
+        setFieldValue('createAgain', true);
+        setOnQuery(false);
+      } else {
+        setModal(false);
+      }
     })
     .catch((err) => {
       setOnQuery(false);

@@ -67,6 +67,7 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   > div {
     height: 100%;
     display: flex;
+    gap: 16px;
     align-items: flex-end;
   }
 `;
@@ -100,7 +101,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   grid-template-rows: 1fr;
   overflow: hidden;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 95px 60px;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 60px 60px;
 
   > p {
     line-height: 17px;
@@ -132,7 +133,7 @@ export const MaintenancesMoreGrid = styled.div`
   grid-template-rows: auto;
 
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 95px 72px;
+  grid-template-columns: 8px 230px minmax(230px, 0.5fr) 0.6fr 0.4fr 0.5fr 60px 60px;
 
   span {
     color: ${theme.color.primary};

@@ -21,6 +21,8 @@ export const requestCreateNotificationConfiguration = async ({
   setUsedMaintenancesCount,
   phoneConfirmUrl,
   emailConfirmUrl,
+  setFieldValue,
+  resetForm,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -49,8 +51,15 @@ export const requestCreateNotificationConfiguration = async ({
         setTotalMaintenancesCount,
         setUsedMaintenancesCount,
       });
-      setModal(false);
       toast.success(res.data.ServerMessage.message);
+
+      if (values.createAgain) {
+        resetForm();
+        setFieldValue('createAgain', false);
+        setOnQuery(false);
+      } else {
+        setModal(false);
+      }
     })
     .catch((err) => {
       setOnQuery(false);
@@ -68,5 +77,6 @@ export const schemaCreateNotificationConfiguration = yup
       .min(15, 'O número do WhatsApp deve conter no mínimo 15 caracteres.'),
     role: yup.string().required('A função deve ser preenchida.'),
     isMain: yup.boolean(),
+    createAgain: yup.boolean(),
   })
   .required();

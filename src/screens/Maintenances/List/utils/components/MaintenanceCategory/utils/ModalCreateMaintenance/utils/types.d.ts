@@ -27,5 +27,9 @@ export interface IRequestCreateMaintenance {
     delay: string;
     delayTimeInterval: string;
     observation: string;
+    createAgain: boolean;
   };
+  setFieldValue: any;
+  resetForm: any;
+  defaultDelayIntervalId: string;
 }
