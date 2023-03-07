@@ -33,8 +33,10 @@ export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
     padding-left: ${theme.size.sm};
   }
   ${({ cssProps }) => cssProps}
+  min-width: 160px;
+  padding-inline: 8px;
 
-  @media (max-width:900px) {
+  @media (max-width: 900px) {
     ${({ cssOnMedia }) => cssOnMedia}
   }
 `;
