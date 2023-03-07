@@ -14,7 +14,7 @@ import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { requestReportsData, requestReportsDataForSelect } from './functions';
+import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
@@ -90,6 +90,7 @@ export const CreateReport = () => {
               startDate: '',
               endDate: '',
             }}
+            validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };

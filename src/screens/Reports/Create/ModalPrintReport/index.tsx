@@ -40,7 +40,8 @@ const styles = StyleSheet.create({
   tableHeader: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 6,
+    padding: '8px 0',
+    gap: '0 8px',
   },
   tableBody: {
     display: 'flex',
