@@ -165,7 +165,10 @@ const MyDocument = ({
       <Page size="A4" style={styles.page} orientation="landscape">
         <View>
           <View fixed style={styles.header}>
-            <Image source={companyImage} style={styles.companyLogo} />
+            <Image
+              src={`${companyImage}?noCache=${Math.random().toString()}`}
+              style={styles.companyLogo}
+            />
             <View style={styles.headerDiv}>
               <Text>Edificação: {`${filterforPDF.buildingName ?? 'Todas'}`}</Text>
               <Text>Responsável: {`${filterforPDF.responsibleUserName ?? 'Todos'}`}</Text>

@@ -228,7 +228,15 @@ export const CreateReport = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {!onQuery && maintenances.length > 0 ? (
+        {onQuery && <DotSpinLoading />}
+
+        {!onQuery && maintenances.length === 0 && (
+          <s.NoMaintenanceCard>
+            <h4>Nenhuma manutenção encontrada.</h4>
+          </s.NoMaintenanceCard>
+        )}
+
+        {!onQuery && maintenances.length > 0 && (
           <>
             <s.CountContainer>
               <s.Counts>
@@ -298,10 +306,6 @@ export const CreateReport = () => {
               ))}
             </ReportDataTable>
           </>
-        ) : (
-          <s.NoMaintenanceCard>
-            <h4>Nenhuma manutenção encontrada.</h4>
-          </s.NoMaintenanceCard>
         )}
       </s.Container>
     </>
