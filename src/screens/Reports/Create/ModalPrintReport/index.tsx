@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     gap: 16,
     marginBottom: 24,
   },
@@ -115,7 +116,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: 4,
-    width: 400,
+    justifyContent: 'flex-start',
+    maxWidth: 250,
   },
   footer: {
     marginTop: 24,
@@ -162,20 +164,12 @@ const MyDocument = ({
           <View fixed style={styles.header}>
             <Image source={companyImage} style={styles.companyLogo} />
             <View style={styles.headerDiv}>
-              <Text>
-                Edificação: Monte Ravello, Hub SmartHome, Vicente de Paula Monte Ravello, Hub
-                SmartHome, Vicente de Paula Monte Ravello, Hub SmartHome, Vicente de Paula Monte
-                Ravello, Hub SmartHome, Vicente de Paula Monte Ravello, Hub SmartHome, Vicente de
-                Paula
-              </Text>
+              <Text>Edificação: Monte Rav</Text>
               <Text>Responsável: Jorge Luiz Andrade Fagundes</Text>
               <Text>ID: {randomNumber()}</Text>
             </View>
             <View style={styles.headerDiv}>
-              <Text>
-                Categoria: Sistemas hidrossanitários Sistemas hidrossanitários Sistemas
-                hidrossanitários Sistemas hidrossanitários Sistemas hidrossanitários{' '}
-              </Text>
+              <Text>Categoria: Sistemas hidrossanitários</Text>
               <Text>
                 Período:{' '}
                 {filterforPDF.startDate && filterforPDF.endDate
