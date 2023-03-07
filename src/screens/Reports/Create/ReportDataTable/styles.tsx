@@ -47,7 +47,7 @@ export const TableColBody = styled.td<{
   cssOnMedia: any;
 }>`
   height: ${theme.size.xxlg};
-  padding-inline: 8px;
+  padding: 8px;
   overflow-wrap: break-word;
   text-align: start;
   min-width: 160px;
