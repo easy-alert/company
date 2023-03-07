@@ -22,6 +22,7 @@ export const requestCreateNotificationConfiguration = async ({
   phoneConfirmUrl,
   emailConfirmUrl,
   setFieldValue,
+  resetForm,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -53,11 +54,8 @@ export const requestCreateNotificationConfiguration = async ({
       toast.success(res.data.ServerMessage.message);
 
       if (values.createAgain) {
-        setFieldValue('name', '');
-        setFieldValue('email', '');
-        setFieldValue('role', '');
-        setFieldValue('contactNumber', '');
-        setFieldValue('isMain', false);
+        resetForm();
+        setFieldValue('createAgain', false);
         setOnQuery(false);
       } else {
         setModal(false);

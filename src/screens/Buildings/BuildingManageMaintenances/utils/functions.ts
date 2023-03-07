@@ -15,11 +15,13 @@ export const requestListCategoriesToManage = async ({
   buildingId,
   setTableLoading,
   setBuildingName,
+  currentBuildingId,
 }: IRequestListCategoriesToManage) => {
   if (setTableLoading) setTableLoading(true);
 
   await Api.post(`/buildings/maintenances/list`, {
     buildingId,
+    currentBuildingId,
   })
     .then((res) => {
       setBuildingName(res.data.buildingName);

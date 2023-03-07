@@ -59,6 +59,7 @@ export const ModalCreateNotificationConfiguration = ({
             emailConfirmUrl,
             phoneConfirmUrl,
             setFieldValue: actions.setFieldValue,
+            resetForm: actions.resetForm,
           });
         }}
       >

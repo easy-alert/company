@@ -31,4 +31,5 @@ export interface IRequestCreateNotificationConfiguration {
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
   setFieldValue: any;
+  resetForm: any;
 }

@@ -47,6 +47,7 @@ export interface IRequestListCategoriesToManage {
   setTableLoading?: (setTableLoading: boolean) => void;
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   buildingId: string;
+  currentBuildingId: string;
   setBuildingName: React.Dispatch<React.SetStateAction<string>>;
 }
 

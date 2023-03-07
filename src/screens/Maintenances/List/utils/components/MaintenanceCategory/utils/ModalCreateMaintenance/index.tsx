@@ -21,6 +21,7 @@ import { schemaCreateMaintenance, requestCreateMaintenance } from './utils/funct
 import { applyMask, capitalizeFirstLetter } from '../../../../../../../../utils/functions';
 
 import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
+import { FormikCheckbox } from '../../../../../../../../components/Form/FormikCheckbox';
 
 export const ModalCreateMaintenance = ({
   setModal,
@@ -46,9 +47,10 @@ export const ModalCreateMaintenance = ({
           delay: '0',
           delayTimeInterval: timeIntervals[0].id,
           observation: '',
+          createAgain: false,
         }}
         validationSchema={schemaCreateMaintenance}
-        onSubmit={async (values) => {
+        onSubmit={async (values, actions) => {
           requestCreateMaintenance({
             values,
             categoryId,
@@ -56,6 +58,9 @@ export const ModalCreateMaintenance = ({
             categories,
             setCategories,
             setOnQuery,
+            setFieldValue: actions.setFieldValue,
+            defaultDelayIntervalId: timeIntervals[0].id,
+            resetForm: actions.resetForm,
           });
         }}
       >
@@ -221,6 +226,7 @@ export const ModalCreateMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
+              <FormikCheckbox name="createAgain" label="Salvar e criar outra" />
               <Button center label="Criar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>

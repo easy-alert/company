@@ -63,6 +63,7 @@ export const BuildingManageMaintenances = () => {
         setCategories,
         buildingId: buildingId!,
         setBuildingName,
+        currentBuildingId: buildingId!,
       });
     });
   }, []);
@@ -130,6 +131,7 @@ export const BuildingManageMaintenances = () => {
                   buildingId: toCopyBuildingId!,
                   setTableLoading,
                   setBuildingName,
+                  currentBuildingId: buildingId!,
                 });
               }}
             >
