@@ -1,5 +1,5 @@
 // LIBS
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // STYLES
@@ -12,9 +12,11 @@ import { IconButton } from '../Buttons/IconButton';
 
 // TYPES
 import { ISidebar, SidebarContentProps } from './utils/types';
+import { AuthContext } from '../../contexts/Auth/AuthContext';
 
 export const Sidebar = ({ children }: ISidebar) => {
   const navigate = useNavigate();
+  const { signout } = useContext(AuthContext);
 
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(true);
@@ -88,6 +90,10 @@ export const Sidebar = ({ children }: ISidebar) => {
                   }, 125);
                 } else {
                   navigate(element.url);
+                }
+
+                if (element.url === '/login') {
+                  signout();
                 }
               }}
               onAuxClick={() => {

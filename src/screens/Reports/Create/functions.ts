@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
@@ -10,18 +11,10 @@ export const requestReportsData = async ({
   filters,
 }: IRequestReportsData) => {
   setOnQuery(true);
-
-  const filtersProcessed = {
-    maintenanceStatusId: filters.maintenanceStatusId,
-    buildingId: filters.buildingId,
-    categoryId: filters.categoryId,
-    responsibleSyndicId: filters.responsibleSyndicId,
-    startDate: filters.startDate !== '' ? filters.startDate : ' ',
-    endDate: filters.endDate !== '' ? filters.endDate : ' ',
-  };
+  setMaintenances([]);
 
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusId=${filtersProcessed.maintenanceStatusId}&buildingId=${filtersProcessed.buildingId}&categoryId=${filtersProcessed.categoryId}&responsibleSyndicId=${filtersProcessed.responsibleSyndicId}&startDate=${filtersProcessed.startDate}&endDate=${filtersProcessed.endDate}`,
+    `/buildings/reports/list?maintenanceStatusId=${filters.maintenanceStatusId}&buildingId=${filters.buildingId}&categoryId=${filters.categoryId}&responsibleSyndicId=${filters.responsibleSyndicId}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
@@ -51,3 +44,17 @@ export const requestReportsDataForSelect = async ({
       setLoading(false);
     });
 };
+
+export const schemaReportFilter = yup
+  .object({
+    maintenanceStatusId: yup.string(),
+    buildingId: yup.string(),
+    categoryId: yup.string(),
+    responsibleSyndicId: yup.string(),
+    startDate: yup.date().required('A data inicial é obrigatória.'),
+    endDate: yup
+      .date()
+      .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+      .required('A data final é obrigatória.'),
+  })
+  .required();

@@ -14,8 +14,8 @@ import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { requestReportsData, requestReportsDataForSelect } from './functions';
-import { ICounts, IFiltersOptions, IMaintenanceReport } from './types';
+import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
+import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
@@ -24,7 +24,7 @@ import { ModalPrintReport } from './ModalPrintReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [counts, setCounts] = useState<ICounts>({
     completed: 0,
@@ -39,6 +39,8 @@ export const CreateReport = () => {
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
+  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -55,13 +57,17 @@ export const CreateReport = () => {
         />
       )}
       {modalPrintReportOpen && (
-        <ModalPrintReport setModal={setModalPrintReportOpen} maintenances={maintenances} />
+        <ModalPrintReport
+          setModal={setModalPrintReportOpen}
+          maintenances={maintenances}
+          filterforPDF={filterforPDF}
+        />
       )}
 
       <s.Container>
         <s.Header>
           <h2>Relatórios</h2>
-          {/*
+
           <IconButton
             icon={icon.pdfLogo}
             label="Exportar"
@@ -70,20 +76,48 @@ export const CreateReport = () => {
             onClick={() => {
               setModalPrintReportOpen(true);
             }}
-          /> */}
+            disabled={maintenances.length === 0}
+          />
         </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
             initialValues={{
-              maintenanceStatusId: ' ',
-              buildingId: ' ',
-              categoryId: ' ',
-              responsibleSyndicId: ' ',
+              maintenanceStatusId: '',
+              buildingId: '',
+              categoryId: '',
+              responsibleSyndicId: '',
               startDate: '',
               endDate: '',
             }}
+            validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
+              setFilterForPDF((prevState) => {
+                const newState = { ...prevState };
+
+                const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
+                if (building) newState.buildingName = building?.name;
+
+                const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
+                if (category) newState.categoryName = category?.name;
+
+                const responsible = filtersOptions?.responsibles.find(
+                  (e) => e.id === values.responsibleSyndicId,
+                );
+                if (responsible) newState.responsibleUserName = responsible?.name;
+
+                newState.startDate = values.startDate;
+
+                newState.endDate = values.endDate;
+
+                const status = filtersOptions?.status.find(
+                  (e) => e.id === values.maintenanceStatusId,
+                );
+                if (status) newState.status = status?.name;
+
+                return newState;
+              });
+
               await requestReportsData({
                 setOnQuery,
                 setCounts,
@@ -109,7 +143,7 @@ export const CreateReport = () => {
                     label="Edificação"
                     error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
 
                     {filtersOptions?.buildings.map((building) => (
                       <option key={building.id} value={building.id}>
@@ -124,7 +158,7 @@ export const CreateReport = () => {
                     label="Categoria"
                     error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -142,7 +176,7 @@ export const CreateReport = () => {
                         : null
                     }
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.responsibles.map((responsible) => (
                       <option key={responsible.id} value={responsible.id}>
                         {responsible.name}
@@ -176,7 +210,7 @@ export const CreateReport = () => {
                         : null
                     }
                   >
-                    <option value=" ">Todos</option>
+                    <option value="">Todos</option>
                     {filtersOptions?.status.map((status) => (
                       <option key={status.id} value={status.id}>
                         {capitalizeFirstLetter(status.pluralLabel)}
@@ -194,7 +228,15 @@ export const CreateReport = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {!onQuery && maintenances.length > 0 ? (
+        {onQuery && <DotSpinLoading />}
+
+        {!onQuery && maintenances.length === 0 && (
+          <s.NoMaintenanceCard>
+            <h4>Nenhuma manutenção encontrada.</h4>
+          </s.NoMaintenanceCard>
+        )}
+
+        {!onQuery && maintenances.length > 0 && (
           <>
             <s.CountContainer>
               <s.Counts>
@@ -215,7 +257,7 @@ export const CreateReport = () => {
                 </s.CountsInfo>
               </s.Counts>
 
-              <p className="p4">
+              <p className="p3">
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>
@@ -264,10 +306,6 @@ export const CreateReport = () => {
               ))}
             </ReportDataTable>
           </>
-        ) : (
-          <s.NoMaintenanceCard>
-            <h4>Nenhuma manutenção encontrada.</h4>
-          </s.NoMaintenanceCard>
         )}
       </s.Container>
     </>

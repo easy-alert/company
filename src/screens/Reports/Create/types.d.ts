@@ -7,6 +7,15 @@ export interface IReportsFilters {
   endDate: string;
 }
 
+export interface IFilterforPDF {
+  buildingName: string;
+  responsibleUserName: string;
+  categoryName: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+}
+
 interface IFilterData {
   id: string;
   name: string;
@@ -35,13 +44,13 @@ export interface IMaintenanceReport {
   activity: string;
   buildingName: string;
   categoryName: string;
-  cost: numnber | null;
+  cost: number | null;
   element: string;
   maintenanceHistoryId: string;
   notificationDate: string;
   resolutionDate: string | null;
-  responsible: tring | null;
-  status: tring | string;
+  responsible: string | null;
+  status: 'completed' | 'expired' | 'pending' | 'overdue';
 }
 
 export interface IRequestReportsData {
