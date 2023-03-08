@@ -51,7 +51,10 @@ export const ModalEditMaintenance = ({
           periodTimeInterval: selectedMaintenance.PeriodTimeInterval.id,
           delay: String(selectedMaintenance.delay),
           delayTimeInterval: selectedMaintenance.DelayTimeInterval.id,
-          observation: selectedMaintenance.observation ?? '',
+          observation:
+            selectedMaintenance.observation && selectedMaintenance.observation !== ''
+              ? selectedMaintenance.observation
+              : '',
         }}
         validationSchema={schemaEditMaintenance}
         onSubmit={async (values) => {

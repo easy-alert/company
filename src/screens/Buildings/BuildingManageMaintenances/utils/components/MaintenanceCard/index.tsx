@@ -131,7 +131,9 @@ export const MaintenanceCard = ({
 
               <p className="p2">
                 <span>Observação: </span>
-                {maintenance.observation ?? '-'}
+                {maintenance.observation && maintenance.observation !== ''
+                  ? maintenance.observation
+                  : '-'}
               </p>
               <p className="p2">
                 <span>Prazo para execução: </span>
