@@ -1,6 +1,7 @@
 // MAINTENANCES
 interface IMaintenance {
   Maintenance: {
+    MaintenancesHistory?: { id: string }[];
     id: string;
     element: string;
     activity: string;

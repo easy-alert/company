@@ -1,5 +1,6 @@
 // MAINTENANCES
 interface IMaintenance {
+  MaintenancesHistory?: { id: string }[];
   id: string;
   element: string;
   activity: string;
@@ -28,8 +29,6 @@ interface IMaintenance {
     singularLabel: string;
   };
   observation: string;
-  resolutionDate?: string | null;
-  notificationDate?: string | null;
 }
 
 export interface ICategories {

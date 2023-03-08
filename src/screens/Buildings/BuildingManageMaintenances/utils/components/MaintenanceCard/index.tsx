@@ -165,6 +165,9 @@ export const MaintenanceCard = ({
               <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
+                    disable={
+                      maintenance.MaintenancesHistory && maintenance.MaintenancesHistory.length > 0
+                    }
                     style={{ whiteSpace: 'nowrap' }}
                     label="+ Opções"
                     onClick={(e) => {

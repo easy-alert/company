@@ -1,5 +1,6 @@
 // MAINTENANCES
 interface IMaintenance {
+  MaintenancesHistory?: { id: string }[];
   isSelected: boolean;
   id: string;
   element: string;
