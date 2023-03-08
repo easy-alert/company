@@ -1,5 +1,5 @@
 // MAINTENANCES
-interface IMaintenance {
+export interface IMaintenance {
   Maintenance: {
     MaintenancesHistory?: { id: string }[];
     id: string;

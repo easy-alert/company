@@ -26,7 +26,6 @@ export const requestListCategoriesToManage = async ({
     .then((res) => {
       setBuildingName(res.data.buildingName);
       setCategories(res.data.CategoriesData);
-
       setLoading(false);
       if (setTableLoading) setTableLoading(false);
     })
