@@ -85,16 +85,19 @@ export const BuildingManageMaintenances = () => {
             <h2>{buildingName} / Plano de manutenções</h2>
           </Style.LeftSide>
           <Style.RightSide>
-            <IconButton
-              hideLabelOnMedia
-              fontWeight="500"
-              label="Criar categoria"
-              className="p2"
-              icon={icon.plusWithBg}
-              onClick={() => {
-                setModalCreateCategoryOpen(true);
-              }}
-            />
+            {!onQuery && (
+              <IconButton
+                hideLabelOnMedia
+                fontWeight="500"
+                label="Criar categoria"
+                className="p2"
+                icon={icon.plusWithBg}
+                onClick={() => {
+                  setModalCreateCategoryOpen(true);
+                }}
+              />
+            )}
+
             {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
               <IconButton
                 icon={icon.checked}

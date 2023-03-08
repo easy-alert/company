@@ -265,7 +265,7 @@ export const CreateReport = () => {
             <ReportDataTable
               colsHeader={[
                 { label: 'Data de notificação' },
-                { label: 'Data de resolução' },
+                { label: 'Data de conclusão' },
                 { label: 'Edificação' },
                 { label: 'Categoria' },
                 { label: 'Elemento' },

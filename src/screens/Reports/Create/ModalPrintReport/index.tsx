@@ -198,7 +198,7 @@ const MyDocument = ({
             </View>
 
             <View style={styles.section2}>
-              <Text>Data de resolução</Text>
+              <Text>Data de conclusão</Text>
             </View>
             <View style={styles.section3}>
               <Text>Edificação</Text>
