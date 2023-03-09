@@ -1,7 +1,7 @@
 // MAINTENANCES
 export interface IMaintenance {
   Maintenance: {
-    MaintenancesHistory?: { id: string }[];
+    hasHistory?: boolean;
     isSelected?: boolean;
     id: string;
     element: string;
