@@ -116,7 +116,12 @@ export const ModalMaintenanceDetails = ({
 
                 <Style.Row>
                   <h6>Observação do relato</h6>
-                  <p className="p2">{maintenance.MaintenanceReport[0].observation ?? '-'}</p>
+                  <p className="p2">
+                    {maintenance.MaintenanceReport[0].observation &&
+                    maintenance.MaintenanceReport[0].observation !== ''
+                      ? maintenance.MaintenanceReport[0].observation
+                      : '-'}
+                  </p>
                 </Style.Row>
 
                 <Style.Row>

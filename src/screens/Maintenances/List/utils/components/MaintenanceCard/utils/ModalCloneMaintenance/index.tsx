@@ -42,7 +42,10 @@ export const ModalCloneMaintenance = ({
           periodTimeInterval: maintenance.PeriodTimeInterval.id,
           delay: String(maintenance.delay),
           delayTimeInterval: maintenance.DelayTimeInterval.id,
-          observation: maintenance.observation ?? '',
+          observation:
+            maintenance.observation && maintenance.observation !== ''
+              ? maintenance.observation
+              : '',
         }}
         validationSchema={schemaCloneMaintenance}
         onSubmit={async (values) => {

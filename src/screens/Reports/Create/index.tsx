@@ -186,6 +186,7 @@ export const CreateReport = () => {
 
                   <FormikInput
                     label="Data de notificação inicial"
+                    typeDatePlaceholderValue={values.startDate}
                     name="startDate"
                     type="date"
                     value={values.startDate}
@@ -194,6 +195,7 @@ export const CreateReport = () => {
 
                   <FormikInput
                     label="Data de notificação final"
+                    typeDatePlaceholderValue={values.endDate}
                     name="endDate"
                     type="date"
                     value={values.endDate}
@@ -265,7 +267,7 @@ export const CreateReport = () => {
             <ReportDataTable
               colsHeader={[
                 { label: 'Data de notificação' },
-                { label: 'Data de resolução' },
+                { label: 'Data de conclusão' },
                 { label: 'Edificação' },
                 { label: 'Categoria' },
                 { label: 'Elemento' },

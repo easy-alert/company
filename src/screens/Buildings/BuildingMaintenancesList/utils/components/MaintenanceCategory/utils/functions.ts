@@ -12,21 +12,47 @@ export const alphabeticalOrder = ({
 }: ISortArray) => {
   if (defaultSortedColumn) {
     if (isSorted) {
-      category.Maintenances.sort((a: any, b: any) =>
-        String(a[toSortString]).toLowerCase() < String(b[toSortString]).toLowerCase() ? -1 : 1,
+      category.sort((a: any, b: any) =>
+        String(a.Maintenance[toSortString]).toLowerCase() <
+        String(b.Maintenance[toSortString]).toLowerCase()
+          ? -1
+          : 1,
       );
     } else {
-      category.Maintenances.sort((a: any, b: any) =>
-        String(a[toSortString]).toLowerCase() > String(b[toSortString]).toLowerCase() ? -1 : 1,
+      category.sort((a: any, b: any) =>
+        String(a.Maintenance[toSortString]).toLowerCase() >
+        String(b.Maintenance[toSortString]).toLowerCase()
+          ? -1
+          : 1,
       );
     }
   } else if (isSorted) {
-    category.Maintenances.sort((a: any, b: any) =>
-      String(a[toSortString]).toLowerCase() > String(b[toSortString]).toLowerCase() ? -1 : 1,
+    category.sort((a: any, b: any) =>
+      String(a.Maintenance[toSortString]).toLowerCase() >
+      String(b.Maintenance[toSortString]).toLowerCase()
+        ? -1
+        : 1,
     );
   } else {
-    category.Maintenances.sort((a: any, b: any) =>
-      String(a[toSortString]).toLowerCase() < String(b[toSortString]).toLowerCase() ? -1 : 1,
+    category.sort((a: any, b: any) =>
+      String(a.Maintenance[toSortString]).toLowerCase() <
+      String(b.Maintenance[toSortString]).toLowerCase()
+        ? -1
+        : 1,
+    );
+  }
+
+  setIsSorted(!isSorted);
+};
+
+export const numericalOrder = ({ category, isSorted, setIsSorted, toSortString }: ISortArray) => {
+  if (isSorted) {
+    category.sort(
+      (a: any, b: any) => Number(b.Maintenance[toSortString]) - Number(a.Maintenance[toSortString]),
+    );
+  } else {
+    category.sort(
+      (a: any, b: any) => Number(a.Maintenance[toSortString]) - Number(b.Maintenance[toSortString]),
     );
   }
 

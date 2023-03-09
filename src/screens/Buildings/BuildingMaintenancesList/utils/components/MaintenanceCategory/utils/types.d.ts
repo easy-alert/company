@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AddedMaintenances } from '../../../types';
+import { AddedMaintenances, IMaintenance } from '../../../types';
 
 export interface IMaintenanceCategory {
   data: AddedMaintenances;
@@ -10,7 +10,7 @@ export interface ISortType {
 }
 
 export interface ISortArray {
-  category: ICategories;
+  category: IMaintenance[];
   isSorted: boolean;
   setIsSorted: (setIsSorted: boolean) => void;
   toSortString: string;

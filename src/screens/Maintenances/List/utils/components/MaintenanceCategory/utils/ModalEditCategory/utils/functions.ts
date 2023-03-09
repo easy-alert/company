@@ -25,7 +25,8 @@ export const requestEditCategory = async ({
     .then((res) => {
       toast.dismiss();
 
-      const categoriesEdit = categories;
+      const categoriesEdit = structuredClone(categories);
+
       const index = categories.findIndex((category) => category.id === categoryId);
       categoriesEdit[index] = {
         id: categoryId,
@@ -60,7 +61,8 @@ export const requestDeleteCategory = async ({
     .then((res) => {
       toast.dismiss();
 
-      const categoriesEdit = categories;
+      const categoriesEdit = structuredClone(categories);
+
       const index = categories.findIndex((category) => category.id === categoryId);
       categoriesEdit.splice(index, 1);
       setCategories([...categoriesEdit]);

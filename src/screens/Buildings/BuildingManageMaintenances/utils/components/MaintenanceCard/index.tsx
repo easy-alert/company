@@ -63,6 +63,7 @@ export const MaintenanceCard = ({
           setCategories={setCategories}
           categoryIndex={categoryIndex}
           maintenanceIndex={maintenanceIndex}
+          selectedMaintenance={maintenance}
         />
       )}
 
@@ -131,7 +132,9 @@ export const MaintenanceCard = ({
 
               <p className="p2">
                 <span>Observação: </span>
-                {maintenance.observation ?? '-'}
+                {maintenance.observation && maintenance.observation !== ''
+                  ? maintenance.observation
+                  : '-'}
               </p>
               <p className="p2">
                 <span>Prazo para execução: </span>
@@ -163,6 +166,7 @@ export const MaintenanceCard = ({
               <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
+                    disable={maintenance.hasHistory}
                     style={{ whiteSpace: 'nowrap' }}
                     label="+ Opções"
                     onClick={(e) => {

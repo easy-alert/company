@@ -20,14 +20,15 @@ export const ModalAdditionalInformations = ({
   setCategories,
   categoryIndex,
   maintenanceIndex,
+  selectedMaintenance,
 }: IModalAdditionalInformations) => (
   <Modal title="Informações adicionais" setModal={setModal}>
     <Formik
       initialValues={{
-        hasLastResolutionDate: false,
-        lastResolutionDate: '',
-        hasFirstNotificationDate: false,
-        firstNotificationDate: '',
+        hasLastResolutionDate: !!selectedMaintenance.resolutionDate,
+        lastResolutionDate: selectedMaintenance.resolutionDate ?? '',
+        hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
+        firstNotificationDate: selectedMaintenance.notificationDate ?? '',
       }}
       validationSchema={schemaAdditionalInformations}
       onSubmit={(values) => {
@@ -98,13 +99,7 @@ export const ModalAdditionalInformations = ({
               maxLength={40}
             />
           </Style.Wrapper>
-          <Button
-            disable={!values.hasFirstNotificationDate && !values.hasLastResolutionDate}
-            style={{ marginTop: '8px' }}
-            center
-            label="Salvar"
-            type="submit"
-          />
+          <Button style={{ marginTop: '8px' }} center label="Salvar" type="submit" />
         </Form>
       )}
     </Formik>

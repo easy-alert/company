@@ -55,7 +55,7 @@ export const requestCreateNotificationConfiguration = async ({
 
       if (values.createAgain) {
         resetForm();
-        setFieldValue('createAgain', false);
+        setFieldValue('createAgain', true);
         setOnQuery(false);
       } else {
         setModal(false);

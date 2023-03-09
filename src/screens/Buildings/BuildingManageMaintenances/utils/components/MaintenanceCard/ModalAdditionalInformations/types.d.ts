@@ -1,10 +1,11 @@
-import { ICategories } from '../../../types';
+import { ICategories, IMaintenance } from '../../../types';
 
 export interface IModalAdditionalInformations {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   maintenanceIndex: number;
   categoryIndex: number;
+  selectedMaintenance: IMaintenance;
 }
 
 export interface IHandleAdditionalInformations {
