@@ -166,7 +166,7 @@ export const BuildingDetails = () => {
         <ModalPrintQRCode
           setModal={setModalPrintQRCodeOpen}
           buildingName={building?.name}
-          buildingId={building.id}
+          buildingNanoId={building.nanoId}
         />
       )}
 
@@ -215,9 +215,9 @@ export const BuildingDetails = () => {
                 label="Manutenções"
                 onClick={() => {
                   window.open(
-                    `${
-                      import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'
-                    }/${buildingId}`,
+                    `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'}/${
+                      building.nanoId
+                    }`,
                     '_blank',
                   );
                 }}
