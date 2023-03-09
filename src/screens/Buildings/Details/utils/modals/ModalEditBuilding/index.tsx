@@ -147,11 +147,13 @@ export const ModalEditBuilding = ({
               <FormikInput
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
-                label="Entrega da edificação *"
+                label="Entrega da edificação"
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}
+                disabled
               />
+
               <FormikInput
                 typeDatePlaceholderValue={values.warrantyExpiration}
                 type="date"
@@ -178,7 +180,8 @@ export const ModalEditBuilding = ({
                     label="Excluir"
                     message={{
                       title: 'Deseja excluir esta edificação?',
-                      content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                      content:
+                        'Atenção, todos os dados relacionados serão excluídos e essa ação não poderá ser desfeita.',
                       contentColor: theme.color.danger,
                     }}
                     actionButtonClick={() => {

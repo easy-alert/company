@@ -27,6 +27,8 @@ export const handleAdditionalInformations = ({
   setCategories((prevState) => {
     const newState = [...prevState];
 
+    newState[categoryIndex].Maintenances[maintenanceIndex].isSelected = true;
+
     newState[categoryIndex].Maintenances[maintenanceIndex].resolutionDate =
       values.lastResolutionDate !== '' ? values.lastResolutionDate : null;
 

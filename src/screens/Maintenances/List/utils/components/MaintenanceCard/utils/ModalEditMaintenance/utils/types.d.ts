@@ -14,6 +14,7 @@ export interface IRequestEditMaintenance {
   categoryId: string;
   maintenanceId: string;
   values: {
+    isSelected: boolean;
     element: string;
     activity: string;
     frequency: string;

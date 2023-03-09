@@ -32,3 +32,17 @@ export const alphabeticalOrder = ({
 
   setIsSorted(!isSorted);
 };
+
+export const numericalOrder = ({ category, isSorted, setIsSorted, toSortString }: ISortArray) => {
+  if (isSorted) {
+    category.Maintenances.sort(
+      (a: any, b: any) => Number(b[toSortString]) - Number(a[toSortString]),
+    );
+  } else {
+    category.Maintenances.sort(
+      (a: any, b: any) => Number(a[toSortString]) - Number(b[toSortString]),
+    );
+  }
+
+  setIsSorted(!isSorted);
+};

@@ -1,5 +1,5 @@
 // LIBS
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // STYLES
@@ -12,22 +12,59 @@ import { IconButton } from '../Buttons/IconButton';
 
 // TYPES
 import { ISidebar, SidebarContentProps } from './utils/types';
-import { AuthContext } from '../../contexts/Auth/AuthContext';
+import { useAuthContext } from '../../contexts/Auth/UseAuthContext';
 
 export const Sidebar = ({ children }: ISidebar) => {
+  const { signout } = useAuthContext();
   const navigate = useNavigate();
-  const { signout } = useContext(AuthContext);
 
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    { icon: icon.calendar, url: '/calendar' },
-    { icon: icon.maintenances, url: '/maintenances' },
-    { icon: icon.building, url: '/buildings' },
-    { icon: icon.report, url: '/report/create' },
-    { icon: icon.gear, url: '/account' },
-    { icon: icon.power, url: '/login' },
+    {
+      icon: icon.calendar,
+      url: '/calendar',
+      redirectFunction: () => {
+        navigate('/calendar');
+      },
+    },
+    {
+      icon: icon.maintenances,
+      url: '/maintenances',
+      redirectFunction: () => {
+        navigate('/maintenances');
+      },
+    },
+    {
+      icon: icon.building,
+      url: '/buildings',
+      redirectFunction: () => {
+        navigate('/buildings');
+      },
+    },
+    {
+      icon: icon.report,
+      url: '/report/create',
+      redirectFunction: () => {
+        navigate('/report/create');
+      },
+    },
+    {
+      icon: icon.gear,
+      url: '/account',
+      redirectFunction: () => {
+        navigate('/account');
+      },
+    },
+    {
+      icon: icon.power,
+      url: '/login',
+      redirectFunction: () => {
+        signout();
+        navigate('/login');
+      },
+    },
   ];
 
   useEffect(() => {
@@ -86,14 +123,10 @@ export const Sidebar = ({ children }: ISidebar) => {
                   setAnimate(false);
                   setTimeout(() => {
                     setOpenSidebar(false);
-                    navigate(element.url);
+                    element.redirectFunction();
                   }, 125);
                 } else {
-                  navigate(element.url);
-                }
-
-                if (element.url === '/login') {
-                  signout();
+                  element.redirectFunction();
                 }
               }}
               onAuxClick={() => {

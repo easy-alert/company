@@ -32,7 +32,6 @@ export const requestEditBuilding = async ({
       neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
       streetName: values.streetName !== '' ? values.streetName : null,
       area: null,
-      deliveryDate: new Date(values.deliveryDate),
       warrantyExpiration: new Date(values.warrantyExpiration),
       keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
     },
@@ -89,7 +88,7 @@ export const schemaModalEditBuilding = yup
     neighborhood: yup.string(),
     streetName: yup.string(),
     area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),
-    deliveryDate: yup.date().required('A data de entrega deve ser preenchida.'),
+    deliveryDate: yup.date(),
     warrantyExpiration: yup
       .date()
       .required('O término da garantia deve ser preenchido.')
