@@ -35,7 +35,7 @@ export const requestEditMaintenance = async ({
     observation: values.observation !== '' ? values.observation : null,
   })
     .then((res) => {
-      const categoriesEdit = categories;
+      const categoriesEdit = structuredClone(categories);
 
       const categoryIndex = categories.findIndex((category) => category.id === categoryId);
 
@@ -43,7 +43,10 @@ export const requestEditMaintenance = async ({
         (maintenance) => maintenance.id === maintenanceId,
       );
 
-      categoriesEdit[categoryIndex].Maintenances[maintenanceIndex] = res.data.maintenance;
+      categoriesEdit[categoryIndex].Maintenances[maintenanceIndex] = {
+        ...res.data.maintenance,
+        isSelected: categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].isSelected,
+      };
 
       setCategories([...categoriesEdit]);
 
@@ -71,7 +74,7 @@ export const requestDeleteMaintenance = async ({
     },
   })
     .then((res) => {
-      const categoriesEdit = categories;
+      const categoriesEdit = structuredClone(categories);
 
       const categoryIndex = categories.findIndex((category) => category.id === categoryId);
 

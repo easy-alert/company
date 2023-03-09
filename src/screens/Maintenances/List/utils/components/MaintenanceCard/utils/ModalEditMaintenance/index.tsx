@@ -41,6 +41,7 @@ export const ModalEditMaintenance = ({
     <Modal title="Editar manutenção" setModal={setModal}>
       <Formik
         initialValues={{
+          isSelected: !!selectedMaintenance.isSelected,
           element: selectedMaintenance.element,
           activity: selectedMaintenance.activity,
           frequency: String(selectedMaintenance.frequency),

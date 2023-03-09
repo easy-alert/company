@@ -2,6 +2,7 @@
 export interface IMaintenance {
   Maintenance: {
     MaintenancesHistory?: { id: string }[];
+    isSelected?: boolean;
     id: string;
     element: string;
     activity: string;
@@ -32,7 +33,6 @@ export interface IMaintenance {
     observation: string;
     resolutionDate?: string | null;
     notificationDate?: string | null;
-    isSelected?: boolean;
   };
 }
 

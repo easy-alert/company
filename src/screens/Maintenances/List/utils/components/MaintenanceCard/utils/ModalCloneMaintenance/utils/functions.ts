@@ -34,7 +34,7 @@ export const requestCloneMaintenance = async ({
     observation: values.observation !== '' ? values.observation : null,
   })
     .then((res) => {
-      const categoriesEdit = categories;
+      const categoriesEdit = structuredClone(categories);
 
       const index = categories.findIndex((category) => category.id === categoryId);
 

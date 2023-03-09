@@ -1,7 +1,7 @@
 // MAINTENANCES
 interface IMaintenance {
   MaintenancesHistory?: { id: string }[];
-  isSelected: boolean;
+  isSelected?: boolean;
   id: string;
   element: string;
   activity: string;
@@ -32,7 +32,6 @@ interface IMaintenance {
   observation: string;
   resolutionDate?: string | null;
   notificationDate?: string | null;
-  isSelected?: boolean;
 }
 
 export interface ICategories {
