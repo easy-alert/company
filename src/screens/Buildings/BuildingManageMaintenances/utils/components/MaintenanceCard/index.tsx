@@ -63,6 +63,7 @@ export const MaintenanceCard = ({
           setCategories={setCategories}
           categoryIndex={categoryIndex}
           maintenanceIndex={maintenanceIndex}
+          selectedMaintenance={maintenance}
         />
       )}
 
