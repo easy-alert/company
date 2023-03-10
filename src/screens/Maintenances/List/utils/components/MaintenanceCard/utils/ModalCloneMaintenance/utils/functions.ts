@@ -7,20 +7,20 @@ import { Api } from '../../../../../../../../../services/api';
 import { catchHandler } from '../../../../../../../../../utils/functions';
 
 // TYPES
-import { IRequestCreateMaintenance } from './types';
+import { IRequestCloneMaintenance } from './types';
 
 export const requestCloneMaintenance = async ({
   values,
-  categoryId,
+
   setModal,
   categories,
   setCategories,
   setOnQuery,
-}: IRequestCreateMaintenance) => {
+}: IRequestCloneMaintenance) => {
   setOnQuery(true);
 
   await Api.post('/maintenances/create', {
-    categoryId,
+    categoryId: values.customCategoryId,
     element: values.element,
     activity: values.activity,
     frequency: Number(values.frequency),
@@ -36,7 +36,7 @@ export const requestCloneMaintenance = async ({
     .then((res) => {
       const categoriesEdit = structuredClone(categories);
 
-      const index = categories.findIndex((category) => category.id === categoryId);
+      const index = categories.findIndex((category) => category.id === values.customCategoryId);
 
       categoriesEdit[index].Maintenances.unshift(res.data.maintenance);
 

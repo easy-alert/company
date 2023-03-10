@@ -11,13 +11,14 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
 // TYPES
-import { IBuildingListForSelect, ICategories } from './utils/types';
+import { IBuildingListForSelect, ICategories, ICategoriesOptions } from './utils/types';
 
 // FUNCTIONS
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
   requestBuildingListForSelect,
+  requestCategoriesForSelect,
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
@@ -44,6 +45,8 @@ export const BuildingManageMaintenances = () => {
 
   const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
 
+  const [categoriesOptions, setCategoriesOptions] = useState<ICategoriesOptions[]>([]);
+
   const isAllCategoriesSelected = categories.every((element) =>
     element.Maintenances.every((e) => e.isSelected === true),
   );
@@ -53,6 +56,10 @@ export const BuildingManageMaintenances = () => {
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
 
   const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    requestCategoriesForSelect({ setCategoriesOptions });
+  }, [JSON.stringify(categories)]);
 
   useEffect(() => {
     query.delete('flow');
@@ -198,6 +205,7 @@ export const BuildingManageMaintenances = () => {
                   setToCopyBuilding={setToCopyBuilding}
                   toCopyBuilding={toCopyBuilding}
                   timeIntervals={timeIntervals}
+                  categoriesOptions={categoriesOptions}
                 />
               ))}
             </Style.CategoriesContainer>

@@ -32,6 +32,7 @@ interface MaintenanceCount {
 }
 
 export interface IBuildingDetail {
+  nanoId: string;
   id: string;
   name: string;
   cep: string;

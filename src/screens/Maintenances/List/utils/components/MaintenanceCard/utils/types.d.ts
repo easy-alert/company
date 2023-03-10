@@ -1,5 +1,5 @@
 import { ITimeInterval } from '../../../../../../../utils/types';
-import { IMaintenance, ICategories } from '../../../types';
+import { IMaintenance, ICategories, ICategoriesOptions } from '../../../types';
 
 export interface IMaintenanceCard {
   maintenance: IMaintenance;
@@ -7,4 +7,5 @@ export interface IMaintenanceCard {
   categories: ICategories[];
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   categoryId: string;
+  categoriesOptions: ICategoriesOptions[];
 }

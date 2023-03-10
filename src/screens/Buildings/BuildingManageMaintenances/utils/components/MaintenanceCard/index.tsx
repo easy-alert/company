@@ -16,6 +16,7 @@ import { IMaintenanceCard } from './types';
 import { dateFormatter } from '../../../../../../utils/functions';
 import { IMaintenance } from '../../types';
 import { ModalCloneMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalCloneMaintenance';
+import { IconButton } from '../../../../../../components/Buttons/IconButton';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -27,6 +28,7 @@ export const MaintenanceCard = ({
   toCopyBuilding,
   categoryId,
   timeIntervals,
+  categoriesOptions,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalAdditionalInformations, setModalAdditionalInformations] = useState<boolean>(false);
@@ -55,6 +57,7 @@ export const MaintenanceCard = ({
           setCategories={setCategories}
           timeIntervals={timeIntervals}
           maintenance={toCloneMaintenance}
+          categoriesOptions={categoriesOptions}
         />
       )}
       {modalAdditionalInformations && (
@@ -109,13 +112,18 @@ export const MaintenanceCard = ({
 
               <div
                 className="copyIcon"
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.stopPropagation();
-                  setToCloneMaintenance(maintenance);
-                  setModalCloneMaintenanceOpen(true);
                 }}
               >
-                <Image size="16px" img={icon.copy} />
+                <IconButton
+                  icon={icon.copy}
+                  size="16px"
+                  onClick={() => {
+                    setToCloneMaintenance(maintenance);
+                    setModalCloneMaintenanceOpen(true);
+                  }}
+                />
               </div>
               <Style.ArrowContainer>
                 <Style.Arrow cardIsOpen={cardIsOpen}>

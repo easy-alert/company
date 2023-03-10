@@ -1,4 +1,4 @@
-import { ICategories } from '../../../../../types';
+import { ICategories, ICategoriesOptions } from '../../../../../types';
 import { ITimeInterval } from '../../../../../../../../../utils/types';
 
 export interface IModalCreateMaintenance {
@@ -7,6 +7,7 @@ export interface IModalCreateMaintenance {
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   timeIntervals: ITimeInterval[];
   setModal: (setModal: boolean) => void;
+  categoriesOptions: ICategoriesOptions[];
 }
 
 export interface IRequestCreateMaintenance {
@@ -14,8 +15,8 @@ export interface IRequestCreateMaintenance {
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   setModal: (setModal: boolean) => void;
   setOnQuery: (setOnQuery: boolean) => void;
-  categoryId: string;
   values: {
+    customCategoryId: string;
     element: string;
     activity: string;
     frequency: string;

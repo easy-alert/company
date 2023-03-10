@@ -58,7 +58,7 @@ export const MaintenancesGrid = styled.div`
   grid-template-rows: 1fr;
   align-items: center;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 230px minmax(280px, 0.8fr) 0.5fr 0.5fr 0.5fr 0.1fr;
+  grid-template-columns: 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px;
 `;
 
 export const SortHeader = styled.div<{ highlighted: boolean }>`

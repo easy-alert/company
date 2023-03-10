@@ -28,6 +28,7 @@ export const MaintenanceCategory = ({
   categories,
   setCategories,
   timeIntervals,
+  categoriesOptions,
 }: IMaintenanceCategory) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
@@ -43,6 +44,7 @@ export const MaintenanceCategory = ({
           categories={categories}
           setCategories={setCategories}
           timeIntervals={timeIntervals}
+          categoriesOptions={categoriesOptions}
         />
       )}
       {modalEditCategoryOpen && (
@@ -215,6 +217,7 @@ export const MaintenanceCategory = ({
               categories={categories}
               setCategories={setCategories}
               categoryId={category.id}
+              categoriesOptions={categoriesOptions}
             />
           ))}
         </Style.MaintenancesContainer>

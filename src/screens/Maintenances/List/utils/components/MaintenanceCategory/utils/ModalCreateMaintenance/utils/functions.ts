@@ -11,7 +11,6 @@ import { IRequestCreateMaintenance } from './types';
 
 export const requestCreateMaintenance = async ({
   values,
-  categoryId,
   setModal,
   categories,
   setCategories,
@@ -23,7 +22,7 @@ export const requestCreateMaintenance = async ({
   setOnQuery(true);
 
   await Api.post('/maintenances/create', {
-    categoryId,
+    categoryId: values.customCategoryId,
     element: values.element,
     activity: values.activity,
     frequency: Number(values.frequency),
@@ -39,7 +38,7 @@ export const requestCreateMaintenance = async ({
     .then((res) => {
       const categoriesEdit = structuredClone(categories);
 
-      const index = categories.findIndex((category) => category.id === categoryId);
+      const index = categories.findIndex((category) => category.id === values.customCategoryId);
 
       categoriesEdit[index].Maintenances.unshift(res.data.maintenance);
 
@@ -50,6 +49,7 @@ export const requestCreateMaintenance = async ({
       if (values.createAgain) {
         resetForm();
         setFieldValue('delayTimeInterval', defaultDelayIntervalId);
+        setFieldValue('customCategoryId', values.customCategoryId);
         setFieldValue('createAgain', true);
         setOnQuery(false);
       } else {

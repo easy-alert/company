@@ -10,7 +10,7 @@ import { Modal } from '../../../../../../../../components/Modal';
 import * as Style from './styles';
 
 // TYPES
-import { IModalCreateMaintenance } from './utils/types';
+import { IModalCloneMaintenance } from './utils/types';
 
 // FUNCTIONS
 import { schemaCloneMaintenance, requestCloneMaintenance } from './utils/functions';
@@ -25,13 +25,15 @@ export const ModalCloneMaintenance = ({
   setCategories,
   timeIntervals,
   maintenance,
-}: IModalCreateMaintenance) => {
+  categoriesOptions,
+}: IModalCloneMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Modal title="Clonar manutenção" setModal={setModal}>
       <Formik
         initialValues={{
+          customCategoryId: categoryId,
           element: maintenance.element,
           activity: maintenance.activity,
           frequency: String(maintenance.frequency),
@@ -51,7 +53,6 @@ export const ModalCloneMaintenance = ({
         onSubmit={async (values) => {
           requestCloneMaintenance({
             values,
-            categoryId,
             setModal,
             categories,
             setCategories,
@@ -63,6 +64,19 @@ export const ModalCloneMaintenance = ({
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
+              <FormikSelect
+                label="Categoria"
+                name="customCategoryId"
+                selectPlaceholderValue={values.customCategoryId}
+                value={values.customCategoryId}
+              >
+                {categoriesOptions.map((option) => (
+                  <option value={option.id} key={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </FormikSelect>
+
               <FormikTextArea
                 label="Elemento"
                 name="element"
