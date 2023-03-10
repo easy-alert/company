@@ -102,7 +102,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   grid-template-rows: 1fr;
   overflow: hidden;
   grid-gap: ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.8fr) 0.5fr 0.4fr 0.5fr 60px 60px;
+  grid-template-columns: 8px 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px 30px;
 
   > p {
     line-height: 17px;
@@ -122,8 +122,8 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   }
 
   .copyIcon {
-    display: flex;
-    justify-content: flex-end;
+    margin-left: auto;
+    width: fit-content;
   }
 `;
 
@@ -132,9 +132,8 @@ export const MaintenancesMoreGrid = styled.div`
   display: grid;
   width: 100%;
   grid-template-rows: auto;
-
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
-  grid-template-columns: 8px 230px minmax(230px, 0.8fr) 0.5fr 0.4fr 0.5fr 60px 60px;
+  grid-template-columns: 8px 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px 30px;
 
   span {
     color: ${theme.color.primary};
