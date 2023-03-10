@@ -68,3 +68,12 @@ export interface IRequestBuildingListForSelect {
   buildingId: string;
   setBuildingListForSelect: (setBuildingListForSelect: IBuildingListForSelect[]) => void;
 }
+
+export interface ICategoriesOptions {
+  name: string;
+  id: string;
+}
+
+export interface IRequestCategoriesForSelect {
+  setCategoriesOptions: React.Dispatch<React.SetStateAction<ICategoriesOptions[]>>;
+}

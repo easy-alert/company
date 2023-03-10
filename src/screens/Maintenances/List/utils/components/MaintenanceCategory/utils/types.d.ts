@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ICategories } from '../../../types';
+import { ICategories, ICategoriesOptions } from '../../../types';
 import { ITimeInterval } from '../../../../../../../utils/types';
 
 export interface IMaintenanceCategory {
@@ -7,6 +7,7 @@ export interface IMaintenanceCategory {
   categories: ICategories[];
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   timeIntervals: ITimeInterval[];
+  categoriesOptions: ICategoriesOptions[];
 }
 
 export interface ISortType {

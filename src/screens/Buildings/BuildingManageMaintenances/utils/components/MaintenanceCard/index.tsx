@@ -27,6 +27,7 @@ export const MaintenanceCard = ({
   toCopyBuilding,
   categoryId,
   timeIntervals,
+  categoriesOptions,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalAdditionalInformations, setModalAdditionalInformations] = useState<boolean>(false);
@@ -55,6 +56,7 @@ export const MaintenanceCard = ({
           setCategories={setCategories}
           timeIntervals={timeIntervals}
           maintenance={toCloneMaintenance}
+          categoriesOptions={categoriesOptions}
         />
       )}
       {modalAdditionalInformations && (

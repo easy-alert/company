@@ -26,6 +26,7 @@ import { applyMask, capitalizeFirstLetter } from '../../../../../../../../utils/
 import { IModalEditMaintenance } from './utils/types';
 import { theme } from '../../../../../../../../styles/theme';
 import { PopoverButton } from '../../../../../../../../components/Buttons/PopoverButton';
+import { Input } from '../../../../../../../../components/Inputs/Input';
 
 export const ModalEditMaintenance = ({
   setModal,
@@ -36,6 +37,9 @@ export const ModalEditMaintenance = ({
   categoryId,
 }: IModalEditMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const categoryIndex = categories.findIndex((category) => category.id === categoryId);
+  const categoryName = categories[categoryIndex].name;
 
   return (
     <Modal title="Editar manutenção" setModal={setModal}>
@@ -73,6 +77,8 @@ export const ModalEditMaintenance = ({
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
+              <Input label="Categoria" defaultValue={categoryName} disabled />
+
               <FormikTextArea
                 label="Elemento"
                 name="element"

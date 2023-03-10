@@ -1,4 +1,4 @@
-import { IMaintenance, ICategories } from '../../types';
+import { IMaintenance, ICategories, ICategoriesOptions } from '../../types';
 import { ITimeInterval } from '../../../../../../utils/types';
 
 export interface IMaintenanceCard {
@@ -11,4 +11,5 @@ export interface IMaintenanceCard {
   setToCopyBuilding: (setToCopyBuilding: string) => void;
   timeIntervals: ITimeInterval[];
   categoryId: string;
+  categoriesOptions: ICategoriesOptions[];
 }

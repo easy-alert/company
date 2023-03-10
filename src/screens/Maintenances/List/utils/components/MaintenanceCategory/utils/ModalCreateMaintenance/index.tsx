@@ -29,6 +29,7 @@ export const ModalCreateMaintenance = ({
   categories,
   setCategories,
   timeIntervals,
+  categoriesOptions,
 }: IModalCreateMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -36,6 +37,7 @@ export const ModalCreateMaintenance = ({
     <Modal title="Criar manutenção" setModal={setModal}>
       <Formik
         initialValues={{
+          customCategoryId: categoryId,
           element: '',
           activity: '',
           frequency: '',
@@ -53,7 +55,6 @@ export const ModalCreateMaintenance = ({
         onSubmit={async (values, actions) => {
           requestCreateMaintenance({
             values,
-            categoryId,
             setModal,
             categories,
             setCategories,
@@ -67,6 +68,18 @@ export const ModalCreateMaintenance = ({
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
+              <FormikSelect
+                label="Categoria"
+                name="customCategoryId"
+                selectPlaceholderValue={values.customCategoryId}
+                value={values.customCategoryId}
+              >
+                {categoriesOptions.map((option) => (
+                  <option value={option.id} key={option.id}>
+                    {option.name}
+                  </option>
+                ))}
+              </FormikSelect>
               <FormikTextArea
                 label="Elemento"
                 name="element"
