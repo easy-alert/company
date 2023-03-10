@@ -166,7 +166,7 @@ const MyDocumentSquare = ({
   </Document>
 );
 
-export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalPrintQRCode) => {
+export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IModalPrintQRCode) => {
   const { account } = useAuthContext();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -190,7 +190,7 @@ export const ModalPrintQRCode = ({ setModal, buildingId, buildingName }: IModalP
             id="QRCode"
             value={`${
               import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'
-            }/${buildingId}`}
+            }/${buildingNanoId}`}
             bgColor="#F2EAEA"
             size={300}
           />
