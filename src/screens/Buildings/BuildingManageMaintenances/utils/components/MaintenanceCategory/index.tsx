@@ -28,6 +28,7 @@ export const MaintenanceCategory = ({
   toCopyBuilding,
   setToCopyBuilding,
   timeIntervals,
+  categoriesOptions,
 }: IMaintenanceCategory) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
@@ -45,6 +46,7 @@ export const MaintenanceCategory = ({
           categories={categories}
           setCategories={setCategories}
           timeIntervals={timeIntervals}
+          categoriesOptions={categoriesOptions}
         />
       )}
       {modalEditCategoryOpen && (
@@ -251,6 +253,7 @@ export const MaintenanceCategory = ({
               setToCopyBuilding={setToCopyBuilding}
               toCopyBuilding={toCopyBuilding}
               timeIntervals={timeIntervals}
+              categoriesOptions={categoriesOptions}
             />
           ))}
         </Style.MaintenancesContainer>

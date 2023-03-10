@@ -11,11 +11,11 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
 // TYPES
-import { ICategories } from './utils/types';
+import { ICategories, ICategoriesOptions } from './utils/types';
 import { ITimeInterval } from '../../../utils/types';
 
 // FUNCTIONS
-import { requestCategories } from './utils/functions';
+import { requestCategories, requestCategoriesForSelect } from './utils/functions';
 import { requestListIntervals } from '../../../utils/functions';
 
 // MODALS
@@ -26,9 +26,14 @@ export const MaintenancesList = () => {
   const [filter, setFilter] = useState<string>('');
   const [categories, setCategories] = useState<ICategories[]>([]);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
+  const [categoriesOptions, setCategoriesOptions] = useState<ICategoriesOptions[]>([]);
 
   // MODALS
   const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    requestCategoriesForSelect({ setCategoriesOptions });
+  }, [JSON.stringify(categories)]);
 
   useEffect(() => {
     requestListIntervals({ setTimeIntervals });
@@ -104,6 +109,7 @@ export const MaintenancesList = () => {
                   setCategories={setCategories}
                   categories={categories}
                   timeIntervals={timeIntervals}
+                  categoriesOptions={categoriesOptions}
                 />
               ))}
             </Style.CategoriesContainer>

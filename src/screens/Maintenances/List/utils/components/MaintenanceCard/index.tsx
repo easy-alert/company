@@ -23,6 +23,7 @@ export const MaintenanceCard = ({
   categories,
   setCategories,
   categoryId,
+  categoriesOptions,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalEditMaintenanceOpen, setModalEditMaintenanceOpen] = useState<boolean>(false);
@@ -51,6 +52,7 @@ export const MaintenanceCard = ({
           setCategories={setCategories}
           timeIntervals={timeIntervals}
           maintenance={toCloneMaintenance}
+          categoriesOptions={categoriesOptions}
         />
       )}
 

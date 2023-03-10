@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ICategories } from '../../../types';
+import { ICategories, ICategoriesOptions } from '../../../types';
 import { ITimeInterval } from '../../../../../../../utils/types';
 
 export interface IMaintenanceCategory {
@@ -10,6 +10,7 @@ export interface IMaintenanceCategory {
   toCopyBuilding: string;
   setToCopyBuilding: (setToCopyBuilding: string) => void;
   timeIntervals: ITimeInterval[];
+  categoriesOptions: ICategoriesOptions[];
 }
 
 export interface ISortType {

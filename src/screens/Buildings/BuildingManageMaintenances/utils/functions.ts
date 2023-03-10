@@ -7,6 +7,7 @@ import {
   IRequestManageBuildingMaintenances,
   IRequestListCategoriesToManage,
   IRequestBuildingListForSelect,
+  IRequestCategoriesForSelect,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
@@ -77,6 +78,18 @@ export const requestBuildingListForSelect = async ({
   await Api.get(`/buildings/listforselect/${buildingId}`)
     .then((res) => {
       setBuildingListForSelect(res.data);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
+
+export const requestCategoriesForSelect = async ({
+  setCategoriesOptions,
+}: IRequestCategoriesForSelect) => {
+  await Api.get('/categories/listforselect')
+    .then((res) => {
+      setCategoriesOptions(res.data);
     })
     .catch((err) => {
       catchHandler(err);

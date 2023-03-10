@@ -45,3 +45,12 @@ export interface IRequestCategories {
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   filter?: string;
 }
+
+export interface ICategoriesOptions {
+  name: string;
+  id: string;
+}
+
+export interface IRequestCategoriesForSelect {
+  setCategoriesOptions: React.Dispatch<React.SetStateAction<ICategoriesOptions[]>>;
+}

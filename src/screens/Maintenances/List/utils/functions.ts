@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestCategories } from './types';
+import { IRequestCategories, IRequestCategoriesForSelect } from './types';
 
 export const requestCategories = async ({
   setLoading,
@@ -15,6 +15,18 @@ export const requestCategories = async ({
     })
     .catch((err) => {
       if (setLoading) setLoading(false);
+      catchHandler(err);
+    });
+};
+
+export const requestCategoriesForSelect = async ({
+  setCategoriesOptions,
+}: IRequestCategoriesForSelect) => {
+  await Api.get('/categories/listforselect')
+    .then((res) => {
+      setCategoriesOptions(res.data);
+    })
+    .catch((err) => {
       catchHandler(err);
     });
 };
