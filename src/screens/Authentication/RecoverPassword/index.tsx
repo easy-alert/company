@@ -1,6 +1,6 @@
 // LIBS
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
@@ -16,34 +16,27 @@ import { theme } from '../../../styles/theme';
 import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
-import { schema } from './functions';
-
-// CONTEXTS
-import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
+import { changePasswordSchema } from './functions';
 
 // TYPES
-import { IFormData } from './types';
 import { catchHandler } from '../../../utils/functions';
 
-export const Login = () => {
+export const RecoverPassword = () => {
   const navigate = useNavigate();
-  const { signin } = useAuthContext();
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Style.Background>
       <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema={schema}
-        onSubmit={async (data: IFormData) => {
+        initialValues={{ newPassword: '', newPasswordConfirm: '' }}
+        validationSchema={changePasswordSchema}
+        onSubmit={async (values) => {
           setOnQuery(true);
-          await Api.post('/auth/login', {
-            email: data.email,
-            password: data.password,
+          await Api.post('/BLABLABL', {
+            email: values.newPassword,
           })
-            .then((res) => {
-              signin(res.data);
-              navigate('/calendar');
+            .then(() => {
+              navigate('/login');
             })
             .catch((err) => {
               setOnQuery(false);
@@ -57,34 +50,33 @@ export const Login = () => {
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <h2>Login/Company</h2>
+                  <h2>Alterar senha</h2>
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    name="email"
-                    label="E-mail"
-                    placeholder="Insira seu e-mail"
-                    value={values.email}
-                    error={touched.email && errors.email ? errors.email : null}
+                    name="newPassword"
+                    label="Nova senha"
+                    placeholder="Informe a nova senha"
+                    value={values.newPassword}
+                    error={touched.newPassword && errors.newPassword ? errors.newPassword : null}
                   />
-
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    name="password"
-                    label="Senha"
-                    type="password"
-                    value={values.password}
-                    placeholder="Insira sua senha"
-                    error={touched.password && errors.password ? errors.password : null}
+                    name="newPasswordConfirm"
+                    label="Confirmar nova senha"
+                    placeholder="Confirme a nova senha"
+                    value={values.newPasswordConfirm}
+                    error={
+                      touched.newPasswordConfirm && errors.newPasswordConfirm
+                        ? errors.newPasswordConfirm
+                        : null
+                    }
                   />
                 </Style.InputWrapper>
-                <Button center label="Login" loading={onQuery} type="submit" />
+                <Button center label="Enviar" loading={onQuery} type="submit" />
               </Form>
             </Style.LoginContainer>
-            <p className="p2">
-              Esqueceu sua senha? <Link to="/login">Recuperar senha</Link>
-            </p>
           </>
         )}
       </Formik>

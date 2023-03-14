@@ -14,10 +14,7 @@ import {
 // #endregion
 
 // #region DATES
-export const dateFormatter = (date: string) =>
-  new Date(date).toLocaleDateString('pt-BR', {
-    timeZone: 'UTC',
-  });
+export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
 
 export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
   new Date(date.setDate(date.getDate() + daysToIncrease)).toISOString().split('T')[0];

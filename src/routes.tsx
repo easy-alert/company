@@ -32,6 +32,10 @@ import { CreateReport } from './screens/Reports/Create';
 // TERMS OF USE
 import { TermsOfUse } from './screens/TermsOfUse';
 
+// RECOVERPASSWORD
+import { SendPasswordRecoverEmail } from './screens/Authentication/SendPasswordRecoverEmail';
+import { RecoverPassword } from './screens/Authentication/RecoverPassword';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
@@ -40,6 +44,10 @@ const AppRoutes = () => (
         <Route path="/login" element={<Login />} />
 
         <Route path="/terms" element={<TermsOfUse />} />
+
+        <Route path="/passwordrecover/sendemail" element={<SendPasswordRecoverEmail />} />
+
+        <Route path="/passwordrecover/change" element={<RecoverPassword />} />
 
         <Route
           path="/"
