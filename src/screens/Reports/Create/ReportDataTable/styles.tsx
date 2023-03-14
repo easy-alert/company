@@ -33,7 +33,7 @@ export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
     padding-left: ${theme.size.sm};
   }
   ${({ cssProps }) => cssProps}
-  min-width: 160px;
+
   padding-inline: 8px;
 
   @media (max-width: 900px) {
@@ -50,20 +50,10 @@ export const TableColBody = styled.td<{
   padding: 8px;
   overflow-wrap: break-word;
   text-align: start;
-  min-width: 160px;
 
   :nth-child(1) {
     border-radius: ${theme.size.xxsm} 0px 0px ${theme.size.xxsm};
     padding-left: ${theme.size.sm};
-  }
-
-  :nth-child(5) {
-    min-width: 200px;
-    max-width: 200px;
-  }
-  :nth-child(6) {
-    min-width: 200px;
-    max-width: 200px;
   }
 
   :last-of-type {

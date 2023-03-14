@@ -16,7 +16,7 @@ import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
-import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
+import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
@@ -268,14 +268,12 @@ export const CreateReport = () => {
 
             <ReportDataTable
               colsHeader={[
-                { label: 'Data de notificação' },
-                { label: 'Data de conclusão' },
+                { label: 'Status' },
                 { label: 'Edificação' },
                 { label: 'Categoria' },
                 { label: 'Elemento' },
                 { label: 'Atividade' },
                 { label: 'Responsável' },
-                { label: 'Status' },
                 { label: 'Valor' },
               ]}
             >
@@ -283,18 +281,13 @@ export const CreateReport = () => {
                 <ReportDataTableContent
                   key={maintenance.activity + i}
                   colsBody={[
-                    { cell: dateFormatter(maintenance.notificationDate) },
-                    {
-                      cell: maintenance.resolutionDate
-                        ? dateFormatter(maintenance.resolutionDate)
-                        : '-',
-                    },
+                    { cell: <EventTag status={maintenance.status} /> },
+
                     { cell: maintenance.buildingName },
                     { cell: maintenance.categoryName },
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: <EventTag status={maintenance.status} /> },
                     {
                       cell:
                         maintenance.cost !== null
