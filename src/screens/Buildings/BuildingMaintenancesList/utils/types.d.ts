@@ -51,6 +51,7 @@ export interface AddedMaintenances {
 export interface IRequestAddedMaintenances {
   setLoading?: (setLoading: boolean) => void;
   setAddedMaintenances: (setAddedMaintenances: AddedMaintenances[]) => void;
+  setAddedMaintenancesForFilter: (setAddedMaintenances: AddedMaintenances[]) => void;
   buildingId: string;
   setBuildingName: React.Dispatch<React.SetStateAction<string>>;
 }

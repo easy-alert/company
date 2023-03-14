@@ -14,7 +14,7 @@ import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { AddedMaintenances } from './utils/types';
 
 // FUNCTIONS
-import { requestAddedMaintenances } from './utils/functions';
+import { filterFunction, requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { IconButton } from '../../../components/Buttons/IconButton';
 
@@ -25,7 +25,13 @@ export const BuildingMaintenancesList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
+  const [addedMaintenancesForFilter, setAddedMaintenancesForFilter] = useState<AddedMaintenances[]>(
+    [],
+  );
+
   const [buildingName, setBuildingName] = useState<string>('');
+
+  const [filter, setFilter] = useState<string>('');
 
   useEffect(() => {
     requestAddedMaintenances({
@@ -33,6 +39,7 @@ export const BuildingMaintenancesList = () => {
       setAddedMaintenances,
       buildingId: buildingId!,
       setBuildingName,
+      setAddedMaintenancesForFilter,
     });
   }, []);
 
@@ -56,6 +63,32 @@ export const BuildingMaintenancesList = () => {
             }}
           />
         </Style.HeaderWrapper>
+        <Style.SearchField>
+          <IconButton
+            icon={icon.search}
+            size="16px"
+            onClick={() => {
+              filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter });
+            }}
+          />
+          <input
+            type="text"
+            maxLength={80}
+            placeholder="Procurar"
+            value={filter}
+            onChange={(evt) => {
+              setFilter(evt.target.value);
+              if (evt.target.value === '') {
+                filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter: '' });
+              }
+            }}
+            onKeyUp={(evt) => {
+              if (evt.key === 'Enter') {
+                filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter });
+              }
+            }}
+          />
+        </Style.SearchField>
         <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
 

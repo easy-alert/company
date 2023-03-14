@@ -103,8 +103,8 @@ export const filterFunction = ({ categoriesForFilter, setCategories, filter }: I
   if (filter !== '') {
     setCategories((prevState) => {
       let newState = [...prevState];
-      newState = categoriesForFilter.filter(
-        (e) => String(e.name).toLowerCase() === String(filter).toLowerCase(),
+      newState = categoriesForFilter.filter((e) =>
+        String(e.name).toLowerCase().includes(String(filter).toLowerCase()),
       );
       return newState;
     });

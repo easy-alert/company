@@ -8,11 +8,13 @@ export const requestAddedMaintenances = async ({
   setAddedMaintenances,
   buildingId,
   setBuildingName,
+  setAddedMaintenancesForFilter,
 }: IRequestAddedMaintenances) => {
   await Api.get(`/buildings/list/details/${buildingId}/maintenances`)
     .then((res) => {
       setBuildingName(res.data.buildingName);
       setAddedMaintenances(res.data.BuildingMaintenances);
+      setAddedMaintenancesForFilter(res.data.BuildingMaintenances);
       if (setLoading) setLoading(false);
     })
     .catch((err) => {
@@ -29,8 +31,8 @@ export const filterFunction = ({
   if (filter !== '') {
     setAddedMaintenances((prevState) => {
       let newState = [...prevState];
-      newState = addedMaintenancesForFilter.filter(
-        (e) => String(e.Category.name).toLowerCase() === String(filter).toLowerCase(),
+      newState = addedMaintenancesForFilter.filter((e) =>
+        String(e.Category.name).toLowerCase().includes(String(filter).toLowerCase()),
       );
       return newState;
     });
