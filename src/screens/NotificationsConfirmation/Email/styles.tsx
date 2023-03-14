@@ -32,8 +32,8 @@ export const Content = styled.div`
   gap: ${theme.size.xlg};
 
   > img {
-    height: 89px;
-    width: 79px;
+    width: 100%;
+    max-width: 150px;
   }
 `;
 
@@ -70,9 +70,7 @@ export const ImageContainer = styled.div`
 
   > img {
     width: 100%;
-    max-width: 450px;
-
-    height: 450px;
+    max-width: 150px;
   }
 
   @media (max-width: 900px) {
@@ -86,6 +84,7 @@ export const BottomContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: ${theme.size.sm};
+  margin-top: ${theme.size.md};
 
   span {
     font-size: 14px;

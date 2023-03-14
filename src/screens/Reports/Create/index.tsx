@@ -40,6 +40,8 @@ export const CreateReport = () => {
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
+  const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
+
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
 
   useEffect(() => {
@@ -65,20 +67,8 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <s.Header>
-          <h2>Relatórios</h2>
+        <h2>Relatórios</h2>
 
-          <IconButton
-            icon={icon.pdfLogo}
-            label="Exportar"
-            color={theme.color.primary}
-            size="20px"
-            onClick={() => {
-              setModalPrintReportOpen(true);
-            }}
-            disabled={maintenances.length === 0}
-          />
-        </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -92,6 +82,8 @@ export const CreateReport = () => {
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
+              setShowNoDataMessage(true);
+
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
 
@@ -222,6 +214,16 @@ export const CreateReport = () => {
                 </s.FiltersGrid>
 
                 <s.ButtonContainer>
+                  <IconButton
+                    icon={icon.pdfLogo}
+                    label="Exportar"
+                    color={theme.color.primary}
+                    size="20px"
+                    onClick={() => {
+                      setModalPrintReportOpen(true);
+                    }}
+                    disabled={maintenances.length === 0}
+                  />
                   {/* <Button borderless label="Limpar filtros" type="reset" /> */}
                   <Button label="Filtrar" type="submit" loading={onQuery} />
                 </s.ButtonContainer>
@@ -232,7 +234,7 @@ export const CreateReport = () => {
 
         {onQuery && <DotSpinLoading />}
 
-        {!onQuery && maintenances.length === 0 && (
+        {!onQuery && maintenances.length === 0 && showNoDataMessage && (
           <s.NoMaintenanceCard>
             <h4>Nenhuma manutenção encontrada.</h4>
           </s.NoMaintenanceCard>

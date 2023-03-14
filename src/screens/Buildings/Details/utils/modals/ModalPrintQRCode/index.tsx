@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 152,
-    height: 34,
+    width: 122,
+    height: 27,
   },
   companyLogo: {
     height: 100,
@@ -104,8 +104,8 @@ const stylesSquare = StyleSheet.create({
     position: 'relative',
   },
   easyAlertLogo: {
-    width: 152,
-    height: 34,
+    width: 122,
+    height: 27,
   },
   companyLogo: {
     height: 80,

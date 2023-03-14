@@ -33,12 +33,6 @@ export const Container = styled.div`
   gap: ${theme.size.sm};
 `;
 
-export const Header = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
 export const FiltersContainer = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
