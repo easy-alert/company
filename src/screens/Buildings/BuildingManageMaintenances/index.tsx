@@ -19,6 +19,7 @@ import {
   requestListCategoriesToManage,
   requestBuildingListForSelect,
   requestCategoriesForSelect,
+  filterFunction,
 } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
@@ -39,6 +40,8 @@ export const BuildingManageMaintenances = () => {
 
   const [categories, setCategories] = useState<ICategories[]>([]);
 
+  const [categoriesForFilter, setCategoriesForFilter] = useState<ICategories[]>([]);
+
   const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
 
   const [buildingName, setBuildingName] = useState<string>('');
@@ -57,13 +60,17 @@ export const BuildingManageMaintenances = () => {
 
   const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
 
+  const [filter, setFilter] = useState<string>('');
+
   useEffect(() => {
     requestCategoriesForSelect({ setCategoriesOptions });
   }, [JSON.stringify(categories)]);
 
   useEffect(() => {
     query.delete('flow');
+
     requestListIntervals({ setTimeIntervals });
+
     requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
       requestListCategoriesToManage({
         setLoading,
@@ -71,6 +78,7 @@ export const BuildingManageMaintenances = () => {
         buildingId: buildingId!,
         setBuildingName,
         currentBuildingId: buildingId!,
+        setCategoriesForFilter,
       });
     });
   }, []);
@@ -122,6 +130,32 @@ export const BuildingManageMaintenances = () => {
             )}
           </Style.RightSide>
         </Style.HeaderWrapper>
+        <Style.SearchField>
+          <IconButton
+            icon={icon.search}
+            size="16px"
+            onClick={() => {
+              filterFunction({ setCategories, categoriesForFilter, filter });
+            }}
+          />
+          <input
+            type="text"
+            maxLength={80}
+            placeholder="Procurar"
+            value={filter}
+            onChange={(evt) => {
+              setFilter(evt.target.value);
+              if (evt.target.value === '') {
+                filterFunction({ setCategories, categoriesForFilter, filter: '' });
+              }
+            }}
+            onKeyUp={(evt) => {
+              if (evt.key === 'Enter') {
+                filterFunction({ setCategories, categoriesForFilter, filter });
+              }
+            }}
+          />
+        </Style.SearchField>
         <ReturnButton path={`/buildings/details/${buildingId}`} />
       </Style.Header>
       {categories.length > 0 ? (
@@ -142,6 +176,7 @@ export const BuildingManageMaintenances = () => {
                   setTableLoading,
                   setBuildingName,
                   currentBuildingId: buildingId!,
+                  setCategoriesForFilter,
                 });
               }}
             >

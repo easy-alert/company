@@ -54,3 +54,9 @@ export interface IRequestAddedMaintenances {
   buildingId: string;
   setBuildingName: React.Dispatch<React.SetStateAction<string>>;
 }
+
+export interface IFilterFunction {
+  setAddedMaintenances: React.Dispatch<React.SetStateAction<AddedMaintenances[]>>;
+  addedMaintenancesForFilter: AddedMaintenances[];
+  filter: string;
+}

@@ -20,7 +20,7 @@ export const HeaderWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: ${theme.size.xsm};
+  margin-bottom: ${theme.size.xxsm};
 `;
 
 export const LeftSide = styled.div`
@@ -35,6 +35,23 @@ export const LeftSide = styled.div`
     align-items: flex-start;
     gap: ${theme.size.xsm};
     flex-direction: column;
+  }
+`;
+
+export const SearchField = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+  margin-bottom: ${theme.size.xsm};
+
+  width: 100%;
+  > input {
+    height: 24px;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    border: none !important;
+    outline: none;
   }
 `;
 

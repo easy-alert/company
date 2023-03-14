@@ -46,6 +46,7 @@ export interface IRequestListCategoriesToManage {
   setLoading: (setLoading: boolean) => void;
   setTableLoading?: (setTableLoading: boolean) => void;
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
+  setCategoriesForFilter: React.Dispatch<React.SetStateAction<ICategories[]>>;
   buildingId: string;
   currentBuildingId: string;
   setBuildingName: React.Dispatch<React.SetStateAction<string>>;
@@ -53,7 +54,6 @@ export interface IRequestListCategoriesToManage {
 
 // REQUESTS
 export interface IRequestManageBuildingMaintenances {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   navigate: any;
   categories: ICategories[];
   buildingId: string;
@@ -76,4 +76,10 @@ export interface ICategoriesOptions {
 
 export interface IRequestCategoriesForSelect {
   setCategoriesOptions: React.Dispatch<React.SetStateAction<ICategoriesOptions[]>>;
+}
+
+export interface IFilterFunction {
+  setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
+  categoriesForFilter: ICategories[];
+  filter: string;
 }

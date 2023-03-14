@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestAddedMaintenances } from './types';
+import { IFilterFunction, IRequestAddedMaintenances } from './types';
 
 export const requestAddedMaintenances = async ({
   setLoading,
@@ -19,4 +19,26 @@ export const requestAddedMaintenances = async ({
       if (setLoading) setLoading(false);
       catchHandler(err);
     });
+};
+
+export const filterFunction = ({
+  addedMaintenancesForFilter,
+  setAddedMaintenances,
+  filter,
+}: IFilterFunction) => {
+  if (filter !== '') {
+    setAddedMaintenances((prevState) => {
+      let newState = [...prevState];
+      newState = addedMaintenancesForFilter.filter(
+        (e) => String(e.Category.name).toLowerCase() === String(filter).toLowerCase(),
+      );
+      return newState;
+    });
+  } else {
+    setAddedMaintenances((prevState) => {
+      let newState = [...prevState];
+      newState = addedMaintenancesForFilter;
+      return newState;
+    });
+  }
 };
