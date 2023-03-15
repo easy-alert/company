@@ -16,10 +16,16 @@ import {
 // #region DATES
 export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
 
-export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
-  new Date(date.setDate(date.getDate() + daysToIncrease)).toISOString().split('T')[0];
+export const convertToFormikDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+};
 
-export const convertToFormikDate = (date: string) => new Date(date).toISOString().split('T')[0];
+export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
+  convertToFormikDate(new Date(date.setDate(date.getDate() + daysToIncrease)));
+
 // #endregion
 
 // #region UPLOAD

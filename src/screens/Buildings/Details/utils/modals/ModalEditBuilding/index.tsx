@@ -52,8 +52,8 @@ export const ModalEditBuilding = ({
           neighborhood: building.neighborhood ?? '',
           streetName: building.streetName ?? '',
           area: '',
-          deliveryDate: convertToFormikDate(building.deliveryDate),
-          warrantyExpiration: convertToFormikDate(building.warrantyExpiration),
+          deliveryDate: convertToFormikDate(new Date(building.deliveryDate)),
+          warrantyExpiration: convertToFormikDate(new Date(building.warrantyExpiration)),
           keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
         }}
         validationSchema={schemaModalEditBuilding}

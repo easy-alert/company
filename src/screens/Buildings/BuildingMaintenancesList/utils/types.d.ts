@@ -31,8 +31,8 @@ export interface IMaintenance {
       singularLabel: string;
     };
     observation: string;
-    resolutionDate?: string | null;
-    notificationDate?: string | null;
+    resolutionDate?: Date | null;
+    notificationDate?: Date | null;
   };
 }
 

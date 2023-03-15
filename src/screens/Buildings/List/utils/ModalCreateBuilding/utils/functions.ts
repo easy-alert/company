@@ -27,8 +27,8 @@ export const requestCreateBuilding = async ({
     neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
     streetName: values.streetName !== '' ? values.streetName : null,
     area: null,
-    deliveryDate: new Date(values.deliveryDate),
-    warrantyExpiration: new Date(values.warrantyExpiration),
+    deliveryDate: new Date(new Date(values.deliveryDate).setUTCHours(3, 0, 0, 0)),
+    warrantyExpiration: new Date(new Date(values.warrantyExpiration).setUTCHours(3, 0, 0, 0)),
     keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
   })
     .then((res) => {

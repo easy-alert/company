@@ -32,10 +32,14 @@ export const handleAdditionalInformations = ({
     }
 
     newState[categoryIndex].Maintenances[maintenanceIndex].resolutionDate =
-      values.lastResolutionDate !== '' ? values.lastResolutionDate : null;
+      values.lastResolutionDate !== ''
+        ? new Date(new Date(values.lastResolutionDate).setUTCHours(3, 0, 0, 0))
+        : null;
 
     newState[categoryIndex].Maintenances[maintenanceIndex].notificationDate =
-      values.firstNotificationDate !== '' ? values.firstNotificationDate : null;
+      values.firstNotificationDate !== ''
+        ? new Date(new Date(values.firstNotificationDate).setUTCHours(3, 0, 0, 0))
+        : null;
 
     return newState;
   });
