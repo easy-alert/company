@@ -47,7 +47,7 @@ const AppRoutes = () => (
 
         <Route path="/passwordrecover/sendemail" element={<SendPasswordRecoverEmail />} />
 
-        <Route path="/passwordrecover/change" element={<RecoverPassword />} />
+        <Route path="/passwordrecovery/change" element={<RecoverPassword />} />
 
         <Route
           path="/"

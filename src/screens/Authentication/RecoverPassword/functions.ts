@@ -3,7 +3,10 @@ import * as yup from 'yup';
 
 export const changePasswordSchema = yup
   .object({
-    password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
+    password: yup
+      .string()
+      .required(`Informe a senha`)
+      .min(8, 'A senha deve ter pelo menos 8 caracteres.'),
 
     confirmPassword: yup
       .string()
