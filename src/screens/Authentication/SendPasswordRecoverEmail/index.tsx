@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
+import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
@@ -25,6 +26,8 @@ export const SendPasswordRecoverEmail = () => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
+  const originPath = window.location.origin;
+
   return (
     <Style.Background>
       <Formik
@@ -32,10 +35,12 @@ export const SendPasswordRecoverEmail = () => {
         validationSchema={sendPasswordRecoverEmailSchema}
         onSubmit={async (values) => {
           setOnQuery(true);
-          await Api.post('/BLABLABL', {
+          await Api.post('/passwordrecovery/sendemail', {
             email: values.email,
+            link: `${originPath}/passwordrecovery/change`,
           })
-            .then(() => {
+            .then((res) => {
+              toast.success(res.data.ServerMessage.message);
               navigate('/login');
             })
             .catch((err) => {

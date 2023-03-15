@@ -1,6 +1,6 @@
 // LIBS
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
@@ -82,9 +82,9 @@ export const Login = () => {
                 <Button center label="Login" loading={onQuery} type="submit" />
               </Form>
             </Style.LoginContainer>
-            {/* <p className="p2">
-              Esqueceu sua senha? <Link to="/login">Recuperar senha</Link>
-            </p> */}
+            <p className="p2">
+              Esqueceu sua senha? <Link to="/passwordrecover/sendemail">Recuperar senha</Link>
+            </p>
           </>
         )}
       </Formik>

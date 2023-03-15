@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
+import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
@@ -19,23 +20,27 @@ import { icon } from '../../../assets/icons';
 import { changePasswordSchema } from './functions';
 
 // TYPES
-import { catchHandler } from '../../../utils/functions';
+import { catchHandler, query } from '../../../utils/functions';
 
 export const RecoverPassword = () => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
+  const token = query.get('token');
+
   return (
     <Style.Background>
       <Formik
-        initialValues={{ newPassword: '', newPasswordConfirm: '' }}
+        initialValues={{ password: '', confirmPassword: '' }}
         validationSchema={changePasswordSchema}
         onSubmit={async (values) => {
           setOnQuery(true);
-          await Api.post('/BLABLABL', {
-            email: values.newPassword,
+          await Api.put('/passwordrecovery/change', {
+            token,
+            password: values.password,
           })
-            .then(() => {
+            .then((res) => {
+              toast.success(res.data.ServerMessage.message);
               navigate('/login');
             })
             .catch((err) => {
@@ -54,22 +59,24 @@ export const RecoverPassword = () => {
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    name="newPassword"
+                    name="password"
+                    type="password"
                     label="Nova senha"
                     placeholder="Informe a nova senha"
-                    value={values.newPassword}
-                    error={touched.newPassword && errors.newPassword ? errors.newPassword : null}
+                    value={values.password}
+                    error={touched.password && errors.password ? errors.password : null}
                   />
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    name="newPasswordConfirm"
+                    name="confirmPassword"
+                    type="password"
                     label="Confirmar nova senha"
                     placeholder="Confirme a nova senha"
-                    value={values.newPasswordConfirm}
+                    value={values.confirmPassword}
                     error={
-                      touched.newPasswordConfirm && errors.newPasswordConfirm
-                        ? errors.newPasswordConfirm
+                      touched.confirmPassword && errors.confirmPassword
+                        ? errors.confirmPassword
                         : null
                     }
                   />
