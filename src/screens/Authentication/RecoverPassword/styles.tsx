@@ -15,19 +15,6 @@ export const Background = styled.div`
     max-width: 290px;
     height: 65px;
   }
-
-  > p {
-    margin-top: ${theme.size.sm};
-    color: ${theme.color.white};
-
-    > a {
-      color: ${theme.color.white};
-      font-weight: 500;
-      :hover {
-        opacity: 0.7;
-      }
-    }
-  }
 `;
 
 export const InputWrapper = styled.div`

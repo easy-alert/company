@@ -13,7 +13,7 @@ import { handleAdditionalInformations, schemaAdditionalInformations } from './fu
 
 // TYPES
 import { IModalAdditionalInformations } from './types';
-import { increaseDaysInDate } from '../../../../../../../utils/functions';
+import { convertToFormikDate, increaseDaysInDate } from '../../../../../../../utils/functions';
 
 export const ModalAdditionalInformations = ({
   setModal,
@@ -26,9 +26,13 @@ export const ModalAdditionalInformations = ({
     <Formik
       initialValues={{
         hasLastResolutionDate: !!selectedMaintenance.resolutionDate,
-        lastResolutionDate: selectedMaintenance.resolutionDate ?? '',
+        lastResolutionDate: selectedMaintenance.resolutionDate
+          ? convertToFormikDate(selectedMaintenance.resolutionDate)
+          : '',
         hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
-        firstNotificationDate: selectedMaintenance.notificationDate ?? '',
+        firstNotificationDate: selectedMaintenance.notificationDate
+          ? convertToFormikDate(selectedMaintenance.notificationDate)
+          : '',
       }}
       validationSchema={schemaAdditionalInformations}
       onSubmit={(values) => {
@@ -57,7 +61,7 @@ export const ModalAdditionalInformations = ({
               }}
             />
             <FormikInput
-              max={new Date().toISOString().split('T')[0]}
+              max={convertToFormikDate(new Date())}
               disabled={!values.hasLastResolutionDate}
               name="lastResolutionDate"
               type="date"

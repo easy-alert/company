@@ -5,7 +5,6 @@ import * as Style from './styles';
 
 // COMPONENTS
 import { Button } from '../../../components/Buttons/Button';
-import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
 import { requestConfirmData, requestGetBuildingName } from '../utils/functions';
@@ -22,9 +21,10 @@ export const PhoneConfirm = () => {
 
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
   const [buildingName, setBuildingName] = useState<string>('');
+  const [companyImage, setCompanyImage] = useState<string>('');
 
   useEffect(() => {
-    requestGetBuildingName({ setBuildingName, setLoading, token: token! });
+    requestGetBuildingName({ setBuildingName, setCompanyImage, setLoading, token: token! });
   }, []);
 
   return loading ? (
@@ -35,7 +35,7 @@ export const PhoneConfirm = () => {
     <Style.Container>
       {isConfirmed ? (
         <Style.Content>
-          <img src={icon.logoRed} alt="" />
+          <img src={companyImage} alt="" />
           <h2>Cadastro de WhatsApp confirmado!</h2>
 
           <Style.ContentText>
@@ -45,37 +45,37 @@ export const PhoneConfirm = () => {
         </Style.Content>
       ) : (
         <Style.Content>
-          <img src={icon.logoRed} alt="" />
+          <img src={companyImage} alt="" />
+
           <h2>Confirmação de responsável</h2>
 
           <Style.ContentText>
             <p>Seu WhatsApp foi cadastrado na Easy Alert para ser o responsável da edificação:</p>
             <span> {buildingName}</span>
             <p>Para confirmar seu cadastro clique no botão abaixo:</p>
+            <Style.BottomContainer>
+              <Button
+                loading={onQuery}
+                label="Confirmar"
+                onClick={() => {
+                  requestConfirmData({
+                    token: token!,
+                    setIsConfirmed,
+                    navigate,
+                    setOnQuery,
+                  });
+                }}
+              />
+
+              <span>
+                Ao clicar em confirmar, você concorda com os{' '}
+                <Link target="_blank" rel="noopener noreferrer" to="/terms">
+                  Termos de Uso
+                </Link>
+                .
+              </span>
+            </Style.BottomContainer>
           </Style.ContentText>
-
-          <Style.BottomContainer>
-            <Button
-              loading={onQuery}
-              label="Confirmar"
-              onClick={() => {
-                requestConfirmData({
-                  token: token!,
-                  setIsConfirmed,
-                  navigate,
-                  setOnQuery,
-                });
-              }}
-            />
-
-            <span>
-              Ao clicar em confirmar, você concorda com os{' '}
-              <Link target="_blank" rel="noopener noreferrer" to="/terms">
-                Termos de Uso
-              </Link>
-              .
-            </span>
-          </Style.BottomContainer>
         </Style.Content>
       )}
     </Style.Container>
