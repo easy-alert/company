@@ -39,7 +39,9 @@ export const ModalCloneMaintenance = ({
           frequency: String(maintenance.frequency),
           frequencyTimeInterval: maintenance.FrequencyTimeInterval.id,
           responsible: maintenance.responsible,
-          source: `${maintenance.source} [adaptada]`,
+          source: maintenance.source.includes('adaptada')
+            ? maintenance.source
+            : `${maintenance.source} [adaptada]`,
           period: String(maintenance.period),
           periodTimeInterval: maintenance.PeriodTimeInterval.id,
           delay: String(maintenance.delay),
