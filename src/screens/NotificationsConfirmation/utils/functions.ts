@@ -27,12 +27,14 @@ export const requestConfirmData = async ({
 
 export const requestGetBuildingName = async ({
   setBuildingName,
+  setCompanyImage,
   setLoading,
   token,
 }: IRequestGetBuildingName) => {
   await Api.post('buildings/list/detailsforconfirm', { token })
     .then((res) => {
-      setBuildingName(res.data.BuildingDetails.name);
+      setBuildingName(res.data.name);
+      setCompanyImage(res.data.image);
       setLoading(false);
     })
     .catch((err) => {

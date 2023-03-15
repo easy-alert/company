@@ -102,8 +102,8 @@ const styles = StyleSheet.create({
     objectFit: 'contain',
   },
   easyAlertLogo: {
-    width: 85,
-    height: 19,
+    width: 77,
+    height: 17,
   },
   header: {
     display: 'flex',

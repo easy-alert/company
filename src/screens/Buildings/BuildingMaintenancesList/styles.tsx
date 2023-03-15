@@ -23,7 +23,7 @@ export const HeaderWrapper = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: ${theme.size.xsm};
+  margin-bottom: ${theme.size.xxsm};
 `;
 
 export const HeaderTitle = styled.div`
@@ -56,6 +56,8 @@ export const SearchField = styled.div`
   align-items: center;
   gap: ${theme.size.xxsm};
   width: 50%;
+  margin-bottom: ${theme.size.xsm};
+
   > input {
     height: 24px;
     width: 100%;

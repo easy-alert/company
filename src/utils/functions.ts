@@ -14,15 +14,18 @@ import {
 // #endregion
 
 // #region DATES
-export const dateFormatter = (date: string) =>
-  new Date(date).toLocaleDateString('pt-BR', {
-    timeZone: 'UTC',
-  });
+export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
+
+export const convertToFormikDate = (date: Date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
+};
 
 export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
-  new Date(date.setDate(date.getDate() + daysToIncrease)).toISOString().split('T')[0];
+  convertToFormikDate(new Date(date.setDate(date.getDate() + daysToIncrease)));
 
-export const convertToFormikDate = (date: string) => new Date(date).toISOString().split('T')[0];
 // #endregion
 
 // #region UPLOAD

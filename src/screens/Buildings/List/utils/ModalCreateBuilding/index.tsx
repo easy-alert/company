@@ -20,6 +20,7 @@ import { requestCreateBuilding, schemaModalCreateBuilding } from './utils/functi
 import {
   applyMask,
   capitalizeFirstLetter,
+  convertToFormikDate,
   requestAddressData,
 } from '../../../../../utils/functions';
 
@@ -144,9 +145,9 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                     const deliveryDate = new Date(e.target.value);
                     const warrantyYear = deliveryDate.getFullYear() + 5;
                     const deliveryDatePlusFiveYears = deliveryDate.setFullYear(warrantyYear);
-                    const deliveryDatePlusFiveYearsString = new Date(deliveryDatePlusFiveYears)
-                      .toISOString()
-                      .split('T')[0];
+                    const deliveryDatePlusFiveYearsString = convertToFormikDate(
+                      new Date(new Date(deliveryDatePlusFiveYears).setUTCHours(3, 0, 0, 0)),
+                    );
 
                     setFieldValue('warrantyExpiration', deliveryDatePlusFiveYearsString);
                   } else {

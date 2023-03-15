@@ -198,7 +198,7 @@ export const MaintenanceCard = ({
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
                     <span>Última conclusão: </span>
-                    {dateFormatter(maintenance.resolutionDate)}
+                    {dateFormatter(maintenance.resolutionDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
               )}
@@ -206,7 +206,7 @@ export const MaintenanceCard = ({
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
                     <span>Primeira notificação: </span>
-                    {dateFormatter(maintenance.notificationDate)}
+                    {dateFormatter(maintenance.notificationDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
               )}

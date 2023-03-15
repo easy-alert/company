@@ -32,7 +32,7 @@ export const requestEditBuilding = async ({
       neighborhood: values.neighborhood !== '' ? values.neighborhood : null,
       streetName: values.streetName !== '' ? values.streetName : null,
       area: null,
-      warrantyExpiration: new Date(values.warrantyExpiration),
+      warrantyExpiration: new Date(new Date(values.warrantyExpiration).setUTCHours(3, 0, 0, 0)),
       keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
     },
   })

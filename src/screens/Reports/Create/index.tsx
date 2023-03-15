@@ -16,7 +16,7 @@ import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
-import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
+import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
@@ -39,6 +39,8 @@ export const CreateReport = () => {
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
+  const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
 
@@ -65,20 +67,8 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <s.Header>
-          <h2>Relatórios</h2>
+        <h2>Relatórios</h2>
 
-          <IconButton
-            icon={icon.pdfLogo}
-            label="Exportar"
-            color={theme.color.primary}
-            size="20px"
-            onClick={() => {
-              setModalPrintReportOpen(true);
-            }}
-            disabled={maintenances.length === 0}
-          />
-        </s.Header>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -92,6 +82,8 @@ export const CreateReport = () => {
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
+              setShowNoDataMessage(true);
+
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
 
@@ -222,6 +214,16 @@ export const CreateReport = () => {
                 </s.FiltersGrid>
 
                 <s.ButtonContainer>
+                  <IconButton
+                    icon={icon.pdfLogo}
+                    label="Exportar"
+                    color={theme.color.primary}
+                    size="20px"
+                    onClick={() => {
+                      setModalPrintReportOpen(true);
+                    }}
+                    disabled={maintenances.length === 0}
+                  />
                   {/* <Button borderless label="Limpar filtros" type="reset" /> */}
                   <Button label="Filtrar" type="submit" loading={onQuery} />
                 </s.ButtonContainer>
@@ -232,7 +234,7 @@ export const CreateReport = () => {
 
         {onQuery && <DotSpinLoading />}
 
-        {!onQuery && maintenances.length === 0 && (
+        {!onQuery && maintenances.length === 0 && showNoDataMessage && (
           <s.NoMaintenanceCard>
             <h4>Nenhuma manutenção encontrada.</h4>
           </s.NoMaintenanceCard>
@@ -266,14 +268,12 @@ export const CreateReport = () => {
 
             <ReportDataTable
               colsHeader={[
-                { label: 'Data de notificação' },
-                { label: 'Data de conclusão' },
+                { label: 'Status' },
                 { label: 'Edificação' },
                 { label: 'Categoria' },
                 { label: 'Elemento' },
                 { label: 'Atividade' },
                 { label: 'Responsável' },
-                { label: 'Status' },
                 { label: 'Valor' },
               ]}
             >
@@ -281,18 +281,13 @@ export const CreateReport = () => {
                 <ReportDataTableContent
                   key={maintenance.activity + i}
                   colsBody={[
-                    { cell: dateFormatter(maintenance.notificationDate) },
-                    {
-                      cell: maintenance.resolutionDate
-                        ? dateFormatter(maintenance.resolutionDate)
-                        : '-',
-                    },
+                    { cell: <EventTag status={maintenance.status} /> },
+
                     { cell: maintenance.buildingName },
                     { cell: maintenance.categoryName },
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: <EventTag status={maintenance.status} /> },
                     {
                       cell:
                         maintenance.cost !== null

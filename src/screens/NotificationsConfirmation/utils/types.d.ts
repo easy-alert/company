@@ -7,6 +7,7 @@ export interface IRequestConfirmPhone {
 
 export interface IRequestGetBuildingName {
   setBuildingName: (setBuildingName: string) => void;
+  setCompanyImage: (setCompanyImage: string) => void;
   setLoading: (setLoading: boolean) => void;
   token: string;
 }

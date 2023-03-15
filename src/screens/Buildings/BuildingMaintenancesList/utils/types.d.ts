@@ -31,8 +31,8 @@ export interface IMaintenance {
       singularLabel: string;
     };
     observation: string;
-    resolutionDate?: string | null;
-    notificationDate?: string | null;
+    resolutionDate?: Date | null;
+    notificationDate?: Date | null;
   };
 }
 
@@ -51,6 +51,13 @@ export interface AddedMaintenances {
 export interface IRequestAddedMaintenances {
   setLoading?: (setLoading: boolean) => void;
   setAddedMaintenances: (setAddedMaintenances: AddedMaintenances[]) => void;
+  setAddedMaintenancesForFilter: (setAddedMaintenances: AddedMaintenances[]) => void;
   buildingId: string;
   setBuildingName: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export interface IFilterFunction {
+  setAddedMaintenances: React.Dispatch<React.SetStateAction<AddedMaintenances[]>>;
+  addedMaintenancesForFilter: AddedMaintenances[];
+  filter: string;
 }

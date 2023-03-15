@@ -30,16 +30,8 @@ export const requestCalendarData = async ({
             title: `${res.data.Dates.Months[i].expired} ${
               res.data.Dates.Months[i].expired > 1 ? 'vencidas' : 'vencida'
             }`,
-            start: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
-            end: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
+            start: new Date(res.data.Dates.Months[i].date),
+            end: new Date(res.data.Dates.Months[i].date),
             status: 'expired',
           });
         }
@@ -47,16 +39,8 @@ export const requestCalendarData = async ({
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
             title: `${res.data.Dates.Months[i].pending} a fazer`,
-            start: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
-            end: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
+            start: new Date(res.data.Dates.Months[i].date),
+            end: new Date(res.data.Dates.Months[i].date),
             status: 'pending',
           });
         }
@@ -67,16 +51,8 @@ export const requestCalendarData = async ({
             title: `${res.data.Dates.Months[i].completed} ${
               res.data.Dates.Months[i].completed > 1 ? 'concluídas' : 'concluída'
             }`,
-            start: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
-            end: new Date(
-              new Date(res.data.Dates.Months[i].date).getUTCFullYear(),
-              new Date(res.data.Dates.Months[i].date).getUTCMonth(),
-              new Date(res.data.Dates.Months[i].date).getUTCDate(),
-            ),
+            start: new Date(res.data.Dates.Months[i].date),
+            end: new Date(res.data.Dates.Months[i].date),
             status: 'completed',
           });
         }
@@ -119,16 +95,8 @@ export const requestCalendarData = async ({
             </div>
           </div>
         ),
-        start: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
-        end: new Date(
-          new Date(e.notificationDate).getUTCFullYear(),
-          new Date(e.notificationDate).getUTCMonth(),
-          new Date(e.notificationDate).getUTCDate(),
-        ),
+        start: new Date(e.notificationDate),
+        end: new Date(e.notificationDate),
         status: e.MaintenancesStatus.name,
         isFuture: e.isFuture,
         expectedDueDate: e.expectedDueDate,
