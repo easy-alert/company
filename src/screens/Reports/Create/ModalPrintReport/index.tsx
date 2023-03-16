@@ -179,9 +179,11 @@ const MyDocument = ({
               <Text>
                 Período:{' '}
                 {filterforPDF.startDate && filterforPDF.endDate
-                  ? `${dateFormatter(filterforPDF.startDate)} a ${dateFormatter(
-                      filterforPDF.endDate,
-                    )}`
+                  ? `${new Date(
+                      new Date(filterforPDF.startDate).setUTCHours(3, 0, 0, 0),
+                    ).toLocaleDateString('pt-BR')} a ${new Date(
+                      new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
+                    ).toLocaleDateString('pt-BR')}`
                   : 'Todos'}
               </Text>
             </View>
