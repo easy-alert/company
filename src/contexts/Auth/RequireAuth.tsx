@@ -42,6 +42,23 @@ export const RequireAuth = () => {
   };
 
   useEffect(() => {
+    function checkUserData() {
+      const tokenHasChanged = localStorage.getItem('authToken');
+
+      if (tokenHasChanged) {
+        validateToken();
+        navigate('/account');
+      }
+    }
+
+    window.addEventListener('storage', checkUserData);
+
+    return () => {
+      window.removeEventListener('storage', checkUserData);
+    };
+  }, []);
+
+  useEffect(() => {
     if (backofficeToken && userId) {
       requestAccessToCompanyUser();
     } else if (localStorage.getItem('authToken')) {
