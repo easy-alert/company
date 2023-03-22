@@ -36,6 +36,7 @@ export const FileZone = styled.div`
   gap: ${theme.size.md};
   justify-content: space-between;
   overflow: hidden;
+  border-radius: ${theme.size.xxsm};
 
   > p {
     word-break: break-all;
