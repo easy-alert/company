@@ -10,6 +10,7 @@ export const TagContainer = styled.div<IEventTag>`
   > p {
     color: ${theme.color.white};
     font-weight: 500;
+    white-space: nowrap;
   }
 
   ${({ status }) =>
