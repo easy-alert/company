@@ -20,7 +20,6 @@ export const Container = styled.div<{
   > img {
     border-radius: ${theme.size.xxsm} ${theme.size.xxsm} 0 0;
     height: calc(100% - 44px);
-    object-fit: contain;
     width: 100%;
   }
 `;
