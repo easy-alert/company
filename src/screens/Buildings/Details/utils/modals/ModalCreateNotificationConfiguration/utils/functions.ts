@@ -74,7 +74,7 @@ export const schemaCreateNotificationConfiguration = yup
     email: yup.string().email('Informe um e-mail válido.'),
     contactNumber: yup
       .string()
-      .min(15, 'O número do WhatsApp deve conter no mínimo 15 caracteres.'),
+      .min(14, 'O número do WhatsApp deve conter no mínimo 14 caracteres.'),
     role: yup.string().required('A função deve ser preenchida.'),
     isMain: yup.boolean(),
     createAgain: yup.boolean(),
