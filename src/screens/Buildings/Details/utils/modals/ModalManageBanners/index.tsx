@@ -211,6 +211,10 @@ export const ModalManageBanners = ({
           </Style.DragAndDropWrapper>
         </Style.DragAndDropGrid>
 
+        <p className="p3" style={{ opacity: 0.7 }}>
+          Resolução recomendada: 1300 x 300 pixels
+        </p>
+
         <Button
           center
           loading={onQuery}
