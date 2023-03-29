@@ -21,6 +21,7 @@ export const Container = styled.div<{
     border-radius: ${theme.size.xxsm} ${theme.size.xxsm} 0 0;
     height: calc(100% - 44px);
     width: 100%;
+    object-fit: cover;
   }
 `;
 
