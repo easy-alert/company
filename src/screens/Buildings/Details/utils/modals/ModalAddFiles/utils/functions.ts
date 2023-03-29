@@ -51,7 +51,7 @@ export const requestRegisterBuildingFile = async ({
 };
 
 export const insertMiddleEllipsis = (string: string) => {
-  if (string.length > 30) {
+  if (string.length > 50) {
     return `${string.substring(0, 30)}...${string.substring(string.length - 10, string.length)}`;
   }
   return string;

@@ -149,12 +149,8 @@ export const NoDataContainer = styled.footer`
 `;
 
 export const Content = styled.div`
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  @media (max-width: 900px) {
-    height: calc(100vh - 184px);
-  }
 `;
