@@ -1,6 +1,6 @@
 // LIBS
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 // STYLES
 import * as Style from './styles';
@@ -11,10 +11,10 @@ import { Image } from '../Image';
 import { IconButton } from '../Buttons/IconButton';
 
 // TYPES
-import { ISidebar, SidebarContentProps } from './utils/types';
+import { SidebarContentProps } from './utils/types';
 import { useAuthContext } from '../../contexts/Auth/UseAuthContext';
 
-export const Sidebar = ({ children }: ISidebar) => {
+export const Sidebar = () => {
   const { signout } = useAuthContext();
   const navigate = useNavigate();
 
@@ -158,7 +158,9 @@ export const Sidebar = ({ children }: ISidebar) => {
         />
       )}
 
-      <Style.AppContent>{children}</Style.AppContent>
+      <Style.AppContent>
+        <Outlet />
+      </Style.AppContent>
     </Style.Background>
   );
 };

@@ -16,3 +16,7 @@ export interface ILoginRequestResponse {
   Account: IAccount;
   token: string;
 }
+
+export interface IRequireAuth {
+  children: JSX.Element;
+}

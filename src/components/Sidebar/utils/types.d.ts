@@ -3,7 +3,3 @@ export interface SidebarContentProps {
   url: string;
   redirectFunction: () => void;
 }
-
-export interface ISidebar {
-  children: JSX.Element;
-}

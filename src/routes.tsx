@@ -52,9 +52,9 @@ const AppRoutes = () => (
         <Route
           path="/"
           element={
-            <Sidebar>
-              <RequireAuth />
-            </Sidebar>
+            <RequireAuth>
+              <Sidebar />
+            </RequireAuth>
           }
         >
           <Route path="/account" element={<AccountDetails />} />
