@@ -175,7 +175,7 @@ export const ModalSendMaintenanceReport = ({
             <Input
               label="Custo"
               placeholder="Ex: R$ 100,00"
-              maxLength={25}
+              maxLength={14}
               value={maintenanceReport.cost}
               onChange={(e) => {
                 setMaintenanceReport((prevState) => {

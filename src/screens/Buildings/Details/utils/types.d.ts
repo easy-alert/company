@@ -7,6 +7,7 @@ export interface INotificationConfiguration {
   contactNumberIsConfirmed: boolean;
   role: string;
   isMain: boolean;
+  showContact: boolean;
 }
 
 interface Annex {

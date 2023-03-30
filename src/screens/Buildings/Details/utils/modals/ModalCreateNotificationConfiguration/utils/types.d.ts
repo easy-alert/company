@@ -6,6 +6,7 @@ interface ICreateNotificationConfiguration {
   role: string;
   contactNumber: string;
   isMain: boolean;
+  showContact: boolean;
   createAgain: boolean;
 }
 
