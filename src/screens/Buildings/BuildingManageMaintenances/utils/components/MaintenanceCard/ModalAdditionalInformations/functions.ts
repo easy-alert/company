@@ -23,6 +23,9 @@ export const handleAdditionalInformations = ({
   categoryIndex,
   maintenanceIndex,
   setModal,
+  files,
+  images,
+  maintenanceReport,
 }: IHandleAdditionalInformations) => {
   setCategories((prevState) => {
     const newState = [...prevState];
@@ -32,14 +35,20 @@ export const handleAdditionalInformations = ({
     }
 
     newState[categoryIndex].Maintenances[maintenanceIndex].resolutionDate =
-      values.lastResolutionDate !== ''
+      values.lastResolutionDate && values.lastResolutionDate !== ''
         ? new Date(new Date(values.lastResolutionDate).setUTCHours(3, 0, 0, 0))
         : null;
 
     newState[categoryIndex].Maintenances[maintenanceIndex].notificationDate =
-      values.firstNotificationDate !== ''
+      values.firstNotificationDate && values.firstNotificationDate !== ''
         ? new Date(new Date(values.firstNotificationDate).setUTCHours(3, 0, 0, 0))
         : null;
+
+    if (values.hasLastResolutionDate) {
+      newState[categoryIndex].Maintenances[maintenanceIndex].files = files;
+      newState[categoryIndex].Maintenances[maintenanceIndex].images = images;
+      newState[categoryIndex].Maintenances[maintenanceIndex].maintenanceReport = maintenanceReport;
+    }
 
     return newState;
   });
