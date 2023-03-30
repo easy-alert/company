@@ -329,7 +329,7 @@ export const BuildingDetails = () => {
                 { label: 'Função' },
                 { label: 'WhatsApp' },
                 { label: '' },
-                // { label: ' ' },
+                { label: ' ' },
               ]}
             >
               {building?.NotificationsConfigurations.map((notificationRow, i: number) => (
@@ -418,12 +418,12 @@ export const BuildingDetails = () => {
                       ),
                       cssProps: { width: '15%' },
                     },
-                    // {
-                    //   cell: notificationRow.showContact ? 'true' : 'false',
-                    //   cssProps: {
-                    //     width: '10%',
-                    //   },
-                    // },
+                    {
+                      cell: notificationRow.showContact ? 'true' : 'false',
+                      cssProps: {
+                        width: '10%',
+                      },
+                    },
                     {
                       cell: (
                         <Style.ButtonWrapper>
