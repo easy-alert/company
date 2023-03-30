@@ -40,7 +40,7 @@ export interface ICounts {
   totalCost: number;
 }
 
-export interface IMaintenanceReport {
+export interface IMaintenanceReportData {
   activity: string;
   buildingName: string;
   categoryName: string;

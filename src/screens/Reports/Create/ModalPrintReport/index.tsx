@@ -16,7 +16,7 @@ import { Button } from '../../../../components/Buttons/Button';
 
 // TYPES
 import { IModalPrintQRCode } from './types';
-import { IFilterforPDF, IMaintenanceReport } from '../types';
+import { IFilterforPDF, IMaintenanceReportData } from '../types';
 
 // STYLES
 import * as Style from './styles';
@@ -138,7 +138,7 @@ const MyDocument = ({
   filterforPDF,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  maintenances: IMaintenanceReport[];
+  maintenances: IMaintenanceReportData[];
   companyImage: string;
   filterforPDF: IFilterforPDF;
 }) => {

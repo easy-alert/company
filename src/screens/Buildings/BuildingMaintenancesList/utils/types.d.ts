@@ -1,3 +1,6 @@
+import { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
+import { AnnexesAndImages } from '../../../Calendar/types';
+
 // MAINTENANCES
 export interface IMaintenance {
   Maintenance: {
@@ -33,6 +36,9 @@ export interface IMaintenance {
     observation: string;
     resolutionDate?: Date | null;
     notificationDate?: Date | null;
+    maintenanceReport?: IMaintenanceReport;
+    files?: AnnexesAndImages[];
+    images?: AnnexesAndImages[];
   };
 }
 

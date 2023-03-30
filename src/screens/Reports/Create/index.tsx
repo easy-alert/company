@@ -15,7 +15,7 @@ import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
-import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReport } from './types';
+import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReportData } from './types';
 import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
@@ -32,7 +32,7 @@ export const CreateReport = () => {
     pending: 0,
     totalCost: 0,
   });
-  const [maintenances, setMaintenances] = useState<IMaintenanceReport[]>([]);
+  const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
 
