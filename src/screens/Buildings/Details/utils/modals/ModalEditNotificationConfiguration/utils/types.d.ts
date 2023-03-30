@@ -6,6 +6,7 @@ interface IEditNotificationConfiguration {
   role: string;
   contactNumber: string;
   isMain: boolean;
+  showContact: boolean;
 }
 
 export interface IModalEditNotificationConfiguration {

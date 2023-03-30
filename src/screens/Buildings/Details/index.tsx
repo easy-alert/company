@@ -329,9 +329,10 @@ export const BuildingDetails = () => {
                 { label: 'Função' },
                 { label: 'WhatsApp' },
                 { label: '' },
+                // { label: ' ' },
               ]}
             >
-              {building?.NotificationsConfigurations.map((notificationRow) => (
+              {building?.NotificationsConfigurations.map((notificationRow, i: number) => (
                 <NotificationTableContent
                   key={notificationRow.id}
                   onClick={() => {
@@ -340,7 +341,13 @@ export const BuildingDetails = () => {
                   colsBody={[
                     {
                       cell: notificationRow.name,
-                      cssProps: { width: '25%', borderBottomLeftRadius: theme.size.xxsm },
+                      cssProps: {
+                        width: '25%',
+                        borderBottomLeftRadius:
+                          i + 1 === building?.NotificationsConfigurations.length
+                            ? theme.size.xsm
+                            : 0,
+                      },
                     },
                     {
                       cell: (
@@ -374,7 +381,7 @@ export const BuildingDetails = () => {
                       ),
                       cssProps: { width: '25%' },
                     },
-                    { cell: notificationRow.role, cssProps: { width: '20%' } },
+                    { cell: notificationRow.role, cssProps: { width: '15%' } },
                     {
                       cell: (
                         <Style.TableDataWrapper>
@@ -409,8 +416,14 @@ export const BuildingDetails = () => {
                             ))}
                         </Style.TableDataWrapper>
                       ),
-                      cssProps: { width: '20%' },
+                      cssProps: { width: '15%' },
                     },
+                    // {
+                    //   cell: notificationRow.showContact ? 'true' : 'false',
+                    //   cssProps: {
+                    //     width: '10%',
+                    //   },
+                    // },
                     {
                       cell: (
                         <Style.ButtonWrapper>
@@ -430,7 +443,13 @@ export const BuildingDetails = () => {
                           />
                         </Style.ButtonWrapper>
                       ),
-                      cssProps: { width: '10%', borderBottomRightRadius: theme.size.xxsm },
+                      cssProps: {
+                        width: '10%',
+                        borderBottomRightRadius:
+                          i + 1 === building?.NotificationsConfigurations.length
+                            ? theme.size.xxsm
+                            : 0,
+                      },
                     },
                   ]}
                 />

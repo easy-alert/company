@@ -45,11 +45,12 @@ export const ModalEditNotificationConfiguration = ({
         initialValues={{
           name: selectedNotificationRow.name,
           email: selectedNotificationRow.email ?? '',
+          role: selectedNotificationRow.role,
           contactNumber: selectedNotificationRow.contactNumber
             ? applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber }).value
             : '',
-          role: selectedNotificationRow.role,
           isMain: selectedNotificationRow.isMain,
+          showContact: selectedNotificationRow.showContact,
         }}
         validationSchema={schemaEditNotificationConfiguration}
         onSubmit={async (values) => {
@@ -122,6 +123,12 @@ export const ModalEditNotificationConfiguration = ({
                 <Image img={icon.alert} size="16px" />
                 <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
               </Style.MainContactObservation>
+
+              <FormikCheckbox
+                name="showContact"
+                labelColor={theme.color.gray4}
+                label="Mostrar contato"
+              />
 
               <Style.ButtonContainer>
                 {!onQuery && (

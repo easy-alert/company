@@ -44,6 +44,7 @@ export const ModalCreateNotificationConfiguration = ({
           role: '',
           contactNumber: '',
           isMain: false,
+          showContact: false,
           createAgain: false,
         }}
         validationSchema={schemaCreateNotificationConfiguration}
@@ -105,15 +106,22 @@ export const ModalCreateNotificationConfiguration = ({
                 placeholder="Ex: Síndico"
                 maxLength={40}
               />
+
+              <FormikCheckbox
+                name="isMain"
+                labelColor={theme.color.gray4}
+                label="Contato principal"
+              />
+
               <Style.MainContactObservation>
                 <Image img={icon.alert} size="16px" />
                 <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
               </Style.MainContactObservation>
 
               <FormikCheckbox
-                name="isMain"
+                name="showContact"
                 labelColor={theme.color.gray4}
-                label="Contato principal"
+                label="Mostrar contato"
               />
 
               <FormikCheckbox

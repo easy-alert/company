@@ -42,6 +42,7 @@ export const requestCreateNotificationConfiguration = async ({
       contactNumber: values.contactNumber !== '' ? unMask(values.contactNumber) : null,
       role: values.role,
       isMain: values.isMain,
+      showContact: values.showContact,
     },
   })
     .then((res) => {
