@@ -240,6 +240,11 @@ export const ModalSendMaintenanceReport = ({
               <h6>Imagens</h6>
 
               <Style.FileAndImageRow>
+                <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
+                  <input {...getInputPropsImages()} />
+                  <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                </Style.DragAndDropZoneImage>
+
                 {images.map((e, i: number) => (
                   <ImagePreview
                     key={e.name + i}
@@ -263,11 +268,6 @@ export const ModalSendMaintenanceReport = ({
                     <DotLoading />
                   </Style.ImageLoadingTag>
                 )}
-
-                <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
-                  <input {...getInputPropsImages()} />
-                  <Image img={icon.addImage} width="48px" height="46px" radius="0" />
-                </Style.DragAndDropZoneImage>
               </Style.FileAndImageRow>
             </Style.Row>
           </Style.Content>

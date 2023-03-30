@@ -1,6 +1,7 @@
 // LIBS
 import { useContext, useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { Api } from '../../services/api';
 
 // CONTEXTS
@@ -10,7 +11,18 @@ import { AuthContext } from './AuthContext';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import { catchHandler, query } from '../../utils/functions';
 
-export const RequireAuth = () => {
+// TYPES
+import { IRequireAuth } from './utils/types';
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+`;
+
+export const RequireAuth = ({ children }: IRequireAuth) => {
   const { setAccount, signin } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -68,5 +80,11 @@ export const RequireAuth = () => {
     }
   }, []);
 
-  return loading ? <DotSpinLoading label="Verificando credenciais" /> : <Outlet />;
+  return loading ? (
+    <Container>
+      <DotSpinLoading label="Verificando credenciais" />
+    </Container>
+  ) : (
+    children
+  );
 };
