@@ -30,6 +30,7 @@ export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
   border: 1px solid ${theme.color.gray3};
   font-size: 12px;
   line-height: 14px;
+  white-space: nowrap;
 
   :first-child {
     border-top-left-radius: ${theme.size.xxsm};
