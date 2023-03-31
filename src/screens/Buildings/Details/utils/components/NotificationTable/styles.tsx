@@ -70,8 +70,8 @@ export const TableColBody = styled.td<{
   border: 1px solid ${theme.color.gray3};
   border-top: 0;
 
-  font-size: 12px;
   line-height: 14px;
+  font-size: 12px;
 
   :not(:first-child) {
     border-left: none;
