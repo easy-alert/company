@@ -76,7 +76,7 @@ export const ModalManageBanners = ({
 
         setWebBanner((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { name: originalName, url: fileUrl }];
+          newState = [{ name: originalName, url: fileUrl }];
           return newState;
         });
         setWebOnQuery(false);
@@ -97,7 +97,7 @@ export const ModalManageBanners = ({
 
         setMobileBanner((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { name: originalName, url: fileUrl }];
+          newState = [{ name: originalName, url: fileUrl }];
           return newState;
         });
         setMobileOnQuery(false);
