@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 
 // AUTHENTICATION
 import { Login } from './screens/Authentication/Login';
+import { Register } from './screens/Authentication/Register';
 
 // ACCOUNT
 import { AccountDetails } from './screens/Account/Details';
@@ -42,6 +43,8 @@ const AppRoutes = () => (
       <Routes>
         <Route path="*" element={<Login />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/register" element={<Register />} />
 
         <Route path="/terms" element={<TermsOfUse />} />
 

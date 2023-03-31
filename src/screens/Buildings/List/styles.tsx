@@ -149,7 +149,7 @@ export const NoDataContainer = styled.footer`
 `;
 
 export const Content = styled.div`
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 72px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

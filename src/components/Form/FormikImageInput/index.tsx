@@ -15,6 +15,8 @@ export const FormikImageInput = ({
   defaultImage,
   name,
   onChange,
+  customAddLogo,
+  customEditLogo,
 }: IUploader) => {
   const checkImageType = () => {
     if (defaultImage) {
@@ -31,7 +33,12 @@ export const FormikImageInput = ({
       <h6>{label}</h6>
       <Style.Container>
         <Style.ImageWrapper>
-          <img src={defaultImage ? icon.editWithBg : icon.plusWithBg} alt="" />
+          <img
+            src={
+              defaultImage ? customEditLogo ?? icon.editWithBg : customAddLogo ?? icon.plusWithBg
+            }
+            alt=""
+          />
           <Image img={checkImageType()} size="80px" />
           <input
             name={name}
@@ -47,9 +54,7 @@ export const FormikImageInput = ({
               opacity: 0,
             }}
           />
-          <Style.ErrorMessage>
-            {!!error && <p className="p3">{error}</p>}
-          </Style.ErrorMessage>
+          <Style.ErrorMessage>{!!error && <p className="p3">{error}</p>}</Style.ErrorMessage>
         </Style.ImageWrapper>
         <p className="p5">JPG ou PNG. Tamanho máximo de 5 MB.</p>
       </Style.Container>

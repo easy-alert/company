@@ -1,0 +1,4 @@
+export interface IRequestCreateCompanyAndOWner {
+  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
+  values: any;
+}
