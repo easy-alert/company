@@ -27,6 +27,7 @@ import { image } from '../../../../assets/images';
 import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { getStatusName } from '../../../Calendar/utils/EventTag/functions';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { getStatusNameforPdf } from './functions';
 
 const styles = StyleSheet.create({
   page: {
@@ -170,12 +171,15 @@ const MyDocument = ({
               style={styles.companyLogo}
             />
             <View style={styles.headerDiv}>
-              <Text>Edificação: {`${filterforPDF.buildingName ?? 'Todas'}`}</Text>
-              <Text>Responsável: {`${filterforPDF.responsibleUserName ?? 'Todos'}`}</Text>
+              <Text>
+                Edificação: {`${filterforPDF.buildingName ? filterforPDF.buildingName : 'Todas'}`}
+              </Text>
               <Text>ID: {randomNumber()}</Text>
             </View>
             <View style={styles.headerDiv}>
-              <Text>Categoria: {`${filterforPDF.categoryName ?? 'Todas'}`}</Text>
+              <Text>
+                Categoria: {`${filterforPDF.categoryName ? filterforPDF.categoryName : 'Todas'}`}
+              </Text>
               <Text>
                 Período:{' '}
                 {filterforPDF.startDate && filterforPDF.endDate
@@ -258,10 +262,10 @@ const MyDocument = ({
                     <Text>{maintenance.activity}</Text>
                   </View>
                   <View style={styles.section7}>
-                    <Text>{maintenance.responsible ?? '-'}</Text>
+                    <Text>{maintenance.responsible}</Text>
                   </View>
                   <View style={styles.section8}>
-                    <Text>{getStatusName(maintenance.status)}</Text>
+                    <Text>{getStatusNameforPdf(maintenance.status)}</Text>
                   </View>
                   <View style={styles.section9}>
                     <Text>

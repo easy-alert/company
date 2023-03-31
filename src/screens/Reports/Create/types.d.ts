@@ -2,14 +2,12 @@ export interface IReportsFilters {
   maintenanceStatusId: string;
   buildingId: string;
   categoryId: string;
-  responsibleSyndicId: string;
   startDate: string;
   endDate: string;
 }
 
 export interface IFilterforPDF {
   buildingName: string;
-  responsibleUserName: string;
   categoryName: string;
   status: string;
   startDate: string;
@@ -29,7 +27,6 @@ interface IFilterStatus extends IFilterData {
 export interface IFiltersOptions {
   buildings: IFilterData[];
   categories: IFilterData[];
-  responsibles: IFilterData[];
   status: IFilterStatus[];
 }
 
@@ -58,7 +55,6 @@ export interface IRequestReportsData {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
   setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceRepor | undefined>>;
-
   filters: IReportsFilters;
 }
 
