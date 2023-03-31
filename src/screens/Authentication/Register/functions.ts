@@ -26,7 +26,7 @@ export const requestCreateCompanyAndOWner = async ({
     )}.png`;
   }
 
-  await Api.post('/companies/create', {
+  await Api.post('/usercompany/create', {
     image: imageUrl,
     name: values.name,
     email: values.email,
