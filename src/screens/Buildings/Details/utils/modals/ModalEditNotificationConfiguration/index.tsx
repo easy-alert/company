@@ -113,21 +113,21 @@ export const ModalEditNotificationConfiguration = ({
                 maxLength={40}
               />
 
-              <FormikCheckbox
-                name="isMain"
-                labelColor={theme.color.gray4}
-                label="Contato principal"
-              />
-
               <Style.MainContactObservation>
                 <Image img={icon.alert} size="16px" />
                 <p className="p3">Apenas o contato principal receberá notificações por WhatsApp.</p>
               </Style.MainContactObservation>
 
               <FormikCheckbox
+                name="isMain"
+                labelColor={theme.color.gray4}
+                label="Contato principal"
+              />
+
+              <FormikCheckbox
                 name="showContact"
                 labelColor={theme.color.gray4}
-                label="Mostrar contato"
+                label="Exibir para condôminos"
               />
 
               <Style.ButtonContainer>
