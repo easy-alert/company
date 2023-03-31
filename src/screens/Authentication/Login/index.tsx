@@ -80,7 +80,9 @@ export const Login = () => {
                   />
                 </Style.InputWrapper>
                 <Style.ButtonContainer loading={+onQuery}>
-                  <Link to="/register">Cadastrar</Link>
+                  <Link style={{ pointerEvents: onQuery ? 'none' : 'auto' }} to="/register">
+                    Cadastrar
+                  </Link>
                   <Button label="Login" loading={onQuery} type="submit" />
                 </Style.ButtonContainer>
               </Form>

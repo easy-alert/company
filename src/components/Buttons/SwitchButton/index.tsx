@@ -7,10 +7,10 @@ export const Switch = ({ disabled, onChange, checked }: ISwitchButton) => (
     disabled={disabled}
     onChange={onChange}
     checked={checked}
-    onColor={theme.color.dangerL}
-    offColor={theme.color.dangerL}
-    onHandleColor={theme.color.primary}
-    offHandleColor={theme.color.primary}
+    onColor={theme.color.gray3}
+    offColor={theme.color.gray3}
+    offHandleColor={theme.color.white}
+    onHandleColor={theme.color.gray4}
     handleDiameter={16}
     uncheckedIcon={false}
     checkedIcon={false}

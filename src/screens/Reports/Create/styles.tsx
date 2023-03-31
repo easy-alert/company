@@ -51,10 +51,15 @@ export const FiltersGrid = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
-  margin-top: ${theme.size.sm};
+  margin-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+`;
+
+export const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: ${theme.size.sm};
 `;
 

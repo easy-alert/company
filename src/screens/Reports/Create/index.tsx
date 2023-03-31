@@ -42,7 +42,13 @@ export const CreateReport = () => {
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
-  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({} as IFilterforPDF);
+  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
+    buildingName: '',
+    categoryName: '',
+    endDate: '',
+    startDate: '',
+    status: '',
+  });
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -76,7 +82,6 @@ export const CreateReport = () => {
               maintenanceStatusId: '',
               buildingId: '',
               categoryId: '',
-              responsibleSyndicId: '',
               startDate: '',
               endDate: '',
             }}
@@ -88,15 +93,12 @@ export const CreateReport = () => {
                 const newState = { ...prevState };
 
                 const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
-                if (building) newState.buildingName = building?.name;
+
+                newState.buildingName = building?.name ? building?.name : '';
 
                 const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
-                if (category) newState.categoryName = category?.name;
 
-                const responsible = filtersOptions?.responsibles.find(
-                  (e) => e.id === values.responsibleSyndicId,
-                );
-                if (responsible) newState.responsibleUserName = responsible?.name;
+                newState.categoryName = category?.name ? category?.name : '';
 
                 newState.startDate = values.startDate;
 
@@ -105,7 +107,7 @@ export const CreateReport = () => {
                 const status = filtersOptions?.status.find(
                   (e) => e.id === values.maintenanceStatusId,
                 );
-                if (status) newState.status = status?.name;
+                newState.status = status?.name ? status?.name : '';
 
                 return newState;
               });
@@ -119,7 +121,6 @@ export const CreateReport = () => {
                   buildingId: values.buildingId,
                   categoryId: values.categoryId,
                   maintenanceStatusId: values.maintenanceStatusId,
-                  responsibleSyndicId: values.responsibleSyndicId,
                   startDate: values.startDate,
                   endDate: values.endDate,
                 },
@@ -159,19 +160,19 @@ export const CreateReport = () => {
                   </FormikSelect>
 
                   <FormikSelect
-                    selectPlaceholderValue={values.responsibleSyndicId}
-                    name="responsibleSyndicId"
-                    label="Responsável"
+                    selectPlaceholderValue={values.maintenanceStatusId}
+                    name="maintenanceStatusId"
+                    label="Status"
                     error={
-                      touched.responsibleSyndicId && errors.responsibleSyndicId
-                        ? errors.responsibleSyndicId
+                      touched.maintenanceStatusId && errors.maintenanceStatusId
+                        ? errors.maintenanceStatusId
                         : null
                     }
                   >
                     <option value="">Todos</option>
-                    {filtersOptions?.responsibles.map((responsible) => (
-                      <option key={responsible.id} value={responsible.id}>
-                        {responsible.name}
+                    {filtersOptions?.status.map((status) => (
+                      <option key={status.id} value={status.id}>
+                        {capitalizeFirstLetter(status.pluralLabel)}
                       </option>
                     ))}
                   </FormikSelect>
@@ -193,40 +194,23 @@ export const CreateReport = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+                  <s.ButtonContainer>
+                    <s.ButtonWrapper>
+                      <IconButton
+                        icon={icon.pdfLogo}
+                        label="Exportar"
+                        color={theme.color.primary}
+                        size="20px"
+                        onClick={() => {
+                          setModalPrintReportOpen(true);
+                        }}
+                        disabled={maintenances.length === 0}
+                      />
 
-                  <FormikSelect
-                    selectPlaceholderValue={values.maintenanceStatusId}
-                    name="maintenanceStatusId"
-                    label="Status"
-                    error={
-                      touched.maintenanceStatusId && errors.maintenanceStatusId
-                        ? errors.maintenanceStatusId
-                        : null
-                    }
-                  >
-                    <option value="">Todos</option>
-                    {filtersOptions?.status.map((status) => (
-                      <option key={status.id} value={status.id}>
-                        {capitalizeFirstLetter(status.pluralLabel)}
-                      </option>
-                    ))}
-                  </FormikSelect>
+                      <Button label="Filtrar" type="submit" loading={onQuery} />
+                    </s.ButtonWrapper>
+                  </s.ButtonContainer>
                 </s.FiltersGrid>
-
-                <s.ButtonContainer>
-                  <IconButton
-                    icon={icon.pdfLogo}
-                    label="Exportar"
-                    color={theme.color.primary}
-                    size="20px"
-                    onClick={() => {
-                      setModalPrintReportOpen(true);
-                    }}
-                    disabled={maintenances.length === 0}
-                  />
-                  {/* <Button borderless label="Limpar filtros" type="reset" /> */}
-                  <Button label="Filtrar" type="submit" loading={onQuery} />
-                </s.ButtonContainer>
               </Form>
             )}
           </Formik>
