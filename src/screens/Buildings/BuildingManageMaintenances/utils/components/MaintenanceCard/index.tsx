@@ -194,19 +194,21 @@ export const MaintenanceCard = ({
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />
-              {maintenance.resolutionDate && (
-                <Style.AdditionalInformationsWrapper>
-                  <p className="p2">
-                    <span>Última conclusão: </span>
-                    {dateFormatter(maintenance.resolutionDate.toString())}
-                  </p>
-                </Style.AdditionalInformationsWrapper>
-              )}
+
               {maintenance.notificationDate && (
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
                     <span>Primeira notificação: </span>
                     {dateFormatter(maintenance.notificationDate.toString())}
+                  </p>
+                </Style.AdditionalInformationsWrapper>
+              )}
+
+              {maintenance.resolutionDate && (
+                <Style.AdditionalInformationsWrapper>
+                  <p className="p2">
+                    <span>Última conclusão: </span>
+                    {dateFormatter(maintenance.resolutionDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
               )}
