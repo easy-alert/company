@@ -328,8 +328,8 @@ export const BuildingDetails = () => {
                 { label: 'E-mail' },
                 { label: 'Função' },
                 { label: 'WhatsApp' },
+                { label: 'Exibindo para condôminos' },
                 { label: '' },
-                // { label: ' ' },
               ]}
             >
               {building?.NotificationsConfigurations.map((notificationRow, i: number) => (
@@ -418,12 +418,19 @@ export const BuildingDetails = () => {
                       ),
                       cssProps: { width: '15%' },
                     },
-                    // {
-                    //   cell: notificationRow.showContact ? 'true' : 'false',
-                    //   cssProps: {
-                    //     width: '10%',
-                    //   },
-                    // },
+                    {
+                      cell: (
+                        <input
+                          style={{ pointerEvents: 'none' }}
+                          type="checkbox"
+                          checked={notificationRow.showContact}
+                          readOnly
+                        />
+                      ),
+                      cssProps: {
+                        width: '10%',
+                      },
+                    },
                     {
                       cell: (
                         <Style.ButtonWrapper>
