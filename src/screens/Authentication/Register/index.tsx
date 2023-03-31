@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikImageInput } from '../../../components/Form/FormikImageInput';
 import { Switch } from '../../../components/Buttons/SwitchButton';
+import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 // STYLES
 import * as Style from './styles';
@@ -25,6 +26,8 @@ import { applyMask } from '../../../utils/functions';
 export const Register = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [isCPF, setIsCPF] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { signin } = useAuthContext();
 
   return (
     <Style.Background>
@@ -44,7 +47,7 @@ export const Register = () => {
           isCPF ? schemaModalCreateCompanyAndOwnerWithCPF : schemaModalCreateCompanyAndOwnerWithCNPJ
         }
         onSubmit={async (values) => {
-          requestCreateCompanyAndOWner({ setOnQuery, values });
+          requestCreateCompanyAndOWner({ setOnQuery, values, navigate, signin });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (

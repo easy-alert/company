@@ -1,5 +1,4 @@
 // LIBS
-import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 // FUNCTIONS
@@ -12,6 +11,8 @@ import { IRequestCreateCompanyAndOWner } from './types';
 export const requestCreateCompanyAndOWner = async ({
   values,
   setOnQuery,
+  navigate,
+  signin,
 }: IRequestCreateCompanyAndOWner) => {
   setOnQuery(true);
   let imageUrl;
@@ -37,7 +38,8 @@ export const requestCreateCompanyAndOWner = async ({
     contactNumber: unMask(values.contactNumber),
   })
     .then((res) => {
-      toast.success(res.data.ServerMessage.message);
+      signin(res.data);
+      navigate('/calendar');
     })
     .catch((err) => {
       setOnQuery(false);
