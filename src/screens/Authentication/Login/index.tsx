@@ -79,7 +79,10 @@ export const Login = () => {
                     error={touched.password && errors.password ? errors.password : null}
                   />
                 </Style.InputWrapper>
-                <Button center label="Login" loading={onQuery} type="submit" />
+                <Style.ButtonContainer loading={+onQuery}>
+                  <Link to="/register">Cadastrar</Link>
+                  <Button label="Login" loading={onQuery} type="submit" />
+                </Style.ButtonContainer>
               </Form>
             </Style.LoginContainer>
             <p className="p2">

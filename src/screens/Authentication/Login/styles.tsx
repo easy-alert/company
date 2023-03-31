@@ -54,8 +54,48 @@ export const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: ${theme.size.xxxxlg};
+`;
 
-  button {
-    margin-top: ${theme.size.xsm};
+export const ButtonContainer = styled.div<{
+  loading: number;
+}>`
+  margin-top: ${theme.size.xsm};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.size.xlg};
+
+  > div {
+    > div {
+      > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ${({ loading }) => (loading ? `width: fit-content;` : `width: 100px;`)}
+      }
+    }
+  }
+
+  > a {
+    transition: 0.5s;
+    color: ${theme.color.white};
+    outline: 1px solid ${theme.color.white};
+    background-color: transparent;
+    height: 30px;
+    width: 100px;
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: ${theme.size.xxsm};
+    padding: ${theme.size.xsm} ${theme.size.sm};
+    border: none;
+
+    :hover {
+      opacity: 0.7;
+    }
   }
 `;

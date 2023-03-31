@@ -41,6 +41,7 @@ export const ContainerButton = styled.div<{
   align-items: center;
   justify-content: center;
   width: fit-content;
+
   > button {
     transition: 0.5s;
     display: flex;
@@ -58,8 +59,7 @@ export const ContainerButton = styled.div<{
       outlined &&
       `outline: 2px solid ${bgColor}; outline-offset: -2px;  background-color: transparent; color:${bgColor};`}
 
-    ${({ disable }) =>
-      disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
+    ${({ disable }) => disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
 
     ${({ borderless }) =>
       borderless &&
