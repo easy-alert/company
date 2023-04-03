@@ -55,6 +55,10 @@ export const ButtonContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+
+  @media (max-width: 900px) {
+    margin-top: 8px;
+  }
 `;
 
 export const ButtonWrapper = styled.div`

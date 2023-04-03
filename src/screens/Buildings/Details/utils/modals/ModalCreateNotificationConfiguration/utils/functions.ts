@@ -77,7 +77,9 @@ export const schemaCreateNotificationConfiguration = yup
       .string()
       .min(14, 'O número do WhatsApp deve conter no mínimo 14 caracteres.'),
     role: yup.string().required('A função deve ser preenchida.'),
+
     isMain: yup.boolean(),
+    showContact: yup.boolean(),
     createAgain: yup.boolean(),
   })
   .required();
