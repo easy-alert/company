@@ -107,5 +107,6 @@ export const schemaEditNotificationConfiguration = yup
     role: yup.string().required('A função deve ser preenchida.'),
 
     isMain: yup.boolean(),
+    showContact: yup.boolean(),
   })
   .required();
