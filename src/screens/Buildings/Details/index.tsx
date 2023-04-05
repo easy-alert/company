@@ -328,7 +328,7 @@ export const BuildingDetails = () => {
                 { label: 'E-mail' },
                 { label: 'Função' },
                 { label: 'WhatsApp' },
-                { label: 'Exibindo para condôminos' },
+                { label: 'Exibir no QRCode' },
                 { label: '' },
               ]}
             >
