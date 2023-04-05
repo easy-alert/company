@@ -127,7 +127,7 @@ export const ModalEditNotificationConfiguration = ({
               <FormikCheckbox
                 name="showContact"
                 labelColor={theme.color.gray4}
-                label="Exibir para condôminos"
+                label="Exibir no QR Code"
               />
 
               <Style.ButtonContainer>
