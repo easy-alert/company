@@ -52,7 +52,7 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   overflow: hidden;
   transition: max-height 0.15s;
 
-  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 200px;` : `max-height: 0px; `)};
+  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 300px;` : `max-height: 0px; `)};
 `;
 
 export const MaintenancesCardGridMoreEditButton = styled.div`

@@ -207,7 +207,7 @@ export const CreateReport = () => {
                         disabled={maintenances.length === 0}
                       />
 
-                      <Button label="Filtrar" type="submit" loading={onQuery} />
+                      <Button label="Filtrar" type="submit" disabled={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>
@@ -258,6 +258,7 @@ export const CreateReport = () => {
                 { label: 'Elemento' },
                 { label: 'Atividade' },
                 { label: 'Responsável' },
+                { label: 'Observação' },
                 { label: 'Valor' },
               ]}
             >
@@ -272,6 +273,7 @@ export const CreateReport = () => {
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
+                    { cell: maintenance.observation ?? '-' },
                     {
                       cell:
                         maintenance.cost !== null

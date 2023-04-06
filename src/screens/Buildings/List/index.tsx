@@ -1,6 +1,6 @@
 // COMPONENTS
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { icon } from '../../../assets/icons/index';
 import { Image } from '../../../components/Image';
@@ -36,9 +36,23 @@ export const BuildingsList = () => {
   const [page, setPage] = useState<number>(1);
   const offset = 20;
 
+  const [search] = useSearchParams();
+  const queryPage = Number(search.get('page'));
+  const queryFilter = search.get('filter');
+
   useEffect(() => {
-    requestBuildingTypes({ setBuildingTypes });
-    requestBuildingList({ page, setBuildingList, setCount, filter, setLoading, setPage });
+    if (queryPage) setPage(queryPage);
+    if (queryFilter) setFilter(queryFilter);
+
+    requestBuildingTypes({ setBuildingTypes }).then(() => {
+      requestBuildingList({
+        page: queryPage || page,
+        filter: queryFilter || filter,
+        setBuildingList,
+        setCount,
+        setLoading,
+      });
+    });
   }, []);
 
   return loading ? (
@@ -63,6 +77,7 @@ export const BuildingsList = () => {
                   setCount,
                   filter,
                   setPage,
+                  resetPage: true,
                 });
               }}
             />
@@ -80,6 +95,7 @@ export const BuildingsList = () => {
                     setCount,
                     filter: '',
                     setPage,
+                    resetPage: true,
                   });
                 }
               }}
@@ -91,6 +107,7 @@ export const BuildingsList = () => {
                     setCount,
                     filter,
                     setPage,
+                    resetPage: true,
                   });
                 }
               }}
@@ -116,7 +133,7 @@ export const BuildingsList = () => {
               <Style.BuildingCard
                 key={building.id}
                 onClick={() => {
-                  navigate(`/buildings/details/${building.id}`);
+                  navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`);
                 }}
               >
                 <Style.BuildingCardHeader>
