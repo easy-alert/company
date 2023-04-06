@@ -42,7 +42,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           streetName: '',
           deliveryDate: '',
           warrantyExpiration: '',
-          keepNotificationAfterWarrantyEnds: false,
+          keepNotificationAfterWarrantyEnds: true,
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {

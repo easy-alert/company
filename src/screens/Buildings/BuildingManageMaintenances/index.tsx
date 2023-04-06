@@ -1,5 +1,5 @@
 // LIBS
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // COMPONENTS
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,8 +19,8 @@ import {
   requestListCategoriesToManage,
   requestBuildingListForSelect,
   requestCategoriesForSelect,
-  filterFunction,
 } from './utils/functions';
+
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { Select } from '../../../components/Inputs/Select';
 import { DotLoading } from '../../../components/Loadings/DotLoading';
@@ -39,8 +39,6 @@ export const BuildingManageMaintenances = () => {
   const [tableloading, setTableLoading] = useState<boolean>(false);
 
   const [categories, setCategories] = useState<ICategories[]>([]);
-
-  const [categoriesForFilter, setCategoriesForFilter] = useState<ICategories[]>([]);
 
   const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
 
@@ -62,6 +60,10 @@ export const BuildingManageMaintenances = () => {
 
   const [filter, setFilter] = useState<string>('');
 
+  const inputRef = useRef('');
+
+  const { search } = window.location;
+
   useEffect(() => {
     requestCategoriesForSelect({ setCategoriesOptions });
   }, [JSON.stringify(categories)]);
@@ -78,7 +80,6 @@ export const BuildingManageMaintenances = () => {
         buildingId: buildingId!,
         setBuildingName,
         currentBuildingId: buildingId!,
-        setCategoriesForFilter,
       });
     });
   }, []);
@@ -135,28 +136,28 @@ export const BuildingManageMaintenances = () => {
             icon={icon.search}
             size="16px"
             onClick={() => {
-              filterFunction({ setCategories, categoriesForFilter, filter });
+              setFilter(inputRef.current);
             }}
           />
           <input
             type="text"
             maxLength={80}
             placeholder="Procurar"
-            value={filter}
             onChange={(evt) => {
-              setFilter(evt.target.value);
+              inputRef.current = evt.target.value;
+
               if (evt.target.value === '') {
-                filterFunction({ setCategories, categoriesForFilter, filter: '' });
+                setFilter('');
               }
             }}
             onKeyUp={(evt) => {
               if (evt.key === 'Enter') {
-                filterFunction({ setCategories, categoriesForFilter, filter });
+                setFilter(inputRef.current);
               }
             }}
           />
         </Style.SearchField>
-        <ReturnButton path={`/buildings/details/${buildingId}`} />
+        <ReturnButton path={`/buildings/details/${buildingId}${search}`} />
       </Style.Header>
       {categories.length > 0 ? (
         <>
@@ -176,7 +177,6 @@ export const BuildingManageMaintenances = () => {
                   setTableLoading,
                   setBuildingName,
                   currentBuildingId: buildingId!,
-                  setCategoriesForFilter,
                 });
               }}
             >
@@ -199,7 +199,7 @@ export const BuildingManageMaintenances = () => {
                       setToCopyBuilding('');
                     }
 
-                    const updatedCategories = categories;
+                    const updatedCategories = structuredClone(categories);
 
                     if (isAllCategoriesSelected) {
                       for (let i = 0; i < updatedCategories.length; i += 1) {
@@ -230,19 +230,24 @@ export const BuildingManageMaintenances = () => {
             </Style.TableLoadingContainer>
           ) : (
             <Style.CategoriesContainer>
-              {categories.map((category, categoryIndex: number) => (
-                <MaintenanceCategory
-                  key={category.id}
-                  category={category}
-                  categories={categories}
-                  setCategories={setCategories}
-                  categoryIndex={categoryIndex}
-                  setToCopyBuilding={setToCopyBuilding}
-                  toCopyBuilding={toCopyBuilding}
-                  timeIntervals={timeIntervals}
-                  categoriesOptions={categoriesOptions}
-                />
-              ))}
+              {categories.map(
+                (category, categoryIndex: number) =>
+                  ((filter &&
+                    category.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) ||
+                    filter === '') && (
+                    <MaintenanceCategory
+                      key={category.id}
+                      category={category}
+                      categories={categories}
+                      setCategories={setCategories}
+                      categoryIndex={categoryIndex}
+                      setToCopyBuilding={setToCopyBuilding}
+                      toCopyBuilding={toCopyBuilding}
+                      timeIntervals={timeIntervals}
+                      categoriesOptions={categoriesOptions}
+                    />
+                  ),
+              )}
             </Style.CategoriesContainer>
           )}
         </>

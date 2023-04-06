@@ -160,7 +160,7 @@ export const ModalCreateMaintenance = ({
                 value={values.observation}
                 error={touched.observation && errors.observation ? errors.observation : null}
                 placeholder="Ex: Atenção no acabamento"
-                maxLength={55}
+                maxLength={200}
               />
               <Style.SelectWrapper>
                 <FormikInput

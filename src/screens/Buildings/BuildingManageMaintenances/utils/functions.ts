@@ -8,7 +8,6 @@ import {
   IRequestListCategoriesToManage,
   IRequestBuildingListForSelect,
   IRequestCategoriesForSelect,
-  IFilterFunction,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
@@ -18,7 +17,6 @@ export const requestListCategoriesToManage = async ({
   setTableLoading,
   setBuildingName,
   currentBuildingId,
-  setCategoriesForFilter,
 }: IRequestListCategoriesToManage) => {
   if (setTableLoading) setTableLoading(true);
 
@@ -29,7 +27,6 @@ export const requestListCategoriesToManage = async ({
     .then((res) => {
       setBuildingName(res.data.buildingName);
       setCategories(res.data.CategoriesData);
-      setCategoriesForFilter(res.data.CategoriesData);
       setLoading(false);
       if (setTableLoading) setTableLoading(false);
     })
@@ -46,6 +43,8 @@ export const requestManageBuildingMaintenances = async ({
   navigate,
   setOnQuery,
 }: IRequestManageBuildingMaintenances) => {
+  const { search } = window.location;
+
   setOnQuery(true);
   toast.loading('Atualizando...');
 
@@ -65,7 +64,7 @@ export const requestManageBuildingMaintenances = async ({
   })
     .then((res) => {
       toast.dismiss();
-      navigate(`/buildings/details/${buildingId}`);
+      navigate(`/buildings/details/${buildingId}${search}`);
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {
@@ -97,22 +96,4 @@ export const requestCategoriesForSelect = async ({
     .catch((err) => {
       catchHandler(err);
     });
-};
-
-export const filterFunction = ({ categoriesForFilter, setCategories, filter }: IFilterFunction) => {
-  if (filter !== '') {
-    setCategories((prevState) => {
-      let newState = [...prevState];
-      newState = categoriesForFilter.filter((e) =>
-        String(e.name).toLowerCase().includes(String(filter).toLowerCase()),
-      );
-      return newState;
-    });
-  } else {
-    setCategories((prevState) => {
-      let newState = [...prevState];
-      newState = categoriesForFilter;
-      return newState;
-    });
-  }
 };
