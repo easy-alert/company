@@ -90,6 +90,7 @@ export const BuildingDetails = () => {
 
       if (query.get('flow') === '1') {
         setModalCreateNotificationConfigurationOpen(true);
+        // não precisaria desse set, se fosse consumir com o useserachparams
         query.set('flow', '2');
         navigate(`/buildings/details/${buildingId}?flow=2`);
       }

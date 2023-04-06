@@ -34,6 +34,7 @@ export const requestCreateBuilding = async ({
     .then((res) => {
       setModal(false);
       toast.success(res.data.ServerMessage.message);
+      // não precisaria desse set, se fosse consumir com o useserachparams
       query.set('flow', '1');
       navigate(`/buildings/details/${res.data.building.id}?flow=1`);
     })
