@@ -201,7 +201,7 @@ export const BuildingManageMaintenances = () => {
                       setToCopyBuilding('');
                     }
 
-                    const updatedCategories = categories;
+                    const updatedCategories = structuredClone(categories);
 
                     if (isAllCategoriesSelected) {
                       for (let i = 0; i < updatedCategories.length; i += 1) {
