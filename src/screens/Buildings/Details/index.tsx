@@ -331,7 +331,12 @@ export const BuildingDetails = () => {
                 { label: 'E-mail' },
                 { label: 'Função' },
                 { label: 'WhatsApp' },
-                { label: 'Exibir no QR Code' },
+                {
+                  label: 'Exibir',
+                  cssProps: {
+                    textAlign: 'center',
+                  },
+                },
                 { label: '' },
               ]}
             >
@@ -345,7 +350,7 @@ export const BuildingDetails = () => {
                     {
                       cell: notificationRow.name,
                       cssProps: {
-                        width: '25%',
+                        width: '20%',
                         borderBottomLeftRadius:
                           i + 1 === building?.NotificationsConfigurations.length
                             ? theme.size.xsm
@@ -382,7 +387,7 @@ export const BuildingDetails = () => {
                             ))}
                         </Style.TableDataWrapper>
                       ),
-                      cssProps: { width: '25%' },
+                      cssProps: { width: '20%' },
                     },
                     { cell: notificationRow.role, cssProps: { width: '15%' } },
                     {
@@ -419,7 +424,7 @@ export const BuildingDetails = () => {
                             ))}
                         </Style.TableDataWrapper>
                       ),
-                      cssProps: { width: '15%' },
+                      cssProps: { width: '10%' },
                     },
                     {
                       cell: (
@@ -432,6 +437,7 @@ export const BuildingDetails = () => {
                       ),
                       cssProps: {
                         width: '10%',
+                        textAlign: 'center',
                       },
                     },
                     {
