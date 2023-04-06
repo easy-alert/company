@@ -25,9 +25,8 @@ import { image } from '../../../../assets/images';
 
 // FUNCTIONS
 import { applyMask, dateFormatter } from '../../../../utils/functions';
-import { getStatusName } from '../../../Calendar/utils/EventTag/functions';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { getStatusNameforPdf } from './functions';
+import { getPluralStatusNameforPdf, getSingularStatusNameforPdf } from './functions';
 
 const styles = StyleSheet.create({
   page: {
@@ -193,7 +192,10 @@ const MyDocument = ({
             </View>
             <View style={styles.headerDiv}>
               <Text>
-                Status: {`${filterforPDF.status ? getStatusName(filterforPDF.status) : 'Todos'}`}
+                Status:{' '}
+                {`${
+                  filterforPDF.status ? getPluralStatusNameforPdf(filterforPDF.status) : 'Todos'
+                }`}
               </Text>
               <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
             </View>
@@ -265,7 +267,7 @@ const MyDocument = ({
                     <Text>{maintenance.responsible}</Text>
                   </View>
                   <View style={styles.section8}>
-                    <Text>{getStatusNameforPdf(maintenance.status)}</Text>
+                    <Text>{getSingularStatusNameforPdf(maintenance.status)}</Text>
                   </View>
                   <View style={styles.section9}>
                     <Text>

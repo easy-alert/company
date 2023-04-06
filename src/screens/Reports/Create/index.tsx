@@ -207,7 +207,7 @@ export const CreateReport = () => {
                         disabled={maintenances.length === 0}
                       />
 
-                      <Button label="Filtrar" type="submit" loading={onQuery} />
+                      <Button label="Filtrar" type="submit" disabled={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>
