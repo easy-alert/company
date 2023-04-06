@@ -44,6 +44,8 @@ export const BuildingDetails = () => {
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
+  const { search } = window.location;
+
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
   const emailConfirmUrl = `${window.location.origin}/confirm/email`;
 
@@ -172,7 +174,7 @@ export const BuildingDetails = () => {
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
-        <ReturnButton path="/buildings" />
+        <ReturnButton path={`/buildings${search}`} />
       </Style.Header>
 
       <Style.CardWrapper>
@@ -480,7 +482,7 @@ export const BuildingDetails = () => {
                 hideLabelOnMedia
                 onClick={() => {
                   if (building?.id) {
-                    navigate(`/buildings/details/${building?.id}/maintenances/list`);
+                    navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
                   }
                 }}
               />
@@ -491,7 +493,7 @@ export const BuildingDetails = () => {
                 hideLabelOnMedia
                 onClick={() => {
                   if (building?.id) {
-                    navigate(`/buildings/details/${building?.id}/maintenances/manage`);
+                    navigate(`/buildings/details/${building?.id}/maintenances/manage${search}`);
                   }
                 }}
               />

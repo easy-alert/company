@@ -46,6 +46,8 @@ export const requestManageBuildingMaintenances = async ({
   navigate,
   setOnQuery,
 }: IRequestManageBuildingMaintenances) => {
+  const { search } = window.location;
+
   setOnQuery(true);
   toast.loading('Atualizando...');
 
@@ -65,7 +67,7 @@ export const requestManageBuildingMaintenances = async ({
   })
     .then((res) => {
       toast.dismiss();
-      navigate(`/buildings/details/${buildingId}`);
+      navigate(`/buildings/details/${buildingId}${search}`);
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {

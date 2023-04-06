@@ -62,6 +62,8 @@ export const BuildingManageMaintenances = () => {
 
   const [filter, setFilter] = useState<string>('');
 
+  const { search } = window.location;
+
   useEffect(() => {
     requestCategoriesForSelect({ setCategoriesOptions });
   }, [JSON.stringify(categories)]);
@@ -156,7 +158,7 @@ export const BuildingManageMaintenances = () => {
             }}
           />
         </Style.SearchField>
-        <ReturnButton path={`/buildings/details/${buildingId}`} />
+        <ReturnButton path={`/buildings/details/${buildingId}${search}`} />
       </Style.Header>
       {categories.length > 0 ? (
         <>

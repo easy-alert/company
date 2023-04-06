@@ -20,4 +20,5 @@ export interface IRequestBuildingList {
   setCount: (setCount: number) => void;
   page: number;
   filter?: string;
+  resetPage?: boolean;
 }

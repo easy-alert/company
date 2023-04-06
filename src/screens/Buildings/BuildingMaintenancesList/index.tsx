@@ -33,6 +33,8 @@ export const BuildingMaintenancesList = () => {
 
   const [filter, setFilter] = useState<string>('');
 
+  const { search } = window.location;
+
   useEffect(() => {
     requestAddedMaintenances({
       setLoading,
@@ -59,7 +61,7 @@ export const BuildingMaintenancesList = () => {
             label="Editar"
             hideLabelOnMedia
             onClick={() => {
-              navigate(`/buildings/details/${buildingId}/maintenances/manage`);
+              navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
             }}
           />
         </Style.HeaderWrapper>
@@ -89,7 +91,7 @@ export const BuildingMaintenancesList = () => {
             }}
           />
         </Style.SearchField>
-        <ReturnButton path={`/buildings/details/${buildingId}`} />
+        <ReturnButton path={`/buildings/details/${buildingId}${search}`} />
       </Style.Header>
 
       {addedMaintenances?.length ? (

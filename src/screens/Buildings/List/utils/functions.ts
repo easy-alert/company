@@ -9,16 +9,18 @@ export const requestBuildingList = async ({
   setPage,
   page = 1,
   filter = '',
+  resetPage,
 }: IRequestBuildingList) => {
   await Api.get(`/buildings/list?page=${page}&search=${filter}`)
     .then((res) => {
       setBuildingList(res.data.Buildings);
       setCount(res.data.buildingsCount);
-      if (setLoading) setLoading(false);
-      if (setPage) setPage(1);
+      if (resetPage && setPage) setPage(1);
     })
     .catch((err) => {
-      if (setLoading) setLoading(false);
       catchHandler(err);
+    })
+    .finally(() => {
+      if (setLoading) setLoading(false);
     });
 };
