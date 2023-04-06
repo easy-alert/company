@@ -129,6 +129,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  obs: {
+    paddingBottom: 8,
+    opacity: 0.7,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 4,
+    width: 700,
+  },
+  obsText: {
+    flexGrow: 1,
+  },
 });
 
 const MyDocument = ({
@@ -277,6 +289,12 @@ const MyDocument = ({
                     </Text>
                   </View>
                 </View>
+                {maintenance.observation && (
+                  <View style={styles.obs}>
+                    <Text>Observação:</Text>
+                    <Text style={styles.obsText}>{maintenance.observation}</Text>
+                  </View>
+                )}
               </View>
             ))}
           </View>

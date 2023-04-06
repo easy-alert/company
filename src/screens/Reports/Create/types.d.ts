@@ -46,6 +46,7 @@ export interface IMaintenanceReportData {
   maintenanceHistoryId: string;
   notificationDate: string;
   resolutionDate: string | null;
+  observation: string | null;
   responsible: string | null;
   status: 'completed' | 'expired' | 'pending' | 'overdue';
 }
