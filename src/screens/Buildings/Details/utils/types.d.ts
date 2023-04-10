@@ -75,3 +75,9 @@ export interface IRequestDeleteAnnex {
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
+
+export interface IChangeShowContactStatus {
+  setShowContactLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  buildingNotificationConfigurationId: string;
+  showContact: boolean;
+}

@@ -1,7 +1,12 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
-import { IRequestBuildingDetails, IRequestDeleteAnnex, IRequestResendConfirmation } from './types';
+import {
+  IChangeShowContactStatus,
+  IRequestBuildingDetails,
+  IRequestDeleteAnnex,
+  IRequestResendConfirmation,
+} from './types';
 
 export const requestBuildingDetails = async ({
   setLoading,
@@ -92,5 +97,25 @@ export const requestDeleteAnnex = async ({
     })
     .catch((err) => {
       catchHandler(err);
+    });
+};
+
+export const changeShowContactStatus = async ({
+  buildingNotificationConfigurationId,
+  showContact,
+  setShowContactLoading,
+}: IChangeShowContactStatus) => {
+  setShowContactLoading(true);
+
+  await Api.put('/buildings//notifications/change/showcontact', {
+    buildingNotificationConfigurationId,
+    showContact,
+  })
+
+    .catch((err) => {
+      catchHandler(err);
+    })
+    .finally(() => {
+      setShowContactLoading(false);
     });
 };
