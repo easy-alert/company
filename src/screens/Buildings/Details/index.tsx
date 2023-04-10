@@ -18,6 +18,7 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 
 // FUNCTIONS
 import {
+  changeShowContactStatus,
   requestBuildingDetails,
   requestDeleteAnnex,
   requestResendEmailConfirmation,
@@ -54,6 +55,8 @@ export const BuildingDetails = () => {
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
 
   const [deleteAnnexOnQuery, setDeleteAnnexOnQuery] = useState<boolean>(false);
 
@@ -429,10 +432,23 @@ export const BuildingDetails = () => {
                     {
                       cell: (
                         <input
-                          style={{ pointerEvents: 'none' }}
+                          disabled={showContactLoading}
                           type="checkbox"
                           checked={notificationRow.showContact}
-                          readOnly
+                          onChange={() => {
+                            changeShowContactStatus({
+                              showContact: !notificationRow.showContact,
+                              buildingNotificationConfigurationId: notificationRow.id,
+                              setShowContactLoading,
+                            });
+
+                            const prevBuilding = structuredClone(building);
+
+                            prevBuilding.NotificationsConfigurations[i].showContact =
+                              !building.NotificationsConfigurations[i].showContact;
+
+                            setBuilding(prevBuilding);
+                          }}
                         />
                       ),
                       cssProps: {

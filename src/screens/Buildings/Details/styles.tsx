@@ -28,6 +28,7 @@ export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: ${theme.size.sm};
   width: 100%;
 `;
 
