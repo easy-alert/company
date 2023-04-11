@@ -8,6 +8,7 @@ export interface INotificationConfiguration {
   role: string;
   isMain: boolean;
   showContact: boolean;
+  nanoId: string;
 }
 
 interface Annex {
