@@ -222,14 +222,14 @@ export const BuildingDetails = () => {
                 onClick={() => {
                   if (building.NotificationsConfigurations.length > 0) {
                     window.open(
-                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/syndicarea'}/${
+                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/syndicarea/${
                         building.nanoId
                       }?syndicNanoId=${building.NotificationsConfigurations[0].nanoId}`,
                       '_blank',
                     );
                   } else {
                     window.open(
-                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'}/${
+                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${
                         building.nanoId
                       }`,
                       '_blank',
