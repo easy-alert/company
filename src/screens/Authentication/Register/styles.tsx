@@ -76,13 +76,3 @@ export const InputWrapper = styled.div`
     }
   }
 `;
-
-export const SwitchWrapper = styled.div`
-  width: fit-content;
-  height: fit-content;
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
-  margin-bottom: -4px;
-  color: ${theme.color.white};
-`;
