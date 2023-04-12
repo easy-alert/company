@@ -56,10 +56,6 @@ export const TableColBody = styled.td<{
     padding-left: ${theme.size.sm};
   }
 
-  :nth-child(7) {
-    max-width: 200px;
-  }
-
   :last-of-type {
     border-radius: 0px ${theme.size.xxsm} ${theme.size.xxsm} 0px;
     padding-right: ${theme.size.sm};
