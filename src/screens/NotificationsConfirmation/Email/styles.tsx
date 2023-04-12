@@ -55,7 +55,7 @@ export const ContentText = styled.div`
     color: #3f3e3e;
   }
 
-  span {
+  > span {
     color: ${theme.color.primary};
     word-break: break-all;
   }
@@ -89,10 +89,15 @@ export const BottomContainer = styled.div`
   span {
     font-size: 14px;
     line-height: 16px;
+    color: #3f3e3e;
   }
 
   a {
     color: ${theme.color.primary};
-    font-weight: 500;
+    font-weight: 700;
+
+    :hover {
+      opacity: 0.7;
+    }
   }
 `;
