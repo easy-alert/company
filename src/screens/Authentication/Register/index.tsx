@@ -7,7 +7,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikImageInput } from '../../../components/Form/FormikImageInput';
-import { Switch } from '../../../components/Buttons/SwitchButton';
 import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 // STYLES
@@ -16,16 +15,11 @@ import { theme } from '../../../styles/theme';
 import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
-import {
-  requestCreateCompanyAndOWner,
-  schemaModalCreateCompanyAndOwnerWithCNPJ,
-  schemaModalCreateCompanyAndOwnerWithCPF,
-} from './functions';
+import { requestCreateCompanyAndOWner, schemaModalCreateCompanyAndOwner } from './functions';
 import { applyMask } from '../../../utils/functions';
 
 export const Register = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [isCPF, setIsCPF] = useState<boolean>(false);
   const navigate = useNavigate();
   const { signin } = useAuthContext();
 
@@ -38,14 +32,11 @@ export const Register = () => {
           email: '',
           companyName: '',
           contactNumber: '',
-          CPF: '',
-          CNPJ: '',
+          CNPJorCPF: '',
           password: '',
           confirmPassword: '',
         }}
-        validationSchema={
-          isCPF ? schemaModalCreateCompanyAndOwnerWithCPF : schemaModalCreateCompanyAndOwnerWithCNPJ
-        }
+        validationSchema={schemaModalCreateCompanyAndOwner}
         onSubmit={async (values) => {
           requestCreateCompanyAndOWner({ setOnQuery, values, navigate, signin });
         }}
@@ -125,54 +116,30 @@ export const Register = () => {
                     }}
                   />
 
-                  <Style.SwitchWrapper>
-                    <h6>CNPJ</h6>
-                    <Switch
-                      checked={isCPF}
-                      onChange={() => {
-                        setIsCPF((state) => !state);
-                        setFieldValue('CNPJ', '');
-                        setFieldValue('CPF', '');
-                      }}
-                    />
-                    <h6>CPF</h6>
-                  </Style.SwitchWrapper>
+                  <FormikInput
+                    labelColor={theme.color.white}
+                    errorColor={theme.color.white}
+                    label="CNPJ/CPF"
+                    name="CNPJorCPF"
+                    placeholder="Insira o CNPJ ou CPF"
+                    error={touched.CNPJorCPF && errors.CNPJorCPF ? errors.CNPJorCPF : null}
+                    maxLength={
+                      applyMask({
+                        mask: 'CNPJ',
+                        value: values.CNPJorCPF,
+                      }).length
+                    }
+                    onChange={(e) => {
+                      setFieldValue(
+                        'CNPJorCPF',
+                        applyMask({
+                          mask: e.target.value.length > 14 ? 'CNPJ' : 'CPF',
+                          value: e.target.value,
+                        }).value,
+                      );
+                    }}
+                  />
 
-                  {isCPF && (
-                    <FormikInput
-                      labelColor={theme.color.white}
-                      errorColor={theme.color.white}
-                      name="CPF"
-                      maxLength={applyMask({ value: values.CPF, mask: 'CPF' }).length}
-                      value={values.CPF}
-                      error={touched.CPF && errors.CPF ? errors.CPF : null}
-                      placeholder="000.000.000-00"
-                      onChange={(e) => {
-                        setFieldValue(
-                          'CPF',
-                          applyMask({ value: e.target.value, mask: 'CPF' }).value,
-                        );
-                      }}
-                    />
-                  )}
-
-                  {!isCPF && (
-                    <FormikInput
-                      labelColor={theme.color.white}
-                      errorColor={theme.color.white}
-                      name="CNPJ"
-                      maxLength={applyMask({ value: values.CNPJ, mask: 'CNPJ' }).length}
-                      value={values.CNPJ}
-                      error={touched.CNPJ && errors.CNPJ ? errors.CNPJ : null}
-                      placeholder="00.000.000/0000-00"
-                      onChange={(e) => {
-                        setFieldValue(
-                          'CNPJ',
-                          applyMask({ value: e.target.value, mask: 'CNPJ' }).value,
-                        );
-                      }}
-                    />
-                  )}
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
