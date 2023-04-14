@@ -189,8 +189,8 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
           <QRCodeCanvas
             id="QRCode"
             value={`${
-              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001/home'
-            }/${buildingNanoId}`}
+              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
+            }/home/${buildingNanoId}`}
             bgColor="#F2EAEA"
             size={300}
           />
