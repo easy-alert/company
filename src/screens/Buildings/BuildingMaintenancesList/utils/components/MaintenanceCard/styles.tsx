@@ -87,7 +87,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: ${({ cardIsOpen }) => (cardIsOpen ? 6 : 4)};
+    -webkit-line-clamp: ${({ cardIsOpen }) => (cardIsOpen ? 11 : 4)};
     -webkit-box-orient: vertical;
   }
 
