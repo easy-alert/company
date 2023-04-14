@@ -86,7 +86,7 @@ export const ModalCloneMaintenance = ({
                 error={touched.element && errors.element ? errors.element : null}
                 placeholder="Ex: Rejuntamento e vedações"
                 height="60px"
-                maxLength={150}
+                maxLength={300}
               />
 
               <FormikTextArea
@@ -96,7 +96,7 @@ export const ModalCloneMaintenance = ({
                 error={touched.activity && errors.activity ? errors.activity : null}
                 placeholder="Ex: Verificar sua integridade e reconstruir os rejuntamentos internos e externos dos pisos"
                 height="82px"
-                maxLength={180}
+                maxLength={300}
               />
               <Style.SelectWrapper>
                 <FormikInput
@@ -141,7 +141,7 @@ export const ModalCloneMaintenance = ({
                 value={values.responsible}
                 error={touched.responsible && errors.responsible ? errors.responsible : null}
                 placeholder="Ex: Equipe de manutenção local"
-                maxLength={40}
+                maxLength={80}
               />
 
               <FormikInput
@@ -150,7 +150,7 @@ export const ModalCloneMaintenance = ({
                 value={values.source}
                 error={touched.source && errors.source ? errors.source : null}
                 placeholder="Ex: NBR 5674:2012"
-                maxLength={40}
+                maxLength={80}
               />
 
               <FormikInput
