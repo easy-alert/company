@@ -8,6 +8,7 @@ import { setToken } from './utils/functions';
 import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
 import { ILoginRequestResponse } from './utils/types';
+import { query } from '../../utils/functions';
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [account, setAccount] = useState<IAccount | null>(null);
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   };
 
   const signout = () => {
+    query.delete('backofficeToken');
+    query.delete('userId');
     setAccount(null);
     localStorage.removeItem('authToken');
   };
