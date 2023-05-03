@@ -17,11 +17,14 @@ import { icon } from '../../../assets/icons';
 // FUNCTIONS
 import { requestCreateCompanyAndOWner, schemaModalCreateCompanyAndOwner } from './functions';
 import { applyMask } from '../../../utils/functions';
+import { IconButton } from '../../../components/Buttons/IconButton';
 
 export const Register = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
   const { signin } = useAuthContext();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword2, setShowPassword2] = useState<boolean>(false);
 
   return (
     <Style.Background>
@@ -38,7 +41,9 @@ export const Register = () => {
         }}
         validationSchema={schemaModalCreateCompanyAndOwner}
         onSubmit={async (values) => {
-          requestCreateCompanyAndOWner({ setOnQuery, values, navigate, signin });
+          setShowPassword(false);
+          setShowPassword2(false);
+          await requestCreateCompanyAndOWner({ setOnQuery, values, navigate, signin });
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -140,32 +145,53 @@ export const Register = () => {
                     }}
                   />
 
-                  <FormikInput
-                    labelColor={theme.color.white}
-                    errorColor={theme.color.white}
-                    type="password"
-                    label="Senha"
-                    name="password"
-                    value={values.password}
-                    error={touched.password && errors.password ? errors.password : null}
-                    placeholder="Crie uma senha de 8 caracteres"
-                    maxLength={120}
-                  />
-                  <FormikInput
-                    labelColor={theme.color.white}
-                    errorColor={theme.color.white}
-                    type="password"
-                    label="Confirmar senha"
-                    name="confirmPassword"
-                    value={values.confirmPassword}
-                    error={
-                      touched.confirmPassword && errors.confirmPassword
-                        ? errors.confirmPassword
-                        : null
-                    }
-                    placeholder="Confirme a senha criada"
-                    maxLength={120}
-                  />
+                  <Style.PasswordDiv>
+                    <FormikInput
+                      labelColor={theme.color.white}
+                      errorColor={theme.color.white}
+                      type={showPassword ? 'text' : 'password'}
+                      label="Senha"
+                      name="password"
+                      value={values.password}
+                      error={touched.password && errors.password ? errors.password : null}
+                      placeholder="Informe a senha"
+                      maxLength={120}
+                    />
+                    <IconButton
+                      icon={showPassword ? icon.eye : icon.eyeGray}
+                      size="20px"
+                      onClick={() => {
+                        setShowPassword((prevState) => !prevState);
+                      }}
+                      opacity="1"
+                    />
+                  </Style.PasswordDiv>
+
+                  <Style.PasswordDiv>
+                    <FormikInput
+                      labelColor={theme.color.white}
+                      errorColor={theme.color.white}
+                      type={showPassword2 ? 'text' : 'password'}
+                      label="Confirmar senha"
+                      name="confirmPassword"
+                      value={values.confirmPassword}
+                      error={
+                        touched.confirmPassword && errors.confirmPassword
+                          ? errors.confirmPassword
+                          : null
+                      }
+                      placeholder="Confirme a senha"
+                      maxLength={120}
+                    />
+                    <IconButton
+                      icon={showPassword2 ? icon.eye : icon.eyeGray}
+                      size="20px"
+                      onClick={() => {
+                        setShowPassword2((prevState) => !prevState);
+                      }}
+                      opacity="1"
+                    />
+                  </Style.PasswordDiv>
                 </Style.InputWrapper>
                 <Button center label="Cadastrar" type="submit" loading={onQuery} />
               </Form>

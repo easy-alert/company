@@ -76,3 +76,15 @@ export const InputWrapper = styled.div`
     }
   }
 `;
+
+export const PasswordDiv = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  > :nth-child(2) {
+    position: absolute;
+    top: 26px;
+    right: 16px;
+  }
+`;

@@ -6,3 +6,15 @@ export const FormContainer = styled.div`
     margin-top: ${theme.size.xsm};
   }
 `;
+
+export const PasswordDiv = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  > :nth-child(2) {
+    position: absolute;
+    top: 26px;
+    right: 16px;
+  }
+`;

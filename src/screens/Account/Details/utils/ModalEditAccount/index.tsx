@@ -20,10 +20,14 @@ import {
   schemaModalEditAccountWithCNPJ,
   schemaModalEditAccountWithCPF,
 } from './utils/functions';
+import { IconButton } from '../../../../../components/Buttons/IconButton';
+import { icon } from '../../../../../assets/icons';
 
 export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword2, setShowPassword2] = useState<boolean>(false);
 
   return (
     <Modal title="Editar usuário" setModal={setModal}>
@@ -50,6 +54,8 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
           account.Company.CPF ? schemaModalEditAccountWithCPF : schemaModalEditAccountWithCNPJ
         }
         onSubmit={async (values) => {
+          setShowPassword(false);
+          setShowPassword2(false);
           await requestEditAccount({
             values,
             account,
@@ -146,28 +152,56 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   }}
                 />
               )}
-              <FormikInput
-                type="password"
-                label="Senha"
-                name="password"
-                value={values.password}
-                error={touched.password && errors.password ? errors.password : null}
-                passwordPlaceholder
-                placeholder="••••••••••"
-                maxLength={120}
-              />
-              <FormikInput
-                type="password"
-                label="Confirmar senha"
-                name="confirmPassword"
-                value={values.confirmPassword}
-                error={
-                  touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null
-                }
-                passwordPlaceholder
-                placeholder="••••••••••"
-                maxLength={120}
-              />
+              <Style.PasswordDiv>
+                <FormikInput
+                  type={showPassword ? 'text' : 'password'}
+                  label="Senha"
+                  name="password"
+                  value={values.password}
+                  error={touched.password && errors.password ? errors.password : null}
+                  passwordPlaceholder
+                  placeholder="••••••••••"
+                  maxLength={120}
+                />
+                {values.password && (
+                  <IconButton
+                    icon={showPassword ? icon.eye : icon.eyeGray}
+                    size="20px"
+                    onClick={() => {
+                      setShowPassword((prevState) => !prevState);
+                    }}
+                    opacity="1"
+                  />
+                )}
+              </Style.PasswordDiv>
+
+              <Style.PasswordDiv>
+                <FormikInput
+                  type={showPassword2 ? 'text' : 'password'}
+                  label="Confirmar senha"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  error={
+                    touched.confirmPassword && errors.confirmPassword
+                      ? errors.confirmPassword
+                      : null
+                  }
+                  passwordPlaceholder
+                  placeholder="••••••••••"
+                  maxLength={120}
+                />
+                {values.confirmPassword && (
+                  <IconButton
+                    icon={showPassword2 ? icon.eye : icon.eyeGray}
+                    size="20px"
+                    onClick={() => {
+                      setShowPassword2((prevState) => !prevState);
+                    }}
+                    opacity="1"
+                  />
+                )}
+              </Style.PasswordDiv>
+
               <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
