@@ -232,8 +232,7 @@ export const BuildingManageMaintenances = () => {
             <Style.CategoriesContainer>
               {categories.map(
                 (category, categoryIndex: number) =>
-                  ((filter &&
-                    category.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase())) ||
+                  ((filter && category.name.toLowerCase().includes(filter.toLowerCase())) ||
                     filter === '') && (
                     <MaintenanceCategory
                       key={category.id}
