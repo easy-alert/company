@@ -505,7 +505,7 @@ export const BuildingDetails = () => {
         <Style.Card>
           <Style.MaintenanceCardHeader>
             <h5>
-              Plano de manutenções ({usedMaintenancesCount}/{totalMaintenancesCount})
+              Plano de manutenção ({usedMaintenancesCount}/{totalMaintenancesCount})
             </h5>
             <Style.ButtonWrapper>
               <IconButton
