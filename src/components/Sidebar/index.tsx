@@ -30,19 +30,20 @@ export const Sidebar = () => {
       },
     },
     {
-      icon: icon.maintenances,
-      url: '/maintenances',
-      redirectFunction: () => {
-        navigate('/maintenances');
-      },
-    },
-    {
       icon: icon.building,
       url: '/buildings',
       redirectFunction: () => {
         navigate('/buildings');
       },
     },
+    {
+      icon: icon.maintenances,
+      url: '/maintenances',
+      redirectFunction: () => {
+        navigate('/maintenances');
+      },
+    },
+
     {
       icon: icon.report,
       url: '/report/create',

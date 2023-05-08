@@ -53,7 +53,7 @@ export const BuildingMaintenancesList = () => {
         <Style.HeaderWrapper>
           <Style.LeftSide>
             <Style.HeaderTitle>
-              <h2>{buildingName} / Plano de manutenções</h2>
+              <h2>{buildingName} / Plano de manutenção</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
           <IconButton

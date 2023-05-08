@@ -99,3 +99,15 @@ export const ButtonContainer = styled.div<{
     }
   }
 `;
+
+export const PasswordDiv = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  > :last-child {
+    position: absolute;
+    top: 26px;
+    right: 16px;
+  }
+`;

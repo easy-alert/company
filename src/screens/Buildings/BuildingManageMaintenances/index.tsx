@@ -98,7 +98,7 @@ export const BuildingManageMaintenances = () => {
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
-            <h2>{buildingName} / Plano de manutenções</h2>
+            <h2>{buildingName} / Plano de manutenção</h2>
           </Style.LeftSide>
           <Style.RightSide>
             {!onQuery && (
