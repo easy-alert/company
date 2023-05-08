@@ -1,6 +1,7 @@
 import leftArrow from './leftArrow.svg';
 import paper from './paper.svg';
 import eye from './eye.svg';
+import eyeGray from './eyeGray.svg';
 import plusWithBg from './plusWithBackground.svg';
 import user from './user.svg';
 import power from './power.svg';
@@ -52,6 +53,7 @@ export const icon = {
   leftArrow,
   paper,
   eye,
+  eyeGray,
   plusWithBg,
   user,
   power,

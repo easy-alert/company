@@ -24,11 +24,14 @@ import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 // TYPES
 import { IFormData } from './types';
 import { catchHandler } from '../../../utils/functions';
+import { IconButton } from '../../../components/Buttons/IconButton';
 
 export const Login = () => {
   const navigate = useNavigate();
   const { signin } = useAuthContext();
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
     <Style.Background>
@@ -37,6 +40,7 @@ export const Login = () => {
         validationSchema={schema}
         onSubmit={async (data: IFormData) => {
           setOnQuery(true);
+          setShowPassword(false);
           await Api.post('/auth/login', {
             email: data.email,
             password: data.password,
@@ -68,16 +72,26 @@ export const Login = () => {
                     error={touched.email && errors.email ? errors.email : null}
                   />
 
-                  <FormikInput
-                    labelColor={theme.color.white}
-                    errorColor={theme.color.white}
-                    name="password"
-                    label="Senha"
-                    type="password"
-                    value={values.password}
-                    placeholder="Insira sua senha"
-                    error={touched.password && errors.password ? errors.password : null}
-                  />
+                  <Style.PasswordDiv>
+                    <FormikInput
+                      labelColor={theme.color.white}
+                      errorColor={theme.color.white}
+                      name="password"
+                      label="Senha"
+                      type={showPassword ? 'text' : 'password'}
+                      value={values.password}
+                      placeholder="Insira sua senha"
+                      error={touched.password && errors.password ? errors.password : null}
+                    />
+                    <IconButton
+                      icon={showPassword ? icon.eye : icon.eyeGray}
+                      size="20px"
+                      onClick={() => {
+                        setShowPassword((prevState) => !prevState);
+                      }}
+                      opacity="1"
+                    />
+                  </Style.PasswordDiv>
                 </Style.InputWrapper>
                 <Style.ButtonContainer loading={+onQuery}>
                   <Link style={{ pointerEvents: onQuery ? 'none' : 'auto' }} to="/register">
