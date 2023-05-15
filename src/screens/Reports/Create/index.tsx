@@ -21,6 +21,7 @@ import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalPrintReport } from './ModalPrintReport';
+import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -35,6 +36,7 @@ export const CreateReport = () => {
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
   const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
@@ -61,6 +63,12 @@ export const CreateReport = () => {
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
+          maintenanceHistoryId={maintenceHistoryId}
+        />
+      )}
+      {modalEditReport && (
+        <ModalEditMaintenanceReport
+          setModal={setModalEditReport}
           maintenanceHistoryId={maintenceHistoryId}
         />
       )}
@@ -283,7 +291,14 @@ export const CreateReport = () => {
                   ]}
                   onClick={() => {
                     setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
-                    setModalMaintenanceDetails(true);
+
+                    if (maintenance.status === 'pending' || maintenance.status === 'expired') {
+                      setModalMaintenanceDetails(true);
+                    }
+
+                    if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
+                      setModalEditReport(true);
+                    }
                   }}
                 />
               ))}
