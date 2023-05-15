@@ -27,6 +27,7 @@ import { applyMask, dateFormatter, uploadFile } from '../../../../utils/function
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
 import { requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
+import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -42,6 +43,8 @@ export const ModalSendMaintenanceReport = ({
   modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+
+  const { account } = useAuthContext();
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -293,6 +296,7 @@ export const ModalSendMaintenanceReport = ({
                 setMaintenancesWeekView,
                 setYearChangeLoading,
                 yearToRequest,
+                origin: account?.origin ?? 'Company',
               });
             }}
           />

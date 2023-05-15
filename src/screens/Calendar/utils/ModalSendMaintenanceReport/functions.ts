@@ -20,10 +20,12 @@ export const requestSendReport = async ({
   buildingId,
   calendarType,
   setOnQuery,
+  origin,
 }: IRequestSendReport) => {
   setOnQuery(true);
 
   await Api.post('/maintenances/create/report', {
+    origin,
     maintenanceHistoryId,
     cost: Number(unMaskBRL(maintenanceReport.cost)),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
