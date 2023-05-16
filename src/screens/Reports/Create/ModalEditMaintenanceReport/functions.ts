@@ -11,8 +11,6 @@ export const requestSendReport = async ({
   images,
   setOnQuery,
   origin,
-  setMaintenances,
-  maintenances,
 }: IRequestSendReport) => {
   setOnQuery(true);
 
@@ -26,13 +24,7 @@ export const requestSendReport = async ({
     ReportImages: images,
   })
     .then((res) => {
-      const maintenanceIndex = maintenances.findIndex((e) => e.id === maintenanceHistoryId);
-
-      setMaintenances((prevState) => {
-        const newState = [...prevState];
-        newState[maintenanceIndex].cost = Number(unMaskBRL(maintenanceReport.cost));
-        return newState;
-      });
+      //  aqui
 
       toast.success(res.data.ServerMessage.message);
       setModal(false);

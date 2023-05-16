@@ -24,22 +24,22 @@ import { AnnexesAndImages, IMaintenance } from '../../../Calendar/types';
 
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
-import { requestMaintenanceDetailsForEdit, requestSendReport } from './functions';
+import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
+import { requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
-export const ModalEditMaintenanceReport = ({
+export const ModalSendMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
 }: IModalSendMaintenanceReport) => {
-  const { account } = useAuthContext();
-
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+
+  const { account } = useAuthContext();
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
     observation: '',
-    id: '',
   });
 
   const [modalLoading, setModalLoading] = useState<boolean>(true);
@@ -112,18 +112,15 @@ export const ModalEditMaintenanceReport = ({
   }, [acceptedImages]);
 
   useEffect(() => {
-    requestMaintenanceDetailsForEdit({
+    requestMaintenanceDetails({
+      maintenanceHistoryId,
       setMaintenance,
       setModalLoading,
-      setFiles,
-      setImages,
-      setMaintenanceReport,
-      maintenanceHistoryId,
     });
   }, []);
 
   return (
-    <Modal title="Editar relato" setModal={setModal}>
+    <Modal title="Enviar relato" setModal={setModal}>
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
@@ -187,7 +184,7 @@ export const ModalEditMaintenanceReport = ({
               label="Observação do relato"
               placeholder="Digite aqui"
               maxLength={300}
-              value={maintenanceReport.observation ?? ''}
+              value={maintenanceReport.observation}
               onChange={(e) => {
                 setMaintenanceReport((prevState) => {
                   const newState = { ...prevState };
@@ -269,19 +266,19 @@ export const ModalEditMaintenanceReport = ({
             </Style.Row>
           </Style.Content>
           <Button
-            label="Editar relato"
+            label="Enviar relato"
             center
             disable={onFileQuery || onImageQuery}
             loading={onQuery}
             onClick={() => {
               requestSendReport({
                 setOnQuery,
+                maintenanceHistoryId,
                 maintenanceReport,
                 setModal,
                 files,
                 images,
                 origin: account?.origin ?? 'Company',
-                maintenanceHistoryId,
               });
             }}
           />

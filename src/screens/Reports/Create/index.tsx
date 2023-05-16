@@ -22,6 +22,7 @@ import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalPrintReport } from './ModalPrintReport';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
+import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -43,6 +44,9 @@ export const CreateReport = () => {
   const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
+  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
+    useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
@@ -68,12 +72,16 @@ export const CreateReport = () => {
           maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
+      {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
+        <ModalSendMaintenanceReport
+          setModal={setModalSendMaintenanceReportOpen}
+          maintenanceHistoryId={maintenanceHistoryId}
+        />
+      )}
       {modalEditReport && (
         <ModalEditMaintenanceReport
           setModal={setModalEditReport}
           maintenanceHistoryId={maintenanceHistoryId}
-          setMaintenances={setMaintenances}
-          maintenances={maintenances}
         />
       )}
       {modalPrintReportOpen && (
@@ -274,9 +282,9 @@ export const CreateReport = () => {
                 { label: 'Valor' },
               ]}
             >
-              {maintenances?.map((maintenance, i) => (
+              {maintenances?.map((maintenance) => (
                 <ReportDataTableContent
-                  key={maintenance.activity + i}
+                  key={maintenance.id}
                   colsBody={[
                     { cell: <EventTag status={maintenance.status} /> },
 
@@ -297,7 +305,7 @@ export const CreateReport = () => {
                     setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
 
                     if (maintenance.status === 'pending' || maintenance.status === 'expired') {
-                      setModalMaintenanceDetails(true);
+                      setModalSendMaintenanceReportOpen(true);
                     }
 
                     if (maintenance.status === 'completed' || maintenance.status === 'overdue') {

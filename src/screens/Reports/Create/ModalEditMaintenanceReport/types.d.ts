@@ -1,11 +1,8 @@
 import { IMaintenance, AnnexesAndImages } from '../../types';
-import { IMaintenanceReportData } from '../types';
 
 export interface IModalSendMaintenanceReport {
   setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  maintenances: IMaintenanceReportData[];
 }
 
 export interface IMaintenanceReport {
@@ -22,8 +19,6 @@ export interface IRequestSendReport {
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
   origin: 'Backoffice' | 'Company' | 'Client';
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  maintenances: IMaintenanceReportData[];
 }
 
 export interface IRequestMaintenanceDetailsForEdit {
