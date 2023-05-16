@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '../../../../components/Buttons/Button';
 import { Input } from '../../../../components/Inputs/Input';
 import { Modal } from '../../../../components/Modal';
-import { EventTag } from '../EventTag';
-import { Image } from '../../../../components/Image';
+import { EventTag } from '../../../Calendar/utils/EventTag';
 import { DotLoading } from '../../../../components/Loadings/DotLoading';
+import { Image } from '../../../../components/Image';
 import { ImagePreview } from '../../../../components/ImagePreview';
 import { IconButton } from '../../../../components/Buttons/IconButton';
 import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
@@ -20,7 +20,7 @@ import { icon } from '../../../../assets/icons';
 
 // TYPES
 import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
-import { AnnexesAndImages, IMaintenance } from '../../types';
+import { AnnexesAndImages, IMaintenance } from '../../../Calendar/types';
 
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
@@ -31,16 +31,12 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
-  buildingId,
-  calendarType,
-  setBuildingOptions,
+  maintenanceHistoryId,
+  filters,
+  setCounts,
   setLoading,
-  setMaintenancesDisplay,
-  setMaintenancesMonthView,
-  setMaintenancesWeekView,
-  setYearChangeLoading,
-  yearToRequest,
-  modalAdditionalInformations,
+  setMaintenances,
+  setOnQuery,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
@@ -53,7 +49,7 @@ export const ModalSendMaintenanceReport = ({
 
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onModalQuery, setOnModalQuery] = useState<boolean>(false);
 
   const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
@@ -122,7 +118,7 @@ export const ModalSendMaintenanceReport = ({
 
   useEffect(() => {
     requestMaintenanceDetails({
-      maintenanceHistoryId: modalAdditionalInformations.id,
+      maintenanceHistoryId,
       setMaintenance,
       setModalLoading,
     });
@@ -174,7 +170,6 @@ export const ModalSendMaintenanceReport = ({
               <h6>Data de vencimento</h6>
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
-
             {maintenance.canReport && (
               <>
                 <Input
@@ -278,31 +273,26 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
-
           {maintenance.canReport ? (
             <Button
               label="Enviar relato"
               center
               disable={onFileQuery || onImageQuery}
-              loading={onQuery}
+              loading={onModalQuery}
               onClick={() => {
                 requestSendReport({
-                  setOnQuery,
-                  maintenanceHistoryId: modalAdditionalInformations.id,
+                  setOnModalQuery,
+                  maintenanceHistoryId,
                   maintenanceReport,
                   setModal,
                   files,
                   images,
-                  buildingId,
-                  calendarType,
-                  setBuildingOptions,
-                  setLoading,
-                  setMaintenancesDisplay,
-                  setMaintenancesMonthView,
-                  setMaintenancesWeekView,
-                  setYearChangeLoading,
-                  yearToRequest,
                   origin: account?.origin ?? 'Company',
+                  filters,
+                  setCounts,
+                  setLoading,
+                  setMaintenances,
+                  setOnQuery,
                 });
               }}
             />

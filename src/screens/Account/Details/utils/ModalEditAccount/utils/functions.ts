@@ -41,6 +41,7 @@ export const requestEditAccount = async ({
   })
     .then((res) => {
       const updatedAccount: IAccount = {
+        origin: 'Company',
         Company: {
           contactNumber: values.contactNumber,
           image: imageUrl,

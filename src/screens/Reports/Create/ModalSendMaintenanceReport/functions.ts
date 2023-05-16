@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler, unMaskBRL } from '../../../../utils/functions';
 import { IRequestSendReport } from './types';
-import { requestCalendarData } from '../../functions';
+import { requestReportsData } from '../functions';
 
 export const requestSendReport = async ({
   maintenanceReport,
@@ -10,19 +10,15 @@ export const requestSendReport = async ({
   maintenanceHistoryId,
   files,
   images,
-  setLoading,
-  setMaintenancesWeekView,
-  setMaintenancesMonthView,
-  setMaintenancesDisplay,
-  yearToRequest,
-  setYearChangeLoading,
-  setBuildingOptions,
-  buildingId,
-  calendarType,
-  setOnQuery,
+  setOnModalQuery,
   origin,
+  filters,
+  setCounts,
+  setLoading,
+  setMaintenances,
+  setOnQuery,
 }: IRequestSendReport) => {
-  setOnQuery(true);
+  setOnModalQuery(true);
 
   await Api.post('/maintenances/create/report', {
     origin,
@@ -33,16 +29,12 @@ export const requestSendReport = async ({
     ReportImages: images,
   })
     .then((res) => {
-      requestCalendarData({
+      requestReportsData({
+        setOnQuery,
+        setCounts,
+        setMaintenances,
         setLoading,
-        setMaintenancesWeekView,
-        setMaintenancesMonthView,
-        setMaintenancesDisplay,
-        yearToRequest,
-        setYearChangeLoading,
-        setBuildingOptions,
-        buildingId,
-        calendarType,
+        filters,
       });
 
       toast.success(res.data.ServerMessage.message);
@@ -52,6 +44,6 @@ export const requestSendReport = async ({
       catchHandler(err);
     })
     .finally(() => {
-      setOnQuery(false);
+      setOnModalQuery(false);
     });
 };

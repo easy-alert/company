@@ -1,4 +1,5 @@
 export interface IAccount {
+  origin: 'Backoffice' | 'Company' | 'Client';
   User: {
     id: string;
     lastAccess: string;

@@ -15,12 +15,20 @@ import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
-import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReportData } from './types';
+import {
+  ICounts,
+  IFilterforPDF,
+  IFilterforRequest,
+  IFiltersOptions,
+  IMaintenanceReportData,
+} from './types';
 import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalPrintReport } from './ModalPrintReport';
+import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
+import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -33,12 +41,18 @@ export const CreateReport = () => {
     totalCost: 0,
   });
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
-  const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
-  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
 
-  const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
+  const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
+
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
+
+  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+
+  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
+    useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
@@ -48,6 +62,14 @@ export const CreateReport = () => {
     endDate: '',
     startDate: '',
     status: '',
+  });
+
+  const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
+    maintenanceStatusId: '',
+    buildingId: '',
+    categoryId: '',
+    startDate: '',
+    endDate: '',
   });
 
   useEffect(() => {
@@ -61,7 +83,29 @@ export const CreateReport = () => {
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
-          maintenanceHistoryId={maintenceHistoryId}
+          maintenanceHistoryId={maintenanceHistoryId}
+        />
+      )}
+      {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
+        <ModalSendMaintenanceReport
+          setModal={setModalSendMaintenanceReportOpen}
+          maintenanceHistoryId={maintenanceHistoryId}
+          filters={filterforRequest}
+          setCounts={setCounts}
+          setLoading={setLoading}
+          setMaintenances={setMaintenances}
+          setOnQuery={setOnQuery}
+        />
+      )}
+      {modalEditReport && maintenanceHistoryId && (
+        <ModalEditMaintenanceReport
+          setModal={setModalEditReport}
+          maintenanceHistoryId={maintenanceHistoryId}
+          filters={filterforRequest}
+          setCounts={setCounts}
+          setLoading={setLoading}
+          setMaintenances={setMaintenances}
+          setOnQuery={setOnQuery}
         />
       )}
       {modalPrintReportOpen && (
@@ -88,6 +132,8 @@ export const CreateReport = () => {
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
               setShowNoDataMessage(true);
+
+              setFilterforRequest({ ...values });
 
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
@@ -262,9 +308,9 @@ export const CreateReport = () => {
                 { label: 'Valor' },
               ]}
             >
-              {maintenances?.map((maintenance, i) => (
+              {maintenances?.map((maintenance) => (
                 <ReportDataTableContent
-                  key={maintenance.activity + i}
+                  key={maintenance.id}
                   colsBody={[
                     { cell: <EventTag status={maintenance.status} /> },
 
@@ -283,7 +329,14 @@ export const CreateReport = () => {
                   ]}
                   onClick={() => {
                     setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
-                    setModalMaintenanceDetails(true);
+
+                    if (maintenance.status === 'pending' || maintenance.status === 'expired') {
+                      setModalSendMaintenanceReportOpen(true);
+                    }
+
+                    if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
+                      setModalEditReport(true);
+                    }
                   }}
                 />
               ))}

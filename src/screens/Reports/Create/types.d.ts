@@ -14,6 +14,14 @@ export interface IFilterforPDF {
   endDate: string;
 }
 
+export interface IFilterforRequest {
+  maintenanceStatusId: string;
+  buildingId: string;
+  categoryId: string;
+  startDate: string;
+  endDate: string;
+}
+
 interface IFilterData {
   id: string;
   name: string;
@@ -38,6 +46,7 @@ export interface ICounts {
 }
 
 export interface IMaintenanceReportData {
+  id: string;
   activity: string;
   buildingName: string;
   categoryName: string;
@@ -55,7 +64,7 @@ export interface IRequestReportsData {
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceRepor | undefined>>;
+  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
   filters: IReportsFilters;
 }
 
