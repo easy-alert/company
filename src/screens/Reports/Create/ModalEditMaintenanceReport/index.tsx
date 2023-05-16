@@ -31,6 +31,8 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 export const ModalEditMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
+  setMaintenances,
+  maintenances,
 }: IModalSendMaintenanceReport) => {
   const { account } = useAuthContext();
 
@@ -187,7 +189,7 @@ export const ModalEditMaintenanceReport = ({
               label="Observação do relato"
               placeholder="Digite aqui"
               maxLength={300}
-              value={maintenanceReport.observation}
+              value={maintenanceReport.observation ?? ''}
               onChange={(e) => {
                 setMaintenanceReport((prevState) => {
                   const newState = { ...prevState };
@@ -282,6 +284,8 @@ export const ModalEditMaintenanceReport = ({
                 images,
                 origin: account?.origin ?? 'Company',
                 maintenanceHistoryId,
+                setMaintenances,
+                maintenances,
               });
             }}
           />

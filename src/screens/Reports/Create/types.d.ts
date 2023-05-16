@@ -38,6 +38,7 @@ export interface ICounts {
 }
 
 export interface IMaintenanceReportData {
+  id: string;
   activity: string;
   buildingName: string;
   categoryName: string;
@@ -55,7 +56,7 @@ export interface IRequestReportsData {
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceRepor | undefined>>;
+  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
   filters: IReportsFilters;
 }
 

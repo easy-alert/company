@@ -34,11 +34,13 @@ export const CreateReport = () => {
     totalCost: 0,
   });
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
+
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
+
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
   const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
-  const [maintenceHistoryId, setMaintenanceHistoryId] = useState<string>('');
+  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
@@ -63,13 +65,15 @@ export const CreateReport = () => {
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
-          maintenanceHistoryId={maintenceHistoryId}
+          maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
       {modalEditReport && (
         <ModalEditMaintenanceReport
           setModal={setModalEditReport}
-          maintenanceHistoryId={maintenceHistoryId}
+          maintenanceHistoryId={maintenanceHistoryId}
+          setMaintenances={setMaintenances}
+          maintenances={maintenances}
         />
       )}
       {modalPrintReportOpen && (
