@@ -15,7 +15,13 @@ import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
-import { ICounts, IFilterforPDF, IFiltersOptions, IMaintenanceReportData } from './types';
+import {
+  ICounts,
+  IFilterforPDF,
+  IFilterforRequest,
+  IFiltersOptions,
+  IMaintenanceReportData,
+} from './types';
 import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
@@ -58,6 +64,14 @@ export const CreateReport = () => {
     status: '',
   });
 
+  const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
+    maintenanceStatusId: '',
+    buildingId: '',
+    categoryId: '',
+    startDate: '',
+    endDate: '',
+  });
+
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
   }, []);
@@ -76,12 +90,22 @@ export const CreateReport = () => {
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
           maintenanceHistoryId={maintenanceHistoryId}
+          filters={filterforRequest}
+          setCounts={setCounts}
+          setLoading={setLoading}
+          setMaintenances={setMaintenances}
+          setOnQuery={setOnQuery}
         />
       )}
-      {modalEditReport && (
+      {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
           setModal={setModalEditReport}
           maintenanceHistoryId={maintenanceHistoryId}
+          filters={filterforRequest}
+          setCounts={setCounts}
+          setLoading={setLoading}
+          setMaintenances={setMaintenances}
+          setOnQuery={setOnQuery}
         />
       )}
       {modalPrintReportOpen && (
@@ -108,6 +132,8 @@ export const CreateReport = () => {
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
               setShowNoDataMessage(true);
+
+              setFilterforRequest({ ...values });
 
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };

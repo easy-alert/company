@@ -14,6 +14,14 @@ export interface IFilterforPDF {
   endDate: string;
 }
 
+export interface IFilterforRequest {
+  maintenanceStatusId: string;
+  buildingId: string;
+  categoryId: string;
+  startDate: string;
+  endDate: string;
+}
+
 interface IFilterData {
   id: string;
   name: string;

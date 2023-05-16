@@ -1,18 +1,24 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
-import { IRequestMaintenanceDetailsForEdit, IRequestSendReport } from './types';
+import { IRequestMaintenanceDetailsForEdit, IRequestEditReport } from './types';
+import { requestReportsData } from '../functions';
 
-export const requestSendReport = async ({
+export const requestEditReport = async ({
   maintenanceReport,
   setModal,
   maintenanceHistoryId,
   files,
   images,
-  setOnQuery,
+  setOnModalQuery,
   origin,
-}: IRequestSendReport) => {
-  setOnQuery(true);
+  filters,
+  setCounts,
+  setLoading,
+  setMaintenances,
+  setOnQuery,
+}: IRequestEditReport) => {
+  setOnModalQuery(true);
 
   await Api.post('/maintenances/edit/report', {
     origin,
@@ -24,7 +30,13 @@ export const requestSendReport = async ({
     ReportImages: images,
   })
     .then((res) => {
-      //  aqui
+      requestReportsData({
+        setOnQuery,
+        setCounts,
+        setMaintenances,
+        setLoading,
+        filters,
+      });
 
       toast.success(res.data.ServerMessage.message);
       setModal(false);
@@ -33,7 +45,7 @@ export const requestSendReport = async ({
       catchHandler(err);
     })
     .finally(() => {
-      setOnQuery(false);
+      setOnModalQuery(false);
     });
 };
 

@@ -19,19 +19,24 @@ import * as Style from './styles';
 import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
+import { IMaintenanceReport, IModalEditMaintenanceReport } from './types';
 import { AnnexesAndImages, IMaintenance } from '../../../Calendar/types';
 
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
-import { requestMaintenanceDetailsForEdit, requestSendReport } from './functions';
+import { requestMaintenanceDetailsForEdit, requestEditReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
-}: IModalSendMaintenanceReport) => {
+  filters,
+  setCounts,
+  setLoading,
+  setMaintenances,
+  setOnQuery,
+}: IModalEditMaintenanceReport) => {
   const { account } = useAuthContext();
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
@@ -44,7 +49,7 @@ export const ModalEditMaintenanceReport = ({
 
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onModalQuery, setOnModalQuery] = useState<boolean>(false);
 
   const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
@@ -272,16 +277,21 @@ export const ModalEditMaintenanceReport = ({
             label="Editar relato"
             center
             disable={onFileQuery || onImageQuery}
-            loading={onQuery}
+            loading={onModalQuery}
             onClick={() => {
-              requestSendReport({
-                setOnQuery,
+              requestEditReport({
+                setOnModalQuery,
                 maintenanceReport,
                 setModal,
                 files,
                 images,
                 origin: account?.origin ?? 'Company',
                 maintenanceHistoryId,
+                filters,
+                setCounts,
+                setLoading,
+                setMaintenances,
+                setOnQuery,
               });
             }}
           />

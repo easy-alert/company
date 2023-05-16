@@ -32,6 +32,11 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 export const ModalSendMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
+  filters,
+  setCounts,
+  setLoading,
+  setMaintenances,
+  setOnQuery,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
@@ -44,7 +49,7 @@ export const ModalSendMaintenanceReport = ({
 
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onModalQuery, setOnModalQuery] = useState<boolean>(false);
 
   const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
@@ -269,16 +274,21 @@ export const ModalSendMaintenanceReport = ({
             label="Enviar relato"
             center
             disable={onFileQuery || onImageQuery}
-            loading={onQuery}
+            loading={onModalQuery}
             onClick={() => {
               requestSendReport({
-                setOnQuery,
+                setOnModalQuery,
                 maintenanceHistoryId,
                 maintenanceReport,
                 setModal,
                 files,
                 images,
                 origin: account?.origin ?? 'Company',
+                filters,
+                setCounts,
+                setLoading,
+                setMaintenances,
+                setOnQuery,
               });
             }}
           />
