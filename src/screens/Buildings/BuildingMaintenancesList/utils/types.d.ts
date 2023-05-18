@@ -15,6 +15,7 @@ export interface IMaintenance {
       id: string;
       pluralLabel: string;
       singularLabel: string;
+      unitTime: number;
     };
     responsible: string;
     source: string;
@@ -24,6 +25,7 @@ export interface IMaintenance {
       id: string;
       pluralLabel: string;
       singularLabel: string;
+      unitTime: number;
     };
     ownerCompanyId: string | null;
     delay: number;
@@ -32,6 +34,7 @@ export interface IMaintenance {
       id: string;
       pluralLabel: string;
       singularLabel: string;
+      unitTime: number;
     };
     observation: string;
     resolutionDate?: Date | null;

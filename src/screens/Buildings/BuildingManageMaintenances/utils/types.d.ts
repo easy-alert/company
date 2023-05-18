@@ -14,6 +14,7 @@ interface IMaintenance {
     id: string;
     pluralLabel: string;
     singularLabel: string;
+    unitTime: number;
   };
   responsible: string;
   source: string;
@@ -23,6 +24,7 @@ interface IMaintenance {
     id: string;
     pluralLabel: string;
     singularLabel: string;
+    unitTime: number;
   };
   ownerCompanyId: string | null;
   delay: number;
@@ -31,11 +33,14 @@ interface IMaintenance {
     id: string;
     pluralLabel: string;
     singularLabel: string;
+    unitTime: number;
   };
   observation: string;
   resolutionDate?: Date | null;
   notificationDate?: Date | null;
   maintenanceReport?: IMaintenanceReport;
+  resolutionDate?: Date | null;
+  notificationDate?: Date | null;
   files?: AnnexesAndImages[];
   images?: AnnexesAndImages[];
 }

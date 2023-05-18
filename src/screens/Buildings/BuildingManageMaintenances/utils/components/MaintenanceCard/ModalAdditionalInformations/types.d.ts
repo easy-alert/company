@@ -7,12 +7,14 @@ import {
 export interface IModalAdditionalInformations {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
+  categories: ICategories[];
   maintenanceIndex: number;
   categoryIndex: number;
   selectedMaintenance: IMaintenance;
 }
 
 export interface IHandleAdditionalInformations {
+  categories: ICategories[];
   setCategories: React.Dispatch<React.SetStateAction<ICategories[]>>;
   values: {
     hasLastResolutionDate: boolean;
