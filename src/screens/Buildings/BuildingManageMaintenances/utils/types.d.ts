@@ -68,6 +68,7 @@ export interface IRequestManageBuildingMaintenances {
   categories: ICategories[];
   buildingId: string;
   setOnQuery: (setOnQuery: boolean) => void;
+  origin: 'Company' | 'Backoffice' | 'Client' | undefined;
 }
 
 export interface IBuildingListForSelect {

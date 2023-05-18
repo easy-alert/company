@@ -48,7 +48,10 @@ export const handleAdditionalInformations = ({
     );
 
     if (notificationDateBasedOnLastResolution < today) {
-      toast.error('Informe a data que deseja receber a primeira notificação.');
+      toast.error(
+        'Essa manutenção deveria ter sido realizada mais vezes desde a data da última conclusão. Informe a data que deseja receber a próxima notificação.',
+        { autoClose: 6000 },
+      );
       return;
     }
   }

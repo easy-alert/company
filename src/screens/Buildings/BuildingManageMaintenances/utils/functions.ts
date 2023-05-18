@@ -42,6 +42,7 @@ export const requestManageBuildingMaintenances = async ({
   buildingId,
   navigate,
   setOnQuery,
+  origin,
 }: IRequestManageBuildingMaintenances) => {
   const { search } = window.location;
 
@@ -60,6 +61,7 @@ export const requestManageBuildingMaintenances = async ({
 
   await Api.put('/buildings/maintenances/edit', {
     buildingId,
+    origin,
     data: filteredBuildingMaintenances,
   })
     .then((res) => {
