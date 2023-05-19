@@ -32,18 +32,15 @@ export const Card = styled.div`
     margin-right: ${theme.size.xsm};
   }
 
-  /*
-  @media (max-width: 500px) {
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${theme.size.xsm};
+
     > h6 {
-      width: fit-content;
-      min-width: 150px;
+      width: 100%;
     }
-    > p {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  } */
+  }
 `;
 
 export const Footer = styled.footer`
