@@ -46,7 +46,8 @@ export const requestEditMaintenance = async ({
       categoriesEdit[categoryIndex].Maintenances[maintenanceIndex] = {
         ...res.data.maintenance,
         isSelected: !!categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].isSelected,
-        hasHistory: categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].hasHistory,
+        hasHistory:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].hasHistory ?? false,
         notificationDate:
           categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].notificationDate ?? null,
         resolutionDate:
