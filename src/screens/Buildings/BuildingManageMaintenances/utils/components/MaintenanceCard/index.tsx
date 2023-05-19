@@ -64,6 +64,7 @@ export const MaintenanceCard = ({
         <ModalAdditionalInformations
           setModal={setModalAdditionalInformations}
           setCategories={setCategories}
+          categories={categories}
           categoryIndex={categoryIndex}
           maintenanceIndex={maintenanceIndex}
           selectedMaintenance={maintenance}

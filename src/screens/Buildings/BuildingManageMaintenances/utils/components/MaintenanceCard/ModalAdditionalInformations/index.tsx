@@ -36,6 +36,7 @@ export const ModalAdditionalInformations = ({
   categoryIndex,
   maintenanceIndex,
   selectedMaintenance,
+  categories,
 }: IModalAdditionalInformations) => {
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -145,6 +146,7 @@ export const ModalAdditionalInformations = ({
             files,
             images,
             maintenanceReport,
+            categories,
           });
         }}
       >

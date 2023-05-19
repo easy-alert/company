@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
 import { IHandleAdditionalInformations } from './types';
 
 export const schemaAdditionalInformations = yup
@@ -26,7 +27,35 @@ export const handleAdditionalInformations = ({
   files,
   images,
   maintenanceReport,
+  categories,
 }: IHandleAdditionalInformations) => {
+  if (values.lastResolutionDate && !values.firstNotificationDate) {
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+    const lastResolutionDate = new Date(values.lastResolutionDate);
+
+    const frequencyInDays =
+      categories[categoryIndex].Maintenances[maintenanceIndex].frequency *
+      categories[categoryIndex].Maintenances[maintenanceIndex].FrequencyTimeInterval.unitTime;
+
+    const notificationDateBasedOnLastResolution = new Date(
+      new Date(lastResolutionDate.setDate(lastResolutionDate.getDate() + frequencyInDays)).setHours(
+        0,
+        0,
+        0,
+        0,
+      ),
+    );
+
+    if (notificationDateBasedOnLastResolution < today) {
+      toast.error(
+        'Essa manutenção deveria ter sido realizada mais vezes desde a data da última conclusão. Informe a data que deseja receber a próxima notificação.',
+        { autoClose: 6000 },
+      );
+      return;
+    }
+  }
+
   setCategories((prevState) => {
     const newState = [...prevState];
 

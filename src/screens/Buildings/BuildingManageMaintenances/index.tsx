@@ -27,9 +27,13 @@ import { DotLoading } from '../../../components/Loadings/DotLoading';
 import { ITimeInterval } from '../../../utils/types';
 import { query, requestListIntervals } from '../../../utils/functions';
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
+import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 export const BuildingManageMaintenances = () => {
+  const { account } = useAuthContext();
+
   const navigate = useNavigate();
+
   const { buildingId } = useParams();
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -125,6 +129,7 @@ export const BuildingManageMaintenances = () => {
                     buildingId: buildingId!,
                     navigate,
                     setOnQuery,
+                    origin: account?.origin,
                   });
                 }}
               />
