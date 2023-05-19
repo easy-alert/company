@@ -129,7 +129,10 @@ export const ModalSendMaintenanceReport = ({
   }, []);
 
   return (
-    <Modal title="Enviar relato" setModal={setModal}>
+    <Modal
+      title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
+      setModal={setModal}
+    >
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
