@@ -15,7 +15,7 @@ export const requestCalendarData = async ({
   buildingId,
   calendarType,
 }: IRequestCalendarData) => {
-  setYearChangeLoading(true);
+  // setYearChangeLoading(true);
 
   await Api.get(`calendars/list/${String(yearToRequest)}?buildingId=${buildingId}`)
     .then((res: IRequestCalendarDataResData) => {
