@@ -174,6 +174,11 @@ export const ModalEditMaintenanceReport = ({
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
 
+            <Style.Row>
+              <h6>Data de conclusão</h6>
+              <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+            </Style.Row>
+
             <Input
               label="Custo"
               placeholder="Ex: R$ 100,00"
@@ -215,7 +220,16 @@ export const ModalEditMaintenanceReport = ({
                   <Style.FileAndImageRow>
                     {files.map((e, i: number) => (
                       <Style.Tag title={e.name} key={i}>
-                        <p className="p3">{e.name}</p>
+                        <a
+                          title={e.originalName}
+                          href={e.url}
+                          download
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <p className="p3">{e.name}</p>
+                          <Image size="16px" img={icon.download} />
+                        </a>
                         <IconButton
                           size="16px"
                           icon={icon.xBlack}
@@ -254,6 +268,7 @@ export const ModalEditMaintenanceReport = ({
                     height="136px"
                     imageCustomName={e.name}
                     imageOriginalName={e.name}
+                    downloadUrl={e.url}
                     src={e.url}
                     onTrashClick={() => {
                       setImages((prevState) => {

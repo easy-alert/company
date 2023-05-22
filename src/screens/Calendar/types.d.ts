@@ -57,7 +57,7 @@ export interface IRequestCalendarDataResData {
               singularLabel: string;
             };
           };
-          notificationDate: Date;
+          notificationDate: string;
           isFuture: boolean;
           id: string;
           expectedDueDate: string;
