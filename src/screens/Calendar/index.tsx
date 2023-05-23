@@ -205,8 +205,7 @@ export const MaintenancesCalendar = () => {
       buildingId,
       calendarType,
     });
-  }, [buildingId]);
-  // colocar o yearToRequest no array se for fazer requisição por ano
+  }, [buildingId, yearToRequest]);
 
   return loading ? (
     <DotSpinLoading />
