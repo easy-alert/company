@@ -79,7 +79,7 @@ export const requestBuildingListForSelect = async ({
   setBuildingListForSelect,
   buildingId,
 }: IRequestBuildingListForSelect) => {
-  await Api.get(`/buildings/listforselect/${buildingId}`)
+  await Api.get(`/buildings/listforselectwithtemplates/${buildingId}`)
     .then((res) => {
       setBuildingListForSelect(res.data);
     })
