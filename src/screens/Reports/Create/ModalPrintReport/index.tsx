@@ -183,7 +183,7 @@ const MyDocument = ({
             />
             <View style={styles.headerDiv}>
               <Text>
-                Edificação: {`${filterforPDF.buildingName ? filterforPDF.buildingName : 'Todas'}`}
+                Edificação: {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
               </Text>
               <Text>ID: {randomNumber()}</Text>
             </View>

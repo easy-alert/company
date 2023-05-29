@@ -17,6 +17,7 @@ import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import {
   ICounts,
+  IFilterData,
   IFilterforPDF,
   IFilterforRequest,
   IFiltersOptions,
@@ -29,6 +30,7 @@ import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalPrintReport } from './ModalPrintReport';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
+import { Select } from '../../../components/Inputs/Select';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -57,7 +59,7 @@ export const CreateReport = () => {
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
-    buildingName: '',
+    buildingNames: '',
     categoryName: '',
     endDate: '',
     startDate: '',
@@ -66,11 +68,13 @@ export const CreateReport = () => {
 
   const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
     maintenanceStatusId: '',
-    buildingId: '',
     categoryId: '',
     startDate: '',
     endDate: '',
+    buildingIds: [],
   });
+
+  const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -124,7 +128,6 @@ export const CreateReport = () => {
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              buildingId: '',
               categoryId: '',
               startDate: '',
               endDate: '',
@@ -133,14 +136,18 @@ export const CreateReport = () => {
             onSubmit={async (values) => {
               setShowNoDataMessage(true);
 
-              setFilterforRequest({ ...values });
+              setFilterforRequest({
+                buildingIds: buildingsForFilter.map((e) => e.id),
+                categoryId: values.categoryId,
+                endDate: values.endDate,
+                maintenanceStatusId: values.maintenanceStatusId,
+                startDate: values.startDate,
+              });
 
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
 
-                const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
-
-                newState.buildingName = building?.name ? building?.name : '';
+                newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
 
                 const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
 
@@ -164,7 +171,7 @@ export const CreateReport = () => {
                 setMaintenances,
                 setLoading,
                 filters: {
-                  buildingId: values.buildingId,
+                  buildingIds: buildingsForFilter.map((e) => e.id),
                   categoryId: values.categoryId,
                   maintenanceStatusId: values.maintenanceStatusId,
                   startDate: values.startDate,
@@ -176,20 +183,44 @@ export const CreateReport = () => {
             {({ errors, values, touched }) => (
               <Form>
                 <s.FiltersGrid>
-                  <FormikSelect
-                    selectPlaceholderValue={values.buildingId}
-                    name="buildingId"
+                  <Select
+                    selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
-                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
+                    value=""
+                    onChange={(e) => {
+                      const selectedBuilding = filtersOptions?.buildings.find(
+                        (building) => building.id === e.target.value,
+                      );
+
+                      if (selectedBuilding) {
+                        setBuildingsForFilter((prevState) => [
+                          ...prevState,
+                          { id: selectedBuilding.id, name: selectedBuilding.name },
+                        ]);
+                      }
+
+                      if (e.target.value === 'all') {
+                        setBuildingsForFilter([]);
+                      }
+                    }}
                   >
-                    <option value="">Todos</option>
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+                    <option value="all" disabled={buildingsForFilter.length === 0}>
+                      Todas
+                    </option>
 
                     {filtersOptions?.buildings.map((building) => (
-                      <option key={building.id} value={building.id}>
+                      <option
+                        key={building.id}
+                        value={building.id}
+                        disabled={buildingsForFilter.some((e) => e.id === building.id)}
+                      >
                         {building.name}
                       </option>
                     ))}
-                  </FormikSelect>
+                  </Select>
 
                   <FormikSelect
                     selectPlaceholderValue={values.categoryId}
@@ -240,6 +271,29 @@ export const CreateReport = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+                  <s.TagWrapper>
+                    {buildingsForFilter.length === 0 && (
+                      <s.Tag>
+                        <p className="p3">Todas as edificações</p>
+                      </s.Tag>
+                    )}
+                    {buildingsForFilter.map((building, i: number) => (
+                      <s.Tag key={building.id}>
+                        <p className="p3">{building.name}</p>
+                        <IconButton
+                          size="14px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setBuildingsForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </s.Tag>
+                    ))}
+                  </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
                       <IconButton
