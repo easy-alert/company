@@ -197,7 +197,7 @@ export const CreateReport = () => {
                     label="Categoria"
                     error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
                   >
-                    <option value="">Todos</option>
+                    <option value="">Todas</option>
                     {filtersOptions?.categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
