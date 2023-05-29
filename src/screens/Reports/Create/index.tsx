@@ -92,6 +92,7 @@ export const CreateReport = () => {
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
           maintenanceHistoryId={maintenanceHistoryId}
+          setModalEditReport={setModalSendMaintenanceReportOpen}
         />
       )}
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
@@ -480,7 +481,7 @@ export const CreateReport = () => {
                     }
 
                     if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
-                      setModalEditReport(true);
+                      setModalMaintenanceDetails(true);
                     }
                   }}
                 />

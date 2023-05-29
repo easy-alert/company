@@ -26,6 +26,7 @@ import { IMaintenance } from '../../../Calendar/types';
 export const ModalMaintenanceDetails = ({
   setModal,
   maintenanceHistoryId,
+  setModalEditReport,
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
@@ -166,13 +167,23 @@ export const ModalMaintenanceDetails = ({
             )}
           </Style.Content>
 
-          <Button
-            label="Fechar"
-            center
-            onClick={() => {
-              setModal(false);
-            }}
-          />
+          <Style.ButtonContainer>
+            <Button
+              borderless
+              label="Editar relato"
+              onClick={() => {
+                setModal(false);
+                setModalEditReport(true);
+              }}
+            />
+
+            <Button
+              label="Fechar"
+              onClick={() => {
+                setModal(false);
+              }}
+            />
+          </Style.ButtonContainer>
         </Style.Container>
       )}
     </Modal>
