@@ -60,7 +60,7 @@ export const CreateReport = () => {
 
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
     buildingNames: '',
-    categoryName: '',
+    categoryNames: '',
     endDate: '',
     startDate: '',
     status: '',
@@ -68,13 +68,15 @@ export const CreateReport = () => {
 
   const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
     maintenanceStatusId: '',
-    categoryId: '',
     startDate: '',
     endDate: '',
+    categoryIds: [],
     buildingIds: [],
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
+
+  const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -128,7 +130,6 @@ export const CreateReport = () => {
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              categoryId: '',
               startDate: '',
               endDate: '',
             }}
@@ -138,7 +139,7 @@ export const CreateReport = () => {
 
               setFilterforRequest({
                 buildingIds: buildingsForFilter.map((e) => e.id),
-                categoryId: values.categoryId,
+                categoryIds: categoriesForFilter.map((e) => e.id),
                 endDate: values.endDate,
                 maintenanceStatusId: values.maintenanceStatusId,
                 startDate: values.startDate,
@@ -149,9 +150,7 @@ export const CreateReport = () => {
 
                 newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
 
-                const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
-
-                newState.categoryName = category?.name ? category?.name : '';
+                newState.categoryNames = categoriesForFilter.map((e) => e.name).join(', ');
 
                 newState.startDate = values.startDate;
 
@@ -172,7 +171,7 @@ export const CreateReport = () => {
                 setLoading,
                 filters: {
                   buildingIds: buildingsForFilter.map((e) => e.id),
-                  categoryId: values.categoryId,
+                  categoryIds: categoriesForFilter.map((e) => e.id),
                   maintenanceStatusId: values.maintenanceStatusId,
                   startDate: values.startDate,
                   endDate: values.endDate,
@@ -222,19 +221,43 @@ export const CreateReport = () => {
                     ))}
                   </Select>
 
-                  <FormikSelect
-                    selectPlaceholderValue={values.categoryId}
-                    name="categoryId"
+                  <Select
+                    selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
                     label="Categoria"
-                    error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
+                    value=""
+                    onChange={(e) => {
+                      const selectedCategory = filtersOptions?.categories.find(
+                        (category) => category.id === e.target.value,
+                      );
+
+                      if (selectedCategory) {
+                        setCategoriesForFilter((prevState) => [
+                          ...prevState,
+                          { id: selectedCategory.id, name: selectedCategory.name },
+                        ]);
+                      }
+
+                      if (e.target.value === 'all') {
+                        setCategoriesForFilter([]);
+                      }
+                    }}
                   >
-                    <option value="">Todas</option>
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+                    <option value="all" disabled={categoriesForFilter.length === 0}>
+                      Todas
+                    </option>
                     {filtersOptions?.categories.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option
+                        key={category.id}
+                        value={category.id}
+                        disabled={categoriesForFilter.some((e) => e.id === category.id)}
+                      >
                         {category.name}
                       </option>
                     ))}
-                  </FormikSelect>
+                  </Select>
 
                   <FormikSelect
                     selectPlaceholderValue={values.maintenanceStatusId}
@@ -277,6 +300,7 @@ export const CreateReport = () => {
                         <p className="p3">Todas as edificações</p>
                       </s.Tag>
                     )}
+
                     {buildingsForFilter.map((building, i: number) => (
                       <s.Tag key={building.id}>
                         <p className="p3">{building.name}</p>
@@ -285,6 +309,29 @@ export const CreateReport = () => {
                           icon={icon.xBlack}
                           onClick={() => {
                             setBuildingsForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </s.Tag>
+                    ))}
+
+                    {categoriesForFilter.length === 0 && (
+                      <s.Tag>
+                        <p className="p3">Todas as categorias</p>
+                      </s.Tag>
+                    )}
+
+                    {categoriesForFilter.map((category, i: number) => (
+                      <s.Tag key={category.id}>
+                        <p className="p3">{category.name}</p>
+                        <IconButton
+                          size="14px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setCategoriesForFilter((prevState) => {
                               const newState = [...prevState];
                               newState.splice(i, 1);
                               return newState;

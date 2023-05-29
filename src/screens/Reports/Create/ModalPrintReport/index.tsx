@@ -189,7 +189,7 @@ const MyDocument = ({
             </View>
             <View style={styles.headerDiv}>
               <Text>
-                Categoria: {`${filterforPDF.categoryName ? filterforPDF.categoryName : 'Todas'}`}
+                Categoria: {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
               </Text>
               <Text>
                 Período:{' '}

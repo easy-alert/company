@@ -1,14 +1,14 @@
 export interface IReportsFilters {
   maintenanceStatusId: string;
   buildingIds: string[];
-  categoryId: string;
+  categoryIds: string[];
   startDate: string;
   endDate: string;
 }
 
 export interface IFilterforPDF {
   buildingNames: string;
-  categoryName: string;
+  categoryNames: string;
   status: string;
   startDate: string;
   endDate: string;
@@ -17,7 +17,7 @@ export interface IFilterforPDF {
 export interface IFilterforRequest {
   buildingIds: string[];
   maintenanceStatusId: string;
-  categoryId: string;
+  categoryIds: string[];
   startDate: string;
   endDate: string;
 }
