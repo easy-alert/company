@@ -13,10 +13,10 @@ import { icon } from '../../../assets/icons';
 import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
-import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import {
   ICounts,
+  IFilterData,
   IFilterforPDF,
   IFilterforRequest,
   IFiltersOptions,
@@ -29,6 +29,8 @@ import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalPrintReport } from './ModalPrintReport';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
+import { Select } from '../../../components/Inputs/Select';
+import { getPluralStatusNameforPdf } from './ModalPrintReport/functions';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -57,20 +59,26 @@ export const CreateReport = () => {
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
-    buildingName: '',
-    categoryName: '',
+    buildingNames: '',
+    categoryNames: '',
     endDate: '',
     startDate: '',
-    status: '',
+    statusNames: '',
   });
 
   const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
-    maintenanceStatusId: '',
-    buildingId: '',
-    categoryId: '',
     startDate: '',
     endDate: '',
+    maintenanceStatusIds: [],
+    categoryIds: [],
+    buildingIds: [],
   });
+
+  const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
+
+  const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
+
+  const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -124,8 +132,6 @@ export const CreateReport = () => {
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              buildingId: '',
-              categoryId: '',
               startDate: '',
               endDate: '',
             }}
@@ -133,27 +139,28 @@ export const CreateReport = () => {
             onSubmit={async (values) => {
               setShowNoDataMessage(true);
 
-              setFilterforRequest({ ...values });
+              setFilterforRequest({
+                buildingIds: buildingsForFilter.map((e) => e.id),
+                categoryIds: categoriesForFilter.map((e) => e.id),
+                maintenanceStatusIds: statusForFilter.map((e) => e.id),
+                endDate: values.endDate,
+                startDate: values.startDate,
+              });
 
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
 
-                const building = filtersOptions?.buildings.find((e) => e.id === values.buildingId);
+                newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
 
-                newState.buildingName = building?.name ? building?.name : '';
+                newState.categoryNames = categoriesForFilter.map((e) => e.name).join(', ');
 
-                const category = filtersOptions?.categories.find((e) => e.id === values.categoryId);
-
-                newState.categoryName = category?.name ? category?.name : '';
+                newState.statusNames = statusForFilter
+                  .map((e) => getPluralStatusNameforPdf(e.name))
+                  .join(', ');
 
                 newState.startDate = values.startDate;
 
                 newState.endDate = values.endDate;
-
-                const status = filtersOptions?.status.find(
-                  (e) => e.id === values.maintenanceStatusId,
-                );
-                newState.status = status?.name ? status?.name : '';
 
                 return newState;
               });
@@ -164,9 +171,9 @@ export const CreateReport = () => {
                 setMaintenances,
                 setLoading,
                 filters: {
-                  buildingId: values.buildingId,
-                  categoryId: values.categoryId,
-                  maintenanceStatusId: values.maintenanceStatusId,
+                  buildingIds: buildingsForFilter.map((e) => e.id),
+                  categoryIds: categoriesForFilter.map((e) => e.id),
+                  maintenanceStatusIds: statusForFilter.map((e) => e.id),
                   startDate: values.startDate,
                   endDate: values.endDate,
                 },
@@ -176,52 +183,120 @@ export const CreateReport = () => {
             {({ errors, values, touched }) => (
               <Form>
                 <s.FiltersGrid>
-                  <FormikSelect
-                    selectPlaceholderValue={values.buildingId}
-                    name="buildingId"
+                  <Select
+                    selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
-                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
+                    value=""
+                    onChange={(e) => {
+                      const selectedBuilding = filtersOptions?.buildings.find(
+                        (building) => building.id === e.target.value,
+                      );
+
+                      if (selectedBuilding) {
+                        setBuildingsForFilter((prevState) => [
+                          ...prevState,
+                          { id: selectedBuilding.id, name: selectedBuilding.name },
+                        ]);
+                      }
+
+                      if (e.target.value === 'all') {
+                        setBuildingsForFilter([]);
+                      }
+                    }}
                   >
-                    <option value="">Todos</option>
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+                    <option value="all" disabled={buildingsForFilter.length === 0}>
+                      Todas
+                    </option>
 
                     {filtersOptions?.buildings.map((building) => (
-                      <option key={building.id} value={building.id}>
+                      <option
+                        key={building.id}
+                        value={building.id}
+                        disabled={buildingsForFilter.some((e) => e.id === building.id)}
+                      >
                         {building.name}
                       </option>
                     ))}
-                  </FormikSelect>
+                  </Select>
 
-                  <FormikSelect
-                    selectPlaceholderValue={values.categoryId}
-                    name="categoryId"
+                  <Select
+                    selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
                     label="Categoria"
-                    error={touched.categoryId && errors.categoryId ? errors.categoryId : null}
+                    value=""
+                    onChange={(e) => {
+                      const selectedCategory = filtersOptions?.categories.find(
+                        (category) => category.id === e.target.value,
+                      );
+
+                      if (selectedCategory) {
+                        setCategoriesForFilter((prevState) => [
+                          ...prevState,
+                          { id: selectedCategory.id, name: selectedCategory.name },
+                        ]);
+                      }
+
+                      if (e.target.value === 'all') {
+                        setCategoriesForFilter([]);
+                      }
+                    }}
                   >
-                    <option value="">Todos</option>
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+                    <option value="all" disabled={categoriesForFilter.length === 0}>
+                      Todas
+                    </option>
                     {filtersOptions?.categories.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option
+                        key={category.id}
+                        value={category.id}
+                        disabled={categoriesForFilter.some((e) => e.id === category.id)}
+                      >
                         {category.name}
                       </option>
                     ))}
-                  </FormikSelect>
+                  </Select>
 
-                  <FormikSelect
-                    selectPlaceholderValue={values.maintenanceStatusId}
-                    name="maintenanceStatusId"
+                  <Select
+                    selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
-                    error={
-                      touched.maintenanceStatusId && errors.maintenanceStatusId
-                        ? errors.maintenanceStatusId
-                        : null
-                    }
+                    value=""
+                    onChange={(e) => {
+                      const selectedStatus = filtersOptions?.status.find(
+                        (status) => status.id === e.target.value,
+                      );
+
+                      if (selectedStatus) {
+                        setStatusForFilter((prevState) => [
+                          ...prevState,
+                          { id: selectedStatus.id, name: selectedStatus.name },
+                        ]);
+                      }
+
+                      if (e.target.value === 'all') {
+                        setStatusForFilter([]);
+                      }
+                    }}
                   >
-                    <option value="">Todos</option>
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+                    <option value="all" disabled={statusForFilter.length === 0}>
+                      Todas
+                    </option>
                     {filtersOptions?.status.map((status) => (
-                      <option key={status.id} value={status.id}>
+                      <option
+                        key={status.id}
+                        value={status.id}
+                        disabled={statusForFilter.some((e) => e.id === status.id)}
+                      >
                         {capitalizeFirstLetter(status.pluralLabel)}
                       </option>
                     ))}
-                  </FormikSelect>
+                  </Select>
 
                   <FormikInput
                     label="Data de notificação inicial"
@@ -240,6 +315,76 @@ export const CreateReport = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+                  <s.TagWrapper>
+                    {buildingsForFilter.length === 0 && (
+                      <s.Tag>
+                        <p className="p3">Todas as edificações</p>
+                      </s.Tag>
+                    )}
+
+                    {buildingsForFilter.map((building, i: number) => (
+                      <s.Tag key={building.id}>
+                        <p className="p3">{building.name}</p>
+                        <IconButton
+                          size="14px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setBuildingsForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </s.Tag>
+                    ))}
+
+                    {categoriesForFilter.length === 0 && (
+                      <s.Tag>
+                        <p className="p3">Todas as categorias</p>
+                      </s.Tag>
+                    )}
+
+                    {categoriesForFilter.map((category, i: number) => (
+                      <s.Tag key={category.id}>
+                        <p className="p3">{category.name}</p>
+                        <IconButton
+                          size="14px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setCategoriesForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </s.Tag>
+                    ))}
+
+                    {statusForFilter.length === 0 && (
+                      <s.Tag>
+                        <p className="p3">Todos os status</p>
+                      </s.Tag>
+                    )}
+
+                    {statusForFilter.map((status, i: number) => (
+                      <s.Tag key={status.id}>
+                        <p className="p3">{getPluralStatusNameforPdf(status.name)}</p>
+                        <IconButton
+                          size="14px"
+                          icon={icon.xBlack}
+                          onClick={() => {
+                            setStatusForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      </s.Tag>
+                    ))}
+                  </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
                       <IconButton

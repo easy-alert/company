@@ -83,3 +83,25 @@ export const NoMaintenanceCard = styled.div`
   width: 100%;
   color: ${theme.color.gray4};
 `;
+
+export const TagWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.size.xsm};
+  grid-area: 3 / 1 / 3 / 4;
+
+  @media (max-width: 900px) {
+    grid-area: 6 / 1 / 6 / 2;
+  }
+`;
+
+export const Tag = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: ${theme.color.primaryL};
+  width: fit-content;
+  height: fit-content;
+  border-radius: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
+`;
