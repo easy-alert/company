@@ -26,7 +26,7 @@ import { image } from '../../../../assets/images';
 // FUNCTIONS
 import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { getPluralStatusNameforPdf, getSingularStatusNameforPdf } from './functions';
+import { getSingularStatusNameforPdf } from './functions';
 
 const styles = StyleSheet.create({
   page: {
@@ -183,13 +183,13 @@ const MyDocument = ({
             />
             <View style={styles.headerDiv}>
               <Text>
-                Edificação: {`${filterforPDF.buildingName ? filterforPDF.buildingName : 'Todas'}`}
+                Edificação: {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
               </Text>
               <Text>ID: {randomNumber()}</Text>
             </View>
             <View style={styles.headerDiv}>
               <Text>
-                Categoria: {`${filterforPDF.categoryName ? filterforPDF.categoryName : 'Todas'}`}
+                Categoria: {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
               </Text>
               <Text>
                 Período:{' '}
@@ -204,10 +204,7 @@ const MyDocument = ({
             </View>
             <View style={styles.headerDiv}>
               <Text>
-                Status:{' '}
-                {`${
-                  filterforPDF.status ? getPluralStatusNameforPdf(filterforPDF.status) : 'Todos'
-                }`}
+                Status: {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
               </Text>
               <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
             </View>

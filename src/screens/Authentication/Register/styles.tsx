@@ -60,6 +60,12 @@ export const InputWrapper = styled.div`
   gap: ${theme.size.xsm};
   padding: ${theme.size.md};
 
+  a {
+    color: ${theme.color.white};
+    font-weight: 700;
+    font-size: 12px;
+  }
+
   > h2 {
     margin-bottom: ${theme.size.sm};
     color: ${theme.color.white};

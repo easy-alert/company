@@ -14,7 +14,7 @@ export const requestReportsData = async ({
   setMaintenances([]);
 
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusId=${filters.maintenanceStatusId}&buildingId=${filters.buildingId}&categoryId=${filters.categoryId}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
+    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryIds=${filters.categoryIds}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
@@ -48,8 +48,6 @@ export const requestReportsDataForSelect = async ({
 export const schemaReportFilter = yup
   .object({
     maintenanceStatusId: yup.string(),
-    buildingId: yup.string(),
-    categoryId: yup.string(),
     responsibleSyndicId: yup.string(),
     startDate: yup.date().required('A data inicial é obrigatória.'),
     endDate: yup

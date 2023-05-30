@@ -192,6 +192,13 @@ export const Register = () => {
                       opacity="1"
                     />
                   </Style.PasswordDiv>
+                  <p className="p3">
+                    Ao clicar em cadastrar, você concorda com os{' '}
+                    <Link target="_blank" rel="noopener noreferrer" to="/terms">
+                      Termos de Uso
+                    </Link>
+                    .
+                  </p>
                 </Style.InputWrapper>
                 <Button center label="Cadastrar" type="submit" loading={onQuery} />
               </Form>
