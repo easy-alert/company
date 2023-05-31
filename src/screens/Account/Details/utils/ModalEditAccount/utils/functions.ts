@@ -34,6 +34,7 @@ export const requestEditAccount = async ({
     email: values.email,
     password: values.password !== '' ? values.password : null,
     image: imageUrl,
+    supportLink: values.supportLink ? values.supportLink : null,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
@@ -47,6 +48,7 @@ export const requestEditAccount = async ({
           image: imageUrl,
           name: values.companyName,
           CNPJ: values.CNPJ,
+          supportLink: values.supportLink ? values.supportLink : null,
           CPF: values.CPF,
           createdAt: account.Company.createdAt,
           id: account.Company.id,
@@ -117,6 +119,8 @@ export const schemaModalEditAccountWithCNPJ = yup
 
     CNPJ: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
 
+    supportLink: yup.string().url('Digite uma URL válida. Ex: https://easyalert.com.br').nullable(),
+
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 
     confirmPassword: yup
@@ -173,6 +177,8 @@ export const schemaModalEditAccountWithCPF = yup
       .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
 
     CPF: yup.string().required('O CPF deve ser preenchido.').min(14, 'O CPF deve ser válido.'),
+
+    supportLink: yup.string().url('Digite uma URL válida. Ex: https://easyalert.com.br').nullable(),
 
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 

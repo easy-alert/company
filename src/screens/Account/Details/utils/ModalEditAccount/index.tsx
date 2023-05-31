@@ -37,6 +37,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
           name: account.User.name,
           email: account.User.email,
           companyName: account.Company.name,
+          supportLink: account.Company.supportLink,
           contactNumber: applyMask({
             value: account.Company.contactNumber,
             mask: 'TEL',
@@ -152,6 +153,15 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   }}
                 />
               )}
+
+              <FormikInput
+                label="Link para chamado"
+                name="supportLink"
+                value={values.supportLink ?? ''}
+                error={touched.supportLink && errors.supportLink ? errors.supportLink : null}
+                placeholder="Ex: https://easyalert.com.br"
+              />
+
               <Style.PasswordDiv>
                 <FormikInput
                   type={showPassword ? 'text' : 'password'}
@@ -163,6 +173,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   placeholder="••••••••••"
                   maxLength={120}
                 />
+
                 {values.password && (
                   <IconButton
                     icon={showPassword ? icon.eye : icon.eyeGray}

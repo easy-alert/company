@@ -75,6 +75,11 @@ export const AccountDetails = () => {
         )}
 
         <Style.Card>
+          <h6>Link para chamado</h6>
+          <p className="p2">{account?.Company.supportLink ?? '-'}</p>
+        </Style.Card>
+
+        <Style.Card>
           <h6>Data de cadastro</h6>
           <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
         </Style.Card>
