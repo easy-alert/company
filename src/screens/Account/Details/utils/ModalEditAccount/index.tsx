@@ -157,7 +157,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               <FormikInput
                 label="Link para chamado"
                 name="supportLink"
-                value={values.supportLink}
+                value={values.supportLink ?? ''}
                 error={touched.supportLink && errors.supportLink ? errors.supportLink : null}
                 placeholder="Ex: https://easyalert.com.br"
               />
@@ -173,6 +173,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   placeholder="••••••••••"
                   maxLength={120}
                 />
+
                 {values.password && (
                   <IconButton
                     icon={showPassword ? icon.eye : icon.eyeGray}

@@ -22,7 +22,7 @@ export interface IAccount {
     CPF?: string;
     createdAt: string;
     image: string;
-    supportLink: string;
+    supportLink: string | null;
   };
 }
 
