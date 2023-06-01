@@ -10,6 +10,7 @@ interface IFormEditAccount {
   CPF: string;
   CNPJ: string;
   password: string;
+  supportLink: string | null;
 }
 
 export interface IModalEditAccount {
