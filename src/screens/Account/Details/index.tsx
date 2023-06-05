@@ -76,7 +76,15 @@ export const AccountDetails = () => {
 
         <Style.Card>
           <h6>Link para chamado</h6>
-          <p className="p2">{account?.Company.supportLink ?? '-'}</p>
+          <p className="p2 link">
+            {account?.Company.supportLink ? (
+              <a href={account?.Company.supportLink} target="_blank" rel="noreferrer">
+                {account?.Company.supportLink}
+              </a>
+            ) : (
+              '-'
+            )}
+          </p>
         </Style.Card>
 
         <Style.Card>

@@ -22,6 +22,10 @@ export const Card = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
 
+  .link {
+    word-break: break-all;
+  }
+
   > img {
     width: 80px;
     height: 80px;
@@ -32,12 +36,24 @@ export const Card = styled.div`
     margin-right: ${theme.size.xsm};
   }
 
+  > p {
+    width: 60%;
+
+    > a {
+      color: ${theme.color.black};
+    }
+  }
+
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
     gap: ${theme.size.xsm};
 
     > h6 {
+      width: 100%;
+    }
+
+    > p {
       width: 100%;
     }
   }
