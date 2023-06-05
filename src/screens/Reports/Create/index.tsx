@@ -92,7 +92,7 @@ export const CreateReport = () => {
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
           maintenanceHistoryId={maintenanceHistoryId}
-          setModalEditReport={setModalSendMaintenanceReportOpen}
+          setModalEditReport={setModalEditReport}
         />
       )}
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (

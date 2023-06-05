@@ -60,6 +60,7 @@ export const requestMaintenanceDetailsForEdit = async ({
   await Api.get(`maintenances/list/details/${maintenanceHistoryId}`)
     .then((res) => {
       setMaintenance(res.data);
+
       const report = res.data.MaintenanceReport[0];
 
       if (report) {
