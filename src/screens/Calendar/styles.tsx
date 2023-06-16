@@ -16,10 +16,17 @@ export const Header = styled.header`
     max-width: 300px;
   }
 
+  > :last-child {
+    margin-left: auto;
+  }
+
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
     gap: ${theme.size.xxsm};
+    > :last-child {
+      margin-left: 0;
+    }
   }
 `;
 

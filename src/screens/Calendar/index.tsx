@@ -9,6 +9,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+// import { icon } from '../../assets/icons';
 
 // STYLES
 import * as Style from './styles';
@@ -21,6 +22,8 @@ import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
 import { requestCalendarData } from './functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
+// import { IconButton } from '../../components/Buttons/IconButton';
+import { ModalCreateOccasionalMaintenance } from './utils/ModalCreateOccasionalMaintenance';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -29,6 +32,8 @@ export const MaintenancesCalendar = () => {
     useState<boolean>(false);
 
   const [modalMaintenanceDetailsOpen, setModalMaintenanceDetailsOpen] = useState<boolean>(false);
+  const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
+    useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -232,6 +237,25 @@ export const MaintenancesCalendar = () => {
           modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
+
+      {modalCreateOccasionalMaintenance && (
+        <ModalCreateOccasionalMaintenance
+          setModal={setModalCreateOccasionalMaintenance}
+          getCalendarData={async () =>
+            requestCalendarData({
+              setLoading,
+              setMaintenancesWeekView,
+              setMaintenancesMonthView,
+              setMaintenancesDisplay,
+              yearToRequest,
+              setYearChangeLoading,
+              setBuildingOptions,
+              buildingId,
+              calendarType,
+            })
+          }
+        />
+      )}
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
@@ -249,6 +273,12 @@ export const MaintenancesCalendar = () => {
               </option>
             ))}
           </select>
+
+          {/* <IconButton
+            icon={icon.plus}
+            label="Manutenção avulsa"
+            onClick={() => setModalCreateOccasionalMaintenance(true)}
+          /> */}
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper

@@ -127,6 +127,7 @@ export default createGlobalStyle`
       border: 1px solid ${theme.color.gray3};
     }
 
+
   }
   input[type=file],
   input[type=file]::-webkit-file-upload-button {
@@ -140,11 +141,21 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
+
+
   input[disabled],textarea[disabled],select[disabled] {
     cursor: not-allowed;
     background-color: ${theme.color.gray1};
     color: ${theme.color.gray4}
   }
+
+  input::-webkit-calendar-picker-indicator {
+   opacity: 0;
+  }
+
+
+
+
 
   textarea {
     font-weight: 400;
@@ -180,6 +191,7 @@ export default createGlobalStyle`
     height: 32px;
     border-radius: ${theme.size.xxsm};
     padding: 0 ${theme.size.sm};
+
     background-image: url(${icon.downArrow});
     background-repeat: no-repeat, repeat;
     background-position: right ${theme.size.sm} top 50%, 0 0;
