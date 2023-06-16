@@ -16,9 +16,9 @@ export const Header = styled.header`
     max-width: 300px;
   }
 
-  > :last-child {
+  /* > :last-child {
     margin-left: auto;
-  }
+  } */
 
   @media (max-width: 900px) {
     flex-direction: column;
