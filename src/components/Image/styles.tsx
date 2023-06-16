@@ -22,4 +22,6 @@ export const ImgHolder = styled.div<ImageProps>`
     ${({ width }) => width && `min-width:${width} ; width: ${width};`}
     ${({ height }) => height && `min-height: ${height}; height: ${height};`}
   }
+
+  z-index: 0;
 `;
