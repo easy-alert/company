@@ -27,6 +27,9 @@ import { applyMask, dateFormatter, uploadFile } from '../../../../utils/function
 import { requestMaintenanceDetailsForEdit, requestEditReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
+import { theme } from '../../../../styles/theme';
+import { requestDeleteMaintenanceHistory, requestReportsData } from '../functions';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
@@ -139,6 +142,10 @@ export const ModalEditMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
+
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+              <EventTag status="occasional" />
+            )}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>
@@ -288,28 +295,59 @@ export const ModalEditMaintenanceReport = ({
               </Style.FileAndImageRow>
             </Style.Row>
           </Style.Content>
-          <Button
-            label="Editar relato"
-            center
-            disable={onFileQuery || onImageQuery}
-            loading={onModalQuery}
-            onClick={() => {
-              requestEditReport({
-                setOnModalQuery,
-                maintenanceReport,
-                setModal,
-                files,
-                images,
-                origin: account?.origin ?? 'Company',
-                maintenanceHistoryId,
-                filters,
-                setCounts,
-                setLoading,
-                setMaintenances,
-                setOnQuery,
-              });
-            }}
-          />
+
+          <Style.ButtonContainer>
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+              <PopoverButton
+                actionButtonBgColor={theme.color.actionDanger}
+                borderless
+                type="Button"
+                label="Excluir"
+                message={{
+                  title: 'Deseja excluir este histórico de manutenção?',
+                  content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                  contentColor: theme.color.danger,
+                }}
+                actionButtonClick={() => {
+                  requestDeleteMaintenanceHistory({
+                    maintenanceHistoryId,
+                    setModal,
+                    requestReports: async () =>
+                      requestReportsData({
+                        filters,
+                        setCounts,
+                        setLoading,
+                        setMaintenances,
+                        setOnQuery,
+                      }),
+                    setModalLoading,
+                  });
+                }}
+              />
+            )}
+
+            <Button
+              label="Editar relato"
+              disable={onFileQuery || onImageQuery}
+              loading={onModalQuery}
+              onClick={() => {
+                requestEditReport({
+                  setOnModalQuery,
+                  maintenanceReport,
+                  setModal,
+                  files,
+                  images,
+                  origin: account?.origin ?? 'Company',
+                  maintenanceHistoryId,
+                  filters,
+                  setCounts,
+                  setLoading,
+                  setMaintenances,
+                  setOnQuery,
+                });
+              }}
+            />
+          </Style.ButtonContainer>
         </Style.Container>
       )}
     </Modal>

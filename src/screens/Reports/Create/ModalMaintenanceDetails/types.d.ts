@@ -1,4 +1,4 @@
-import { IMaintenance } from '../../types';
+import { IMaintenance } from '../../../Calendar/types';
 
 export interface IModalAdditionalInformations {
   id: string;

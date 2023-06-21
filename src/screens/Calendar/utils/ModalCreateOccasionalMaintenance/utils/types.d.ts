@@ -48,7 +48,7 @@ export interface ICreateOccasionalMaintenanceData {
 }
 
 export interface IRequestAuxiliaryDataForCreateOccasionalMaintenance {
-  setOnQuery: (setOnQuery: boolean) => void;
+  setLoading: (setOnQuery: boolean) => void;
   setAuxiliaryData: React.Dispatch<React.SetStateAction<IAuxiliaryData>>;
 }
 

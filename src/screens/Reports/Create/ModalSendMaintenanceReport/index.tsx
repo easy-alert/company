@@ -28,6 +28,9 @@ import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions'
 import { requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
+import { theme } from '../../../../styles/theme';
+import { requestDeleteMaintenanceHistory, requestReportsData } from '../functions';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -139,6 +142,9 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+              <EventTag status="occasional" />
+            )}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>
@@ -276,38 +282,68 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
-          {maintenance.canReport ? (
-            <Button
-              label="Enviar relato"
-              center
-              disable={onFileQuery || onImageQuery}
-              loading={onModalQuery}
-              onClick={() => {
-                requestSendReport({
-                  setOnModalQuery,
-                  maintenanceHistoryId,
-                  maintenanceReport,
-                  setModal,
-                  files,
-                  images,
-                  origin: account?.origin ?? 'Company',
-                  filters,
-                  setCounts,
-                  setLoading,
-                  setMaintenances,
-                  setOnQuery,
-                });
-              }}
-            />
-          ) : (
-            <Button
-              label="Fechar"
-              center
-              onClick={() => {
-                setModal(false);
-              }}
-            />
-          )}
+
+          <Style.ButtonContainer>
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+              <PopoverButton
+                actionButtonBgColor={theme.color.actionDanger}
+                borderless
+                type="Button"
+                label="Excluir"
+                message={{
+                  title: 'Deseja excluir este histórico de manutenção?',
+                  content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                  contentColor: theme.color.danger,
+                }}
+                actionButtonClick={() => {
+                  requestDeleteMaintenanceHistory({
+                    maintenanceHistoryId,
+                    setModal,
+                    requestReports: async () =>
+                      requestReportsData({
+                        filters,
+                        setCounts,
+                        setLoading,
+                        setMaintenances,
+                        setOnQuery,
+                      }),
+                    setModalLoading,
+                  });
+                }}
+              />
+            )}
+
+            {maintenance.canReport ? (
+              <Button
+                label="Enviar relato"
+                disable={onFileQuery || onImageQuery}
+                loading={onModalQuery}
+                onClick={() => {
+                  requestSendReport({
+                    setOnModalQuery,
+                    maintenanceHistoryId,
+                    maintenanceReport,
+                    setModal,
+                    files,
+                    images,
+                    origin: account?.origin ?? 'Company',
+                    filters,
+                    setCounts,
+                    setLoading,
+                    setMaintenances,
+                    setOnQuery,
+                  });
+                }}
+              />
+            ) : (
+              <Button
+                label="Fechar"
+                onClick={() => {
+                  setModal(false);
+                }}
+              />
+            )}
+          </Style.ButtonContainer>
         </Style.Container>
       )}
     </Modal>

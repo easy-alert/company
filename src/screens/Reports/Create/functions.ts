@@ -1,7 +1,12 @@
 import * as yup from 'yup';
+import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
-import { IRequestReportsData, IRequestReportsDataForSelect } from './types';
+import {
+  IRequestDeleteMaintenanceHistory,
+  IRequestReportsData,
+  IRequestReportsDataForSelect,
+} from './types';
 
 export const requestReportsData = async ({
   setOnQuery,
@@ -56,3 +61,27 @@ export const schemaReportFilter = yup
       .required('A data final é obrigatória.'),
   })
   .required();
+
+export const requestDeleteMaintenanceHistory = async ({
+  maintenanceHistoryId,
+  requestReports,
+  setModal,
+  setModalLoading,
+}: IRequestDeleteMaintenanceHistory) => {
+  setModalLoading(true);
+
+  await Api.delete(`/maintenances/occasional/delete/${maintenanceHistoryId}`)
+    .then((res) => {
+      requestReports();
+
+      setModalLoading(false);
+      toast.success(res.data.ServerMessage.message);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    })
+    .finally(() => {
+      setModal(false);
+      setModalLoading(false);
+    });
+};

@@ -58,6 +58,7 @@ export interface IMaintenanceReportData {
   observation: string | null;
   responsible: string | null;
   status: 'completed' | 'expired' | 'pending' | 'overdue';
+  type: 'common' | 'occasional' | null;
 }
 
 export interface IRequestReportsData {
@@ -71,4 +72,11 @@ export interface IRequestReportsData {
 export interface IRequestReportsDataForSelect {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setFiltersOptions: React.Dispatch<React.SetStateAction<IFiltersOptions | undefined>>;
+}
+
+export interface IRequestDeleteMaintenanceHistory {
+  maintenanceHistoryId: string;
+  requestReports: () => Promise<void>;
+  setModalLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setModal: (setModal: boolean) => void;
 }

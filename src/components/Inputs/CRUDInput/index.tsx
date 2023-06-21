@@ -49,19 +49,23 @@ export const CRUDInput = ({
         </select>
       ) : (
         <>
-          <Style.IconContainer>
-            <IconButton
-              disabled={disabled}
-              icon={icon.x}
-              size="16px"
-              onClick={() => {
-                setEditing(false);
-                inputProps.onXClick();
-              }}
-            />
-          </Style.IconContainer>
+          {value && (
+            <Style.IconContainer>
+              <IconButton
+                disabled={disabled}
+                icon={icon.x}
+                size="16px"
+                onClick={() => {
+                  setEditing(false);
+                  inputProps.onXClick();
+                }}
+              />
+            </Style.IconContainer>
+          )}
+
           <input
             disabled={disabled}
+            maxLength={inputProps.maxLength ?? 60}
             id={name}
             placeholder={inputProps.placeholder}
             value={value}

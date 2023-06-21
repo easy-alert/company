@@ -105,3 +105,11 @@ export const Tag = styled.div`
   border-radius: ${theme.size.xxsm};
   gap: ${theme.size.xsm};
 `;
+
+export const TagContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  gap: ${theme.size.xxsm};
+  flex-direction: column;
+`;
