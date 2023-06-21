@@ -49,7 +49,7 @@ export const CRUDInput = ({
         </select>
       ) : (
         <>
-          {value && (
+          {(value || selectProps.options.length > 0) && (
             <Style.IconContainer>
               <IconButton
                 disabled={disabled}
