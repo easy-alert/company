@@ -52,6 +52,9 @@ export const ModalMaintenanceDetails = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+              <EventTag status="occasional" />
+            )}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>
@@ -169,18 +172,10 @@ export const ModalMaintenanceDetails = ({
 
           <Style.ButtonContainer>
             <Button
-              borderless
               label="Editar relato"
               onClick={() => {
                 setModal(false);
                 setModalEditReport(true);
-              }}
-            />
-
-            <Button
-              label="Fechar"
-              onClick={() => {
-                setModal(false);
               }}
             />
           </Style.ButtonContainer>

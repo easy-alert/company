@@ -79,6 +79,8 @@ export const requestCalendarData = async ({
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
               <EventTag status={e.MaintenancesStatus.name} />
+              {/* {show occasional maintenance tag } */}
+              {e.Maintenance.frequency < 1 && <EventTag status="occasional" />}
             </div>
 
             <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
@@ -87,12 +89,15 @@ export const requestCalendarData = async ({
             <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
               {e.Maintenance.element}
             </div>
-            <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
-              A cada {e.Maintenance.frequency}{' '}
-              {e.Maintenance.frequency > 1
-                ? e.Maintenance.FrequencyTimeInterval.pluralLabel
-                : e.Maintenance.FrequencyTimeInterval.singularLabel}
-            </div>
+            {/* {occult frequency of occasional maintenances } */}
+            {e.Maintenance.frequency >= 1 && (
+              <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
+                A cada {e.Maintenance.frequency}{' '}
+                {e.Maintenance.frequency > 1
+                  ? e.Maintenance.FrequencyTimeInterval.pluralLabel
+                  : e.Maintenance.FrequencyTimeInterval.singularLabel}
+              </div>
+            )}
           </div>
         ),
         start: new Date(e.notificationDate),

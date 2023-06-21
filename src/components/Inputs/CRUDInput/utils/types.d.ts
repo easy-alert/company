@@ -14,6 +14,7 @@ export interface IDataList extends InputHTMLAttributes<HTMLInputElement> {
 
   input: {
     placeholder: string;
+    maxLength?: number;
     getEvtValue: (value: string) => void;
     onXClick: () => void;
   };

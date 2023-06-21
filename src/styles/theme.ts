@@ -12,6 +12,7 @@ export const theme = {
     dangerM: '#FF6D4C',
     dangerL: '#FFC0B3',
     actionDanger: '#FF3508',
+    actionBlue: '#28A5FF',
 
     warning: '#FFB200',
     warningL: '#FFE8B3',

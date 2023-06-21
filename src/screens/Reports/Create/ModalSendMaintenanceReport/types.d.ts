@@ -1,5 +1,6 @@
-import { IMaintenance, AnnexesAndImages } from '../../types';
 import { IMaintenanceReportData } from '../types';
+
+import { IMaintenance } from '../../../Calendar/types';
 
 export interface IModalSendMaintenanceReport {
   setModal: (setModal: boolean) => void;

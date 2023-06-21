@@ -441,7 +441,6 @@ export const CreateReport = () => {
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>
-
             <ReportDataTable
               colsHeader={[
                 { label: 'Status' },
@@ -458,7 +457,14 @@ export const CreateReport = () => {
                 <ReportDataTableContent
                   key={maintenance.id}
                   colsBody={[
-                    { cell: <EventTag status={maintenance.status} /> },
+                    {
+                      cell: (
+                        <s.TagContainer>
+                          <EventTag status={maintenance.status} />
+                          {maintenance.type === 'occasional' && <EventTag status="occasional" />}
+                        </s.TagContainer>
+                      ),
+                    },
 
                     { cell: maintenance.buildingName },
                     { cell: maintenance.categoryName },

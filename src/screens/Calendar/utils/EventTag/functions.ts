@@ -18,6 +18,10 @@ export const getStatusName = (status: string) => {
       statusName = 'Feita em atraso';
       break;
 
+    case 'occasional':
+      statusName = 'Avulsa';
+      break;
+
     default:
       break;
   }

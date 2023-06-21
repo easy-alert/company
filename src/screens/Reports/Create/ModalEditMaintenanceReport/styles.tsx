@@ -144,3 +144,10 @@ export const LoadingContainer = styled.div`
   justify-content: center;
   min-height: 600px;
 `;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+  justify-content: center;
+`;

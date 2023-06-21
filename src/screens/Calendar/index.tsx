@@ -187,13 +187,21 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
+    if (
+      !modalSendMaintenanceReportOpen &&
+      !modalCreateOccasionalMaintenance &&
+      !yearChangeloading
+    ) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
+    if (
+      !modalSendMaintenanceReportOpen &&
+      !modalCreateOccasionalMaintenance &&
+      !yearChangeloading
+    ) {
       onView('month');
     }
   });
