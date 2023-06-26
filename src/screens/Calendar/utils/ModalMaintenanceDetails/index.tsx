@@ -49,6 +49,9 @@ export const ModalMaintenanceDetails = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+              <EventTag status="occasional" />
+            )}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>

@@ -110,6 +110,9 @@ export interface Maintenance {
   observation: string;
   responsible: string;
   source: string;
+  MaintenanceType: {
+    name: string;
+  };
 }
 
 export interface IMaintenance {

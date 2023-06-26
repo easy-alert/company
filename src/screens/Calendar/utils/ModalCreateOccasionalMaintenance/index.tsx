@@ -28,7 +28,7 @@ import {
 // FUNCTIONS
 import { ModalCreateOccasionalMaintenanceInstructions } from './ModalCreateOccasionalMaintenance';
 import {
-  findCategoryByid,
+  findCategoryById,
   requestAuxiliaryDataForCreateOccasionalMaintenance,
   requestCreateOccasionalMaintenance,
 } from './utils/functions';
@@ -41,7 +41,8 @@ export const ModalCreateOccasionalMaintenance = ({
   setModal,
   getCalendarData,
 }: IModalCreateOccasionalMaintenance) => {
-  const [onQuery, setOnQuery] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const { account } = useAuthContext();
@@ -96,7 +97,7 @@ export const ModalCreateOccasionalMaintenance = ({
   });
 
   useEffect(() => {
-    requestAuxiliaryDataForCreateOccasionalMaintenance({ setAuxiliaryData, setOnQuery });
+    requestAuxiliaryDataForCreateOccasionalMaintenance({ setAuxiliaryData, setLoading });
   }, []);
 
   useEffect(() => {
@@ -156,7 +157,7 @@ export const ModalCreateOccasionalMaintenance = ({
 
   return (
     <Modal title="Manutenção avulsa" setModal={setModal}>
-      {onQuery ? (
+      {loading ? (
         <Style.OnQueryContainer>
           <DotSpinLoading />
         </Style.OnQueryContainer>
@@ -179,9 +180,8 @@ export const ModalCreateOccasionalMaintenance = ({
               </option>
             ))}
           </Select>
-
           <CRUDInput
-            label="Categoria"
+            label="Categoria *"
             value={data.categoryData.name}
             select={{
               getEvtValue: (value) =>
@@ -190,8 +190,14 @@ export const ModalCreateOccasionalMaintenance = ({
                   categoryData: {
                     id: value,
                     name:
-                      findCategoryByid({ id: value, categoriesData: auxiliaryData.Categories })
+                      findCategoryById({ id: value, categoriesData: auxiliaryData.Categories })
                         ?.name ?? '',
+                  },
+                  maintenanceData: {
+                    id: '',
+                    activity: '',
+                    element: '',
+                    responsible: '',
                   },
                 })),
               createLabel: 'Criar categoria',
@@ -217,17 +223,23 @@ export const ModalCreateOccasionalMaintenance = ({
                     id: '',
                     name: '',
                   },
+                  maintenanceData: {
+                    id: '',
+                    activity: '',
+                    element: '',
+                    responsible: '',
+                  },
                 })),
             }}
           />
 
           <CRUDInput
-            label="Manutenção"
+            label="Elemento *"
             disabled={!data.categoryData.name}
             value={data.maintenanceData.element}
             select={{
               getEvtValue: (value) => {
-                const maintenance = findCategoryByid({
+                const maintenance = findCategoryById({
                   id: data.categoryData.id,
                   categoriesData: auxiliaryData.Categories,
                 })?.Maintenances.find((maintenanceData) => maintenanceData.id === value);
@@ -247,7 +259,7 @@ export const ModalCreateOccasionalMaintenance = ({
 
               createLabel: 'Criar manutenção',
               options:
-                findCategoryByid({
+                findCategoryById({
                   id: data.categoryData.id,
                   categoriesData: auxiliaryData.Categories,
                 })?.Maintenances.map((maintenance) => ({
@@ -304,7 +316,7 @@ export const ModalCreateOccasionalMaintenance = ({
           />
 
           <Input
-            label="Data de execução"
+            label="Data de execução *"
             type="date"
             value={data.executionDate}
             onChange={(evt) =>
@@ -433,6 +445,7 @@ export const ModalCreateOccasionalMaintenance = ({
           )}
           <Style.ButtonContainer>
             <Button
+              loading={onQuery}
               disable={onQuery || onFileQuery}
               label="Confirmar"
               center

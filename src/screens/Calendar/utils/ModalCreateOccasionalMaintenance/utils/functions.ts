@@ -15,6 +15,14 @@ export const requestCreateOccasionalMaintenance = async ({
   getCalendarData,
   data: { buildingId, executionDate, maintenanceData, categoryData, reportData },
 }: IRequestCreateOccasionalMaintenance) => {
+  if (!buildingId) return toast.error('Edificação não informada.');
+  if (!categoryData) return toast.error('Categoria não informada.');
+  if (!categoryData.name) return toast.error('Nome da categoria não informado.');
+  if (!maintenanceData.element) return toast.error('Nome da manutenção não informado.');
+  if (!maintenanceData.activity) return toast.error('Atividade não informada.');
+  if (!maintenanceData.responsible) return toast.error('Nome do reponsável não informado.');
+  if (!executionDate) return toast.error('Data de execução não informada.');
+
   setOnQuery(true);
 
   await Api.post('/buildings/reports/occasional/create', {
@@ -53,28 +61,27 @@ export const requestCreateOccasionalMaintenance = async ({
 
       catchHandler(err);
     });
+  return null;
 };
 
 export const requestAuxiliaryDataForCreateOccasionalMaintenance = async ({
   setAuxiliaryData,
-  setOnQuery,
+  setLoading,
 }: IRequestAuxiliaryDataForCreateOccasionalMaintenance) => {
-  setOnQuery(true);
-
   await Api.get('/buildings/maintenances/occasional/auxiliarydata')
 
     .then((res) => {
       setAuxiliaryData(res.data);
-      setOnQuery(false);
+      setLoading(false);
     })
     .catch((err) => {
-      setOnQuery(false);
+      setLoading(false);
 
       catchHandler(err);
     });
 };
 
-export const findCategoryByid = ({
+export const findCategoryById = ({
   id,
   categoriesData,
 }: {

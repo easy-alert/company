@@ -149,14 +149,6 @@ export default createGlobalStyle`
     color: ${theme.color.gray4}
   }
 
-  input::-webkit-calendar-picker-indicator {
-   opacity: 0;
-  }
-
-
-
-
-
   textarea {
     font-weight: 400;
     font-size: 14px;

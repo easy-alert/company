@@ -9,7 +9,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-// import { icon } from '../../assets/icons';
+import { icon } from '../../assets/icons';
 
 // STYLES
 import * as Style from './styles';
@@ -22,7 +22,7 @@ import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
 import { requestCalendarData } from './functions';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
-// import { IconButton } from '../../components/Buttons/IconButton';
+import { IconButton } from '../../components/Buttons/IconButton';
 import { ModalCreateOccasionalMaintenance } from './utils/ModalCreateOccasionalMaintenance';
 
 export const MaintenancesCalendar = () => {
@@ -187,13 +187,21 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
 
   useKeyPressEvent('w', () => {
-    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
+    if (
+      !modalSendMaintenanceReportOpen &&
+      !modalCreateOccasionalMaintenance &&
+      !yearChangeloading
+    ) {
       onView('week');
     }
   });
 
   useKeyPressEvent('m', () => {
-    if (!modalSendMaintenanceReportOpen && !yearChangeloading) {
+    if (
+      !modalSendMaintenanceReportOpen &&
+      !modalCreateOccasionalMaintenance &&
+      !yearChangeloading
+    ) {
       onView('month');
     }
   });
@@ -274,11 +282,11 @@ export const MaintenancesCalendar = () => {
             ))}
           </select>
 
-          {/* <IconButton
+          <IconButton
             icon={icon.plus}
             label="Manutenção avulsa"
             onClick={() => setModalCreateOccasionalMaintenance(true)}
-          /> */}
+          />
         </Style.Header>
         <Style.CalendarScroll>
           <Style.CalendarWrapper
