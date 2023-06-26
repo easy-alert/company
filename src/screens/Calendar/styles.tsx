@@ -9,15 +9,15 @@ export const Container = styled.header`
 export const Header = styled.header`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
   margin-bottom: ${theme.size.sm};
-
-  > select {
-    max-width: 300px;
-  }
+  gap: ${theme.size.sm};
 
   > :last-child {
     margin-left: auto;
+  }
+
+  > select {
+    max-width: 300px;
   }
 
   @media (max-width: 900px) {
