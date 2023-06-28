@@ -83,7 +83,6 @@ export const ModalCreateOccasionalMaintenance = ({
     },
 
     maintenanceData: {
-      id: '',
       element: '',
       activity: '',
       responsible: '',
@@ -180,6 +179,7 @@ export const ModalCreateOccasionalMaintenance = ({
               </option>
             ))}
           </Select>
+
           <CRUDInput
             label="Categoria *"
             value={data.categoryData.name}
@@ -248,7 +248,6 @@ export const ModalCreateOccasionalMaintenance = ({
                   ...prevState,
                   maintenanceData: {
                     ...prevState.maintenanceData,
-                    id: value,
                     element: maintenance?.element ?? '',
                     responsible: maintenance?.responsible ?? '',
                     activity: maintenance?.activity ?? '',
@@ -281,7 +280,6 @@ export const ModalCreateOccasionalMaintenance = ({
                 setData((prevState) => ({
                   ...prevState,
                   maintenanceData: {
-                    id: '',
                     element: '',
                     activity: '',
                     responsible: '',
