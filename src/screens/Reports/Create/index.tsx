@@ -70,7 +70,7 @@ export const CreateReport = () => {
     startDate: '',
     endDate: '',
     maintenanceStatusIds: [],
-    categoryIds: [],
+    categoryNames: [],
     buildingIds: [],
   });
 
@@ -127,7 +127,6 @@ export const CreateReport = () => {
 
       <s.Container>
         <h2>Relatórios</h2>
-
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -142,7 +141,7 @@ export const CreateReport = () => {
 
               setFilterforRequest({
                 buildingIds: buildingsForFilter.map((e) => e.id),
-                categoryIds: categoriesForFilter.map((e) => e.id),
+                categoryNames: categoriesForFilter.map((e) => e.name),
                 maintenanceStatusIds: statusForFilter.map((e) => e.id),
                 endDate: values.endDate,
                 startDate: values.startDate,
@@ -173,7 +172,7 @@ export const CreateReport = () => {
                 setLoading,
                 filters: {
                   buildingIds: buildingsForFilter.map((e) => e.id),
-                  categoryIds: categoriesForFilter.map((e) => e.id),
+                  categoryNames: categoriesForFilter.map((e) => e.name),
                   maintenanceStatusIds: statusForFilter.map((e) => e.id),
                   startDate: values.startDate,
                   endDate: values.endDate,

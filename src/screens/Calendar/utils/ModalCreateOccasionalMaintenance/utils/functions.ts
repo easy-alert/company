@@ -30,12 +30,10 @@ export const requestCreateOccasionalMaintenance = async ({
     origin,
     executionDate: new Date(new Date(executionDate).setUTCHours(3, 0, 0, 0)) || null,
     categoryData: {
-      id: categoryData.id || null,
       name: categoryData.name || null,
     },
     maintenanceData: {
       ...maintenanceData,
-      id: maintenanceData.id || null,
       element: maintenanceData.element || null,
       activity: maintenanceData.activity || null,
       responsible: maintenanceData.responsible || null,

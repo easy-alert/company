@@ -17,9 +17,8 @@ export const requestReportsData = async ({
 }: IRequestReportsData) => {
   setOnQuery(true);
   setMaintenances([]);
-
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryIds=${filters.categoryIds}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
+    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
   )
     .then((res) => {
       setMaintenances(res.data.maintenances);
