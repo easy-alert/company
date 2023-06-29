@@ -242,7 +242,7 @@ export const ModalCreateOccasionalMaintenance = ({
                 const maintenance = findCategoryById({
                   id: data.categoryData.id,
                   categoriesData: auxiliaryData.Categories,
-                })?.Maintenances.find((maintenanceData) => maintenanceData.id === value);
+                })?.Maintenances?.find((maintenanceData) => maintenanceData.id === value);
 
                 setData((prevState) => ({
                   ...prevState,
@@ -261,7 +261,7 @@ export const ModalCreateOccasionalMaintenance = ({
                 findCategoryById({
                   id: data.categoryData.id,
                   categoriesData: auxiliaryData.Categories,
-                })?.Maintenances.map((maintenance) => ({
+                })?.Maintenances?.map((maintenance) => ({
                   value: maintenance.id,
                   label: maintenance.element,
                 })) || [],
