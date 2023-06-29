@@ -28,7 +28,6 @@ export interface ICreateOccasionalMaintenanceData {
   executionDate: string;
 
   maintenanceData: {
-    id: string;
     element: string;
     activity: string;
     responsible: string;
