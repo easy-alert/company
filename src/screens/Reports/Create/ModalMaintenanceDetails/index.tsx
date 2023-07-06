@@ -87,6 +87,17 @@ export const ModalMaintenanceDetails = ({
               <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
             </Style.Row>
 
+            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+              <Style.Row>
+                <h6>Periodicidade</h6>
+                <p className="p2">
+                  {maintenance.Maintenance.frequency > 1
+                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
+                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}
+                </p>
+              </Style.Row>
+            )}
+
             <Style.Row>
               <h6>Data de notificação</h6>
               <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>

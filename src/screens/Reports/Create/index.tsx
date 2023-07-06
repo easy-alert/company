@@ -22,7 +22,7 @@ import {
   IFiltersOptions,
   IMaintenanceReportData,
 } from './types';
-import { applyMask, capitalizeFirstLetter } from '../../../utils/functions';
+import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
@@ -448,7 +448,7 @@ export const CreateReport = () => {
                 { label: 'Elemento' },
                 { label: 'Atividade' },
                 { label: 'Responsável' },
-                { label: 'Observação' },
+                { label: 'Data de notificação' },
                 { label: 'Valor' },
               ]}
             >
@@ -459,6 +459,7 @@ export const CreateReport = () => {
                     {
                       cell: (
                         <s.TagContainer>
+                          {maintenance.status === 'overdue' && <EventTag status="completed" />}
                           <EventTag status={maintenance.status} />
                           {maintenance.type === 'occasional' && <EventTag status="occasional" />}
                         </s.TagContainer>
@@ -470,7 +471,7 @@ export const CreateReport = () => {
                     { cell: maintenance.element },
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: maintenance.observation ?? '-' },
+                    { cell: dateFormatter(maintenance.notificationDate) },
                     {
                       cell:
                         maintenance.cost !== null
