@@ -9,6 +9,7 @@ export interface IModalAdditionalInformations {
 
 export interface IModalMaintenanceDetails {
   setModal: (setModal: boolean) => void;
+  setModalEditReport: (setModal: boolean) => void;
   modalAdditionalInformations: IModalAdditionalInformations;
 }
 

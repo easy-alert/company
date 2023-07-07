@@ -1,15 +1,9 @@
 import { IMaintenance, AnnexesAndImages } from '../../types';
-import { IMaintenanceReportData, IFilterforRequest } from '../types';
 
 export interface IModalEditMaintenanceReport {
   setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
-
-  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  filters: IFilterforRequest;
+  onThenActionRequest: () => Promise<void>;
 }
 
 export interface IMaintenanceReport {
@@ -26,12 +20,7 @@ export interface IRequestEditReport {
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
   origin: 'Backoffice' | 'Company' | 'Client';
-
-  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  filters: IFilterforRequest;
+  onThenRequest: () => Promise<void>;
 }
 
 export interface IRequestMaintenanceDetailsForEdit {

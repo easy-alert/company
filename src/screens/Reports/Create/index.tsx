@@ -108,13 +108,17 @@ export const CreateReport = () => {
       )}
       {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
+          onThenActionRequest={async () =>
+            requestReportsData({
+              filters: filterforRequest,
+              setCounts,
+              setLoading,
+              setMaintenances,
+              setOnQuery,
+            })
+          }
           setModal={setModalEditReport}
           maintenanceHistoryId={maintenanceHistoryId}
-          filters={filterforRequest}
-          setCounts={setCounts}
-          setLoading={setLoading}
-          setMaintenances={setMaintenances}
-          setOnQuery={setOnQuery}
         />
       )}
       {modalPrintReportOpen && (

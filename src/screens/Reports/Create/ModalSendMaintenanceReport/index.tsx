@@ -294,13 +294,13 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
-
           <Style.ButtonContainer>
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
                 type="Button"
+                disabled={onModalQuery}
                 label="Excluir"
                 message={{
                   title: 'Deseja excluir este histórico de manutenção?',
@@ -311,7 +311,7 @@ export const ModalSendMaintenanceReport = ({
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
                     setModal,
-                    requestReports: async () =>
+                    onThenRequest: async () =>
                       requestReportsData({
                         filters,
                         setCounts,
@@ -319,7 +319,7 @@ export const ModalSendMaintenanceReport = ({
                         setMaintenances,
                         setOnQuery,
                       }),
-                    setModalLoading,
+                    setOnModalQuery,
                   });
                 }}
               />
@@ -328,7 +328,7 @@ export const ModalSendMaintenanceReport = ({
             {maintenance.canReport ? (
               <Button
                 label="Enviar relato"
-                disable={onFileQuery || onImageQuery}
+                disable={onFileQuery || onImageQuery || onModalQuery}
                 loading={onModalQuery}
                 onClick={() => {
                   requestSendReport({

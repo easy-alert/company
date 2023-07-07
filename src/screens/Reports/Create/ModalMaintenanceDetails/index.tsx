@@ -185,8 +185,8 @@ export const ModalMaintenanceDetails = ({
             <Button
               label="Editar relato"
               onClick={() => {
-                setModal(false);
                 setModalEditReport(true);
+                setModal(false);
               }}
             />
           </Style.ButtonContainer>
