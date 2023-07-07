@@ -51,6 +51,15 @@ export const Sidebar = () => {
         navigate('/report/create');
       },
     },
+
+    {
+      icon: icon.tutorial,
+      url: '/tutorials',
+      redirectFunction: () => {
+        navigate('/tutorials');
+      },
+    },
+
     {
       icon: icon.gear,
       url: '/account',
@@ -58,6 +67,7 @@ export const Sidebar = () => {
         navigate('/account');
       },
     },
+
     {
       icon: icon.power,
       url: '/login',
