@@ -37,6 +37,9 @@ import { TermsOfUse } from './screens/TermsOfUse';
 import { SendPasswordRecoverEmail } from './screens/Authentication/SendPasswordRecoverEmail';
 import { RecoverPassword } from './screens/Authentication/RecoverPassword';
 
+// TUTORIALS
+import { Tutorials } from './screens/Tutorials';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
@@ -61,6 +64,8 @@ const AppRoutes = () => (
           }
         >
           <Route path="/account" element={<AccountDetails />} />
+
+          <Route path="/tutorials" element={<Tutorials />} />
 
           <Route path="/maintenances" element={<MaintenancesList />} />
 

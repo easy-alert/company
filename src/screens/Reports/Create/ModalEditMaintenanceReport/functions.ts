@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
 import { IRequestMaintenanceDetailsForEdit, IRequestEditReport } from './types';
-import { requestReportsData } from '../functions';
 
 export const requestEditReport = async ({
   maintenanceReport,
@@ -12,11 +11,7 @@ export const requestEditReport = async ({
   images,
   setOnModalQuery,
   origin,
-  filters,
-  setCounts,
-  setLoading,
-  setMaintenances,
-  setOnQuery,
+  onThenRequest,
 }: IRequestEditReport) => {
   setOnModalQuery(true);
 
@@ -30,13 +25,7 @@ export const requestEditReport = async ({
     ReportImages: images,
   })
     .then((res) => {
-      requestReportsData({
-        setOnQuery,
-        setCounts,
-        setMaintenances,
-        setLoading,
-        filters,
-      });
+      onThenRequest();
 
       toast.success(res.data.ServerMessage.message);
       setModal(false);

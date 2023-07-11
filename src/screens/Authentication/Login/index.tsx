@@ -1,5 +1,5 @@
 // LIBS
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
@@ -30,8 +30,18 @@ export const Login = () => {
   const navigate = useNavigate();
   const { signin } = useAuthContext();
   const [onQuery, setOnQuery] = useState<boolean>(false);
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [viewedTutorial, setViewedTutorial] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (
+      !localStorage.getItem('viewedTutorial') ||
+      localStorage.getItem('viewedTutorial') === 'false'
+    ) {
+      localStorage.setItem('viewedTutorial', 'false');
+      setViewedTutorial(false);
+    }
+  }, []);
 
   return (
     <Style.Background>
@@ -47,7 +57,12 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/calendar');
+
+              if (!viewedTutorial) {
+                navigate('/tutorials', { state: { from: 'login' } });
+              } else {
+                navigate('/calendar');
+              }
             })
             .catch((err) => {
               setOnQuery(false);

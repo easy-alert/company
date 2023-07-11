@@ -76,7 +76,7 @@ export interface IRequestReportsDataForSelect {
 
 export interface IRequestDeleteMaintenanceHistory {
   maintenanceHistoryId: string;
-  requestReports: () => Promise<void>;
-  setModalLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  onThenRequest: () => Promise<void>;
+  setOnModalQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setModal: (setModal: boolean) => void;
 }

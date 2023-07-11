@@ -29,16 +29,12 @@ import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
-import { requestDeleteMaintenanceHistory, requestReportsData } from '../functions';
+import { requestDeleteMaintenanceHistory } from '../functions';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
-  filters,
-  setCounts,
-  setLoading,
-  setMaintenances,
-  setOnQuery,
+  onThenActionRequest,
 }: IModalEditMaintenanceReport) => {
   const { account } = useAuthContext();
 
@@ -172,6 +168,18 @@ export const ModalEditMaintenanceReport = ({
               <h6>Observação da manutenção</h6>
               <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
             </Style.Row>
+
+            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+              <Style.Row>
+                <h6>Periodicidade</h6>
+                <p className="p2">
+                  {maintenance.Maintenance.frequency > 1
+                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
+                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}
+                </p>
+              </Style.Row>
+            )}
+
             <Style.Row>
               <h6>Data de notificação</h6>
               <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
@@ -301,6 +309,7 @@ export const ModalEditMaintenanceReport = ({
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
+                disabled={onModalQuery}
                 type="Button"
                 label="Excluir"
                 message={{
@@ -312,15 +321,8 @@ export const ModalEditMaintenanceReport = ({
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
                     setModal,
-                    requestReports: async () =>
-                      requestReportsData({
-                        filters,
-                        setCounts,
-                        setLoading,
-                        setMaintenances,
-                        setOnQuery,
-                      }),
-                    setModalLoading,
+                    onThenRequest: async () => onThenActionRequest(),
+                    setOnModalQuery,
                   });
                 }}
               />
@@ -328,7 +330,7 @@ export const ModalEditMaintenanceReport = ({
 
             <Button
               label="Editar relato"
-              disable={onFileQuery || onImageQuery}
+              disable={onFileQuery || onImageQuery || onModalQuery}
               loading={onModalQuery}
               onClick={() => {
                 requestEditReport({
@@ -339,11 +341,8 @@ export const ModalEditMaintenanceReport = ({
                   images,
                   origin: account?.origin ?? 'Company',
                   maintenanceHistoryId,
-                  filters,
-                  setCounts,
-                  setLoading,
-                  setMaintenances,
-                  setOnQuery,
+
+                  onThenRequest: async () => onThenActionRequest(),
                 });
               }}
             />

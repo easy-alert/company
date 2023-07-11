@@ -171,6 +171,18 @@ export const ModalSendMaintenanceReport = ({
               <h6>Observação da manutenção</h6>
               <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
             </Style.Row>
+
+            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+              <Style.Row>
+                <h6>Periodicidade</h6>
+                <p className="p2">
+                  {maintenance.Maintenance.frequency > 1
+                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
+                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}
+                </p>
+              </Style.Row>
+            )}
+
             <Style.Row>
               <h6>Data de notificação</h6>
               <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
@@ -282,13 +294,13 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
-
           <Style.ButtonContainer>
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
                 type="Button"
+                disabled={onModalQuery}
                 label="Excluir"
                 message={{
                   title: 'Deseja excluir este histórico de manutenção?',
@@ -299,7 +311,7 @@ export const ModalSendMaintenanceReport = ({
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
                     setModal,
-                    requestReports: async () =>
+                    onThenRequest: async () =>
                       requestReportsData({
                         filters,
                         setCounts,
@@ -307,7 +319,7 @@ export const ModalSendMaintenanceReport = ({
                         setMaintenances,
                         setOnQuery,
                       }),
-                    setModalLoading,
+                    setOnModalQuery,
                   });
                 }}
               />
@@ -316,7 +328,7 @@ export const ModalSendMaintenanceReport = ({
             {maintenance.canReport ? (
               <Button
                 label="Enviar relato"
-                disable={onFileQuery || onImageQuery}
+                disable={onFileQuery || onImageQuery || onModalQuery}
                 loading={onModalQuery}
                 onClick={() => {
                   requestSendReport({

@@ -48,6 +48,7 @@ import downloadRed from './downloadRed.svg';
 import pdfLogo from './pdfLogo.svg';
 import plusWhite from './plusWhite.svg';
 import editWhite from './editWhite.svg';
+import tutorial from './tutorial.svg';
 
 export const icon = {
   leftArrow,
@@ -100,4 +101,5 @@ export const icon = {
   pdfLogo,
   plusWhite,
   editWhite,
+  tutorial,
 };

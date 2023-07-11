@@ -63,17 +63,14 @@ export const schemaReportFilter = yup
 
 export const requestDeleteMaintenanceHistory = async ({
   maintenanceHistoryId,
-  requestReports,
+  onThenRequest,
   setModal,
-  setModalLoading,
+  setOnModalQuery,
 }: IRequestDeleteMaintenanceHistory) => {
-  setModalLoading(true);
-
+  setOnModalQuery(true);
   await Api.delete(`/maintenances/occasional/delete/${maintenanceHistoryId}`)
     .then((res) => {
-      requestReports();
-
-      setModalLoading(false);
+      onThenRequest();
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {
@@ -81,6 +78,6 @@ export const requestDeleteMaintenanceHistory = async ({
     })
     .finally(() => {
       setModal(false);
-      setModalLoading(false);
+      setOnModalQuery(false);
     });
 };

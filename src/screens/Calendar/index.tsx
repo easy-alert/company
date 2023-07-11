@@ -24,12 +24,15 @@ import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 import { IconButton } from '../../components/Buttons/IconButton';
 import { ModalCreateOccasionalMaintenance } from './utils/ModalCreateOccasionalMaintenance';
+import { ModalEditMaintenanceReport } from '../Reports/Create/ModalEditMaintenanceReport';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
     useState<boolean>(false);
+
+  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
   const [modalMaintenanceDetailsOpen, setModalMaintenanceDetailsOpen] = useState<boolean>(false);
   const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
@@ -137,6 +140,8 @@ export const MaintenancesCalendar = () => {
 
   const onSelectEvent = useCallback(
     (event: any) => {
+      if (yearChangeloading) return;
+
       if (calendarType === 'week') {
         setModalAdditionalInformations({
           id: event.id,
@@ -168,6 +173,7 @@ export const MaintenancesCalendar = () => {
       setDate,
       modalAdditionalInformations,
       setModalAdditionalInformations,
+      yearChangeloading,
     ],
   );
 
@@ -237,11 +243,25 @@ export const MaintenancesCalendar = () => {
           setBuildingOptions={setBuildingOptions}
           buildingId={buildingId}
           calendarType={calendarType}
+          onThenActionRequest={async () =>
+            requestCalendarData({
+              setLoading,
+              setMaintenancesWeekView,
+              setMaintenancesMonthView,
+              setMaintenancesDisplay,
+              yearToRequest,
+              setYearChangeLoading,
+              setBuildingOptions,
+              buildingId,
+              calendarType,
+            })
+          }
         />
       )}
       {modalMaintenanceDetailsOpen && modalAdditionalInformations.id && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetailsOpen}
+          setModalEditReport={setModalEditReport}
           modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
@@ -264,6 +284,27 @@ export const MaintenancesCalendar = () => {
           }
         />
       )}
+
+      {modalEditReport && modalAdditionalInformations.id && (
+        <ModalEditMaintenanceReport
+          onThenActionRequest={async () =>
+            requestCalendarData({
+              setLoading,
+              setMaintenancesWeekView,
+              setMaintenancesMonthView,
+              setMaintenancesDisplay,
+              yearToRequest,
+              setYearChangeLoading,
+              setBuildingOptions,
+              buildingId,
+              calendarType,
+            })
+          }
+          setModal={setModalEditReport}
+          maintenanceHistoryId={modalAdditionalInformations.id}
+        />
+      )}
+
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
