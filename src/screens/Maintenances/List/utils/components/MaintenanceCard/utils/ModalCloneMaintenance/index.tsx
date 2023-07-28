@@ -96,7 +96,7 @@ export const ModalCloneMaintenance = ({
                 error={touched.activity && errors.activity ? errors.activity : null}
                 placeholder="Ex: Verificar sua integridade e reconstruir os rejuntamentos internos e externos dos pisos"
                 height="82px"
-                maxLength={300}
+                maxLength={400}
               />
               <Style.SelectWrapper>
                 <FormikInput
@@ -159,7 +159,7 @@ export const ModalCloneMaintenance = ({
                 value={values.observation}
                 error={touched.observation && errors.observation ? errors.observation : null}
                 placeholder="Ex: Atenção no acabamento"
-                maxLength={200}
+                maxLength={400}
               />
               <Style.SelectWrapper>
                 <FormikInput
