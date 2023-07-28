@@ -130,7 +130,7 @@ export const ModalManageBanners = ({
       <Style.Container>
         <Input
           label="Nome do banner *"
-          maxLength={50}
+          maxLength={100}
           value={bannerName}
           placeholder="Ex: Foto do Edifício"
           onChange={(e) => {
@@ -139,7 +139,7 @@ export const ModalManageBanners = ({
         />
         <Input
           label="Link do banner"
-          maxLength={300}
+          maxLength={600}
           value={bannerLink ?? ''}
           placeholder="Ex: https://easyalert.com.br"
           onChange={(e) => {

@@ -210,7 +210,7 @@ export const ModalSendMaintenanceReport = ({
                 <TextArea
                   label="Observação do relato"
                   placeholder="Digite aqui"
-                  maxLength={300}
+                  maxLength={600}
                   value={maintenanceReport.observation}
                   onChange={(e) => {
                     setMaintenanceReport((prevState) => {
