@@ -10,13 +10,14 @@ import { catchHandler } from '../../utils/functions';
 
 export const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [dashboardData, setDashboardData] = useState<any>();
-  console.log('dashboardData:', dashboardData);
+  const [investments, setInvestments] = useState<boolean>(true);
+  const [timeLine, setTimeLine] = useState<any>();
 
   const getDashboardData = async () => {
     await Api.get('/dashboard/list-data')
       .then(({ data }) => {
-        setDashboardData(data);
+        setTimeLine(data.timeLine);
+        setInvestments(data.investments);
       })
       .catch((err) => {
         catchHandler(err);
@@ -67,28 +68,7 @@ export const Dashboard = () => {
   };
 
   const timeLineChart = {
-    series: [
-      {
-        name: 'Concluídas',
-        data: [
-          { x: '2020-08-01', y: 1 },
-          { x: '2021-08-02', y: 2 },
-          { x: '2022-08-03', y: 3 },
-          { x: '2023-08-04', y: 4 },
-          { x: '2023-08-05', y: 5 },
-        ],
-      },
-      {
-        name: 'Vencidas',
-        data: [
-          { x: '2020-08-01', y: 6 },
-          { x: '2021-08-02', y: 7 },
-          { x: '2022-08-03', y: 8 },
-          { x: '2023-08-04', y: 9 },
-          { x: '2023-08-05', y: 9 },
-        ],
-      },
-    ],
+    series: timeLine,
     options: {
       chart: {
         defaultLocale: 'pt-BR',
@@ -289,6 +269,7 @@ export const Dashboard = () => {
       },
       legend: {
         position: 'bottom' as const,
+        offsetY: -10,
       },
     },
   };
@@ -330,14 +311,24 @@ export const Dashboard = () => {
           <Style.Card>
             <h5>Linha do tempo - Manutenções</h5>
             <Style.ChartContent>
-              <Chart options={timeLineChart.options} series={timeLineChart.series} type="line" />
+              <Chart
+                options={timeLineChart.options}
+                series={timeLineChart.series}
+                type="line"
+                height={280}
+              />
             </Style.ChartContent>
           </Style.Card>
 
           <Style.Card>
             <h5>Score</h5>
             <Style.ChartContent>
-              <Chart type="donut" options={scoreChart.options} series={scoreChart.series} />
+              <Chart
+                type="donut"
+                options={scoreChart.options}
+                series={scoreChart.series}
+                height={320}
+              />
             </Style.ChartContent>
           </Style.Card>
         </Style.ChartsWrapper>
@@ -346,7 +337,7 @@ export const Dashboard = () => {
           <Style.Card>
             <h5>Investido em manutenções</h5>
             <Style.CardContent>
-              <h1>R$ 4.200,80</h1>
+              <h1>{investments}</h1>
             </Style.CardContent>
           </Style.Card>
 

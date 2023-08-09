@@ -14,7 +14,7 @@ export const FilterWrapper = styled.div`
   gap: ${theme.size.xsm};
   margin-top: ${theme.size.sm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -32,7 +32,7 @@ export const ButtonWrapper = styled.div`
   gap: ${theme.size.sm};
   grid-area: 2 / 4;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-area: unset;
   }
 `;
@@ -48,7 +48,7 @@ export const ChartsWrapper = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: ${theme.size.sm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -58,7 +58,7 @@ export const PanelWrapper = styled.div`
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: ${theme.size.sm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -78,6 +78,7 @@ export const Card = styled.div`
 export const ChartContent = styled.div`
   height: 100%;
   width: 100%;
+  min-height: 280px;
 `;
 
 export const CardContent = styled.div`
@@ -103,6 +104,10 @@ const MaintenanceCard = styled.div`
   flex-direction: column;
   gap: ${theme.size.xsm};
   border-radius: ${theme.size.xxsm};
+
+  p.p2 {
+    background-color: red;
+  }
 `;
 
 export const MostAccomplishedMaintenance = styled(MaintenanceCard)`
