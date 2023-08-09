@@ -88,7 +88,7 @@ export const ModalCreateOccasionalMaintenance = ({
       responsible: '',
     },
     reportData: {
-      cost: '',
+      cost: 'R$ 0,00',
       observation: '',
       files: [],
       images: [],

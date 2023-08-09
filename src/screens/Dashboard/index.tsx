@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import Chart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
@@ -7,23 +8,91 @@ import { Select } from '../../components/Inputs/Select';
 import { Button } from '../../components/Buttons/Button';
 import { Api } from '../../services/api';
 import { catchHandler } from '../../utils/functions';
+import { ListTag } from '../../components/ListTag';
+
+interface IDataFilter {
+  buildings: string[];
+  maintenances: string[];
+  responsibles: string[];
+}
+
+interface IPeriods {
+  label: string;
+  period: number;
+}
+
+interface IFilterOptions {
+  buildings: string[];
+  categories: {
+    name: string;
+    maintenances: {
+      element: string;
+      activity: string;
+    }[];
+  }[];
+  responsibles: string[];
+  periods: IPeriods[];
+}
+
+type IFilterTypes = 'buildings' | 'maintenances' | 'responsibles';
 
 export const Dashboard = () => {
+  const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [investments, setInvestments] = useState<boolean>(true);
   const [timeLine, setTimeLine] = useState<any>();
 
-  const getDashboardData = async () => {
-    await Api.get('/dashboard/list-data')
+  const dataFilterInitialValues: IDataFilter = {
+    buildings: [],
+    maintenances: [],
+    responsibles: [],
+  };
+
+  const [dataFilter, setDataFilter] = useState<IDataFilter>(dataFilterInitialValues);
+
+  const [periodFilter, setPeriodFilter] = useState<string>('30');
+
+  const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
+    buildings: [],
+    categories: [],
+    responsibles: [],
+    periods: [],
+  });
+
+  const getAuxiliaryData = async () => {
+    await Api.get('/dashboard/list-auxiliary-data')
       .then(({ data }) => {
+        console.log(data);
+
+        setFilterOptions(data);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      });
+  };
+
+  const getDashboardData = async () => {
+    setOnQuery(true);
+
+    await Api.get('/dashboard/list-data', {
+      params: {
+        period: periodFilter,
+        buildings: JSON.stringify(dataFilter.buildings),
+        maintenances: JSON.stringify(dataFilter.maintenances),
+        responsibles: JSON.stringify(dataFilter.responsibles),
+      },
+    })
+      .then(async ({ data }) => {
         setTimeLine(data.timeLine);
         setInvestments(data.investments);
+        await getAuxiliaryData();
       })
       .catch((err) => {
         catchHandler(err);
       })
       .finally(() => {
         setLoading(false);
+        setOnQuery(false);
       });
   };
 
@@ -274,6 +343,26 @@ export const Dashboard = () => {
     },
   };
 
+  const handleSelectClick = (filterType: IFilterTypes, value: string) => {
+    setDataFilter((prevState) => {
+      const newState = { ...prevState };
+      newState[filterType] = [...newState[filterType], value];
+      return newState;
+    });
+  };
+
+  const handleRemoveFilter = (filterType: IFilterTypes, index: number) => {
+    setDataFilter((prevState) => {
+      const newState = { ...prevState };
+      newState[filterType].splice(index, 1);
+      return newState;
+    });
+  };
+
+  const handleResetFilter = () => {
+    setDataFilter(dataFilterInitialValues);
+  };
+
   useEffect(() => {
     getDashboardData();
   }, []);
@@ -287,22 +376,134 @@ export const Dashboard = () => {
       <Style.FilterSection>
         <h5>Filtros</h5>
         <Style.FilterWrapper>
-          <Select>
-            <option value="">Selecione</option>
+          <Select
+            label="Período"
+            value={periodFilter}
+            selectPlaceholderValue={periodFilter}
+            onChange={(e) => {
+              setPeriodFilter(e.target.value);
+            }}
+          >
+            {filterOptions.periods.map((period) => (
+              <option value={period.period} key={period.period}>
+                {period.label}
+              </option>
+            ))}
           </Select>
-          <Select>
-            <option value="">Selecione</option>
+          <Select
+            label="Edificação"
+            value=""
+            onChange={(e) => {
+              handleSelectClick('buildings', e.target.value);
+            }}
+          >
+            <option value="" disabled hidden>
+              Selecione
+            </option>
+            {filterOptions.buildings.map((building) => (
+              <option
+                value={building}
+                key={building}
+                disabled={dataFilter.buildings.some((e) => e === building)}
+              >
+                {building}
+              </option>
+            ))}
           </Select>
-          <Select>
-            <option value="">Selecione</option>
+          <Select
+            label="Responsável"
+            value=""
+            onChange={(e) => {
+              handleSelectClick('responsibles', e.target.value);
+            }}
+          >
+            <option value="" disabled hidden>
+              Selecione
+            </option>
+            {filterOptions.responsibles.map((responsible) => (
+              <option
+                value={responsible}
+                key={responsible}
+                disabled={dataFilter.responsibles.some((e) => e === responsible)}
+              >
+                {responsible}
+              </option>
+            ))}
           </Select>
-          <Select>
-            <option value="">Selecione</option>
+          <Select
+            label="Manutenções"
+            value=""
+            onChange={(e) => {
+              handleSelectClick('maintenances', e.target.value);
+            }}
+          >
+            <option value="" disabled hidden>
+              Selecione
+            </option>
+
+            {filterOptions.categories.map((category, i) => (
+              <optgroup label={category.name} key={category.name + i}>
+                {category.maintenances.map((maintenance, j) => (
+                  <option
+                    title={maintenance.activity}
+                    key={maintenance.element + j}
+                    value={maintenance.element}
+                    disabled={dataFilter.maintenances.some((e) => e === maintenance.element)}
+                  >
+                    {maintenance.element}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
           </Select>
           <Style.ButtonWrapper>
-            <Button borderless label="Limpar filtros" />
-            <Button label="Filtrar" />
+            <Button
+              type="button"
+              borderless
+              label="Limpar filtros"
+              disable={onQuery}
+              onClick={handleResetFilter}
+            />
+            <Button type="button" label="Filtrar" loading={onQuery} onClick={getDashboardData} />
           </Style.ButtonWrapper>
+          {[...dataFilter.buildings, ...dataFilter.maintenances, ...dataFilter.responsibles]
+            .length > 0 && (
+            <Style.Tags>
+              {dataFilter.buildings.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('buildings', i);
+                  }}
+                />
+              ))}
+              {dataFilter.responsibles.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('responsibles', i);
+                  }}
+                />
+              ))}
+              {dataFilter.maintenances.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('maintenances', i);
+                  }}
+                />
+              ))}
+            </Style.Tags>
+          )}
         </Style.FilterWrapper>
       </Style.FilterSection>
 
@@ -327,7 +528,7 @@ export const Dashboard = () => {
                 type="donut"
                 options={scoreChart.options}
                 series={scoreChart.series}
-                height={320}
+                height={330}
               />
             </Style.ChartContent>
           </Style.Card>
