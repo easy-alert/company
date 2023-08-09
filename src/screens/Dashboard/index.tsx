@@ -12,7 +12,7 @@ import { ListTag } from '../../components/ListTag';
 
 interface IDataFilter {
   buildings: string[];
-  maintenances: string[];
+  categories: string[];
   responsibles: string[];
 }
 
@@ -25,16 +25,12 @@ interface IFilterOptions {
   buildings: string[];
   categories: {
     name: string;
-    maintenances: {
-      element: string;
-      activity: string;
-    }[];
   }[];
   responsibles: string[];
   periods: IPeriods[];
 }
 
-type IFilterTypes = 'buildings' | 'maintenances' | 'responsibles';
+type IFilterTypes = 'buildings' | 'categories' | 'responsibles';
 
 export const Dashboard = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -44,7 +40,7 @@ export const Dashboard = () => {
 
   const dataFilterInitialValues: IDataFilter = {
     buildings: [],
-    maintenances: [],
+    categories: [],
     responsibles: [],
   };
 
@@ -62,8 +58,6 @@ export const Dashboard = () => {
   const getAuxiliaryData = async () => {
     await Api.get('/dashboard/list-auxiliary-data')
       .then(({ data }) => {
-        console.log(data);
-
         setFilterOptions(data);
       })
       .catch((err) => {
@@ -71,15 +65,15 @@ export const Dashboard = () => {
       });
   };
 
-  const getDashboardData = async () => {
+  const getDashboardData = async (resetFilters?: boolean) => {
     setOnQuery(true);
 
     await Api.get('/dashboard/list-data', {
       params: {
         period: periodFilter,
-        buildings: JSON.stringify(dataFilter.buildings),
-        maintenances: JSON.stringify(dataFilter.maintenances),
-        responsibles: JSON.stringify(dataFilter.responsibles),
+        buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.buildings),
+        categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.categories),
+        responsibles: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.responsibles),
       },
     })
       .then(async ({ data }) => {
@@ -361,6 +355,8 @@ export const Dashboard = () => {
 
   const handleResetFilter = () => {
     setDataFilter(dataFilterInitialValues);
+    const resetFilters = true;
+    getDashboardData(resetFilters);
   };
 
   useEffect(() => {
@@ -431,10 +427,10 @@ export const Dashboard = () => {
             ))}
           </Select>
           <Select
-            label="Manutenções"
+            label="Categoria"
             value=""
             onChange={(e) => {
-              handleSelectClick('maintenances', e.target.value);
+              handleSelectClick('categories', e.target.value);
             }}
           >
             <option value="" disabled hidden>
@@ -442,18 +438,13 @@ export const Dashboard = () => {
             </option>
 
             {filterOptions.categories.map((category, i) => (
-              <optgroup label={category.name} key={category.name + i}>
-                {category.maintenances.map((maintenance, j) => (
-                  <option
-                    title={maintenance.activity}
-                    key={maintenance.element + j}
-                    value={maintenance.element}
-                    disabled={dataFilter.maintenances.some((e) => e === maintenance.element)}
-                  >
-                    {maintenance.element}
-                  </option>
-                ))}
-              </optgroup>
+              <option
+                label={category.name}
+                key={category.name + i}
+                disabled={dataFilter.categories.some((e) => e === category.name)}
+              >
+                {category.name}
+              </option>
             ))}
           </Select>
           <Style.ButtonWrapper>
@@ -464,10 +455,17 @@ export const Dashboard = () => {
               disable={onQuery}
               onClick={handleResetFilter}
             />
-            <Button type="button" label="Filtrar" loading={onQuery} onClick={getDashboardData} />
+            <Button
+              type="button"
+              label="Filtrar"
+              loading={onQuery}
+              onClick={() => {
+                getDashboardData();
+              }}
+            />
           </Style.ButtonWrapper>
-          {[...dataFilter.buildings, ...dataFilter.maintenances, ...dataFilter.responsibles]
-            .length > 0 && (
+          {[...dataFilter.buildings, ...dataFilter.categories, ...dataFilter.responsibles].length >
+            0 && (
             <Style.Tags>
               {dataFilter.buildings.map((e, i) => (
                 <ListTag
@@ -491,14 +489,14 @@ export const Dashboard = () => {
                   }}
                 />
               ))}
-              {dataFilter.maintenances.map((e, i) => (
+              {dataFilter.categories.map((e, i) => (
                 <ListTag
                   padding="4px 12px"
                   fontWeight={500}
                   label={e}
                   key={e}
                   onClick={() => {
-                    handleRemoveFilter('maintenances', i);
+                    handleRemoveFilter('categories', i);
                   }}
                 />
               ))}

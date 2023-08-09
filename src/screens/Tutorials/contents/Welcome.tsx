@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import * as Style from './styles';
 import { Button } from '../../../components/Buttons/Button';
 
-/* eslint-disable jsx-a11y/iframe-has-title */
 export const WelcomeTutorial = () => {
   const [viewedTutorial, setViewedTutorial] = useState<boolean>(true);
 
@@ -16,7 +15,12 @@ export const WelcomeTutorial = () => {
 
   return (
     <Style.Container>
-      <iframe src="https://www.youtube.com/embed/ZmAId85nywI" width="100%" height={540} />
+      <iframe
+        title="welcome"
+        src="https://www.youtube.com/embed/ZmAId85nywI"
+        width="100%"
+        height={540}
+      />
 
       {!viewedTutorial && (
         <Button
