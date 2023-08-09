@@ -23,9 +23,7 @@ interface IPeriods {
 
 interface IFilterOptions {
   buildings: string[];
-  categories: {
-    name: string;
-  }[];
+  categories: string[];
   responsibles: string[];
   periods: IPeriods[];
 }
@@ -437,13 +435,13 @@ export const Dashboard = () => {
               Selecione
             </option>
 
-            {filterOptions.categories.map((category, i) => (
+            {filterOptions.categories.map((category) => (
               <option
-                label={category.name}
-                key={category.name + i}
-                disabled={dataFilter.categories.some((e) => e === category.name)}
+                label={category}
+                key={category}
+                disabled={dataFilter.categories.some((e) => e === category)}
               >
-                {category.name}
+                {category}
               </option>
             ))}
           </Select>
