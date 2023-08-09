@@ -23,6 +23,13 @@ export const Sidebar = () => {
 
   const SidebarContent: SidebarContentProps[] = [
     {
+      icon: icon.dashboard,
+      url: '/dashboard',
+      redirectFunction: () => {
+        navigate('/dashboard');
+      },
+    },
+    {
       icon: icon.calendar,
       url: '/calendar',
       redirectFunction: () => {

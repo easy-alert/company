@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
-import * as Style from './styles.';
+import * as Style from './styles';
 import { Button } from '../../../components/Buttons/Button';
 
 /* eslint-disable jsx-a11y/iframe-has-title */
