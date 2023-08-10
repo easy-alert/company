@@ -1,3 +1,4 @@
+// #region imports
 /* eslint-disable react/no-array-index-key */
 import Chart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,10 @@ import { Button } from '../../components/Buttons/Button';
 import { Api } from '../../services/api';
 import { catchHandler } from '../../utils/functions';
 import { ListTag } from '../../components/ListTag';
+import { ModalDashboardMaintenanceDetails } from './ModalDashboardMaintenanceDetails';
+// #endregion
 
+// #region interfaces
 interface IDataFilter {
   buildings: string[];
   categories: string[];
@@ -29,11 +33,17 @@ interface IFilterOptions {
 }
 
 type IFilterTypes = 'buildings' | 'categories' | 'responsibles';
+// #endregion
 
 export const Dashboard = () => {
+  // #region states
+  const [modalDashboardMaintenanceDetails, setModalDashboardMaintenanceDetails] =
+    useState<boolean>(false);
+  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [investments, setInvestments] = useState<boolean>(true);
+  const [investments, setInvestments] = useState<string>('');
   const [timeLine, setTimeLine] = useState<any>();
 
   const dataFilterInitialValues: IDataFilter = {
@@ -52,7 +62,9 @@ export const Dashboard = () => {
     responsibles: [],
     periods: [],
   });
+  // #endregion
 
+  // #region requests
   const getAuxiliaryData = async () => {
     await Api.get('/dashboard/list-auxiliary-data')
       .then(({ data }) => {
@@ -87,7 +99,9 @@ export const Dashboard = () => {
         setOnQuery(false);
       });
   };
+  // #endregion
 
+  // #region dashboard functions
   const findLargestValueAndIndex = (array: number[]) => {
     let largestValue = array[0];
     let largestValueIndex = 0;
@@ -129,7 +143,7 @@ export const Dashboard = () => {
   };
 
   const timeLineChart = {
-    series: timeLine,
+    series: timeLine || [],
     options: {
       chart: {
         defaultLocale: 'pt-BR',
@@ -357,6 +371,12 @@ export const Dashboard = () => {
     getDashboardData(resetFilters);
   };
 
+  const handleSelectedMaintenance = (maintenanceId: string) => {
+    setSelectedMaintenanceId(maintenanceId);
+    setModalDashboardMaintenanceDetails(true);
+  };
+  // #endregion
+
   useEffect(() => {
     getDashboardData();
   }, []);
@@ -364,225 +384,258 @@ export const Dashboard = () => {
   return loading ? (
     <DotSpinLoading />
   ) : (
-    <Style.Container>
-      <h2>Dashboard</h2>
+    <>
+      {modalDashboardMaintenanceDetails && (
+        <ModalDashboardMaintenanceDetails
+          setModal={setModalDashboardMaintenanceDetails}
+          maintenanceId={selectedMaintenanceId}
+        />
+      )}
 
-      <Style.FilterSection>
-        <h5>Filtros</h5>
-        <Style.FilterWrapper>
-          <Select
-            label="Período"
-            value={periodFilter}
-            selectPlaceholderValue={periodFilter}
-            onChange={(e) => {
-              setPeriodFilter(e.target.value);
-            }}
-          >
-            {filterOptions.periods.map((period) => (
-              <option value={period.period} key={period.period}>
-                {period.label}
-              </option>
-            ))}
-          </Select>
-          <Select
-            label="Edificação"
-            value=""
-            onChange={(e) => {
-              handleSelectClick('buildings', e.target.value);
-            }}
-          >
-            <option value="" disabled hidden>
-              Selecione
-            </option>
-            {filterOptions.buildings.map((building) => (
-              <option
-                value={building}
-                key={building}
-                disabled={dataFilter.buildings.some((e) => e === building)}
-              >
-                {building}
-              </option>
-            ))}
-          </Select>
-          <Select
-            label="Responsável"
-            value=""
-            onChange={(e) => {
-              handleSelectClick('responsibles', e.target.value);
-            }}
-          >
-            <option value="" disabled hidden>
-              Selecione
-            </option>
-            {filterOptions.responsibles.map((responsible) => (
-              <option
-                value={responsible}
-                key={responsible}
-                disabled={dataFilter.responsibles.some((e) => e === responsible)}
-              >
-                {responsible}
-              </option>
-            ))}
-          </Select>
-          <Select
-            label="Categoria"
-            value=""
-            onChange={(e) => {
-              handleSelectClick('categories', e.target.value);
-            }}
-          >
-            <option value="" disabled hidden>
-              Selecione
-            </option>
+      <Style.Container>
+        <h2>Dashboard</h2>
 
-            {filterOptions.categories.map((category) => (
-              <option
-                label={category}
-                key={category}
-                disabled={dataFilter.categories.some((e) => e === category)}
-              >
-                {category}
-              </option>
-            ))}
-          </Select>
-          <Style.ButtonWrapper>
-            <Button
-              type="button"
-              borderless
-              label="Limpar filtros"
-              disable={onQuery}
-              onClick={handleResetFilter}
-            />
-            <Button
-              type="button"
-              label="Filtrar"
-              loading={onQuery}
-              onClick={() => {
-                getDashboardData();
+        <Style.FilterSection>
+          <h5>Filtros</h5>
+          <Style.FilterWrapper>
+            <Select
+              label="Período"
+              value={periodFilter}
+              selectPlaceholderValue={periodFilter}
+              onChange={(e) => {
+                setPeriodFilter(e.target.value);
               }}
-            />
-          </Style.ButtonWrapper>
-          {[...dataFilter.buildings, ...dataFilter.categories, ...dataFilter.responsibles].length >
-            0 && (
-            <Style.Tags>
-              {dataFilter.buildings.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('buildings', i);
-                  }}
-                />
+            >
+              {filterOptions.periods.map((period) => (
+                <option value={period.period} key={period.period}>
+                  {period.label}
+                </option>
               ))}
-              {dataFilter.responsibles.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('responsibles', i);
-                  }}
-                />
+            </Select>
+            <Select
+              label="Edificação"
+              value=""
+              onChange={(e) => {
+                handleSelectClick('buildings', e.target.value);
+              }}
+            >
+              <option value="" disabled hidden>
+                Selecione
+              </option>
+              {filterOptions.buildings.map((building) => (
+                <option
+                  value={building}
+                  key={building}
+                  disabled={dataFilter.buildings.some((e) => e === building)}
+                >
+                  {building}
+                </option>
               ))}
-              {dataFilter.categories.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('categories', i);
-                  }}
-                />
+            </Select>
+            <Select
+              label="Responsável"
+              value=""
+              onChange={(e) => {
+                handleSelectClick('responsibles', e.target.value);
+              }}
+            >
+              <option value="" disabled hidden>
+                Selecione
+              </option>
+              {filterOptions.responsibles.map((responsible) => (
+                <option
+                  value={responsible}
+                  key={responsible}
+                  disabled={dataFilter.responsibles.some((e) => e === responsible)}
+                >
+                  {responsible}
+                </option>
               ))}
-            </Style.Tags>
-          )}
-        </Style.FilterWrapper>
-      </Style.FilterSection>
+            </Select>
+            <Select
+              label="Categoria"
+              value=""
+              onChange={(e) => {
+                handleSelectClick('categories', e.target.value);
+              }}
+            >
+              <option value="" disabled hidden>
+                Selecione
+              </option>
 
-      <Style.Wrappers>
-        <Style.ChartsWrapper>
-          <Style.Card>
-            <h5>Linha do tempo - Manutenções</h5>
-            <Style.ChartContent>
-              <Chart
-                options={timeLineChart.options}
-                series={timeLineChart.series}
-                type="line"
-                height={280}
+              {filterOptions.categories.map((category) => (
+                <option
+                  label={category}
+                  key={category}
+                  disabled={dataFilter.categories.some((e) => e === category)}
+                >
+                  {category}
+                </option>
+              ))}
+            </Select>
+            <Style.ButtonWrapper>
+              <Button
+                type="button"
+                borderless
+                label="Limpar filtros"
+                disable={onQuery}
+                onClick={handleResetFilter}
               />
-            </Style.ChartContent>
-          </Style.Card>
-
-          <Style.Card>
-            <h5>Score</h5>
-            <Style.ChartContent>
-              <Chart
-                type="donut"
-                options={scoreChart.options}
-                series={scoreChart.series}
-                height={330}
+              <Button
+                type="button"
+                label="Filtrar"
+                loading={onQuery}
+                onClick={() => {
+                  getDashboardData();
+                }}
               />
-            </Style.ChartContent>
-          </Style.Card>
-        </Style.ChartsWrapper>
+            </Style.ButtonWrapper>
+            {[...dataFilter.buildings, ...dataFilter.categories, ...dataFilter.responsibles]
+              .length > 0 && (
+              <Style.Tags>
+                {dataFilter.buildings.map((e, i) => (
+                  <ListTag
+                    padding="4px 12px"
+                    fontWeight={500}
+                    label={e}
+                    key={e}
+                    onClick={() => {
+                      handleRemoveFilter('buildings', i);
+                    }}
+                  />
+                ))}
+                {dataFilter.responsibles.map((e, i) => (
+                  <ListTag
+                    padding="4px 12px"
+                    fontWeight={500}
+                    label={e}
+                    key={e}
+                    onClick={() => {
+                      handleRemoveFilter('responsibles', i);
+                    }}
+                  />
+                ))}
+                {dataFilter.categories.map((e, i) => (
+                  <ListTag
+                    padding="4px 12px"
+                    fontWeight={500}
+                    label={e}
+                    key={e}
+                    onClick={() => {
+                      handleRemoveFilter('categories', i);
+                    }}
+                  />
+                ))}
+              </Style.Tags>
+            )}
+          </Style.FilterWrapper>
+        </Style.FilterSection>
 
-        <Style.PanelWrapper>
-          <Style.Card>
-            <h5>Investido em manutenções</h5>
-            <Style.CardContent>
-              <h1>{investments}</h1>
-            </Style.CardContent>
-          </Style.Card>
+        <Style.Wrappers>
+          <Style.ChartsWrapper>
+            <Style.Card>
+              <h5>Linha do tempo - Manutenções</h5>
+              <Style.ChartContent>
+                {timeLine?.length > 0 ? (
+                  <Chart
+                    options={timeLineChart.options}
+                    series={timeLineChart.series}
+                    type="line"
+                    height={280}
+                  />
+                ) : (
+                  <Style.NoDataWrapper>
+                    <h6>Nenhuma informação encontrada</h6>
+                  </Style.NoDataWrapper>
+                )}
+              </Style.ChartContent>
+            </Style.Card>
 
-          <Style.Card>
-            <h5>Manutenções mais realizadas</h5>
-            <Style.CardContent>
-              <Style.MostAccomplishedMaintenance>
-                <h6>man man man man man man man man man man man man man man man man </h6>
-                <p className="p2">
-                  claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                  claaa claaa claaa
-                </p>
-                <p className="p3">A cada 9999 semanas</p>
-              </Style.MostAccomplishedMaintenance>
-              <Style.MostAccomplishedMaintenance>
-                <h6>man man man man man man man man man man man man man man man man </h6>
-                <p className="p2 ">
-                  claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                  claaa claaa claaa
-                </p>
-                <p className="p3">A cada 9999 semanas</p>
-              </Style.MostAccomplishedMaintenance>
-            </Style.CardContent>
-          </Style.Card>
+            <Style.Card>
+              <h5>Score</h5>
+              <Style.ChartContent>
+                <Chart
+                  type="donut"
+                  options={scoreChart.options}
+                  series={scoreChart.series}
+                  height={330}
+                />
+              </Style.ChartContent>
+            </Style.Card>
+          </Style.ChartsWrapper>
 
-          <Style.Card>
-            <h5>Manutenções menos realizadas</h5>
-            <Style.CardContent>
-              <Style.LeastAccomplishedMaintenance>
-                <h6>man man man man man man man man man man man man man man man man </h6>
-                <p className="p2">
-                  claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                  claaa claaa claaa
-                </p>
-                <p className="p3">A cada 9999 semanas</p>
-              </Style.LeastAccomplishedMaintenance>
-              <Style.LeastAccomplishedMaintenance>
-                <h6>man man man man man man man man man man man man man man man man </h6>
-                <p className="p2">
-                  claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                  claaa claaa claaa
-                </p>
-                <p className="p3">A cada 9999 semanas</p>
-              </Style.LeastAccomplishedMaintenance>
-            </Style.CardContent>
-          </Style.Card>
-        </Style.PanelWrapper>
-      </Style.Wrappers>
-    </Style.Container>
+          <Style.PanelWrapper>
+            <Style.Card>
+              <h5>Investido em manutenções</h5>
+              <Style.CardContent>
+                <h1>{investments || 'R$ 0,00'}</h1>
+              </Style.CardContent>
+            </Style.Card>
+
+            <Style.Card>
+              <h5>Manutenções mais realizadas</h5>
+              <Style.CardContent>
+                <Style.MostAccomplishedMaintenance
+                  onClick={() => {
+                    handleSelectedMaintenance('e.id');
+                  }}
+                >
+                  <h6>man man man man man man man man man man man man man man man man </h6>
+                  <p className="p2">
+                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
+                    claaa claaa claaa
+                  </p>
+                  <p className="p3">A cada 9999 semanas</p>
+                </Style.MostAccomplishedMaintenance>
+
+                <Style.MostAccomplishedMaintenance
+                  onClick={() => {
+                    handleSelectedMaintenance('e.id');
+                  }}
+                >
+                  <h6>man man man man man man man man man man man man man man man man </h6>
+                  <p className="p2 ">
+                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
+                    claaa claaa claaa
+                  </p>
+                  <p className="p3">A cada 9999 semanas</p>
+                </Style.MostAccomplishedMaintenance>
+              </Style.CardContent>
+            </Style.Card>
+
+            <Style.Card>
+              <h5>Manutenções menos realizadas</h5>
+              <Style.CardContent>
+                <Style.LeastAccomplishedMaintenance
+                  onClick={() => {
+                    handleSelectedMaintenance('e.id');
+                  }}
+                >
+                  <h6>man man man man man man man man man man man man man man man man </h6>
+                  <p className="p2">
+                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
+                    claaa claaa claaa
+                  </p>
+                  <p className="p3">A cada 9999 semanas</p>
+                </Style.LeastAccomplishedMaintenance>
+
+                <Style.LeastAccomplishedMaintenance
+                  onClick={() => {
+                    handleSelectedMaintenance('e.id');
+                  }}
+                >
+                  <h6>man man man man man man man man man man man man man man man man </h6>
+                  <p className="p2">
+                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
+                    claaa claaa claaa
+                  </p>
+                  <p className="p3">A cada 9999 semanas</p>
+                </Style.LeastAccomplishedMaintenance>
+              </Style.CardContent>
+            </Style.Card>
+          </Style.PanelWrapper>
+        </Style.Wrappers>
+      </Style.Container>
+    </>
   );
 };

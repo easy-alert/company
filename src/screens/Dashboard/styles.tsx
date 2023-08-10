@@ -93,6 +93,18 @@ export const ChartContent = styled.div`
   height: 100%;
   width: 100%;
   min-height: 280px;
+
+  .apexcharts-toolbar {
+    z-index: 0 !important;
+  }
+`;
+
+export const NoDataWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  opacity: 0.7;
 `;
 
 export const CardContent = styled.div`
@@ -118,6 +130,8 @@ const MaintenanceCard = styled.div`
   flex-direction: column;
   gap: ${theme.size.xsm};
   border-radius: ${theme.size.xxsm};
+
+  cursor: pointer;
 `;
 
 export const MostAccomplishedMaintenance = styled(MaintenanceCard)`
