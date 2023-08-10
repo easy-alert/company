@@ -33,6 +33,21 @@ interface IFilterOptions {
 }
 
 type IFilterTypes = 'buildings' | 'categories' | 'responsibles';
+
+interface IAxis {
+  x: string;
+  y: number;
+}
+
+interface ITimeline {
+  name: string;
+  data: IAxis[];
+}
+
+interface IScore {
+  data: number[];
+  labels: string[];
+}
 // #endregion
 
 export const Dashboard = () => {
@@ -44,7 +59,13 @@ export const Dashboard = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [investments, setInvestments] = useState<string>('');
-  const [timeLine, setTimeLine] = useState<any>();
+
+  const [timeLine, setTimeLine] = useState<ITimeline[]>([]);
+
+  const [score, setScore] = useState<IScore>({
+    data: [],
+    labels: [],
+  });
 
   const dataFilterInitialValues: IDataFilter = {
     buildings: [],
@@ -89,6 +110,7 @@ export const Dashboard = () => {
       .then(async ({ data }) => {
         setTimeLine(data.timeLine);
         setInvestments(data.investments);
+        setScore(data.score);
         await getAuxiliaryData();
       })
       .catch((err) => {
@@ -256,15 +278,10 @@ export const Dashboard = () => {
     },
   };
 
-  const temp = {
-    data: [20, 15, 10],
-    labels: ['Concluídas', 'Vencidas', 'Pendentes'],
-  };
-
   const scoreChart = {
-    series: temp.data,
+    series: score.data,
     options: {
-      labels: temp.labels,
+      labels: score.labels,
 
       chart: {
         toolbar: {
@@ -273,7 +290,7 @@ export const Dashboard = () => {
       },
 
       tooltip: {
-        enabled: true,
+        enabled: false,
       },
 
       plotOptions: {
@@ -308,23 +325,15 @@ export const Dashboard = () => {
               total: {
                 show: true,
                 showAlways: false,
-                // label:
-                //   knowledgeCountByTypeChart?.knowledgeTypes[
-                //     findLargestValueAndIndex(knowledgeCountByTypeChart?.data).index
-                //   ],
-                label: temp.labels[findLargestValueAndIndex(temp.data).index],
+
+                label: score.labels[findLargestValueAndIndex(score.data).index],
                 fontSize: '16px',
                 fontWeight: 600,
                 color: '#000000',
-                // formatter(w: any) {
-                //   return w.globals.seriesTotals.reduce(
-                //     () => findLargestValueAndIndex(knowledgeCountByTypeChart?.data).value,
-                //     0,
-                //   );
-                // },
+
                 formatter(w: any) {
                   return w.globals.seriesTotals.reduce(
-                    () => findLargestValueAndIndex(temp.data).value,
+                    () => findLargestValueAndIndex(score.data).value,
                     0,
                   );
                 },
@@ -333,8 +342,8 @@ export const Dashboard = () => {
           },
         },
       },
-      // colors: getLabelColorBasedOnKnowledgeType(knowledgeCountByTypeChart.knowledgeTypes),
-      colors: getLabelColor(temp.labels),
+
+      colors: getLabelColor(score.labels),
       dataLabels: {
         enabled: false,
         style: {
@@ -394,7 +403,6 @@ export const Dashboard = () => {
 
       <Style.Container>
         <h2>Dashboard</h2>
-
         <Style.FilterSection>
           <h5>Filtros</h5>
           <Style.FilterWrapper>
@@ -432,26 +440,7 @@ export const Dashboard = () => {
                 </option>
               ))}
             </Select>
-            <Select
-              label="Responsável"
-              value=""
-              onChange={(e) => {
-                handleSelectClick('responsibles', e.target.value);
-              }}
-            >
-              <option value="" disabled hidden>
-                Selecione
-              </option>
-              {filterOptions.responsibles.map((responsible) => (
-                <option
-                  value={responsible}
-                  key={responsible}
-                  disabled={dataFilter.responsibles.some((e) => e === responsible)}
-                >
-                  {responsible}
-                </option>
-              ))}
-            </Select>
+
             <Select
               label="Categoria"
               value=""
@@ -473,6 +462,28 @@ export const Dashboard = () => {
                 </option>
               ))}
             </Select>
+
+            <Select
+              label="Responsável"
+              value=""
+              onChange={(e) => {
+                handleSelectClick('responsibles', e.target.value);
+              }}
+            >
+              <option value="" disabled hidden>
+                Selecione
+              </option>
+              {filterOptions.responsibles.map((responsible) => (
+                <option
+                  value={responsible}
+                  key={responsible}
+                  disabled={dataFilter.responsibles.some((e) => e === responsible)}
+                >
+                  {responsible}
+                </option>
+              ))}
+            </Select>
+
             <Style.ButtonWrapper>
               <Button
                 type="button"
@@ -490,44 +501,55 @@ export const Dashboard = () => {
                 }}
               />
             </Style.ButtonWrapper>
-            {[...dataFilter.buildings, ...dataFilter.categories, ...dataFilter.responsibles]
-              .length > 0 && (
-              <Style.Tags>
-                {dataFilter.buildings.map((e, i) => (
-                  <ListTag
-                    padding="4px 12px"
-                    fontWeight={500}
-                    label={e}
-                    key={e}
-                    onClick={() => {
-                      handleRemoveFilter('buildings', i);
-                    }}
-                  />
-                ))}
-                {dataFilter.responsibles.map((e, i) => (
-                  <ListTag
-                    padding="4px 12px"
-                    fontWeight={500}
-                    label={e}
-                    key={e}
-                    onClick={() => {
-                      handleRemoveFilter('responsibles', i);
-                    }}
-                  />
-                ))}
-                {dataFilter.categories.map((e, i) => (
-                  <ListTag
-                    padding="4px 12px"
-                    fontWeight={500}
-                    label={e}
-                    key={e}
-                    onClick={() => {
-                      handleRemoveFilter('categories', i);
-                    }}
-                  />
-                ))}
-              </Style.Tags>
-            )}
+            <Style.Tags>
+              {dataFilter.buildings.length === 0 && (
+                <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+              )}
+
+              {dataFilter.buildings.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('buildings', i);
+                  }}
+                />
+              ))}
+
+              {dataFilter.categories.length === 0 && (
+                <ListTag padding="4px 12px" fontWeight={500} label="Todas as categorias" />
+              )}
+
+              {dataFilter.categories.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('categories', i);
+                  }}
+                />
+              ))}
+
+              {dataFilter.responsibles.length === 0 && (
+                <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
+              )}
+
+              {dataFilter.responsibles.map((e, i) => (
+                <ListTag
+                  padding="4px 12px"
+                  fontWeight={500}
+                  label={e}
+                  key={e}
+                  onClick={() => {
+                    handleRemoveFilter('responsibles', i);
+                  }}
+                />
+              ))}
+            </Style.Tags>
           </Style.FilterWrapper>
         </Style.FilterSection>
 
@@ -552,14 +574,21 @@ export const Dashboard = () => {
             </Style.Card>
 
             <Style.Card>
-              <h5>Score</h5>
+              <h5>Score - Manutenções</h5>
+
               <Style.ChartContent>
-                <Chart
-                  type="donut"
-                  options={scoreChart.options}
-                  series={scoreChart.series}
-                  height={330}
-                />
+                {score?.data?.length > 0 ? (
+                  <Chart
+                    type="donut"
+                    options={scoreChart.options}
+                    series={scoreChart.series}
+                    height={330}
+                  />
+                ) : (
+                  <Style.NoDataWrapper>
+                    <h6>Nenhuma informação encontrada</h6>
+                  </Style.NoDataWrapper>
+                )}
               </Style.ChartContent>
             </Style.Card>
           </Style.ChartsWrapper>
@@ -568,7 +597,7 @@ export const Dashboard = () => {
             <Style.Card>
               <h5>Investido em manutenções</h5>
               <Style.CardContent>
-                <h1>{investments || 'R$ 0,00'}</h1>
+                <h2>{investments || 'R$ 0,00'}</h2>
               </Style.CardContent>
             </Style.Card>
 

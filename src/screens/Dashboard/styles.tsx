@@ -69,7 +69,7 @@ export const ChartsWrapper = styled.div`
 
 export const PanelWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: ${theme.size.sm};
 
   @media (max-width: 1100px) {
@@ -132,6 +132,14 @@ const MaintenanceCard = styled.div`
   border-radius: ${theme.size.xxsm};
 
   cursor: pointer;
+  min-width: 0;
+
+  > h6,
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const MostAccomplishedMaintenance = styled(MaintenanceCard)`
