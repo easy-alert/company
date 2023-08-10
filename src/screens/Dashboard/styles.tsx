@@ -73,7 +73,7 @@ export const PanelWrapper = styled.div`
   gap: ${theme.size.sm};
 
   @media (max-width: 1100px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 `;
 
@@ -113,6 +113,11 @@ export const CardContent = styled.div`
   justify-content: center;
   gap: ${theme.size.sm};
 
+  > h2 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
   height: 100%;
   width: 100%;
 
@@ -133,6 +138,7 @@ const MaintenanceCard = styled.div`
 
   cursor: pointer;
   min-width: 0;
+  width: 100%;
 
   > h6,
   p {
