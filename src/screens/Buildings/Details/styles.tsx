@@ -172,7 +172,7 @@ export const NoDataContainer = styled.div`
   }
 `;
 
-export const MatrixTagWrapper = styled.div`
+export const TagWrapper = styled.div`
   margin-top: ${theme.size.xsm};
   display: flex;
   flex-wrap: wrap;

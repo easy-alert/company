@@ -20,7 +20,6 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import {
   changeShowContactStatus,
   requestBuildingDetails,
-  requestDeleteAnnex,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
 } from './utils/functions';
@@ -40,6 +39,7 @@ import { theme } from '../../../styles/theme';
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
+import { Folder } from '../../../components/Folder';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -57,8 +57,6 @@ export const BuildingDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
-
-  const [deleteAnnexOnQuery, setDeleteAnnexOnQuery] = useState<boolean>(false);
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
@@ -548,37 +546,11 @@ export const BuildingDetails = () => {
               />
             </Style.CardHeader>
             {building && building?.Annexes.length > 0 ? (
-              <Style.MatrixTagWrapper>
+              <Style.TagWrapper>
                 {building.Annexes.map((element) => (
-                  <Style.Tag key={element.id}>
-                    <a
-                      title={element.originalName}
-                      href={element.url}
-                      download
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <p className="p3">{element.name}</p>
-                      <Image size="16px" img={icon.download} />
-                    </a>
-                    <IconButton
-                      disabled={deleteAnnexOnQuery}
-                      size="16px"
-                      icon={icon.xBlack}
-                      onClick={() => {
-                        requestDeleteAnnex({
-                          annexeId: element.id,
-                          setDeleteAnnexOnQuery,
-                          buildingId: building.id,
-                          setBuilding,
-                          setTotalMaintenancesCount,
-                          setUsedMaintenancesCount,
-                        });
-                      }}
-                    />
-                  </Style.Tag>
+                  <Folder key={element.id} name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
                 ))}
-              </Style.MatrixTagWrapper>
+              </Style.TagWrapper>
             ) : (
               <Style.NoDataContainer className="bottom">
                 <h5>Nenhum anexo cadastrado.</h5>
@@ -600,7 +572,7 @@ export const BuildingDetails = () => {
               />
             </Style.CardHeader>
             {building && building?.Banners.length > 0 ? (
-              <Style.MatrixTagWrapper>
+              <Style.TagWrapper>
                 {building.Banners.map((element, i: number) => (
                   <ImagePreview
                     // eslint-disable-next-line react/no-array-index-key
@@ -613,7 +585,7 @@ export const BuildingDetails = () => {
                     imageOriginalName={element.originalName}
                   />
                 ))}
-              </Style.MatrixTagWrapper>
+              </Style.TagWrapper>
             ) : (
               <Style.NoDataContainer className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>

@@ -4,7 +4,6 @@ import { catchHandler } from '../../../../utils/functions';
 import {
   IChangeShowContactStatus,
   IRequestBuildingDetails,
-  IRequestDeleteAnnex,
   IRequestResendConfirmation,
 } from './types';
 
@@ -61,39 +60,6 @@ export const requestResendEmailConfirmation = async ({
     .then((res) => {
       toast.dismiss();
       toast.success(res.data.ServerMessage.message);
-    })
-    .catch((err) => {
-      catchHandler(err);
-    });
-};
-
-export const requestDeleteAnnex = async ({
-  annexeId,
-  setDeleteAnnexOnQuery,
-  buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
-}: IRequestDeleteAnnex) => {
-  toast.loading('Excluindo anexo...');
-  setDeleteAnnexOnQuery(true);
-
-  await Api.delete('/buildings/annexes/delete', {
-    data: {
-      annexeId,
-    },
-  })
-    .then((res) => {
-      toast.dismiss();
-      toast.success(res.data.ServerMessage.message);
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      }).finally(() => {
-        setDeleteAnnexOnQuery(false);
-      });
     })
     .catch((err) => {
       catchHandler(err);
