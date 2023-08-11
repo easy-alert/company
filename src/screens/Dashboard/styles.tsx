@@ -118,6 +118,10 @@ export const CardContent = styled.div`
     line-height: 36px;
   }
 
+  > h6 {
+    opacity: 0.7;
+  }
+
   height: 100%;
   width: 100%;
 

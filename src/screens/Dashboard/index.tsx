@@ -642,7 +642,7 @@ export const Dashboard = () => {
             <Style.Card>
               <h5>Linha do tempo - Manutenções</h5>
               <Style.ChartContent>
-                {timeLine?.length > 0 ? (
+                {timeLine?.some((element) => element?.data.length > 0) ? (
                   <Chart
                     options={timeLineChart.options}
                     series={timeLineChart.series}
@@ -707,6 +707,10 @@ export const Dashboard = () => {
                     </p>
                   </Style.MostAccomplishedMaintenance>
                 ))}
+
+                {maintenancesData?.completed?.length === 0 && (
+                  <h6>Nenhuma informação encontrada.</h6>
+                )}
               </Style.CardContent>
             </Style.Card>
 
@@ -732,6 +736,7 @@ export const Dashboard = () => {
                     </p>
                   </Style.LeastAccomplishedMaintenance>
                 ))}
+                {maintenancesData?.expired?.length === 0 && <h6>Nenhuma informação encontrada.</h6>}
               </Style.CardContent>
             </Style.Card>
           </Style.PanelWrapper>
