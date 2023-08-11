@@ -22,6 +22,12 @@ export const Card = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
 
+  .terms {
+    color: ${theme.color.primary};
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
   .link {
     word-break: break-all;
   }

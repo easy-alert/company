@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import axios from 'axios';
 
 export const Api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8080/api/company',
+  baseURL: import.meta.env.VITE_API_URL ?? 'http://10.109.0.94:8080/api/company',
 });
 
 Api.interceptors.request.use(
