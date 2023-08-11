@@ -505,6 +505,7 @@ export const Dashboard = () => {
               ))}
             </Select>
             <Select
+              selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
               label="Edificação"
               value=""
               onChange={(e) => {
@@ -526,6 +527,7 @@ export const Dashboard = () => {
             </Select>
 
             <Select
+              selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
               label="Categoria"
               value=""
               onChange={(e) => {
@@ -548,6 +550,7 @@ export const Dashboard = () => {
             </Select>
 
             <Select
+              selectPlaceholderValue={dataFilter.responsibles.length > 0 ? ' ' : ''}
               label="Responsável"
               value=""
               onChange={(e) => {
@@ -659,9 +662,8 @@ export const Dashboard = () => {
 
             <Style.Card>
               <h5>Score - Manutenções</h5>
-
               <Style.ChartContent>
-                {score?.data?.length > 0 ? (
+                {score?.data?.some((e) => e > 0) ? (
                   <Chart
                     type="donut"
                     options={scoreChart.options}
@@ -701,9 +703,9 @@ export const Dashboard = () => {
                     </p>
                     <p className="p3">
                       A cada{' '}
-                      {rating.data.period > 1
-                        ? `${rating.data.period} ${rating.data.PeriodTimeInterval.pluralLabel}`
-                        : `${rating.data.period} ${rating.data.PeriodTimeInterval.singularLabel}`}
+                      {rating.data.frequency > 1
+                        ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
+                        : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
                     </p>
                   </Style.MostAccomplishedMaintenance>
                 ))}
@@ -730,9 +732,9 @@ export const Dashboard = () => {
                     </p>
                     <p className="p3">
                       A cada{' '}
-                      {rating.data.period > 1
-                        ? `${rating.data.period} ${rating.data.PeriodTimeInterval.pluralLabel}`
-                        : `${rating.data.period} ${rating.data.PeriodTimeInterval.singularLabel}`}
+                      {rating.data.frequency > 1
+                        ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
+                        : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
                     </p>
                   </Style.LeastAccomplishedMaintenance>
                 ))}
