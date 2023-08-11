@@ -59,13 +59,15 @@ export const Card = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
+  height: fit-content;
+`;
 
-  .bottom {
-    height: calc(100% - 40px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+export const AnnexCard = styled.div`
+  width: 100%;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm};
+  height: fit-content;
 `;
 
 export const CardGrid = styled.div`

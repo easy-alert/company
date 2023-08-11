@@ -534,7 +534,7 @@ export const BuildingDetails = () => {
         </Style.Card>
 
         <Style.CardGrid>
-          <Style.Card>
+          <Style.AnnexCard>
             <Style.CardHeader>
               <h5>Anexos</h5>
               <IconButton
@@ -584,7 +584,8 @@ export const BuildingDetails = () => {
                 <h5>Nenhum anexo cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card>
+          </Style.AnnexCard>
+
           <Style.Card>
             <Style.CardHeader>
               <h5>Banners</h5>
