@@ -27,10 +27,6 @@ export const Count = styled.div`
   display: flex;
   flex-direction: column;
 
-  .count {
-    color: ${theme.color.success};
-  }
-
   .total {
     color: ${theme.color.gray4};
   }

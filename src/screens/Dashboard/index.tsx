@@ -48,17 +48,98 @@ interface IScore {
   data: number[];
   labels: string[];
 }
+
+interface IMaintenance {
+  Category: {
+    name: string;
+  };
+  id: string;
+  element: string;
+  activity: string;
+  frequency: number;
+  FrequencyTimeInterval: {
+    pluralLabel: string;
+    singularLabel: string;
+  };
+  responsible: string;
+  source: string;
+  period: number;
+  PeriodTimeInterval: {
+    pluralLabel: string;
+    singularLabel: string;
+  };
+  delay: number;
+  DelayTimeInterval: {
+    pluralLabel: string;
+    singularLabel: string;
+  };
+  observation: string;
+}
+
+interface IRating {
+  allCount: number;
+  count: number;
+  data: IMaintenance;
+  id: string;
+  rating: number;
+}
+
+interface IMaintenancesData {
+  completed: IRating[];
+  expired: IRating[];
+}
+
+type IRatingStatus = '' | 'completed' | 'expired';
 // #endregion
 
 export const Dashboard = () => {
   // #region states
   const [modalDashboardMaintenanceDetails, setModalDashboardMaintenanceDetails] =
     useState<boolean>(false);
-  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string>('');
+
+  const [selectedRating, setSelectedRating] = useState<IRating>({
+    allCount: 0,
+    count: 0,
+    data: {
+      Category: {
+        name: '',
+      },
+      id: '',
+      element: '',
+      activity: '',
+      frequency: 0,
+      FrequencyTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      responsible: '',
+      source: '',
+      period: 0,
+      PeriodTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      delay: 0,
+      DelayTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      observation: '',
+    },
+    id: '',
+    rating: 0,
+  });
+
+  const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [investments, setInvestments] = useState<string>('');
+
+  const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
+    completed: [],
+    expired: [],
+  });
 
   const [timeLine, setTimeLine] = useState<ITimeline[]>([]);
 
@@ -108,6 +189,7 @@ export const Dashboard = () => {
       },
     })
       .then(async ({ data }) => {
+        setMaintenancesData(data.maintenancesData);
         setTimeLine(data.timeLine);
         setInvestments(data.investments);
         setScore(data.score);
@@ -380,8 +462,9 @@ export const Dashboard = () => {
     getDashboardData(resetFilters);
   };
 
-  const handleSelectedMaintenance = (maintenanceId: string) => {
-    setSelectedMaintenanceId(maintenanceId);
+  const handleSelectedMaintenance = (rating: IRating, status: IRatingStatus) => {
+    setSelectedRating(rating);
+    setSelectedRatingStatus(status);
     setModalDashboardMaintenanceDetails(true);
   };
   // #endregion
@@ -397,7 +480,8 @@ export const Dashboard = () => {
       {modalDashboardMaintenanceDetails && (
         <ModalDashboardMaintenanceDetails
           setModal={setModalDashboardMaintenanceDetails}
-          maintenanceId={selectedMaintenanceId}
+          status={selectedRatingStatus}
+          rating={selectedRating}
         />
       )}
 
@@ -604,62 +688,50 @@ export const Dashboard = () => {
             <Style.Card>
               <h5>Manutenções mais realizadas</h5>
               <Style.CardContent>
-                <Style.MostAccomplishedMaintenance
-                  onClick={() => {
-                    handleSelectedMaintenance('e.id');
-                  }}
-                >
-                  <h6>man man man man man man man man man man man man man man man man </h6>
-                  <p className="p2">
-                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                    claaa claaa claaa
-                  </p>
-                  <p className="p3">A cada 9999 semanas</p>
-                </Style.MostAccomplishedMaintenance>
-
-                <Style.MostAccomplishedMaintenance
-                  onClick={() => {
-                    handleSelectedMaintenance('e.id');
-                  }}
-                >
-                  <h6>man man man man man man man man man man man man man man man man </h6>
-                  <p className="p2 ">
-                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                    claaa claaa claaa
-                  </p>
-                  <p className="p3">A cada 9999 semanas</p>
-                </Style.MostAccomplishedMaintenance>
+                {maintenancesData?.completed?.map((rating) => (
+                  <Style.MostAccomplishedMaintenance
+                    key={rating.id}
+                    onClick={() => {
+                      handleSelectedMaintenance(rating, 'completed');
+                    }}
+                  >
+                    <h6>{rating.data.Category.name}</h6>
+                    <p className="p2" title={rating.data.activity}>
+                      {rating.data.activity}
+                    </p>
+                    <p className="p3">
+                      A cada{' '}
+                      {rating.data.period > 1
+                        ? `${rating.data.period} ${rating.data.PeriodTimeInterval.pluralLabel}`
+                        : `${rating.data.period} ${rating.data.PeriodTimeInterval.singularLabel}`}
+                    </p>
+                  </Style.MostAccomplishedMaintenance>
+                ))}
               </Style.CardContent>
             </Style.Card>
 
             <Style.Card>
               <h5>Manutenções menos realizadas</h5>
               <Style.CardContent>
-                <Style.LeastAccomplishedMaintenance
-                  onClick={() => {
-                    handleSelectedMaintenance('e.id');
-                  }}
-                >
-                  <h6>man man man man man man man man man man man man man man man man </h6>
-                  <p className="p2">
-                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                    claaa claaa claaa
-                  </p>
-                  <p className="p3">A cada 9999 semanas</p>
-                </Style.LeastAccomplishedMaintenance>
-
-                <Style.LeastAccomplishedMaintenance
-                  onClick={() => {
-                    handleSelectedMaintenance('e.id');
-                  }}
-                >
-                  <h6>man man man man man man man man man man man man man man man man </h6>
-                  <p className="p2">
-                    claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa claaa
-                    claaa claaa claaa
-                  </p>
-                  <p className="p3">A cada 9999 semanas</p>
-                </Style.LeastAccomplishedMaintenance>
+                {maintenancesData?.expired?.map((rating) => (
+                  <Style.LeastAccomplishedMaintenance
+                    key={rating.id}
+                    onClick={() => {
+                      handleSelectedMaintenance(rating, 'expired');
+                    }}
+                  >
+                    <h6>{rating.data.Category.name}</h6>
+                    <p className="p2" title={rating.data.activity}>
+                      {rating.data.activity}
+                    </p>
+                    <p className="p3">
+                      A cada{' '}
+                      {rating.data.period > 1
+                        ? `${rating.data.period} ${rating.data.PeriodTimeInterval.pluralLabel}`
+                        : `${rating.data.period} ${rating.data.PeriodTimeInterval.singularLabel}`}
+                    </p>
+                  </Style.LeastAccomplishedMaintenance>
+                ))}
               </Style.CardContent>
             </Style.Card>
           </Style.PanelWrapper>
