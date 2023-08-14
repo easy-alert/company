@@ -68,6 +68,13 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
+  min-height: 152px;
+`;
+
+export const AnnexCardButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
 `;
 
 export const CardGrid = styled.div`
@@ -164,11 +171,15 @@ export const TableDataWrapper = styled.div`
 
 export const NoDataContainer = styled.div`
   width: 100%;
+  min-height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   > h5 {
     color: ${theme.color.gray4};
     text-align: center;
-    margin-bottom: ${theme.size.xlg};
   }
 `;
 

@@ -48,7 +48,7 @@ export async function uploadManyFiles(files: any) {
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i += 1) {
-    formData.append('images', files[i]);
+    formData.append('files', files[i]);
   }
 
   await Api.post('upload/files', formData).then((res) => {

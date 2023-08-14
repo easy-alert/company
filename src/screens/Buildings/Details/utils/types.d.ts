@@ -11,11 +11,22 @@ export interface INotificationConfiguration {
   nanoId: string;
 }
 
-interface Annex {
+interface File {
   name: string;
   id: string;
   url: string;
-  originalName: string;
+}
+
+interface Folder {
+  name: string;
+  id: string;
+}
+
+interface Folders {
+  name: string;
+  id: string;
+  Files: Files[];
+  Folders: Folder[];
 }
 
 interface Banner {
@@ -49,7 +60,7 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
-  Annexes: Annex[];
+  Folders: Folders[];
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
   Banners: Banner[];

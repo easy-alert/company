@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../services/api';
-import { catchHandler, uploadFile } from '../../../../../../utils/functions';
+import { catchHandler, uploadManyFiles } from '../../../../../../utils/functions';
 import { requestBuildingDetails } from '../../functions';
 import { IRequestRegisterBuildingFile } from './types';
 
@@ -20,11 +20,13 @@ export const requestRegisterBuildingFile = async ({
 
   setOnQuery(true);
 
-  const { Location: fileUrl, originalname: originalName } = await uploadFile(files[0]);
+  const teste = await uploadManyFiles(files);
+  // eslint-disable-next-line no-console
+  console.log('teste:', teste);
+
+  setOnQuery(false);
 
   await Api.post('/buildings/annexes/create', {
-    url: fileUrl,
-    originalName,
     buildingId,
   })
     .then((res) => {

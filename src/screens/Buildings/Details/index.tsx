@@ -1,3 +1,4 @@
+// #region
 // COMPONENTS
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -40,8 +41,11 @@ import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 import { FileComponent, FolderComponent } from '../../../components/FileSystem';
+import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
+// #endregion
 
 export const BuildingDetails = () => {
+  // #region states
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
@@ -74,11 +78,15 @@ export const BuildingDetails = () => {
 
   const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
 
+  const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
+
   const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
+  // #endregion
 
+  // #region useeffects
   useEffect(() => {
     requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
@@ -104,6 +112,7 @@ export const BuildingDetails = () => {
       navigate(`/buildings/details/${buildingId}/maintenances/manage`);
     }
   }, [modalCreateNotificationConfigurationOpen]);
+  // #endregion
 
   return loading ? (
     <DotSpinLoading />
@@ -153,6 +162,10 @@ export const BuildingDetails = () => {
           setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
         />
+      )}
+
+      {modalCreateFolderOpen && building && (
+        <ModalCreateFolder setModal={setModalCreateFolderOpen} />
       )}
 
       {modalManageBannersOpen && building && (
@@ -535,29 +548,35 @@ export const BuildingDetails = () => {
           <Style.AnnexCard>
             <Style.CardHeader>
               <h5>Anexos</h5>
-              <IconButton
-                icon={icon.plusWithBg}
-                label="Cadastrar"
-                size="24px"
-                hideLabelOnMedia
-                onClick={() => {
-                  setModalAddFilesOpen(true);
-                }}
-              />
+              <Style.AnnexCardButtons>
+                <IconButton
+                  icon={icon.plusWithBg}
+                  label="Criar pasta"
+                  size="24px"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    setModalCreateFolderOpen(true);
+                  }}
+                />
+
+                <IconButton
+                  icon={icon.plusWithBg}
+                  label="Enviar arquivos"
+                  size="24px"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    setModalAddFilesOpen(true);
+                  }}
+                />
+              </Style.AnnexCardButtons>
             </Style.CardHeader>
-            {building && building?.Annexes.length > 0 ? (
+            {building && building?.Folders.length > 0 ? (
               <Style.TagWrapper>
-                {building.Annexes.map((element) => (
-                  <FolderComponent
-                    key={element.id}
-                    name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                  />
+                {building.Folders[0].Folders.map((element) => (
+                  <FolderComponent key={element.id} name={element.name} />
                 ))}
-                {building.Annexes.map((element) => (
-                  <FileComponent
-                    key={element.id}
-                    name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png"
-                  />
+                {building.Folders[0].Files.map((element) => (
+                  <FileComponent key={element.id} name={element.name} url={element.url} />
                 ))}
               </Style.TagWrapper>
             ) : (

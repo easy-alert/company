@@ -5,10 +5,12 @@ export const Background = styled.div`
   position: relative;
 `;
 
-export const Wrapper = styled.button`
+export const Wrapper = styled.div`
   background-color: ${theme.color.gray2};
   padding: ${theme.size.xsm};
   border-radius: ${theme.size.xxsm};
+
+  cursor: pointer;
 
   display: flex;
   align-items: center;
@@ -16,6 +18,10 @@ export const Wrapper = styled.button`
 
   min-width: 0;
   max-width: 150px;
+
+  > button {
+    all: unset;
+  }
 
   > p {
     white-space: nowrap;
@@ -29,6 +35,13 @@ export const Wrapper = styled.button`
   :hover {
     opacity: 0.7;
   }
+`;
+
+export const Download = styled.a`
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
 `;
 
 export const Dropdown = styled.div`
@@ -45,4 +58,11 @@ export const Dropdown = styled.div`
   bottom: 10px;
   right: -82px;
   z-index: 150;
+
+  > a {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xxsm};
+    color: ${theme.color.gray5};
+  }
 `;

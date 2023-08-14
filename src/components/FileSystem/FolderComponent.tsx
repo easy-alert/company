@@ -14,7 +14,8 @@ export const FolderComponent = ({ name }: IFolder) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
     setDropdownOpen((prevState) => !prevState);
   };
 
@@ -35,17 +36,25 @@ export const FolderComponent = ({ name }: IFolder) => {
   return (
     <Style.Background ref={dropdownRef}>
       <Style.Wrapper
-        type="button"
         onClick={() => {
-          //
+          // console.log('folder click');
         }}
       >
         <Image img={icon.folder} size="16px" />
         <p className="p4" title={name}>
           {name}
         </p>
-        <IconButton icon={icon.dots} size="16px" onClick={toggleDropdown} />
+
+        <button
+          type="button"
+          onClick={(e) => {
+            toggleDropdown(e);
+          }}
+        >
+          <Image img={icon.dots} size="16px" />
+        </button>
       </Style.Wrapper>
+
       {dropdownOpen && (
         <Style.Dropdown>
           <PopoverButton
@@ -77,7 +86,9 @@ export const FolderComponent = ({ name }: IFolder) => {
             labelPos="right"
             icon={icon.grayEdit}
             size="16px"
-            onClick={toggleDropdown}
+            onClick={() => {
+              //
+            }}
             label="Renomear"
           />
         </Style.Dropdown>

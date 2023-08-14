@@ -9,9 +9,10 @@ import { detectFileExtension } from '../../utils/functions';
 
 interface IFile {
   name: string;
+  url: string;
 }
 
-export const FileComponent = ({ name }: IFile) => {
+export const FileComponent = ({ name, url }: IFile) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -36,7 +37,7 @@ export const FileComponent = ({ name }: IFile) => {
   const imageExtensions = ['png', 'jpg', 'svg', 'jpeg'];
 
   const handleFileIcon = () => {
-    const fileExtension = detectFileExtension(name);
+    const fileExtension = detectFileExtension(url);
 
     if (fileExtension && imageExtensions.includes(fileExtension)) {
       return icon.placeholder;
@@ -47,17 +48,17 @@ export const FileComponent = ({ name }: IFile) => {
 
   return (
     <Style.Background ref={dropdownRef}>
-      <Style.Wrapper
-        type="button"
-        onClick={() => {
-          //
-        }}
-      >
-        <Image img={handleFileIcon()} size="16px" />
-        <p className="p4" title={name}>
-          {name}
-        </p>
-        <IconButton icon={icon.dots} size="16px" onClick={toggleDropdown} />
+      <Style.Wrapper>
+        <Style.Download href={url} download target="_blank" rel="noreferrer">
+          <Image img={handleFileIcon()} size="16px" />
+          <p className="p4" title={name}>
+            {name}
+          </p>
+        </Style.Download>
+
+        <button type="button" onClick={toggleDropdown}>
+          <Image img={icon.dots} size="16px" />
+        </button>
       </Style.Wrapper>
       {dropdownOpen && (
         <Style.Dropdown>
@@ -90,18 +91,15 @@ export const FileComponent = ({ name }: IFile) => {
             labelPos="right"
             icon={icon.grayEdit}
             size="16px"
-            onClick={toggleDropdown}
+            onClick={() => {
+              //
+            }}
             label="Renomear"
           />
-          <IconButton
-            fontWeight="400"
-            color={theme.color.gray5}
-            labelPos="right"
-            icon={icon.grayDownload}
-            size="16px"
-            onClick={toggleDropdown}
-            label="Download"
-          />
+          <a href={url} download target="_blank" rel="noreferrer">
+            <Image img={icon.grayDownload} size="16px" />
+            <p className="p2">Download</p>
+          </a>
         </Style.Dropdown>
       )}
     </Style.Background>
