@@ -39,7 +39,7 @@ import { theme } from '../../../styles/theme';
 import { IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
-import { Folder } from '../../../components/Folder';
+import { FileComponent, FolderComponent } from '../../../components/FileSystem';
 
 export const BuildingDetails = () => {
   const navigate = useNavigate();
@@ -548,7 +548,16 @@ export const BuildingDetails = () => {
             {building && building?.Annexes.length > 0 ? (
               <Style.TagWrapper>
                 {building.Annexes.map((element) => (
-                  <Folder key={element.id} name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
+                  <FolderComponent
+                    key={element.id}
+                    name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                  />
+                ))}
+                {building.Annexes.map((element) => (
+                  <FileComponent
+                    key={element.id}
+                    name="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png"
+                  />
                 ))}
               </Style.TagWrapper>
             ) : (

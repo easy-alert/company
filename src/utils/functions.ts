@@ -41,6 +41,22 @@ export async function uploadFile(file: any) {
 
   return response as IUploadFile;
 }
+
+export async function uploadManyFiles(files: any) {
+  let response = {};
+
+  const formData = new FormData();
+
+  for (let i = 0; i < files.length; i += 1) {
+    formData.append('images', files[i]);
+  }
+
+  await Api.post('upload/files', formData).then((res) => {
+    response = res.data;
+  });
+
+  return response as IUploadFile[];
+}
 // #endregion
 
 // #region ERRORS
@@ -234,15 +250,14 @@ export const unMaskBRL = (value: string) => value.replace(/[^0-9]/g, '');
 export const capitalizeFirstLetter = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1);
 
-export const convertToUrlString = (value: string) =>
-  value
-    .normalize('NFD')
-    .replaceAll(/[\u0300-\u036f]/g, '')
-    .replaceAll(' ', '-')
-    .replaceAll(/[^a-zA-Z0-9-]/g, '')
-    .toLowerCase()
-    .replaceAll('--', '-')
-    .replaceAll('---', '-');
+export const detectFileExtension = (fileName: string): string | null => {
+  const parts = fileName.split('.');
+
+  if (parts.length > 1) {
+    return parts[parts.length - 1];
+  }
+  return null;
+};
 // #endregion
 
 // #region REQUESTS

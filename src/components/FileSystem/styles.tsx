@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-export const FolderWrapper = styled.div`
+export const Background = styled.div`
   position: relative;
+`;
+
+export const Wrapper = styled.button`
   background-color: ${theme.color.gray2};
   padding: ${theme.size.xsm};
   border-radius: ${theme.size.xxsm};
@@ -20,6 +23,12 @@ export const FolderWrapper = styled.div`
     text-overflow: ellipsis;
     color: ${theme.color.black};
   }
+
+  transition: 0.5s;
+
+  :hover {
+    opacity: 0.7;
+  }
 `;
 
 export const Dropdown = styled.div`
@@ -33,7 +42,7 @@ export const Dropdown = styled.div`
   gap: ${theme.size.xsm};
 
   position: absolute;
-  top: -35px;
-  right: -60px;
-  z-index: 10;
+  bottom: 10px;
+  right: -82px;
+  z-index: 150;
 `;

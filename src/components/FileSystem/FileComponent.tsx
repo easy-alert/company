@@ -5,12 +5,13 @@ import { Image } from '../Image';
 import { IconButton } from '../Buttons/IconButton';
 import { theme } from '../../styles/theme';
 import { PopoverButton } from '../Buttons/PopoverButton';
+import { detectFileExtension } from '../../utils/functions';
 
-interface IFolder {
+interface IFile {
   name: string;
 }
 
-export const Folder = ({ name }: IFolder) => {
+export const FileComponent = ({ name }: IFile) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,19 +33,38 @@ export const Folder = ({ name }: IFolder) => {
     };
   }, []);
 
+  const imageExtensions = ['png', 'jpg', 'svg', 'jpeg'];
+
+  const handleFileIcon = () => {
+    const fileExtension = detectFileExtension(name);
+
+    if (fileExtension && imageExtensions.includes(fileExtension)) {
+      return icon.placeholder;
+    }
+
+    return icon.grayPaper;
+  };
+
   return (
-    <Style.FolderWrapper ref={dropdownRef}>
-      <Image img={icon.folder} size="16px" />
-      <p className="p4" title={name}>
-        {name}
-      </p>
-      <IconButton icon={icon.dots} size="16px" onClick={toggleDropdown} />
+    <Style.Background ref={dropdownRef}>
+      <Style.Wrapper
+        type="button"
+        onClick={() => {
+          //
+        }}
+      >
+        <Image img={handleFileIcon()} size="16px" />
+        <p className="p4" title={name}>
+          {name}
+        </p>
+        <IconButton icon={icon.dots} size="16px" onClick={toggleDropdown} />
+      </Style.Wrapper>
       {dropdownOpen && (
         <Style.Dropdown>
           <PopoverButton
             actionButtonBgColor={theme.color.actionDanger}
             type="IconButton"
-            buttonIcon={icon.trash}
+            buttonIcon={icon.grayTrash}
             buttonIconSize="16px"
             iconButtonColor={theme.color.gray5}
             label="Excluir"
@@ -68,13 +88,22 @@ export const Folder = ({ name }: IFolder) => {
             fontWeight="400"
             color={theme.color.gray5}
             labelPos="right"
-            icon={icon.edit}
+            icon={icon.grayEdit}
             size="16px"
             onClick={toggleDropdown}
-            label="Editar"
+            label="Renomear"
+          />
+          <IconButton
+            fontWeight="400"
+            color={theme.color.gray5}
+            labelPos="right"
+            icon={icon.grayDownload}
+            size="16px"
+            onClick={toggleDropdown}
+            label="Download"
           />
         </Style.Dropdown>
       )}
-    </Style.FolderWrapper>
+    </Style.Background>
   );
 };

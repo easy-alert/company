@@ -1,12 +1,11 @@
 import { toast } from 'react-toastify';
-import { Api } from '../../../../../../../services/api';
-import { catchHandler, uploadFile } from '../../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../../functions';
+import { Api } from '../../../../../../services/api';
+import { catchHandler, uploadFile } from '../../../../../../utils/functions';
+import { requestBuildingDetails } from '../../functions';
 import { IRequestRegisterBuildingFile } from './types';
 
 export const requestRegisterBuildingFile = async ({
   files,
-  fileName,
   setOnQuery,
   buildingId,
   setBuilding,
@@ -14,11 +13,6 @@ export const requestRegisterBuildingFile = async ({
   setUsedMaintenancesCount,
   setModal,
 }: IRequestRegisterBuildingFile) => {
-  if (fileName === '') {
-    toast.error('O nome do anexo é obrigatório.');
-    return;
-  }
-
   if (files.length === 0) {
     toast.error('O anexo é obrigatório.');
     return;
@@ -29,7 +23,6 @@ export const requestRegisterBuildingFile = async ({
   const { Location: fileUrl, originalname: originalName } = await uploadFile(files[0]);
 
   await Api.post('/buildings/annexes/create', {
-    name: fileName,
     url: fileUrl,
     originalName,
     buildingId,

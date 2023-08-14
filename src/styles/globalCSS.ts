@@ -207,13 +207,6 @@ export default createGlobalStyle`
     cursor: pointer;
     color: ${theme.color.white};
     background-color: ${theme.color.primary};
-
-
-    transition: 0.5s;
-
-    :hover {
-      opacity: 0.7;
-    }
   }
 
   table{
