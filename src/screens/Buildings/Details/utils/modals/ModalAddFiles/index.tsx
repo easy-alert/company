@@ -51,21 +51,23 @@ export const ModalAddFiles = ({
           </Style.Content>
         </Style.DragAndDropZone>
 
-        <Style.TagsWrapper>
-          {files.map((e, i) => (
-            <ListTag
-              label={e.name}
-              key={e.name}
-              onClick={() => {
-                setFiles((prevState) => {
-                  const newState = [...prevState];
-                  newState.splice(i, 1);
-                  return newState;
-                });
-              }}
-            />
-          ))}
-        </Style.TagsWrapper>
+        {files.length > 0 && (
+          <Style.TagsWrapper>
+            {files.map((e, i) => (
+              <ListTag
+                label={e.name}
+                key={e.name}
+                onClick={() => {
+                  setFiles((prevState) => {
+                    const newState = [...prevState];
+                    newState.splice(i, 1);
+                    return newState;
+                  });
+                }}
+              />
+            ))}
+          </Style.TagsWrapper>
+        )}
 
         <Button
           loading={onQuery}

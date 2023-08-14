@@ -21,6 +21,7 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import {
   changeShowContactStatus,
   requestBuildingDetails,
+  requestFolderDetails,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
 } from './utils/functions';
@@ -82,6 +83,8 @@ export const BuildingDetails = () => {
 
   const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
 
+  const [folderId, setFolderId] = useState<string | null>(null);
+
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
   // #endregion
@@ -112,6 +115,15 @@ export const BuildingDetails = () => {
       navigate(`/buildings/details/${buildingId}/maintenances/manage`);
     }
   }, [modalCreateNotificationConfigurationOpen]);
+
+  useEffect(() => {
+    if (folderId) {
+      requestFolderDetails({
+        folderId,
+        setBuilding,
+      });
+    }
+  }, [folderId]);
   // #endregion
 
   return loading ? (
@@ -165,7 +177,12 @@ export const BuildingDetails = () => {
       )}
 
       {modalCreateFolderOpen && building && (
-        <ModalCreateFolder setModal={setModalCreateFolderOpen} />
+        <ModalCreateFolder
+          setModal={setModalCreateFolderOpen}
+          buildingId={building.id}
+          setBuilding={setBuilding}
+          parentId={folderId || building?.Folders.id}
+        />
       )}
 
       {modalManageBannersOpen && building && (
@@ -547,7 +564,10 @@ export const BuildingDetails = () => {
         <Style.CardGrid>
           <Style.AnnexCard>
             <Style.CardHeader>
-              <h5>Anexos</h5>
+              <Style.AnnexCardHeader>
+                <h5>Anexos</h5>
+                <p className="p3">Início</p>
+              </Style.AnnexCardHeader>
               <Style.AnnexCardButtons>
                 <IconButton
                   icon={icon.plusWithBg}
@@ -560,7 +580,7 @@ export const BuildingDetails = () => {
                 />
 
                 <IconButton
-                  icon={icon.plusWithBg}
+                  icon={icon.addFileV2}
                   label="Enviar arquivos"
                   size="24px"
                   hideLabelOnMedia
@@ -570,12 +590,19 @@ export const BuildingDetails = () => {
                 />
               </Style.AnnexCardButtons>
             </Style.CardHeader>
-            {building && building?.Folders.length > 0 ? (
+            {building &&
+            (building?.Folders.Files.length > 0 || building?.Folders.Folders.length > 0) ? (
               <Style.TagWrapper>
-                {building.Folders[0].Folders.map((element) => (
-                  <FolderComponent key={element.id} name={element.name} />
+                {building?.Folders?.Folders?.map((element) => (
+                  <FolderComponent
+                    key={element.id}
+                    name={element.name}
+                    onFolderClick={() => {
+                      setFolderId(element.id);
+                    }}
+                  />
                 ))}
-                {building.Folders[0].Files.map((element) => (
+                {building?.Folders?.Files?.map((element) => (
                   <FileComponent key={element.id} name={element.name} url={element.url} />
                 ))}
               </Style.TagWrapper>

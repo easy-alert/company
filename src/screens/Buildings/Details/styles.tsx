@@ -71,6 +71,11 @@ export const AnnexCard = styled.div`
   min-height: 152px;
 `;
 
+export const AnnexCardHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const AnnexCardButtons = styled.div`
   display: flex;
   align-items: center;

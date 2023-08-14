@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../services/api';
-import { catchHandler, uploadManyFiles } from '../../../../../../utils/functions';
+import { catchHandler } from '../../../../../../utils/functions';
 import { requestBuildingDetails } from '../../functions';
 import { IRequestRegisterBuildingFile } from './types';
 
@@ -20,9 +20,7 @@ export const requestRegisterBuildingFile = async ({
 
   setOnQuery(true);
 
-  const teste = await uploadManyFiles(files);
-  // eslint-disable-next-line no-console
-  console.log('teste:', teste);
+  // const teste = await uploadManyFiles(files);
 
   setOnQuery(false);
 

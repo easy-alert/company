@@ -57,6 +57,7 @@ import grayTrash from './grayTrash.svg';
 import grayPaper from './grayPaper.svg';
 import placeholder from './placeholder.svg';
 import grayDownload from './grayDownload.svg';
+import addFileV2 from './addFileV2.svg';
 
 export const icon = {
   leftArrow,
@@ -118,4 +119,5 @@ export const icon = {
   grayPaper,
   placeholder,
   grayDownload,
+  addFileV2,
 };

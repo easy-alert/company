@@ -4,6 +4,7 @@ import { catchHandler } from '../../../../utils/functions';
 import {
   IChangeShowContactStatus,
   IRequestBuildingDetails,
+  IRequestFolderDetails,
   IRequestResendConfirmation,
 } from './types';
 
@@ -77,11 +78,29 @@ export const changeShowContactStatus = async ({
     buildingNotificationConfigurationId,
     showContact,
   })
-
     .catch((err) => {
       catchHandler(err);
     })
     .finally(() => {
       setShowContactLoading(false);
+    });
+};
+
+export const requestFolderDetails = async ({ folderId, setBuilding }: IRequestFolderDetails) => {
+  await Api.get(`/buildings/folders/list/${folderId}`)
+    .then((res) => {
+      setBuilding((prevState) => {
+        if (prevState) {
+          const newState = { ...prevState };
+
+          newState.Folders = res.data;
+
+          return newState;
+        }
+        return undefined;
+      });
+    })
+    .catch((err) => {
+      catchHandler(err);
     });
 };

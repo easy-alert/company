@@ -60,7 +60,7 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
-  Folders: Folders[];
+  Folders: Folders;
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
   Banners: Banner[];
@@ -92,4 +92,9 @@ export interface IChangeShowContactStatus {
   setShowContactLoading: React.Dispatch<React.SetStateAction<boolean>>;
   buildingNotificationConfigurationId: string;
   showContact: boolean;
+}
+
+export interface IRequestFolderDetails {
+  folderId: string;
+  setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
 }

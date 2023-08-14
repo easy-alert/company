@@ -8,9 +8,10 @@ import { PopoverButton } from '../Buttons/PopoverButton';
 
 interface IFolder {
   name: string;
+  onFolderClick: () => void;
 }
 
-export const FolderComponent = ({ name }: IFolder) => {
+export const FolderComponent = ({ name, onFolderClick }: IFolder) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,11 +36,7 @@ export const FolderComponent = ({ name }: IFolder) => {
 
   return (
     <Style.Background ref={dropdownRef}>
-      <Style.Wrapper
-        onClick={() => {
-          // console.log('folder click');
-        }}
-      >
+      <Style.Wrapper onClick={onFolderClick}>
         <Image img={icon.folder} size="16px" />
         <p className="p4" title={name}>
           {name}
