@@ -266,6 +266,13 @@ export const TagWrapper = styled.div`
   gap: ${theme.size.xsm};
 `;
 
+export const BannerWrapper = styled.div`
+  margin-top: ${theme.size.xsm};
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.size.xsm};
+`;
+
 export const Tag = styled.div`
   display: flex;
   align-items: center;

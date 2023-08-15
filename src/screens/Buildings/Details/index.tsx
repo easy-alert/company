@@ -722,7 +722,7 @@ export const BuildingDetails = () => {
               />
             </Style.CardHeader>
             {building && building?.Banners.length > 0 ? (
-              <Style.TagWrapper>
+              <Style.BannerWrapper>
                 {building.Banners.map((element, i: number) => (
                   <ImagePreview
                     // eslint-disable-next-line react/no-array-index-key
@@ -735,7 +735,7 @@ export const BuildingDetails = () => {
                     imageOriginalName={element.originalName}
                   />
                 ))}
-              </Style.TagWrapper>
+              </Style.BannerWrapper>
             ) : (
               <Style.NoBanners className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>
