@@ -702,9 +702,9 @@ export const BuildingDetails = () => {
                 ))}
               </Style.TagWrapper>
             ) : (
-              <Style.NoDataContainer className="bottom">
+              <Style.NoAnnexes className="bottom">
                 <h5>Nenhum anexo cadastrado.</h5>
-              </Style.NoDataContainer>
+              </Style.NoAnnexes>
             )}
           </Style.AnnexCard>
 
@@ -737,9 +737,9 @@ export const BuildingDetails = () => {
                 ))}
               </Style.TagWrapper>
             ) : (
-              <Style.NoDataContainer className="bottom">
+              <Style.NoBanners className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>
-              </Style.NoDataContainer>
+              </Style.NoBanners>
             )}
           </Style.AnnexCard>
         </Style.CardGrid>

@@ -24,6 +24,14 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
+export const AnnexCardTitle = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: ${theme.size.sm};
+`;
+
 export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -215,6 +223,35 @@ export const NoDataContainer = styled.div`
   > h5 {
     color: ${theme.color.gray4};
     text-align: center;
+  }
+`;
+
+export const NoBanners = styled.div`
+  width: 100%;
+  min-height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+  }
+`;
+
+export const NoAnnexes = styled.div`
+  width: 100%;
+  min-height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+    margin-top: -20px;
   }
 `;
 
