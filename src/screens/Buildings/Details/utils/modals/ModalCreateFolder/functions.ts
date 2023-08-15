@@ -31,7 +31,7 @@ export const requestCreateFolder = async ({
           const newState = { ...prevState };
 
           if (newState.Folders) {
-            newState.Folders.Folders.unshift({ id: data.id, name: data.name });
+            newState.Folders.Folders.unshift(data);
           }
 
           return newState;

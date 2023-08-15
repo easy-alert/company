@@ -16,7 +16,7 @@ import { requestRegisterBuildingFile } from './functions';
 import { IModalAddFiles } from './types';
 import { ListTag } from '../../../../../../components/ListTag';
 
-export const ModalAddFiles = ({ setModal, buildingId, setBuilding }: IModalAddFiles) => {
+export const ModalAddFiles = ({ setModal, folderId, setBuilding }: IModalAddFiles) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const onDrop = useCallback(
@@ -71,7 +71,7 @@ export const ModalAddFiles = ({ setModal, buildingId, setBuilding }: IModalAddFi
             requestRegisterBuildingFile({
               files,
               setOnQuery,
-              buildingId,
+              folderId,
               setModal,
               setBuilding,
             });

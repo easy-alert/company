@@ -86,7 +86,6 @@ export const BuildingDetails = () => {
   const [folderId, setFolderId] = useState<string | null>(null);
 
   const [rootFolderId, setRootFolderId] = useState<string>('');
-  console.log('rootFolderId:', rootFolderId);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -194,8 +193,8 @@ export const BuildingDetails = () => {
       {modalAddFilesOpen && building && (
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
-          buildingId={building.id}
           setBuilding={setBuilding}
+          folderId={folderId || building?.Folders.id}
         />
       )}
 
@@ -596,7 +595,14 @@ export const BuildingDetails = () => {
             <Style.CardHeader>
               <Style.AnnexCardHeader>
                 <h5>Anexos</h5>
-                <p className="p3">Início</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFolderId(rootFolderId);
+                  }}
+                >
+                  Início
+                </button>
               </Style.AnnexCardHeader>
               <Style.AnnexCardButtons>
                 <IconButton

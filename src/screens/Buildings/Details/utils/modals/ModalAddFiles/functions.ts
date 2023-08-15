@@ -1,13 +1,14 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../services/api';
-import { catchHandler } from '../../../../../../utils/functions';
+import { catchHandler, uploadManyFiles } from '../../../../../../utils/functions';
 import { IRequestRegisterBuildingFile } from './types';
 
 export const requestRegisterBuildingFile = async ({
   files,
   setOnQuery,
-  buildingId,
+  folderId,
   setModal,
+  setBuilding,
 }: IRequestRegisterBuildingFile) => {
   if (files.length === 0) {
     toast.error('O anexo é obrigatório.');
@@ -16,17 +17,32 @@ export const requestRegisterBuildingFile = async ({
 
   setOnQuery(true);
 
-  // const teste = await uploadManyFiles(files);
+  const uploadedFiles = await uploadManyFiles(files);
 
-  setOnQuery(false);
+  const formattedFiles = uploadedFiles.map((file) => ({
+    name: file.originalname,
+    url: file.Location,
+    folderId,
+  }));
 
-  await Api.post('/buildings/annexes/create', {
-    buildingId,
+  await Api.post('/buildings/folders/files/create', {
+    files: formattedFiles,
   })
-    .then((res) => {
-      // add pelo front?
+    .then(({ data }) => {
+      setBuilding((prevState) => {
+        if (prevState) {
+          const newState = { ...prevState };
+
+          if (newState.Folders) {
+            newState.Folders.Files = [...data, ...newState.Folders.Files];
+          }
+
+          return newState;
+        }
+        return undefined;
+      });
+
       setModal(false);
-      toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {
       setOnQuery(false);

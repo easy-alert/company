@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
   gap: ${theme.size.xsm};
 
   min-width: 0;
-  max-width: 150px;
+  max-width: 170px;
 
   > button {
     all: unset;
@@ -42,6 +42,15 @@ export const Download = styled.a`
   display: flex;
   align-items: center;
   gap: ${theme.size.xsm};
+
+  min-width: 0;
+
+  > p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: ${theme.color.black};
+  }
 `;
 
 export const Dropdown = styled.div`

@@ -2,13 +2,13 @@ import { IBuildingDetail } from '../../types';
 
 export interface IModalAddFiles {
   setModal: (setModal: boolean) => void;
-  buildingId: string;
+  folderId: string;
   setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
 }
 
 export interface IRequestRegisterBuildingFile {
   files: any;
-  buildingId: string;
+  folderId: string;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;

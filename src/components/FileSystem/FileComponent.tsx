@@ -37,7 +37,7 @@ export const FileComponent = ({ name, url }: IFile) => {
   const imageExtensions = ['png', 'jpg', 'svg', 'jpeg'];
 
   const handleFileIcon = () => {
-    const fileExtension = detectFileExtension(url);
+    const fileExtension = url && detectFileExtension(url);
 
     if (fileExtension && imageExtensions.includes(fileExtension)) {
       return icon.placeholder;

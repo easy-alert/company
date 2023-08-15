@@ -22,12 +22,12 @@ export const requestBuildingDetails = async ({
       setUsedMaintenancesCount(res.data.usedMaintenancesCount);
       setTotalMaintenancesCount(res.data.totalMaintenancesCount);
       setRootFolderId(res.data.BuildingDetails.Folders.id);
-
-      if (setLoading) setLoading(false);
     })
     .catch((err) => {
-      if (setLoading) setLoading(false);
       catchHandler(err);
+    })
+    .finally(() => {
+      if (setLoading) setLoading(false);
     });
 };
 

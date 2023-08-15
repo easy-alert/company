@@ -74,6 +74,18 @@ export const AnnexCard = styled.div`
 export const AnnexCardHeader = styled.div`
   display: flex;
   flex-direction: column;
+
+  color: ${theme.color.gray4};
+
+  > button {
+    all: unset;
+    font-size: 12px;
+    cursor: pointer;
+
+    :hover {
+      opacity: 0.7;
+    }
+  }
 `;
 
 export const AnnexCardButtons = styled.div`
