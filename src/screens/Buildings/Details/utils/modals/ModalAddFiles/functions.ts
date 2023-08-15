@@ -1,16 +1,12 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../services/api';
 import { catchHandler } from '../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../functions';
 import { IRequestRegisterBuildingFile } from './types';
 
 export const requestRegisterBuildingFile = async ({
   files,
   setOnQuery,
   buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   setModal,
 }: IRequestRegisterBuildingFile) => {
   if (files.length === 0) {
@@ -28,12 +24,7 @@ export const requestRegisterBuildingFile = async ({
     buildingId,
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      // add pelo front?
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })

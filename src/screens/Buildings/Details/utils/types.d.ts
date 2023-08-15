@@ -72,6 +72,7 @@ export interface IRequestBuildingDetails {
   buildingId: string;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  setRootFolderId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface IRequestResendConfirmation {

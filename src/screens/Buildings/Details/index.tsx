@@ -1,4 +1,4 @@
-// #region
+// #region imports
 // COMPONENTS
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -85,6 +85,9 @@ export const BuildingDetails = () => {
 
   const [folderId, setFolderId] = useState<string | null>(null);
 
+  const [rootFolderId, setRootFolderId] = useState<string>('');
+  console.log('rootFolderId:', rootFolderId);
+
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
   // #endregion
@@ -98,6 +101,7 @@ export const BuildingDetails = () => {
         setBuilding,
         setUsedMaintenancesCount,
         setTotalMaintenancesCount,
+        setRootFolderId,
       });
 
       if (query.get('flow') === '1') {
@@ -134,10 +138,17 @@ export const BuildingDetails = () => {
         <ModalEditBuilding
           setModal={setModalEditBuildingOpen}
           building={building}
-          setBuilding={setBuilding}
           buildingTypes={buildingTypes}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolderId,
+            });
+          }}
         />
       )}
 
@@ -145,11 +156,18 @@ export const BuildingDetails = () => {
         <ModalCreateNotificationConfiguration
           setModal={setModalCreateNotificationConfigurationOpen}
           buildingId={building.id}
-          setBuilding={setBuilding}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolderId,
+            });
+          }}
         />
       )}
 
@@ -157,12 +175,19 @@ export const BuildingDetails = () => {
         <ModalEditNotificationConfiguration
           setModal={setModalEditNotificationConfigurationOpen}
           buildingId={building.id}
-          setBuilding={setBuilding}
           selectedNotificationRow={selectedNotificationRow}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolderId,
+            });
+          }}
         />
       )}
 
@@ -170,8 +195,6 @@ export const BuildingDetails = () => {
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
           buildingId={building.id}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
         />
       )}
@@ -189,10 +212,17 @@ export const BuildingDetails = () => {
         <ModalManageBanners
           setModal={setModalManageBannersOpen}
           buildingId={building.id}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
-          setBuilding={setBuilding}
           currentBanners={building?.Banners}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolderId,
+            });
+          }}
         />
       )}
 
@@ -591,7 +621,7 @@ export const BuildingDetails = () => {
               </Style.AnnexCardButtons>
             </Style.CardHeader>
             {building &&
-            (building?.Folders.Files.length > 0 || building?.Folders.Folders.length > 0) ? (
+            (building?.Folders?.Files?.length > 0 || building?.Folders?.Folders?.length > 0) ? (
               <Style.TagWrapper>
                 {building?.Folders?.Folders?.map((element) => (
                   <FolderComponent
