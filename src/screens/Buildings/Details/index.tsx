@@ -1,5 +1,6 @@
+// #region imports
 // COMPONENTS
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { icon } from '../../../assets/icons';
 import { IconButton } from '../../../components/Buttons/IconButton';
@@ -8,8 +9,8 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { Image } from '../../../components/Image';
 import { ImagePreview } from '../../../components/ImagePreview';
+import { Image } from '../../../components/Image';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
@@ -20,7 +21,8 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import {
   changeShowContactStatus,
   requestBuildingDetails,
-  requestDeleteAnnex,
+  requestDeleteFolder,
+  requestFolderDetails,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
 } from './utils/functions';
@@ -37,11 +39,17 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 
 // TYPES
-import { IBuildingDetail, INotificationConfiguration } from './utils/types';
+import { Folder, IBuildingDetail, INotificationConfiguration, File } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
+import { FileComponent, FolderComponent } from '../../../components/FileSystem';
+import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
+import { ModalEditFolder } from './utils/modals/ModalEditFolder';
+import { ModalEditFile } from './utils/modals/ModalEditFile';
+// #endregion
 
 export const BuildingDetails = () => {
+  // #region states
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
@@ -57,8 +65,6 @@ export const BuildingDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
-
-  const [deleteAnnexOnQuery, setDeleteAnnexOnQuery] = useState<boolean>(false);
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
@@ -76,11 +82,29 @@ export const BuildingDetails = () => {
 
   const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
 
+  const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
+
+  const [modalEditFolderOpen, setModalEditFolderOpen] = useState<boolean>(false);
+
+  const [modalEditFileOpen, setModalEditFileOpen] = useState<boolean>(false);
+
   const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
+
+  const [folderId, setFolderId] = useState<string | null>(null);
+
+  const [rootFolder, setRootFolder] = useState<Folder>({ id: '', name: '' });
+
+  const [folderToEdit, setFolderToEdit] = useState<Folder>();
+
+  const [fileToEdit, setFileToEdit] = useState<File>();
+
+  const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
+  // #endregion
 
+  // #region useeffects
   useEffect(() => {
     requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
@@ -89,6 +113,7 @@ export const BuildingDetails = () => {
         setBuilding,
         setUsedMaintenancesCount,
         setTotalMaintenancesCount,
+        setRootFolder,
       });
 
       if (query.get('flow') === '1') {
@@ -107,6 +132,18 @@ export const BuildingDetails = () => {
     }
   }, [modalCreateNotificationConfigurationOpen]);
 
+  useEffect(() => {
+    if (folderId) {
+      requestFolderDetails({
+        folderId,
+        setBuilding,
+        setBreadcrumb,
+        rootFolder,
+      });
+    }
+  }, [folderId]);
+  // #endregion
+
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -115,10 +152,17 @@ export const BuildingDetails = () => {
         <ModalEditBuilding
           setModal={setModalEditBuildingOpen}
           building={building}
-          setBuilding={setBuilding}
           buildingTypes={buildingTypes}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
         />
       )}
 
@@ -126,11 +170,18 @@ export const BuildingDetails = () => {
         <ModalCreateNotificationConfiguration
           setModal={setModalCreateNotificationConfigurationOpen}
           buildingId={building.id}
-          setBuilding={setBuilding}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
         />
       )}
 
@@ -138,22 +189,52 @@ export const BuildingDetails = () => {
         <ModalEditNotificationConfiguration
           setModal={setModalEditNotificationConfigurationOpen}
           buildingId={building.id}
-          setBuilding={setBuilding}
           selectedNotificationRow={selectedNotificationRow}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           emailConfirmUrl={emailConfirmUrl}
           phoneConfirmUrl={phoneConfirmUrl}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
         />
       )}
 
-      {modalAddFilesOpen && building && (
+      {modalAddFilesOpen && building && rootFolder && (
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
-          buildingId={building.id}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
           setBuilding={setBuilding}
+          folderId={folderId || building?.Folders.id}
+        />
+      )}
+
+      {modalCreateFolderOpen && building && rootFolder && (
+        <ModalCreateFolder
+          setModal={setModalCreateFolderOpen}
+          buildingId={building.id}
+          setBuilding={setBuilding}
+          parentId={folderId || building?.Folders.id}
+        />
+      )}
+
+      {modalEditFolderOpen && building && folderToEdit && (
+        <ModalEditFolder
+          setModal={setModalEditFolderOpen}
+          setBuilding={setBuilding}
+          folder={folderToEdit}
+        />
+      )}
+
+      {modalEditFileOpen && building && fileToEdit && (
+        <ModalEditFile
+          setModal={setModalEditFileOpen}
+          setBuilding={setBuilding}
+          file={fileToEdit}
         />
       )}
 
@@ -161,10 +242,17 @@ export const BuildingDetails = () => {
         <ModalManageBanners
           setModal={setModalManageBannersOpen}
           buildingId={building.id}
-          setTotalMaintenancesCount={setTotalMaintenancesCount}
-          setUsedMaintenancesCount={setUsedMaintenancesCount}
-          setBuilding={setBuilding}
           currentBanners={building?.Banners}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
         />
       )}
 
@@ -535,58 +623,92 @@ export const BuildingDetails = () => {
 
         <Style.CardGrid>
           <Style.AnnexCard>
-            <Style.CardHeader>
-              <h5>Anexos</h5>
-              <IconButton
-                icon={icon.plusWithBg}
-                label="Cadastrar"
-                size="24px"
-                hideLabelOnMedia
-                onClick={() => {
-                  setModalAddFilesOpen(true);
-                }}
-              />
-            </Style.CardHeader>
-            {building && building?.Annexes.length > 0 ? (
-              <Style.MatrixTagWrapper>
-                {building.Annexes.map((element) => (
-                  <Style.Tag key={element.id}>
-                    <a
-                      title={element.originalName}
-                      href={element.url}
-                      download
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <p className="p3">{element.name}</p>
-                      <Image size="16px" img={icon.download} />
-                    </a>
-                    <IconButton
-                      disabled={deleteAnnexOnQuery}
-                      size="16px"
-                      icon={icon.xBlack}
-                      onClick={() => {
-                        requestDeleteAnnex({
-                          annexeId: element.id,
-                          setDeleteAnnexOnQuery,
-                          buildingId: building.id,
-                          setBuilding,
-                          setTotalMaintenancesCount,
-                          setUsedMaintenancesCount,
-                        });
-                      }}
-                    />
-                  </Style.Tag>
+            <Style.AnnexCardTitle>
+              <Style.AnnexCardHeader>
+                <h5>Anexos</h5>
+                <Style.BreadcrumbWrapper>
+                  {breadcrumb.map((element, i) => (
+                    <React.Fragment key={element.id}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFolderId(element.id);
+                        }}
+                      >
+                        {element.name}
+                      </button>
+
+                      {i === 0 && breadcrumb.length > 1 && <p className="p3">/</p>}
+
+                      {i > 0 && breadcrumb.length > 1 && i + 1 !== breadcrumb.length && (
+                        <p className="p3">{'>'}</p>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </Style.BreadcrumbWrapper>
+              </Style.AnnexCardHeader>
+
+              <Style.AnnexCardButtons>
+                <IconButton
+                  icon={icon.plusWithBg}
+                  label="Pasta"
+                  size="24px"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    setModalCreateFolderOpen(true);
+                  }}
+                />
+
+                <IconButton
+                  icon={icon.addFileV2}
+                  label="Arquivos"
+                  size="24px"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    setModalAddFilesOpen(true);
+                  }}
+                />
+              </Style.AnnexCardButtons>
+            </Style.AnnexCardTitle>
+            {building &&
+            (building?.Folders?.Files?.length > 0 || building?.Folders?.Folders?.length > 0) ? (
+              <Style.TagWrapper>
+                {building?.Folders?.Folders?.map((element) => (
+                  <FolderComponent
+                    key={element.id}
+                    name={element.name}
+                    onFolderClick={() => {
+                      setFolderId(element.id);
+                    }}
+                    onEditClick={() => {
+                      setFolderToEdit(element);
+                      setModalEditFolderOpen(true);
+                    }}
+                    onDeleteClick={() => {
+                      requestDeleteFolder({ folderId: element.id, setBuilding });
+                    }}
+                  />
                 ))}
-              </Style.MatrixTagWrapper>
+                {building?.Folders?.Files?.map((element) => (
+                  <FileComponent
+                    key={element.id}
+                    name={element.name}
+                    url={element.url}
+                    onEditClick={() => {
+                      setFileToEdit(element);
+                      setModalEditFileOpen(true);
+                    }}
+                  />
+                ))}
+              </Style.TagWrapper>
             ) : (
-              <Style.NoDataContainer className="bottom">
+              <Style.NoAnnexes className="bottom">
                 <h5>Nenhum anexo cadastrado.</h5>
-              </Style.NoDataContainer>
+              </Style.NoAnnexes>
             )}
           </Style.AnnexCard>
 
-          <Style.Card>
+          <Style.AnnexCard>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
@@ -600,7 +722,7 @@ export const BuildingDetails = () => {
               />
             </Style.CardHeader>
             {building && building?.Banners.length > 0 ? (
-              <Style.MatrixTagWrapper>
+              <Style.TagWrapper>
                 {building.Banners.map((element, i: number) => (
                   <ImagePreview
                     // eslint-disable-next-line react/no-array-index-key
@@ -613,13 +735,13 @@ export const BuildingDetails = () => {
                     imageOriginalName={element.originalName}
                   />
                 ))}
-              </Style.MatrixTagWrapper>
+              </Style.TagWrapper>
             ) : (
-              <Style.NoDataContainer className="bottom">
+              <Style.NoBanners className="bottom">
                 <h5>Nenhum banner cadastrado.</h5>
-              </Style.NoDataContainer>
+              </Style.NoBanners>
             )}
-          </Style.Card>
+          </Style.AnnexCard>
         </Style.CardGrid>
       </Style.CardWrapper>
     </>

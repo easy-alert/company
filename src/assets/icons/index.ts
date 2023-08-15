@@ -50,6 +50,14 @@ import plusWhite from './plusWhite.svg';
 import editWhite from './editWhite.svg';
 import tutorial from './tutorial.svg';
 import dashboard from './dashboard.svg';
+import dots from './dots.svg';
+import folder from './folder.svg';
+import grayEdit from './grayEdit.svg';
+import grayTrash from './grayTrash.svg';
+import grayPaper from './grayPaper.svg';
+import placeholder from './placeholder.svg';
+import grayDownload from './grayDownload.svg';
+import addFileV2 from './addFileV2.svg';
 
 export const icon = {
   leftArrow,
@@ -104,4 +112,12 @@ export const icon = {
   editWhite,
   tutorial,
   dashboard,
+  folder,
+  dots,
+  grayEdit,
+  grayTrash,
+  grayPaper,
+  placeholder,
+  grayDownload,
+  addFileV2,
 };

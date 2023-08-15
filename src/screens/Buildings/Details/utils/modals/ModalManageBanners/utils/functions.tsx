@@ -1,20 +1,17 @@
 import { toast } from 'react-toastify';
 import { Api } from '../../../../../../../services/api';
 import { catchHandler } from '../../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../../functions';
 import { IData, IRequestRegisterBuildingBanners } from './types';
 
 export const requestRegisterBuildingBanners = async ({
   setOnQuery,
   buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   setModal,
   bannerLink,
   bannerName,
   webBanner,
   mobileBanner,
+  requestBuildingDetailsCall,
 }: IRequestRegisterBuildingBanners) => {
   if (!bannerName) {
     toast.error('Verifique a informação: nome do banner e tente novamente.');
@@ -63,12 +60,7 @@ export const requestRegisterBuildingBanners = async ({
     buildingId,
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      requestBuildingDetailsCall();
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })

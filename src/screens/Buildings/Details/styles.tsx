@@ -24,6 +24,14 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
+export const AnnexCardTitle = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: ${theme.size.sm};
+`;
+
 export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
@@ -68,6 +76,52 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
+  min-height: 162px;
+
+  @media (max-width: 1100px) {
+    min-height: fit-content;
+  }
+`;
+
+export const AnnexCardHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const BreadcrumbWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+
+  > button {
+    padding: unset;
+    background-color: unset;
+    width: fit-content;
+
+    color: ${theme.color.gray4};
+    font-size: 12px;
+    cursor: pointer;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    max-width: 90px;
+
+    :hover {
+      opacity: 0.7;
+    }
+  }
+
+  > p {
+    color: ${theme.color.gray4};
+  }
+`;
+
+export const AnnexCardButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
 `;
 
 export const CardGrid = styled.div`
@@ -75,7 +129,7 @@ export const CardGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${theme.size.xsm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -164,18 +218,51 @@ export const TableDataWrapper = styled.div`
 
 export const NoDataContainer = styled.div`
   width: 100%;
+  min-height: 80px;
+
+  margin-top: -20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   > h5 {
     color: ${theme.color.gray4};
     text-align: center;
-    margin-bottom: ${theme.size.xlg};
   }
 `;
 
-export const MatrixTagWrapper = styled.div`
-  margin-top: ${theme.size.xsm};
+export const NoBanners = styled.div`
+  width: 100%;
+  min-height: 80px;
+
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+  }
+`;
+
+export const NoAnnexes = styled.div`
+  width: 100%;
+  min-height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > h5 {
+    color: ${theme.color.gray4};
+    text-align: center;
+    margin-top: -20px;
+  }
+`;
+
+export const TagWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: ${theme.size.xsm};
 `;
 

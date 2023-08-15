@@ -3,10 +3,8 @@ import { Banner } from '../../../types';
 export interface IModalAddBanners {
   setModal: (setModal: boolean) => void;
   buildingId: string;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   currentBanners: Banner[];
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 export interface IImage {
@@ -19,12 +17,10 @@ export interface IRequestRegisterBuildingBanners {
   bannerName: string;
   bannerLink: string;
   setOnQuery: (setOnQuery: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   setModal: (setModal: boolean) => void;
   webBanner: IImage[];
   mobileBanner: IImage[];
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 export interface IData {

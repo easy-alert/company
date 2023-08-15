@@ -17,21 +17,17 @@ interface IEditBuilding {
 
 export interface IModalEditBuilding {
   setModal: (setModal: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
   building: IBuildingDetail;
   buildingTypes: IBuildingTypes[];
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 // REQUESTS
 export interface IRequestEditBuilding {
   values: IEditBuilding;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 export interface IRequestDeleteBuilding {

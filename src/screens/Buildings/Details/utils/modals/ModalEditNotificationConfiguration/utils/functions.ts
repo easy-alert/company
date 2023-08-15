@@ -6,7 +6,6 @@ import * as yup from 'yup';
 // FUNCTIONS
 import { Api } from '../../../../../../../services/api';
 import { catchHandler, unMask } from '../../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../../functions';
 
 // TYPES
 import {
@@ -19,12 +18,10 @@ export const requestEditNotificationConfiguration = async ({
   setModal,
   setOnQuery,
   buildingId,
-  setBuilding,
   buildingNotificationConfigurationId,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   emailConfirmUrl,
   phoneConfirmUrl,
+  requestBuildingDetailsCall,
 }: IRequestEditNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -49,12 +46,7 @@ export const requestEditNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      requestBuildingDetailsCall();
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })
@@ -68,10 +60,7 @@ export const requestDeleteNotificationConfiguration = async ({
   setModal,
   setOnQuery,
   buildingNotificationConfigurationId,
-  setBuilding,
-  buildingId,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
+  requestBuildingDetailsCall,
 }: IRequestDeleteNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -81,12 +70,7 @@ export const requestDeleteNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      requestBuildingDetailsCall();
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })

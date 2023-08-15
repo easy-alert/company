@@ -6,7 +6,6 @@ import * as yup from 'yup';
 // FUNCTIONS
 import { Api } from '../../../../../../../services/api';
 import { catchHandler, unMask } from '../../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../../functions';
 
 // TYPES
 import { IRequestCreateNotificationConfiguration } from './types';
@@ -16,13 +15,11 @@ export const requestCreateNotificationConfiguration = async ({
   setModal,
   setOnQuery,
   buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   phoneConfirmUrl,
   emailConfirmUrl,
   setFieldValue,
   resetForm,
+  requestBuildingDetailsCall,
 }: IRequestCreateNotificationConfiguration) => {
   setOnQuery(true);
 
@@ -46,12 +43,7 @@ export const requestCreateNotificationConfiguration = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      requestBuildingDetailsCall();
       toast.success(res.data.ServerMessage.message);
 
       if (values.createAgain) {

@@ -30,12 +30,10 @@ import { PopoverButton } from '../../../../../../components/Buttons/PopoverButto
 export const ModalEditNotificationConfiguration = ({
   setModal,
   buildingId,
-  setBuilding,
   selectedNotificationRow,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   emailConfirmUrl,
   phoneConfirmUrl,
+  requestBuildingDetailsCall,
 }: IModalEditNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -60,11 +58,9 @@ export const ModalEditNotificationConfiguration = ({
             setModal,
             setOnQuery,
             values,
-            setBuilding,
-            setTotalMaintenancesCount,
-            setUsedMaintenancesCount,
             emailConfirmUrl,
             phoneConfirmUrl,
+            requestBuildingDetailsCall,
           });
         }}
       >
@@ -147,10 +143,7 @@ export const ModalEditNotificationConfiguration = ({
                         buildingNotificationConfigurationId: selectedNotificationRow.id,
                         setModal,
                         setOnQuery,
-                        setBuilding,
-                        buildingId,
-                        setTotalMaintenancesCount,
-                        setUsedMaintenancesCount,
+                        requestBuildingDetailsCall,
                       });
                     }}
                   />

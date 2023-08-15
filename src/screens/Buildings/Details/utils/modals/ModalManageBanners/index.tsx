@@ -22,10 +22,8 @@ import { uploadFile } from '../../../../../../utils/functions';
 export const ModalManageBanners = ({
   setModal,
   buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   currentBanners,
+  requestBuildingDetailsCall,
 }: IModalAddBanners) => {
   // REFATORAR ISSO PRA TRABALHAR COM MAIS BANNERS
   const [bannerName, setBannerName] = useState<string>('');
@@ -224,14 +222,12 @@ export const ModalManageBanners = ({
             requestRegisterBuildingBanners({
               setOnQuery,
               buildingId,
-              setBuilding,
-              setTotalMaintenancesCount,
-              setUsedMaintenancesCount,
               setModal,
               bannerLink,
               bannerName,
               mobileBanner,
               webBanner,
+              requestBuildingDetailsCall,
             });
           }}
         />

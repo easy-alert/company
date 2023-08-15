@@ -35,6 +35,9 @@ export const PopoverButton = ({
     content: 'Message Title',
     contentColor: theme.color.gray4,
   },
+  hideLabelOnMedia = false,
+  labelPos,
+  fontWeight,
 }: IPopoverButton) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
@@ -111,9 +114,7 @@ export const PopoverButton = ({
                 arrowStyle={getArrowStyle(position, arrowSize)}
               >
                 <Style.PopoverBackground>
-                  <Style.PopoverBody
-                    contentColor={message.contentColor ?? theme.color.gray4}
-                  >
+                  <Style.PopoverBody contentColor={message.contentColor ?? theme.color.gray4}>
                     <h2>
                       {label}
                       <IconButton
@@ -161,13 +162,15 @@ export const PopoverButton = ({
         {type === 'IconButton' && (
           <IconButton
             disabled={disabled}
-            hideLabelOnMedia
+            hideLabelOnMedia={hideLabelOnMedia}
             className={iconButtonClassName}
             label={hiddenIconButtonLabel ? '' : label}
             color={iconButtonColor}
             icon={buttonIcon}
             size={buttonIconSize}
             onClick={togglePopOver}
+            labelPos={labelPos}
+            fontWeight={fontWeight}
           />
         )}
       </Style.ButtonContainer>

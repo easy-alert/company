@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from '../../../../../../styles/theme';
 
 export const Container = styled.div`
-  button {
+  > :last-child {
     margin-top: ${theme.size.sm};
   }
 
@@ -20,27 +20,24 @@ export const DragAndDropZone = styled.div`
   overflow: hidden;
   cursor: pointer;
   transition: 0.25s;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100px;
+
   :hover {
     opacity: 0.7;
   }
 `;
 
-export const FileZone = styled.div`
-  margin-top: ${theme.size.xxsm};
-  width: 100%;
-  border: 1px dashed ${theme.color.gray4};
-  padding: ${theme.size.sm} ${theme.size.md};
-  height: 82px;
+export const TagsWrapper = styled.div`
+  margin-top: ${theme.size.xsm};
   display: flex;
   align-items: center;
-  gap: ${theme.size.md};
-  justify-content: space-between;
-  overflow: hidden;
-  border-radius: ${theme.size.xxsm};
-
-  > p {
-    word-break: break-all;
-  }
+  gap: ${theme.size.xsm};
+  flex-wrap: wrap;
 `;
 
 export const Content = styled.div`
@@ -53,10 +50,10 @@ export const Content = styled.div`
     color: ${theme.color.gray4};
 
     ::after {
-      content: 'Clique para selecionar seu arquivo ou arraste e solte aqui.';
+      content: 'Clique para selecionar seus arquivos ou arraste e solte aqui.';
 
       @media (max-width: 900px) {
-        content: 'Clique aqui para enviar seu arquivo.';
+        content: 'Clique aqui para enviar seus arquivos.';
       }
     }
   }

@@ -27,11 +27,9 @@ import { applyMask } from '../../../../../../utils/functions';
 export const ModalCreateNotificationConfiguration = ({
   setModal,
   buildingId,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
   emailConfirmUrl,
   phoneConfirmUrl,
+  requestBuildingDetailsCall,
 }: IModalCreateNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -54,13 +52,11 @@ export const ModalCreateNotificationConfiguration = ({
             setModal,
             setOnQuery,
             values,
-            setBuilding,
-            setTotalMaintenancesCount,
-            setUsedMaintenancesCount,
             emailConfirmUrl,
             phoneConfirmUrl,
             setFieldValue: actions.setFieldValue,
             resetForm: actions.resetForm,
+            requestBuildingDetailsCall,
           });
         }}
       >

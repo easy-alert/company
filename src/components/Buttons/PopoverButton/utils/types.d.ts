@@ -18,4 +18,7 @@ export interface IPopoverButton {
   borderless?: boolean;
   iconButtonClassName?: string;
   disabled?: boolean;
+  hideLabelOnMedia?: boolean;
+  labelPos?: 'left' | 'right' | 'top' | 'bottom';
+  fontWeight?: string;
 }

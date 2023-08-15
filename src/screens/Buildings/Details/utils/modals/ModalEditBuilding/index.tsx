@@ -31,10 +31,8 @@ import {
 export const ModalEditBuilding = ({
   setModal,
   building,
-  setBuilding,
   buildingTypes,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
+  requestBuildingDetailsCall,
 }: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -62,9 +60,7 @@ export const ModalEditBuilding = ({
             setModal,
             setOnQuery,
             values,
-            setBuilding,
-            setTotalMaintenancesCount,
-            setUsedMaintenancesCount,
+            requestBuildingDetailsCall,
           });
         }}
       >
