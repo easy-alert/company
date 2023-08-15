@@ -72,21 +72,12 @@ export interface IRequestBuildingDetails {
   buildingId: string;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
-  setRootFolderId: React.Dispatch<React.SetStateAction<string>>;
+  setRootFolder: React.Dispatch<React.SetStateAction<Folder>>;
 }
 
 export interface IRequestResendConfirmation {
   link: string;
   buildingNotificationConfigurationId: string;
-}
-
-export interface IRequestDeleteAnnex {
-  annexeId: string;
-  setDeleteAnnexOnQuery: (setDeleteAnnexOnQuery: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  buildingId: string;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
 }
 
 export interface IChangeShowContactStatus {
@@ -98,4 +89,6 @@ export interface IChangeShowContactStatus {
 export interface IRequestFolderDetails {
   folderId: string;
   setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
+  setBreadcrumb: React.Dispatch<React.SetStateAction<Folder[]>>;
+  rootFolder: Folder;
 }

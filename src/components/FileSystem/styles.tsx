@@ -27,7 +27,7 @@ export const Wrapper = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: ${theme.color.black};
+    color: ${theme.color.gray5};
   }
 
   transition: 0.5s;
@@ -49,7 +49,7 @@ export const Download = styled.a`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: ${theme.color.black};
+    color: ${theme.color.gray5};
   }
 `;
 

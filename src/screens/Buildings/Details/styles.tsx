@@ -74,17 +74,35 @@ export const AnnexCard = styled.div`
 export const AnnexCardHeader = styled.div`
   display: flex;
   flex-direction: column;
+`;
 
-  color: ${theme.color.gray4};
+export const BreadcrumbWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
 
   > button {
-    all: unset;
+    padding: unset;
+    background-color: unset;
+    width: fit-content;
+
+    color: ${theme.color.gray4};
     font-size: 12px;
     cursor: pointer;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    max-width: 90px;
 
     :hover {
       opacity: 0.7;
     }
+  }
+
+  > p {
+    color: ${theme.color.gray4};
   }
 `;
 
@@ -99,7 +117,7 @@ export const CardGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${theme.size.xsm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 1100px) {
     grid-template-columns: 1fr;
   }
 `;

@@ -1,6 +1,6 @@
 // #region imports
 // COMPONENTS
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { icon } from '../../../assets/icons';
 import { IconButton } from '../../../components/Buttons/IconButton';
@@ -38,7 +38,7 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 
 // TYPES
-import { IBuildingDetail, INotificationConfiguration } from './utils/types';
+import { Folder, IBuildingDetail, INotificationConfiguration } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 import { FileComponent, FolderComponent } from '../../../components/FileSystem';
@@ -85,7 +85,9 @@ export const BuildingDetails = () => {
 
   const [folderId, setFolderId] = useState<string | null>(null);
 
-  const [rootFolderId, setRootFolderId] = useState<string>('');
+  const [rootFolder, setRootFolder] = useState<Folder>({ id: '', name: '' });
+
+  const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
@@ -100,7 +102,7 @@ export const BuildingDetails = () => {
         setBuilding,
         setUsedMaintenancesCount,
         setTotalMaintenancesCount,
-        setRootFolderId,
+        setRootFolder,
       });
 
       if (query.get('flow') === '1') {
@@ -124,6 +126,8 @@ export const BuildingDetails = () => {
       requestFolderDetails({
         folderId,
         setBuilding,
+        setBreadcrumb,
+        rootFolder,
       });
     }
   }, [folderId]);
@@ -145,7 +149,7 @@ export const BuildingDetails = () => {
               setBuilding,
               setUsedMaintenancesCount,
               setTotalMaintenancesCount,
-              setRootFolderId,
+              setRootFolder,
             });
           }}
         />
@@ -164,7 +168,7 @@ export const BuildingDetails = () => {
               setBuilding,
               setUsedMaintenancesCount,
               setTotalMaintenancesCount,
-              setRootFolderId,
+              setRootFolder,
             });
           }}
         />
@@ -184,7 +188,7 @@ export const BuildingDetails = () => {
               setBuilding,
               setUsedMaintenancesCount,
               setTotalMaintenancesCount,
-              setRootFolderId,
+              setRootFolder,
             });
           }}
         />
@@ -219,7 +223,7 @@ export const BuildingDetails = () => {
               setBuilding,
               setUsedMaintenancesCount,
               setTotalMaintenancesCount,
-              setRootFolderId,
+              setRootFolder,
             });
           }}
         />
@@ -595,19 +599,31 @@ export const BuildingDetails = () => {
             <Style.CardHeader>
               <Style.AnnexCardHeader>
                 <h5>Anexos</h5>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFolderId(rootFolderId);
-                  }}
-                >
-                  Início
-                </button>
+                <Style.BreadcrumbWrapper>
+                  {breadcrumb.map((element, i) => (
+                    <React.Fragment key={element.id}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFolderId(element.id);
+                        }}
+                      >
+                        {element.name}
+                      </button>
+
+                      {i === 0 && breadcrumb.length > 1 && <p className="p3">/</p>}
+
+                      {i > 0 && breadcrumb.length > 1 && i + 1 !== breadcrumb.length && (
+                        <p className="p3">{'>'}</p>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </Style.BreadcrumbWrapper>
               </Style.AnnexCardHeader>
               <Style.AnnexCardButtons>
                 <IconButton
                   icon={icon.plusWithBg}
-                  label="Criar pasta"
+                  label="Pasta"
                   size="24px"
                   hideLabelOnMedia
                   onClick={() => {
@@ -617,7 +633,7 @@ export const BuildingDetails = () => {
 
                 <IconButton
                   icon={icon.addFileV2}
-                  label="Enviar arquivos"
+                  label="Arquivos"
                   size="24px"
                   hideLabelOnMedia
                   onClick={() => {

@@ -14,14 +14,14 @@ export const requestBuildingDetails = async ({
   setBuilding,
   setUsedMaintenancesCount,
   setTotalMaintenancesCount,
-  setRootFolderId,
+  setRootFolder,
 }: IRequestBuildingDetails) => {
   await Api.get(`/buildings/list/details/${buildingId}`)
     .then((res) => {
       setBuilding(res.data.BuildingDetails);
+      setRootFolder(res.data.BuildingDetails.Folders);
       setUsedMaintenancesCount(res.data.usedMaintenancesCount);
       setTotalMaintenancesCount(res.data.totalMaintenancesCount);
-      setRootFolderId(res.data.BuildingDetails.Folders.id);
     })
     .catch((err) => {
       catchHandler(err);
@@ -88,14 +88,39 @@ export const changeShowContactStatus = async ({
     });
 };
 
-export const requestFolderDetails = async ({ folderId, setBuilding }: IRequestFolderDetails) => {
+export const requestFolderDetails = async ({
+  folderId,
+  setBuilding,
+  setBreadcrumb,
+  rootFolder,
+}: IRequestFolderDetails) => {
   await Api.get(`/buildings/folders/list/${folderId}`)
-    .then((res) => {
+    .then(({ data }) => {
+      const breadcrumb = [
+        {
+          id: data?.Parent?.id || null,
+          name: data?.Parent?.name || null,
+        },
+        {
+          id: data.id,
+          name: data.name,
+        },
+      ].filter((e) => e.id);
+
+      if (breadcrumb[0].id !== rootFolder.id) {
+        breadcrumb.unshift({
+          id: rootFolder.id,
+          name: rootFolder.name,
+        });
+      }
+
+      setBreadcrumb(breadcrumb);
+
       setBuilding((prevState) => {
         if (prevState) {
           const newState = { ...prevState };
 
-          newState.Folders = res.data;
+          newState.Folders = data;
 
           return newState;
         }
