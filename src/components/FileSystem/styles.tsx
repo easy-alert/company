@@ -64,7 +64,7 @@ export const Dropdown = styled.div`
   position: absolute;
   bottom: 10px;
   right: -82px;
-  z-index: 150;
+  z-index: 9;
 
   > a {
     display: flex;

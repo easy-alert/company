@@ -10,9 +10,10 @@ interface IFolder {
   name: string;
   onFolderClick: () => void;
   onEditClick: () => void;
+  onDeleteClick: () => void;
 }
 
-export const FolderComponent = ({ name, onFolderClick, onEditClick }: IFolder) => {
+export const FolderComponent = ({ name, onFolderClick, onEditClick, onDeleteClick }: IFolder) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -35,6 +36,7 @@ export const FolderComponent = ({ name, onFolderClick, onEditClick }: IFolder) =
     };
   }, []);
 
+  // ;; DOIS POP ABERTO
   return (
     <Style.Background ref={dropdownRef}>
       <Style.Wrapper onClick={onFolderClick}>
@@ -69,14 +71,7 @@ export const FolderComponent = ({ name, onFolderClick, onEditClick }: IFolder) =
             }}
             fontWeight="400"
             labelPos="right"
-            actionButtonClick={() => {
-              // requestDeleteBuilding({
-              //   setModal,
-              //   setOnQuery,
-              //   buildingId: building.id,
-              //   navigate,
-              // });
-            }}
+            actionButtonClick={onDeleteClick}
           />
           <IconButton
             fontWeight="400"

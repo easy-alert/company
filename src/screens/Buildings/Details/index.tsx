@@ -21,6 +21,7 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import {
   changeShowContactStatus,
   requestBuildingDetails,
+  requestDeleteFolder,
   requestFolderDetails,
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
@@ -204,7 +205,7 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalAddFilesOpen && building && (
+      {modalAddFilesOpen && building && rootFolder && (
         <ModalAddFiles
           setModal={setModalAddFilesOpen}
           setBuilding={setBuilding}
@@ -212,7 +213,7 @@ export const BuildingDetails = () => {
         />
       )}
 
-      {modalCreateFolderOpen && building && (
+      {modalCreateFolderOpen && building && rootFolder && (
         <ModalCreateFolder
           setModal={setModalCreateFolderOpen}
           buildingId={building.id}
@@ -622,7 +623,7 @@ export const BuildingDetails = () => {
 
         <Style.CardGrid>
           <Style.AnnexCard>
-            <Style.CardHeader>
+            <Style.AnnexCardTitle>
               <Style.AnnexCardHeader>
                 <h5>Anexos</h5>
                 <Style.BreadcrumbWrapper>
@@ -646,6 +647,7 @@ export const BuildingDetails = () => {
                   ))}
                 </Style.BreadcrumbWrapper>
               </Style.AnnexCardHeader>
+
               <Style.AnnexCardButtons>
                 <IconButton
                   icon={icon.plusWithBg}
@@ -667,7 +669,7 @@ export const BuildingDetails = () => {
                   }}
                 />
               </Style.AnnexCardButtons>
-            </Style.CardHeader>
+            </Style.AnnexCardTitle>
             {building &&
             (building?.Folders?.Files?.length > 0 || building?.Folders?.Folders?.length > 0) ? (
               <Style.TagWrapper>
@@ -681,6 +683,9 @@ export const BuildingDetails = () => {
                     onEditClick={() => {
                       setFolderToEdit(element);
                       setModalEditFolderOpen(true);
+                    }}
+                    onDeleteClick={() => {
+                      requestDeleteFolder({ folderId: element.id, setBuilding });
                     }}
                   />
                 ))}

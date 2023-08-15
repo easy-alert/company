@@ -2,6 +2,7 @@ import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { catchHandler } from '../../../../utils/functions';
 import {
+  IBuildingDetail,
   IChangeShowContactStatus,
   IRequestBuildingDetails,
   IRequestFolderDetails,
@@ -121,6 +122,33 @@ export const requestFolderDetails = async ({
           const newState = { ...prevState };
 
           newState.Folders = data;
+
+          return newState;
+        }
+        return undefined;
+      });
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
+
+export const requestDeleteFolder = async ({
+  folderId,
+  setBuilding,
+}: {
+  folderId: string;
+  setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
+}) => {
+  await Api.delete(`/buildings/folders/delete/${folderId}`)
+    .then(() => {
+      setBuilding((prevState) => {
+        if (prevState) {
+          const newState = { ...prevState };
+
+          if (newState.Folders) {
+            newState.Folders.Folders = newState.Folders.Folders.filter((e) => e.id !== folderId);
+          }
 
           return newState;
         }
