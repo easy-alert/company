@@ -17,8 +17,7 @@ export const FolderComponent = ({ name, onFolderClick, onEditClick, onDeleteClic
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
+  const toggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
   };
 
@@ -36,21 +35,16 @@ export const FolderComponent = ({ name, onFolderClick, onEditClick, onDeleteClic
     };
   }, []);
 
-  // ;; DOIS POP ABERTO
   return (
     <Style.Background ref={dropdownRef}>
-      <Style.Wrapper onClick={onFolderClick}>
-        <Image img={icon.folder} size="16px" />
-        <p className="p4" title={name}>
-          {name}
-        </p>
-
-        <button
-          type="button"
-          onClick={(e) => {
-            toggleDropdown(e);
-          }}
-        >
+      <Style.Wrapper>
+        <Style.Label onClick={onFolderClick}>
+          <Image img={icon.folder} size="16px" />
+          <p className="p4" title={name}>
+            {name}
+          </p>
+        </Style.Label>
+        <button type="button" onClick={toggleDropdown}>
           <Image img={icon.dots} size="16px" />
         </button>
       </Style.Wrapper>

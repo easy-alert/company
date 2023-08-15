@@ -38,6 +38,7 @@ export const ModalEditFile = ({ setBuilding, setModal, file }: IModalEditFile) =
           {({ errors, touched }) => (
             <Form>
               <FormikInput
+                maxLength={100}
                 autoFocus
                 label="Nome do arquivo"
                 placeholder="Informe o nome do arquivo"

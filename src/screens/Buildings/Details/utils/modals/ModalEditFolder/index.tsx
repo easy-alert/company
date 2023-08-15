@@ -38,6 +38,7 @@ export const ModalEditFolder = ({ setBuilding, setModal, folder }: IModalEditFol
           {({ errors, touched }) => (
             <Form>
               <FormikInput
+                maxLength={100}
                 autoFocus
                 label="Nome da pasta"
                 placeholder="Informe o nome da pasta"
