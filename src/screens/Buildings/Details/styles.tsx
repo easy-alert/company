@@ -77,6 +77,10 @@ export const AnnexCard = styled.div`
   padding: ${theme.size.sm};
   height: fit-content;
   min-height: 162px;
+
+  @media (max-width: 1100px) {
+    min-height: fit-content;
+  }
 `;
 
 export const AnnexCardHeader = styled.div`
