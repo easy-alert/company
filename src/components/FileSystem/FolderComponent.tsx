@@ -9,9 +9,10 @@ import { PopoverButton } from '../Buttons/PopoverButton';
 interface IFolder {
   name: string;
   onFolderClick: () => void;
+  onEditClick: () => void;
 }
 
-export const FolderComponent = ({ name, onFolderClick }: IFolder) => {
+export const FolderComponent = ({ name, onFolderClick, onEditClick }: IFolder) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -84,7 +85,8 @@ export const FolderComponent = ({ name, onFolderClick }: IFolder) => {
             icon={icon.grayEdit}
             size="16px"
             onClick={() => {
-              //
+              onEditClick();
+              setDropdownOpen(false);
             }}
             label="Renomear"
           />

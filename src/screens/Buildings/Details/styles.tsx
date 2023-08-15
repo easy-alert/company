@@ -68,7 +68,7 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
-  min-height: 152px;
+  min-height: 162px;
 `;
 
 export const AnnexCardHeader = styled.div`

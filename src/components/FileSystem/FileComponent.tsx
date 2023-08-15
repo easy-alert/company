@@ -10,9 +10,10 @@ import { detectFileExtension } from '../../utils/functions';
 interface IFile {
   name: string;
   url: string;
+  onEditClick: () => void;
 }
 
-export const FileComponent = ({ name, url }: IFile) => {
+export const FileComponent = ({ name, url, onEditClick }: IFile) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -92,7 +93,8 @@ export const FileComponent = ({ name, url }: IFile) => {
             icon={icon.grayEdit}
             size="16px"
             onClick={() => {
-              //
+              onEditClick();
+              setDropdownOpen(false);
             }}
             label="Renomear"
           />

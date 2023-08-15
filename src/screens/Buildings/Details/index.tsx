@@ -38,11 +38,13 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 
 // TYPES
-import { Folder, IBuildingDetail, INotificationConfiguration } from './utils/types';
+import { Folder, IBuildingDetail, INotificationConfiguration, File } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 import { FileComponent, FolderComponent } from '../../../components/FileSystem';
 import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
+import { ModalEditFolder } from './utils/modals/ModalEditFolder';
+import { ModalEditFile } from './utils/modals/ModalEditFile';
 // #endregion
 
 export const BuildingDetails = () => {
@@ -81,11 +83,19 @@ export const BuildingDetails = () => {
 
   const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
 
+  const [modalEditFolderOpen, setModalEditFolderOpen] = useState<boolean>(false);
+
+  const [modalEditFileOpen, setModalEditFileOpen] = useState<boolean>(false);
+
   const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
 
   const [folderId, setFolderId] = useState<string | null>(null);
 
   const [rootFolder, setRootFolder] = useState<Folder>({ id: '', name: '' });
+
+  const [folderToEdit, setFolderToEdit] = useState<Folder>();
+
+  const [fileToEdit, setFileToEdit] = useState<File>();
 
   const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
@@ -208,6 +218,22 @@ export const BuildingDetails = () => {
           buildingId={building.id}
           setBuilding={setBuilding}
           parentId={folderId || building?.Folders.id}
+        />
+      )}
+
+      {modalEditFolderOpen && building && folderToEdit && (
+        <ModalEditFolder
+          setModal={setModalEditFolderOpen}
+          setBuilding={setBuilding}
+          folder={folderToEdit}
+        />
+      )}
+
+      {modalEditFileOpen && building && fileToEdit && (
+        <ModalEditFile
+          setModal={setModalEditFileOpen}
+          setBuilding={setBuilding}
+          file={fileToEdit}
         />
       )}
 
@@ -652,10 +678,22 @@ export const BuildingDetails = () => {
                     onFolderClick={() => {
                       setFolderId(element.id);
                     }}
+                    onEditClick={() => {
+                      setFolderToEdit(element);
+                      setModalEditFolderOpen(true);
+                    }}
                   />
                 ))}
                 {building?.Folders?.Files?.map((element) => (
-                  <FileComponent key={element.id} name={element.name} url={element.url} />
+                  <FileComponent
+                    key={element.id}
+                    name={element.name}
+                    url={element.url}
+                    onEditClick={() => {
+                      setFileToEdit(element);
+                      setModalEditFileOpen(true);
+                    }}
+                  />
                 ))}
               </Style.TagWrapper>
             ) : (
@@ -665,7 +703,7 @@ export const BuildingDetails = () => {
             )}
           </Style.AnnexCard>
 
-          <Style.Card>
+          <Style.AnnexCard>
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
@@ -698,7 +736,7 @@ export const BuildingDetails = () => {
                 <h5>Nenhum banner cadastrado.</h5>
               </Style.NoDataContainer>
             )}
-          </Style.Card>
+          </Style.AnnexCard>
         </Style.CardGrid>
       </Style.CardWrapper>
     </>

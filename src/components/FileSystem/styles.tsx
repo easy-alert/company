@@ -30,8 +30,6 @@ export const Wrapper = styled.div`
     color: ${theme.color.gray5};
   }
 
-  transition: 0.5s;
-
   :hover {
     opacity: 0.7;
   }
@@ -73,5 +71,9 @@ export const Dropdown = styled.div`
     align-items: center;
     gap: ${theme.size.xxsm};
     color: ${theme.color.gray5};
+
+    :hover {
+      opacity: 0.7;
+    }
   }
 `;
