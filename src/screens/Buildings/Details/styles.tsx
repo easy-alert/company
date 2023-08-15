@@ -262,7 +262,7 @@ export const NoAnnexes = styled.div`
 
 export const TagWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: ${theme.size.xsm};
 `;
 
