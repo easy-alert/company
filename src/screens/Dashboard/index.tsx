@@ -375,7 +375,7 @@ export const Dashboard = () => {
       },
 
       tooltip: {
-        enabled: false,
+        enabled: true,
       },
 
       plotOptions: {
@@ -406,6 +406,10 @@ export const Dashboard = () => {
                 fontSize: '16px',
                 fontWeight: 600,
                 color: '#000000',
+                formatter(val: any) {
+                  const percent = (val * 100) / score.data.reduce((a: any, b: any) => a + b, 0);
+                  return `${percent.toFixed(1)} %`;
+                },
               },
               total: {
                 show: true,
@@ -417,10 +421,11 @@ export const Dashboard = () => {
                 color: '#000000',
 
                 formatter(w: any) {
-                  return w.globals.seriesTotals.reduce(
-                    () => findLargestValueAndIndex(score.data).value,
-                    0,
-                  );
+                  const percent =
+                    (w.globals.seriesTotals[findLargestValueAndIndex(score.data).index] * 100) /
+                    w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+
+                  return `${percent.toFixed(1)} %`;
                 },
               },
             },
