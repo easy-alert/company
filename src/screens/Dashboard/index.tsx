@@ -340,7 +340,7 @@ export const Dashboard = () => {
         curve: 'smooth' as const,
       },
 
-      colors: ['#34B53A', '#FF3508'],
+      colors: ['#34B53A', '#FF3508', '#FFB200'],
 
       legend: {
         position: 'bottom' as const,
@@ -406,8 +406,9 @@ export const Dashboard = () => {
                 fontSize: '16px',
                 fontWeight: 600,
                 color: '#000000',
-                formatter(val: any) {
-                  const percent = (val * 100) / score.data.reduce((a: any, b: any) => a + b, 0);
+                formatter(val: any, w: any) {
+                  const percent =
+                    (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
                   return `${percent.toFixed(1)} %`;
                 },
               },
@@ -674,7 +675,7 @@ export const Dashboard = () => {
                 {score?.data?.some((e) => e > 0) ? (
                   <Chart
                     type="donut"
-                    options={scoreChart.options}
+                    options={scoreChart.options as any}
                     series={scoreChart.series}
                     height={330}
                   />
