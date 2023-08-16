@@ -60,7 +60,7 @@ export const FolderComponent = ({ name, onFolderClick, onEditClick, onDeleteClic
             label="Excluir"
             message={{
               title: 'Deseja excluir esta pasta?',
-              content: 'Atenção, todas as pastas e arquivos dentro desta pasta serão excluídos.',
+              content: 'Atenção, todas as informações dentro desta pasta serão excluídas.',
               contentColor: theme.color.danger,
             }}
             fontWeight="400"

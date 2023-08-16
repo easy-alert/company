@@ -21,6 +21,7 @@ import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import {
   changeShowContactStatus,
   requestBuildingDetails,
+  requestDeleteFile,
   requestDeleteFolder,
   requestFolderDetails,
   requestResendEmailConfirmation,
@@ -697,6 +698,12 @@ export const BuildingDetails = () => {
                     onEditClick={() => {
                       setFileToEdit(element);
                       setModalEditFileOpen(true);
+                    }}
+                    onDeleteClick={() => {
+                      requestDeleteFile({
+                        folderId: element.id,
+                        setBuilding,
+                      });
                     }}
                   />
                 ))}

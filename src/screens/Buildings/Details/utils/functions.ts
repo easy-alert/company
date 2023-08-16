@@ -159,3 +159,30 @@ export const requestDeleteFolder = async ({
       catchHandler(err);
     });
 };
+
+export const requestDeleteFile = async ({
+  folderId: fileId,
+  setBuilding,
+}: {
+  folderId: string;
+  setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
+}) => {
+  await Api.delete(`/buildings/folders/files/delete/${fileId}`)
+    .then(() => {
+      setBuilding((prevState) => {
+        if (prevState) {
+          const newState = { ...prevState };
+
+          if (newState.Folders) {
+            newState.Folders.Files = newState.Folders.Files.filter((e) => e.id !== fileId);
+          }
+
+          return newState;
+        }
+        return undefined;
+      });
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};

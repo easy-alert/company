@@ -11,9 +11,10 @@ interface IFile {
   name: string;
   url: string;
   onEditClick: () => void;
+  onDeleteClick: () => void;
 }
 
-export const FileComponent = ({ name, url, onEditClick }: IFile) => {
+export const FileComponent = ({ name, url, onEditClick, onDeleteClick }: IFile) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -71,19 +72,15 @@ export const FileComponent = ({ name, url, onEditClick }: IFile) => {
             iconButtonColor={theme.color.gray5}
             label="Excluir"
             message={{
-              title: 'Deseja excluir esta pasta?',
-              content: 'Atenção, todas as pastas e arquivos dentro desta pasta serão excluídos.',
+              title: 'Deseja excluir este arquivo?',
+              content: 'Atenção, essa ação é irreversível.',
               contentColor: theme.color.danger,
             }}
             fontWeight="400"
             labelPos="right"
             actionButtonClick={() => {
-              // requestDeleteBuilding({
-              //   setModal,
-              //   setOnQuery,
-              //   buildingId: building.id,
-              //   navigate,
-              // });
+              onDeleteClick();
+              setDropdownOpen(false);
             }}
           />
           <IconButton
