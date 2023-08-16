@@ -331,6 +331,9 @@ export const Dashboard = () => {
           show: true,
           formatter: (value: any) => format(new Date(value), 'dd/MM/yyyy'),
         },
+        y: {
+          formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
+        },
       },
 
       stroke: {
