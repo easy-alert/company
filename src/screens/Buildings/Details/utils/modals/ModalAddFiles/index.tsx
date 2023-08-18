@@ -21,7 +21,7 @@ export const ModalAddFiles = ({ setModal, folderId, setBuilding }: IModalAddFile
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles);
+      setFiles((prevState) => [...prevState, ...acceptedFiles]);
     },
     [files],
   );
