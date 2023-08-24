@@ -519,10 +519,17 @@ export const Dashboard = () => {
               value=""
               onChange={(e) => {
                 handleSelectClick('buildings', e.target.value);
+
+                if (e.target.value === 'all') {
+                  setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
+                }
               }}
             >
               <option value="" disabled hidden>
                 Selecione
+              </option>
+              <option value="all" disabled={dataFilter.buildings.length === 0}>
+                Todas
               </option>
               {filterOptions.buildings.map((building) => (
                 <option
@@ -541,10 +548,18 @@ export const Dashboard = () => {
               value=""
               onChange={(e) => {
                 handleSelectClick('categories', e.target.value);
+
+                if (e.target.value === 'all') {
+                  setDataFilter((prevState) => ({ ...prevState, categories: [] }));
+                }
               }}
             >
               <option value="" disabled hidden>
                 Selecione
+              </option>
+
+              <option value="all" disabled={dataFilter.categories.length === 0}>
+                Todas
               </option>
 
               {filterOptions.categories.map((category) => (
@@ -564,10 +579,18 @@ export const Dashboard = () => {
               value=""
               onChange={(e) => {
                 handleSelectClick('responsibles', e.target.value);
+
+                if (e.target.value === 'all') {
+                  setDataFilter((prevState) => ({ ...prevState, responsibles: [] }));
+                }
               }}
             >
               <option value="" disabled hidden>
                 Selecione
+              </option>
+
+              <option value="all" disabled={dataFilter.responsibles.length === 0}>
+                Todos
               </option>
               {filterOptions.responsibles.map((responsible) => (
                 <option
