@@ -22,13 +22,13 @@ export const Sidebar = () => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const SidebarContent: SidebarContentProps[] = [
-    {
-      icon: icon.dashboard,
-      url: '/dashboard',
-      redirectFunction: () => {
-        navigate('/dashboard');
-      },
-    },
+    // {
+    //   icon: icon.dashboard,
+    //   url: '/dashboard',
+    //   redirectFunction: () => {
+    //     navigate('/dashboard');
+    //   },
+    // },
     {
       icon: icon.calendar,
       url: '/calendar',
