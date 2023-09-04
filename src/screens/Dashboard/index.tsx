@@ -245,24 +245,6 @@ export const Dashboard = () => {
     return colors;
   };
 
-  const getBarColors = (timeLineParam: ITimeline) => {
-    const colors: string[] = [];
-
-    if (timeLineParam.series[0]?.data.some((e) => e > 0)) {
-      colors.push('#34B53A');
-    }
-
-    if (timeLineParam.series[1]?.data.some((e) => e > 0)) {
-      colors.push('#FF3508');
-    }
-
-    if (timeLineParam.series[2]?.data.some((e) => e > 0)) {
-      colors.push('#FFB200');
-    }
-
-    return colors;
-  };
-
   const timeLineChart = {
     series: timeLine.series,
     options: {
@@ -271,7 +253,7 @@ export const Dashboard = () => {
           show: false,
         },
       },
-      colors: getBarColors(timeLine),
+      colors: ['#34B53A', '#FF3508', '#FFB200'],
       grid: {
         show: false,
       },
