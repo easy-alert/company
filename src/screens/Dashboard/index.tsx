@@ -266,6 +266,11 @@ export const Dashboard = () => {
   const timeLineChart = {
     series: timeLine.series,
     options: {
+      chart: {
+        toolbar: {
+          show: false,
+        },
+      },
       colors: getBarColors(timeLine),
       grid: {
         show: false,
