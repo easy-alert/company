@@ -1,8 +1,6 @@
 // #region imports
-/* eslint-disable react/no-array-index-key */
 import Chart from 'react-apexcharts';
-import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import * as Style from './styles';
 import { Select } from '../../components/Inputs/Select';
@@ -34,14 +32,12 @@ interface IFilterOptions {
 
 type IFilterTypes = 'buildings' | 'categories' | 'responsibles';
 
-interface IAxis {
-  x: string;
-  y: number;
-}
-
 interface ITimeline {
-  name: string;
-  data: IAxis[];
+  categories: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
 }
 
 interface IScore {
@@ -141,7 +137,10 @@ export const Dashboard = () => {
     expired: [],
   });
 
-  const [timeLine, setTimeLine] = useState<ITimeline[]>([]);
+  const [timeLine, setTimeLine] = useState<ITimeline>({
+    categories: [],
+    series: [],
+  });
 
   const [score, setScore] = useState<IScore>({
     data: [],
@@ -246,119 +245,78 @@ export const Dashboard = () => {
     return colors;
   };
 
+  const getBarColors = (timeLineParam: ITimeline) => {
+    const colors: string[] = [];
+
+    if (timeLineParam.series[0]?.data.some((e) => e > 0)) {
+      colors.push('#34B53A');
+    }
+
+    if (timeLineParam.series[1]?.data.some((e) => e > 0)) {
+      colors.push('#FF3508');
+    }
+
+    if (timeLineParam.series[2]?.data.some((e) => e > 0)) {
+      colors.push('#FFB200');
+    }
+
+    return colors;
+  };
+
   const timeLineChart = {
-    series: timeLine || [],
+    series: timeLine.series,
     options: {
       chart: {
-        defaultLocale: 'pt-BR',
-        locales: [
-          {
-            name: 'pt-BR',
-            options: {
-              months: [
-                'Janeiro',
-                'Fevereiro',
-                'Março',
-                'Abril',
-                'Maio',
-                'Junho',
-                'Julho',
-                'Agosto',
-                'Setembro',
-                'Outubro',
-                'Novembro',
-                'Dezembro',
-              ],
-              shortMonths: [
-                'Jan',
-                'Fev',
-                'Mar',
-                'Abr',
-                'Mai',
-                'Jun',
-                'Jul',
-                'Ago',
-                'Set',
-                'Out',
-                'Nov',
-                'Dez',
-              ],
-              days: [
-                'Domingo',
-                'Segunda-feira',
-                'Terça-feira',
-                'Quarta-feira',
-                'Quinta-feira',
-                'Sexta-feira',
-                'Sábado',
-              ],
-              shortDays: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-              toolbar: {
-                download: 'Baixar SVG',
-                selection: 'Seleção',
-                selectionZoom: 'Zoom de Seleção',
-                zoomIn: 'Aumentar Zoom',
-                zoomOut: 'Diminuir Zoom',
-                pan: 'Panorâmica',
-                reset: 'Redefinir Zoom',
-              },
-            },
-          },
-        ],
-
-        stacked: true,
-        zoom: {
-          type: 'x' as const,
-          enabled: true,
-          autoScaleYaxis: true,
-        },
         toolbar: {
-          autoSelected: 'zoom' as const,
+          show: false,
         },
       },
-
+      colors: getBarColors(timeLine),
       grid: {
         show: false,
       },
 
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '16px',
+          endingShape: 'rounded',
+        },
+      },
       dataLabels: {
         enabled: false,
       },
-
       tooltip: {
-        enabled: true,
-        x: {
-          show: true,
-          formatter: (value: any) => format(new Date(value), 'dd/MM/yyyy'),
-        },
+        shared: true,
+        intersect: false,
         y: {
           formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
         },
       },
 
-      stroke: {
-        curve: 'smooth' as const,
+      yaxis: {
+        labels: {
+          formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
+        },
       },
 
-      colors: ['#34B53A', '#FF3508', '#FFB200'],
-
-      legend: {
-        position: 'bottom' as const,
-        horizontalAlign: 'center' as const,
-        offsetY: 8,
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
       },
 
       xaxis: {
-        type: 'datetime' as const,
-        axisBorder: {
-          show: false,
-        },
+        categories: timeLine.categories,
         axisTicks: {
           show: false,
         },
-        tooltip: {
-          enabled: false,
+        axisBorder: {
+          show: false,
         },
+      },
+      fill: {
+        opacity: 1,
       },
     },
   };
@@ -476,6 +434,42 @@ export const Dashboard = () => {
     setSelectedRatingStatus(status);
     setModalDashboardMaintenanceDetails(true);
   };
+
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [divWidth, setDivWidth] = useState(0);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const handleScroll = (event: any) => {
+    if (!scrollRef.current?.clientWidth) return;
+
+    const newScrollLeft = event.target.scrollLeft + (scrollRef.current.clientWidth - 261) / 2;
+    setScrollLeft(newScrollLeft);
+  };
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const refCallback = useCallback(
+    (node: any) => {
+      scrollRef.current = node;
+
+      if (scrollRef.current) {
+        setScrollLeft((scrollRef.current.clientWidth - 261) / 2);
+        setDivWidth(scrollRef.current.clientWidth);
+      }
+    },
+    [windowWidth],
+  );
+  const handleWindowResize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+    };
+  }, []);
   // #endregion
 
   useEffect(() => {
@@ -677,13 +671,26 @@ export const Dashboard = () => {
             <Style.Card>
               <h5>Linha do tempo - Manutenções</h5>
               <Style.ChartContent>
-                {timeLine?.some((element) => element?.data.length > 0) ? (
-                  <Chart
-                    options={timeLineChart.options}
-                    series={timeLineChart.series}
-                    type="line"
-                    height={280}
-                  />
+                {timeLine?.series.some((element) => element?.data.length > 0) ? (
+                  <Style.ChartWrapperX
+                    onScroll={handleScroll}
+                    scrollLeft={scrollLeft}
+                    ref={refCallback}
+                  >
+                    <Chart
+                      options={timeLineChart.options}
+                      series={timeLineChart.series}
+                      type="bar"
+                      height={290}
+                      width={Math.max(
+                        divWidth,
+                        (timeLine.series[0].data.length +
+                          timeLine.series[1].data.length +
+                          timeLine.series[2].data.length) *
+                          30,
+                      )}
+                    />
+                  </Style.ChartWrapperX>
                 ) : (
                   <Style.NoDataWrapper>
                     <h6>Nenhuma informação encontrada</h6>
@@ -700,7 +707,7 @@ export const Dashboard = () => {
                     type="donut"
                     options={scoreChart.options as any}
                     series={scoreChart.series}
-                    height={330}
+                    height={335}
                   />
                 ) : (
                   <Style.NoDataWrapper>
