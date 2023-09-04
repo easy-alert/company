@@ -84,9 +84,47 @@ export const Card = styled.div`
 
   min-height: 182px;
 
+  width: 100%;
+
+  overflow-x: hidden;
+
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
+`;
+
+export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .apexcharts-legend {
+    transition: 0.2s !important;
+    inset: unset !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: ${({ scrollLeft }) => `${scrollLeft}px !important`};
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px; /* Largura da scrollbar */
+    height: 5px; /* Altura da scrollbar */
+  }
+
+  /* Estilizando o trilho da scrollbar */
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Cor de fundo do trilho */
+  }
+
+  /* Estilizando o thumb (a parte móvel) da scrollbar */
+  ::-webkit-scrollbar-thumb {
+    background-color: #888; /* Cor do thumb */
+    border-radius: 5px; /* Borda arredondada do thumb */
+  }
+
+  /* Estilizando o thumb quando estiver passando o mouse */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Cor do thumb ao passar o mouse */
+  }
 `;
 
 export const ChartContent = styled.div`
@@ -96,6 +134,10 @@ export const ChartContent = styled.div`
 
   .apexcharts-toolbar {
     z-index: 0 !important;
+  }
+
+  .apexcharts-bar-series.apexcharts-plot-series path {
+    clip-path: inset(0% 0% -8px 0% round 8px);
   }
 `;
 
