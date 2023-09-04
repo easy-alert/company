@@ -287,6 +287,8 @@ export const Dashboard = () => {
         enabled: false,
       },
       tooltip: {
+        shared: true,
+        intersect: false,
         y: {
           formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
         },
