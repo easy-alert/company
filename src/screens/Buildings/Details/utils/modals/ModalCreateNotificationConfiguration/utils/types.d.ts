@@ -1,5 +1,3 @@
-import { IBuildingDetail } from '../../../types';
-
 interface ICreateNotificationConfiguration {
   name: string;
   email: string;
@@ -13,11 +11,9 @@ interface ICreateNotificationConfiguration {
 export interface IModalCreateNotificationConfiguration {
   setModal: (setModal: boolean) => void;
   buildingId: string;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 // REQUESTS
@@ -26,11 +22,10 @@ export interface IRequestCreateNotificationConfiguration {
   buildingId: string;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
   setFieldValue: any;
   resetForm: any;
+  requestBuildingDetailsCall: () => Promise<void>;
 }

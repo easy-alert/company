@@ -89,6 +89,7 @@ export const ModalMaintenanceDetails = ({
               <Style.Row>
                 <h6>Periodicidade</h6>
                 <p className="p2">
+                  A cada{' '}
                   {maintenance.Maintenance.frequency > 1
                     ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
                     : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}

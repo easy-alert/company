@@ -1,5 +1,6 @@
 // LIBS
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 // COMPONENTS
@@ -75,6 +76,11 @@ export const AccountDetails = () => {
         )}
 
         <Style.Card>
+          <h6>Data de cadastro</h6>
+          <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
+        </Style.Card>
+
+        <Style.Card>
           <h6>Link para chamado</h6>
           <p className="p2 link">
             {account?.Company.supportLink ? (
@@ -88,8 +94,10 @@ export const AccountDetails = () => {
         </Style.Card>
 
         <Style.Card>
-          <h6>Data de cadastro</h6>
-          <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
+          <h6>Termos de uso</h6>
+          <Link className="terms" to="/terms" target="_blank" rel="noopener noreferrer">
+            Visualizar termos
+          </Link>
         </Style.Card>
       </Style.CardSection>
 

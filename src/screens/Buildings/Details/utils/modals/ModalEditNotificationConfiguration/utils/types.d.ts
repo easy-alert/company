@@ -1,4 +1,4 @@
-import { IBuildingDetail, INotificationConfiguration } from '../../../types';
+import { INotificationConfiguration } from '../../../types';
 
 interface IEditNotificationConfiguration {
   name: string;
@@ -12,12 +12,10 @@ interface IEditNotificationConfiguration {
 export interface IModalEditNotificationConfiguration {
   setModal: (setModal: boolean) => void;
   buildingId: string;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
   selectedNotificationRow: INotificationConfiguration;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 // REQUESTS
@@ -27,19 +25,14 @@ export interface IRequestEditNotificationConfiguration {
   buildingNotificationConfigurationId: string;
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
+  requestBuildingDetailsCall: () => Promise<void>;
 }
 
 export interface IRequestDeleteNotificationConfiguration {
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;
   buildingNotificationConfigurationId: string;
-  buildingId: string;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  requestBuildingDetailsCall: () => Promise<void>;
 }

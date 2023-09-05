@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { Api } from '../../../../../../../services/api';
 import { unMask, catchHandler } from '../../../../../../../utils/functions';
-import { requestBuildingDetails } from '../../../functions';
 
 // FUNCTIONS
 
@@ -15,9 +14,7 @@ export const requestEditBuilding = async ({
   values,
   setModal,
   setOnQuery,
-  setBuilding,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
+  requestBuildingDetailsCall,
 }: IRequestEditBuilding) => {
   setOnQuery(true);
 
@@ -37,12 +34,7 @@ export const requestEditBuilding = async ({
     },
   })
     .then((res) => {
-      requestBuildingDetails({
-        buildingId: values.id,
-        setBuilding,
-        setTotalMaintenancesCount,
-        setUsedMaintenancesCount,
-      });
+      requestBuildingDetailsCall();
       setModal(false);
       toast.success(res.data.ServerMessage.message);
     })

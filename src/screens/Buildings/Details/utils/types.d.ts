@@ -11,11 +11,22 @@ export interface INotificationConfiguration {
   nanoId: string;
 }
 
-interface Annex {
+interface File {
   name: string;
   id: string;
   url: string;
-  originalName: string;
+}
+
+interface Folder {
+  name: string;
+  id: string;
+}
+
+interface Folders {
+  name: string;
+  id: string;
+  Files: Files[];
+  Folders: Folder[];
 }
 
 interface Banner {
@@ -49,7 +60,7 @@ export interface IBuildingDetail {
     name: string;
     id: string;
   };
-  Annexes: Annex[];
+  Folders: Folders;
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
   Banners: Banner[];
@@ -61,6 +72,7 @@ export interface IRequestBuildingDetails {
   buildingId: string;
   setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
   setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
+  setRootFolder: React.Dispatch<React.SetStateAction<Folder>>;
 }
 
 export interface IRequestResendConfirmation {
@@ -68,17 +80,15 @@ export interface IRequestResendConfirmation {
   buildingNotificationConfigurationId: string;
 }
 
-export interface IRequestDeleteAnnex {
-  annexeId: string;
-  setDeleteAnnexOnQuery: (setDeleteAnnexOnQuery: boolean) => void;
-  setBuilding: (setBuilding: IBuildingDetail) => void;
-  buildingId: string;
-  setUsedMaintenancesCount: (setUsedMaintenancesCount: number) => void;
-  setTotalMaintenancesCount: (setTotalMaintenancesCount: number) => void;
-}
-
 export interface IChangeShowContactStatus {
   setShowContactLoading: React.Dispatch<React.SetStateAction<boolean>>;
   buildingNotificationConfigurationId: string;
   showContact: boolean;
+}
+
+export interface IRequestFolderDetails {
+  folderId: string;
+  setBuilding: React.Dispatch<React.SetStateAction<IBuildingDetail | undefined>>;
+  setBreadcrumb: React.Dispatch<React.SetStateAction<Folder[]>>;
+  rootFolder: Folder;
 }

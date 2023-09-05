@@ -40,6 +40,9 @@ import { RecoverPassword } from './screens/Authentication/RecoverPassword';
 // TUTORIALS
 import { Tutorials } from './screens/Tutorials';
 
+// DASHBOARD
+import { Dashboard } from './screens/Dashboard';
+
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
@@ -88,6 +91,8 @@ const AppRoutes = () => (
           <Route path="/calendar" element={<MaintenancesCalendar />} />
 
           <Route path="report/create" element={<CreateReport />} />
+
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />

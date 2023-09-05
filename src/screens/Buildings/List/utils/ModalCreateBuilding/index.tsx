@@ -58,7 +58,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: Monte Ravello"
-                maxLength={40}
+                maxLength={80}
               />
               <FormikSelect
                 label="Tipo *"

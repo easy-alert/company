@@ -31,10 +31,8 @@ import {
 export const ModalEditBuilding = ({
   setModal,
   building,
-  setBuilding,
   buildingTypes,
-  setTotalMaintenancesCount,
-  setUsedMaintenancesCount,
+  requestBuildingDetailsCall,
 }: IModalEditBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -62,9 +60,7 @@ export const ModalEditBuilding = ({
             setModal,
             setOnQuery,
             values,
-            setBuilding,
-            setTotalMaintenancesCount,
-            setUsedMaintenancesCount,
+            requestBuildingDetailsCall,
           });
         }}
       >
@@ -77,7 +73,7 @@ export const ModalEditBuilding = ({
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: Monte Ravello"
-                maxLength={40}
+                maxLength={80}
               />
               <FormikSelect
                 label="Tipo *"
