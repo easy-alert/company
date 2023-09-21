@@ -23,7 +23,7 @@ const Container = styled.div`
 `;
 
 export const RequireAuth = ({ children }: IRequireAuth) => {
-  const { setAccount, signin } = useContext(AuthContext);
+  const { setAccount, signin, signout } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -51,7 +51,10 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
         setLoading(false);
         localStorage.setItem('user', res.data.User.name);
       })
-      .catch(() => navigate('/login'));
+      .catch(() => {
+        signout();
+        navigate('/login');
+      });
   };
 
   useEffect(() => {
