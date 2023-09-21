@@ -6,7 +6,7 @@ export const Container = styled.div`
   align-items: center;
   > button {
     height: 16px;
-    width: 16px;
+    min-width: 16px;
     padding: 2px;
     cursor: pointer;
     transition: 0.25s;
