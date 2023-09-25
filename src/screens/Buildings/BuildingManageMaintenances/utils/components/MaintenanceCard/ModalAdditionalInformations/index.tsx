@@ -154,7 +154,7 @@ export const ModalAdditionalInformations = ({
           <Form>
             <Style.Wrapper>
               <FormikCheckbox
-                label="Informar data da primeira notificação"
+                label="Informar data da próxima notificação"
                 name="hasFirstNotificationDate"
                 onChange={() => {
                   setFieldValue('hasFirstNotificationDate', !values.hasFirstNotificationDate);

@@ -13,7 +13,7 @@ export const schemaAdditionalInformations = yup
     hasFirstNotificationDate: yup.boolean(),
     firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
       is: (hasFirstNotificationDate: boolean) => hasFirstNotificationDate === true,
-      then: yup.date().required('Informe a data da primeira notificação.'),
+      then: yup.date().required('Informe a data da próxima notificação.'),
     }),
   })
   .required();

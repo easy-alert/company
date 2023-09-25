@@ -365,7 +365,7 @@ export const BuildingDetails = () => {
               </Style.BuildingCardData>
 
               <Style.BuildingCardData>
-                <p className="p3">Entrega da edificação:</p>
+                <p className="p3">Data de início:</p>
                 <p className="p3">
                   {building?.deliveryDate ? dateFormatter(building?.deliveryDate!) : ''}
                 </p>
