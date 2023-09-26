@@ -131,7 +131,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
               <FormikInput
                 typeDatePlaceholderValue={values.deliveryDate}
                 type="date"
-                label="Entrega da edificação *"
+                label="Data de início *"
                 name="deliveryDate"
                 value={values.deliveryDate}
                 error={touched.deliveryDate && errors.deliveryDate ? errors.deliveryDate : null}

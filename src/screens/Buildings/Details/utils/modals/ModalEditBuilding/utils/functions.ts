@@ -84,7 +84,7 @@ export const schemaModalEditBuilding = yup
     warrantyExpiration: yup
       .date()
       .required('O término da garantia deve ser preenchido.')
-      .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de entrega.'),
+      .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de início.'),
     keepNotificationAfterWarrantyEnds: yup.boolean(),
   })
   .required();

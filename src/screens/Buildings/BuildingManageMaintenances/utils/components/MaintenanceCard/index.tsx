@@ -199,7 +199,7 @@ export const MaintenanceCard = ({
               {maintenance.notificationDate && (
                 <Style.AdditionalInformationsWrapper>
                   <p className="p2">
-                    <span>Primeira notificação: </span>
+                    <span>Próxima notificação: </span>
                     {dateFormatter(maintenance.notificationDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
