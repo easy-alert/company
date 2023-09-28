@@ -147,10 +147,9 @@ export const MaintenancesMoreGrid = styled.div`
 
 export const AdditionalInformationsWrapper = styled.div`
   display: flex;
-  align-items: center;
   gap: ${theme.size.xxsm};
 `;
 
 export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
-  grid-area: 3 / 1 / 3 / 3;
+  grid-area: 3 / 2 / 3 / 4;
 `;
