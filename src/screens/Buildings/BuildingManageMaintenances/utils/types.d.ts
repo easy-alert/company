@@ -43,6 +43,10 @@ interface IMaintenance {
   notificationDate?: Date | null;
   files?: AnnexesAndImages[];
   images?: AnnexesAndImages[];
+  nextNotificationDate?: string;
+  lastResolutionDate?: string;
+  lastNotificationDate?: string;
+  lastNotificationStatus?: string;
 }
 
 export interface ICategories {

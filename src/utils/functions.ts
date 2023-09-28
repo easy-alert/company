@@ -26,6 +26,52 @@ export const convertToFormikDate = (date: Date) => {
 export const increaseDaysInDate = ({ date, daysToIncrease }: IIncreaseDaysInDate) =>
   convertToFormikDate(new Date(date.setDate(date.getDate() + daysToIncrease)));
 
+export const addDays = ({ date, days }: { date: Date; days: number }) => {
+  const newDate = date;
+  newDate.setDate(newDate.getDate() + days);
+  return newDate;
+};
+
+export function removeDays({ date, days }: { date: Date; days: number }) {
+  const newDate = date;
+  date.setDate(date.getDate() - days);
+  return newDate;
+}
+
+export const noWeekendTimeDate = ({ date, interval }: { date: Date; interval: number }) => {
+  let dateNoWeekend;
+
+  switch (date.getDay()) {
+    case 0:
+      dateNoWeekend = addDays({
+        date,
+        days: 1,
+      });
+
+      break;
+    case 6:
+      if (interval === 1) {
+        dateNoWeekend = addDays({
+          date,
+          days: 2,
+        });
+        break;
+      } else {
+        dateNoWeekend = removeDays({
+          date,
+          days: 1,
+        });
+        break;
+      }
+
+    default:
+      dateNoWeekend = date;
+      break;
+  }
+
+  return dateNoWeekend;
+};
+
 // #endregion
 
 // #region UPLOAD

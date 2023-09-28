@@ -104,8 +104,8 @@ export const MaintenancesMoreGrid = styled.div`
   align-items: flex-start;
   display: grid;
   width: 100%;
-  grid-template-rows: 1fr;
-  grid-gap: ${theme.size.sm};
+  grid-template-rows: auto;
+  grid-gap: ${theme.size.xsm} ${theme.size.sm};
   grid-template-columns: 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px;
 
   span {
@@ -116,4 +116,13 @@ export const MaintenancesMoreGrid = styled.div`
     overflow: hidden;
     word-wrap: break-word;
   }
+`;
+
+export const AdditionalInformationsWrapper = styled.div`
+  display: flex;
+  gap: ${theme.size.xxsm};
+`;
+
+export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
+  grid-area: 3 / 1 / 3 / 3;
 `;

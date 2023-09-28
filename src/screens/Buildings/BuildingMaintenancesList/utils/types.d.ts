@@ -42,6 +42,10 @@ export interface IMaintenance {
     maintenanceReport?: IMaintenanceReport;
     files?: AnnexesAndImages[];
     images?: AnnexesAndImages[];
+    nextNotificationDate?: string;
+    lastResolutionDate?: string;
+    lastNotificationDate?: string;
+    lastNotificationStatus?: string;
   };
 }
 
