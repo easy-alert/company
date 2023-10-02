@@ -10,6 +10,7 @@ import * as Style from './styles';
 
 // TYPES
 import { IMaintenanceCard } from './utils/types';
+import { capitalizeFirstLetter, dateFormatter } from '../../../../../../utils/functions';
 
 export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
@@ -54,17 +55,15 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                 : '-'}
             </p>
 
-            <Style.PeriodIconWrapper>
-              <Image img={icon.alert} size="16px" />
-              <p className="p2">
-                <span>Prazo para execução: </span>
-                {`${maintenance.Maintenance.period} ${
-                  maintenance.Maintenance.period > 1
-                    ? maintenance.Maintenance.PeriodTimeInterval.pluralLabel
-                    : maintenance.Maintenance.PeriodTimeInterval.singularLabel
-                }`}
-              </p>
-            </Style.PeriodIconWrapper>
+            <p className="p2">
+              <span>Prazo para execução: </span>
+              {`${maintenance.Maintenance.period} ${
+                maintenance.Maintenance.period > 1
+                  ? maintenance.Maintenance.PeriodTimeInterval.pluralLabel
+                  : maintenance.Maintenance.PeriodTimeInterval.singularLabel
+              }`}
+            </p>
+
             <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
               <Image img={icon.alert} size="16px" />
               <p className="p2">
@@ -78,7 +77,39 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                   : '-'}
               </p>
             </Style.PeriodIconWrapper>
-            <div style={{ height: '32px' }} />
+            <div />
+            <div />
+            <div />
+
+            {maintenance.Maintenance.nextNotificationDate && (
+              <Style.AdditionalInformationsWrapper>
+                <p className="p2">
+                  <span>Próxima notificação: </span>
+                  {dateFormatter(maintenance.Maintenance.nextNotificationDate)}
+                </p>
+              </Style.AdditionalInformationsWrapper>
+            )}
+
+            {maintenance.Maintenance.lastResolutionDate && (
+              <Style.AdditionalInformationsWrapper>
+                <p className="p2">
+                  <span>Última conclusão: </span>
+                  {dateFormatter(maintenance.Maintenance.lastResolutionDate)}
+                </p>
+              </Style.AdditionalInformationsWrapper>
+            )}
+
+            {maintenance.Maintenance.lastNotificationDate && (
+              <Style.LastNotificationDate
+                title={capitalizeFirstLetter(maintenance.Maintenance.lastNotificationStatus || '')}
+              >
+                <Image img={icon.yellowAlert} size="16px" />
+                <p className="p2">
+                  <span>Última notificação: </span>
+                  {maintenance.Maintenance.lastNotificationDate}
+                </p>
+              </Style.LastNotificationDate>
+            )}
           </Style.MaintenancesMoreGrid>
         </Style.MaintenancesCardBottomContainer>
       </Style.MaintenancesCardContent>

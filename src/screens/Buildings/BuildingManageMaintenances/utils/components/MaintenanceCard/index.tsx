@@ -13,7 +13,7 @@ import { ModalEditMaintenance } from '../../../../../Maintenances/List/utils/com
 
 // TYPES
 import { IMaintenanceCard } from './types';
-import { dateFormatter } from '../../../../../../utils/functions';
+import { capitalizeFirstLetter, dateFormatter } from '../../../../../../utils/functions';
 import { IMaintenance } from '../../types';
 import { ModalCloneMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalCloneMaintenance';
 import { IconButton } from '../../../../../../components/Buttons/IconButton';
@@ -145,6 +145,7 @@ export const MaintenanceCard = ({
                   ? maintenance.observation
                   : '-'}
               </p>
+
               <p className="p2">
                 <span>Prazo para execução: </span>
                 {`${maintenance.period} ${
@@ -169,7 +170,6 @@ export const MaintenanceCard = ({
               </Style.PeriodIconWrapper>
               <div />
               <div />
-
               <div />
 
               <Style.MaintenancesCardGridMoreEditButton>
@@ -195,6 +195,40 @@ export const MaintenanceCard = ({
               </Style.MaintenancesCardGridMoreEditButton>
               <div />
               <div />
+
+              {maintenance.hasHistory && (
+                <>
+                  {maintenance.nextNotificationDate && (
+                    <Style.AdditionalInformationsWrapper>
+                      <p className="p2">
+                        <span>Próxima notificação: </span>
+                        {dateFormatter(maintenance.nextNotificationDate)}
+                      </p>
+                    </Style.AdditionalInformationsWrapper>
+                  )}
+
+                  {maintenance.lastResolutionDate && (
+                    <Style.AdditionalInformationsWrapper>
+                      <p className="p2">
+                        <span>Última conclusão: </span>
+                        {dateFormatter(maintenance.lastResolutionDate)}
+                      </p>
+                    </Style.AdditionalInformationsWrapper>
+                  )}
+
+                  {maintenance.lastNotificationDate && (
+                    <Style.LastNotificationDate
+                      title={capitalizeFirstLetter(maintenance.lastNotificationStatus || '')}
+                    >
+                      <Image img={icon.yellowAlert} size="16px" />
+                      <p className="p2">
+                        <span>Última notificação: </span>
+                        {maintenance.lastNotificationDate}
+                      </p>
+                    </Style.LastNotificationDate>
+                  )}
+                </>
+              )}
 
               {maintenance.notificationDate && (
                 <Style.AdditionalInformationsWrapper>

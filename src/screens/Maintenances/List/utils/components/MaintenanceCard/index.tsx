@@ -110,17 +110,15 @@ export const MaintenanceCard = ({
                   : '-'}
               </p>
 
-              <Style.PeriodIconWrapper>
-                <Image img={icon.alert} size="16px" />
-                <p className="p2">
-                  <span>Prazo para execução: </span>
-                  {`${maintenance.period} ${
-                    maintenance.period > 1
-                      ? maintenance.PeriodTimeInterval.pluralLabel
-                      : maintenance.PeriodTimeInterval.singularLabel
-                  }`}
-                </p>
-              </Style.PeriodIconWrapper>
+              <p className="p2">
+                <span>Prazo para execução: </span>
+                {`${maintenance.period} ${
+                  maintenance.period > 1
+                    ? maintenance.PeriodTimeInterval.pluralLabel
+                    : maintenance.PeriodTimeInterval.singularLabel
+                }`}
+              </p>
+
               <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
                 <Image img={icon.alert} size="16px" />
                 <p className="p2">
