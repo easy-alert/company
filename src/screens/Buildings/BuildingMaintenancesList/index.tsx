@@ -17,11 +17,13 @@ import { AddedMaintenances } from './utils/types';
 import { filterFunction, requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { IconButton } from '../../../components/Buttons/IconButton';
+import { ModalPrintPlan } from './utils/ModalPrintPlan';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
+  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
@@ -49,6 +51,9 @@ export const BuildingMaintenancesList = () => {
     <DotSpinLoading />
   ) : (
     <>
+      {modalPrintPlanOpen && (
+        <ModalPrintPlan setModal={setModalPrintPlanOpen} categories={addedMaintenances} />
+      )}
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
