@@ -202,7 +202,7 @@ export const MaintenanceCard = ({
                     <Style.AdditionalInformationsWrapper>
                       <p className="p2">
                         <span>Próxima notificação: </span>
-                        {dateFormatter(maintenance.nextNotificationDate)}
+                        {maintenance.nextNotificationDate}
                       </p>
                     </Style.AdditionalInformationsWrapper>
                   )}
@@ -211,7 +211,7 @@ export const MaintenanceCard = ({
                     <Style.AdditionalInformationsWrapper>
                       <p className="p2">
                         <span>Última conclusão: </span>
-                        {dateFormatter(maintenance.lastResolutionDate)}
+                        {maintenance.lastResolutionDate}
                       </p>
                     </Style.AdditionalInformationsWrapper>
                   )}

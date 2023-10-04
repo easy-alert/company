@@ -51,6 +51,12 @@ export const LeftSide = styled.div`
   }
 `;
 
+export const RightSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+`;
+
 export const SearchField = styled.div`
   display: flex;
   align-items: center;
