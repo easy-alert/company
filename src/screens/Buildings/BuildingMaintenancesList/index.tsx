@@ -63,6 +63,7 @@ export const BuildingMaintenancesList = () => {
           </Style.LeftSide>
           <Style.RightSide>
             <IconButton
+              disabled={addedMaintenances.length < 1}
               icon={icon.pdfLogo2}
               label="Exportar"
               hideLabelOnMedia
