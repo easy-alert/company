@@ -46,6 +46,7 @@ import trashWithPrimaryBg from './trashWithPrimaryBg.svg';
 import report from './report.svg';
 import downloadRed from './downloadRed.svg';
 import pdfLogo from './pdfLogo.svg';
+import pdfLogo2 from './pdfLogo2.svg';
 import plusWhite from './plusWhite.svg';
 import editWhite from './editWhite.svg';
 import tutorial from './tutorial.svg';
@@ -108,6 +109,7 @@ export const icon = {
   report,
   downloadRed,
   pdfLogo,
+  pdfLogo2,
   plusWhite,
   editWhite,
   tutorial,

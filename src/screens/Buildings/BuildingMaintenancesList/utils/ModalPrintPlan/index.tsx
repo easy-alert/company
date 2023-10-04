@@ -53,39 +53,40 @@ const styles = StyleSheet.create({
   },
   section1: {
     flexGrow: 1,
-    width: 83,
+    width: 120,
   },
   section2: {
     flexGrow: 1,
-    width: 83,
+    width: 120,
   },
   section3: {
     flexGrow: 1,
-    width: 80,
+    // quando colocar a antecedencia, mudar o width pra 90
+    width: 70,
   },
   section4: {
     flexGrow: 1,
-    width: 100,
+    width: 90,
   },
   section5: {
     flexGrow: 1,
-    width: 130,
+    width: 80,
   },
   section6: {
     flexGrow: 1,
-    width: 120,
+    width: 60,
   },
   section7: {
     flexGrow: 1,
-    width: 80,
+    width: 75,
   },
   section8: {
     flexGrow: 1,
-    width: 63,
+    width: 75,
   },
   section9: {
     flexGrow: 1,
-    width: 63,
+    width: 75,
   },
   hr: {
     height: 0.5,
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   },
 
   companyLogo: {
-    height: 40,
+    height: 45,
     width: 89,
     objectFit: 'contain',
   },
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   name: {
-    fontSize: 14,
+    fontSize: 12,
   },
   categories: {
     display: 'flex',
@@ -175,7 +176,7 @@ const MyDocument = ({
     <Page size="A4" style={styles.page} orientation="landscape">
       <View>
         <View fixed style={styles.header}>
-          <Image src={image.logoForPDF} style={styles.companyLogo} />
+          <Image src={image.logoForPDF2} style={styles.companyLogo} />
 
           <View style={styles.headerSide}>
             <View style={styles.headerDiv}>
@@ -197,42 +198,43 @@ const MyDocument = ({
         <View style={styles.categories}>
           {categories.map((category) => (
             <View key={category.Category.id}>
-              <Text style={styles.name}>{category.Category.name}</Text>
-              <View style={styles.tableHeader} fixed>
-                <View style={styles.section1}>
-                  <Text>Elemento</Text>
-                </View>
+              <View wrap={false}>
+                <Text style={styles.name}>{category.Category.name}</Text>
+                <View style={styles.tableHeader}>
+                  <View style={styles.section1}>
+                    <Text>Elemento</Text>
+                  </View>
 
-                <View style={styles.section2}>
-                  <Text>Atividade</Text>
-                </View>
+                  <View style={styles.section2}>
+                    <Text>Atividade</Text>
+                  </View>
 
-                <View style={styles.section3}>
-                  <Text>Periodicidade</Text>
-                </View>
+                  <View style={styles.section3}>
+                    <Text>Periodicidade</Text>
+                  </View>
 
-                <View style={styles.section4}>
-                  <Text>Fonte</Text>
-                </View>
+                  <View style={styles.section4}>
+                    <Text>Fonte</Text>
+                  </View>
 
-                <View style={styles.section5}>
-                  <Text>Prazo de execução</Text>
-                </View>
+                  <View style={styles.section5}>
+                    <Text>Prazo de execução</Text>
+                  </View>
 
-                <View style={styles.section6}>
+                  {/* <View style={styles.section6}>
                   <Text>Antecedência</Text>
-                </View>
+                </View> */}
+                  <View style={styles.section9}>
+                    <Text>Próxima notificação</Text>
+                  </View>
 
-                <View style={styles.section7}>
-                  <Text>Última notificação</Text>
-                </View>
+                  <View style={styles.section7}>
+                    <Text>Última notificação</Text>
+                  </View>
 
-                <View style={styles.section8}>
-                  <Text>Última execução</Text>
-                </View>
-
-                <View style={styles.section9}>
-                  <Text>Próxima notificação</Text>
+                  <View style={styles.section8}>
+                    <Text>Última execução</Text>
+                  </View>
                 </View>
               </View>
 
@@ -270,17 +272,17 @@ const MyDocument = ({
                           }`}
                         </Text>
                       </View>
-                      <View style={styles.section6}>
+                      {/* <View style={styles.section6}>
                         <Text>-</Text>
+                      </View> */}
+                      <View style={styles.section9}>
+                        <Text>{maintenance.Maintenance.nextNotificationDate ?? '-'}</Text>
                       </View>
                       <View style={styles.section7}>
-                        <Text>{maintenance.Maintenance.lastNotificationDate ?? ''}</Text>
+                        <Text>{maintenance.Maintenance.lastNotificationDate ?? '-'}</Text>
                       </View>
                       <View style={styles.section8}>
-                        <Text>{maintenance.Maintenance.lastResolutionDate ?? ''}</Text>
-                      </View>
-                      <View style={styles.section9}>
-                        <Text>{maintenance.Maintenance.nextNotificationDate ?? ''}</Text>
+                        <Text>{maintenance.Maintenance.lastResolutionDate ?? '-'}</Text>
                       </View>
                     </View>
                   </View>
@@ -305,7 +307,7 @@ export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   return (
-    <Modal bodyWidth="90vw" title="Relatório" setModal={setModal}>
+    <Modal bodyWidth="90vw" title="Plano de manutenção" setModal={setModal}>
       <>
         {loading && <Style.SmallLoading />}
 
@@ -315,7 +317,9 @@ export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
           </PDFViewer>
           <PDFDownloadLink
             document={<MyDocument setLoading={setLoading} categories={categories} />}
-            fileName={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+            fileName={`Plano de manutenção - ${
+              categories[0].Building.name
+            } - ${new Date().toLocaleDateString('pt-BR')}`}
           >
             <Button label="Download" disable={loading} />
           </PDFDownloadLink>

@@ -23,7 +23,7 @@ export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
-  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(true);
+  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
@@ -61,14 +61,25 @@ export const BuildingMaintenancesList = () => {
               <h2>{buildingName} / Plano de manutenção</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
-          <IconButton
-            icon={icon.editWithBg}
-            label="Editar"
-            hideLabelOnMedia
-            onClick={() => {
-              navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
-            }}
-          />
+          <Style.RightSide>
+            <IconButton
+              icon={icon.pdfLogo2}
+              label="Exportar"
+              hideLabelOnMedia
+              onClick={() => {
+                setModalPrintPlanOpen(true);
+              }}
+            />
+
+            <IconButton
+              icon={icon.editWithBg}
+              label="Editar"
+              hideLabelOnMedia
+              onClick={() => {
+                navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
+              }}
+            />
+          </Style.RightSide>
         </Style.HeaderWrapper>
         <Style.SearchField>
           <IconButton

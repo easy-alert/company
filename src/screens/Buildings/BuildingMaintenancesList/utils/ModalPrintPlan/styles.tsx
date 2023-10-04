@@ -17,7 +17,7 @@ export const Container = styled.div`
 
 export const SmallLoading = styled.div`
   position: absolute;
-  left: 125px;
+  left: 270px;
   top: 24px;
 
   border: 4px solid ${theme.color.primaryL};
