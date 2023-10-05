@@ -12,5 +12,5 @@ export const TagContainer = styled.div`
     white-space: nowrap;
   }
 
-  background-color: ${theme.color.gray5};
+  background-color: ${theme.color.orange1};
 `;
