@@ -39,6 +39,7 @@ export interface IRequestCalendarDataResData {
     Dates: {
       Weeks: [
         {
+          inProgress: boolean;
           MaintenancesStatus: {
             name: 'expired' | 'pending' | 'completed' | 'overdue';
             pluralLabel: string;

@@ -11,5 +11,6 @@ export const TagContainer = styled.div`
     font-weight: 500;
     white-space: nowrap;
   }
-  background-color: ${theme.color.actionBlue};
+
+  background-color: ${theme.color.gray5};
 `;
