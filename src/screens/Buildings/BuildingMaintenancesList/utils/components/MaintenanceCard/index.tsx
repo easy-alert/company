@@ -10,7 +10,7 @@ import * as Style from './styles';
 
 // TYPES
 import { IMaintenanceCard } from './utils/types';
-import { capitalizeFirstLetter, dateFormatter } from '../../../../../../utils/functions';
+import { capitalizeFirstLetter } from '../../../../../../utils/functions';
 
 export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
@@ -85,7 +85,7 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
               <Style.AdditionalInformationsWrapper>
                 <p className="p2">
                   <span>Próxima notificação: </span>
-                  {dateFormatter(maintenance.Maintenance.nextNotificationDate)}
+                  {maintenance.Maintenance.nextNotificationDate}
                 </p>
               </Style.AdditionalInformationsWrapper>
             )}
@@ -94,7 +94,7 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
               <Style.AdditionalInformationsWrapper>
                 <p className="p2">
                   <span>Última conclusão: </span>
-                  {dateFormatter(maintenance.Maintenance.lastResolutionDate)}
+                  {maintenance.Maintenance.lastResolutionDate}
                 </p>
               </Style.AdditionalInformationsWrapper>
             )}

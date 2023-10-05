@@ -17,11 +17,13 @@ import { AddedMaintenances } from './utils/types';
 import { filterFunction, requestAddedMaintenances } from './utils/functions';
 import { ReturnButton } from '../../../components/Buttons/ReturnButton';
 import { IconButton } from '../../../components/Buttons/IconButton';
+import { ModalPrintPlan } from './utils/ModalPrintPlan';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
+  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
 
@@ -49,6 +51,9 @@ export const BuildingMaintenancesList = () => {
     <DotSpinLoading />
   ) : (
     <>
+      {modalPrintPlanOpen && (
+        <ModalPrintPlan setModal={setModalPrintPlanOpen} categories={addedMaintenances} />
+      )}
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
@@ -56,14 +61,26 @@ export const BuildingMaintenancesList = () => {
               <h2>{buildingName} / Plano de manutenção</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
-          <IconButton
-            icon={icon.editWithBg}
-            label="Editar"
-            hideLabelOnMedia
-            onClick={() => {
-              navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
-            }}
-          />
+          <Style.RightSide>
+            <IconButton
+              disabled={addedMaintenances.length < 1}
+              icon={icon.pdfLogo2}
+              label="Exportar"
+              hideLabelOnMedia
+              onClick={() => {
+                setModalPrintPlanOpen(true);
+              }}
+            />
+
+            <IconButton
+              icon={icon.editWithBg}
+              label="Editar"
+              hideLabelOnMedia
+              onClick={() => {
+                navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
+              }}
+            />
+          </Style.RightSide>
         </Style.HeaderWrapper>
         <Style.SearchField>
           <IconButton
