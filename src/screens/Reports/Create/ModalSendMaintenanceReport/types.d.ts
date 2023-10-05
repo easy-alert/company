@@ -5,6 +5,7 @@ import { IMaintenance } from '../../../Calendar/types';
 export interface IModalSendMaintenanceReport {
   setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
+  onThenActionRequest: () => Promise<void>;
 
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;

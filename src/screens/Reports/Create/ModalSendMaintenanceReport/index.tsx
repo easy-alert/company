@@ -32,6 +32,7 @@ import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory, requestReportsData } from '../functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
+import { requestToggleInProgress } from '../../../Calendar/utils/ModalSendMaintenanceReport/functions';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -41,6 +42,7 @@ export const ModalSendMaintenanceReport = ({
   setLoading,
   setMaintenances,
   setOnQuery,
+  onThenActionRequest,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
 
@@ -331,27 +333,59 @@ export const ModalSendMaintenanceReport = ({
             )}
 
             {maintenance.canReport ? (
-              <Button
-                label="Enviar relato"
-                disable={onFileQuery || onImageQuery || onModalQuery}
-                loading={onModalQuery}
-                onClick={() => {
-                  requestSendReport({
-                    setOnModalQuery,
-                    maintenanceHistoryId,
-                    maintenanceReport,
-                    setModal,
-                    files,
-                    images,
-                    origin: account?.origin ?? 'Company',
-                    filters,
-                    setCounts,
-                    setLoading,
-                    setMaintenances,
-                    setOnQuery,
-                  });
-                }}
-              />
+              <>
+                {!onModalQuery && (
+                  <PopoverButton
+                    disabled={onFileQuery || onImageQuery || onModalQuery}
+                    actionButtonClick={() => {
+                      requestToggleInProgress({
+                        maintenanceHistoryId,
+                        setModal,
+                        setOnQuery: setOnModalQuery,
+                        onThenActionRequest,
+                        inProgressChange: !maintenance.inProgress,
+                      });
+                    }}
+                    borderless
+                    label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
+                    message={{
+                      title: maintenance.inProgress
+                        ? 'Tem certeza que deseja alterar a execução?'
+                        : 'Iniciar a execução apenas indica que a manutenção está sendo realizada, mas não conclui a manutenção.',
+                      content: 'Esta ação é reversível.',
+                    }}
+                    type="Button"
+                  />
+                )}
+
+                <PopoverButton
+                  disabled={onFileQuery || onImageQuery}
+                  loading={onModalQuery}
+                  actionButtonClick={() => {
+                    requestSendReport({
+                      setOnModalQuery,
+                      maintenanceHistoryId,
+                      maintenanceReport,
+                      setModal,
+                      files,
+                      images,
+                      origin: account?.origin ?? 'Company',
+                      filters,
+                      setCounts,
+                      setLoading,
+                      setMaintenances,
+                      setOnQuery,
+                    });
+                  }}
+                  label="Enviar relato"
+                  message={{
+                    title: 'Tem certeza que deseja enviar o relato?',
+                    content: 'Esta ação é irreversível.',
+                    contentColor: theme.color.danger,
+                  }}
+                  type="Button"
+                />
+              </>
             ) : (
               <Button
                 label="Fechar"

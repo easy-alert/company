@@ -105,6 +105,15 @@ export const CreateReport = () => {
           setLoading={setLoading}
           setMaintenances={setMaintenances}
           setOnQuery={setOnQuery}
+          onThenActionRequest={async () =>
+            requestReportsData({
+              filters: filterforRequest,
+              setCounts,
+              setLoading,
+              setMaintenances,
+              setOnQuery,
+            })
+          }
         />
       )}
       {modalEditReport && maintenanceHistoryId && (
