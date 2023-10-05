@@ -131,4 +131,5 @@ export interface IMaintenance {
   Building: Building;
   Maintenance: Maintenance;
   canReport: boolean;
+  inProgress: boolean;
 }

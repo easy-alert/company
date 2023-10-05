@@ -31,6 +31,7 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../../../Reports/Create/functions';
+import { InProgressTag } from '../../../../components/InProgressTag';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -147,10 +148,12 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <EventTag status="occasional" />
             )}
+            {(maintenance?.MaintenancesStatus.name === 'expired' ||
+              maintenance?.MaintenancesStatus.name === 'pending') &&
+              maintenance.inProgress && <InProgressTag />}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>

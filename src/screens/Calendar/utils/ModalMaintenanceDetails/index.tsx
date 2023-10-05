@@ -20,6 +20,7 @@ import { requestMaintenanceDetails } from './functions';
 import { IMaintenance } from '../../types';
 import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { ImagePreview } from '../../../../components/ImagePreview';
+import { InProgressTag } from '../../../../components/InProgressTag';
 
 export const ModalMaintenanceDetails = ({
   setModal,
@@ -53,6 +54,10 @@ export const ModalMaintenanceDetails = ({
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <EventTag status="occasional" />
             )}
+            {(maintenance?.MaintenancesStatus.name === 'expired' ||
+              maintenance?.MaintenancesStatus.name === 'pending') &&
+              maintenance.inProgress &&
+              !modalAdditionalInformations.isFuture && <InProgressTag />}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>
