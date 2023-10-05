@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
   section2: {
     flexGrow: 1,
-    width: 150,
+    width: 170,
   },
   section3: {
     flexGrow: 1,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   section7: {
     flexGrow: 1,
-    width: 50,
+    width: 40,
   },
   section8: {
     flexGrow: 1,
@@ -217,7 +217,7 @@ const MyDocument = ({
                   </View>
 
                   <View style={styles.section5}>
-                    <Text>Prazo de execução</Text>
+                    <Text>Prazo para execução</Text>
                   </View>
 
                   {/* <View style={styles.section6}>
