@@ -25,12 +25,13 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadFile } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
-import { requestSendReport } from './functions';
+import { requestSendReport, requestToggleInProgress } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../../../Reports/Create/functions';
+import { InProgressTag } from '../../../../components/InProgressTag';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -147,10 +148,12 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <EventTag status="occasional" />
             )}
+            {(maintenance?.MaintenancesStatus.name === 'expired' ||
+              maintenance?.MaintenancesStatus.name === 'pending') &&
+              maintenance.inProgress && <InProgressTag />}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>
@@ -302,59 +305,87 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
-
-          {maintenance.canReport ? (
-            <Button
-              label="Enviar relato"
-              center
-              disable={onFileQuery || onImageQuery}
-              loading={onQuery}
-              onClick={() => {
-                requestSendReport({
-                  setOnQuery,
-                  maintenanceHistoryId: modalAdditionalInformations.id,
-                  maintenanceReport,
-                  setModal,
-                  files,
-                  images,
-                  buildingId,
-                  calendarType,
-                  setBuildingOptions,
-                  setLoading,
-                  setMaintenancesDisplay,
-                  setMaintenancesMonthView,
-                  setMaintenancesWeekView,
-                  setYearChangeLoading,
-                  yearToRequest,
-                  origin: account?.origin ?? 'Company',
-                });
-              }}
-            />
-          ) : (
-            <Style.ButtonContainer>
-              {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+          <Style.ButtonContainer>
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+              <PopoverButton
+                actionButtonBgColor={theme.color.actionDanger}
+                borderless
+                disabled={onQuery}
+                type="Button"
+                label="Excluir"
+                message={{
+                  title: 'Deseja excluir este histórico de manutenção?',
+                  content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                  contentColor: theme.color.danger,
+                }}
+                actionButtonClick={() => {
+                  requestDeleteMaintenanceHistory({
+                    maintenanceHistoryId: modalAdditionalInformations.id,
+                    setModal,
+                    onThenRequest: async () => onThenActionRequest(),
+                    setOnModalQuery: setOnQuery,
+                  });
+                }}
+              />
+            )}
+            {maintenance.canReport ? (
+              <>
+                {!onQuery && (
+                  <PopoverButton
+                    disabled={onFileQuery || onImageQuery || onQuery}
+                    actionButtonClick={() => {
+                      requestToggleInProgress({
+                        maintenanceHistoryId: modalAdditionalInformations.id,
+                        setModal,
+                        setOnQuery,
+                        onThenActionRequest,
+                        inProgressChange: !maintenance.inProgress,
+                      });
+                    }}
+                    borderless
+                    label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
+                    message={{
+                      title: maintenance.inProgress
+                        ? 'Tem certeza que deseja alterar a execução?'
+                        : 'Iniciar a execução apenas indica que a manutenção está sendo realizada, mas não conclui a manutenção.',
+                      content: 'Esta ação é reversível.',
+                    }}
+                    type="Button"
+                  />
+                )}
                 <PopoverButton
-                  actionButtonBgColor={theme.color.actionDanger}
-                  borderless
-                  disabled={onQuery}
-                  type="Button"
-                  label="Excluir"
-                  message={{
-                    title: 'Deseja excluir este histórico de manutenção?',
-                    content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                    contentColor: theme.color.danger,
-                  }}
+                  disabled={onFileQuery || onImageQuery}
+                  loading={onQuery}
                   actionButtonClick={() => {
-                    requestDeleteMaintenanceHistory({
+                    requestSendReport({
+                      setOnQuery,
                       maintenanceHistoryId: modalAdditionalInformations.id,
+                      maintenanceReport,
                       setModal,
-                      onThenRequest: async () => onThenActionRequest(),
-                      setOnModalQuery: setOnQuery,
+                      files,
+                      images,
+                      buildingId,
+                      calendarType,
+                      setBuildingOptions,
+                      setLoading,
+                      setMaintenancesDisplay,
+                      setMaintenancesMonthView,
+                      setMaintenancesWeekView,
+                      setYearChangeLoading,
+                      yearToRequest,
+                      origin: account?.origin ?? 'Company',
                     });
                   }}
+                  label="Enviar relato"
+                  message={{
+                    title: 'Tem certeza que deseja enviar o relato?',
+                    content: 'Esta ação é irreversível.',
+                    contentColor: theme.color.danger,
+                  }}
+                  type="Button"
                 />
-              )}
-
+              </>
+            ) : (
               <Button
                 label="Fechar"
                 disable={onQuery}
@@ -363,8 +394,8 @@ export const ModalSendMaintenanceReport = ({
                   setModal(false);
                 }}
               />
-            </Style.ButtonContainer>
-          )}
+            )}
+          </Style.ButtonContainer>
         </Style.Container>
       )}
     </Modal>

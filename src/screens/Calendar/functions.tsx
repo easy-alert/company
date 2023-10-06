@@ -3,6 +3,7 @@ import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from
 import { Api } from '../../services/api';
 import { catchHandler } from '../../utils/functions';
 import { EventTag } from './utils/EventTag';
+import { InProgressTag } from '../../components/InProgressTag';
 
 export const requestCalendarData = async ({
   setMaintenancesMonthView,
@@ -81,6 +82,10 @@ export const requestCalendarData = async ({
               <EventTag status={e.MaintenancesStatus.name} />
               {/* {show occasional maintenance tag } */}
               {e.Maintenance.frequency < 1 && <EventTag status="occasional" />}
+              {(e.MaintenancesStatus.name === 'expired' ||
+                e.MaintenancesStatus.name === 'pending') &&
+                e.inProgress &&
+                !e.isFuture && <InProgressTag />}
             </div>
 
             <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>

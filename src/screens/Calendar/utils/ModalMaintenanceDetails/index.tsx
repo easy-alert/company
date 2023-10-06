@@ -53,6 +53,11 @@ export const ModalMaintenanceDetails = ({
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <EventTag status="occasional" />
             )}
+            {/* Aqui não deve precisar da tag in progress porque quando clica na vencida ele abre sempre a modal de enviar relato */}
+            {/* {(maintenance?.MaintenancesStatus.name === 'expired' ||
+              maintenance?.MaintenancesStatus.name === 'pending') &&
+              maintenance.inProgress &&
+              !modalAdditionalInformations.isFuture && <InProgressTag />} */}
           </Style.StatusTagWrapper>
           <Style.Content>
             <Style.Row>

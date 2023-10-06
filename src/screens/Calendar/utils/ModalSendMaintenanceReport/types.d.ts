@@ -45,3 +45,11 @@ export interface IRequestSendReport {
   calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
   origin: 'Backoffice' | 'Company' | 'Client';
 }
+
+export interface IRequestToggleInProgress {
+  setModal: (setModal: boolean) => void;
+  maintenanceHistoryId: string;
+  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
+  inProgressChange: boolean;
+  onThenActionRequest: () => Promise<void>;
+}
