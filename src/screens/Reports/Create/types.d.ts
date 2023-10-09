@@ -59,6 +59,7 @@ export interface IMaintenanceReportData {
   responsible: string | null;
   status: 'completed' | 'expired' | 'pending' | 'overdue';
   type: 'common' | 'occasional' | null;
+  inProgress: boolean;
 }
 
 export interface IRequestReportsData {

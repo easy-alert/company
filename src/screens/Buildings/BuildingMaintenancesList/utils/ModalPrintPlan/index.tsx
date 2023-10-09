@@ -53,16 +53,15 @@ const styles = StyleSheet.create({
   },
   section1: {
     flexGrow: 1,
-    width: 120,
+    width: 110,
   },
   section2: {
     flexGrow: 1,
-    width: 120,
+    width: 170,
   },
   section3: {
     flexGrow: 1,
-    // quando colocar a antecedencia, mudar o width pra 90
-    width: 70,
+    width: 50,
   },
   section4: {
     flexGrow: 1,
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
   },
   section5: {
     flexGrow: 1,
-    width: 80,
+    width: 50,
   },
   section6: {
     flexGrow: 1,
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
   },
   section7: {
     flexGrow: 1,
-    width: 75,
+    width: 40,
   },
   section8: {
     flexGrow: 1,
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
   section9: {
     flexGrow: 1,
-    width: 75,
+    width: 50,
   },
   hr: {
     height: 0.5,
@@ -180,7 +179,7 @@ const MyDocument = ({
 
           <View style={styles.headerSide}>
             <View style={styles.headerDiv}>
-              <Text style={styles.name}>Plano de manutenções</Text>
+              <Text style={styles.name}>Plano de manutenção</Text>
             </View>
 
             <View style={styles.headerSideRow}>
@@ -218,22 +217,23 @@ const MyDocument = ({
                   </View>
 
                   <View style={styles.section5}>
-                    <Text>Prazo de execução</Text>
+                    <Text>Prazo para execução</Text>
                   </View>
 
                   {/* <View style={styles.section6}>
                   <Text>Antecedência</Text>
                 </View> */}
-                  <View style={styles.section9}>
-                    <Text>Próxima notificação</Text>
-                  </View>
 
                   <View style={styles.section7}>
-                    <Text>Última notificação</Text>
+                    <Text>Última execução</Text>
                   </View>
 
-                  <View style={styles.section8}>
-                    <Text>Última execução</Text>
+                  {/* <View style={styles.section8}>
+                    <Text>Última notificação</Text>
+                  </View> */}
+
+                  <View style={styles.section9}>
+                    <Text>Próxima notificação</Text>
                   </View>
                 </View>
               </View>
@@ -272,17 +272,20 @@ const MyDocument = ({
                           }`}
                         </Text>
                       </View>
+
                       {/* <View style={styles.section6}>
                         <Text>-</Text>
                       </View> */}
+
+                      <View style={styles.section7}>
+                        <Text>{maintenance.Maintenance.lastResolutionDate ?? '-'}</Text>
+                      </View>
+
+                      {/* <View style={styles.section8}>
+                        <Text>{maintenance.Maintenance.lastNotificationDate ?? '-'}</Text>
+                      </View> */}
                       <View style={styles.section9}>
                         <Text>{maintenance.Maintenance.nextNotificationDate ?? '-'}</Text>
-                      </View>
-                      <View style={styles.section7}>
-                        <Text>{maintenance.Maintenance.lastNotificationDate ?? '-'}</Text>
-                      </View>
-                      <View style={styles.section8}>
-                        <Text>{maintenance.Maintenance.lastResolutionDate ?? '-'}</Text>
                       </View>
                     </View>
                   </View>

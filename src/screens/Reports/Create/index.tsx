@@ -31,6 +31,7 @@ import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 import { Select } from '../../../components/Inputs/Select';
 import { getPluralStatusNameforPdf } from './ModalPrintReport/functions';
+import { InProgressTag } from '../../../components/InProgressTag';
 
 export const CreateReport = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -104,6 +105,15 @@ export const CreateReport = () => {
           setLoading={setLoading}
           setMaintenances={setMaintenances}
           setOnQuery={setOnQuery}
+          onThenActionRequest={async () =>
+            requestReportsData({
+              filters: filterforRequest,
+              setCounts,
+              setLoading,
+              setMaintenances,
+              setOnQuery,
+            })
+          }
         />
       )}
       {modalEditReport && maintenanceHistoryId && (
@@ -466,6 +476,8 @@ export const CreateReport = () => {
                           {maintenance.status === 'overdue' && <EventTag status="completed" />}
                           <EventTag status={maintenance.status} />
                           {maintenance.type === 'occasional' && <EventTag status="occasional" />}
+                          {(maintenance.status === 'expired' || maintenance.status === 'pending') &&
+                            maintenance.inProgress && <InProgressTag />}
                         </s.TagContainer>
                       ),
                     },
