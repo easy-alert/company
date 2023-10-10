@@ -68,6 +68,7 @@ export const MaintenanceCard = ({
           categoryIndex={categoryIndex}
           maintenanceIndex={maintenanceIndex}
           selectedMaintenance={maintenance}
+          hasHistory={!!maintenance.hasHistory}
         />
       )}
 
@@ -175,7 +176,6 @@ export const MaintenanceCard = ({
               <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
-                    disable={maintenance.hasHistory}
                     style={{ whiteSpace: 'nowrap' }}
                     label="+ Opções"
                     onClick={(e) => {
@@ -246,6 +246,15 @@ export const MaintenanceCard = ({
                     {dateFormatter(maintenance.resolutionDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
+              )}
+
+              {!!maintenance.daysToAnticipate && (
+                <Style.DaysToAncitipateWrapper>
+                  <p className="p2">
+                    <span>Dias para antecipar: </span>
+                    {maintenance.daysToAnticipate}
+                  </p>
+                </Style.DaysToAncitipateWrapper>
               )}
             </Style.MaintenancesMoreGrid>
           </Style.MaintenancesCardBottomContainer>

@@ -15,6 +15,12 @@ export const schemaAdditionalInformations = yup
       is: (hasFirstNotificationDate: boolean) => hasFirstNotificationDate === true,
       then: yup.date().required('Informe a data da próxima notificação.'),
     }),
+
+    daysToAnticipate: yup
+      .number()
+      .required('Campo obrigatório')
+      .min(0, 'Informe um número maior que zero.')
+      .integer('Informe um número inteiro.'),
   })
   .required();
 
@@ -79,6 +85,8 @@ export const handleAdditionalInformations = ({
       newState[categoryIndex].Maintenances[maintenanceIndex].maintenanceReport = maintenanceReport;
     }
 
+    newState[categoryIndex].Maintenances[maintenanceIndex].daysToAnticipate =
+      values.daysToAnticipate || 0;
     return newState;
   });
   setModal(false);

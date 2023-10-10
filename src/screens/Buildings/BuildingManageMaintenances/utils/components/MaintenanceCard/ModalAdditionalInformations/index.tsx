@@ -37,6 +37,7 @@ export const ModalAdditionalInformations = ({
   maintenanceIndex,
   selectedMaintenance,
   categories,
+  hasHistory,
 }: IModalAdditionalInformations) => {
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -140,6 +141,7 @@ export const ModalAdditionalInformations = ({
           firstNotificationDate: selectedMaintenance.notificationDate
             ? convertToFormikDate(selectedMaintenance.notificationDate)
             : '',
+          daysToAnticipate: selectedMaintenance.daysToAnticipate ?? 0,
         }}
         validationSchema={schemaAdditionalInformations}
         onSubmit={(values) => {
@@ -158,173 +160,187 @@ export const ModalAdditionalInformations = ({
       >
         {({ errors, values, touched, setFieldValue, setTouched }) => (
           <Form>
-            <Style.Wrapper>
-              <FormikCheckbox
-                label="Informar data da próxima notificação"
-                name="hasFirstNotificationDate"
-                onChange={() => {
-                  setFieldValue('hasFirstNotificationDate', !values.hasFirstNotificationDate);
+            <>
+              <Style.Wrapper hasHistory={hasHistory}>
+                <FormikCheckbox
+                  disable={hasHistory}
+                  label="Informar data da próxima notificação"
+                  name="hasFirstNotificationDate"
+                  onChange={() => {
+                    setFieldValue('hasFirstNotificationDate', !values.hasFirstNotificationDate);
 
-                  if (values.firstNotificationDate) {
-                    setTouched({ firstNotificationDate: false });
-                    setFieldValue('firstNotificationDate', '');
+                    if (values.firstNotificationDate) {
+                      setTouched({ firstNotificationDate: false });
+                      setFieldValue('firstNotificationDate', '');
+                    }
+                  }}
+                />
+                <FormikInput
+                  min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
+                  disabled={!values.hasFirstNotificationDate || hasHistory}
+                  name="firstNotificationDate"
+                  type="date"
+                  value={values.firstNotificationDate}
+                  error={
+                    touched.firstNotificationDate && errors.firstNotificationDate
+                      ? errors.firstNotificationDate
+                      : null
                   }
-                }}
-              />
-              <FormikInput
-                min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
-                disabled={!values.hasFirstNotificationDate}
-                name="firstNotificationDate"
-                type="date"
-                value={values.firstNotificationDate}
-                error={
-                  touched.firstNotificationDate && errors.firstNotificationDate
-                    ? errors.firstNotificationDate
-                    : null
-                }
-                placeholder="Ex: João Silva"
-                maxLength={40}
-              />
-            </Style.Wrapper>
+                  placeholder="Ex: João Silva"
+                  maxLength={40}
+                />
+              </Style.Wrapper>
 
-            <Style.Wrapper>
-              <FormikCheckbox
-                label="Informar data da última conclusão"
-                name="hasLastResolutionDate"
-                onChange={() => {
-                  setFieldValue('hasLastResolutionDate', !values.hasLastResolutionDate);
+              <Style.Wrapper hasHistory={hasHistory}>
+                <FormikCheckbox
+                  disable={hasHistory}
+                  label="Informar data da última conclusão"
+                  name="hasLastResolutionDate"
+                  onChange={() => {
+                    setFieldValue('hasLastResolutionDate', !values.hasLastResolutionDate);
 
-                  if (values.lastResolutionDate) {
-                    setTouched({ lastResolutionDate: false });
-                    setFieldValue('lastResolutionDate', '');
+                    if (values.lastResolutionDate) {
+                      setTouched({ lastResolutionDate: false });
+                      setFieldValue('lastResolutionDate', '');
+                    }
+                    setMaintenanceReport({ cost: 'R$ 0,00', observation: '' });
+                    setFiles([]);
+                    setImages([]);
+                  }}
+                />
+                <FormikInput
+                  max={convertToFormikDate(new Date())}
+                  disabled={!values.hasLastResolutionDate || hasHistory}
+                  name="lastResolutionDate"
+                  type="date"
+                  value={values.lastResolutionDate}
+                  error={
+                    touched.lastResolutionDate && errors.lastResolutionDate
+                      ? errors.lastResolutionDate
+                      : null
                   }
-                  setMaintenanceReport({ cost: 'R$ 0,00', observation: '' });
-                  setFiles([]);
-                  setImages([]);
-                }}
-              />
-              <FormikInput
-                max={convertToFormikDate(new Date())}
-                disabled={!values.hasLastResolutionDate}
-                name="lastResolutionDate"
-                type="date"
-                value={values.lastResolutionDate}
-                error={
-                  touched.lastResolutionDate && errors.lastResolutionDate
-                    ? errors.lastResolutionDate
-                    : null
-                }
-                placeholder="Ex: João Silva"
-                maxLength={40}
-              />
+                  placeholder="Ex: João Silva"
+                  maxLength={40}
+                />
 
-              {values.hasLastResolutionDate && (
-                <Style.ReportWrapper>
-                  <Input
-                    label="Custo"
-                    placeholder="Ex: R$ 100,00"
-                    maxLength={14}
-                    value={maintenanceReport.cost}
-                    onChange={(e) => {
-                      setMaintenanceReport((prevState) => {
-                        const newState = { ...prevState };
-                        newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
-                        return newState;
-                      });
-                    }}
-                  />
+                {values.hasLastResolutionDate && (
+                  <Style.ReportWrapper>
+                    <Input
+                      label="Custo"
+                      placeholder="Ex: R$ 100,00"
+                      maxLength={14}
+                      value={maintenanceReport.cost}
+                      onChange={(e) => {
+                        setMaintenanceReport((prevState) => {
+                          const newState = { ...prevState };
+                          newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
+                          return newState;
+                        });
+                      }}
+                    />
 
-                  <TextArea
-                    label="Observação do relato"
-                    placeholder="Digite aqui"
-                    maxLength={600}
-                    value={maintenanceReport.observation}
-                    onChange={(e) => {
-                      setMaintenanceReport((prevState) => {
-                        const newState = { ...prevState };
-                        newState.observation = e.target.value;
-                        return newState;
-                      });
-                    }}
-                  />
+                    <TextArea
+                      label="Observação do relato"
+                      placeholder="Digite aqui"
+                      maxLength={600}
+                      value={maintenanceReport.observation}
+                      onChange={(e) => {
+                        setMaintenanceReport((prevState) => {
+                          const newState = { ...prevState };
+                          newState.observation = e.target.value;
+                          return newState;
+                        });
+                      }}
+                    />
 
-                  <Style.Row disabled={onFileQuery}>
-                    <h6>Anexar</h6>
-                    <Style.FileRow>
-                      <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
+                    <Style.Row disabled={onFileQuery}>
+                      <h6>Anexar</h6>
+                      <Style.FileRow>
+                        <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                          <input {...getInputProps()} />
 
-                        <Image img={icon.addFile} width="60px" height="48px" radius="0" />
-                      </Style.DragAndDropZoneFile>
+                          <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                        </Style.DragAndDropZoneFile>
 
-                      {(files.length > 0 || onFileQuery) && (
-                        <Style.FileAndImageRow>
-                          {files.map((e, i: number) => (
-                            <Style.Tag title={e.name} key={e.url}>
-                              <p className="p3">{e.name}</p>
-                              <IconButton
-                                size="16px"
-                                icon={icon.xBlack}
-                                onClick={() => {
-                                  setFiles((prevState) => {
-                                    const newState = [...prevState];
-                                    newState.splice(i, 1);
-                                    return newState;
-                                  });
-                                }}
-                              />
-                            </Style.Tag>
-                          ))}
-                          {onFileQuery &&
-                            acceptedFiles.map((e) => (
-                              <Style.FileLoadingTag key={e.name}>
-                                <DotLoading />
-                              </Style.FileLoadingTag>
+                        {(files.length > 0 || onFileQuery) && (
+                          <Style.FileAndImageRow>
+                            {files.map((e, i: number) => (
+                              <Style.Tag title={e.name} key={e.url}>
+                                <p className="p3">{e.name}</p>
+                                <IconButton
+                                  size="16px"
+                                  icon={icon.xBlack}
+                                  onClick={() => {
+                                    setFiles((prevState) => {
+                                      const newState = [...prevState];
+                                      newState.splice(i, 1);
+                                      return newState;
+                                    });
+                                  }}
+                                />
+                              </Style.Tag>
                             ))}
-                        </Style.FileAndImageRow>
-                      )}
-                    </Style.FileRow>
-                  </Style.Row>
-                  <Style.Row disabled={onImageQuery}>
-                    <h6>Imagens</h6>
+                            {onFileQuery &&
+                              acceptedFiles.map((e) => (
+                                <Style.FileLoadingTag key={e.name}>
+                                  <DotLoading />
+                                </Style.FileLoadingTag>
+                              ))}
+                          </Style.FileAndImageRow>
+                        )}
+                      </Style.FileRow>
+                    </Style.Row>
+                    <Style.Row disabled={onImageQuery}>
+                      <h6>Imagens</h6>
 
-                    <Style.FileAndImageRow>
-                      <Style.DragAndDropZoneImage
-                        {...getRootPropsImages({ className: 'dropzone' })}
-                      >
-                        <input {...getInputPropsImages()} />
-                        <Image img={icon.addImage} width="48px" height="46px" radius="0" />
-                      </Style.DragAndDropZoneImage>
+                      <Style.FileAndImageRow>
+                        <Style.DragAndDropZoneImage
+                          {...getRootPropsImages({ className: 'dropzone' })}
+                        >
+                          <input {...getInputPropsImages()} />
+                          <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                        </Style.DragAndDropZoneImage>
 
-                      {images.map((e, i: number) => (
-                        <ImagePreview
-                          key={e.url}
-                          width="132px"
-                          height="136px"
-                          imageCustomName={e.name}
-                          imageOriginalName={e.name}
-                          src={e.url}
-                          onTrashClick={() => {
-                            setImages((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
-                          }}
-                        />
-                      ))}
-
-                      {onImageQuery &&
-                        acceptedImages.map((e) => (
-                          <Style.ImageLoadingTag key={e.name}>
-                            <DotLoading />
-                          </Style.ImageLoadingTag>
+                        {images.map((e, i: number) => (
+                          <ImagePreview
+                            key={e.url}
+                            width="132px"
+                            height="136px"
+                            imageCustomName={e.name}
+                            imageOriginalName={e.name}
+                            src={e.url}
+                            onTrashClick={() => {
+                              setImages((prevState) => {
+                                const newState = [...prevState];
+                                newState.splice(i, 1);
+                                return newState;
+                              });
+                            }}
+                          />
                         ))}
-                    </Style.FileAndImageRow>
-                  </Style.Row>
-                </Style.ReportWrapper>
-              )}
-            </Style.Wrapper>
+
+                        {onImageQuery &&
+                          acceptedImages.map((e) => (
+                            <Style.ImageLoadingTag key={e.name}>
+                              <DotLoading />
+                            </Style.ImageLoadingTag>
+                          ))}
+                      </Style.FileAndImageRow>
+                    </Style.Row>
+                  </Style.ReportWrapper>
+                )}
+              </Style.Wrapper>
+            </>
+            <FormikInput
+              name="daysToAnticipate"
+              label="Dias para antecipar cada notificação"
+              type="number"
+              placeholder="Informe um número"
+              error={
+                touched.daysToAnticipate && errors.daysToAnticipate ? errors.daysToAnticipate : null
+              }
+            />
+
             <Button
               disable={onImageQuery || onFileQuery}
               style={{ marginTop: '8px' }}

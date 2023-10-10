@@ -61,28 +61,13 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
   justify-content: flex-end;
-  grid-area: 3/8;
+  grid-area: 4/8;
   height: 100%;
 
   > div {
     height: 100%;
     display: flex;
     gap: 16px;
-    align-items: flex-end;
-  }
-`;
-
-export const MaintenancesCardGridMoreOptionsButton = styled.div`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: ${theme.size.xsm};
-  justify-content: flex-end;
-  grid-area: 3/7;
-
-  > div {
-    height: 100%;
-    display: flex;
     align-items: flex-end;
   }
 `;
@@ -152,4 +137,8 @@ export const AdditionalInformationsWrapper = styled.div`
 
 export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
   grid-area: 3 / 2 / 3 / 4;
+`;
+
+export const DaysToAncitipateWrapper = styled(AdditionalInformationsWrapper)`
+  grid-area: auto / 2 / auto / 4;
 `;
