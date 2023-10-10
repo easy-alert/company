@@ -126,3 +126,7 @@ export const AdditionalInformationsWrapper = styled.div`
 export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
   grid-area: 3 / 1 / 3 / 3;
 `;
+
+export const DaysToAncitipateWrapper = styled(AdditionalInformationsWrapper)`
+  grid-area: auto / 1 / auto / 3;
+`;
