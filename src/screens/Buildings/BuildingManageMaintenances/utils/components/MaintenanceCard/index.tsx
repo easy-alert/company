@@ -37,7 +37,6 @@ export const MaintenanceCard = ({
 
   const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const frequency = maintenance.FrequencyTimeInterval.unitTime * maintenance.frequency;
 
   // periodicidade mínima de 6 meses pra antecipar
@@ -47,6 +46,9 @@ export const MaintenanceCard = ({
   // TESTAR PELO BACKEND DEPOIS
   // const canAnticipate = frequency >= sixMonthsInDays;
   const canAnticipate = true;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const maxDaysToAnticipate = frequency / 2;
 
   return (
     <>
