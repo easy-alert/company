@@ -37,6 +37,17 @@ export const MaintenanceCard = ({
 
   const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const frequency = maintenance.FrequencyTimeInterval.unitTime * maintenance.frequency;
+
+  // periodicidade mínima de 6 meses pra antecipar
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const sixMonthsInDays = 30 * 6;
+
+  // TESTAR PELO BACKEND DEPOIS
+  // const canAnticipate = frequency >= sixMonthsInDays;
+  const canAnticipate = true;
+
   return (
     <>
       {modalEditMaintenanceOpen && (
@@ -69,6 +80,7 @@ export const MaintenanceCard = ({
           maintenanceIndex={maintenanceIndex}
           selectedMaintenance={maintenance}
           hasHistory={!!maintenance.hasHistory}
+          canAnticipate={canAnticipate}
         />
       )}
 

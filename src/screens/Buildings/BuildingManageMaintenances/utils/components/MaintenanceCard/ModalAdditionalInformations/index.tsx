@@ -38,6 +38,7 @@ export const ModalAdditionalInformations = ({
   selectedMaintenance,
   categories,
   hasHistory,
+  canAnticipate,
 }: IModalAdditionalInformations) => {
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -161,7 +162,7 @@ export const ModalAdditionalInformations = ({
         {({ errors, values, touched, setFieldValue, setTouched }) => (
           <Form>
             <>
-              <Style.Wrapper hasHistory={hasHistory}>
+              <Style.Wrapper decreaseOpacity={hasHistory}>
                 <FormikCheckbox
                   disable={hasHistory}
                   label="Informar data da próxima notificação"
@@ -191,7 +192,7 @@ export const ModalAdditionalInformations = ({
                 />
               </Style.Wrapper>
 
-              <Style.Wrapper hasHistory={hasHistory}>
+              <Style.Wrapper decreaseOpacity={hasHistory}>
                 <FormikCheckbox
                   disable={hasHistory}
                   label="Informar data da última conclusão"
@@ -331,15 +332,20 @@ export const ModalAdditionalInformations = ({
                 )}
               </Style.Wrapper>
             </>
-            <FormikInput
-              name="daysToAnticipate"
-              label="Dias para antecipar cada notificação"
-              type="number"
-              placeholder="Informe um número"
-              error={
-                touched.daysToAnticipate && errors.daysToAnticipate ? errors.daysToAnticipate : null
-              }
-            />
+            <Style.Wrapper decreaseOpacity={!canAnticipate}>
+              <FormikInput
+                disabled={!canAnticipate}
+                name="daysToAnticipate"
+                label="Dias para antecipar cada notificação"
+                type="number"
+                placeholder="Informe um número"
+                error={
+                  touched.daysToAnticipate && errors.daysToAnticipate
+                    ? errors.daysToAnticipate
+                    : null
+                }
+              />
+            </Style.Wrapper>
 
             <Button
               disable={onImageQuery || onFileQuery}

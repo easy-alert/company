@@ -12,6 +12,7 @@ export interface IModalAdditionalInformations {
   categoryIndex: number;
   selectedMaintenance: IMaintenance;
   hasHistory: boolean;
+  canAnticipate: boolean;
 }
 
 export interface IHandleAdditionalInformations {
