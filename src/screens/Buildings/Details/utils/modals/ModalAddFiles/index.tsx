@@ -50,7 +50,8 @@ export const ModalAddFiles = ({ setModal, folderId, setBuilding }: IModalAddFile
             {files.map((e, i) => (
               <ListTag
                 label={e.name}
-                key={e.name}
+                // eslint-disable-next-line react/no-array-index-key
+                key={e.name + i}
                 onClick={() => {
                   setFiles((prevState) => {
                     const newState = [...prevState];
