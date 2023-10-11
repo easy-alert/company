@@ -71,6 +71,19 @@ export const requestEditMaintenance = async ({
           categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].notificationDate ?? null,
         resolutionDate:
           categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].resolutionDate ?? null,
+
+        nextNotificationDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].nextNotificationDate,
+
+        lastResolutionDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastResolutionDate,
+
+        lastNotificationDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastNotificationDate,
+
+        lastNotificationStatus:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastNotificationStatus,
+
         daysToAnticipate,
       };
 
