@@ -65,7 +65,11 @@ export const handleAdditionalInformations = ({
   setCategories((prevState) => {
     const newState = [...prevState];
 
-    if (!!values.lastResolutionDate || !!values.firstNotificationDate) {
+    if (
+      !!values.lastResolutionDate ||
+      !!values.firstNotificationDate ||
+      !!values.daysToAnticipate
+    ) {
       newState[categoryIndex].Maintenances[maintenanceIndex].isSelected = true;
     }
 
