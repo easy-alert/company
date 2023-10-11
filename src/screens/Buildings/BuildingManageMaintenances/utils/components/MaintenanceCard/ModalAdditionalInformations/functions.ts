@@ -1,28 +1,5 @@
-import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { IHandleAdditionalInformations } from './types';
-
-export const schemaAdditionalInformations = yup
-  .object({
-    hasLastResolutionDate: yup.boolean(),
-    lastResolutionDate: yup.date().when('hasLastResolutionDate', {
-      is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
-      then: yup.date().required('Informe a data da última conclusão.'),
-    }),
-
-    hasFirstNotificationDate: yup.boolean(),
-    firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
-      is: (hasFirstNotificationDate: boolean) => hasFirstNotificationDate === true,
-      then: yup.date().required('Informe a data da próxima notificação.'),
-    }),
-
-    daysToAnticipate: yup
-      .number()
-      .required('Campo obrigatório')
-      .min(0, 'Informe um número maior que zero.')
-      .integer('Informe um número inteiro.'),
-  })
-  .required();
 
 export const handleAdditionalInformations = ({
   setCategories,

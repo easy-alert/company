@@ -1,6 +1,7 @@
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
+import * as yup from 'yup';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '../../../../../../../components/Buttons/Button';
 import { FormikCheckbox } from '../../../../../../../components/Form/FormikCheckbox';
@@ -14,7 +15,7 @@ import * as Style from './styles';
 import { icon } from '../../../../../../../assets/icons';
 
 // FUNCTIONS
-import { handleAdditionalInformations, schemaAdditionalInformations } from './functions';
+import { handleAdditionalInformations } from './functions';
 import {
   applyMask,
   convertToFormikDate,
@@ -39,7 +40,34 @@ export const ModalAdditionalInformations = ({
   categories,
   hasHistory,
   canAnticipate,
+  maxDaysToAnticipate,
 }: IModalAdditionalInformations) => {
+  const schemaAdditionalInformations = yup
+    .object({
+      hasLastResolutionDate: yup.boolean(),
+      lastResolutionDate: yup.date().when('hasLastResolutionDate', {
+        is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
+        then: yup.date().required('Informe a data da última conclusão.'),
+      }),
+
+      hasFirstNotificationDate: yup.boolean(),
+      firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
+        is: (hasFirstNotificationDate: boolean) => hasFirstNotificationDate === true,
+        then: yup.date().required('Informe a data da próxima notificação.'),
+      }),
+
+      daysToAnticipate: yup
+        .number()
+        .required('Campo obrigatório')
+        .min(0, 'Informe um número maior que zero.')
+        .max(
+          maxDaysToAnticipate,
+          `O limite de antecipação dessa manutenção é ${maxDaysToAnticipate} dias.`,
+        )
+        .integer('Informe um número inteiro.'),
+    })
+    .required();
+
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
     observation: '',

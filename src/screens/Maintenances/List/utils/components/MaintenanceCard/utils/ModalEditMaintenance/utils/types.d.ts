@@ -13,6 +13,7 @@ export interface IModalEditMaintenance {
 export interface IRequestEditMaintenance {
   categoryId: string;
   maintenanceId: string;
+  timeIntervals: ITimeInterval[];
   values: {
     isSelected: boolean;
     element: string;

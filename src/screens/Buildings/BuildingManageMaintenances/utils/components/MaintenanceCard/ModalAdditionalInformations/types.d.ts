@@ -13,6 +13,7 @@ export interface IModalAdditionalInformations {
   selectedMaintenance: IMaintenance;
   hasHistory: boolean;
   canAnticipate: boolean;
+  maxDaysToAnticipate: number;
 }
 
 export interface IHandleAdditionalInformations {

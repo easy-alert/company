@@ -64,6 +64,7 @@ export const ModalEditMaintenance = ({
         validationSchema={schemaEditMaintenance}
         onSubmit={async (values) => {
           requestEditMaintenance({
+            timeIntervals,
             maintenanceId: selectedMaintenance.id,
             values,
             setOnQuery,
