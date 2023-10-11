@@ -19,7 +19,7 @@ import {
   applyMask,
   convertToFormikDate,
   increaseDaysInDate,
-  uploadFile,
+  uploadManyFiles,
 } from '../../../../../../../utils/functions';
 // TYPES
 import { IModalAdditionalInformations } from './types';
@@ -46,7 +46,6 @@ export const ModalAdditionalInformations = ({
   const [files, setFiles] = useState<AnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    multiple: false,
     disabled: onFileQuery,
   });
 
@@ -57,7 +56,6 @@ export const ModalAdditionalInformations = ({
     getRootProps: getRootPropsImages,
     getInputProps: getInputPropsImages,
   } = useDropzone({
-    multiple: false,
     accept: {
       'image/png': ['.png'],
       'image/jpg': ['.jpg'],
@@ -71,13 +69,17 @@ export const ModalAdditionalInformations = ({
       const uploadAcceptedFiles = async () => {
         setOnFileQuery(true);
 
-        const { Location: fileUrl, originalname: originalName } = await uploadFile(
-          acceptedFiles[0],
-        );
+        const uploadedFiles = await uploadManyFiles(acceptedFiles);
+
+        const formattedFiles = uploadedFiles.map((file) => ({
+          name: file.originalname,
+          originalName: file.originalname,
+          url: file.Location,
+        }));
 
         setFiles((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { originalName, name: originalName, url: fileUrl }];
+          newState = [...newState, ...formattedFiles];
           return newState;
         });
         setOnFileQuery(false);
@@ -92,13 +94,17 @@ export const ModalAdditionalInformations = ({
       const uploadAcceptedImages = async () => {
         setOnImageQuery(true);
 
-        const { Location: fileUrl, originalname: originalName } = await uploadFile(
-          acceptedImages[0],
-        );
+        const uploadedImages = await uploadManyFiles(acceptedImages);
+
+        const formattedImages = uploadedImages.map((file) => ({
+          name: file.originalname,
+          originalName: file.originalname,
+          url: file.Location,
+        }));
 
         setImages((prevState) => {
           let newState = [...prevState];
-          newState = [...newState, { originalName, name: originalName, url: fileUrl }];
+          newState = [...newState, ...formattedImages];
           return newState;
         });
         setOnImageQuery(false);
@@ -269,11 +275,12 @@ export const ModalAdditionalInformations = ({
                               />
                             </Style.Tag>
                           ))}
-                          {onFileQuery && (
-                            <Style.FileLoadingTag>
-                              <DotLoading />
-                            </Style.FileLoadingTag>
-                          )}
+                          {onFileQuery &&
+                            acceptedFiles.map((e) => (
+                              <Style.FileLoadingTag key={e.name}>
+                                <DotLoading />
+                              </Style.FileLoadingTag>
+                            ))}
                         </Style.FileAndImageRow>
                       )}
                     </Style.FileRow>
@@ -307,11 +314,12 @@ export const ModalAdditionalInformations = ({
                         />
                       ))}
 
-                      {onImageQuery && (
-                        <Style.ImageLoadingTag>
-                          <DotLoading />
-                        </Style.ImageLoadingTag>
-                      )}
+                      {onImageQuery &&
+                        acceptedImages.map((e) => (
+                          <Style.ImageLoadingTag key={e.name}>
+                            <DotLoading />
+                          </Style.ImageLoadingTag>
+                        ))}
                     </Style.FileAndImageRow>
                   </Style.Row>
                 </Style.ReportWrapper>
