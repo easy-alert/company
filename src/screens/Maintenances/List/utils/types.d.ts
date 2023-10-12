@@ -35,6 +35,11 @@ interface IMaintenance {
   observation: string;
   resolutionDate?: Date | null;
   notificationDate?: Date | null;
+  daysToAnticipate?: number;
+  nextNotificationDate?: string;
+  lastResolutionDate?: string;
+  lastNotificationDate?: string;
+  lastNotificationStatus?: string;
 }
 
 export interface ICategories {

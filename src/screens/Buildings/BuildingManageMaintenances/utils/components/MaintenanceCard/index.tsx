@@ -37,6 +37,15 @@ export const MaintenanceCard = ({
 
   const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
 
+  const frequency = maintenance.FrequencyTimeInterval.unitTime * maintenance.frequency;
+
+  // periodicidade mínima de 6 meses pra antecipar
+  const sixMonthsInDays = 30 * 6;
+
+  const canAnticipate = frequency >= sixMonthsInDays;
+
+  const maxDaysToAnticipate = frequency / 2;
+
   return (
     <>
       {modalEditMaintenanceOpen && (
@@ -68,6 +77,9 @@ export const MaintenanceCard = ({
           categoryIndex={categoryIndex}
           maintenanceIndex={maintenanceIndex}
           selectedMaintenance={maintenance}
+          hasHistory={!!maintenance.hasHistory}
+          canAnticipate={canAnticipate}
+          maxDaysToAnticipate={maxDaysToAnticipate}
         />
       )}
 
@@ -175,7 +187,6 @@ export const MaintenanceCard = ({
               <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
-                    disable={maintenance.hasHistory}
                     style={{ whiteSpace: 'nowrap' }}
                     label="+ Opções"
                     onClick={(e) => {
@@ -246,6 +257,15 @@ export const MaintenanceCard = ({
                     {dateFormatter(maintenance.resolutionDate.toString())}
                   </p>
                 </Style.AdditionalInformationsWrapper>
+              )}
+
+              {!!maintenance.daysToAnticipate && (
+                <Style.DaysToAncitipateWrapper>
+                  <p className="p2">
+                    <span>Dias para antecipar: </span>
+                    {maintenance.daysToAnticipate}
+                  </p>
+                </Style.DaysToAncitipateWrapper>
               )}
             </Style.MaintenancesMoreGrid>
           </Style.MaintenancesCardBottomContainer>

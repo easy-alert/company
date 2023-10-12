@@ -1,10 +1,11 @@
 import styled, { css } from 'styled-components';
 import { theme } from '../../../../../../../styles/theme';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ decreaseOpacity?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+  ${({ decreaseOpacity: hasHistory }) => hasHistory && 'opacity: 0.7;'};
 `;
 
 export const Row = styled.div<{ disabled?: boolean }>`

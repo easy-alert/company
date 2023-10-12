@@ -3,6 +3,8 @@ import { AnnexesAndImages } from '../../../Calendar/types';
 
 // MAINTENANCES
 export interface IMaintenance {
+  daysToAnticipate?: number;
+
   Maintenance: {
     hasHistory?: boolean;
     isSelected?: boolean;

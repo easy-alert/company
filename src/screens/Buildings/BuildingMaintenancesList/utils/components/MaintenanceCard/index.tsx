@@ -110,6 +110,15 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                 </p>
               </Style.LastNotificationDate>
             )}
+
+            {!!maintenance.daysToAnticipate && (
+              <Style.DaysToAncitipateWrapper>
+                <p className="p2">
+                  <span>Dias para antecipar: </span>
+                  {maintenance.daysToAnticipate}
+                </p>
+              </Style.DaysToAncitipateWrapper>
+            )}
           </Style.MaintenancesMoreGrid>
         </Style.MaintenancesCardBottomContainer>
       </Style.MaintenancesCardContent>
