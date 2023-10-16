@@ -53,31 +53,31 @@ const styles = StyleSheet.create({
   },
   section1: {
     flexGrow: 1,
-    width: 110,
+    width: 100,
   },
   section2: {
     flexGrow: 1,
-    width: 170,
+    width: 160,
   },
   section3: {
     flexGrow: 1,
-    width: 50,
+    width: 55,
   },
   section4: {
     flexGrow: 1,
-    width: 90,
+    width: 75,
   },
   section5: {
     flexGrow: 1,
-    width: 50,
+    width: 70,
   },
   section6: {
     flexGrow: 1,
-    width: 60,
+    width: 45,
   },
   section7: {
     flexGrow: 1,
-    width: 40,
+    width: 50,
   },
   section8: {
     flexGrow: 1,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   section9: {
     flexGrow: 1,
-    width: 50,
+    width: 60,
   },
   hr: {
     height: 0.5,
@@ -220,9 +220,9 @@ const MyDocument = ({
                     <Text>Prazo para execução</Text>
                   </View>
 
-                  {/* <View style={styles.section6}>
-                  <Text>Antecedência</Text>
-                </View> */}
+                  <View style={styles.section6}>
+                    <Text>Antecedência</Text>
+                  </View>
 
                   <View style={styles.section7}>
                     <Text>Última execução</Text>
@@ -273,9 +273,19 @@ const MyDocument = ({
                         </Text>
                       </View>
 
-                      {/* <View style={styles.section6}>
-                        <Text>-</Text>
-                      </View> */}
+                      <View style={styles.section6}>
+                        <Text>
+                          {maintenance.daysToAnticipate || '-'}
+
+                          {!!maintenance.daysToAnticipate &&
+                            maintenance.daysToAnticipate > 1 &&
+                            ' dias'}
+
+                          {!!maintenance.daysToAnticipate &&
+                            maintenance.daysToAnticipate === 1 &&
+                            ' dia'}
+                        </Text>
+                      </View>
 
                       <View style={styles.section7}>
                         <Text>{maintenance.Maintenance.lastResolutionDate ?? '-'}</Text>

@@ -208,6 +208,13 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
 
+            {!!maintenance.daysInAdvance && (
+              <Style.Row>
+                <h6>Dias de antecedência</h6>
+                <p className="p2">{maintenance.daysInAdvance}</p>
+              </Style.Row>
+            )}
+
             {maintenance.canReport && (
               <>
                 <Input
