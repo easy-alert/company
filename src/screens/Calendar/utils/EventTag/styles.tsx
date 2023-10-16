@@ -37,6 +37,6 @@ export const TagContainer = styled.div<IEventTag>`
   ${({ status }) =>
     status === 'occasional' &&
     css`
-      background-color: ${theme.color.actionBlue};
+      background-color: ${theme.color.purple};
     `};
 `;

@@ -38,6 +38,7 @@ export const PopoverButton = ({
   hideLabelOnMedia = false,
   labelPos,
   fontWeight,
+  textColor,
 }: IPopoverButton) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
@@ -156,6 +157,7 @@ export const PopoverButton = ({
             loading={loading}
             label={label}
             onClick={togglePopOver}
+            textColor={textColor}
           />
         )}
 

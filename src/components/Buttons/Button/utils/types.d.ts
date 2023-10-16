@@ -8,4 +8,5 @@ export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   center?: boolean;
   borderless?: boolean;
+  textColor?: string;
 }

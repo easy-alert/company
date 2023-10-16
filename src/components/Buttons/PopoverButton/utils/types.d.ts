@@ -21,4 +21,5 @@ export interface IPopoverButton {
   hideLabelOnMedia?: boolean;
   labelPos?: 'left' | 'right' | 'top' | 'bottom';
   fontWeight?: string;
+  textColor?: string;
 }

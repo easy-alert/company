@@ -35,6 +35,7 @@ export const ContainerButton = styled.div<{
   outlined: boolean;
   bgColor: string;
   borderless: boolean;
+  textColor?: string;
 }>`
   display: flex;
   flex-direction: column;
@@ -53,7 +54,9 @@ export const ContainerButton = styled.div<{
       ${({ outlined, bgColor }) => outlined && `background-color: ${`${bgColor}26`};`}
     }
 
-    ${({ bgColor }) => bgColor && `  background-color: ${bgColor};`}
+    ${({ bgColor }) => bgColor && `background-color: ${bgColor};`}
+
+    ${({ textColor }) => textColor && `color: ${textColor} !important;`}
 
     ${({ outlined, bgColor }) =>
       outlined &&

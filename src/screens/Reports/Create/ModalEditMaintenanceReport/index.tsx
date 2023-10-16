@@ -314,7 +314,7 @@ export const ModalEditMaintenanceReport = ({
           </Style.Content>
 
           <Style.ButtonContainer>
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {!onModalQuery && maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless

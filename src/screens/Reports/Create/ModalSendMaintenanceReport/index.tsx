@@ -310,7 +310,7 @@ export const ModalSendMaintenanceReport = ({
             )}
           </Style.Content>
           <Style.ButtonContainer>
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {!onModalQuery && maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
@@ -354,6 +354,7 @@ export const ModalSendMaintenanceReport = ({
                         inProgressChange: !maintenance.inProgress,
                       });
                     }}
+                    textColor={maintenance.inProgress ? theme.color.danger : theme.color.actionBlue}
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
                     message={{
