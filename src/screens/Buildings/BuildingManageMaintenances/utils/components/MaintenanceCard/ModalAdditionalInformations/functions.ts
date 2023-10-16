@@ -21,13 +21,13 @@ export const handleAdditionalInformations = ({
       categories[categoryIndex].Maintenances[maintenanceIndex].frequency *
       categories[categoryIndex].Maintenances[maintenanceIndex].FrequencyTimeInterval.unitTime;
 
+    // considerando a antecipação
     const notificationDateBasedOnLastResolution = new Date(
-      new Date(lastResolutionDate.setDate(lastResolutionDate.getDate() + frequencyInDays)).setHours(
-        0,
-        0,
-        0,
-        0,
-      ),
+      new Date(
+        lastResolutionDate.setDate(
+          lastResolutionDate.getDate() + frequencyInDays - (values.daysToAnticipate || 0),
+        ),
+      ).setHours(0, 0, 0, 0),
     );
 
     if (notificationDateBasedOnLastResolution < today) {
