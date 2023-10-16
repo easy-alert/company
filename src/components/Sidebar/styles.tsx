@@ -77,7 +77,7 @@ export const ImageContainer = styled.div`
   }
 `;
 export const CloseButtonMobile = styled.div`
-  margin: 12px 0 4px 0;
+  margin: 12px 0 12px 0;
   display: flex;
   align-items: center;
   justify-content: center;

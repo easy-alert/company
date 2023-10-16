@@ -198,7 +198,8 @@ export const ModalCloneMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.SelectWrapper>
+
+              {/* <Style.SelectWrapper>
                 <FormikInput
                   label="Delay"
                   name="delay"
@@ -231,7 +232,8 @@ export const ModalCloneMaintenance = ({
                     </option>
                   ))}
                 </FormikSelect>
-              </Style.SelectWrapper>
+              </Style.SelectWrapper> */}
+
               <Button center label="Clonar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>

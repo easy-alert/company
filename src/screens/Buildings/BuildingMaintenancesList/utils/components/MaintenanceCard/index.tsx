@@ -64,7 +64,7 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
               }`}
             </p>
 
-            <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
+            {/* <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
               <Image img={icon.alert} size="16px" />
               <p className="p2">
                 <span>Delay: </span>
@@ -76,7 +76,10 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                     }`
                   : '-'}
               </p>
-            </Style.PeriodIconWrapper>
+            </Style.PeriodIconWrapper> */}
+            {/* div pra suprir o espaço do delay */}
+            <div />
+            {/*  */}
             <div />
             <div />
             <div />

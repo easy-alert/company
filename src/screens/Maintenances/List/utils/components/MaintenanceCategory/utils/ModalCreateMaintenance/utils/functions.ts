@@ -31,7 +31,9 @@ export const requestCreateMaintenance = async ({
     source: values.source,
     period: Number(values.period),
     periodTimeIntervalId: values.periodTimeInterval,
-    delay: Number(values.delay),
+
+    // OCULTADO DA PLATAFORMA
+    delay: 0,
     delayTimeIntervalId: values.delayTimeInterval,
     observation: values.observation !== '' ? values.observation : null,
   })
