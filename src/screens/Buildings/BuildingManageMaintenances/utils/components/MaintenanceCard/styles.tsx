@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../../../../../styles/theme';
 
 export const ArrowContainer = styled.div`
@@ -50,9 +50,19 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   flex-direction: column;
   gap: ${theme.size.xsm};
   overflow: hidden;
-  transition: max-height 0.15s;
+  transition: max-height 0.25s;
 
-  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 300px;` : `max-height: 0px; `)};
+  ${({ cardIsOpen }) =>
+    cardIsOpen
+      ? css`
+          -webkit-max-height: 250px;
+          max-height: 250px;
+          min-height: fit-content;
+        `
+      : css`
+          -webkit-max-height: 0px;
+          max-height: 0px;
+        `};
 `;
 
 export const MaintenancesCardGridMoreEditButton = styled.div`
@@ -117,6 +127,7 @@ export const MaintenancesMoreGrid = styled.div`
   display: grid;
   width: 100%;
   grid-template-rows: auto;
+  max-height: 100%;
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
   grid-template-columns: 8px 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px 30px;
 

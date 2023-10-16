@@ -62,7 +62,7 @@ export const ModalAdditionalInformations = ({
         .min(0, 'Informe um número maior que zero.')
         .max(
           maxDaysToAnticipate,
-          `O limite de antecipação dessa manutenção é ${maxDaysToAnticipate} dias.`,
+          `O limite de antecipação dessa manutenção é ${Math.floor(maxDaysToAnticipate)} dias.`,
         )
         .integer('Informe um número inteiro.'),
     })
