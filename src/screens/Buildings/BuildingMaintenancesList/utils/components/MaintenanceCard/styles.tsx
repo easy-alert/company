@@ -114,7 +114,8 @@ export const MaintenancesMoreGrid = styled.div`
   align-items: flex-start;
   display: grid;
   width: 100%;
-  grid-template-rows: auto;
+  height: 100%;
+  max-height: 100%;
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
   grid-template-columns: 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px;
 
