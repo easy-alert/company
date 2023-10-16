@@ -188,3 +188,13 @@ export const ModalInfoContainer = styled.div`
 export const ButtonContainer = styled.div`
   margin-top: ${theme.size.xsm};
 `;
+
+export const Label = styled.label`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+  cursor: pointer;
+  color: ${theme.color.gray4};
+  font-size: 14px;
+  line-height: 16px;
+`;

@@ -13,7 +13,7 @@ export const requestCreateOccasionalMaintenance = async ({
   setOnQuery,
   origin,
   getCalendarData,
-  data: { buildingId, executionDate, maintenanceData, categoryData, reportData },
+  data: { buildingId, executionDate, maintenanceData, categoryData, reportData, inProgress },
 }: IRequestCreateOccasionalMaintenance) => {
   if (!buildingId) return toast.error('Edificação não informada.');
   if (!categoryData) return toast.error('Categoria não informada.');
@@ -38,7 +38,7 @@ export const requestCreateOccasionalMaintenance = async ({
       activity: maintenanceData.activity || null,
       responsible: maintenanceData.responsible || null,
     },
-
+    inProgress,
     reportData: {
       cost: unMaskBRL(reportData.cost) || null,
       observation: reportData.observation || null,
