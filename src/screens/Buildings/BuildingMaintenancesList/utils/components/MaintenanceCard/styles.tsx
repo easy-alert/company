@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../../../../../styles/theme';
 
 export const ArrowContainer = styled.div`
@@ -52,7 +52,17 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   overflow: hidden;
   transition: max-height 0.25s;
 
-  ${({ cardIsOpen }) => (cardIsOpen ? `max-height: 250px;` : `max-height: 0px; `)};
+  ${({ cardIsOpen }) =>
+    cardIsOpen
+      ? css`
+          -webkit-max-height: 250px;
+          max-height: 250px;
+          min-height: fit-content;
+        `
+      : css`
+          -webkit-max-height: 0px;
+          max-height: 0px;
+        `};
 `;
 
 export const MaintenancesCardGridMoreEditButton = styled.div`
