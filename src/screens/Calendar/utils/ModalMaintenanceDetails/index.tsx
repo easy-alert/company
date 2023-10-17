@@ -130,17 +130,17 @@ export const ModalMaintenanceDetails = ({
               </>
             )}
 
-            {!!maintenance.daysInAdvance && (
-              <Style.Row>
-                <h6>Dias de antecedência</h6>
-                <p className="p2">{maintenance.daysInAdvance}</p>
-              </Style.Row>
-            )}
-
             {maintenance.resolutionDate && (
               <Style.Row>
                 <h6>Data de conclusão</h6>
                 <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+              </Style.Row>
+            )}
+
+            {!!maintenance.daysInAdvance && (
+              <Style.Row>
+                <h6>Dias de antecedência</h6>
+                <p className="p2">{maintenance.daysInAdvance}</p>
               </Style.Row>
             )}
 
