@@ -203,7 +203,7 @@ export const ModalEditMaintenanceReport = ({
 
             {!!maintenance.daysInAdvance && (
               <Style.Row>
-                <h6>Dias de antecedência</h6>
+                <h6>Dias antecipados</h6>
                 <p className="p2">{maintenance.daysInAdvance}</p>
               </Style.Row>
             )}
