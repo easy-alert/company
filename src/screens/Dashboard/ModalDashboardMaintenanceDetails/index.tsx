@@ -120,15 +120,6 @@ export const ModalDashboardMaintenanceDetails = ({
               : `${rating.data.period} ${rating.data.PeriodTimeInterval.singularLabel}`}
           </p>
         </Style.Row>
-
-        <Style.Row>
-          <h6>Delay</h6>
-          <p className="p2">
-            {rating.data.delay > 1
-              ? `${rating.data.delay} ${rating.data.DelayTimeInterval.pluralLabel}`
-              : `${rating.data.delay} ${rating.data.DelayTimeInterval.singularLabel}`}
-          </p>
-        </Style.Row>
       </Style.Content>
     </Style.Container>
   </Modal>

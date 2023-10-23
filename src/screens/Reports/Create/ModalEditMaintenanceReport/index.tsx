@@ -201,6 +201,13 @@ export const ModalEditMaintenanceReport = ({
               <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
             </Style.Row>
 
+            {!!maintenance.daysInAdvance && (
+              <Style.Row>
+                <h6>Dias antecipados</h6>
+                <p className="p2">{maintenance.daysInAdvance}</p>
+              </Style.Row>
+            )}
+
             <Input
               label="Custo"
               placeholder="Ex: R$ 100,00"
@@ -314,7 +321,7 @@ export const ModalEditMaintenanceReport = ({
           </Style.Content>
 
           <Style.ButtonContainer>
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {!onModalQuery && maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless

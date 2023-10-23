@@ -47,6 +47,7 @@ interface IMaintenance {
   lastResolutionDate?: string;
   lastNotificationDate?: string;
   lastNotificationStatus?: string;
+  daysToAnticipate?: number;
 }
 
 export interface ICategories {

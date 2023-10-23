@@ -13,6 +13,7 @@ export const theme = {
     dangerL: '#FFC0B3',
     actionDanger: '#FF3508',
     actionBlue: '#28A5FF',
+    purple: '#8A1FDF',
 
     warning: '#FFB200',
     warningL: '#FFE8B3',

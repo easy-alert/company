@@ -27,6 +27,8 @@ export interface ICreateOccasionalMaintenanceData {
   buildingId: string;
   executionDate: string;
 
+  inProgress: boolean;
+
   maintenanceData: {
     element: string;
     activity: string;

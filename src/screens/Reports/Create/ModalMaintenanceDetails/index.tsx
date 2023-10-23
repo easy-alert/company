@@ -121,6 +121,13 @@ export const ModalMaintenanceDetails = ({
               </Style.Row>
             )}
 
+            {!!maintenance.daysInAdvance && (
+              <Style.Row>
+                <h6>Dias antecipados</h6>
+                <p className="p2">{maintenance.daysInAdvance}</p>
+              </Style.Row>
+            )}
+
             {maintenance.MaintenanceReport.length > 0 && (
               <>
                 <Style.Row>

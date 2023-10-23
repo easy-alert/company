@@ -1,22 +1,5 @@
-import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { IHandleAdditionalInformations } from './types';
-
-export const schemaAdditionalInformations = yup
-  .object({
-    hasLastResolutionDate: yup.boolean(),
-    lastResolutionDate: yup.date().when('hasLastResolutionDate', {
-      is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
-      then: yup.date().required('Informe a data da última conclusão.'),
-    }),
-
-    hasFirstNotificationDate: yup.boolean(),
-    firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
-      is: (hasFirstNotificationDate: boolean) => hasFirstNotificationDate === true,
-      then: yup.date().required('Informe a data da próxima notificação.'),
-    }),
-  })
-  .required();
 
 export const handleAdditionalInformations = ({
   setCategories,
@@ -38,13 +21,13 @@ export const handleAdditionalInformations = ({
       categories[categoryIndex].Maintenances[maintenanceIndex].frequency *
       categories[categoryIndex].Maintenances[maintenanceIndex].FrequencyTimeInterval.unitTime;
 
+    // considerando a antecipação
     const notificationDateBasedOnLastResolution = new Date(
-      new Date(lastResolutionDate.setDate(lastResolutionDate.getDate() + frequencyInDays)).setHours(
-        0,
-        0,
-        0,
-        0,
-      ),
+      new Date(
+        lastResolutionDate.setDate(
+          lastResolutionDate.getDate() + frequencyInDays - (values.daysToAnticipate || 0),
+        ),
+      ).setHours(0, 0, 0, 0),
     );
 
     if (notificationDateBasedOnLastResolution < today) {
@@ -59,7 +42,11 @@ export const handleAdditionalInformations = ({
   setCategories((prevState) => {
     const newState = [...prevState];
 
-    if (!!values.lastResolutionDate || !!values.firstNotificationDate) {
+    if (
+      !!values.lastResolutionDate ||
+      !!values.firstNotificationDate ||
+      !!values.daysToAnticipate
+    ) {
       newState[categoryIndex].Maintenances[maintenanceIndex].isSelected = true;
     }
 
@@ -79,6 +66,8 @@ export const handleAdditionalInformations = ({
       newState[categoryIndex].Maintenances[maintenanceIndex].maintenanceReport = maintenanceReport;
     }
 
+    newState[categoryIndex].Maintenances[maintenanceIndex].daysToAnticipate =
+      values.daysToAnticipate || 0;
     return newState;
   });
   setModal(false);

@@ -41,6 +41,7 @@ export interface ITimeInterval {
   name: string;
   singularLabel: string;
   pluralLabel: string;
+  unitTime: number;
 }
 
 export interface IRequestListIntervals {

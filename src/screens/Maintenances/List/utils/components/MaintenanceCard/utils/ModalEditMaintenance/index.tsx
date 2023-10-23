@@ -8,11 +8,9 @@ import { FormikTextArea } from '../../../../../../../../components/Form/FormikTe
 import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../../../../components/Modal';
 import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
-import { Image } from '../../../../../../../../components/Image';
 
 // STYLES
 import * as Style from './styles';
-import { icon } from '../../../../../../../../assets/icons';
 
 // FUNCTIONS
 import {
@@ -64,6 +62,7 @@ export const ModalEditMaintenance = ({
         validationSchema={schemaEditMaintenance}
         onSubmit={async (values) => {
           requestEditMaintenance({
+            timeIntervals,
             maintenanceId: selectedMaintenance.id,
             values,
             setOnQuery,
@@ -198,7 +197,8 @@ export const ModalEditMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.SelectWrapper>
+
+              {/* <Style.SelectWrapper>
                 <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
                   <FormikInput
                     label="Delay"
@@ -238,7 +238,8 @@ export const ModalEditMaintenance = ({
                     </option>
                   ))}
                 </FormikSelect>
-              </Style.SelectWrapper>
+              </Style.SelectWrapper> */}
+
               <Style.ButtonContainer buttonsAlign={!onQuery}>
                 {!onQuery && (
                   <PopoverButton

@@ -11,6 +11,9 @@ export interface IModalAdditionalInformations {
   maintenanceIndex: number;
   categoryIndex: number;
   selectedMaintenance: IMaintenance;
+  hasHistory: boolean;
+  canAnticipate: boolean;
+  maxDaysToAnticipate: number;
 }
 
 export interface IHandleAdditionalInformations {
@@ -21,6 +24,7 @@ export interface IHandleAdditionalInformations {
     lastResolutionDate: string;
     hasFirstNotificationDate: boolean;
     firstNotificationDate: string;
+    daysToAnticipate: number;
   };
   maintenanceIndex: number;
   categoryIndex: number;

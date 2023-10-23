@@ -17,6 +17,7 @@ export const requestEditMaintenance = async ({
   categories,
   setCategories,
   categoryId,
+  timeIntervals,
 }: IRequestEditMaintenance) => {
   setOnQuery(true);
 
@@ -30,7 +31,9 @@ export const requestEditMaintenance = async ({
     source: values.source,
     period: Number(values.period),
     periodTimeIntervalId: values.periodTimeInterval,
-    delay: Number(values.delay),
+
+    // OCULTADO DA PLATAFORMA
+    delay: 0,
     delayTimeIntervalId: values.delayTimeInterval,
     observation: values.observation !== '' ? values.observation : null,
   })
@@ -43,6 +46,24 @@ export const requestEditMaintenance = async ({
         (maintenance) => maintenance.id === maintenanceId,
       );
 
+      // mínimo para antecipar
+      const sixMonthsInDays = 30 * 6;
+
+      // tive que pegar por fora pq o state nao estava atualizado
+      const foundFrequencyInterval = timeIntervals.find(
+        (e) => e.id === values.frequencyTimeInterval,
+      );
+
+      let daysToAnticipate = 0;
+      if (foundFrequencyInterval) {
+        const frequency = foundFrequencyInterval.unitTime * Number(values.frequency);
+
+        const daysToAnticipateSaved =
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].daysToAnticipate ?? 0;
+
+        daysToAnticipate = frequency >= sixMonthsInDays ? daysToAnticipateSaved : 0;
+      }
+
       categoriesEdit[categoryIndex].Maintenances[maintenanceIndex] = {
         ...res.data.maintenance,
         isSelected: !!categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].isSelected,
@@ -52,6 +73,20 @@ export const requestEditMaintenance = async ({
           categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].notificationDate ?? null,
         resolutionDate:
           categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].resolutionDate ?? null,
+
+        nextNotificationDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].nextNotificationDate,
+
+        lastResolutionDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastResolutionDate,
+
+        lastNotificationDate:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastNotificationDate,
+
+        lastNotificationStatus:
+          categoriesEdit[categoryIndex].Maintenances[maintenanceIndex].lastNotificationStatus,
+
+        daysToAnticipate,
       };
 
       setCategories([...categoriesEdit]);

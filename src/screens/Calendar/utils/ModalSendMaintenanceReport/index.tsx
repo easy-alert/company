@@ -208,6 +208,13 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
             </Style.Row>
 
+            {!!maintenance.daysInAdvance && (
+              <Style.Row>
+                <h6>Dias antecipados</h6>
+                <p className="p2">{maintenance.daysInAdvance}</p>
+              </Style.Row>
+            )}
+
             {maintenance.canReport && (
               <>
                 <Input
@@ -314,7 +321,7 @@ export const ModalSendMaintenanceReport = ({
             )}
           </Style.Content>
           <Style.ButtonContainer>
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {!onQuery && maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
@@ -350,6 +357,7 @@ export const ModalSendMaintenanceReport = ({
                         inProgressChange: !maintenance.inProgress,
                       });
                     }}
+                    textColor={theme.color.actionBlue}
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
                     message={{

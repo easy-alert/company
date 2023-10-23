@@ -14,6 +14,7 @@ export const Button = ({
   center = false,
   bgColor = theme.color.primary,
   borderless = false,
+  textColor,
   ...rest
 }: IButton) => (
   <Background center={center}>
@@ -23,6 +24,7 @@ export const Button = ({
       disable={disable}
       outlined={outlined}
       borderless={borderless}
+      textColor={textColor}
     >
       <button {...rest} disabled={disable || loading}>
         {loading ? <SpinnerContent /> : <h6>{label}</h6>}

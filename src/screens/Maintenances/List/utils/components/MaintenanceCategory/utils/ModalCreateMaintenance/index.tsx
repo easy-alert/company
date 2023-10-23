@@ -7,11 +7,9 @@ import { Button } from '../../../../../../../../components/Buttons/Button';
 import { FormikTextArea } from '../../../../../../../../components/Form/FormikTextArea';
 import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
 import { Modal } from '../../../../../../../../components/Modal';
-import { Image } from '../../../../../../../../components/Image';
 
 // STYLES
 import * as Style from './styles';
-import { icon } from '../../../../../../../../assets/icons';
 
 // TYPES
 import { IModalCreateMaintenance } from './utils/types';
@@ -199,7 +197,8 @@ export const ModalCreateMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
-              <Style.SelectWrapper>
+
+              {/* <Style.SelectWrapper>
                 <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
                   <FormikInput
                     label="Delay"
@@ -238,7 +237,8 @@ export const ModalCreateMaintenance = ({
                     </option>
                   ))}
                 </FormikSelect>
-              </Style.SelectWrapper>
+              </Style.SelectWrapper> */}
+
               <FormikCheckbox name="createAgain" label="Salvar e criar outra" />
               <Button center label="Criar" type="submit" loading={onQuery} />
             </Form>
