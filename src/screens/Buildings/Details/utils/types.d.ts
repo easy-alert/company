@@ -64,6 +64,7 @@ export interface IBuildingDetail {
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
   Banners: Banner[];
+  mandatoryReportProof: boolean;
 }
 
 export interface IRequestBuildingDetails {
