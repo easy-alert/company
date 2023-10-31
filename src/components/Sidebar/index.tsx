@@ -87,7 +87,7 @@ export const Sidebar = () => {
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
-      navigate('/calendar');
+      navigate('/dashboard');
     }
   }, []);
 

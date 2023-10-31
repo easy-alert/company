@@ -43,6 +43,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           deliveryDate: '',
           warrantyExpiration: '',
           keepNotificationAfterWarrantyEnds: true,
+          mandatoryReportProof: false,
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {
@@ -168,11 +169,19 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                     : null
                 }
               />
+
               <FormikCheckbox
                 name="keepNotificationAfterWarrantyEnds"
                 labelColor={theme.color.gray4}
                 label="Notificar após garantia?"
               />
+
+              <FormikCheckbox
+                name="mandatoryReportProof"
+                labelColor={theme.color.gray4}
+                label="Comprovantes de relato obrigatórios?"
+              />
+
               <Button center label="Cadastrar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>

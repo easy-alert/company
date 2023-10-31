@@ -31,6 +31,7 @@ export const requestEditBuilding = async ({
       area: null,
       warrantyExpiration: new Date(new Date(values.warrantyExpiration).setUTCHours(3, 0, 0, 0)),
       keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
+      mandatoryReportProof: values.mandatoryReportProof,
     },
   })
     .then((res) => {

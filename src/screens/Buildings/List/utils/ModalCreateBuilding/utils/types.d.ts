@@ -11,6 +11,7 @@ interface ICreateBuilding {
   deliveryDate: string;
   warrantyExpiration: string;
   keepNotificationAfterWarrantyEnds: boolean;
+  mandatoryReportProof: boolean;
 }
 
 export interface IModalCreateBuilding {
