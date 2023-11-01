@@ -31,13 +31,13 @@ export const IconButton = ({
     color={color}
     fontWeight={fontWeight}
     disable={disabled}
-    onClick={() => {
+    onClick={(evt) => {
       if (!disabled) {
-        onClick();
+        onClick(evt);
       }
     }}
-    onAuxClick={() => {
-      if (onAuxClick) onAuxClick();
+    onAuxClick={(evt) => {
+      if (onAuxClick) onAuxClick(evt);
     }}
   >
     <Image img={icon} size={size} radius="0px" />

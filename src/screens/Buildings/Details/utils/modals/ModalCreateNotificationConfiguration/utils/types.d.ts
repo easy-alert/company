@@ -8,6 +8,14 @@ interface ICreateNotificationConfiguration {
   createAgain: boolean;
 }
 
+interface IAutoCompleteData {
+  customId: string;
+  name: string;
+  email: string;
+  role: string;
+  contactNumber: string;
+}
+
 export interface IModalCreateNotificationConfiguration {
   setModal: (setModal: boolean) => void;
   buildingId: string;
