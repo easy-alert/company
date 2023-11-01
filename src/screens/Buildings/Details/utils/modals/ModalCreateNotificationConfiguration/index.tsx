@@ -1,5 +1,6 @@
+/* eslint-disable react/no-array-index-key */
 // LIBS
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
@@ -15,14 +16,16 @@ import * as Style from './styles';
 import { icon } from '../../../../../../assets/icons';
 
 // TYPES
-import { IModalCreateNotificationConfiguration } from './utils/types';
+import { IAutoCompleteData, IModalCreateNotificationConfiguration } from './utils/types';
 
 // FUNCTIONS
 import {
+  getDataForAutoComplete,
   requestCreateNotificationConfiguration,
   schemaCreateNotificationConfiguration,
 } from './utils/functions';
 import { applyMask } from '../../../../../../utils/functions';
+import { DataListInput } from '../../../../../../components/DataListInput';
 
 export const ModalCreateNotificationConfiguration = ({
   setModal,
@@ -32,6 +35,11 @@ export const ModalCreateNotificationConfiguration = ({
   requestBuildingDetailsCall,
 }: IModalCreateNotificationConfiguration) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [autoCompleteData, setAutoCompleteData] = useState<IAutoCompleteData[]>([]);
+
+  useEffect(() => {
+    getDataForAutoComplete({ buildingId, setAutoCompleteData });
+  }, []);
 
   return (
     <Modal title="Cadastrar responsável de manutenção" setModal={setModal}>
@@ -63,14 +71,96 @@ export const ModalCreateNotificationConfiguration = ({
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
+              {/* <FormikDatalist
+                label="Nome"
+                name="name"
+                placeholder="Ex: João Silva"
+                datalistId="autoComplete"
+                error={touched.name && errors.name ? errors.name : null}
+                maxLength={60}
+                onChange={(evt) => {
+                  const name = evt.target.value;
+                  setFieldValue('name', name);
+
+                  const data = autoCompleteData.find((e) => e.name === name);
+
+                  if (data) {
+                    setFieldValue('email', data?.email || '');
+                    setFieldValue(
+                      'contactNumber',
+                      data?.contactNumber
+                        ? applyMask({
+                            mask: 'TEL',
+                            value: data.contactNumber,
+                          }).value
+                        : '',
+                    );
+                    setFieldValue('role', data?.role);
+                  }
+                }}
+              >
+                {autoCompleteData.map((data, i) => (
+                  <option key={i} value={data.name}>
+                    {`${data.email} - ${
+                      applyMask({
+                        mask: 'TEL',
+                        value: data.contactNumber,
+                      }).value
+                    } - ${data.role}`}
+                  </option>
+                ))}
+              </FormikDatalist> */}
+
+              <DataListInput
+                error={touched.name && errors.name ? errors.name : null}
+                label="Nome"
+                name="name"
+                maxLength={60}
+                getValue={({ value }) => {
+                  const customId = value;
+
+                  const data = autoCompleteData.find((e) => e.customId === customId);
+
+                  if (data) {
+                    setFieldValue('email', data?.email || '');
+                    setFieldValue(
+                      'contactNumber',
+                      data?.contactNumber
+                        ? applyMask({
+                            mask: 'TEL',
+                            value: data.contactNumber,
+                          }).value
+                        : '',
+                    );
+                    setFieldValue('role', data?.role);
+                  }
+                }}
+                getValueOnChange={({ value }) => {
+                  setFieldValue('name', value);
+                }}
+                options={autoCompleteData.map((data) => ({
+                  label: data.name,
+                  extraLabel: `${data.email || 'Sem email'} - ${
+                    data.contactNumber
+                      ? applyMask({
+                          mask: 'TEL',
+                          value: data.contactNumber,
+                        }).value
+                      : 'Sem WhatsApp'
+                  } - ${data.role}`,
+                  value: data.customId,
+                }))}
+              />
+
+              {/*
               <FormikInput
                 label="Nome"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: João Silva"
-                maxLength={40}
-              />
+                maxLength={60}
+              /> */}
 
               <FormikInput
                 label="E-mail"
@@ -78,7 +168,7 @@ export const ModalCreateNotificationConfiguration = ({
                 value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
                 placeholder="Ex: joaosilva@gmail.com"
-                maxLength={40}
+                maxLength={50}
               />
               <FormikInput
                 label="WhatsApp"
@@ -100,7 +190,7 @@ export const ModalCreateNotificationConfiguration = ({
                 value={values.role}
                 error={touched.role && errors.role ? errors.role : null}
                 placeholder="Ex: Síndico"
-                maxLength={40}
+                maxLength={50}
               />
 
               <Style.MainContactObservation>

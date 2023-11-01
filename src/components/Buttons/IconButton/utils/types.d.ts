@@ -7,8 +7,8 @@ export interface IIconButton {
   className?: string;
   labelPos?: 'left' | 'right' | 'top' | 'bottom';
   selected?: boolean;
-  onClick: () => void;
-  onAuxClick?: () => void;
+  onClick: (evt?) => void;
+  onAuxClick?: (evt?) => void;
   hideLabelOnMedia?: boolean;
   fontWeight?: string;
   size?: string;

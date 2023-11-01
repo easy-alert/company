@@ -8,7 +8,7 @@ import { Api } from '../../../../../../../services/api';
 import { catchHandler, unMask } from '../../../../../../../utils/functions';
 
 // TYPES
-import { IRequestCreateNotificationConfiguration } from './types';
+import { IAutoCompleteData, IRequestCreateNotificationConfiguration } from './types';
 
 export const requestCreateNotificationConfiguration = async ({
   values,
@@ -75,3 +75,20 @@ export const schemaCreateNotificationConfiguration = yup
     createAgain: yup.boolean(),
   })
   .required();
+
+export const getDataForAutoComplete = async ({
+  buildingId,
+  setAutoCompleteData,
+}: {
+  buildingId: string;
+  setAutoCompleteData: React.Dispatch<React.SetStateAction<IAutoCompleteData[]>>;
+}) => {
+  await Api.get(`/buildings/notifications/list-for-autocomplete/${buildingId}`)
+    .then((res) => {
+      console.log(res.data);
+      setAutoCompleteData(res.data);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
