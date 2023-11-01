@@ -199,7 +199,7 @@ export function DataListInput({
           <s.RootResetValueContainer>
             <IconButton
               disabled={disabled}
-              icon={icon.x}
+              icon={icon.trash}
               size="22px"
               onClick={(evt) => {
                 evt.stopPropagation();

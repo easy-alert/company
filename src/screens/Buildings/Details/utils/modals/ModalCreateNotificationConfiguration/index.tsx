@@ -122,6 +122,7 @@ export const ModalCreateNotificationConfiguration = ({
                   const data = autoCompleteData.find((e) => e.customId === customId);
 
                   if (data) {
+                    setFieldValue('name', data.name);
                     setFieldValue('email', data?.email || '');
                     setFieldValue(
                       'contactNumber',
