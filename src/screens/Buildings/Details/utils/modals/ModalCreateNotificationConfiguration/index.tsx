@@ -25,7 +25,7 @@ import {
   schemaCreateNotificationConfiguration,
 } from './utils/functions';
 import { applyMask } from '../../../../../../utils/functions';
-import { DataListInput } from '../../../../../../components/DataListInput';
+import { DataListInput } from '../../../../../../components/Inputs/DataListInput';
 
 export const ModalCreateNotificationConfiguration = ({
   setModal,

@@ -3,8 +3,8 @@ import { useEffect, useRef, useState, KeyboardEvent as KeyboardType } from 'reac
 import * as s from './styles';
 
 import { Option } from './Option';
-import { icon } from '../../assets/icons';
-import { IconButton } from '../Buttons/IconButton';
+import { icon } from '../../../assets/icons';
+import { IconButton } from '../../Buttons/IconButton';
 
 // #region TYPES
 interface IOptions {
