@@ -1,5 +1,5 @@
 import { IBuildingTypes } from '../../../../../../utils/types';
-import { IBuildingDetail } from '../../types';
+import { IBuildingDetail } from '../../../types';
 
 interface IEditBuilding {
   id: string;
@@ -13,6 +13,7 @@ interface IEditBuilding {
   deliveryDate: string;
   warrantyExpiration: string;
   keepNotificationAfterWarrantyEnds: boolean;
+  mandatoryReportProof: boolean;
 }
 
 export interface IModalEditBuilding {

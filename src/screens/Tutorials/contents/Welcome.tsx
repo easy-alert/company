@@ -1,28 +1,23 @@
-import { useEffect, useState } from 'react';
-
-import { toast } from 'react-toastify';
 import * as Style from './styles';
-import { Button } from '../../../components/Buttons/Button';
 
-export const WelcomeTutorial = () => {
-  const [viewedTutorial, setViewedTutorial] = useState<boolean>(true);
+export const WelcomeTutorial = () => (
+  // const [viewedTutorial, setViewedTutorial] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (localStorage.getItem('viewedTutorial') === 'false') {
-      setViewedTutorial(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem('viewedTutorial') === 'false') {
+  //     setViewedTutorial(false);
+  //   }
+  // }, []);
 
-  return (
-    <Style.Container>
-      <iframe
-        title="welcome"
-        src="https://www.youtube.com/embed/ZmAId85nywI"
-        width="100%"
-        height={540}
-      />
+  <Style.Container>
+    <iframe
+      title="welcome"
+      src="https://www.youtube.com/embed/ZmAId85nywI"
+      width="100%"
+      height={540}
+    />
 
-      {!viewedTutorial && (
+    {/* {!viewedTutorial && (
         <Button
           onClick={() => {
             toast.success(
@@ -33,7 +28,6 @@ export const WelcomeTutorial = () => {
           }}
           label="Não ver este tutorial novamente"
         />
-      )}
-    </Style.Container>
-  );
-};
+      )} */}
+  </Style.Container>
+);

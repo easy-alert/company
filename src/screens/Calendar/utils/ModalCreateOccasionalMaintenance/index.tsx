@@ -196,12 +196,12 @@ export const ModalCreateOccasionalMaintenance = ({
                       findCategoryById({ id: value, categoriesData: auxiliaryData.Categories })
                         ?.name ?? '',
                   },
-                  maintenanceData: {
-                    id: '',
-                    activity: '',
-                    element: '',
-                    responsible: '',
-                  },
+                  // maintenanceData: {
+                  //   id: '',
+                  //   activity: '',
+                  //   element: '',
+                  //   responsible: '',
+                  // },
                 })),
               createLabel: 'Criar categoria',
               options: auxiliaryData.Categories.map((category) => ({
@@ -226,17 +226,17 @@ export const ModalCreateOccasionalMaintenance = ({
                     id: '',
                     name: '',
                   },
-                  maintenanceData: {
-                    id: '',
-                    activity: '',
-                    element: '',
-                    responsible: '',
-                  },
+                  // maintenanceData: {
+                  //   id: '',
+                  //   activity: '',
+                  //   element: '',
+                  //   responsible: '',
+                  // },
                 })),
             }}
           />
 
-          <CRUDInput
+          {/* <CRUDInput
             label="Elemento *"
             disabled={!data.categoryData.name}
             value={data.maintenanceData.element}
@@ -290,6 +290,18 @@ export const ModalCreateOccasionalMaintenance = ({
                   },
                 })),
             }}
+          /> */}
+
+          <Input
+            label="Elemento *"
+            placeholder="Informe o elemento"
+            value={data.maintenanceData.element}
+            onChange={(evt) =>
+              setData((prevState) => ({
+                ...prevState,
+                maintenanceData: { ...prevState.maintenanceData, element: evt.target.value },
+              }))
+            }
           />
 
           <Input

@@ -53,6 +53,7 @@ export const ModalEditBuilding = ({
           deliveryDate: convertToFormikDate(new Date(building.deliveryDate)),
           warrantyExpiration: convertToFormikDate(new Date(building.warrantyExpiration)),
           keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
+          mandatoryReportProof: building.mandatoryReportProof,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
@@ -167,6 +168,13 @@ export const ModalEditBuilding = ({
                 labelColor={theme.color.gray4}
                 label="Notificar após garantia?"
               />
+
+              <FormikCheckbox
+                name="mandatoryReportProof"
+                labelColor={theme.color.gray4}
+                label="Comprovantes de relato obrigatórios?"
+              />
+
               <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton

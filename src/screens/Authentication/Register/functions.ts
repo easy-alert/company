@@ -39,7 +39,7 @@ export const requestCreateCompanyAndOWner = async ({
   })
     .then((res) => {
       signin(res.data);
-      navigate('/calendar');
+      navigate('/dashboard');
     })
     .catch((err) => {
       setOnQuery(false);

@@ -1,7 +1,6 @@
 /* eslint-disable no-alert */
 // LIBS
-import { useEffect, useState } from 'react';
-import { useLocation, Location } from 'react-router-dom';
+import { useState } from 'react';
 
 import { figure } from '../../assets/figures';
 
@@ -18,11 +17,11 @@ interface IContent {
   content: JSX.Element | null;
 }
 
-interface IHistory extends Location {
-  state: {
-    from: string;
-  };
-}
+// interface IHistory extends Location {
+//   state: {
+//     from: string;
+//   };
+// }
 
 const contents = [
   {
@@ -34,7 +33,7 @@ const contents = [
 ];
 
 export const Tutorials = () => {
-  const history = useLocation() as IHistory;
+  // const history = useLocation() as IHistory;
 
   const [content, setContent] = useState<IContent>({
     title: contents[0].title,
@@ -43,15 +42,15 @@ export const Tutorials = () => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (
-      localStorage.getItem('viewedTutorial') === 'false' &&
-      history.state &&
-      history.state.from === 'login'
-    ) {
-      setModalOpen(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (
+  //     localStorage.getItem('viewedTutorial') === 'false' &&
+  //     history.state &&
+  //     history.state.from === 'login'
+  //   ) {
+  //     setModalOpen(true);
+  //   }
+  // }, []);
 
   return (
     <>
