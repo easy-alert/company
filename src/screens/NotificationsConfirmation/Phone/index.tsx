@@ -13,7 +13,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 
 export const PhoneConfirm = () => {
   const navigate = useNavigate();
-  const token = query.get('token');
+  const tokenId = query.get('tokenId');
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -24,7 +24,7 @@ export const PhoneConfirm = () => {
   const [companyImage, setCompanyImage] = useState<string>('');
 
   useEffect(() => {
-    requestGetBuildingName({ setBuildingName, setCompanyImage, setLoading, token: token! });
+    requestGetBuildingName({ setBuildingName, setCompanyImage, setLoading, token: tokenId! });
   }, []);
 
   return loading ? (
@@ -59,7 +59,7 @@ export const PhoneConfirm = () => {
                 label="Confirmar"
                 onClick={() => {
                   requestConfirmData({
-                    token: token!,
+                    token: tokenId!,
                     setIsConfirmed,
                     navigate,
                     setOnQuery,
