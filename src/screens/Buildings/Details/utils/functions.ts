@@ -77,7 +77,7 @@ export const changeShowContactStatus = async ({
 }: IChangeShowContactStatus) => {
   setShowContactLoading(true);
 
-  await Api.put('/buildings//notifications/change/showcontact', {
+  await Api.put('/buildings/notifications/change/showcontact', {
     buildingNotificationConfigurationId,
     showContact,
   })
