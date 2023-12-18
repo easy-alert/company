@@ -29,6 +29,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
     <>
       {modalPrintCategoryQrCodeOpen && (
         <ModalPrintCategoryQRCode
+          categoryId={data.Category.id}
           buildingName={data.Building.name}
           buildingNanoId={data.Building.nanoId}
           categoryName={data.Category.name}

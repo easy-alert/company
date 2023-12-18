@@ -197,6 +197,7 @@ export const ModalPrintCategoryQRCode = ({
   buildingNanoId,
   buildingName,
   categoryName,
+  categoryId,
 }: IModalPrintCategoryQRCode) => {
   const { account } = useAuthContext();
 
@@ -221,7 +222,7 @@ export const ModalPrintCategoryQRCode = ({
             id="QRCode"
             value={`${
               import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-            }/choose/${buildingNanoId}/${encodeURI(categoryName)}`}
+            }/choose/${buildingNanoId}/${categoryId}`}
             bgColor="#F2EAEA"
             size={300}
           />

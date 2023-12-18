@@ -3,4 +3,5 @@ export interface IModalPrintCategoryQRCode {
   buildingName: string;
   buildingNanoId: string;
   categoryName: string;
+  categoryId: string;
 }
