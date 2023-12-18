@@ -85,7 +85,6 @@ export const getDataForAutoComplete = async ({
 }) => {
   await Api.get(`/buildings/notifications/list-for-autocomplete/${buildingId}`)
     .then((res) => {
-      console.log(res.data);
       setAutoCompleteData(res.data);
     })
     .catch((err) => {
