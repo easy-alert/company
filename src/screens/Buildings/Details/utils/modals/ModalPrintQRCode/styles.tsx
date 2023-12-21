@@ -42,3 +42,17 @@ export const SmallLoading = styled.div`
     }
   }
 `;
+
+export const Selects = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+
+  > :first-child {
+    max-width: 150px;
+  }
+
+  > :nth-child(2) {
+    max-width: 250px;
+  }
+`;
