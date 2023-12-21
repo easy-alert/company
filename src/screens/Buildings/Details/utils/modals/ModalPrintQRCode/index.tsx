@@ -214,10 +214,10 @@ export const ModalPrintQRCode = ({
               syndicNanoId
                 ? `${
                     import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-                  }/syndicarea/${buildingNanoId}?syndicNanoId=${syndicNanoId}}`
+                  }/syndicarea/${buildingNanoId}?syndicNanoId=${syndicNanoId}`
                 : `${
                     import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-                  }/home/${buildingNanoId}}`
+                  }/home/${buildingNanoId}`
             }
             bgColor="#F2EAEA"
             size={300}
