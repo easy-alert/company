@@ -262,6 +262,10 @@ export const BuildingDetails = () => {
           setModal={setModalPrintQRCodeOpen}
           buildingName={building?.name}
           buildingNanoId={building.nanoId}
+          notificationsConfigurations={building.NotificationsConfigurations.map((syndic) => ({
+              name:syndic.name,
+              nanoId: syndic.nanoId
+            }))}
         />
       )}
 

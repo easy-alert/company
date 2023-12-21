@@ -62,11 +62,13 @@ const MyDocument = ({
   buildingName,
   QRCodePNG,
   setLoading,
+  syndicName,
 }: {
   companyImage: string;
   buildingName: string;
   QRCodePNG: string;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  syndicName: string | undefined;
 }) => (
   <Document
     onRender={() => {
@@ -84,7 +86,11 @@ const MyDocument = ({
         />
       )}
       <View style={styles.mainMessageView}>
-        <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
+        {syndicName ? (
+          <Text>{syndicName}</Text>
+        ) : (
+          <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
+        )}
       </View>
       <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={styles.QRCode} />}</Text>
 
@@ -134,17 +140,19 @@ const MyDocumentSquare = ({
   buildingName,
   QRCodePNG,
   setLoading,
+  syndicName,
 }: {
   companyImage: string;
   buildingName: string;
   QRCodePNG: string;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  syndicName: string | undefined;
 }) => (
   <Document
     onRender={() => {
       setTimeout(() => {
         setLoading(false);
-      }, 2500);
+      }, 4000);
     }}
   >
     <Page size={[595.28, 595.28]} style={stylesSquare.page}>
@@ -156,7 +164,11 @@ const MyDocumentSquare = ({
         />
       )}
       <View style={stylesSquare.mainMessageView}>
-        <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
+        {syndicName ? (
+          <Text>{syndicName}</Text>
+        ) : (
+          <Text>Acompanhe as manutenções do seu condomínio aqui!</Text>
+        )}
       </View>
       <Text>{QRCodePNG && <PDFImage src={QRCodePNG} style={stylesSquare.QRCode} />}</Text>
 
@@ -166,12 +178,22 @@ const MyDocumentSquare = ({
   </Document>
 );
 
-export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IModalPrintQRCode) => {
+export const ModalPrintQRCode = ({
+  setModal,
+  buildingNanoId,
+  buildingName,
+  notificationsConfigurations,
+}: IModalPrintQRCode) => {
   const { account } = useAuthContext();
 
   const [loading, setLoading] = useState<boolean>(true);
 
   const [pdfSize, setPdfSize] = useState<'A4' | 'Quadrado'>('A4');
+  const [syndicNanoId, setSyndicNanoId] = useState<string>('');
+
+  const syndicName = notificationsConfigurations.find(
+    ({ nanoId }) => syndicNanoId === nanoId,
+  )?.name;
 
   const [QRCodePNG, setQRCodePNG] = useState<string>('');
 
@@ -179,7 +201,7 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
     const canvas: any = document.getElementById('QRCode');
     const QRCodeURL = canvas.toDataURL('image/png');
     setQRCodePNG(QRCodeURL);
-  }, []);
+  }, [syndicNanoId]);
 
   return (
     <Modal bodyWidth="60vw" title="QR Code" setModal={setModal}>
@@ -190,30 +212,50 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
             id="QRCode"
             value={`${
               import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-            }/home/${buildingNanoId}`}
+            }/home/${buildingNanoId}${syndicNanoId ? `?syndicNanoId=${syndicNanoId}` : ''}`}
             bgColor="#F2EAEA"
             size={300}
           />
         </Style.HideQRCode>
 
         <Style.Container>
-          <Select
-            disabled={loading}
-            label="Formato"
-            style={{ maxWidth: '150px' }}
-            selectPlaceholderValue=" "
-            value={pdfSize}
-            onChange={(e) => {
-              setLoading(true);
-              setPdfSize(e.target.value as 'A4' | 'Quadrado');
-            }}
-          >
-            <option value="A4">A4</option>
-            <option value="Quadrado">Quadrado</option>
-          </Select>
+          <Style.Selects>
+            <Select
+              disabled={loading}
+              label="Formato"
+              selectPlaceholderValue=" "
+              value={pdfSize}
+              onChange={(e) => {
+                setLoading(true);
+                setPdfSize(e.target.value as 'A4' | 'Quadrado');
+              }}
+            >
+              <option value="A4">A4</option>
+              <option value="Quadrado">Quadrado</option>
+            </Select>
+
+            <Select
+              disabled={loading}
+              label="Tipo"
+              selectPlaceholderValue=" "
+              value={syndicNanoId}
+              onChange={(e) => {
+                setSyndicNanoId(e.target.value);
+              }}
+            >
+              <option value="">Morador</option>
+              {notificationsConfigurations.map((syndic) => (
+                <option key={syndic.nanoId} value={syndic.nanoId}>
+                  {syndic.name}
+                </option>
+              ))}
+            </Select>
+          </Style.Selects>
+
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
             {pdfSize === 'A4' ? (
               <MyDocument
+                syndicName={syndicName}
                 companyImage={account?.Company.image!}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
@@ -221,6 +263,7 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
               />
             ) : (
               <MyDocumentSquare
+                syndicName={syndicName}
                 companyImage={account?.Company.image!}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
@@ -232,6 +275,7 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
             document={
               pdfSize === 'A4' ? (
                 <MyDocument
+                  syndicName={syndicName}
                   companyImage={account?.Company.image!}
                   buildingName={buildingName}
                   QRCodePNG={QRCodePNG}
@@ -239,6 +283,7 @@ export const ModalPrintQRCode = ({ setModal, buildingNanoId, buildingName }: IMo
                 />
               ) : (
                 <MyDocumentSquare
+                  syndicName={syndicName}
                   companyImage={account?.Company.image!}
                   buildingName={buildingName}
                   QRCodePNG={QRCodePNG}
