@@ -210,9 +210,15 @@ export const ModalPrintQRCode = ({
         <Style.HideQRCode>
           <QRCodeCanvas
             id="QRCode"
-            value={`${
-              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-            }/home/${buildingNanoId}${syndicNanoId ? `?syndicNanoId=${syndicNanoId}` : ''}`}
+            value={
+              syndicNanoId
+                ? `${
+                    import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
+                  }/syndicarea/${buildingNanoId}?syndicNanoId=${syndicNanoId}}`
+                : `${
+                    import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
+                  }/home/${buildingNanoId}}`
+            }
             bgColor="#F2EAEA"
             size={300}
           />
