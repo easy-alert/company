@@ -93,7 +93,7 @@ export const Register = () => {
                     name="companyName"
                     value={values.companyName}
                     error={touched.companyName && errors.companyName ? errors.companyName : null}
-                    placeholder="Ex: SATC"
+                    placeholder="Ex: Easy Alert"
                     maxLength={40}
                   />
 

@@ -59,6 +59,7 @@ export interface AddedMaintenances {
   Maintenances: IMaintenance[];
   Building: {
     name: string;
+    nanoId: string;
   };
 }
 
