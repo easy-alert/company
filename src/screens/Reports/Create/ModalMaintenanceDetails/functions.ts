@@ -7,7 +7,7 @@ export const requestMaintenanceDetails = async ({
   setMaintenance,
   setModalLoading,
 }: IRequestMaintenanceDetails) => {
-  await Api.get(`maintenances/list/details/${maintenanceHistoryId}`)
+  await Api.get(`/maintenances/list/details/${maintenanceHistoryId}`)
     .then((res) => {
       setMaintenance(res.data);
     })
