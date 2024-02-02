@@ -40,3 +40,20 @@ export interface IRequestSendReport {
   setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
   filters: IFilterforRequest;
 }
+
+export interface IRequestReportProgress {
+  maintenanceHistoryId: string;
+  setFiles: React.Dispatch<React.SetStateAction<AnnexesAndImages[]>>;
+  setImages: React.Dispatch<React.SetStateAction<AnnexesAndImages[]>>;
+  setMaintenanceReport: React.Dispatch<React.SetStateAction<IMaintenanceReport>>;
+}
+
+export interface IRequestSaveReportProgress {
+  maintenanceReport: IMaintenanceReport;
+  setModal: (setModal: boolean) => void;
+  maintenanceHistoryId: string;
+  files: AnnexesAndImages[];
+  images: AnnexesAndImages[];
+  setOnModalQuery: (setOnModalQuery: boolean) => void;
+  onThenActionRequest: () => Promise<void>;
+}
