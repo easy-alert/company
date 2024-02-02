@@ -30,7 +30,40 @@ export const ModalMaintenanceDetails = ({
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
-  const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+  const [maintenance, setMaintenance] = useState<IMaintenance>({
+    Building: {
+      name: '',
+    },
+    canReport: false,
+    daysInAdvance: 0,
+    dueDate: '',
+    id: '',
+    inProgress: false,
+    Maintenance: {
+      activity: '',
+      Category: {
+        name: '',
+      },
+      element: '',
+      frequency: 0,
+      FrequencyTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      MaintenanceType: {
+        name: '',
+      },
+      observation: '',
+      responsible: '',
+      source: '',
+    },
+    resolutionDate: '',
+    notificationDate: '',
+    MaintenancesStatus: {
+      name: 'pending',
+    },
+    MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
+  });
 
   useEffect(() => {
     requestMaintenanceDetails({
