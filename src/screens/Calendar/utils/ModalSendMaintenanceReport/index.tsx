@@ -25,12 +25,7 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
-import {
-  requestReportProgress,
-  requestSaveReportProgress,
-  requestSendReport,
-  requestToggleInProgress,
-} from './functions';
+import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
@@ -188,7 +183,6 @@ export const ModalSendMaintenanceReport = ({
     <Modal
       title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
       setModal={setModal}
-      bodyWidth="490px"
     >
       {modalLoading ? (
         <Style.LoadingContainer>
@@ -394,7 +388,7 @@ export const ModalSendMaintenanceReport = ({
             )}
             {maintenance.canReport ? (
               <>
-                {!onQuery && (
+                {/* {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
                     actionButtonClick={() => {
@@ -417,7 +411,7 @@ export const ModalSendMaintenanceReport = ({
                     }}
                     type="Button"
                   />
-                )}
+                )} */}
 
                 {!onQuery && (
                   <PopoverButton
@@ -441,12 +435,12 @@ export const ModalSendMaintenanceReport = ({
                         yearToRequest,
                       });
                     }}
-                    textColor={theme.color.primaryM}
+                    textColor={theme.color.actionBlue}
                     borderless
                     label="Salvar progresso"
                     message={{
-                      title: 'Tem certeza que salvar o progresso?',
-                      content: 'Esta ação é reversível.',
+                      title: 'Tem certeza que deseja salvar o progresso?',
+                      content: '',
                     }}
                     type="Button"
                   />
