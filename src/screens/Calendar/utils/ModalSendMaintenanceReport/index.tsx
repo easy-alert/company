@@ -25,7 +25,7 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
-import { requestSendReport, requestToggleInProgress } from './functions';
+import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
@@ -47,7 +47,40 @@ export const ModalSendMaintenanceReport = ({
   onThenActionRequest,
   modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
-  const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+  const [maintenance, setMaintenance] = useState<IMaintenance>({
+    Building: {
+      name: '',
+    },
+    canReport: false,
+    daysInAdvance: 0,
+    dueDate: '',
+    id: '',
+    inProgress: false,
+    Maintenance: {
+      activity: '',
+      Category: {
+        name: '',
+      },
+      element: '',
+      frequency: 0,
+      FrequencyTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      MaintenanceType: {
+        name: '',
+      },
+      observation: '',
+      responsible: '',
+      source: '',
+    },
+    resolutionDate: '',
+    notificationDate: '',
+    MaintenancesStatus: {
+      name: 'pending',
+    },
+    MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
+  });
 
   const { account } = useAuthContext();
 
@@ -132,10 +165,17 @@ export const ModalSendMaintenanceReport = ({
   }, [acceptedImages]);
 
   useEffect(() => {
-    requestMaintenanceDetails({
+    requestReportProgress({
       maintenanceHistoryId: modalAdditionalInformations.id,
-      setMaintenance,
-      setModalLoading,
+      setFiles,
+      setImages,
+      setMaintenanceReport,
+    }).then(() => {
+      requestMaintenanceDetails({
+        maintenanceHistoryId: modalAdditionalInformations.id,
+        setMaintenance,
+        setModalLoading,
+      });
     });
   }, []);
 
@@ -348,7 +388,7 @@ export const ModalSendMaintenanceReport = ({
             )}
             {maintenance.canReport ? (
               <>
-                {!onQuery && (
+                {/* {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
                     actionButtonClick={() => {
@@ -368,6 +408,39 @@ export const ModalSendMaintenanceReport = ({
                         ? 'Tem certeza que deseja alterar a execução?'
                         : 'Iniciar a execução apenas indica que a manutenção está sendo realizada, mas não conclui a manutenção.',
                       content: 'Esta ação é reversível.',
+                    }}
+                    type="Button"
+                  />
+                )} */}
+
+                {!onQuery && (
+                  <PopoverButton
+                    disabled={onFileQuery || onImageQuery || onQuery}
+                    actionButtonClick={() => {
+                      requestSaveReportProgress({
+                        setOnQuery,
+                        maintenanceHistoryId: modalAdditionalInformations.id,
+                        maintenanceReport,
+                        setModal,
+                        files,
+                        images,
+                        buildingId,
+                        calendarType,
+                        setBuildingOptions,
+                        setLoading,
+                        setMaintenancesDisplay,
+                        setMaintenancesMonthView,
+                        setMaintenancesWeekView,
+                        setYearChangeLoading,
+                        yearToRequest,
+                      });
+                    }}
+                    textColor={theme.color.actionBlue}
+                    borderless
+                    label="Salvar progresso"
+                    message={{
+                      title: 'Tem certeza que deseja salvar o progresso?',
+                      content: '',
                     }}
                     type="Button"
                   />

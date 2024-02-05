@@ -173,7 +173,6 @@ export function DataListInput({
           id={name}
           name={name}
           ref={inputRef}
-          readOnly={!visibleOptions}
           placeholder={placeholder || 'Selecione'}
           maxLength={maxLength}
           value={inputValue}

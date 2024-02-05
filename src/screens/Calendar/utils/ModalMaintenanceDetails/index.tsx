@@ -28,7 +28,40 @@ export const ModalMaintenanceDetails = ({
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
-  const [maintenance, setMaintenance] = useState<IMaintenance>({} as IMaintenance);
+  const [maintenance, setMaintenance] = useState<IMaintenance>({
+    Building: {
+      name: '',
+    },
+    canReport: false,
+    daysInAdvance: 0,
+    dueDate: '',
+    id: '',
+    inProgress: false,
+    Maintenance: {
+      activity: '',
+      Category: {
+        name: '',
+      },
+      element: '',
+      frequency: 0,
+      FrequencyTimeInterval: {
+        pluralLabel: '',
+        singularLabel: '',
+      },
+      MaintenanceType: {
+        name: '',
+      },
+      observation: '',
+      responsible: '',
+      source: '',
+    },
+    resolutionDate: '',
+    notificationDate: '',
+    MaintenancesStatus: {
+      name: 'pending',
+    },
+    MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
+  });
 
   useEffect(() => {
     requestMaintenanceDetails({
@@ -49,7 +82,7 @@ export const ModalMaintenanceDetails = ({
           <h3>{maintenance?.Building?.name}</h3>
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
-            <EventTag status={maintenance?.MaintenancesStatus.name} />
+            <EventTag status={maintenance.MaintenancesStatus.name} />
             {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
               <EventTag status="occasional" />
             )}
