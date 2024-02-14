@@ -395,7 +395,7 @@ export const ModalCreateOccasionalMaintenance = ({
                   <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                     <input {...getInputProps()} />
 
-                    <Image img={icon.addFile} width="48px" height="46px" radius="0" />
+                    <Image img={icon.addFile} width="60px" height="48px" radius="0" />
                   </Style.DragAndDropZoneFile>
 
                   {(data.reportData.files.length > 0 || onFileQuery) && (

@@ -43,13 +43,13 @@ export const Sidebar = () => {
         navigate('/buildings');
       },
     },
-    {
-      icon: icon.maintenances,
-      url: '/maintenances',
-      redirectFunction: () => {
-        navigate('/maintenances');
-      },
-    },
+    // {
+    //   icon: icon.maintenances,
+    //   url: '/maintenances',
+    //   redirectFunction: () => {
+    //     navigate('/maintenances');
+    //   },
+    // },
 
     {
       icon: icon.report,

@@ -460,7 +460,7 @@ export const ModalSendMaintenanceReport = ({
                       setOnQuery,
                     });
                   }}
-                  label="Enviar relato"
+                  label="Finalizar manutenção"
                   message={{
                     title: 'Tem certeza que deseja enviar o relato?',
                     content: 'Esta ação é irreversível.',
