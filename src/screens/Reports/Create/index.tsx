@@ -96,16 +96,12 @@ export const CreateReport = () => {
           setModalEditReport={setModalEditReport}
         />
       )}
+
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
           maintenanceHistoryId={maintenanceHistoryId}
-          filters={filterforRequest}
-          setCounts={setCounts}
-          setLoading={setLoading}
-          setMaintenances={setMaintenances}
-          setOnQuery={setOnQuery}
-          onThenActionRequest={async () =>
+          onThenRequest={async () =>
             requestReportsData({
               filters: filterforRequest,
               setCounts,
@@ -116,6 +112,7 @@ export const CreateReport = () => {
           }
         />
       )}
+
       {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
           onThenActionRequest={async () =>
@@ -131,6 +128,7 @@ export const CreateReport = () => {
           maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
+
       {modalPrintReportOpen && (
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
@@ -140,14 +138,14 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <h2>Relatórios</h2>
+        <h2>Relatórios TIRAR AS DATA PADRÃO DEPOIS *************************</h2>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              startDate: '',
-              endDate: '',
+              startDate: '2020-01-01',
+              endDate: '2025-01-01',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {

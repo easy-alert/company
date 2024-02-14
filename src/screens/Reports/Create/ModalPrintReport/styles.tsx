@@ -1,3 +1,4 @@
+import { StyleSheet } from '@react-pdf/renderer';
 import styled from 'styled-components';
 import { theme } from '../../../../styles/theme';
 
@@ -36,3 +37,56 @@ export const SmallLoading = styled.div`
     }
   }
 `;
+
+export const pdf = StyleSheet.create({
+  page: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 24,
+    fontSize: 8,
+    color: theme.color.gray5,
+  },
+
+  companyLogo: {
+    height: 40,
+    width: 60,
+    objectFit: 'contain',
+  },
+
+  easyAlertLogo: {
+    width: 77,
+    height: 17,
+  },
+
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 16,
+    marginBottom: 24,
+  },
+
+  headerDiv: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: 4,
+    justifyContent: 'flex-start',
+    maxWidth: 250,
+  },
+
+  headerSide: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+
+  footer: {
+    marginTop: 24,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+});

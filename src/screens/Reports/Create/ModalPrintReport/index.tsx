@@ -1,16 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 // COMPONENTS
 import React, { useState } from 'react';
-import {
-  Page,
-  Text,
-  Document,
-  StyleSheet,
-  View,
-  PDFDownloadLink,
-  PDFViewer,
-  Image,
-} from '@react-pdf/renderer';
+import { Page, Text, Document, View, PDFDownloadLink, PDFViewer, Image } from '@react-pdf/renderer';
 import { Modal } from '../../../../components/Modal';
 import { Button } from '../../../../components/Buttons/Button';
 
@@ -20,128 +11,10 @@ import { IFilterforPDF, IMaintenanceReportData } from '../types';
 
 // STYLES
 import * as Style from './styles';
-import { theme } from '../../../../styles/theme';
 import { image } from '../../../../assets/images';
 
 // FUNCTIONS
-import { applyMask, dateFormatter } from '../../../../utils/functions';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { getSingularStatusNameforPdf } from './functions';
-
-const styles = StyleSheet.create({
-  page: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 24,
-    fontSize: 8,
-    color: theme.color.gray5,
-  },
-  tableHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: '8px 0',
-    gap: '0 8px',
-  },
-  tableBody: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tableContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: '8px 0',
-    gap: '0 8px',
-  },
-  section1: {
-    flexGrow: 1,
-    width: 83,
-  },
-  section2: {
-    flexGrow: 1,
-    width: 83,
-  },
-  section3: {
-    flexGrow: 1,
-    width: 80,
-  },
-  section4: {
-    flexGrow: 1,
-    width: 100,
-  },
-  section5: {
-    flexGrow: 1,
-    width: 130,
-  },
-  section6: {
-    flexGrow: 1,
-    width: 120,
-  },
-  section7: {
-    flexGrow: 1,
-    width: 80,
-  },
-  section8: {
-    flexGrow: 1,
-    width: 63,
-  },
-  section9: {
-    flexGrow: 1,
-    width: 63,
-  },
-  hr: {
-    height: 0.5,
-    backgroundColor: theme.color.gray5,
-    width: '100%',
-  },
-
-  companyLogo: {
-    height: 40,
-    width: 60,
-    objectFit: 'contain',
-  },
-  easyAlertLogo: {
-    width: 77,
-    height: 17,
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    gap: 16,
-    marginBottom: 24,
-  },
-
-  headerDiv: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 4,
-    justifyContent: 'flex-start',
-    maxWidth: 250,
-  },
-  footer: {
-    marginTop: 24,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  obs: {
-    paddingBottom: 8,
-    opacity: 0.7,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 4,
-    width: 700,
-  },
-  obsText: {
-    flexGrow: 1,
-  },
-});
 
 const MyDocument = ({
   setLoading,
@@ -154,6 +27,8 @@ const MyDocument = ({
   companyImage: string;
   filterforPDF: IFilterforPDF;
 }) => {
+  console.log(maintenances);
+
   const randomNumber = () => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -174,131 +49,50 @@ const MyDocument = ({
         }, 500);
       }}
     >
-      <Page size="A4" style={styles.page} orientation="landscape">
+      <Page size="A4" style={Style.pdf.page} orientation="landscape">
         <View>
-          <View fixed style={styles.header}>
-            <Image
-              src={`${companyImage}?noCache=${Math.random().toString()}`}
-              style={styles.companyLogo}
-            />
-            <View style={styles.headerDiv}>
-              <Text>
-                Edificação: {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
-              </Text>
+          <View fixed style={Style.pdf.header}>
+            <View style={Style.pdf.headerSide}>
+              <Image
+                src={`${companyImage}?noCache=${Math.random().toString()}`}
+                style={Style.pdf.companyLogo}
+              />
+
+              <View>
+                <Text>
+                  Edificação:{' '}
+                  {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
+                </Text>
+                <Text>
+                  Status: {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
+                </Text>
+
+                <Text>
+                  Período:{' '}
+                  {filterforPDF.startDate && filterforPDF.endDate
+                    ? `${new Date(
+                        new Date(filterforPDF.startDate).setUTCHours(3, 0, 0, 0),
+                      ).toLocaleDateString('pt-BR')} a ${new Date(
+                        new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
+                      ).toLocaleDateString('pt-BR')}`
+                    : 'Todos'}
+                </Text>
+
+                <Text>
+                  Categoria:{' '}
+                  {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
               <Text>ID: {randomNumber()}</Text>
             </View>
-            <View style={styles.headerDiv}>
-              <Text>
-                Categoria: {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
-              </Text>
-              <Text>
-                Período:{' '}
-                {filterforPDF.startDate && filterforPDF.endDate
-                  ? `${new Date(
-                      new Date(filterforPDF.startDate).setUTCHours(3, 0, 0, 0),
-                    ).toLocaleDateString('pt-BR')} a ${new Date(
-                      new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
-                    ).toLocaleDateString('pt-BR')}`
-                  : 'Todos'}
-              </Text>
-            </View>
-            <View style={styles.headerDiv}>
-              <Text>
-                Status: {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
-              </Text>
-              <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
-            </View>
-          </View>
-          <View style={styles.tableHeader} fixed>
-            <View style={styles.section1}>
-              <Text>Data de notificação</Text>
-            </View>
-
-            <View style={styles.section2}>
-              <Text>Data de conclusão</Text>
-            </View>
-            <View style={styles.section3}>
-              <Text>Edificação</Text>
-            </View>
-
-            <View style={styles.section4}>
-              <Text>Categoria</Text>
-            </View>
-
-            <View style={styles.section5}>
-              <Text>Elemento</Text>
-            </View>
-
-            <View style={styles.section6}>
-              <Text>Atividade</Text>
-            </View>
-
-            <View style={styles.section7}>
-              <Text>Responsável</Text>
-            </View>
-
-            <View style={styles.section8}>
-              <Text>Status</Text>
-            </View>
-
-            <View style={styles.section9}>
-              <Text>Valor</Text>
-            </View>
-          </View>
-
-          <View style={styles.tableBody}>
-            {maintenances.map((maintenance, i: number) => (
-              <View key={maintenance.activity + i} wrap={false}>
-                <View style={styles.hr} />
-
-                <View style={styles.tableContent} key={maintenance.activity + i}>
-                  <View style={styles.section1}>
-                    <Text>{dateFormatter(maintenance.notificationDate)}</Text>
-                  </View>
-                  <View style={styles.section2}>
-                    <Text>
-                      {maintenance.resolutionDate ? dateFormatter(maintenance.resolutionDate) : '-'}
-                    </Text>
-                  </View>
-                  <View style={styles.section3}>
-                    <Text>{maintenance.buildingName}</Text>
-                  </View>
-                  <View style={styles.section4}>
-                    <Text>{maintenance.categoryName}</Text>
-                  </View>
-                  <View style={styles.section5}>
-                    <Text>{maintenance.element}</Text>
-                  </View>
-                  <View style={styles.section6}>
-                    <Text>{maintenance.activity}</Text>
-                  </View>
-                  <View style={styles.section7}>
-                    <Text>{maintenance.responsible}</Text>
-                  </View>
-                  <View style={styles.section8}>
-                    <Text>{getSingularStatusNameforPdf(maintenance.status)}</Text>
-                  </View>
-                  <View style={styles.section9}>
-                    <Text>
-                      {maintenance.cost
-                        ? applyMask({ mask: 'BRL', value: String(maintenance.cost) }).value
-                        : '-'}
-                    </Text>
-                  </View>
-                </View>
-                {maintenance.observation && (
-                  <View style={styles.obs}>
-                    <Text>Observação:</Text>
-                    <Text style={styles.obsText}>{maintenance.observation}</Text>
-                  </View>
-                )}
-              </View>
-            ))}
           </View>
         </View>
 
-        <View fixed style={styles.footer}>
-          <Image source={image.logoForPDF} style={styles.easyAlertLogo} />
+        <View fixed style={Style.pdf.footer}>
+          <Image source={image.logoForPDF} style={Style.pdf.easyAlertLogo} />
           <Text
             render={({ pageNumber, totalPages }) => `${`Página ${pageNumber} de ${totalPages}`}`}
           />

@@ -1,17 +1,9 @@
-import { IMaintenanceReportData } from '../types';
-
 import { IMaintenance } from '../../../Calendar/types';
 
 export interface IModalSendMaintenanceReport {
   setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
-  onThenActionRequest: () => Promise<void>;
-
-  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  filters: IFilterforRequest;
+  onThenRequest: () => Promise<void>;
 }
 
 export interface IRequestMaintenanceDetails {
@@ -34,11 +26,7 @@ export interface IRequestSendReport {
   setOnModalQuery: (setOnModalQuery: boolean) => void;
   origin: 'Backoffice' | 'Company' | 'Client';
 
-  setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
-  filters: IFilterforRequest;
+  onThenRequest: () => Promise<void>;
 }
 
 export interface IRequestReportProgress {
@@ -55,5 +43,5 @@ export interface IRequestSaveReportProgress {
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
   setOnModalQuery: (setOnModalQuery: boolean) => void;
-  onThenActionRequest: () => Promise<void>;
+  onThenRequest: () => Promise<void>;
 }
