@@ -116,8 +116,8 @@ export const CreateReport = () => {
     Responsável: data.responsible,
     'Valor (R$)': data.cost ? data.cost / 100 : 0,
     'Observação do relato': data.reportObservation || '',
-    Anexos: data.annexes.map(({ url }) => url).join(', '),
-    Imagens: data.images.map(({ url }) => url).join(', '),
+    Anexos: data.annexes.map(({ url }) => url).join('; '),
+    Imagens: data.images.map(({ url }) => url).join('; '),
   }));
 
   useEffect(() => {
