@@ -1,9 +1,23 @@
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+// #region imports
 // COMPONENTS
 import React, { useState } from 'react';
-import { Page, Text, Document, View, PDFDownloadLink, PDFViewer, Image } from '@react-pdf/renderer';
+import {
+  Page,
+  Text,
+  Document,
+  View,
+  PDFDownloadLink,
+  PDFViewer,
+  Image,
+  Font,
+  Link,
+} from '@react-pdf/renderer';
 import { Modal } from '../../../../components/Modal';
 import { Button } from '../../../../components/Buttons/Button';
+import DMSansMedium from '../../../../assets/fonts/DM_Sans/DMSans-Medium.ttf';
+import DMSansRegular from '../../../../assets/fonts/DM_Sans/DMSans-Regular.ttf';
+import DMSansBold500 from '../../../../assets/fonts/DM_Sans/DMSans-Bold.ttf';
 
 // TYPES
 import { IModalPrintQRCode } from './types';
@@ -16,19 +30,37 @@ import { image } from '../../../../assets/images';
 // FUNCTIONS
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
+Font.register({
+  family: 'DMSans',
+  format: 'truetype',
+  fonts: [
+    {
+      src: DMSansRegular,
+    },
+    {
+      src: DMSansMedium,
+      fontWeight: 500,
+    },
+    {
+      src: DMSansBold500,
+      fontWeight: 700,
+    },
+  ],
+});
+// #endregion
+
+// #region pdf
 const MyDocument = ({
   setLoading,
-  maintenances,
+  maintenancesForPDF,
   companyImage,
   filterforPDF,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  maintenances: IMaintenanceReportData[];
+  maintenancesForPDF: IMaintenanceReportData[];
   companyImage: string;
   filterforPDF: IFilterforPDF;
 }) => {
-  console.log(maintenances);
-
   const randomNumber = () => {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -40,68 +72,215 @@ const MyDocument = ({
 
     return result;
   };
+  console.log(maintenancesForPDF);
 
   return (
     <Document
       onRender={() => {
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
+        setLoading(false);
       }}
     >
       <Page size="A4" style={Style.pdf.page} orientation="landscape">
         <View>
-          <View fixed style={Style.pdf.header}>
-            <View style={Style.pdf.headerSide}>
-              <Image
-                src={`${companyImage}?noCache=${Math.random().toString()}`}
-                style={Style.pdf.companyLogo}
-              />
+          {
+            // #region Header
+            <View fixed style={Style.pdf.header}>
+              <View style={Style.pdf.headerSide}>
+                <Image
+                  src={`${companyImage}?noCache=${Math.random().toString()}`}
+                  style={Style.pdf.companyLogo}
+                />
 
-              <View>
+                <View style={Style.pdf.headerColumn}>
+                  <Text>
+                    <Text style={Style.pdf.bold500}>Edificação:</Text>{' '}
+                    {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
+                  </Text>
+
+                  <Text>
+                    <Text style={Style.pdf.bold500}>Status:</Text>{' '}
+                    {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
+                  </Text>
+
+                  <Text>
+                    <Text style={Style.pdf.bold500}>Período:</Text>{' '}
+                    {filterforPDF.startDate && filterforPDF.endDate
+                      ? `${new Date(
+                          new Date(filterforPDF.startDate).setUTCHours(3, 0, 0, 0),
+                        ).toLocaleDateString('pt-BR')} a ${new Date(
+                          new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
+                        ).toLocaleDateString('pt-BR')}`
+                      : 'Todos'}
+                  </Text>
+
+                  <Text>
+                    <Text style={Style.pdf.bold500}>Categoria:</Text>{' '}
+                    {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={Style.pdf.headerColumn}>
                 <Text>
-                  Edificação:{' '}
-                  {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
-                </Text>
-                <Text>
-                  Status: {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
+                  <Text style={Style.pdf.bold500}>ID:</Text> {randomNumber()}
                 </Text>
 
                 <Text>
-                  Período:{' '}
-                  {filterforPDF.startDate && filterforPDF.endDate
-                    ? `${new Date(
-                        new Date(filterforPDF.startDate).setUTCHours(3, 0, 0, 0),
-                      ).toLocaleDateString('pt-BR')} a ${new Date(
-                        new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
-                      ).toLocaleDateString('pt-BR')}`
-                    : 'Todos'}
-                </Text>
-
-                <Text>
-                  Categoria:{' '}
-                  {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
+                  <Text style={Style.pdf.bold500}>Emissão:</Text>{' '}
+                  {new Date().toLocaleString('pt-BR')}
                 </Text>
               </View>
             </View>
-            <View>
-              <Text>Emissão: {new Date().toLocaleString('pt-BR')}</Text>
-              <Text>ID: {randomNumber()}</Text>
+            // #endregion
+          }
+
+          {
+            // #region Body
+            <View style={Style.pdf.body}>
+              {[...Array(5).keys()].map((e) => (
+                <View style={Style.pdf.cardWrapper} key={e}>
+                  <Text style={Style.pdf.month}>Fev/24</Text>
+                  {[...Array(5).keys()].map((i) => (
+                    <View style={Style.pdf.cardRow} key={i} wrap={false}>
+                      <View style={Style.pdf.cardDateColumn}>
+                        <Text>07</Text>
+                        <Text>Qua</Text>
+                      </View>
+
+                      <View style={Style.pdf.card}>
+                        <View style={Style.pdf.tag} />
+
+                        <View style={Style.pdf.content}>
+                          <View style={Style.pdf.contentHeader}>
+                            <Text>Lugano</Text>
+                            <Text style={Style.pdf.maintenanceTag}>tag</Text>
+                          </View>
+
+                          <View style={Style.pdf.contentData}>
+                            <View style={Style.pdf.contentColumn1}>
+                              <Text style={Style.pdf.bold500}>
+                                Categoria: <Text style={Style.pdf.normal}>contentdata</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Elemento: <Text style={Style.pdf.normal}>contentdata</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Atividade:{' '}
+                                <Text style={Style.pdf.normal}>
+                                  Verificar sua integridade e reconstruir o funcionamento do sistema
+                                  de lavagem internados depósitos de água quente e limpeza das
+                                  chaminés, conforma instruções do fabricante
+                                </Text>
+                              </Text>
+                            </View>
+
+                            <View style={Style.pdf.contentColumn2}>
+                              <Text style={Style.pdf.bold500}>
+                                Notificação: <Text style={Style.pdf.normal}>contentdata</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Conclusão: <Text style={Style.pdf.normal}>contentdata</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Responsável:{' '}
+                                <Text style={Style.pdf.normal}>Equipe de manutenção local</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Valor: <Text style={Style.pdf.normal}>contentdata</Text>
+                              </Text>
+
+                              <Text style={Style.pdf.bold500}>
+                                Anexos (1):{' '}
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/dump-easyalert-production-202402061124-1708000442446.sql"
+                                  style={Style.pdf.annex}
+                                >
+                                  contentdata
+                                </Link>
+                                ,{' '}
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/dump-easyalert-production-202402061124-1708000442446.sql"
+                                  style={Style.pdf.annex}
+                                >
+                                  contentdata
+                                </Link>
+                                ,{' '}
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/dump-easyalert-production-202402061124-1708000442446.sql"
+                                  style={Style.pdf.annex}
+                                >
+                                  contentdata
+                                </Link>
+                              </Text>
+                            </View>
+
+                            <View style={Style.pdf.contentColumn3}>
+                              <Text>Imagens (1):</Text>
+                              <View style={Style.pdf.images}>
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg"
+                                  style={Style.pdf.image}
+                                >
+                                  <Image source="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg" />
+                                </Link>
+
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg"
+                                  style={Style.pdf.image}
+                                >
+                                  <Image source="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg" />
+                                </Link>
+
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg"
+                                  style={Style.pdf.image}
+                                >
+                                  <Image source="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg" />
+                                </Link>
+
+                                <Link
+                                  src="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg"
+                                  style={Style.pdf.image}
+                                >
+                                  <Image source="https://larguei.s3.us-west-2.amazonaws.com/1672021868146-1708001509115.jpeg" />
+                                </Link>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              ))}
             </View>
-          </View>
+
+            // #endregion
+          }
         </View>
 
-        <View fixed style={Style.pdf.footer}>
-          <Image source={image.logoForPDF} style={Style.pdf.easyAlertLogo} />
-          <Text
-            render={({ pageNumber, totalPages }) => `${`Página ${pageNumber} de ${totalPages}`}`}
-          />
-        </View>
+        {
+          // #region Footer
+          <View fixed style={Style.pdf.footer}>
+            <Image source={image.logoForPDF} style={Style.pdf.easyAlertLogo} />
+            <Text
+              render={({ pageNumber, totalPages }) => `${`Página ${pageNumber} de ${totalPages}`}`}
+            />
+          </View>
+          // #endregion
+        }
       </Page>
     </Document>
   );
 };
+// #endregion
 
+// #region modal
 export const ModalPrintReport = ({ setModal, maintenances, filterforPDF }: IModalPrintQRCode) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { account } = useAuthContext();
@@ -115,7 +294,7 @@ export const ModalPrintReport = ({ setModal, maintenances, filterforPDF }: IModa
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
             <MyDocument
               setLoading={setLoading}
-              maintenances={maintenances}
+              maintenancesForPDF={maintenances}
               companyImage={account?.Company.image!}
               filterforPDF={filterforPDF}
             />
@@ -124,7 +303,7 @@ export const ModalPrintReport = ({ setModal, maintenances, filterforPDF }: IModa
             document={
               <MyDocument
                 setLoading={setLoading}
-                maintenances={maintenances}
+                maintenancesForPDF={maintenances}
                 companyImage={account?.Company.image!}
                 filterforPDF={filterforPDF}
               />
@@ -138,3 +317,4 @@ export const ModalPrintReport = ({ setModal, maintenances, filterforPDF }: IModa
     </Modal>
   );
 };
+// #endregion
