@@ -20,6 +20,7 @@ import {
   IFilterforPDF,
   IFilterforRequest,
   IFiltersOptions,
+  IMaintenanceForPDF,
   IMaintenanceReportData,
 } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
@@ -44,6 +45,7 @@ export const CreateReport = () => {
     totalCost: 0,
   });
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
+  const [maintenancesForPDF, setMaintenancesForPDF] = useState<IMaintenanceForPDF[]>([]);
 
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
@@ -108,6 +110,7 @@ export const CreateReport = () => {
               setLoading,
               setMaintenances,
               setOnQuery,
+              setMaintenancesForPDF,
             })
           }
         />
@@ -122,6 +125,7 @@ export const CreateReport = () => {
               setLoading,
               setMaintenances,
               setOnQuery,
+              setMaintenancesForPDF,
             })
           }
           setModal={setModalEditReport}
@@ -132,7 +136,7 @@ export const CreateReport = () => {
       {modalPrintReportOpen && (
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
-          maintenances={maintenances}
+          maintenancesForPDF={maintenancesForPDF}
           filterforPDF={filterforPDF}
         />
       )}
@@ -189,6 +193,7 @@ export const CreateReport = () => {
                   startDate: values.startDate,
                   endDate: values.endDate,
                 },
+                setMaintenancesForPDF,
               });
             }}
           >

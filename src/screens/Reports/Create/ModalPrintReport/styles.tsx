@@ -1,46 +1,6 @@
 import { StyleSheet } from '@react-pdf/renderer';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from '../../../../styles/theme';
-import { IEventTag } from '../../../Calendar/utils/EventTag/types';
-
-export const TagContainer = styled.div<IEventTag>`
-  width: fit-content;
-  padding: 2px ${theme.size.xxsm};
-  border-radius: ${theme.size.xxsm};
-
-  > p {
-    color: ${theme.color.white};
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  ${({ status }) =>
-    status === 'completed' &&
-    css`
-      background-color: ${theme.color.success};
-    `}
-  ${({ status }) =>
-    status === 'overdue' &&
-    css`
-      background-color: ${theme.color.primaryM};
-    `}
-    ${({ status }) =>
-    status === 'pending' &&
-    css`
-      background-color: ${theme.color.warning};
-    `}
-    ${({ status }) =>
-    status === 'expired' &&
-    css`
-      background-color: ${theme.color.actionDanger};
-    `};
-
-  ${({ status }) =>
-    status === 'occasional' &&
-    css`
-      background-color: ${theme.color.purple};
-    `};
-`;
 
 export const Container = styled.div`
   display: flex;
@@ -173,7 +133,6 @@ export const pdf = StyleSheet.create({
 
   tag: {
     width: '4px',
-    backgroundColor: '#34B53A',
     borderTopLeftRadius: '4px',
     borderBottomLeftRadius: '4px',
   },
@@ -258,5 +217,11 @@ export const pdf = StyleSheet.create({
     fontWeight: 400,
     color: theme.color.primary,
     textDecoration: 'none',
+  },
+
+  tagsRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '4px',
   },
 });
