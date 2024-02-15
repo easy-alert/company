@@ -52,14 +52,25 @@ export interface IMaintenanceReportData {
   categoryName: string;
   cost: number | null;
   element: string;
+  source: string;
   maintenanceHistoryId: string;
   notificationDate: string;
   resolutionDate: string | null;
-  observation: string | null;
   responsible: string | null;
   status: 'completed' | 'expired' | 'pending' | 'overdue';
   type: 'common' | 'occasional' | null;
   inProgress: boolean;
+  maintenanceObservation: string | null;
+  reportObservation: string | null;
+
+  images: {
+    url: string;
+  }[];
+
+  annexes: {
+    url: string;
+    name: string;
+  }[];
 }
 
 export interface IMaintenanceForPDF {
@@ -71,7 +82,6 @@ export interface IMaintenanceForPDF {
     buildingName: string;
     categoryName: string;
     element: string;
-    observation: string | null;
     activity: string;
     responsible: string | null;
     notificationDate: string;

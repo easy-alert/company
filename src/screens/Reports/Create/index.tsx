@@ -1,14 +1,11 @@
 /* eslint-disable react/no-array-index-key */
-// LIBS
-
-// COMPONENTS
+// #region imports
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
+import { CSVLink } from 'react-csv';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-
-// STYLES
 import { icon } from '../../../assets/icons';
 import * as s from './styles';
 import { theme } from '../../../styles/theme';
@@ -31,10 +28,15 @@ import { ModalPrintReport } from './ModalPrintReport';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 import { Select } from '../../../components/Inputs/Select';
-import { getPluralStatusNameforPdf } from './ModalPrintReport/functions';
+import {
+  getPluralStatusNameforPdf,
+  getSingularStatusNameforPdf,
+} from './ModalPrintReport/functions';
 import { InProgressTag } from '../../../components/InProgressTag';
+// #endregion
 
 export const CreateReport = () => {
+  // #region states
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -82,6 +84,41 @@ export const CreateReport = () => {
   const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
 
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
+  // #endregion
+
+  const csvHeaders = [
+    { label: 'Edificação', key: 'Edificação' },
+    { label: 'Status', key: 'Status' },
+    { label: 'Data de notificação', key: 'Data de notificação' },
+    { label: 'Data de conclusão', key: 'Data de conclusão' },
+    { label: 'Categoria', key: 'Categoria' },
+    { label: 'Elemento', key: 'Elemento' },
+    { label: 'Atividade', key: 'Atividade' },
+    { label: 'Fonte', key: 'Fonte' },
+    { label: 'Observação da manutenção', key: 'Observação da manutenção' },
+    { label: 'Responsável', key: 'Responsável' },
+    { label: 'Valor (R$)', key: 'Valor (R$)' },
+    { label: 'Observação do relato', key: 'Observação do relato' },
+    { label: 'Anexos', key: 'Anexos' },
+    { label: 'Imagens', key: 'Imagens' },
+  ];
+
+  const csvData = maintenances.map((data) => ({
+    Edificação: data.buildingName,
+    Status: getSingularStatusNameforPdf(data.status),
+    'Data de notificação': dateFormatter(data.notificationDate),
+    'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
+    Categoria: data.categoryName,
+    Elemento: data.element,
+    Atividade: data.activity,
+    Fonte: data.source,
+    'Observação da manutenção': data.maintenanceObservation || '',
+    Responsável: data.responsible,
+    'Valor (R$)': data.cost ? data.cost / 100 : 0,
+    'Observação do relato': data.reportObservation || '',
+    Anexos: data.annexes.map(({ url }) => url).join(', '),
+    Imagens: data.images.map(({ url }) => url).join(', '),
+  }));
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -404,6 +441,23 @@ export const CreateReport = () => {
                   </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
+                      <CSVLink
+                        data={csvData}
+                        headers={csvHeaders}
+                        filename={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+                        onClick={() => maintenances.length !== 0}
+                      >
+                        <IconButton
+                          icon={icon.csvLogo}
+                          label="Exportar"
+                          color={theme.color.primary}
+                          size="20px"
+                          onClick={() => {
+                            //
+                          }}
+                          disabled={maintenances.length === 0}
+                        />
+                      </CSVLink>
                       <IconButton
                         icon={icon.pdfLogo}
                         label="Exportar"
@@ -414,7 +468,6 @@ export const CreateReport = () => {
                         }}
                         disabled={maintenances.length === 0}
                       />
-
                       <Button label="Filtrar" type="submit" disabled={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
