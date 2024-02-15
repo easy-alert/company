@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import { Api } from '../../../../services/api';
 import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
 import { IRequestReportProgress, IRequestSaveReportProgress, IRequestSendReport } from './types';
-import { requestReportsData } from '../functions';
 
 export const requestSendReport = async ({
   maintenanceReport,
@@ -12,11 +11,7 @@ export const requestSendReport = async ({
   images,
   setOnModalQuery,
   origin,
-  filters,
-  setCounts,
-  setLoading,
-  setMaintenances,
-  setOnQuery,
+  onThenRequest,
 }: IRequestSendReport) => {
   setOnModalQuery(true);
 
@@ -29,14 +24,7 @@ export const requestSendReport = async ({
     ReportImages: images,
   })
     .then((res) => {
-      requestReportsData({
-        setOnQuery,
-        setCounts,
-        setMaintenances,
-        setLoading,
-        filters,
-      });
-
+      onThenRequest();
       toast.success(res.data.ServerMessage.message);
       setModal(false);
     })
@@ -76,7 +64,7 @@ export const requestSaveReportProgress = async ({
   maintenanceHistoryId,
   files,
   images,
-  onThenActionRequest,
+  onThenRequest,
   setOnModalQuery,
 }: IRequestSaveReportProgress) => {
   setOnModalQuery(true);
@@ -89,7 +77,7 @@ export const requestSaveReportProgress = async ({
     ReportImages: images,
   })
     .then((res) => {
-      onThenActionRequest();
+      onThenRequest();
       toast.success(res.data.ServerMessage.message);
       setModal(false);
     })

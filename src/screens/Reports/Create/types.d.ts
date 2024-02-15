@@ -62,11 +62,42 @@ export interface IMaintenanceReportData {
   inProgress: boolean;
 }
 
+export interface IMaintenanceForPDF {
+  month: string;
+
+  data: {
+    id: string;
+    maintenanceHistoryId: string;
+    buildingName: string;
+    categoryName: string;
+    element: string;
+    observation: string | null;
+    activity: string;
+    responsible: string | null;
+    notificationDate: string;
+    resolutionDate: string | null;
+    status: 'completed' | 'expired' | 'pending' | 'overdue';
+    inProgress: boolean;
+    cost: number | null;
+    type: string | null;
+
+    images: {
+      url: string;
+    }[];
+
+    annexes: {
+      url: string;
+      name: string;
+    }[];
+  }[];
+}
+
 export interface IRequestReportsData {
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
   setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
+  setMaintenancesForPDF: React.Dispatch<React.SetStateAction<IMaintenanceForPDF[]>>;
   filters: IReportsFilters;
 }
 

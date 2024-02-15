@@ -1,3 +1,5 @@
+import { theme } from '../../../../styles/theme';
+
 export const getPluralStatusNameforPdf = (status: string) => {
   let statusName = '';
 
@@ -50,4 +52,19 @@ export const getSingularStatusNameforPdf = (status: string) => {
   }
 
   return statusName;
+};
+
+export const getStatusBackgroundColor = (
+  status: 'completed' | 'expired' | 'pending' | 'overdue' | 'occasional' | 'inProgress',
+) => {
+  const backgroundColor = {
+    completed: theme.color.success,
+    overdue: theme.color.primaryM,
+    pending: theme.color.warning,
+    expired: theme.color.actionDanger,
+    occasional: theme.color.purple,
+    inProgress: theme.color.actionBlue,
+  };
+
+  return backgroundColor[status];
 };

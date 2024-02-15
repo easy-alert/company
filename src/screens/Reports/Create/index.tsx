@@ -20,6 +20,7 @@ import {
   IFilterforPDF,
   IFilterforRequest,
   IFiltersOptions,
+  IMaintenanceForPDF,
   IMaintenanceReportData,
 } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
@@ -44,6 +45,7 @@ export const CreateReport = () => {
     totalCost: 0,
   });
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
+  const [maintenancesForPDF, setMaintenancesForPDF] = useState<IMaintenanceForPDF[]>([]);
 
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
@@ -96,26 +98,24 @@ export const CreateReport = () => {
           setModalEditReport={setModalEditReport}
         />
       )}
+
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
         <ModalSendMaintenanceReport
           setModal={setModalSendMaintenanceReportOpen}
           maintenanceHistoryId={maintenanceHistoryId}
-          filters={filterforRequest}
-          setCounts={setCounts}
-          setLoading={setLoading}
-          setMaintenances={setMaintenances}
-          setOnQuery={setOnQuery}
-          onThenActionRequest={async () =>
+          onThenRequest={async () =>
             requestReportsData({
               filters: filterforRequest,
               setCounts,
               setLoading,
               setMaintenances,
               setOnQuery,
+              setMaintenancesForPDF,
             })
           }
         />
       )}
+
       {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
           onThenActionRequest={async () =>
@@ -125,29 +125,31 @@ export const CreateReport = () => {
               setLoading,
               setMaintenances,
               setOnQuery,
+              setMaintenancesForPDF,
             })
           }
           setModal={setModalEditReport}
           maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
+
       {modalPrintReportOpen && (
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
-          maintenances={maintenances}
+          maintenancesForPDF={maintenancesForPDF}
           filterforPDF={filterforPDF}
         />
       )}
 
       <s.Container>
-        <h2>Relatórios</h2>
+        <h2>Relatórios TIRAR AS DATA PADRÃO DEPOIS *************************</h2>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              startDate: '',
-              endDate: '',
+              startDate: '2020-01-01',
+              endDate: '2025-01-01',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
@@ -191,6 +193,7 @@ export const CreateReport = () => {
                   startDate: values.startDate,
                   endDate: values.endDate,
                 },
+                setMaintenancesForPDF,
               });
             }}
           >
