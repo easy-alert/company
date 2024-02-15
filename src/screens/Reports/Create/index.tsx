@@ -179,14 +179,14 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <h2>Relatórios TIRAR AS DATA PADRÃO DEPOIS *************************</h2>
+        <h2>Relatórios</h2>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
-              startDate: '2020-01-01',
-              endDate: '2025-01-01',
+              startDate: '',
+              endDate: '',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
