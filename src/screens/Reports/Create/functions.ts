@@ -14,6 +14,7 @@ export const requestReportsData = async ({
   setMaintenances,
   setLoading,
   filters,
+  setMaintenancesForPDF,
 }: IRequestReportsData) => {
   setOnQuery(true);
   setMaintenances([]);
@@ -23,6 +24,7 @@ export const requestReportsData = async ({
     .then((res) => {
       setMaintenances(res.data.maintenances);
       setCounts(res.data.counts);
+      setMaintenancesForPDF(res.data.maintenancesForPDF);
     })
     .catch((err) => {
       catchHandler(err);

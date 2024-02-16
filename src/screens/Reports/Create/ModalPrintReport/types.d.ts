@@ -1,7 +1,7 @@
-import { IMaintenanceReport, IFilterforPDF } from '../types';
+import { IMaintenanceForPDF, IFilterforPDF } from '../types';
 
 export interface IModalPrintQRCode {
   setModal: (setModal: boolean) => void;
-  maintenances: IMaintenanceReport[];
+  maintenancesForPDF: IMaintenanceForPDF[];
   filterforPDF: IFilterforPDF;
 }

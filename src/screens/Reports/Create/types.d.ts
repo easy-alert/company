@@ -52,14 +52,54 @@ export interface IMaintenanceReportData {
   categoryName: string;
   cost: number | null;
   element: string;
+  source: string;
   maintenanceHistoryId: string;
   notificationDate: string;
   resolutionDate: string | null;
-  observation: string | null;
   responsible: string | null;
   status: 'completed' | 'expired' | 'pending' | 'overdue';
   type: 'common' | 'occasional' | null;
   inProgress: boolean;
+  maintenanceObservation: string | null;
+  reportObservation: string | null;
+
+  images: {
+    url: string;
+  }[];
+
+  annexes: {
+    url: string;
+    name: string;
+  }[];
+}
+
+export interface IMaintenanceForPDF {
+  month: string;
+
+  data: {
+    id: string;
+    maintenanceHistoryId: string;
+    buildingName: string;
+    categoryName: string;
+    element: string;
+    activity: string;
+    responsible: string | null;
+    notificationDate: string;
+    resolutionDate: string | null;
+    status: 'completed' | 'expired' | 'pending' | 'overdue';
+    inProgress: boolean;
+    cost: number | null;
+    type: string | null;
+
+    images: {
+      url: string;
+    }[];
+
+    annexes: {
+      url: string;
+      name: string;
+    }[];
+  }[];
 }
 
 export interface IRequestReportsData {
@@ -67,6 +107,7 @@ export interface IRequestReportsData {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
   setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
+  setMaintenancesForPDF: React.Dispatch<React.SetStateAction<IMaintenanceForPDF[]>>;
   filters: IReportsFilters;
 }
 

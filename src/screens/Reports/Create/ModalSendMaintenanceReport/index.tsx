@@ -30,18 +30,13 @@ import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
-import { requestDeleteMaintenanceHistory, requestReportsData } from '../functions';
+import { requestDeleteMaintenanceHistory } from '../functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
   maintenanceHistoryId,
-  filters,
-  setCounts,
-  setLoading,
-  setMaintenances,
-  setOnQuery,
-  onThenActionRequest,
+  onThenRequest,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
@@ -376,14 +371,7 @@ export const ModalSendMaintenanceReport = ({
                     maintenanceHistoryId,
                     setModal,
                     setOnModalQuery,
-                    onThenRequest: async () =>
-                      requestReportsData({
-                        filters,
-                        setCounts,
-                        setLoading,
-                        setMaintenances,
-                        setOnQuery,
-                      }),
+                    onThenRequest: async () => onThenRequest(),
                   });
                 }}
               />
@@ -427,7 +415,7 @@ export const ModalSendMaintenanceReport = ({
                         maintenanceHistoryId,
                         maintenanceReport,
                         setOnModalQuery,
-                        onThenActionRequest,
+                        onThenRequest: async () => onThenRequest(),
                       });
                     }}
                     textColor={theme.color.actionBlue}
@@ -453,14 +441,10 @@ export const ModalSendMaintenanceReport = ({
                       files,
                       images,
                       origin: account?.origin ?? 'Company',
-                      filters,
-                      setCounts,
-                      setLoading,
-                      setMaintenances,
-                      setOnQuery,
+                      onThenRequest: async () => onThenRequest(),
                     });
                   }}
-                  label="Enviar relato"
+                  label="Finalizar manutenção"
                   message={{
                     title: 'Tem certeza que deseja enviar o relato?',
                     content: 'Esta ação é irreversível.',

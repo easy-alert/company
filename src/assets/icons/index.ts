@@ -60,6 +60,7 @@ import placeholder from './placeholder.svg';
 import grayDownload from './grayDownload.svg';
 import addFileV2 from './addFileV2.svg';
 import qrcode from './qrcode.svg';
+import csvLogo from './csvLogo.svg';
 
 export const icon = {
   leftArrow,
@@ -124,4 +125,5 @@ export const icon = {
   grayDownload,
   addFileV2,
   qrcode,
+  csvLogo,
 };
