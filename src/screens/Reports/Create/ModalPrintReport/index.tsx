@@ -165,7 +165,9 @@ const MyDocument = ({
                         <View
                           style={{
                             ...Style.pdf.tag,
-                            backgroundColor: getStatusBackgroundColor(maintenance.status),
+                            backgroundColor: getStatusBackgroundColor(
+                              maintenance.status === 'overdue' ? 'completed' : maintenance.status,
+                            ),
                           }}
                         />
 
@@ -289,7 +291,9 @@ const MyDocument = ({
                               <View style={Style.pdf.images}>
                                 {maintenance.images.slice(0, 4).map(({ url }) => (
                                   <Link key={url} src={url} style={Style.pdf.image}>
-                                    <Image source={url} />
+                                    <Image
+                                      source={url.endsWith('jpeg') ? image.imagePlaceholder : url}
+                                    />
                                   </Link>
                                 ))}
                               </View>

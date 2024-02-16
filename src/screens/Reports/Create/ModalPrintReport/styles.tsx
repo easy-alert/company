@@ -124,6 +124,7 @@ export const pdf = StyleSheet.create({
     flexDirection: 'column',
     fontSize: '12px',
     fontWeight: 500,
+    width: '30px',
   },
 
   card: {
