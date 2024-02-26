@@ -85,7 +85,9 @@ export const AccountDetails = () => {
           <p className="p2 link">
             {account?.Company.supportLink ? (
               <a href={account?.Company.supportLink} target="_blank" rel="noreferrer">
-                {account?.Company.supportLink}
+                {account?.Company.supportLink.startsWith('//')
+                  ? account?.Company.supportLink.slice(2)
+                  : account?.Company.supportLink}
               </a>
             ) : (
               '-'

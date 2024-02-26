@@ -108,7 +108,11 @@ export const ModalManageBanners = ({
   useEffect(() => {
     if (currentBanners.length > 0) {
       setBannerName(currentBanners[0].bannerName);
-      setBannerLink(currentBanners[0].redirectUrl);
+      setBannerLink(
+        currentBanners[0].redirectUrl.startsWith('//')
+          ? currentBanners[0].redirectUrl.slice(2)
+          : currentBanners[0].redirectUrl,
+      );
 
       currentBanners.forEach((banner) => {
         if (banner.type === 'Web') {
@@ -135,11 +139,12 @@ export const ModalManageBanners = ({
             setBannerName(e.target.value);
           }}
         />
+
         <Input
           label="Link do banner"
           maxLength={600}
           value={bannerLink ?? ''}
-          placeholder="Ex: https://easyalert.com.br"
+          placeholder="Ex: www.easyalert.com.br"
           onChange={(e) => {
             setBannerLink(e.target.value);
           }}
