@@ -37,7 +37,12 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
           name: account.User.name,
           email: account.User.email,
           companyName: account.Company.name,
-          supportLink: account.Company.supportLink,
+          // eslint-disable-next-line no-nested-ternary
+          supportLink: account.Company.supportLink
+            ? account?.Company.supportLink.startsWith('//')
+              ? account?.Company.supportLink.slice(2)
+              : account?.Company.supportLink
+            : '',
           contactNumber: applyMask({
             value: account.Company.contactNumber,
             mask: 'TEL',
@@ -159,7 +164,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 name="supportLink"
                 value={values.supportLink ?? ''}
                 error={touched.supportLink && errors.supportLink ? errors.supportLink : null}
-                placeholder="Ex: https://easyalert.com.br"
+                placeholder="Ex: www.easyalert.com.br"
               />
 
               <Style.PasswordDiv>

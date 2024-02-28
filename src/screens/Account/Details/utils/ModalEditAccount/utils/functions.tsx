@@ -19,7 +19,6 @@ export const requestEditAccount = async ({
   navigate,
   setOnQuery,
 }: IRequestEditAccount) => {
-  setOnQuery(true);
   let imageUrl: any;
 
   if (!values.image.length) {
@@ -29,12 +28,39 @@ export const requestEditAccount = async ({
     imageUrl = account.Company.image;
   }
 
+  if (
+    values.supportLink &&
+    !values.supportLink.startsWith('www.') &&
+    !values.supportLink.startsWith('https://') &&
+    !values.supportLink.startsWith('http://') &&
+    !values.supportLink.startsWith('//')
+  ) {
+    toast.error(
+      <div>
+        Informe um link válido.
+        <br />
+        Ex: www.easyalert.com.br
+      </div>,
+    );
+    return;
+  }
+
+  setOnQuery(true);
+
+  const formattedSupportLink =
+    values.supportLink &&
+    (values.supportLink.startsWith('https://') ||
+      values.supportLink.startsWith('http://') ||
+      values.supportLink.startsWith('//'))
+      ? values.supportLink
+      : `//${values.supportLink}`;
+
   await Api.put('/account/edit', {
     name: values.name,
     email: values.email,
     password: values.password !== '' ? values.password : null,
     image: imageUrl,
-    supportLink: values.supportLink ? values.supportLink : null,
+    supportLink: formattedSupportLink || null,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
@@ -119,7 +145,7 @@ export const schemaModalEditAccountWithCNPJ = yup
 
     CNPJ: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
 
-    supportLink: yup.string().url('Digite uma URL válida. Ex: https://easyalert.com.br').nullable(),
+    supportLink: yup.string().nullable(),
 
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 
@@ -178,7 +204,7 @@ export const schemaModalEditAccountWithCPF = yup
 
     CPF: yup.string().required('O CPF deve ser preenchido.').min(14, 'O CPF deve ser válido.'),
 
-    supportLink: yup.string().url('Digite uma URL válida. Ex: https://easyalert.com.br').nullable(),
+    supportLink: yup.string().nullable(),
 
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 

@@ -18,16 +18,39 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
-  if (bannerLink && !bannerLink.startsWith('https://') && !bannerLink.startsWith('http://')) {
+  if (!bannerLink) {
+    toast.error('Verifique a informação: nome do banner e tente novamente.');
+    return;
+  }
+
+  if (!bannerLink) {
+    toast.error('Verifique a informação: nome do banner e tente novamente.');
+    return;
+  }
+
+  if (
+    bannerLink &&
+    !bannerLink.startsWith('www.') &&
+    !bannerLink.startsWith('https://') &&
+    !bannerLink.startsWith('http://') &&
+    !bannerLink.startsWith('//')
+  ) {
     toast.error(
       <div>
         Informe um link válido.
         <br />
-        Ex: https://easyalert.com.br
+        Ex: www.easyalert.com.br
       </div>,
     );
     return;
   }
+
+  const formattedBannerLink =
+    bannerLink.startsWith('https://') ||
+    bannerLink.startsWith('http://') ||
+    bannerLink.startsWith('//')
+      ? bannerLink
+      : `//${bannerLink}`;
 
   setOnQuery(true);
 
@@ -37,7 +60,7 @@ export const requestRegisterBuildingBanners = async ({
     data.push({
       buildingId,
       bannerName: bannerName !== '' ? bannerName : null,
-      redirectUrl: bannerLink !== '' ? bannerLink : null,
+      redirectUrl: bannerLink !== '' ? formattedBannerLink : null,
       type: 'Web',
       url: webBanner[0]?.url,
       originalName: webBanner[0]?.name,
@@ -48,7 +71,7 @@ export const requestRegisterBuildingBanners = async ({
     data.push({
       buildingId,
       bannerName: bannerName !== '' ? bannerName : null,
-      redirectUrl: bannerLink !== '' ? bannerLink : null,
+      redirectUrl: bannerLink !== '' ? formattedBannerLink : null,
       type: 'Mobile',
       url: mobileBanner[0]?.url,
       originalName: mobileBanner[0]?.name,
