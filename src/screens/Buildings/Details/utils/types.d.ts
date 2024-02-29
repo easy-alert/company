@@ -32,7 +32,7 @@ interface Folders {
 interface Banner {
   bannerName: string;
   originalName: string;
-  redirectUrl: string;
+  redirectUrl: string | null;
   type: 'Web' | 'Mobile';
   url: string;
 }

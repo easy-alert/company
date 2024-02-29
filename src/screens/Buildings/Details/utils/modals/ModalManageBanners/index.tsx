@@ -109,9 +109,12 @@ export const ModalManageBanners = ({
     if (currentBanners.length > 0) {
       setBannerName(currentBanners[0].bannerName);
       setBannerLink(
-        currentBanners[0].redirectUrl.startsWith('//')
-          ? currentBanners[0].redirectUrl.slice(2)
-          : currentBanners[0].redirectUrl,
+        // eslint-disable-next-line no-nested-ternary
+        currentBanners[0].redirectUrl
+          ? currentBanners[0].redirectUrl.startsWith('//')
+            ? currentBanners[0].redirectUrl.slice(2)
+            : currentBanners[0].redirectUrl
+          : '',
       );
 
       currentBanners.forEach((banner) => {
