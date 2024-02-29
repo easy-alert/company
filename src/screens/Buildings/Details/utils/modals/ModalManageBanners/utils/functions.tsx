@@ -35,12 +35,14 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
-  const formattedBannerLink =
-    bannerLink.startsWith('https://') ||
-    bannerLink.startsWith('http://') ||
-    bannerLink.startsWith('//')
+  // eslint-disable-next-line no-nested-ternary
+  const formattedBannerLink = bannerLink
+    ? bannerLink.startsWith('https://') ||
+      bannerLink.startsWith('http://') ||
+      bannerLink.startsWith('//')
       ? bannerLink
-      : `//${bannerLink}`;
+      : `//${bannerLink}`
+    : '';
 
   setOnQuery(true);
 
