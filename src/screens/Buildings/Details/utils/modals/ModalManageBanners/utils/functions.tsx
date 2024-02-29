@@ -18,16 +18,6 @@ export const requestRegisterBuildingBanners = async ({
     return;
   }
 
-  if (!bannerLink) {
-    toast.error('Verifique a informação: nome do banner e tente novamente.');
-    return;
-  }
-
-  if (!bannerLink) {
-    toast.error('Verifique a informação: nome do banner e tente novamente.');
-    return;
-  }
-
   if (
     bannerLink &&
     !bannerLink.startsWith('www.') &&
