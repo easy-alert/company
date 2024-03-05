@@ -300,7 +300,7 @@ export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildin
 export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
   toast.dismiss();
   await axios
-    .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
+    .get(`https://brasilapi.com.br/api/cep/v2/${unMask(cep)}`)
     .then((res) => {
       setFieldValue('city', res.data.city ?? '');
       setFieldValue('neighborhood', res.data.neighborhood ?? '');
@@ -308,7 +308,7 @@ export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddress
       setFieldValue('state', res.data.state ? convertStateAcronym(res.data.state) : '');
     })
     .catch(() => {
-      toast.error('CEP não encontrado. Verifique o número ou digite o endereço.');
+      toast.error('Erro ao buscar dados do CEP.');
     });
 };
 
