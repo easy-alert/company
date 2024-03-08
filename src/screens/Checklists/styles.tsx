@@ -273,6 +273,7 @@ export const CalendarDiv = styled.div`
 
 export const ChecklistRow = styled.button<{ status: 'pending' | 'completed' }>`
   all: unset;
+  width: 100%;
   padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
   background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
@@ -298,4 +299,25 @@ export const ChecklistContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0;
+`;
+
+export const Dropdown = styled.div`
+  background-color: ${theme.color.white};
+  padding: ${theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  z-index: 9;
+`;
+
+export const ChecklistBackground = styled.div`
+  position: relative;
+  display: flex;
 `;
