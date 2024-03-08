@@ -14,7 +14,7 @@ import {
 // #endregion
 
 // #region DATES
-export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
+export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
 
 export const convertToFormikDate = (date: Date) => {
   const year = date.getFullYear();

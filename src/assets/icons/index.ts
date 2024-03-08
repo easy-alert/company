@@ -62,6 +62,8 @@ import addFileV2 from './addFileV2.svg';
 import qrcode from './qrcode.svg';
 import csvLogo from './csvLogo.svg';
 import checklists from './checklists.svg';
+import checklistChecked from './checklistChecked.svg';
+import checklistUnchecked from './checklistUnchecked.svg';
 
 export const icon = {
   leftArrow,
@@ -128,4 +130,6 @@ export const icon = {
   qrcode,
   csvLogo,
   checklists,
+  checklistChecked,
+  checklistUnchecked,
 };

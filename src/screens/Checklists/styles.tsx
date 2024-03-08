@@ -12,6 +12,12 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const HeaderLeftSide = styled.div`
@@ -37,9 +43,15 @@ export const DateHeader = styled.div`
   padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
 
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const ContentRow = styled.div`
@@ -48,10 +60,16 @@ export const ContentRow = styled.div`
   gap: ${theme.size.xsm};
   min-height: 270px;
 
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
   .react-calendar {
     border-radius: ${theme.size.xxsm};
     border: none;
     position: relative;
+    width: 100%;
+    max-width: 242px;
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
@@ -179,6 +197,13 @@ export const Checklists = styled.div`
   background-color: ${theme.color.white};
   padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
+
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
+
+  max-height: 600px;
+  overflow-y: auto;
 `;
 
 export const NavigateButtons = styled.div`
@@ -190,6 +215,14 @@ export const NavigateButtons = styled.div`
   display: flex;
   align-items: center;
   gap: 0;
+
+  @media (max-width: 900px) {
+    position: static;
+    transform: translateY(0);
+    justify-content: center;
+    width: 100%;
+    margin-bottom: ${theme.size.xxsm};
+  }
 
   button {
     padding: 0;
@@ -231,4 +264,38 @@ export const CalendarDiv = styled.div`
   padding: 2px ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
+  height: fit-content;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ChecklistRow = styled.button<{ status: 'pending' | 'completed' }>`
+  all: unset;
+  padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+  background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${theme.size.sm};
+
+  cursor: pointer;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
+export const ChecklistRowLeftSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+`;
+
+export const ChecklistContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 `;

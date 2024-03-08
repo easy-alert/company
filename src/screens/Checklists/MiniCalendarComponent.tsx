@@ -4,29 +4,29 @@ import ReactCalendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 interface IMiniCalendar {
-  currentDate: Date;
-  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
+  date: Date;
+  setDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 
 type IValuePiece = Date | null;
 type IValue = IValuePiece | [IValuePiece, IValuePiece];
 
-export const MiniCalendar = ({ currentDate, setCurrentDate }: IMiniCalendar) => {
-  const [value, onChange] = useState<IValue>(currentDate);
+export const MiniCalendarComponent = ({ date, setDate }: IMiniCalendar) => {
+  const [value, onChange] = useState<IValue>(date);
 
   useEffect(() => {
-    onChange(currentDate);
-  }, [currentDate]);
+    onChange(date);
+  }, [date]);
 
   return (
     <ReactCalendar
-      key={currentDate.toISOString()}
+      key={date.toISOString()}
       onChange={onChange}
       value={value}
       calendarType="gregory"
       locale="pt-BR"
       onClickDay={(dateChange) => {
-        setCurrentDate(dateChange);
+        setDate(dateChange);
       }}
     />
   );
