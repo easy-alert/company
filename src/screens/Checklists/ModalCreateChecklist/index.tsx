@@ -1,6 +1,7 @@
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
 import * as Style from './styles';
 import { Modal } from '../../../components/Modal';
 import { ITimeInterval } from '../../../utils/types';
@@ -53,122 +54,145 @@ export const ModalCreateChecklist = ({
   onThenRequest,
   buildingId,
   buildingName,
-}: IModalCreateChecklist) => (
-  <Modal setModal={setModal} title="Modal">
-    <Style.Container>
-      <Formik
-        initialValues={{
-          name: '',
-          buildingId,
-          date: '',
-          frequency: '',
-          frequencyTimeIntervalId: timeIntervals[0].id,
-          description: '',
-          syndicId: '',
-          hasFrequency: false,
-        }}
-        validationSchema={schema}
-        onSubmit={async (values: TSchema) => {
-          await Api.post(`/checklists`, {
-            ...values,
-            frequency: values.frequency || null,
-            frequencyTimeIntervalId: values.frequency ? values.frequencyTimeIntervalId : null,
-          })
-            .then((res) => {
-              onThenRequest();
-              toast.success(res.data.ServerMessage.message);
-              setModal(false);
+}: IModalCreateChecklist) => {
+  const [syndics, setSyndics] = useState<{ name: string; id: string }[]>([]);
+
+  const listSyndics = async () => {
+    await Api.get(`/buildings/notifications/list-for-select/${buildingId}`)
+      .then((res) => {
+        setSyndics(res.data.syndics);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      });
+  };
+
+  useEffect(() => {
+    listSyndics();
+  }, []);
+
+  return (
+    <Modal setModal={setModal} title="Modal">
+      <Style.Container>
+        <Formik
+          initialValues={{
+            name: '',
+            buildingId,
+            date: '',
+            frequency: '',
+            frequencyTimeIntervalId: timeIntervals[0].id,
+            description: '',
+            syndicId: '',
+            hasFrequency: false,
+          }}
+          validationSchema={schema}
+          onSubmit={async (values: TSchema) => {
+            await Api.post(`/checklists`, {
+              ...values,
+              frequency: values.frequency || null,
+              frequencyTimeIntervalId: values.frequency ? values.frequencyTimeIntervalId : null,
             })
-            .catch((err) => {
-              catchHandler(err);
-            });
-        }}
-      >
-        {({ errors, touched, values, setFieldValue }) => (
-          <Form>
-            <Input name="buildingName" label="Edificação" defaultValue={buildingName} disabled />
+              .then((res) => {
+                onThenRequest();
+                toast.success(res.data.ServerMessage.message);
+                setModal(false);
+              })
+              .catch((err) => {
+                catchHandler(err);
+              });
+          }}
+        >
+          {({ errors, touched, values, setFieldValue }) => (
+            <Form>
+              <Input name="buildingName" label="Edificação" defaultValue={buildingName} disabled />
 
-            <FormikInput
-              name="name"
-              label="Nome"
-              placeholder="Ex: Retirar o lixo"
-              maxLength={200}
-              error={touched.name && (errors.name || null)}
-            />
+              <FormikInput
+                name="name"
+                label="Nome"
+                placeholder="Ex: Retirar o lixo"
+                maxLength={200}
+                error={touched.name && (errors.name || null)}
+              />
 
-            <FormikSelect
-              name="syndicId"
-              selectPlaceholderValue={values.syndicId}
-              label="Responsável"
-              error={touched.syndicId && (errors.syndicId || null)}
-            >
-              <option value="" disabled hidden>
-                Selecione
-              </option>
-            </FormikSelect>
+              <FormikSelect
+                name="syndicId"
+                selectPlaceholderValue={values.syndicId}
+                label="Responsável"
+                error={touched.syndicId && (errors.syndicId || null)}
+              >
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+                {syndics.map(({ id, name }) => (
+                  <option value={id} key={id}>
+                    {name}
+                  </option>
+                ))}
+              </FormikSelect>
 
-            <FormikTextArea
-              label="Descrição"
-              placeholder="Insira a descrição"
-              name="description"
-              maxLength={200}
-              error={touched.description && (errors.description || null)}
-            />
+              <FormikTextArea
+                label="Descrição"
+                placeholder="Insira a descrição"
+                name="description"
+                maxLength={200}
+                error={touched.description && (errors.description || null)}
+              />
 
-            <FormikInput
-              name="date"
-              label="Data"
-              type="date"
-              error={touched.date && (errors.date || null)}
-            />
+              <FormikInput
+                name="date"
+                label="Data"
+                type="date"
+                error={touched.date && (errors.date || null)}
+              />
 
-            <FormikCheckbox
-              label="Periodicidade"
-              name="hasFrequency"
-              onChange={() => {
-                setFieldValue('hasFrequency', !values.hasFrequency);
+              <FormikCheckbox
+                label="Periodicidade"
+                name="hasFrequency"
+                onChange={() => {
+                  setFieldValue('hasFrequency', !values.hasFrequency);
 
-                if (!values.hasFrequency) {
-                  setFieldValue('frequency', '');
-                }
-              }}
-            />
+                  if (!values.hasFrequency) {
+                    setFieldValue('frequency', '');
+                  }
+                }}
+              />
 
-            {values.hasFrequency && (
-              <Style.FrequencyWrapper>
-                <FormikInput
-                  name="frequency"
-                  label="Periodicidade"
-                  placeholder="Ex: 2"
-                  maxLength={4}
-                  error={touched.frequency && (errors.frequency || null)}
-                  onChange={(e) => {
-                    setFieldValue(
-                      'frequency',
-                      applyMask({ mask: 'NUM', value: e.target.value }).value,
-                    );
-                  }}
-                />
-                <FormikSelect
-                  name="frequencyTimeIntervalId"
-                  selectPlaceholderValue={values.frequencyTimeIntervalId}
-                  label="Unidade"
-                >
-                  {timeIntervals.map(({ id, pluralLabel, singularLabel }) => (
-                    <option value={id} key={id}>
-                      {Number(values.frequency) > 1
-                        ? capitalizeFirstLetter(pluralLabel)
-                        : capitalizeFirstLetter(singularLabel)}
-                    </option>
-                  ))}
-                </FormikSelect>
-              </Style.FrequencyWrapper>
-            )}
+              {values.hasFrequency && (
+                <Style.FrequencyWrapper>
+                  <FormikInput
+                    name="frequency"
+                    label="Periodicidade"
+                    placeholder="Ex: 2"
+                    maxLength={4}
+                    error={touched.frequency && (errors.frequency || null)}
+                    onChange={(e) => {
+                      setFieldValue(
+                        'frequency',
+                        applyMask({ mask: 'NUM', value: e.target.value }).value,
+                      );
+                    }}
+                  />
+                  <FormikSelect
+                    name="frequencyTimeIntervalId"
+                    selectPlaceholderValue={values.frequencyTimeIntervalId}
+                    label="Unidade"
+                  >
+                    {timeIntervals.map(({ id, pluralLabel, singularLabel }) => (
+                      <option value={id} key={id}>
+                        {Number(values.frequency) > 1
+                          ? capitalizeFirstLetter(pluralLabel)
+                          : capitalizeFirstLetter(singularLabel)}
+                      </option>
+                    ))}
+                  </FormikSelect>
+                </Style.FrequencyWrapper>
+              )}
 
-            <Button center label="Cadastrar" type="submit" />
-          </Form>
-        )}
-      </Formik>
-    </Style.Container>
-  </Modal>
-);
+              <Button center label="Cadastrar" type="submit" />
+            </Form>
+          )}
+        </Formik>
+      </Style.Container>
+    </Modal>
+  );
+};
