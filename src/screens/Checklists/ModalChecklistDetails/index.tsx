@@ -1,0 +1,210 @@
+import { useEffect, useState } from 'react';
+import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
+import { Modal } from '../../../components/Modal';
+import * as Style from './styles';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { theme } from '../../../styles/theme';
+import { Api } from '../../../services/api';
+import { catchHandler, dateFormatter, uploadManyFiles } from '../../../utils/functions';
+import { TextArea } from '../../../components/Inputs/TextArea';
+import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
+import { ImagePreview } from '../../../components/ImagePreview';
+import { DotLoading } from '../../../components/Loadings/DotLoading';
+
+interface IModalChecklistDetails {
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  checklistId: string;
+}
+
+interface IChecklist {
+  id: string;
+  name: string;
+  description: string | null;
+  date: string;
+  frequency: string | null;
+  observation: string | null;
+  status: 'pending' | 'completed';
+  building: { name: string };
+  syndic: { name: string };
+}
+
+interface IChecklistReport {
+  observation: string;
+  images: {
+    name: string;
+    url: string;
+  }[];
+}
+
+export const ModalChecklistDetails = ({ setModal, checklistId }: IModalChecklistDetails) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [checklist, setChecklist] = useState<IChecklist>();
+  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
+  const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
+  const [checklistReport, setChecklistReport] = useState<IChecklistReport>({
+    images: [],
+    observation: '',
+  });
+
+  const findChecklistById = async () => {
+    await Api.get(`/checklists/${checklistId}`)
+      .then((res) => {
+        setChecklist(res.data.checklist);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    findChecklistById();
+  }, []);
+
+  return (
+    <Modal title="Detalhes de checklist" setModal={setModal}>
+      {loading ? (
+        <Style.LoadingContainer>
+          <DotSpinLoading />
+        </Style.LoadingContainer>
+      ) : (
+        <Style.Container>
+          <Style.Content>
+            <Style.Row>
+              <h6>Edificação</h6>
+              <p className="p2">{checklist?.building.name}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Nome</h6>
+              <p className="p2">{checklist?.name}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Responsável</h6>
+              <p className="p2">{checklist?.syndic.name}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Descrição</h6>
+              <pre className="p2">{checklist?.description ?? '-'}</pre>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Data</h6>
+              <p className="p2">{checklist?.date ? dateFormatter(checklist?.date) : '-'}</p>
+            </Style.Row>
+
+            <Style.Row>
+              <h6>Periodicidade</h6>
+              <p className="p2">{checklist?.frequency ? 'Sim' : 'Não'}</p>
+            </Style.Row>
+
+            <TextArea
+              label="Observações"
+              placeholder="Digite aqui"
+              maxLength={200}
+              value={checklistReport.observation}
+              onChange={(e) => {
+                setChecklistReport((prevState) => {
+                  const newState = { ...prevState };
+                  newState.observation = e.target.value;
+                  return newState;
+                });
+              }}
+            />
+
+            <Style.Row>
+              <h6>Imagens</h6>
+              <Style.FileAndImageRow>
+                <DragAndDropFiles
+                  width="132px"
+                  height="136px"
+                  onlyImages
+                  getAcceptedFiles={async ({ acceptedFiles }) => {
+                    setImagesToUploadCount(acceptedFiles.length);
+                    setOnImageQuery(true);
+                    const uploadedFiles = await uploadManyFiles(acceptedFiles);
+                    setOnImageQuery(false);
+                    setImagesToUploadCount(0);
+
+                    const formattedUploadedFiles = uploadedFiles.map(
+                      ({ Location, originalname }) => ({
+                        name: originalname,
+                        url: Location,
+                      }),
+                    );
+
+                    setChecklistReport((prevState) => {
+                      const newState = { ...prevState };
+                      newState.images = [...newState.images, ...formattedUploadedFiles];
+                      return newState;
+                    });
+                  }}
+                />
+                {checklistReport.images.length > 0 &&
+                  checklistReport.images.map((image, index) => (
+                    <ImagePreview
+                      key={image.url}
+                      src={image.url}
+                      downloadUrl={image.url}
+                      imageCustomName={image.name}
+                      width="132px"
+                      height="136px"
+                      onTrashClick={() => {
+                        setChecklistReport((prevState) => {
+                          const newState = { ...prevState };
+                          newState.images.splice(index, 1);
+                          return newState;
+                        });
+                      }}
+                    />
+                  ))}
+
+                {onImageQuery &&
+                  [...Array(imagesToUploadCount).keys()].map((e) => (
+                    <Style.ImageLoadingTag key={e}>
+                      <DotLoading />
+                    </Style.ImageLoadingTag>
+                  ))}
+
+                {/* <p className="p2">Nenhuma imagem enviada.</p> */}
+              </Style.FileAndImageRow>
+            </Style.Row>
+          </Style.Content>
+
+          <Style.ButtonContainer>
+            <PopoverButton
+              actionButtonBgColor={theme.color.actionDanger}
+              borderless
+              type="Button"
+              label="Excluir"
+              message={{
+                title: 'Deseja excluir este checklist?',
+                content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                contentColor: theme.color.danger,
+              }}
+              actionButtonClick={() => {
+                //
+              }}
+            />
+            <PopoverButton
+              type="Button"
+              label="Concluir"
+              message={{
+                title: 'Deseja concluir este checklist?',
+                content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                contentColor: theme.color.danger,
+              }}
+              actionButtonClick={() => {
+                //
+              }}
+            />
+          </Style.ButtonContainer>
+        </Style.Container>
+      )}
+    </Modal>
+  );
+};

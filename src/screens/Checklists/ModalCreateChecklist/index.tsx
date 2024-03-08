@@ -56,6 +56,7 @@ export const ModalCreateChecklist = ({
   buildingName,
 }: IModalCreateChecklist) => {
   const [syndics, setSyndics] = useState<{ name: string; id: string }[]>([]);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const listSyndics = async () => {
     await Api.get(`/buildings/notifications/list-for-select/${buildingId}`)
@@ -72,7 +73,7 @@ export const ModalCreateChecklist = ({
   }, []);
 
   return (
-    <Modal setModal={setModal} title="Modal">
+    <Modal setModal={setModal} title="Cadastrar checklist">
       <Style.Container>
         <Formik
           initialValues={{
@@ -87,9 +88,11 @@ export const ModalCreateChecklist = ({
           }}
           validationSchema={schema}
           onSubmit={async (values: TSchema) => {
+            setOnQuery(true);
+
             await Api.post(`/checklists`, {
               ...values,
-              frequency: values.frequency || null,
+              frequency: values.frequency ? Number(values.frequency) : null,
               frequencyTimeIntervalId: values.frequency ? values.frequencyTimeIntervalId : null,
             })
               .then((res) => {
@@ -99,16 +102,24 @@ export const ModalCreateChecklist = ({
               })
               .catch((err) => {
                 catchHandler(err);
+              })
+              .finally(() => {
+                setOnQuery(false);
               });
           }}
         >
           {({ errors, touched, values, setFieldValue }) => (
             <Form>
-              <Input name="buildingName" label="Edificação" defaultValue={buildingName} disabled />
+              <Input
+                name="buildingName"
+                label="Edificação *"
+                defaultValue={buildingName}
+                disabled
+              />
 
               <FormikInput
                 name="name"
-                label="Nome"
+                label="Nome *"
                 placeholder="Ex: Retirar o lixo"
                 maxLength={200}
                 error={touched.name && (errors.name || null)}
@@ -117,7 +128,7 @@ export const ModalCreateChecklist = ({
               <FormikSelect
                 name="syndicId"
                 selectPlaceholderValue={values.syndicId}
-                label="Responsável"
+                label="Responsável *"
                 error={touched.syndicId && (errors.syndicId || null)}
               >
                 <option value="" disabled hidden>
@@ -140,7 +151,7 @@ export const ModalCreateChecklist = ({
 
               <FormikInput
                 name="date"
-                label="Data"
+                label="Data *"
                 type="date"
                 error={touched.date && (errors.date || null)}
               />
@@ -161,7 +172,7 @@ export const ModalCreateChecklist = ({
                 <Style.FrequencyWrapper>
                   <FormikInput
                     name="frequency"
-                    label="Periodicidade"
+                    label="Periodicidade *"
                     placeholder="Ex: 2"
                     maxLength={4}
                     error={touched.frequency && (errors.frequency || null)}
@@ -175,7 +186,7 @@ export const ModalCreateChecklist = ({
                   <FormikSelect
                     name="frequencyTimeIntervalId"
                     selectPlaceholderValue={values.frequencyTimeIntervalId}
-                    label="Unidade"
+                    label="Unidade *"
                   >
                     {timeIntervals.map(({ id, pluralLabel, singularLabel }) => (
                       <option value={id} key={id}>
@@ -188,7 +199,7 @@ export const ModalCreateChecklist = ({
                 </Style.FrequencyWrapper>
               )}
 
-              <Button center label="Cadastrar" type="submit" />
+              <Button center label="Cadastrar" type="submit" loading={onQuery} />
             </Form>
           )}
         </Formik>
