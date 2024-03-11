@@ -56,7 +56,7 @@ export const DateHeader = styled.div`
 
 export const ContentRow = styled.div`
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 235px 1fr;
   gap: ${theme.size.xsm};
   min-height: 270px;
 
@@ -69,7 +69,7 @@ export const ContentRow = styled.div`
     border: none;
     position: relative;
     width: 100%;
-    max-width: 230px;
+    max-width: 235px;
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
