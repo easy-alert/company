@@ -93,8 +93,8 @@ export const ModalUpdateChecklist = ({
   });
   const [loading, setLoading] = useState<boolean>(true);
 
-  const listSyndics = async (buildingId: string) => {
-    await Api.get(`/buildings/notifications/list-for-select/${buildingId}`)
+  const listSyndics = async (buildingNanoId: string) => {
+    await Api.get(`/buildings/notifications/list-for-select/${buildingNanoId}`)
       .then((res) => {
         setSyndics(res.data.syndics);
       })
@@ -107,7 +107,7 @@ export const ModalUpdateChecklist = ({
     await Api.get(`/checklists/${checklistId}`)
       .then(async (res) => {
         setChecklist(res.data.checklist);
-        await listSyndics(res.data.checklist.building.id);
+        await listSyndics(res.data.checklist.building.nanoId);
       })
       .catch((err) => {
         catchHandler(err);

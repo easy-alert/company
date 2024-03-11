@@ -58,7 +58,7 @@ export const ContentRow = styled.div`
   display: grid;
   grid-template-columns: 235px 1fr;
   gap: ${theme.size.xsm};
-  min-height: 270px;
+  min-height: 240px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
