@@ -17,14 +17,14 @@ import { FormikTextArea } from '../../../components/Form/FormikTextArea';
 interface IModalCreateChecklist {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   timeIntervals: ITimeInterval[];
-  buildingId: string;
+  buildingNanoId: string;
   buildingName: string;
   onThenRequest: () => Promise<void>;
 }
 
 const schema = yup
   .object({
-    buildingId: yup.string().required('Campo obrigatório.'),
+    buildingNanoId: yup.string().required('Campo obrigatório.'),
     name: yup.string().required('Campo obrigatório.'),
     syndicId: yup.string().required('Campo obrigatório.'),
     description: yup.string(),
@@ -52,14 +52,14 @@ export const ModalCreateChecklist = ({
   setModal,
   timeIntervals,
   onThenRequest,
-  buildingId,
+  buildingNanoId,
   buildingName,
 }: IModalCreateChecklist) => {
   const [syndics, setSyndics] = useState<{ name: string; id: string }[]>([]);
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const listSyndics = async () => {
-    await Api.get(`/buildings/notifications/list-for-select/${buildingId}`)
+    await Api.get(`/buildings/notifications/list-for-select/${buildingNanoId}`)
       .then((res) => {
         setSyndics(res.data.syndics);
       })
@@ -78,7 +78,7 @@ export const ModalCreateChecklist = ({
         <Formik
           initialValues={{
             name: '',
-            buildingId,
+            buildingNanoId,
             date: '',
             frequency: '',
             frequencyTimeIntervalId: timeIntervals[0].id,

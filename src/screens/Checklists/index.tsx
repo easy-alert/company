@@ -12,7 +12,6 @@ import { ModalCreateChecklist } from './ModalCreateChecklist';
 import { ITimeInterval } from '../../utils/types';
 import { catchHandler, requestListIntervals } from '../../utils/functions';
 import { Api } from '../../services/api';
-import { IBuildingOptions } from '../Calendar/types';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
 
 export interface IChecklist {
@@ -27,12 +26,17 @@ export interface ICalendarDates {
   completed: { date: string }[];
 }
 
+export interface IBuildingOptions {
+  name: string;
+  nanoId: string;
+}
+
 export const Checklists = () => {
   const [date, setDate] = useState(new Date());
   const [modalCreateChecklistOpen, setModalCreateChecklistOpen] = useState(false);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [buildingId, setBuildingId] = useState<string>('');
+  const [buildingNanoId, setBuildingNanoId] = useState<string>('');
   const [buildingName, setBuildingName] = useState<string>('');
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
   const [checklists, setChecklists] = useState<IChecklist[]>([]);
@@ -44,7 +48,7 @@ export const Checklists = () => {
   const findManyChecklists = async () => {
     setLoading(true);
 
-    await Api.get(`/checklists/${buildingId}/${date}`)
+    await Api.get(`/checklists/${buildingNanoId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
         setCalendarDates(res.data.calendarDates);
@@ -76,10 +80,10 @@ export const Checklists = () => {
   }, []);
 
   useEffect(() => {
-    if (buildingId) {
+    if (buildingNanoId) {
       findManyChecklists();
     }
-  }, [buildingId, date]);
+  }, [buildingNanoId, date]);
 
   return (
     <>
@@ -88,7 +92,7 @@ export const Checklists = () => {
           setModal={setModalCreateChecklistOpen}
           timeIntervals={timeIntervals}
           onThenRequest={findManyChecklists}
-          buildingId={buildingId}
+          buildingNanoId={buildingNanoId}
           buildingName={buildingName}
         />
       )}
@@ -100,18 +104,18 @@ export const Checklists = () => {
             <Select
               disabled={loading}
               selectPlaceholderValue=" "
-              value={buildingId}
+              value={buildingNanoId}
               onChange={(evt) => {
-                const building = buildingOptions.find(({ id }) => id === evt.target.value);
+                const building = buildingOptions.find(({ nanoId }) => nanoId === evt.target.value);
                 setBuildingName(building?.name ?? '');
-                setBuildingId(evt.target.value);
+                setBuildingNanoId(evt.target.value);
               }}
             >
               <option value="" disabled hidden>
                 Selecione
               </option>
-              {buildingOptions.map(({ id, name }) => (
-                <option value={id} key={id}>
+              {buildingOptions.map(({ nanoId, name }) => (
+                <option value={nanoId} key={nanoId}>
                   {name}
                 </option>
               ))}
@@ -122,7 +126,7 @@ export const Checklists = () => {
             icon={icon.plusWithBg}
             label="Cadastrar"
             onClick={() => {
-              if (!buildingId) {
+              if (!buildingNanoId) {
                 toast.error('Selecione uma edificação.');
                 return;
               }
@@ -182,10 +186,10 @@ export const Checklists = () => {
                   />
                 ))}
 
-              {!loading && checklists.length === 0 && !buildingId && (
+              {!loading && checklists.length === 0 && !buildingNanoId && (
                 <NoDataFound label="Selecione uma edificação para visualizar" height="100%" />
               )}
-              {!loading && checklists.length === 0 && buildingId && (
+              {!loading && checklists.length === 0 && buildingNanoId && (
                 <NoDataFound label="Nenhum checklist encontrado" height="100%" />
               )}
             </Style.Checklists>
