@@ -40,14 +40,11 @@ interface IChecklist extends IChecklistReport {
   resolutionDate: string | null;
 }
 
-// type TUpdateMode = 'this' | 'all' | 'thisAndFollowing' | '';
-
 export const ModalChecklistDetails = ({
   setModal,
   checklistId,
   onThenRequest,
 }: IModalChecklistDetails) => {
-  // const [updateMode, setUpdateMode] = useState<TUpdateMode>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [checklist, setChecklist] = useState<IChecklist>();

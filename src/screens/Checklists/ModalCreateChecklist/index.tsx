@@ -93,7 +93,6 @@ export const ModalCreateChecklist = ({
             await Api.post(`/checklists`, {
               ...values,
               frequency: values.frequency ? Number(values.frequency) : null,
-              frequencyTimeIntervalId: values.frequency ? values.frequencyTimeIntervalId : null,
             })
               .then((res) => {
                 onThenRequest();
@@ -161,10 +160,7 @@ export const ModalCreateChecklist = ({
                 name="hasFrequency"
                 onChange={() => {
                   setFieldValue('hasFrequency', !values.hasFrequency);
-
-                  if (!values.hasFrequency) {
-                    setFieldValue('frequency', '');
-                  }
+                  setFieldValue('frequency', '');
                 }}
               />
 

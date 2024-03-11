@@ -92,6 +92,7 @@ export const Checklists = () => {
           buildingName={buildingName}
         />
       )}
+
       <Style.Container>
         <Style.Header>
           <Style.HeaderLeftSide>
@@ -177,6 +178,7 @@ export const Checklists = () => {
                     key={checklist.id}
                     checklist={checklist}
                     onThenRequest={findManyChecklists}
+                    timeIntervals={timeIntervals}
                   />
                 ))}
 

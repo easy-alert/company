@@ -10,18 +10,23 @@ import * as Style from './styles';
 import { ModalChecklistDetails } from './ModalChecklistDetails';
 import { theme } from '../../styles/theme';
 import { ModalDeleteChecklist } from './ModalDeleteChecklist';
+import { ModalUpdateChecklist } from './ModalUpdateChecklist';
+import { ITimeInterval } from '../../utils/types';
 
 interface IChecklistRow {
   checklist: IChecklist;
   onThenRequest: () => Promise<void>;
+  timeIntervals: ITimeInterval[];
 }
 
 export const ChecklistRowComponent = ({
   checklist: { id, name, status, syndic },
   onThenRequest,
+  timeIntervals,
 }: IChecklistRow) => {
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [modalDeleteChecklistOpen, setModalDeleteChecklistOpen] = useState(false);
+  const [modalUpdateChecklistOpen, setModalUpdateChecklistOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,6 +61,14 @@ export const ChecklistRowComponent = ({
         <ModalDeleteChecklist
           onThenRequest={onThenRequest}
           setModal={setModalDeleteChecklistOpen}
+          checklistId={id}
+        />
+      )}
+      {modalUpdateChecklistOpen && (
+        <ModalUpdateChecklist
+          setModal={setModalUpdateChecklistOpen}
+          timeIntervals={timeIntervals}
+          onThenRequest={onThenRequest}
           checklistId={id}
         />
       )}
@@ -113,7 +126,7 @@ export const ChecklistRowComponent = ({
               icon={icon.grayEdit}
               size="16px"
               onClick={() => {
-                // onEditClick();
+                setModalUpdateChecklistOpen(true);
                 setDropdownOpen(false);
               }}
               label="Editar"
