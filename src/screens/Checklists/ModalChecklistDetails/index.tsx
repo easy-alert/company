@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { Modal } from '../../../components/Modal';
 import * as Style from './styles';
@@ -14,37 +15,65 @@ import { DotLoading } from '../../../components/Loadings/DotLoading';
 interface IModalChecklistDetails {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   checklistId: string;
-}
-
-interface IChecklist {
-  id: string;
-  name: string;
-  description: string | null;
-  date: string;
-  frequency: string | null;
-  observation: string | null;
-  status: 'pending' | 'completed';
-  building: { name: string };
-  syndic: { name: string };
+  onThenRequest: () => Promise<void>;
 }
 
 interface IChecklistReport {
-  observation: string;
+  observation: string | null;
   images: {
     name: string;
     url: string;
   }[];
 }
 
-export const ModalChecklistDetails = ({ setModal, checklistId }: IModalChecklistDetails) => {
+interface IChecklist extends IChecklistReport {
+  id: string;
+  name: string;
+  description: string | null;
+  date: string;
+  frequency: string | null;
+  status: 'pending' | 'completed';
+  building: { name: string };
+  syndic: { name: string };
+
+  resolutionDate: string | null;
+}
+
+export const ModalChecklistDetails = ({
+  setModal,
+  checklistId,
+  onThenRequest,
+}: IModalChecklistDetails) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [checklist, setChecklist] = useState<IChecklist>();
+  const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
   const [checklistReport, setChecklistReport] = useState<IChecklistReport>({
     images: [],
     observation: '',
   });
+
+  const completeChecklist = async () => {
+    setOnQuery(true);
+
+    await Api.put(`/checklists/complete`, {
+      ...checklistReport,
+      observation: checklistReport.observation || null,
+      checklistId,
+    })
+      .then((res) => {
+        onThenRequest();
+        toast.success(res.data.ServerMessage.message);
+        setModal(false);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+      });
+  };
 
   const findChecklistById = async () => {
     await Api.get(`/checklists/${checklistId}`)
@@ -102,81 +131,123 @@ export const ModalChecklistDetails = ({ setModal, checklistId }: IModalChecklist
               <p className="p2">{checklist?.frequency ? 'Sim' : 'Não'}</p>
             </Style.Row>
 
-            <TextArea
-              label="Observações"
-              placeholder="Digite aqui"
-              maxLength={200}
-              value={checklistReport.observation}
-              onChange={(e) => {
-                setChecklistReport((prevState) => {
-                  const newState = { ...prevState };
-                  newState.observation = e.target.value;
-                  return newState;
-                });
-              }}
-            />
-
-            <Style.Row>
-              <h6>Imagens</h6>
-              <Style.FileAndImageRow>
-                <DragAndDropFiles
-                  width="132px"
-                  height="136px"
-                  onlyImages
-                  getAcceptedFiles={async ({ acceptedFiles }) => {
-                    setImagesToUploadCount(acceptedFiles.length);
-                    setOnImageQuery(true);
-                    const uploadedFiles = await uploadManyFiles(acceptedFiles);
-                    setOnImageQuery(false);
-                    setImagesToUploadCount(0);
-
-                    const formattedUploadedFiles = uploadedFiles.map(
-                      ({ Location, originalname }) => ({
-                        name: originalname,
-                        url: Location,
-                      }),
-                    );
-
+            {checklist?.status === 'pending' && (
+              <>
+                <TextArea
+                  label="Observações"
+                  placeholder="Digite aqui"
+                  maxLength={200}
+                  value={checklistReport.observation || ''}
+                  onChange={(e) => {
                     setChecklistReport((prevState) => {
                       const newState = { ...prevState };
-                      newState.images = [...newState.images, ...formattedUploadedFiles];
+                      newState.observation = e.target.value;
                       return newState;
                     });
                   }}
                 />
-                {checklistReport.images.length > 0 &&
-                  checklistReport.images.map((image, index) => (
-                    <ImagePreview
-                      key={image.url}
-                      src={image.url}
-                      downloadUrl={image.url}
-                      imageCustomName={image.name}
+
+                <Style.Row>
+                  <h6>Imagens</h6>
+                  <Style.FileAndImageRow>
+                    <DragAndDropFiles
+                      disabled={onImageQuery}
                       width="132px"
                       height="136px"
-                      onTrashClick={() => {
+                      onlyImages
+                      getAcceptedFiles={async ({ acceptedFiles }) => {
+                        setImagesToUploadCount(acceptedFiles.length);
+                        setOnImageQuery(true);
+                        const uploadedFiles = await uploadManyFiles(acceptedFiles);
+                        setOnImageQuery(false);
+                        setImagesToUploadCount(0);
+
+                        const formattedUploadedFiles = uploadedFiles.map(
+                          ({ Location, originalname }) => ({
+                            name: originalname,
+                            url: Location,
+                          }),
+                        );
+
                         setChecklistReport((prevState) => {
                           const newState = { ...prevState };
-                          newState.images.splice(index, 1);
+                          newState.images = [...newState.images, ...formattedUploadedFiles];
                           return newState;
                         });
                       }}
                     />
-                  ))}
+                    {checklistReport.images.length > 0 &&
+                      checklistReport.images.map((image, index) => (
+                        <ImagePreview
+                          key={image.url}
+                          src={image.url}
+                          downloadUrl={image.url}
+                          imageCustomName={image.name}
+                          width="132px"
+                          height="136px"
+                          onTrashClick={() => {
+                            setChecklistReport((prevState) => {
+                              const newState = { ...prevState };
+                              newState.images.splice(index, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      ))}
 
-                {onImageQuery &&
-                  [...Array(imagesToUploadCount).keys()].map((e) => (
-                    <Style.ImageLoadingTag key={e}>
-                      <DotLoading />
-                    </Style.ImageLoadingTag>
-                  ))}
+                    {onImageQuery &&
+                      [...Array(imagesToUploadCount).keys()].map((e) => (
+                        <Style.ImageLoadingTag key={e}>
+                          <DotLoading />
+                        </Style.ImageLoadingTag>
+                      ))}
 
-                {/* <p className="p2">Nenhuma imagem enviada.</p> */}
-              </Style.FileAndImageRow>
-            </Style.Row>
+                    {/* <p className="p2">Nenhuma imagem enviada.</p> */}
+                  </Style.FileAndImageRow>
+                </Style.Row>
+              </>
+            )}
+
+            {checklist?.status === 'completed' && (
+              <>
+                <Style.Row>
+                  <h6>Data de conclusão</h6>
+                  <p className="p2">
+                    {checklist.resolutionDate ? dateFormatter(checklist.resolutionDate) : '-'}
+                  </p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Observação</h6>
+                  <pre className="p2">{checklist.observation || '-'}</pre>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Imagens</h6>
+                  <Style.FileAndImageRow>
+                    {checklist.images.length > 0 ? (
+                      checklist.images.map((image) => (
+                        <ImagePreview
+                          key={image.url}
+                          src={image.url}
+                          downloadUrl={image.url}
+                          imageCustomName={image.name}
+                          width="132px"
+                          height="136px"
+                        />
+                      ))
+                    ) : (
+                      <p className="p2">Nenhuma imagem enviada.</p>
+                    )}
+                  </Style.FileAndImageRow>
+                </Style.Row>
+              </>
+            )}
           </Style.Content>
 
           <Style.ButtonContainer>
             <PopoverButton
+              disabled={onQuery || onImageQuery}
               actionButtonBgColor={theme.color.actionDanger}
               borderless
               type="Button"
@@ -190,18 +261,22 @@ export const ModalChecklistDetails = ({ setModal, checklistId }: IModalChecklist
                 //
               }}
             />
-            <PopoverButton
-              type="Button"
-              label="Concluir"
-              message={{
-                title: 'Deseja concluir este checklist?',
-                content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                contentColor: theme.color.danger,
-              }}
-              actionButtonClick={() => {
-                //
-              }}
-            />
+            {checklist?.status === 'pending' && (
+              <PopoverButton
+                loading={onQuery}
+                disabled={onImageQuery}
+                type="Button"
+                label="Concluir"
+                message={{
+                  title: 'Deseja concluir este checklist?',
+                  content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                  contentColor: theme.color.danger,
+                }}
+                actionButtonClick={() => {
+                  completeChecklist();
+                }}
+              />
+            )}
           </Style.ButtonContainer>
         </Style.Container>
       )}

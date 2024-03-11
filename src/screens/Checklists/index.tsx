@@ -163,7 +163,11 @@ export const Checklists = () => {
             <Style.Checklists>
               {!loading &&
                 checklists.map((checklist) => (
-                  <ChecklistRowComponent key={checklist.id} checklist={checklist} />
+                  <ChecklistRowComponent
+                    key={checklist.id}
+                    checklist={checklist}
+                    onThenRequest={findManyChecklists}
+                  />
                 ))}
 
               {!loading && checklists.length === 0 && !buildingId && (

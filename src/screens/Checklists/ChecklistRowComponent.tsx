@@ -12,10 +12,12 @@ import { theme } from '../../styles/theme';
 
 interface IChecklistRow {
   checklist: IChecklist;
+  onThenRequest: () => Promise<void>;
 }
 
 export const ChecklistRowComponent = ({
   checklist: { id, name, status, syndic },
+  onThenRequest,
 }: IChecklistRow) => {
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -42,7 +44,11 @@ export const ChecklistRowComponent = ({
   return (
     <>
       {modalChecklistDetailsOpen && (
-        <ModalChecklistDetails checklistId={id} setModal={setModalChecklistDetailsOpen} />
+        <ModalChecklistDetails
+          checklistId={id}
+          setModal={setModalChecklistDetailsOpen}
+          onThenRequest={onThenRequest}
+        />
       )}
       <Style.ChecklistBackground ref={dropdownRef}>
         <Style.ChecklistWrapper>
