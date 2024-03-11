@@ -11,9 +11,11 @@ import { TextArea } from '../../../components/Inputs/TextArea';
 import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
 import { ImagePreview } from '../../../components/ImagePreview';
 import { DotLoading } from '../../../components/Loadings/DotLoading';
+import { Button } from '../../../components/Buttons/Button';
 
 interface IModalChecklistDetails {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setModalDeleteChecklistOpen: React.Dispatch<React.SetStateAction<boolean>>;
   checklistId: string;
   onThenRequest: () => Promise<void>;
 }
@@ -43,6 +45,7 @@ export const ModalChecklistDetails = ({
   setModal,
   checklistId,
   onThenRequest,
+  setModalDeleteChecklistOpen,
 }: IModalChecklistDetails) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [checklist, setChecklist] = useState<IChecklist>();
@@ -246,21 +249,17 @@ export const ModalChecklistDetails = ({
           </Style.Content>
 
           <Style.ButtonContainer>
-            <PopoverButton
-              disabled={onQuery || onImageQuery}
-              actionButtonBgColor={theme.color.actionDanger}
+            <Button
               borderless
-              type="Button"
               label="Excluir"
-              message={{
-                title: 'Deseja excluir este checklist?',
-                content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                contentColor: theme.color.danger,
-              }}
-              actionButtonClick={() => {
-                //
+              type="button"
+              loading={onQuery}
+              onClick={() => {
+                setModal(false);
+                setModalDeleteChecklistOpen(true);
               }}
             />
+
             {checklist?.status === 'pending' && (
               <PopoverButton
                 loading={onQuery}

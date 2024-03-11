@@ -9,6 +9,7 @@ import { ImageComponent } from '../../components/ImageComponent';
 import * as Style from './styles';
 import { ModalChecklistDetails } from './ModalChecklistDetails';
 import { theme } from '../../styles/theme';
+import { ModalDeleteChecklist } from './ModalDeleteChecklist';
 
 interface IChecklistRow {
   checklist: IChecklist;
@@ -20,6 +21,7 @@ export const ChecklistRowComponent = ({
   onThenRequest,
 }: IChecklistRow) => {
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
+  const [modalDeleteChecklistOpen, setModalDeleteChecklistOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,6 +50,14 @@ export const ChecklistRowComponent = ({
           checklistId={id}
           setModal={setModalChecklistDetailsOpen}
           onThenRequest={onThenRequest}
+          setModalDeleteChecklistOpen={setModalDeleteChecklistOpen}
+        />
+      )}
+      {modalDeleteChecklistOpen && (
+        <ModalDeleteChecklist
+          onThenRequest={onThenRequest}
+          setModal={setModalDeleteChecklistOpen}
+          checklistId={id}
         />
       )}
       <Style.ChecklistBackground ref={dropdownRef}>
@@ -91,7 +101,7 @@ export const ChecklistRowComponent = ({
               icon={icon.grayTrash}
               size="16px"
               onClick={() => {
-                // onEditClick();
+                setModalDeleteChecklistOpen(true);
                 setDropdownOpen(false);
               }}
               label="Excluir"
