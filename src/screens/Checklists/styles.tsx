@@ -275,18 +275,13 @@ export const ChecklistRow = styled.button<{ status: 'pending' | 'completed' }>`
   all: unset;
   width: 100%;
   padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
-  border-radius: ${theme.size.xxsm};
+  border-radius: ${theme.size.xxsm} 0 0 ${theme.size.xxsm};
   background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.sm};
-
-  cursor: pointer;
-  :hover {
-    opacity: 0.7;
-  }
 `;
 
 export const ChecklistRowLeftSide = styled.div`
@@ -312,12 +307,28 @@ export const Dropdown = styled.div`
   gap: ${theme.size.xsm};
 
   position: absolute;
-  top: -8px;
   right: 8px;
-  z-index: 9;
+  bottom: 0px;
+  z-index: 90;
 `;
 
 export const ChecklistBackground = styled.div`
   position: relative;
   display: flex;
+`;
+
+export const ChecklistWrapper = styled.div`
+  display: flex;
+  width: 100%;
+
+  cursor: pointer;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
+export const DotsButton = styled.div<{ status: 'pending' | 'completed' }>`
+  padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
+  border-radius: 0 ${theme.size.xxsm} ${theme.size.xxsm} 0;
+  background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
 `;

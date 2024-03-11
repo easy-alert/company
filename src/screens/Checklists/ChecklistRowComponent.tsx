@@ -45,33 +45,37 @@ export const ChecklistRowComponent = ({
         <ModalChecklistDetails checklistId={id} setModal={setModalChecklistDetailsOpen} />
       )}
       <Style.ChecklistBackground ref={dropdownRef}>
-        <Style.ChecklistRow
-          key={id}
-          status={status}
-          onClick={() => {
-            setModalChecklistDetailsOpen(true);
-          }}
-        >
-          <Style.ChecklistRowLeftSide>
-            <ImageComponent
-              size="16px"
-              src={status === 'pending' ? icon.checklistUnchecked : icon.checklistChecked}
-            />
-            <Style.ChecklistContent>
-              <p className="p4">{name}</p>
-              <p className="p5">{syndic.name}</p>
-            </Style.ChecklistContent>
-          </Style.ChecklistRowLeftSide>
-
-          <div
+        <Style.ChecklistWrapper>
+          <Style.ChecklistRow
+            key={id}
+            status={status}
             onClick={() => {
-              // e.stopPropagation();
-              // ARRUMAR ESSA NABA
+              setModalChecklistDetailsOpen(true);
             }}
           >
-            <IconButton icon={icon.dots} size="24px" onClick={toggleDropdown} />
-          </div>
-        </Style.ChecklistRow>
+            <Style.ChecklistRowLeftSide>
+              <ImageComponent
+                size="16px"
+                src={status === 'pending' ? icon.checklistUnchecked : icon.checklistChecked}
+              />
+              <Style.ChecklistContent>
+                <p className="p4">{name}</p>
+                <p className="p5">{syndic.name}</p>
+              </Style.ChecklistContent>
+            </Style.ChecklistRowLeftSide>
+          </Style.ChecklistRow>
+
+          <Style.DotsButton status={status}>
+            <IconButton
+              icon={icon.dots}
+              size="24px"
+              onClick={() => {
+                toggleDropdown();
+              }}
+            />
+          </Style.DotsButton>
+        </Style.ChecklistWrapper>
+
         {dropdownOpen && (
           <Style.Dropdown>
             <IconButton
