@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { icon } from '../../assets/icons';
@@ -12,7 +13,6 @@ import { ITimeInterval } from '../../utils/types';
 import { catchHandler, requestListIntervals } from '../../utils/functions';
 import { Api } from '../../services/api';
 import { IBuildingOptions } from '../Calendar/types';
-// eslint-disable-next-line import/no-cycle
 import { ChecklistRowComponent } from './ChecklistRowComponent';
 
 export interface IChecklist {
@@ -20,6 +20,11 @@ export interface IChecklist {
   name: string;
   syndic: { name: string };
   status: 'pending' | 'completed';
+}
+
+export interface ICalendarDates {
+  pending: { date: string }[];
+  completed: { date: string }[];
 }
 
 export const Checklists = () => {
@@ -31,6 +36,10 @@ export const Checklists = () => {
   const [buildingName, setBuildingName] = useState<string>('');
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
   const [checklists, setChecklists] = useState<IChecklist[]>([]);
+  const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
+    completed: [],
+    pending: [],
+  });
 
   const findManyChecklists = async () => {
     setLoading(true);
@@ -38,6 +47,7 @@ export const Checklists = () => {
     await Api.get(`/checklists/${buildingId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
+        setCalendarDates(res.data.calendarDates);
       })
       .catch((err) => {
         catchHandler(err);
@@ -158,7 +168,7 @@ export const Checklists = () => {
 
           <Style.ContentRow>
             <Style.CalendarDiv style={{ pointerEvents: loading ? 'none' : 'auto' }}>
-              <MiniCalendarComponent date={date} setDate={setDate} />
+              <MiniCalendarComponent date={date} setDate={setDate} calendarDates={calendarDates} />
             </Style.CalendarDiv>
             <Style.Checklists>
               {!loading &&

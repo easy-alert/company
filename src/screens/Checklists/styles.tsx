@@ -83,11 +83,14 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar__month-view__days {
-    /* gap: 5px !important; */
+    abbr {
+      width: 25px !important;
+    }
   }
 
   .react-calendar__month-view__days__day {
     color: ${theme.color.black};
+    height: 28px !important;
 
     :hover {
       background-color: ${theme.color.primaryL};
@@ -139,6 +142,7 @@ export const ContentRow = styled.div`
   .react-calendar__month-view__weekdays__weekday abbr {
     text-decoration: none;
   }
+
   .react-calendar__month-view__weekNumbers,
   .react-calendar__tile {
     display: flex;
