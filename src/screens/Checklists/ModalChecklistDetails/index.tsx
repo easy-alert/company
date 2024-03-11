@@ -15,7 +15,6 @@ import { Button } from '../../../components/Buttons/Button';
 
 interface IModalChecklistDetails {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalDeleteChecklistOpen: React.Dispatch<React.SetStateAction<boolean>>;
   checklistId: string;
   onThenRequest: () => Promise<void>;
 }
@@ -41,12 +40,15 @@ interface IChecklist extends IChecklistReport {
   resolutionDate: string | null;
 }
 
+// type TUpdateMode = 'this' | 'all' | 'thisAndFollowing' | '';
+
 export const ModalChecklistDetails = ({
   setModal,
   checklistId,
   onThenRequest,
-  setModalDeleteChecklistOpen,
 }: IModalChecklistDetails) => {
+  // const [updateMode, setUpdateMode] = useState<TUpdateMode>('');
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [checklist, setChecklist] = useState<IChecklist>();
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -61,6 +63,27 @@ export const ModalChecklistDetails = ({
     setOnQuery(true);
 
     await Api.put(`/checklists/complete`, {
+      ...checklistReport,
+      observation: checklistReport.observation || null,
+      checklistId,
+    })
+      .then((res) => {
+        onThenRequest();
+        toast.success(res.data.ServerMessage.message);
+        setModal(false);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+      });
+  };
+
+  const updateChecklistReport = async () => {
+    setOnQuery(true);
+
+    await Api.put(`/checklists/reports`, {
       ...checklistReport,
       observation: checklistReport.observation || null,
       checklistId,
@@ -134,10 +157,10 @@ export const ModalChecklistDetails = ({
               <p className="p2">{checklist?.frequency ? 'Sim' : 'Não'}</p>
             </Style.Row>
 
-            {checklist?.status === 'pending' && (
+            {(checklist?.status === 'pending' || isEditing) && (
               <>
                 <TextArea
-                  label="Observações"
+                  label="Observação"
                   placeholder="Digite aqui"
                   maxLength={200}
                   value={checklistReport.observation || ''}
@@ -211,7 +234,7 @@ export const ModalChecklistDetails = ({
               </>
             )}
 
-            {checklist?.status === 'completed' && (
+            {checklist?.status === 'completed' && !isEditing && (
               <>
                 <Style.Row>
                   <h6>Data de conclusão</h6>
@@ -249,16 +272,29 @@ export const ModalChecklistDetails = ({
           </Style.Content>
 
           <Style.ButtonContainer>
-            <Button
-              borderless
-              label="Excluir"
-              type="button"
-              loading={onQuery}
-              onClick={() => {
-                setModal(false);
-                setModalDeleteChecklistOpen(true);
-              }}
-            />
+            {checklist?.status === 'completed' && (
+              <Button
+                label="Editar relato"
+                loading={onQuery}
+                type="button"
+                onClick={() => {
+                  if (!isEditing) {
+                    setIsEditing(true);
+                    setChecklistReport({
+                      images: checklist?.images
+                        ? checklist.images.map(({ url, name }) => ({
+                            name,
+                            url,
+                          }))
+                        : [],
+                      observation: checklist?.observation || '',
+                    });
+                  } else {
+                    updateChecklistReport();
+                  }
+                }}
+              />
+            )}
 
             {checklist?.status === 'pending' && (
               <PopoverButton

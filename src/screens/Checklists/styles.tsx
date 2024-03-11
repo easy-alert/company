@@ -308,7 +308,7 @@ export const Dropdown = styled.div`
 
   position: absolute;
   right: 8px;
-  bottom: 0px;
+  top: -8px;
   z-index: 90;
 `;
 

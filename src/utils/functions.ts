@@ -300,7 +300,7 @@ export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildin
 export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
   toast.dismiss();
   await axios
-    .get(`https://brasilapi.com.br/api/cep/v2/${unMask(cep)}`)
+    .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
     .then((res) => {
       setFieldValue('city', res.data.city ?? '');
       setFieldValue('neighborhood', res.data.neighborhood ?? '');

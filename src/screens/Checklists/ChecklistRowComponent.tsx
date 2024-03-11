@@ -50,7 +50,6 @@ export const ChecklistRowComponent = ({
           checklistId={id}
           setModal={setModalChecklistDetailsOpen}
           onThenRequest={onThenRequest}
-          setModalDeleteChecklistOpen={setModalDeleteChecklistOpen}
         />
       )}
       {modalDeleteChecklistOpen && (
@@ -71,7 +70,7 @@ export const ChecklistRowComponent = ({
           >
             <Style.ChecklistRowLeftSide>
               <ImageComponent
-                size="16px"
+                size="18px"
                 src={status === 'pending' ? icon.checklistUnchecked : icon.checklistChecked}
               />
               <Style.ChecklistContent>
