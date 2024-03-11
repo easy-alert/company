@@ -14,7 +14,7 @@ import {
 // #endregion
 
 // #region DATES
-export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
+export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
 
 export const convertToFormikDate = (date: Date) => {
   const year = date.getFullYear();
@@ -300,7 +300,7 @@ export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildin
 export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
   toast.dismiss();
   await axios
-    .get(`https://brasilapi.com.br/api/cep/v2/${unMask(cep)}`)
+    .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
     .then((res) => {
       setFieldValue('city', res.data.city ?? '');
       setFieldValue('neighborhood', res.data.neighborhood ?? '');

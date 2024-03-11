@@ -43,6 +43,14 @@ export const Sidebar = () => {
         navigate('/buildings');
       },
     },
+
+    {
+      icon: icon.checklists,
+      url: '/checklists',
+      redirectFunction: () => {
+        navigate('/checklists');
+      },
+    },
     // {
     //   icon: icon.maintenances,
     //   url: '/maintenances',
