@@ -56,7 +56,7 @@ export const DateHeader = styled.div`
 
 export const ContentRow = styled.div`
   display: grid;
-  grid-template-columns: 242px 1fr;
+  grid-template-columns: 240px 1fr;
   gap: ${theme.size.xsm};
   min-height: 270px;
 
@@ -69,7 +69,7 @@ export const ContentRow = styled.div`
     border: none;
     position: relative;
     width: 100%;
-    max-width: 242px;
+    max-width: 230px;
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
@@ -82,8 +82,13 @@ export const ContentRow = styled.div`
     color: ${theme.color.black} !important;
   }
 
+  .react-calendar__month-view__days {
+    /* gap: 5px !important; */
+  }
+
   .react-calendar__month-view__days__day {
     color: ${theme.color.black};
+
     :hover {
       background-color: ${theme.color.primaryL};
     }
@@ -122,9 +127,15 @@ export const ContentRow = styled.div`
     font-weight: 400;
     font-size: 12px;
   }
+
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 0 !important;
+  }
+
   .react-calendar__month-view__weekdays__weekday {
     padding: 4px;
   }
+
   .react-calendar__month-view__weekdays__weekday abbr {
     text-decoration: none;
   }
@@ -190,6 +201,24 @@ export const ContentRow = styled.div`
   .react-calendar__navigation__arrow,
   .react-calendar__navigation__label {
     background-color: transparent !important;
+  }
+
+  .somePending {
+    padding: 0 !important;
+    > abbr {
+      outline: 2px solid #ffb200cc !important;
+      border-radius: 100%;
+      padding: 4px 6px;
+    }
+  }
+
+  .allCompleted {
+    padding: 0 !important;
+    > abbr {
+      outline: 2px solid #34b53acc !important;
+      border-radius: 100%;
+      padding: 4px 6px;
+    }
   }
 `;
 
@@ -261,7 +290,7 @@ export const NavigateButtons = styled.div`
 `;
 
 export const CalendarDiv = styled.div`
-  padding: 2px ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
+  padding: 2px ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm};
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
   height: fit-content;
