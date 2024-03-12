@@ -44,13 +44,14 @@ export const Sidebar = () => {
       },
     },
 
-    {
-      icon: icon.checklists,
-      url: '/checklists',
-      redirectFunction: () => {
-        navigate('/checklists');
-      },
-    },
+    // {
+    //   icon: icon.checklists,
+    //   url: '/checklists',
+    //   redirectFunction: () => {
+    //     navigate('/checklists');
+    //   },
+    // },
+
     // {
     //   icon: icon.maintenances,
     //   url: '/maintenances',
