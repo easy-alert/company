@@ -56,7 +56,7 @@ export const DateHeader = styled.div`
 
 export const ContentRow = styled.div`
   display: grid;
-  grid-template-columns: 235px 1fr;
+  grid-template-columns: 226px 1fr;
   gap: ${theme.size.xsm};
   min-height: 240px;
 
@@ -69,7 +69,7 @@ export const ContentRow = styled.div`
     border: none;
     position: relative;
     width: 100%;
-    max-width: 235px;
+    max-width: 210px;
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
@@ -84,13 +84,17 @@ export const ContentRow = styled.div`
 
   .react-calendar__month-view__days {
     abbr {
-      width: 25px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 23px !important;
+      height: 23px !important;
     }
   }
 
   .react-calendar__month-view__days__day {
     color: ${theme.color.black};
-    height: 28px !important;
+    height: 30px !important;
 
     :hover {
       background-color: ${theme.color.primaryL};
@@ -210,7 +214,7 @@ export const ContentRow = styled.div`
   .somePending {
     padding: 0 !important;
     > abbr {
-      outline: 2px solid #ffb200cc !important;
+      border: 2px solid #ffb200cc !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -219,7 +223,7 @@ export const ContentRow = styled.div`
   .allCompleted {
     padding: 0 !important;
     > abbr {
-      outline: 2px solid #34b53acc !important;
+      border: 2px solid #34b53acc !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
