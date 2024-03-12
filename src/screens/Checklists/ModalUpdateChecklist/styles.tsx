@@ -23,3 +23,8 @@ export const LoadingContainer = styled.div`
   justify-content: center;
   min-height: 400px;
 `;
+
+export const ButtonDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
