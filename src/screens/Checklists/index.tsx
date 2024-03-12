@@ -51,13 +51,22 @@ export const Checklists = () => {
     await Api.get(`/checklists/${buildingNanoId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
-        setCalendarDates(res.data.calendarDates);
       })
       .catch((err) => {
         catchHandler(err);
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const findManyChecklistDates = async () => {
+    await Api.get(`/checklists/${buildingNanoId}/calendar/dates`)
+      .then((res) => {
+        setCalendarDates(res.data.calendarDates);
+      })
+      .catch((err) => {
+        catchHandler(err);
       });
   };
 
@@ -85,13 +94,22 @@ export const Checklists = () => {
     }
   }, [buildingNanoId, date]);
 
+  useEffect(() => {
+    if (buildingNanoId) {
+      findManyChecklistDates();
+    }
+  }, [buildingNanoId]);
+
   return (
     <>
       {modalCreateChecklistOpen && (
         <ModalCreateChecklist
           setModal={setModalCreateChecklistOpen}
           timeIntervals={timeIntervals}
-          onThenRequest={findManyChecklists}
+          onThenRequest={async () => {
+            findManyChecklists();
+            findManyChecklistDates();
+          }}
           buildingNanoId={buildingNanoId}
           buildingName={buildingName}
         />
@@ -102,6 +120,7 @@ export const Checklists = () => {
           <Style.HeaderLeftSide>
             <h2>Checklists</h2>
             <Select
+              id="customFilterForChecklist"
               disabled={loading}
               selectPlaceholderValue=" "
               value={buildingNanoId}
@@ -181,8 +200,11 @@ export const Checklists = () => {
                   <ChecklistRowComponent
                     key={checklist.id}
                     checklist={checklist}
-                    onThenRequest={findManyChecklists}
                     timeIntervals={timeIntervals}
+                    onThenRequest={async () => {
+                      findManyChecklists();
+                      findManyChecklistDates();
+                    }}
                   />
                 ))}
 
