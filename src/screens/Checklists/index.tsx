@@ -66,7 +66,10 @@ export const Checklists = () => {
         setCalendarDates(res.data.calendarDates);
       })
       .catch((err) => {
-        catchHandler(err);
+        // Pra não dar toast duplo
+        if (err.response.status !== 403) {
+          catchHandler(err);
+        }
       });
   };
 
