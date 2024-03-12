@@ -8,8 +8,8 @@ import { theme } from '../../../styles/theme';
 import { Api } from '../../../services/api';
 import { catchHandler, dateFormatter, uploadManyFiles } from '../../../utils/functions';
 import { TextArea } from '../../../components/Inputs/TextArea';
-import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
 import { ImagePreview } from '../../../components/ImagePreview';
+import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
 import { DotLoading } from '../../../components/Loadings/DotLoading';
 import { Button } from '../../../components/Buttons/Button';
 
