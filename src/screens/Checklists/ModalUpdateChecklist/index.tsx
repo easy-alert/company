@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import * as Style from './styles';
 import { Modal } from '../../../components/Modal';
 import { ITimeInterval } from '../../../utils/types';
-import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { Api } from '../../../services/api';
 import {
@@ -20,6 +19,8 @@ import { FormikCheckbox } from '../../../components/Form/FormikCheckbox';
 import { FormikTextArea } from '../../../components/Form/FormikTextArea';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { InputRadio } from '../../../components/Inputs/InputRadio';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { theme } from '../../../styles/theme';
 
 interface IModalUpdateChecklist {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -187,7 +188,7 @@ export const ModalUpdateChecklist = ({
                 });
             }}
           >
-            {({ errors, touched, values, setFieldValue }) => (
+            {({ errors, touched, values, setFieldValue, submitForm }) => (
               <Form>
                 <Input
                   name="buildingName"
@@ -277,8 +278,28 @@ export const ModalUpdateChecklist = ({
                     </FormikSelect>
                   </Style.FrequencyWrapper>
                 )}
+                <Style.ButtonDiv>
+                  <PopoverButton
+                    loading={onQuery}
+                    disabled={onQuery}
+                    actionButtonBgColor={theme.color.actionDanger}
+                    type="Button"
+                    label="Salvar"
+                    message={{
+                      title:
+                        updateMode === 'this'
+                          ? 'Deseja editar este checklist?'
+                          : 'Deseja editar este checklist e os seguintes?',
 
-                <Button center label="Salvar" type="submit" loading={onQuery} />
+                      content:
+                        updateMode === 'this'
+                          ? 'Atenção, somente as informações deste checklist serão editadas. Caso o checklist tenha sido relatado, as informações do relato não serão alteradas.'
+                          : 'Atenção, as informações deste checklist e os seguintes serão editadas. Caso o checklist tenha sido relatado, as informações do relato não serão alteradas.',
+                      contentColor: theme.color.danger,
+                    }}
+                    actionButtonClick={submitForm}
+                  />
+                </Style.ButtonDiv>
               </Form>
             )}
           </Formik>

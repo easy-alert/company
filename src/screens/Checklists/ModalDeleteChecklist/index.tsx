@@ -84,7 +84,13 @@ export const ModalDeleteChecklist = ({
             type="Button"
             label="Excluir"
             message={{
-              title: 'Deseja excluir este checklist?',
+              title:
+                // eslint-disable-next-line no-nested-ternary
+                deleteMode === 'all'
+                  ? 'Deseja excluir todos os checklists?'
+                  : deleteMode === 'this'
+                  ? 'Deseja excluir este checklist?'
+                  : 'Deseja excluir este checklist e os seguintes?',
               content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
               contentColor: theme.color.danger,
             }}
