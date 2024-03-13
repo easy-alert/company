@@ -14,7 +14,7 @@ import {
 // #endregion
 
 // #region DATES
-export const dateFormatter = (date: string) => new Date(date).toLocaleDateString('pt-BR');
+export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
 
 export const convertToFormikDate = (date: Date) => {
   const year = date.getFullYear();
@@ -308,7 +308,7 @@ export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddress
       setFieldValue('state', res.data.state ? convertStateAcronym(res.data.state) : '');
     })
     .catch(() => {
-      toast.error('CEP não encontrado. Verifique o número ou digite o endereço.');
+      toast.error('Erro ao buscar dados do CEP.');
     });
 };
 

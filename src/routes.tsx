@@ -42,6 +42,7 @@ import { Tutorials } from './screens/Tutorials';
 
 // DASHBOARD
 import { Dashboard } from './screens/Dashboard';
+import { Checklists } from './screens/Checklists';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -93,6 +94,8 @@ const AppRoutes = () => (
           <Route path="report/create" element={<CreateReport />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
+
+          <Route path="/checklists" element={<Checklists />} />
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />

@@ -50,9 +50,9 @@ export const schemaModalCreateBuilding = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
-    cep: yup.string().min(9, 'Digite um CEP válido.'),
-    city: yup.string(),
-    state: yup.string(),
+    cep: yup.string().min(9, 'Digite um CEP válido.').required('Campo obrigatório.'),
+    city: yup.string().required('Campo obrigatório.'),
+    state: yup.string().required('Campo obrigatório.'),
     neighborhood: yup.string(),
     streetName: yup.string(),
     area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),

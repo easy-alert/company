@@ -80,7 +80,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 ))}
               </FormikSelect>
               <FormikInput
-                label="CEP"
+                label="CEP *"
                 name="cep"
                 value={values.cep}
                 error={touched.cep && errors.cep ? errors.cep : null}
@@ -97,7 +97,8 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 }}
               />
               <FormikInput
-                label="Estado"
+                disabled
+                label="Estado *"
                 name="state"
                 value={values.state}
                 error={touched.state && errors.state ? errors.state : null}
@@ -105,7 +106,8 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 maxLength={20}
               />
               <FormikInput
-                label="Cidade"
+                disabled
+                label="Cidade *"
                 name="city"
                 value={values.city}
                 error={touched.city && errors.city ? errors.city : null}
