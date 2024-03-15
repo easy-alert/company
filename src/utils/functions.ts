@@ -300,12 +300,16 @@ export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildin
 export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
   toast.dismiss();
   await axios
-    .get(`https://brasilapi.com.br/api/cep/v1/${unMask(cep)}`)
+    .get(`https://viacep.com.br/ws/${unMask(cep)}/json`)
     .then((res) => {
-      setFieldValue('city', res.data.city ?? '');
-      setFieldValue('neighborhood', res.data.neighborhood ?? '');
-      setFieldValue('streetName', res.data.street ?? '');
-      setFieldValue('state', res.data.state ? convertStateAcronym(res.data.state) : '');
+      if (res?.data?.erro) {
+        toast.error('Erro ao buscar dados do CEP.');
+      } else {
+        setFieldValue('city', res.data.localidade ?? '');
+        setFieldValue('neighborhood', res.data.bairro ?? '');
+        setFieldValue('streetName', res.data.logradouro ?? '');
+        setFieldValue('state', res.data.uf ? convertStateAcronym(res.data.uf) : '');
+      }
     })
     .catch(() => {
       toast.error('Erro ao buscar dados do CEP.');
