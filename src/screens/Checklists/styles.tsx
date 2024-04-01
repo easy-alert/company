@@ -346,7 +346,7 @@ export const Dropdown = styled.div`
   position: absolute;
   right: 8px;
   top: -8px;
-  z-index: 90;
+  z-index: 9;
 `;
 
 export const ChecklistBackground = styled.div`

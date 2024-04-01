@@ -38,6 +38,11 @@ interface IChecklist extends IChecklistReport {
   syndic: { name: string };
 
   resolutionDate: string | null;
+
+  detailImages: {
+    name: string;
+    url: string;
+  }[];
 }
 
 export const ModalChecklistDetails = ({
@@ -145,6 +150,26 @@ export const ModalChecklistDetails = ({
             </Style.Row>
 
             <Style.Row>
+              <h6>Imagens da checklist</h6>
+              <Style.FileAndImageRow>
+                {checklist && checklist.detailImages.length > 0 ? (
+                  checklist?.detailImages.map((image) => (
+                    <ImagePreview
+                      key={image.url}
+                      src={image.url}
+                      downloadUrl={image.url}
+                      imageCustomName={image.name}
+                      width="132px"
+                      height="136px"
+                    />
+                  ))
+                ) : (
+                  <p className="p2">Nenhuma imagem enviada.</p>
+                )}
+              </Style.FileAndImageRow>
+            </Style.Row>
+
+            <Style.Row>
               <h6>Data</h6>
               <p className="p2">{checklist?.date ? dateFormatter(checklist?.date) : '-'}</p>
             </Style.Row>
@@ -224,8 +249,6 @@ export const ModalChecklistDetails = ({
                           <DotLoading />
                         </Style.ImageLoadingTag>
                       ))}
-
-                    {/* <p className="p2">Nenhuma imagem enviada.</p> */}
                   </Style.FileAndImageRow>
                 </Style.Row>
               </>

@@ -8,11 +8,20 @@ import { ITimeInterval } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 import { Api } from '../../../services/api';
-import { applyMask, capitalizeFirstLetter, catchHandler } from '../../../utils/functions';
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  catchHandler,
+  uploadManyFiles,
+} from '../../../utils/functions';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 import { Input } from '../../../components/Inputs/Input';
 import { FormikCheckbox } from '../../../components/Form/FormikCheckbox';
 import { FormikTextArea } from '../../../components/Form/FormikTextArea';
+import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
+import { ImagePreview } from '../../../components/ImagePreview';
+import { DotLoading } from '../../../components/Loadings/DotLoading';
+import { Row, FileAndImageRow, ImageLoadingTag } from '../ModalChecklistDetails/styles';
 
 interface IModalCreateChecklist {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -57,6 +66,12 @@ export const ModalCreateChecklist = ({
 }: IModalCreateChecklist) => {
   const [syndics, setSyndics] = useState<{ name: string; id: string }[]>([]);
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
+  const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
+
+  const [checklistDetailImages, setChecklistDetailImages] = useState<
+    { url: string; name: string }[]
+  >([]);
 
   const listSyndics = async () => {
     await Api.get(`/buildings/notifications/list-for-select/${buildingNanoId}`)
@@ -93,6 +108,7 @@ export const ModalCreateChecklist = ({
             await Api.post(`/checklists`, {
               ...values,
               frequency: values.frequency ? Number(values.frequency) : null,
+              detailImages: checklistDetailImages,
             })
               .then((res) => {
                 onThenRequest();
@@ -148,6 +164,61 @@ export const ModalCreateChecklist = ({
                 error={touched.description && (errors.description || null)}
               />
 
+              <Row>
+                <h6>Imagens da checklist</h6>
+                <FileAndImageRow>
+                  <DragAndDropFiles
+                    disabled={onImageQuery}
+                    width="132px"
+                    height="136px"
+                    onlyImages
+                    getAcceptedFiles={async ({ acceptedFiles }) => {
+                      setImagesToUploadCount(acceptedFiles.length);
+                      setOnImageQuery(true);
+                      const uploadedFiles = await uploadManyFiles(acceptedFiles);
+                      setOnImageQuery(false);
+                      setImagesToUploadCount(0);
+
+                      const formattedUploadedFiles = uploadedFiles.map(
+                        ({ Location, originalname }) => ({
+                          name: originalname,
+                          url: Location,
+                        }),
+                      );
+
+                      setChecklistDetailImages((prev) => [...prev, ...formattedUploadedFiles]);
+                    }}
+                  />
+                  {checklistDetailImages.length > 0 &&
+                    checklistDetailImages.map(
+                      (image: { name: string; url: string }, index: number) => (
+                        <ImagePreview
+                          key={image.url}
+                          src={image.url}
+                          downloadUrl={image.url}
+                          imageCustomName={image.name}
+                          width="132px"
+                          height="136px"
+                          onTrashClick={() => {
+                            setChecklistDetailImages((prev) => {
+                              const newState = [...prev];
+                              newState.splice(index, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      ),
+                    )}
+
+                  {onImageQuery &&
+                    [...Array(imagesToUploadCount).keys()].map((e) => (
+                      <ImageLoadingTag key={e}>
+                        <DotLoading />
+                      </ImageLoadingTag>
+                    ))}
+                </FileAndImageRow>
+              </Row>
+
               <FormikInput
                 name="date"
                 label="Data *"
@@ -195,7 +266,13 @@ export const ModalCreateChecklist = ({
                 </Style.FrequencyWrapper>
               )}
 
-              <Button center label="Cadastrar" type="submit" loading={onQuery} />
+              <Button
+                center
+                label="Cadastrar"
+                type="submit"
+                loading={onQuery}
+                disable={onImageQuery}
+              />
             </Form>
           )}
         </Formik>
