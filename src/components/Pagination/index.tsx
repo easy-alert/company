@@ -17,7 +17,7 @@ export const Pagination = ({
   currentPage = 1,
   onPageChange,
 }: IPagination) => {
-  const lastPage = Math.ceil(totalCountOfRegister / registerPerPage);
+  const lastPage = Math.ceil(totalCountOfRegister || 1 / registerPerPage);
 
   const previousPages =
     currentPage > 1
