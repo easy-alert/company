@@ -128,7 +128,6 @@ export const BuildingCardFooterInfo = styled.div`
 
 export const PaginationFooter = styled.footer`
   margin-top: 8px;
-  padding-right: 16px;
   width: 100%;
   height: fit-content;
   display: flex;

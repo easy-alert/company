@@ -37,7 +37,7 @@ export const TagContainer = styled.div<{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 130px;
+    max-width: 145px;
 
     text-align: center;
   }
