@@ -200,54 +200,53 @@ export const Tickets = () => {
       )}
       <Style.Container>
         <Style.Header>
-          <Style.HeaderWrapper>
-            <Style.HeaderLeftSide>
-              <h2>Chamados</h2>
-              <Select
-                id="customFilterForChecklist"
-                disabled={loading}
-                selectPlaceholderValue=" "
-                value={buildingNanoId}
-                onChange={(evt) => {
-                  const building = buildingOptions.find(
-                    ({ nanoId }) => nanoId === evt.target.value,
-                  );
-                  setBuildingNanoId(evt.target.value);
-                  setBuildingId(building?.id || '');
-                }}
-              >
-                <option value="" disabled hidden>
-                  Selecione
+          <Style.HeaderLeftSide>
+            <h2>Chamados</h2>
+            <Select
+              id="customFilterForChecklist"
+              disabled={loading}
+              selectPlaceholderValue=" "
+              value={buildingNanoId}
+              onChange={(evt) => {
+                const building = buildingOptions.find(({ nanoId }) => nanoId === evt.target.value);
+                setBuildingNanoId(evt.target.value);
+                setBuildingId(building?.id || '');
+              }}
+            >
+              <option value="" disabled hidden>
+                Selecione
+              </option>
+              {buildingOptions.map(({ nanoId, name }) => (
+                <option value={nanoId} key={nanoId}>
+                  {name}
                 </option>
-                {buildingOptions.map(({ nanoId, name }) => (
-                  <option value={nanoId} key={nanoId}>
-                    {name}
-                  </option>
-                ))}
-              </Select>
-              <IconButton
-                icon={icon.filter}
-                size="16px"
-                label={showFilter ? 'Ocultar' : 'Filtrar'}
-                color={theme.color.gray5}
-                onClick={() => {
-                  setShowFilter(!showFilter);
-                }}
-              />
-            </Style.HeaderLeftSide>
-          </Style.HeaderWrapper>
+              ))}
+            </Select>
+          </Style.HeaderLeftSide>
 
-          <IconButton
-            icon={icon.siren}
-            label="Responder chamados"
-            onClick={() => {
-              if (ticketsToAnswer.length === 0) {
-                toast.error('Selecione pelo menos um chamado.');
-                return;
-              }
-              setModalChooseAnswerType(true);
-            }}
-          />
+          <Style.HeaderRightSide>
+            <IconButton
+              icon={icon.filter}
+              size="16px"
+              label={showFilter ? 'Ocultar' : 'Filtrar'}
+              color={theme.color.gray5}
+              onClick={() => {
+                setShowFilter(!showFilter);
+              }}
+            />
+
+            <IconButton
+              icon={icon.siren}
+              label="Responder chamados"
+              onClick={() => {
+                if (ticketsToAnswer.length === 0) {
+                  toast.error('Selecione pelo menos um chamado.');
+                  return;
+                }
+                setModalChooseAnswerType(true);
+              }}
+            />
+          </Style.HeaderRightSide>
         </Style.Header>
         {showFilter && (
           <Style.FilterWrapper>

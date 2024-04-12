@@ -13,20 +13,9 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.xxsm};
-
-  @media (max-width: 900px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-`;
-
-export const HeaderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
   width: 100%;
 
-  @media (max-width: 600px) {
+  @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -265,9 +254,15 @@ export const HeaderLeftSide = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.sm};
-  width: 100%;
 
   > :nth-child(2) {
     max-width: 300px;
   }
+`;
+
+export const HeaderRightSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+  justify-content: space-between;
 `;
