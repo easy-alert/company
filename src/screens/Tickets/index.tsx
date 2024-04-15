@@ -208,6 +208,7 @@ export const Tickets = () => {
               selectPlaceholderValue=" "
               value={buildingNanoId}
               onChange={(evt) => {
+                resetSelectedTickets();
                 const building = buildingOptions.find(({ nanoId }) => nanoId === evt.target.value);
                 setBuildingNanoId(evt.target.value);
                 setBuildingId(building?.id || '');

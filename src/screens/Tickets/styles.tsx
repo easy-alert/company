@@ -254,6 +254,7 @@ export const HeaderLeftSide = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.sm};
+  width: 100%;
 
   > :nth-child(2) {
     max-width: 300px;
@@ -264,5 +265,6 @@ export const HeaderRightSide = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.sm};
-  justify-content: space-between;
+  justify-content: flex-end;
+  width: fit-content;
 `;
