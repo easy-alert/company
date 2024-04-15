@@ -26,7 +26,7 @@ export interface ICalendarDates {
   completed: { date: string }[];
 }
 
-export interface IBuildingOptions {
+interface IBuildingOptions {
   name: string;
   nanoId: string;
 }

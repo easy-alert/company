@@ -7,8 +7,4 @@ export const LoadingWrapper = ({
 }: {
   minHeight: string;
   children: ReactElement;
-}) => (
-  <Style.LoadingWrapperDiv minHeight={minHeight}>
-    {children}
-  </Style.LoadingWrapperDiv>
-);
+}) => <Style.LoadingWrapperDiv minHeight={minHeight}>{children}</Style.LoadingWrapperDiv>;

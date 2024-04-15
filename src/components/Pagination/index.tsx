@@ -6,9 +6,7 @@ import { IPagination } from './utils/types';
 const siblingsCount = 1;
 
 function generatePagesArray(from: number, to: number) {
-  return [...new Array(to - from)]
-    .map((_, index) => from + index + 1)
-    .filter((page) => page > 0);
+  return [...new Array(to - from)].map((_, index) => from + index + 1).filter((page) => page > 0);
 }
 
 export const Pagination = ({
@@ -17,19 +15,14 @@ export const Pagination = ({
   currentPage = 1,
   onPageChange,
 }: IPagination) => {
-  const lastPage = Math.ceil(totalCountOfRegister / registerPerPage);
+  const lastPage = Math.ceil((totalCountOfRegister || 1) / registerPerPage);
 
   const previousPages =
-    currentPage > 1
-      ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
-      : [];
+    currentPage > 1 ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1) : [];
 
   const nextPages =
     currentPage < lastPage
-      ? generatePagesArray(
-          currentPage,
-          Math.min(currentPage + siblingsCount, lastPage),
-        )
+      ? generatePagesArray(currentPage, Math.min(currentPage + siblingsCount, lastPage))
       : [];
 
   return (
@@ -54,26 +47,14 @@ export const Pagination = ({
 
       {previousPages.length > 0 &&
         previousPages.map((page) => (
-          <PaginationItem
-            pageNumber={page}
-            onPageChange={onPageChange}
-            key={page}
-          />
+          <PaginationItem pageNumber={page} onPageChange={onPageChange} key={page} />
         ))}
 
-      <PaginationItem
-        pageNumber={currentPage}
-        onPageChange={onPageChange}
-        isCurrent
-      />
+      <PaginationItem pageNumber={currentPage} onPageChange={onPageChange} isCurrent />
 
       {nextPages.length > 0 &&
         nextPages.map((page) => (
-          <PaginationItem
-            pageNumber={page}
-            onPageChange={onPageChange}
-            key={page}
-          />
+          <PaginationItem pageNumber={page} onPageChange={onPageChange} key={page} />
         ))}
 
       {currentPage + siblingsCount < lastPage && (

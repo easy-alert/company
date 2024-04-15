@@ -77,6 +77,14 @@ export const Sidebar = () => {
     },
 
     {
+      icon: icon.whiteSiren,
+      url: '/tickets',
+      redirectFunction: () => {
+        navigate('/tickets');
+      },
+    },
+
+    {
       icon: icon.gear,
       url: '/account',
       redirectFunction: () => {
