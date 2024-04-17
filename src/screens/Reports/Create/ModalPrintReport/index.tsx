@@ -299,6 +299,12 @@ const MyDocument = ({
                               </View>
                             </View>
                           </View>
+                          <Text style={Style.pdf.bold500}>
+                            Observação do relato:{' '}
+                            <Text style={Style.pdf.normal}>
+                              {maintenance.reportObservation || '-'}
+                            </Text>
+                          </Text>
                         </View>
                       </View>
                     </View>
