@@ -90,6 +90,7 @@ export interface IMaintenanceForPDF {
     inProgress: boolean;
     cost: number | null;
     type: string | null;
+    reportObservation: string | null;
 
     images: {
       url: string;

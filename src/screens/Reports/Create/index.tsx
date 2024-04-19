@@ -175,6 +175,7 @@ export const CreateReport = () => {
           setModal={setModalPrintReportOpen}
           maintenancesForPDF={maintenancesForPDF}
           filterforPDF={filterforPDF}
+          counts={counts}
         />
       )}
 
@@ -506,7 +507,7 @@ export const CreateReport = () => {
                 </s.CountsInfo>
               </s.Counts>
 
-              <p className="p3">
+              <p className="p2">
                 Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
               </p>
             </s.CountContainer>

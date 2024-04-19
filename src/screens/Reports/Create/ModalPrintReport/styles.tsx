@@ -225,4 +225,18 @@ export const pdf = StyleSheet.create({
     flexDirection: 'row',
     gap: '4px',
   },
+
+  countCard: {
+    marginLeft: 38,
+    marginTop: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+
+    padding: '12px',
+    backgroundColor: `${theme.color.gray3}80`,
+    borderRadius: '4px',
+    fontWeight: 500,
+  },
 });
