@@ -3,6 +3,8 @@
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
+import * as yup from 'yup';
+import { Api } from '../../../services/api';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -10,25 +12,20 @@ import { icon } from '../../../assets/icons';
 import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
-import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
+import { ICounts, IFilterData, IFiltersOptions, IChecklists } from './types';
 import {
-  ICounts,
-  IFilterData,
-  IFilterforPDF,
-  IFiltersOptions,
-  IMaintenanceForPDF,
-  IMaintenanceReportData,
-} from './types';
-import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
-import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
-import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalPrintReport } from './ModalPrintChecklists';
+  applyMask,
+  capitalizeFirstLetter,
+  catchHandler,
+  dateFormatter,
+} from '../../../utils/functions';
 import { Select } from '../../../components/Inputs/Select';
 import {
   getPluralStatusNameforPdf,
   getSingularStatusNameforPdf,
 } from './ModalPrintChecklists/functions';
-import { InProgressTag } from '../../../components/InProgressTag';
+import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
+import { ListTag } from '../../../components/ListTag';
 // #endregion
 
 export const ChecklistReports = () => {
@@ -42,26 +39,26 @@ export const ChecklistReports = () => {
     pending: 0,
     totalCost: 0,
   });
-  const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
-  const [maintenancesForPDF, setMaintenancesForPDF] = useState<IMaintenanceForPDF[]>([]);
 
+  const [checklists, setChecklists] = useState<IChecklists[]>([]);
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
-  const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+  // const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
-  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
-    buildingNames: '',
-    endDate: '',
-    startDate: '',
-    statusNames: '',
-  });
+  // const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
+  //   buildingNames: '',
+  //   endDate: '',
+  //   startDate: '',
+  //   statusNames: '',
+  // });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
   // #endregion
 
+  // #region csv
   const csvHeaders = [
     { label: 'Edificação', key: 'Edificação' },
     { label: 'Status', key: 'Status' },
@@ -79,39 +76,73 @@ export const ChecklistReports = () => {
     { label: 'Imagens', key: 'Imagens' },
   ];
 
-  const csvData = maintenances.map((data) => ({
-    Edificação: data.buildingName,
-    Status: getSingularStatusNameforPdf(data.status),
-    'Data de notificação': dateFormatter(data.notificationDate),
-    'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
-    Categoria: data.categoryName,
-    Elemento: data.element,
-    Atividade: data.activity,
-    Fonte: data.source,
-    'Observação da manutenção': data.maintenanceObservation || '',
-    Responsável: data.responsible,
-    'Valor (R$)': data.cost ? data.cost / 100 : 0,
-    'Observação do relato': data.reportObservation || '',
-    Anexos: data.annexes.map(({ url }) => url).join('; '),
-    Imagens: data.images.map(({ url }) => url).join('; '),
-  }));
+  const csvData = [];
+
+  // const csvData = checklists.map((data) => ({
+  //   Edificação: data.buildingName,
+  //   Status: getSingularStatusNameforPdf(data.status),
+  //   'Data de notificação': dateFormatter(data.notificationDate),
+  //   'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
+  //   Categoria: data.categoryName,
+  //   Elemento: data.element,
+  //   Atividade: data.activity,
+  //   Fonte: data.source,
+  //   'Observação da manutenção': data.maintenanceObservation || '',
+  //   Responsável: data.responsible,
+  //   'Valor (R$)': data.cost ? data.cost / 100 : 0,
+  //   'Observação do relato': data.reportObservation || '',
+  //   Anexos: data.annexes.map(({ url }) => url).join('; '),
+  //   Imagens: data.images.map(({ url }) => url).join('; '),
+  // }));
+  // #endregion
+
+  // #region functions
+  const requestReportsData = async () => {
+    setOnQuery(true);
+    setChecklists([]);
+    await Api.get(`/checklists/reports`)
+      .then((res) => {
+        setChecklists(res.data.checklists);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setLoading(false);
+        setOnQuery(false);
+      });
+  };
+
+  const schemaReportFilter = yup
+    .object({
+      maintenanceStatusId: yup.string(),
+      responsibleSyndicId: yup.string(),
+      startDate: yup.date().required('A data inicial é obrigatória.'),
+      endDate: yup
+        .date()
+        .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+        .required('A data final é obrigatória.'),
+    })
+    .required();
+
+  // #endregion
 
   useEffect(() => {
-    requestReportsDataForSelect({ setFiltersOptions, setLoading });
+    setLoading(false);
   }, []);
 
   return loading ? (
     <DotSpinLoading />
   ) : (
     <>
-      {modalPrintReportOpen && (
+      {/* {modalPrintReportOpen && (
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
           maintenancesForPDF={maintenancesForPDF}
           filterforPDF={filterforPDF}
           counts={counts}
         />
-      )}
+      )} */}
 
       <s.Container>
         <h2>Relatórios de checklists</h2>
@@ -125,37 +156,26 @@ export const ChecklistReports = () => {
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
+              console.log('values:', values);
               setShowNoDataMessage(true);
 
-              setFilterForPDF((prevState) => {
-                const newState = { ...prevState };
+              // setFilterForPDF((prevState) => {
+              //   const newState = { ...prevState };
 
-                newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
+              //   newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
 
-                newState.statusNames = statusForFilter
-                  .map((e) => getPluralStatusNameforPdf(e.name))
-                  .join(', ');
+              //   newState.statusNames = statusForFilter
+              //     .map((e) => getPluralStatusNameforPdf(e.name))
+              //     .join(', ');
 
-                newState.startDate = values.startDate;
+              //   newState.startDate = values.startDate;
 
-                newState.endDate = values.endDate;
+              //   newState.endDate = values.endDate;
 
-                return newState;
-              });
+              //   return newState;
+              // });
 
-              await requestReportsData({
-                setOnQuery,
-                setCounts,
-                setMaintenances,
-                setLoading,
-                filters: {
-                  buildingIds: buildingsForFilter.map((e) => e.id),
-                  maintenanceStatusIds: statusForFilter.map((e) => e.id),
-                  startDate: values.startDate,
-                  endDate: values.endDate,
-                },
-                setMaintenancesForPDF,
-              });
+              await requestReportsData();
             }}
           >
             {({ errors, values, touched }) => (
@@ -309,7 +329,7 @@ export const ChecklistReports = () => {
                         data={csvData}
                         headers={csvHeaders}
                         filename={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
-                        onClick={() => maintenances.length !== 0}
+                        onClick={() => checklists.length !== 0}
                       >
                         <IconButton
                           icon={icon.csvLogo}
@@ -319,7 +339,7 @@ export const ChecklistReports = () => {
                           onClick={() => {
                             //
                           }}
-                          disabled={maintenances.length === 0}
+                          disabled={checklists.length === 0}
                         />
                       </CSVLink>
                       <IconButton
@@ -328,9 +348,9 @@ export const ChecklistReports = () => {
                         color={theme.color.primary}
                         size="20px"
                         onClick={() => {
-                          setModalPrintReportOpen(true);
+                          // setModalPrintReportOpen(true);
                         }}
-                        disabled={maintenances.length === 0}
+                        disabled={checklists.length === 0}
                       />
                       <Button label="Filtrar" type="submit" disabled={onQuery} />
                     </s.ButtonWrapper>
@@ -343,25 +363,19 @@ export const ChecklistReports = () => {
 
         {onQuery && <DotSpinLoading />}
 
-        {!onQuery && maintenances.length === 0 && showNoDataMessage && (
+        {!onQuery && checklists.length === 0 && showNoDataMessage && (
           <s.NoMaintenanceCard>
             <h4>Nenhuma manutenção encontrada.</h4>
           </s.NoMaintenanceCard>
         )}
 
-        {!onQuery && maintenances.length > 0 && (
+        {!onQuery && checklists.length > 0 && (
           <>
             <s.CountContainer>
               <s.Counts>
-                {/* Não fiz .map pra facilitar a estilização */}
                 <s.CountsInfo>
                   <h5 className="completed">{counts.completed}</h5>
                   <p className="p5">{counts.completed > 1 ? 'Concluídas' : 'Concluída'}</p>
-                </s.CountsInfo>
-
-                <s.CountsInfo>
-                  <h5 className="pending">{counts.pending}</h5>
-                  <p className="p5">{counts.pending > 1 ? 'Pendentes' : 'Pendente'}</p>
                 </s.CountsInfo>
 
                 <s.CountsInfo>
@@ -378,42 +392,24 @@ export const ChecklistReports = () => {
               colsHeader={[
                 { label: 'Status' },
                 { label: 'Edificação' },
-                { label: 'Categoria' },
-                { label: 'Elemento' },
-                { label: 'Atividade' },
+                { label: 'Nome' },
+                { label: 'Descrição' },
                 { label: 'Responsável' },
-                { label: 'Data de notificação' },
-                { label: 'Valor' },
+                { label: 'Periodicidade' },
+                { label: 'Data' },
               ]}
             >
-              {maintenances?.map((maintenance) => (
+              {checklists?.map((checklist) => (
                 <ReportDataTableContent
-                  key={maintenance.id}
+                  key={checklist.id}
                   colsBody={[
-                    {
-                      cell: (
-                        <s.TagContainer>
-                          {maintenance.status === 'overdue' && <EventTag status="completed" />}
-                          <EventTag status={maintenance.status} />
-                          {maintenance.type === 'occasional' && <EventTag status="occasional" />}
-                          {(maintenance.status === 'expired' || maintenance.status === 'pending') &&
-                            maintenance.inProgress && <InProgressTag />}
-                        </s.TagContainer>
-                      ),
-                    },
-
-                    { cell: maintenance.buildingName },
-                    { cell: maintenance.categoryName },
-                    { cell: maintenance.element },
-                    { cell: maintenance.activity },
-                    { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
-                    { cell: dateFormatter(maintenance.notificationDate) },
-                    {
-                      cell:
-                        maintenance.cost !== null
-                          ? applyMask({ mask: 'BRL', value: String(maintenance.cost) }).value
-                          : '-',
-                    },
+                    { cell: <ListTag label={checklist.status} />, cssProps: { width: '81px' } },
+                    { cell: checklist.building.name },
+                    { cell: checklist.name },
+                    { cell: checklist.description },
+                    { cell: checklist.syndic.name },
+                    { cell: checklist.frequency ? 'Sim' : 'Não' },
+                    { cell: dateFormatter(checklist.date) },
                   ]}
                   onClick={() => {
                     // setMaintenanceHistoryId(maintenance.maintenanceHistoryId);

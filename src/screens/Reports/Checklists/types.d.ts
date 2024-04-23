@@ -41,32 +41,15 @@ export interface ICounts {
   totalCost: number;
 }
 
-export interface IMaintenanceReportData {
+export interface IChecklists {
   id: string;
-  activity: string;
-  buildingName: string;
-  categoryName: string;
-  cost: number | null;
-  element: string;
-  source: string;
-  maintenanceHistoryId: string;
-  notificationDate: string;
-  resolutionDate: string | null;
-  responsible: string | null;
-  status: 'completed' | 'expired' | 'pending' | 'overdue';
-  type: 'common' | 'occasional' | null;
-  inProgress: boolean;
-  maintenanceObservation: string | null;
-  reportObservation: string | null;
-
-  images: {
-    url: string;
-  }[];
-
-  annexes: {
-    url: string;
-    name: string;
-  }[];
+  name: string;
+  description: string;
+  date: string;
+  syndic: { name: string };
+  building: { name: string };
+  status: 'pending' | 'completed';
+  frequency: number | null;
 }
 
 export interface IMaintenanceForPDF {
@@ -103,7 +86,7 @@ export interface IRequestReportsData {
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setCounts: React.Dispatch<React.SetStateAction<ICounts>>;
-  setMaintenances: React.Dispatch<React.SetStateAction<IMaintenanceReportData[]>>;
+  setMaintenances: React.Dispatch<React.SetStateAction<IChecklists[]>>;
   setMaintenancesForPDF: React.Dispatch<React.SetStateAction<IMaintenanceForPDF[]>>;
   filters: IReportsFilters;
 }
