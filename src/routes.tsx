@@ -28,7 +28,7 @@ import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
 import { MaintenancesCalendar } from './screens/Calendar';
 
 // REPORT
-import { CreateReport } from './screens/Reports/Create';
+import { MaintenanceReports } from './screens/Reports/Maintenances';
 
 // TERMS OF USE
 import { TermsOfUse } from './screens/TermsOfUse';
@@ -44,6 +44,7 @@ import { Tutorials } from './screens/Tutorials';
 import { Dashboard } from './screens/Dashboard';
 import { Checklists } from './screens/Checklists';
 import { Tickets } from './screens/Tickets';
+import { ChecklistReports } from './screens/Reports/Checklists';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -92,7 +93,8 @@ const AppRoutes = () => (
 
           <Route path="/calendar" element={<MaintenancesCalendar />} />
 
-          <Route path="report/create" element={<CreateReport />} />
+          <Route path="reports/maintenances" element={<MaintenanceReports />} />
+          <Route path="reports/checklists" element={<ChecklistReports />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
 

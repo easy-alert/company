@@ -15,7 +15,6 @@ import {
   ICounts,
   IFilterData,
   IFilterforPDF,
-  IFilterforRequest,
   IFiltersOptions,
   IMaintenanceForPDF,
   IMaintenanceReportData,
@@ -23,19 +22,16 @@ import {
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
-import { ModalPrintReport } from './ModalPrintReport';
-import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
-import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
+import { ModalPrintReport } from './ModalPrintChecklists';
 import { Select } from '../../../components/Inputs/Select';
 import {
   getPluralStatusNameforPdf,
   getSingularStatusNameforPdf,
-} from './ModalPrintReport/functions';
+} from './ModalPrintChecklists/functions';
 import { InProgressTag } from '../../../components/InProgressTag';
 // #endregion
 
-export const CreateReport = () => {
+export const ChecklistReports = () => {
   // #region states
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,38 +47,18 @@ export const CreateReport = () => {
 
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
-  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
-
-  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
-
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
-
-  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
-    useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
   const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
     buildingNames: '',
-    categoryNames: '',
     endDate: '',
     startDate: '',
     statusNames: '',
   });
 
-  const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
-    startDate: '',
-    endDate: '',
-    maintenanceStatusIds: [],
-    categoryNames: [],
-    buildingIds: [],
-  });
-
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
-
-  const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
-
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
   // #endregion
 
@@ -128,48 +104,6 @@ export const CreateReport = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalMaintenanceDetails && (
-        <ModalMaintenanceDetails
-          setModal={setModalMaintenanceDetails}
-          maintenanceHistoryId={maintenanceHistoryId}
-          setModalEditReport={setModalEditReport}
-        />
-      )}
-
-      {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
-        <ModalSendMaintenanceReport
-          setModal={setModalSendMaintenanceReportOpen}
-          maintenanceHistoryId={maintenanceHistoryId}
-          onThenRequest={async () =>
-            requestReportsData({
-              filters: filterforRequest,
-              setCounts,
-              setLoading,
-              setMaintenances,
-              setOnQuery,
-              setMaintenancesForPDF,
-            })
-          }
-        />
-      )}
-
-      {modalEditReport && maintenanceHistoryId && (
-        <ModalEditMaintenanceReport
-          onThenActionRequest={async () =>
-            requestReportsData({
-              filters: filterforRequest,
-              setCounts,
-              setLoading,
-              setMaintenances,
-              setOnQuery,
-              setMaintenancesForPDF,
-            })
-          }
-          setModal={setModalEditReport}
-          maintenanceHistoryId={maintenanceHistoryId}
-        />
-      )}
-
       {modalPrintReportOpen && (
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
@@ -180,7 +114,7 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <h2>Relatórios</h2>
+        <h2>Relatórios de checklists</h2>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -193,20 +127,10 @@ export const CreateReport = () => {
             onSubmit={async (values) => {
               setShowNoDataMessage(true);
 
-              setFilterforRequest({
-                buildingIds: buildingsForFilter.map((e) => e.id),
-                categoryNames: categoriesForFilter.map((e) => e.name),
-                maintenanceStatusIds: statusForFilter.map((e) => e.id),
-                endDate: values.endDate,
-                startDate: values.startDate,
-              });
-
               setFilterForPDF((prevState) => {
                 const newState = { ...prevState };
 
                 newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
-
-                newState.categoryNames = categoriesForFilter.map((e) => e.name).join(', ');
 
                 newState.statusNames = statusForFilter
                   .map((e) => getPluralStatusNameforPdf(e.name))
@@ -226,7 +150,6 @@ export const CreateReport = () => {
                 setLoading,
                 filters: {
                   buildingIds: buildingsForFilter.map((e) => e.id),
-                  categoryNames: categoriesForFilter.map((e) => e.name),
                   maintenanceStatusIds: statusForFilter.map((e) => e.id),
                   startDate: values.startDate,
                   endDate: values.endDate,
@@ -278,44 +201,6 @@ export const CreateReport = () => {
                   </Select>
 
                   <Select
-                    selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
-                    label="Categoria"
-                    value=""
-                    onChange={(e) => {
-                      const selectedCategory = filtersOptions?.categories.find(
-                        (category) => category.id === e.target.value,
-                      );
-
-                      if (selectedCategory) {
-                        setCategoriesForFilter((prevState) => [
-                          ...prevState,
-                          { id: selectedCategory.id, name: selectedCategory.name },
-                        ]);
-                      }
-
-                      if (e.target.value === 'all') {
-                        setCategoriesForFilter([]);
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
-                    <option value="all" disabled={categoriesForFilter.length === 0}>
-                      Todas
-                    </option>
-                    {filtersOptions?.categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.id}
-                        disabled={categoriesForFilter.some((e) => e.id === category.id)}
-                      >
-                        {category.name}
-                      </option>
-                    ))}
-                  </Select>
-
-                  <Select
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
                     value=""
@@ -340,7 +225,7 @@ export const CreateReport = () => {
                       Selecione
                     </option>
                     <option value="all" disabled={statusForFilter.length === 0}>
-                      Todas
+                      Todos
                     </option>
                     {filtersOptions?.status.map((status) => (
                       <option
@@ -354,7 +239,7 @@ export const CreateReport = () => {
                   </Select>
 
                   <FormikInput
-                    label="Data de notificação inicial"
+                    label="Data inicial"
                     typeDatePlaceholderValue={values.startDate}
                     name="startDate"
                     type="date"
@@ -363,7 +248,7 @@ export const CreateReport = () => {
                   />
 
                   <FormikInput
-                    label="Data de notificação final"
+                    label="Data final"
                     typeDatePlaceholderValue={values.endDate}
                     name="endDate"
                     type="date"
@@ -385,29 +270,6 @@ export const CreateReport = () => {
                           icon={icon.xBlack}
                           onClick={() => {
                             setBuildingsForFilter((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
-                          }}
-                        />
-                      </s.Tag>
-                    ))}
-
-                    {categoriesForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todas as categorias</p>
-                      </s.Tag>
-                    )}
-
-                    {categoriesForFilter.map((category, i: number) => (
-                      <s.Tag key={category.id}>
-                        <p className="p3">{category.name}</p>
-                        <IconButton
-                          size="14px"
-                          icon={icon.xBlack}
-                          onClick={() => {
-                            setCategoriesForFilter((prevState) => {
                               const newState = [...prevState];
                               newState.splice(i, 1);
                               return newState;
@@ -440,6 +302,7 @@ export const CreateReport = () => {
                       </s.Tag>
                     ))}
                   </s.TagWrapper>
+
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
                       <CSVLink
@@ -553,15 +416,7 @@ export const CreateReport = () => {
                     },
                   ]}
                   onClick={() => {
-                    setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
-
-                    if (maintenance.status === 'pending' || maintenance.status === 'expired') {
-                      setModalSendMaintenanceReportOpen(true);
-                    }
-
-                    if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
-                      setModalMaintenanceDetails(true);
-                    }
+                    // setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
                   }}
                 />
               ))}
