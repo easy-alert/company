@@ -253,13 +253,13 @@ const MyDocument = ({
                 <View>
                   <Text style={{ color: theme.color.success, fontSize: 12 }}>{finishedCount}</Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
-                    {finishedCount > 1 ? 'Concluídas' : 'Concluída'}
+                    {finishedCount > 1 ? 'Finalizados' : 'Finalizado'}
                   </Text>
                 </View>
                 <View>
                   <Text style={{ color: theme.color.primary, fontSize: 12 }}>{openCount}</Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
-                    {openCount > 1 ? 'Pendentes' : 'Pendente'}
+                    {openCount > 1 ? 'Abertos' : 'Aberto'}
                   </Text>
                 </View>
 
