@@ -6,6 +6,7 @@ export const TagContainer = styled.div<{
   color: string;
   fontWeight: number;
   fontSize: string;
+  lineHeight: string;
   padding: string;
 }>`
   display: flex;
@@ -33,6 +34,7 @@ export const TagContainer = styled.div<{
     color: ${({ color }) => color};
     font-weight: ${({ fontWeight }) => fontWeight};
     font-size: ${({ fontSize }) => fontSize};
+    line-height: ${({ lineHeight }) => lineHeight};
 
     white-space: nowrap;
     overflow: hidden;

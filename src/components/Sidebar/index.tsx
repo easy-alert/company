@@ -76,6 +76,15 @@ export const Sidebar = () => {
       },
       options: [
         {
+          label: 'Chamados',
+          icon: icon.redDot,
+          url: '/reports/tickets',
+          redirectFunction: () => {
+            navigate('/reports/tickets');
+          },
+        },
+
+        {
           label: 'Checklists',
           icon: icon.redDot,
           url: '/reports/checklists',

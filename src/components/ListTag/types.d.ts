@@ -6,5 +6,6 @@ export interface IListTag {
   color?: string;
   fontWeight?: number;
   fontSize?: string;
+  lineHeight?: string;
   padding?: string;
 }

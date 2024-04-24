@@ -1,9 +1,9 @@
-import { IChecklistsForPDF, IFilterforPDF } from '../types';
+import { IChecklistsForPDF, IFilter } from '../types';
 
 export interface IModalPrintChecklists {
   setModal: (setModal: boolean) => void;
   checklistsForPDF: IChecklistsForPDF[];
-  filterforPDF: IFilterforPDF;
+  filterforPDF: IFilter;
   pendingCount: number;
   completedCount: number;
 }
