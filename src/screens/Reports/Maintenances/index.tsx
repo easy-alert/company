@@ -445,7 +445,9 @@ export const MaintenanceReports = () => {
                       <CSVLink
                         data={csvData}
                         headers={csvHeaders}
-                        filename={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+                        filename={`Relatório de manutenções ${new Date().toLocaleDateString(
+                          'pt-BR',
+                        )}`}
                         onClick={() => maintenances.length !== 0}
                       >
                         <IconButton

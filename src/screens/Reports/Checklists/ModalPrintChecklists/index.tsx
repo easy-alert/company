@@ -21,7 +21,7 @@ import DMSansBold500 from '../../../../assets/fonts/DM_Sans/DMSans-Bold.ttf';
 
 // TYPES
 import { IModalPrintQRCode } from './types';
-import { ICounts, IFilterforPDF, IMaintenanceForPDF } from '../types';
+import { IFilter, IMaintenanceForPDF } from '../types';
 
 // STYLES
 import * as Style from './styles';
@@ -31,7 +31,6 @@ import { image } from '../../../../assets/images';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { getSingularStatusNameforPdf, getStatusBackgroundColor } from './functions';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../../utils/functions';
-import { theme } from '../../../../styles/theme';
 
 Font.register({
   family: 'DMSans',
@@ -58,13 +57,13 @@ const MyDocument = ({
   maintenancesForPDF,
   companyImage,
   filterforPDF,
-  counts,
-}: {
+}: // counts,
+{
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   maintenancesForPDF: IMaintenanceForPDF[];
   companyImage: string;
-  filterforPDF: IFilterforPDF;
-  counts: ICounts;
+  filterforPDF: IFilter;
+  // counts: ICounts;
 }) => {
   const randomNumber = () => {
     let result = '';
@@ -313,7 +312,7 @@ const MyDocument = ({
                   </View>
                 ))}
               </View>
-
+              {/*
               <View style={Style.pdf.countCard}>
                 <View>
                   <Text style={{ color: theme.color.success, fontSize: 12 }}>
@@ -341,7 +340,7 @@ const MyDocument = ({
                 <Text style={{ marginLeft: 'auto' }}>
                   Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
                 </Text>
-              </View>
+              </View> */}
             </>
             // #endregion
           }
@@ -367,8 +366,8 @@ const MyDocument = ({
 export const ModalPrintReport = ({
   setModal,
   maintenancesForPDF,
+  // counts
   filterforPDF,
-  counts,
 }: IModalPrintQRCode) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { account } = useAuthContext();
@@ -381,7 +380,7 @@ export const ModalPrintReport = ({
         <Style.Container>
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
             <MyDocument
-              counts={counts}
+              // counts={counts}
               setLoading={setLoading}
               maintenancesForPDF={maintenancesForPDF}
               companyImage={account?.Company.image!}
@@ -391,7 +390,7 @@ export const ModalPrintReport = ({
           <PDFDownloadLink
             document={
               <MyDocument
-                counts={counts}
+                // counts={counts}
                 setLoading={setLoading}
                 maintenancesForPDF={maintenancesForPDF}
                 companyImage={account?.Company.image!}

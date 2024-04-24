@@ -12,38 +12,37 @@ import { icon } from '../../../assets/icons';
 import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
-import { ICounts, IFilterData, IFiltersOptions, IChecklists } from './types';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  catchHandler,
-  dateFormatter,
-} from '../../../utils/functions';
+import { IChecklists, IFilter } from './types';
+import { catchHandler, dateFormatter } from '../../../utils/functions';
 import { Select } from '../../../components/Inputs/Select';
 import {
   getPluralStatusNameforPdf,
   getSingularStatusNameforPdf,
 } from './ModalPrintChecklists/functions';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
-import { ListTag } from '../../../components/ListTag';
+import { EventTag } from '../../Calendar/utils/EventTag';
+import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
 // #endregion
 
 export const ChecklistReports = () => {
   // #region states
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const [counts, setCounts] = useState<ICounts>({
-    completed: 0,
-    expired: 0,
-    pending: 0,
-    totalCost: 0,
-  });
 
   const [checklists, setChecklists] = useState<IChecklists[]>([]);
-  const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
+  const [pendingCount, setPendingCount] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [filtersOptions, setFiltersOptions] = useState<{ buildings: { name: string }[] }>();
 
   // const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+  const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
+  const [checklistId, setChecklistId] = useState<string>('');
+
+  const [filterforRequest, setFilterforRequest] = useState<IFilter>({
+    startDate: '',
+    endDate: '',
+    buildingNames: [],
+    statusNames: [],
+  });
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
@@ -54,69 +53,42 @@ export const ChecklistReports = () => {
   //   statusNames: '',
   // });
 
-  const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
-  const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
+  const [buildingsForFilter, setBuildingsForFilter] = useState<string[]>([]);
+  const [statusForFilter, setStatusForFilter] = useState<string[]>([]);
+
   // #endregion
 
   // #region csv
   const csvHeaders = [
     { label: 'Edificação', key: 'Edificação' },
     { label: 'Status', key: 'Status' },
-    { label: 'Data de notificação', key: 'Data de notificação' },
-    { label: 'Data de conclusão', key: 'Data de conclusão' },
-    { label: 'Categoria', key: 'Categoria' },
-    { label: 'Elemento', key: 'Elemento' },
-    { label: 'Atividade', key: 'Atividade' },
-    { label: 'Fonte', key: 'Fonte' },
-    { label: 'Observação da manutenção', key: 'Observação da manutenção' },
+    { label: 'Nome do checklist', key: 'Nome do checklist' },
+    { label: 'Descrição', key: 'Descrição' },
     { label: 'Responsável', key: 'Responsável' },
-    { label: 'Valor (R$)', key: 'Valor (R$)' },
-    { label: 'Observação do relato', key: 'Observação do relato' },
-    { label: 'Anexos', key: 'Anexos' },
-    { label: 'Imagens', key: 'Imagens' },
+    { label: 'Periodicidade', key: 'Periodicidade' },
+    { label: 'Data', key: 'Data' },
+    { label: 'Observações', key: 'Observações' },
+    { label: 'Imagens do relato', key: 'Imagens do relato' },
   ];
 
-  const csvData = [];
-
-  // const csvData = checklists.map((data) => ({
-  //   Edificação: data.buildingName,
-  //   Status: getSingularStatusNameforPdf(data.status),
-  //   'Data de notificação': dateFormatter(data.notificationDate),
-  //   'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
-  //   Categoria: data.categoryName,
-  //   Elemento: data.element,
-  //   Atividade: data.activity,
-  //   Fonte: data.source,
-  //   'Observação da manutenção': data.maintenanceObservation || '',
-  //   Responsável: data.responsible,
-  //   'Valor (R$)': data.cost ? data.cost / 100 : 0,
-  //   'Observação do relato': data.reportObservation || '',
-  //   Anexos: data.annexes.map(({ url }) => url).join('; '),
-  //   Imagens: data.images.map(({ url }) => url).join('; '),
-  // }));
+  const csvData = checklists.map((data) => ({
+    Edificação: data.building.name,
+    Status: getSingularStatusNameforPdf(data.status),
+    'Nome do checklist': data.name,
+    Descrição: data.description,
+    Responsável: data.syndic.name,
+    Periodicidade: data.frequency ? 'Sim' : 'Não',
+    Data: dateFormatter(data.date),
+    Observações: data.observation || '',
+    'Imagens do relato': data.images.map(({ url }) => url).join('; '),
+  }));
   // #endregion
 
   // #region functions
-  const requestReportsData = async () => {
-    setOnQuery(true);
-    setChecklists([]);
-    await Api.get(`/checklists/reports`)
-      .then((res) => {
-        setChecklists(res.data.checklists);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-        setOnQuery(false);
-      });
-  };
-
   const schemaReportFilter = yup
     .object({
-      maintenanceStatusId: yup.string(),
-      responsibleSyndicId: yup.string(),
+      buildingNames: yup.array().of(yup.string()),
+      status: yup.array().of(yup.string()),
       startDate: yup.date().required('A data inicial é obrigatória.'),
       endDate: yup
         .date()
@@ -125,24 +97,60 @@ export const ChecklistReports = () => {
     })
     .required();
 
+  const requestReportsData = async (filters: IFilter) => {
+    setOnQuery(true);
+    setChecklists([]);
+
+    await Api.get(`/checklists/reports?filters=${JSON.stringify(filters)}`)
+      .then((res) => {
+        setChecklists(res.data.checklists);
+        setPendingCount(res.data.pendingCount);
+        setCompletedCount(res.data.completedCount);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+      });
+  };
+
+  const requestBuildings = async () => {
+    await Api.get(`/buildings/reports/listforselect`)
+      .then((res) => {
+        setFiltersOptions(res.data.filters);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      });
+  };
+
   // #endregion
 
   useEffect(() => {
-    setLoading(false);
+    requestBuildings();
   }, []);
 
-  return loading ? (
-    <DotSpinLoading />
-  ) : (
+  return (
     <>
       {/* {modalPrintReportOpen && (
-        <ModalPrintReport
-          setModal={setModalPrintReportOpen}
-          maintenancesForPDF={maintenancesForPDF}
-          filterforPDF={filterforPDF}
-          counts={counts}
+    <ModalPrintReport
+      setModal={setModalPrintReportOpen}
+      maintenancesForPDF={maintenancesForPDF}
+      filterforPDF={filterforPDF}
+      counts={counts}
+    />
+  )} */}
+
+      {modalChecklistDetailsOpen && (
+        <ModalChecklistDetails
+          checklistId={checklistId}
+          setModal={setModalChecklistDetailsOpen}
+          onThenRequest={async () => {
+            requestReportsData(filterforRequest);
+          }}
         />
-      )} */}
+      )}
 
       <s.Container>
         <h2>Relatórios de checklists</h2>
@@ -150,32 +158,27 @@ export const ChecklistReports = () => {
           <h5>Filtros</h5>
           <Formik
             initialValues={{
-              maintenanceStatusId: '',
+              buildingNames: [],
+              statusNames: [],
               startDate: '',
               endDate: '',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
-              console.log('values:', values);
               setShowNoDataMessage(true);
 
-              // setFilterForPDF((prevState) => {
-              //   const newState = { ...prevState };
+              setFilterforRequest({
+                endDate: values.endDate,
+                startDate: values.startDate,
+                buildingNames: buildingsForFilter,
+                statusNames: statusForFilter,
+              });
 
-              //   newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
-
-              //   newState.statusNames = statusForFilter
-              //     .map((e) => getPluralStatusNameforPdf(e.name))
-              //     .join(', ');
-
-              //   newState.startDate = values.startDate;
-
-              //   newState.endDate = values.endDate;
-
-              //   return newState;
-              // });
-
-              await requestReportsData();
+              await requestReportsData({
+                ...values,
+                buildingNames: buildingsForFilter,
+                statusNames: statusForFilter,
+              });
             }}
           >
             {({ errors, values, touched }) => (
@@ -186,16 +189,7 @@ export const ChecklistReports = () => {
                     label="Edificação"
                     value=""
                     onChange={(e) => {
-                      const selectedBuilding = filtersOptions?.buildings.find(
-                        (building) => building.id === e.target.value,
-                      );
-
-                      if (selectedBuilding) {
-                        setBuildingsForFilter((prevState) => [
-                          ...prevState,
-                          { id: selectedBuilding.id, name: selectedBuilding.name },
-                        ]);
-                      }
+                      setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
 
                       if (e.target.value === 'all') {
                         setBuildingsForFilter([]);
@@ -211,9 +205,9 @@ export const ChecklistReports = () => {
 
                     {filtersOptions?.buildings.map((building) => (
                       <option
-                        key={building.id}
-                        value={building.id}
-                        disabled={buildingsForFilter.some((e) => e.id === building.id)}
+                        key={building.name}
+                        value={building.name}
+                        disabled={buildingsForFilter.some((e) => e === building.name)}
                       >
                         {building.name}
                       </option>
@@ -225,16 +219,7 @@ export const ChecklistReports = () => {
                     label="Status"
                     value=""
                     onChange={(e) => {
-                      const selectedStatus = filtersOptions?.status.find(
-                        (status) => status.id === e.target.value,
-                      );
-
-                      if (selectedStatus) {
-                        setStatusForFilter((prevState) => [
-                          ...prevState,
-                          { id: selectedStatus.id, name: selectedStatus.name },
-                        ]);
-                      }
+                      setStatusForFilter((prevState) => [...prevState, e.target.value]);
 
                       if (e.target.value === 'all') {
                         setStatusForFilter([]);
@@ -247,15 +232,15 @@ export const ChecklistReports = () => {
                     <option value="all" disabled={statusForFilter.length === 0}>
                       Todos
                     </option>
-                    {filtersOptions?.status.map((status) => (
-                      <option
-                        key={status.id}
-                        value={status.id}
-                        disabled={statusForFilter.some((e) => e.id === status.id)}
-                      >
-                        {capitalizeFirstLetter(status.pluralLabel)}
-                      </option>
-                    ))}
+                    <option
+                      value="completed"
+                      disabled={statusForFilter.some((e) => e === 'completed')}
+                    >
+                      Concluídas
+                    </option>
+                    <option value="pending" disabled={statusForFilter.some((e) => e === 'pending')}>
+                      Pendentes
+                    </option>
                   </Select>
 
                   <FormikInput
@@ -283,8 +268,8 @@ export const ChecklistReports = () => {
                     )}
 
                     {buildingsForFilter.map((building, i: number) => (
-                      <s.Tag key={building.id}>
-                        <p className="p3">{building.name}</p>
+                      <s.Tag key={building}>
+                        <p className="p3">{building}</p>
                         <IconButton
                           size="14px"
                           icon={icon.xBlack}
@@ -306,8 +291,8 @@ export const ChecklistReports = () => {
                     )}
 
                     {statusForFilter.map((status, i: number) => (
-                      <s.Tag key={status.id}>
-                        <p className="p3">{getPluralStatusNameforPdf(status.name)}</p>
+                      <s.Tag key={status}>
+                        <p className="p3">{getPluralStatusNameforPdf(status)}</p>
                         <IconButton
                           size="14px"
                           icon={icon.xBlack}
@@ -328,7 +313,9 @@ export const ChecklistReports = () => {
                       <CSVLink
                         data={csvData}
                         headers={csvHeaders}
-                        filename={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+                        filename={`Relatório de checklists ${new Date().toLocaleDateString(
+                          'pt-BR',
+                        )}`}
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
@@ -365,7 +352,7 @@ export const ChecklistReports = () => {
 
         {!onQuery && checklists.length === 0 && showNoDataMessage && (
           <s.NoMaintenanceCard>
-            <h4>Nenhuma manutenção encontrada.</h4>
+            <h4>Nenhuma checklist encontrada.</h4>
           </s.NoMaintenanceCard>
         )}
 
@@ -374,19 +361,15 @@ export const ChecklistReports = () => {
             <s.CountContainer>
               <s.Counts>
                 <s.CountsInfo>
-                  <h5 className="completed">{counts.completed}</h5>
-                  <p className="p5">{counts.completed > 1 ? 'Concluídas' : 'Concluída'}</p>
+                  <h5 className="completed">{completedCount}</h5>
+                  <p className="p5">{completedCount > 1 ? 'Concluídas' : 'Concluída'}</p>
                 </s.CountsInfo>
 
                 <s.CountsInfo>
-                  <h5 className="expired">{counts.expired}</h5>
-                  <p className="p5">{counts.expired > 1 ? 'Vencidas' : 'Vencida'}</p>
+                  <h5 className="pending">{pendingCount}</h5>
+                  <p className="p5">{pendingCount > 1 ? 'Pendentes' : 'Pendente'}</p>
                 </s.CountsInfo>
               </s.Counts>
-
-              <p className="p2">
-                Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
-              </p>
             </s.CountContainer>
             <ReportDataTable
               colsHeader={[
@@ -403,7 +386,10 @@ export const ChecklistReports = () => {
                 <ReportDataTableContent
                   key={checklist.id}
                   colsBody={[
-                    { cell: <ListTag label={checklist.status} />, cssProps: { width: '81px' } },
+                    {
+                      cell: <EventTag status={checklist.status} />,
+                      cssProps: { width: '81px' },
+                    },
                     { cell: checklist.building.name },
                     { cell: checklist.name },
                     { cell: checklist.description },
@@ -412,7 +398,8 @@ export const ChecklistReports = () => {
                     { cell: dateFormatter(checklist.date) },
                   ]}
                   onClick={() => {
-                    // setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
+                    setChecklistId(checklist.id);
+                    setModalChecklistDetailsOpen(true);
                   }}
                 />
               ))}
