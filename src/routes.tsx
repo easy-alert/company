@@ -45,6 +45,7 @@ import { Dashboard } from './screens/Dashboard';
 import { Checklists } from './screens/Checklists';
 import { Tickets } from './screens/Tickets';
 import { ChecklistReports } from './screens/Reports/Checklists';
+import { TicketReports } from './screens/Reports/Tickets';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -95,6 +96,7 @@ const AppRoutes = () => (
 
           <Route path="reports/maintenances" element={<MaintenanceReports />} />
           <Route path="reports/checklists" element={<ChecklistReports />} />
+          <Route path="reports/tickets" element={<TicketReports />} />
 
           <Route path="/dashboard" element={<Dashboard />} />
 

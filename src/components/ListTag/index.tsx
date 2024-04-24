@@ -13,6 +13,7 @@ export const ListTag = ({
   fontWeight = 400,
   fontSize = '12px',
   padding = '6px',
+  lineHeight = '14px',
 }: IListTag) => (
   <Style.TagContainer
     backgroundColor={backgroundColor}
@@ -20,6 +21,7 @@ export const ListTag = ({
     fontWeight={fontWeight}
     fontSize={fontSize}
     padding={padding}
+    lineHeight={lineHeight}
   >
     <p className="p4" title={label}>
       {label}

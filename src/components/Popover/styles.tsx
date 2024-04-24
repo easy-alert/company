@@ -29,11 +29,6 @@ export const PopoverBackground = styled.div`
   border: 2px solid ${theme.color.gray3};
 
   min-height: fit-content;
-
-  @media (max-width: 500px) {
-    min-width: calc(100vw - 20px);
-    width: 100%;
-  }
 `;
 
 export const AnimationDiv = styled.div`
