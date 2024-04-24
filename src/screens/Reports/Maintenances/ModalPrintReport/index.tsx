@@ -102,6 +102,11 @@ const MyDocument = ({
                   </Text>
 
                   <Text>
+                    <Text style={Style.pdf.bold500}>Categoria:</Text>{' '}
+                    {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
+                  </Text>
+
+                  <Text>
                     <Text style={Style.pdf.bold500}>Status:</Text>{' '}
                     {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
                   </Text>
@@ -115,11 +120,6 @@ const MyDocument = ({
                           new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
                         ).toLocaleDateString('pt-BR')}`
                       : 'Todos'}
-                  </Text>
-
-                  <Text>
-                    <Text style={Style.pdf.bold500}>Categoria:</Text>{' '}
-                    {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
                   </Text>
                 </View>
               </View>
@@ -319,7 +319,7 @@ const MyDocument = ({
                 ))}
               </View>
 
-              <View style={Style.pdf.countCard}>
+              <View style={Style.pdf.countCard} wrap={false}>
                 <View>
                   <Text style={{ color: theme.color.success, fontSize: 12 }}>
                     {counts.completed}
@@ -329,15 +329,15 @@ const MyDocument = ({
                   </Text>
                 </View>
                 <View>
-                  <Text style={{ color: theme.color.actionDanger, fontSize: 12 }}>
-                    {counts.pending}
-                  </Text>
+                  <Text style={{ color: theme.color.warning, fontSize: 12 }}>{counts.pending}</Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
                     {counts.pending > 1 ? 'Pendentes' : 'Pendente'}
                   </Text>
                 </View>
                 <View>
-                  <Text style={{ color: theme.color.warning, fontSize: 12 }}>{counts.expired}</Text>
+                  <Text style={{ color: theme.color.actionDanger, fontSize: 12 }}>
+                    {counts.expired}
+                  </Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
                     {counts.expired > 1 ? 'Vencidas' : 'Vencida'}
                   </Text>

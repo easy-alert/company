@@ -21,32 +21,7 @@ export interface IChecklists {
   }[];
 }
 
-export interface IMaintenanceForPDF {
+export interface IChecklistsForPDF {
   month: string;
-
-  data: {
-    id: string;
-    maintenanceHistoryId: string;
-    buildingName: string;
-    categoryName: string;
-    element: string;
-    activity: string;
-    responsible: string | null;
-    notificationDate: string;
-    resolutionDate: string | null;
-    status: 'completed' | 'expired' | 'pending' | 'overdue';
-    inProgress: boolean;
-    cost: number | null;
-    type: string | null;
-    reportObservation: string | null;
-
-    images: {
-      url: string;
-    }[];
-
-    annexes: {
-      url: string;
-      name: string;
-    }[];
-  }[];
+  data: IChecklists[];
 }

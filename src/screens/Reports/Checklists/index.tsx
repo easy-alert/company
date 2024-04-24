@@ -12,16 +12,17 @@ import { icon } from '../../../assets/icons';
 import * as s from './styles';
 import { theme } from '../../../styles/theme';
 import { FormikInput } from '../../../components/Form/FormikInput';
-import { IChecklists, IFilter } from './types';
+import { IChecklists, IChecklistsForPDF, IFilter } from './types';
 import { catchHandler, dateFormatter } from '../../../utils/functions';
 import { Select } from '../../../components/Inputs/Select';
-import {
-  getPluralStatusNameforPdf,
-  getSingularStatusNameforPdf,
-} from './ModalPrintChecklists/functions';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
+import {
+  getSingularStatusNameforPdf,
+  getPluralStatusNameforPdf,
+} from '../Maintenances/ModalPrintReport/functions';
+import { ModalPrintChecklists } from './ModalPrintChecklists';
 // #endregion
 
 export const ChecklistReports = () => {
@@ -29,11 +30,12 @@ export const ChecklistReports = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const [checklists, setChecklists] = useState<IChecklists[]>([]);
+  const [checklistsForPDF, setChecklistsForPDF] = useState<IChecklistsForPDF[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
   const [completedCount, setCompletedCount] = useState(0);
   const [filtersOptions, setFiltersOptions] = useState<{ buildings: { name: string }[] }>();
 
-  // const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+  const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [checklistId, setChecklistId] = useState<string>('');
 
@@ -45,14 +47,6 @@ export const ChecklistReports = () => {
   });
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
-
-  // const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
-  //   buildingNames: '',
-  //   endDate: '',
-  //   startDate: '',
-  //   statusNames: '',
-  // });
-
   const [buildingsForFilter, setBuildingsForFilter] = useState<string[]>([]);
   const [statusForFilter, setStatusForFilter] = useState<string[]>([]);
 
@@ -104,6 +98,7 @@ export const ChecklistReports = () => {
     await Api.get(`/checklists/reports?filters=${JSON.stringify(filters)}`)
       .then((res) => {
         setChecklists(res.data.checklists);
+        setChecklistsForPDF(res.data.checklistsForPDF);
         setPendingCount(res.data.pendingCount);
         setCompletedCount(res.data.completedCount);
       })
@@ -133,14 +128,15 @@ export const ChecklistReports = () => {
 
   return (
     <>
-      {/* {modalPrintReportOpen && (
-    <ModalPrintReport
-      setModal={setModalPrintReportOpen}
-      maintenancesForPDF={maintenancesForPDF}
-      filterforPDF={filterforPDF}
-      counts={counts}
-    />
-  )} */}
+      {modalPrintReportOpen && (
+        <ModalPrintChecklists
+          setModal={setModalPrintReportOpen}
+          checklistsForPDF={checklistsForPDF}
+          filterforPDF={filterforRequest}
+          completedCount={completedCount}
+          pendingCount={pendingCount}
+        />
+      )}
 
       {modalChecklistDetailsOpen && (
         <ModalChecklistDetails
@@ -335,7 +331,7 @@ export const ChecklistReports = () => {
                         color={theme.color.primary}
                         size="20px"
                         onClick={() => {
-                          // setModalPrintReportOpen(true);
+                          setModalPrintReportOpen(true);
                         }}
                         disabled={checklists.length === 0}
                       />

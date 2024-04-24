@@ -1,8 +1,9 @@
-import { IMaintenanceForPDF, IFilterforPDF, ICounts } from '../types';
+import { IChecklistsForPDF, IFilterforPDF } from '../types';
 
-export interface IModalPrintQRCode {
+export interface IModalPrintChecklists {
   setModal: (setModal: boolean) => void;
-  maintenancesForPDF: IMaintenanceForPDF[];
+  checklistsForPDF: IChecklistsForPDF[];
   filterforPDF: IFilterforPDF;
-  counts: ICounts;
+  pendingCount: number;
+  completedCount: number;
 }
