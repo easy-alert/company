@@ -30,7 +30,7 @@ import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
-import { requestDeleteMaintenanceHistory } from '../../../Reports/Create/functions';
+import { requestDeleteMaintenanceHistory } from '../../../Reports/Maintenances/functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 
 export const ModalSendMaintenanceReport = ({

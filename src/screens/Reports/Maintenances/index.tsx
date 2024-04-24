@@ -35,7 +35,7 @@ import {
 import { InProgressTag } from '../../../components/InProgressTag';
 // #endregion
 
-export const CreateReport = () => {
+export const MaintenanceReports = () => {
   // #region states
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -180,7 +180,7 @@ export const CreateReport = () => {
       )}
 
       <s.Container>
-        <h2>Relatórios</h2>
+        <h2>Relatórios de manutenções</h2>
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -340,7 +340,7 @@ export const CreateReport = () => {
                       Selecione
                     </option>
                     <option value="all" disabled={statusForFilter.length === 0}>
-                      Todas
+                      Todos
                     </option>
                     {filtersOptions?.status.map((status) => (
                       <option
@@ -445,7 +445,9 @@ export const CreateReport = () => {
                       <CSVLink
                         data={csvData}
                         headers={csvHeaders}
-                        filename={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+                        filename={`Relatório de manutenções ${new Date().toLocaleDateString(
+                          'pt-BR',
+                        )}`}
                         onClick={() => maintenances.length !== 0}
                       >
                         <IconButton

@@ -67,6 +67,9 @@ import checklistUnchecked from './checklistUnchecked.svg';
 import siren from './siren.svg';
 import whiteSiren from './whiteSiren.svg';
 import filter from './filter.svg';
+import maintenancesRed from './maintenancesRed.svg';
+import checklistsRed from './checklistsRed.svg';
+import redDot from './redDot.svg';
 
 export const icon = {
   leftArrow,
@@ -138,4 +141,7 @@ export const icon = {
   siren,
   whiteSiren,
   filter,
+  maintenancesRed,
+  checklistsRed,
+  redDot,
 };

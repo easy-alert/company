@@ -20,8 +20,8 @@ import DMSansRegular from '../../../../assets/fonts/DM_Sans/DMSans-Regular.ttf';
 import DMSansBold500 from '../../../../assets/fonts/DM_Sans/DMSans-Bold.ttf';
 
 // TYPES
-import { IModalPrintQRCode } from './types';
-import { ICounts, IFilterforPDF, IMaintenanceForPDF } from '../types';
+import { IModalPrintChecklists } from './types';
+import { IChecklistsForPDF, IFilter } from '../types';
 
 // STYLES
 import * as Style from './styles';
@@ -29,8 +29,11 @@ import { image } from '../../../../assets/images';
 
 // FUNCTIONS
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { getSingularStatusNameforPdf, getStatusBackgroundColor } from './functions';
-import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../../utils/functions';
+import { capitalizeFirstLetter, dateFormatter } from '../../../../utils/functions';
+import {
+  getStatusBackgroundColor,
+  getSingularStatusNameforPdf,
+} from '../../Maintenances/ModalPrintReport/functions';
 import { theme } from '../../../../styles/theme';
 
 Font.register({
@@ -55,16 +58,18 @@ Font.register({
 // #region pdf
 const MyDocument = ({
   setLoading,
-  maintenancesForPDF,
+  checklistsForPDF,
   companyImage,
   filterforPDF,
-  counts,
+  completedCount,
+  pendingCount,
 }: {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  maintenancesForPDF: IMaintenanceForPDF[];
+  checklistsForPDF: IChecklistsForPDF[];
   companyImage: string;
-  filterforPDF: IFilterforPDF;
-  counts: ICounts;
+  filterforPDF: IFilter;
+  pendingCount: number;
+  completedCount: number;
 }) => {
   const randomNumber = () => {
     let result = '';
@@ -98,12 +103,20 @@ const MyDocument = ({
                 <View style={Style.pdf.headerColumn}>
                   <Text>
                     <Text style={Style.pdf.bold500}>Edificação:</Text>{' '}
-                    {`${filterforPDF.buildingNames ? filterforPDF.buildingNames : 'Todas'}`}
+                    {`${
+                      filterforPDF.buildingNames.length
+                        ? filterforPDF.buildingNames.join(', ')
+                        : 'Todas'
+                    }`}
                   </Text>
 
                   <Text>
                     <Text style={Style.pdf.bold500}>Status:</Text>{' '}
-                    {`${filterforPDF.statusNames ? filterforPDF.statusNames : 'Todos'}`}
+                    {`${
+                      filterforPDF.statusNames.length
+                        ? filterforPDF.statusNames.join(', ')
+                        : 'Todos'
+                    }`}
                   </Text>
 
                   <Text>
@@ -115,11 +128,6 @@ const MyDocument = ({
                           new Date(filterforPDF.endDate).setUTCHours(3, 0, 0, 0),
                         ).toLocaleDateString('pt-BR')}`
                       : 'Todos'}
-                  </Text>
-
-                  <Text>
-                    <Text style={Style.pdf.bold500}>Categoria:</Text>{' '}
-                    {`${filterforPDF.categoryNames ? filterforPDF.categoryNames : 'Todas'}`}
                   </Text>
                 </View>
               </View>
@@ -142,21 +150,16 @@ const MyDocument = ({
             // #region Body
             <>
               <View style={Style.pdf.body}>
-                {maintenancesForPDF.map(({ data, month }) => (
+                {checklistsForPDF.map(({ data, month }) => (
                   <View style={Style.pdf.cardWrapper} key={month}>
                     <Text style={Style.pdf.month}>{month}</Text>
-                    {data.map((maintenance) => (
+                    {data.map((checklist) => (
                       <View style={Style.pdf.cardRow} key={month} wrap={false}>
                         <View style={Style.pdf.cardDateColumn}>
-                          <Text>
-                            {String(new Date(maintenance.notificationDate).getDate()).padStart(
-                              2,
-                              '0',
-                            )}
-                          </Text>
+                          <Text>{String(new Date(checklist.date).getDate()).padStart(2, '0')}</Text>
                           <Text>
                             {capitalizeFirstLetter(
-                              new Date(maintenance.notificationDate)
+                              new Date(checklist.date)
                                 .toLocaleString('pt-br', {
                                   weekday: 'long',
                                 })
@@ -169,133 +172,65 @@ const MyDocument = ({
                           <View
                             style={{
                               ...Style.pdf.tag,
-                              backgroundColor: getStatusBackgroundColor(
-                                maintenance.status === 'overdue' ? 'completed' : maintenance.status,
-                              ),
+                              backgroundColor: getStatusBackgroundColor(checklist.status),
                             }}
                           />
 
                           <View style={Style.pdf.content}>
                             <View style={Style.pdf.contentHeader}>
-                              <Text>{maintenance.buildingName}</Text>
+                              <Text>{checklist.building.name}</Text>
 
                               <View style={Style.pdf.tagsRow}>
-                                {maintenance.status === 'overdue' && (
-                                  <Text
-                                    style={{
-                                      ...Style.pdf.maintenanceTag,
-                                      backgroundColor: getStatusBackgroundColor('completed'),
-                                    }}
-                                  >
-                                    {getSingularStatusNameforPdf('completed')}
-                                  </Text>
-                                )}
                                 <Text
                                   style={{
                                     ...Style.pdf.maintenanceTag,
-                                    backgroundColor: getStatusBackgroundColor(maintenance.status),
+                                    backgroundColor: getStatusBackgroundColor(checklist.status),
                                   }}
                                 >
-                                  {getSingularStatusNameforPdf(maintenance.status)}
+                                  {getSingularStatusNameforPdf(checklist.status)}
                                 </Text>
-
-                                {maintenance.type === 'occasional' && (
-                                  <Text
-                                    style={{
-                                      ...Style.pdf.maintenanceTag,
-                                      backgroundColor: getStatusBackgroundColor('occasional'),
-                                    }}
-                                  >
-                                    Avulsa
-                                  </Text>
-                                )}
-
-                                {maintenance.inProgress && (
-                                  <Text
-                                    style={{
-                                      ...Style.pdf.maintenanceTag,
-                                      backgroundColor: getStatusBackgroundColor('inProgress'),
-                                    }}
-                                  >
-                                    Em execução
-                                  </Text>
-                                )}
                               </View>
                             </View>
 
                             <View style={Style.pdf.contentData}>
                               <View style={Style.pdf.contentColumn1}>
                                 <Text style={Style.pdf.bold500}>
-                                  Categoria:{' '}
-                                  <Text style={Style.pdf.normal}>{maintenance.categoryName}</Text>
+                                  Nome: <Text style={Style.pdf.normal}>{checklist.name}</Text>
                                 </Text>
 
                                 <Text style={Style.pdf.bold500}>
-                                  Elemento:{' '}
-                                  <Text style={Style.pdf.normal}>{maintenance.element}</Text>
-                                </Text>
-
-                                <Text style={Style.pdf.bold500}>
-                                  Atividade:{' '}
-                                  <Text style={Style.pdf.normal}>{maintenance.activity}</Text>
+                                  Descrição:{' '}
+                                  <Text style={Style.pdf.normal}>{checklist.description}</Text>
                                 </Text>
                               </View>
 
                               <View style={Style.pdf.contentColumn2}>
                                 <Text style={Style.pdf.bold500}>
-                                  Notificação:{' '}
+                                  Data:{' '}
                                   <Text style={Style.pdf.normal}>
-                                    {dateFormatter(maintenance.notificationDate)}
-                                  </Text>
-                                </Text>
-
-                                <Text style={Style.pdf.bold500}>
-                                  Conclusão:{' '}
-                                  <Text style={Style.pdf.normal}>
-                                    {maintenance.resolutionDate
-                                      ? dateFormatter(maintenance.resolutionDate)
-                                      : '-'}
+                                    {dateFormatter(checklist.date)}
                                   </Text>
                                 </Text>
 
                                 <Text style={Style.pdf.bold500}>
                                   Responsável:{' '}
-                                  <Text style={Style.pdf.normal}>{maintenance.responsible}</Text>
+                                  <Text style={Style.pdf.normal}>{checklist.syndic.name}</Text>
                                 </Text>
 
                                 <Text style={Style.pdf.bold500}>
-                                  Valor:{' '}
+                                  Periodicidade:{' '}
                                   <Text style={Style.pdf.normal}>
-                                    {' '}
-                                    {
-                                      applyMask({
-                                        value: String(maintenance.cost || 0),
-                                        mask: 'BRL',
-                                      }).value
-                                    }
+                                    {checklist.frequency ? 'Sim' : 'Não'}
                                   </Text>
-                                </Text>
-
-                                <Text style={Style.pdf.bold500}>
-                                  Anexos ({maintenance.annexes.length}):{' '}
-                                  {maintenance.annexes.map(({ url, name }, annexIndex) => (
-                                    <View key={url}>
-                                      <Link src={url} style={Style.pdf.annex}>
-                                        {`${name}${
-                                          maintenance.annexes.length !== annexIndex + 1 ? ', ' : '.'
-                                        }`}
-                                      </Link>
-                                    </View>
-                                  ))}
                                 </Text>
                               </View>
 
                               <View style={Style.pdf.contentColumn3}>
                                 <Text style={Style.pdf.bold500}>
-                                  Imagens ({maintenance.images.slice(0, 4).length}):
+                                  Imagens ({checklist.images.slice(0, 4).length}):
                                 </Text>
                                 <View style={Style.pdf.images}>
-                                  {maintenance.images.slice(0, 4).map(({ url }) => (
+                                  {checklist.images.slice(0, 4).map(({ url }) => (
                                     <Link key={url} src={url} style={Style.pdf.image}>
                                       <Image
                                         source={url.endsWith('jpeg') ? image.imagePlaceholder : url}
@@ -307,9 +242,7 @@ const MyDocument = ({
                             </View>
                             <Text style={Style.pdf.bold500}>
                               Observação do relato:{' '}
-                              <Text style={Style.pdf.normal}>
-                                {maintenance.reportObservation || '-'}
-                              </Text>
+                              <Text style={Style.pdf.normal}>{checklist.observation || '-'}</Text>
                             </Text>
                           </View>
                         </View>
@@ -319,33 +252,19 @@ const MyDocument = ({
                 ))}
               </View>
 
-              <View style={Style.pdf.countCard}>
+              <View style={Style.pdf.countCard} wrap={false}>
                 <View>
-                  <Text style={{ color: theme.color.success, fontSize: 12 }}>
-                    {counts.completed}
-                  </Text>
+                  <Text style={{ color: theme.color.success, fontSize: 12 }}>{completedCount}</Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
-                    {counts.completed > 1 ? 'Concluídas' : 'Concluída'}
+                    {completedCount > 1 ? 'Concluídas' : 'Concluída'}
                   </Text>
                 </View>
                 <View>
-                  <Text style={{ color: theme.color.actionDanger, fontSize: 12 }}>
-                    {counts.pending}
-                  </Text>
+                  <Text style={{ color: theme.color.warning, fontSize: 12 }}>{pendingCount}</Text>
                   <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
-                    {counts.pending > 1 ? 'Pendentes' : 'Pendente'}
+                    {pendingCount > 1 ? 'Pendentes' : 'Pendente'}
                   </Text>
                 </View>
-                <View>
-                  <Text style={{ color: theme.color.warning, fontSize: 12 }}>{counts.expired}</Text>
-                  <Text style={{ color: theme.color.gray4, fontSize: 10 }}>
-                    {counts.expired > 1 ? 'Vencidas' : 'Vencida'}
-                  </Text>
-                </View>
-
-                <Text style={{ marginLeft: 'auto' }}>
-                  Total: {applyMask({ value: String(counts.totalCost), mask: 'BRL' }).value}
-                </Text>
               </View>
             </>
             // #endregion
@@ -369,12 +288,13 @@ const MyDocument = ({
 // #endregion
 
 // #region modal
-export const ModalPrintReport = ({
+export const ModalPrintChecklists = ({
   setModal,
-  maintenancesForPDF,
+  checklistsForPDF,
   filterforPDF,
-  counts,
-}: IModalPrintQRCode) => {
+  completedCount,
+  pendingCount,
+}: IModalPrintChecklists) => {
   const [loading, setLoading] = useState<boolean>(true);
   const { account } = useAuthContext();
 
@@ -386,21 +306,23 @@ export const ModalPrintReport = ({
         <Style.Container>
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
             <MyDocument
-              counts={counts}
               setLoading={setLoading}
-              maintenancesForPDF={maintenancesForPDF}
+              checklistsForPDF={checklistsForPDF}
               companyImage={account?.Company.image!}
               filterforPDF={filterforPDF}
+              completedCount={completedCount}
+              pendingCount={pendingCount}
             />
           </PDFViewer>
           <PDFDownloadLink
             document={
               <MyDocument
-                counts={counts}
                 setLoading={setLoading}
-                maintenancesForPDF={maintenancesForPDF}
+                checklistsForPDF={checklistsForPDF}
                 companyImage={account?.Company.image!}
                 filterforPDF={filterforPDF}
+                completedCount={completedCount}
+                pendingCount={pendingCount}
               />
             }
             fileName={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
