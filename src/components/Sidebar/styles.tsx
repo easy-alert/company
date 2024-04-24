@@ -109,3 +109,9 @@ export const AppContent = styled.div`
     padding: 0 ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
   }
 `;
+
+export const ReportIcons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+`;

@@ -125,6 +125,7 @@ export const pdf = StyleSheet.create({
     fontSize: '12px',
     fontWeight: 500,
     width: '30px',
+    justifyContent: 'center',
   },
 
   card: {

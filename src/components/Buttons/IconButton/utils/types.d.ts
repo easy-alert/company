@@ -13,4 +13,5 @@ export interface IIconButton {
   fontWeight?: string;
   size?: string;
   disabled?: boolean;
+  title?: string;
 }

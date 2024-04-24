@@ -166,7 +166,11 @@ export const Tickets = () => {
   return (
     <>
       {modalTicketDetailsOpen && (
-        <ModalTicketDetails setModal={setModalTicketDetailsOpen} ticketId={selectedTicketId} />
+        <ModalTicketDetails
+          setModal={setModalTicketDetailsOpen}
+          ticketId={selectedTicketId}
+          onThenRequest={findManyTickets}
+        />
       )}
       {modalChooseAnswerType && (
         <ModalChooseAnswerType

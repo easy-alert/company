@@ -29,7 +29,7 @@ export const ModalDeleteChecklist = ({
     setDeleteMode(value);
   };
 
-  const completeChecklist = async () => {
+  const deleteChecklist = async () => {
     setOnQuery(true);
 
     await Api.delete(`/checklists/${checklistId}/${deleteMode}`)
@@ -94,7 +94,7 @@ export const ModalDeleteChecklist = ({
               content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
               contentColor: theme.color.danger,
             }}
-            actionButtonClick={completeChecklist}
+            actionButtonClick={deleteChecklist}
           />
         </Style.ButtonContainer>
       </Style.Container>

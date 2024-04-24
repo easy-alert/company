@@ -24,7 +24,7 @@ import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
 import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 import { IconButton } from '../../components/Buttons/IconButton';
 import { ModalCreateOccasionalMaintenance } from './utils/ModalCreateOccasionalMaintenance';
-import { ModalEditMaintenanceReport } from '../Reports/Create/ModalEditMaintenanceReport';
+import { ModalEditMaintenanceReport } from '../Reports/Maintenances/ModalEditMaintenanceReport';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());

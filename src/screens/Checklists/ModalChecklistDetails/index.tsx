@@ -296,6 +296,7 @@ export const ModalChecklistDetails = ({
               <Button
                 label="Editar relato"
                 loading={onQuery}
+                disable={onImageQuery}
                 type="button"
                 onClick={() => {
                   if (!isEditing) {
