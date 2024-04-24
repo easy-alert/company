@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { Modal } from '../../../components/Modal';
 import * as Style from './styles';
@@ -8,10 +9,12 @@ import { ImagePreview } from '../../../components/ImagePreview';
 import { ListTag } from '../../../components/ListTag';
 import { theme } from '../../../styles/theme';
 import { TagsArray } from '../../../components/TagsArray';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
 
 interface IModalTicketDetails {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   ticketId: string;
+  onThenRequest: () => Promise<void>;
 }
 
 interface Image {
@@ -64,9 +67,27 @@ interface ITicket {
   building: Building;
 }
 
-export const ModalTicketDetails = ({ setModal, ticketId }: IModalTicketDetails) => {
+export const ModalTicketDetails = ({ setModal, ticketId, onThenRequest }: IModalTicketDetails) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [ticket, setTicket] = useState<ITicket>();
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const deleteTicket = async () => {
+    setOnQuery(true);
+
+    await Api.delete(`/tickets/${ticket?.id}`)
+      .then((res) => {
+        onThenRequest();
+        toast.success(res.data.ServerMessage.message);
+        setModal(false);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+      });
+  };
 
   const findChecklistById = async () => {
     await Api.get(`/tickets/${ticketId}`)
@@ -156,6 +177,21 @@ export const ModalTicketDetails = ({ setModal, ticketId }: IModalTicketDetails) 
               </Style.FileAndImageRow>
             </Style.Row>
           </Style.Content>
+          <Style.Buttons>
+            <PopoverButton
+              borderless
+              disabled={onQuery}
+              actionButtonBgColor={theme.color.actionDanger}
+              type="Button"
+              label="Excluir"
+              message={{
+                title: 'Deseja excluir este chamado?',
+                content: 'Atenção, essa ação é irreversível.',
+                contentColor: theme.color.danger,
+              }}
+              actionButtonClick={deleteTicket}
+            />
+          </Style.Buttons>
         </Style.Container>
       )}
     </Modal>
