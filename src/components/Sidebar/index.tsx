@@ -24,6 +24,7 @@ export const Sidebar = () => {
 
   const SidebarContent: SidebarContentProps[] = [
     {
+      title: 'Dashboard',
       type: 'navigate',
       icon: icon.dashboard,
       url: '/dashboard',
@@ -32,6 +33,7 @@ export const Sidebar = () => {
       },
     },
     {
+      title: 'Calendário',
       type: 'navigate',
       icon: icon.calendar,
       url: '/calendar',
@@ -40,6 +42,7 @@ export const Sidebar = () => {
       },
     },
     {
+      title: 'Edificações',
       type: 'navigate',
       icon: icon.building,
       url: '/buildings',
@@ -49,6 +52,7 @@ export const Sidebar = () => {
     },
 
     {
+      title: 'Checklists',
       type: 'navigate',
       icon: icon.checklists,
       url: '/checklists',
@@ -57,7 +61,18 @@ export const Sidebar = () => {
       },
     },
 
+    {
+      title: 'Chamados',
+      type: 'navigate',
+      icon: icon.whiteSiren,
+      url: '/tickets',
+      redirectFunction: () => {
+        navigate('/tickets');
+      },
+    },
+
     // {
+    // title: 'Manutenções',
     // type:'navigate',
     //   icon: icon.maintenances,
     //   url: '/maintenances',
@@ -67,6 +82,7 @@ export const Sidebar = () => {
     // },
 
     {
+      title: 'Relatórios',
       label: 'Relatórios',
       type: 'popover',
       icon: icon.report,
@@ -105,6 +121,7 @@ export const Sidebar = () => {
     },
 
     {
+      title: 'Tutoriais',
       type: 'navigate',
       icon: icon.tutorial,
       url: '/tutorials',
@@ -114,15 +131,7 @@ export const Sidebar = () => {
     },
 
     {
-      type: 'navigate',
-      icon: icon.whiteSiren,
-      url: '/tickets',
-      redirectFunction: () => {
-        navigate('/tickets');
-      },
-    },
-
-    {
+      title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,
       url: '/account',
@@ -132,6 +141,7 @@ export const Sidebar = () => {
     },
 
     {
+      title: 'Sair',
       type: 'navigate',
       icon: icon.power,
       url: '/login',
@@ -190,6 +200,7 @@ export const Sidebar = () => {
 
             {element.type === 'navigate' && (
               <IconButton
+                title={element.title}
                 opacity="0.5"
                 icon={element.icon}
                 onClick={() => {
@@ -226,6 +237,7 @@ export const Sidebar = () => {
                 label={element.label}
                 buttonChildren={
                   <IconButton
+                    title={element.title}
                     opacity="0.5"
                     icon={element.icon}
                     onClick={() => {

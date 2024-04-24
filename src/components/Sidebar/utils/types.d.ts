@@ -3,6 +3,7 @@ interface IBase {
   url: string;
   redirectFunction: () => void;
   label?: string;
+  title?: string;
 }
 
 export interface SidebarContentProps extends IBase {

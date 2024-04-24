@@ -21,8 +21,10 @@ export const IconButton = ({
   fontWeight = '500',
   size = '24px;',
   disabled = false,
+  title,
 }: IIconButton) => (
   <ContainerButton
+    title={title}
     hideLabelOnMedia={hideLabelOnMedia}
     labelPos={labelPos}
     selected={selected}
