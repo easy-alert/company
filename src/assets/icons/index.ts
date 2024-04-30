@@ -70,6 +70,7 @@ import filter from './filter.svg';
 import maintenancesRed from './maintenancesRed.svg';
 import checklistsRed from './checklistsRed.svg';
 import redDot from './redDot.svg';
+import csvLogo2 from './csvLogo2.svg';
 
 export const icon = {
   leftArrow,
@@ -144,4 +145,5 @@ export const icon = {
   maintenancesRed,
   checklistsRed,
   redDot,
+  csvLogo2,
 };
