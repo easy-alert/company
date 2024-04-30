@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 // COMPONENTS
 import { useNavigate, useParams } from 'react-router-dom';
+import { CSVLink } from 'react-csv';
 import * as Style from './styles';
 import { Image } from '../../../components/Image';
 import { icon } from '../../../assets/icons/index';
@@ -37,6 +38,44 @@ export const BuildingMaintenancesList = () => {
 
   const { search } = window.location;
 
+  const csvHeaders = [
+    { label: 'Edificação', key: 'Edificação' },
+    { label: 'Categoria', key: 'Categoria' },
+    { label: 'Elemento', key: 'Elemento' },
+    { label: 'Atividade', key: 'Atividade' },
+    { label: 'Periodicidade', key: 'Periodicidade' },
+    { label: 'Fonte', key: 'Fonte' },
+    { label: 'Prazo para execução', key: 'Prazo para execução' },
+    { label: 'Antecedência', key: 'Antecedência' },
+    { label: 'Última execução', key: 'Última execução' },
+    { label: 'Próxima notificação', key: 'Próxima notificação' },
+  ];
+
+  const csvData = addedMaintenances.flatMap(({ Building, Category, Maintenances }) =>
+    Maintenances.map(({ Maintenance, daysToAnticipate }) => ({
+      Edificação: Building.name,
+      Categoria: Category.name,
+      Elemento: Maintenance.element,
+      Atividade: Maintenance.activity,
+      Periodicidade: `A cada ${Maintenance.frequency} ${
+        Maintenance.frequency > 1
+          ? Maintenance.FrequencyTimeInterval.pluralLabel
+          : Maintenance.FrequencyTimeInterval.singularLabel
+      }`,
+      Fonte: Maintenance.source,
+      'Prazo para execução': `${Maintenance.period} ${
+        Maintenance.period > 1
+          ? Maintenance.PeriodTimeInterval.pluralLabel
+          : Maintenance.PeriodTimeInterval.singularLabel
+      }`,
+      Antecedência: daysToAnticipate
+        ? `${daysToAnticipate} ${!!daysToAnticipate && daysToAnticipate > 1 ? 'dias' : 'dia'}`
+        : '',
+      'Última execução': Maintenance.lastResolutionDate,
+      'Próxima notificação': Maintenance.nextNotificationDate,
+    })),
+  );
+
   useEffect(() => {
     requestAddedMaintenances({
       setLoading,
@@ -62,6 +101,23 @@ export const BuildingMaintenancesList = () => {
             </Style.HeaderTitle>
           </Style.LeftSide>
           <Style.RightSide>
+            <CSVLink
+              data={csvData}
+              headers={csvHeaders}
+              filename={`Plano de manutenção ${new Date().toLocaleDateString('pt-BR')}`}
+              onClick={() => addedMaintenances.length !== 0}
+            >
+              <IconButton
+                disabled={addedMaintenances.length < 1}
+                icon={icon.csvLogo2}
+                label="Exportar"
+                hideLabelOnMedia
+                onClick={() => {
+                  //
+                }}
+              />
+            </CSVLink>
+
             <IconButton
               disabled={addedMaintenances.length < 1}
               icon={icon.pdfLogo2}
