@@ -235,13 +235,30 @@ export const BuildingManageMaintenances = () => {
             </Style.TableLoadingContainer>
           ) : (
             <Style.CategoriesContainer>
-              {categories.map(
-                (category, categoryIndex: number) =>
-                  ((filter && category.name.toLowerCase().includes(filter.toLowerCase())) ||
-                    filter === '') && (
+              {categories.map((category, categoryIndex: number) => {
+                const filteredMaintenances = category.Maintenances.filter(
+                  (maintenance) =>
+                    maintenance.element.toLowerCase().includes(filter.toLowerCase()) ||
+                    maintenance.activity.toLowerCase().includes(filter.toLowerCase()) ||
+                    maintenance.frequency.toString().includes(filter) ||
+                    maintenance.responsible.toLowerCase().includes(filter.toLowerCase()) ||
+                    maintenance.source.toLowerCase().includes(filter.toLowerCase()),
+                );
+
+                if (
+                  filter === '' ||
+                  category.name.toLowerCase().includes(filter.toLowerCase()) ||
+                  filteredMaintenances.length > 0
+                ) {
+                  const categoryWithFilteredMaintenances = {
+                    ...category,
+                    Maintenances: filteredMaintenances,
+                  };
+
+                  return (
                     <MaintenanceCategory
                       key={category.id}
-                      category={category}
+                      category={categoryWithFilteredMaintenances}
                       categories={categories}
                       setCategories={setCategories}
                       categoryIndex={categoryIndex}
@@ -250,8 +267,10 @@ export const BuildingManageMaintenances = () => {
                       timeIntervals={timeIntervals}
                       categoriesOptions={categoriesOptions}
                     />
-                  ),
-              )}
+                  );
+                }
+                return null;
+              })}
             </Style.CategoriesContainer>
           )}
         </>

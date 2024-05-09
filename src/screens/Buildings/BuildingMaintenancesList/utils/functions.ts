@@ -37,7 +37,6 @@ export const filterFunction = ({
           Maintenances: item.Maintenances.filter((maintenance) => {
             const m = maintenance.Maintenance;
             return (
-              item.Category.name.toLowerCase().includes(filter.toLowerCase()) ||
               m.element.toLowerCase().includes(filter.toLowerCase()) ||
               m.activity.toLowerCase().includes(filter.toLowerCase()) ||
               m.frequency.toString().includes(filter) ||
@@ -46,7 +45,11 @@ export const filterFunction = ({
             );
           }),
         }))
-        .filter((item) => item.Maintenances.length > 0);
+        .filter(
+          (item) =>
+            item.Maintenances.length > 0 ||
+            item.Category.name.toLowerCase().includes(filter.toLowerCase()),
+        );
       return newState;
     });
   } else {
