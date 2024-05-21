@@ -15,7 +15,7 @@ import { ICategories, ICategoriesOptions } from './utils/types';
 import { ITimeInterval } from '../../../utils/types';
 
 // FUNCTIONS
-import { requestCategories, requestCategoriesForSelect } from './utils/functions';
+import { filterFunction, requestCategories, requestCategoriesForSelect } from './utils/functions';
 import { requestListIntervals } from '../../../utils/functions';
 
 // MODALS
@@ -25,6 +25,7 @@ export const MaintenancesList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>('');
   const [categories, setCategories] = useState<ICategories[]>([]);
+  const [categoriesForFilter, setCategoriesForFilter] = useState<ICategories[]>([]);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
   const [categoriesOptions, setCategoriesOptions] = useState<ICategoriesOptions[]>([]);
 
@@ -37,7 +38,7 @@ export const MaintenancesList = () => {
 
   useEffect(() => {
     requestListIntervals({ setTimeIntervals });
-    requestCategories({ setLoading, setCategories });
+    requestCategories({ setLoading, setCategories, setCategoriesForFilter });
   }, []);
 
   return (
@@ -62,7 +63,7 @@ export const MaintenancesList = () => {
                     icon={icon.search}
                     size="16px"
                     onClick={() => {
-                      requestCategories({ setCategories, filter });
+                      filterFunction({ setCategories, filter, categoriesForFilter });
                     }}
                   />
                   <input
@@ -73,12 +74,12 @@ export const MaintenancesList = () => {
                     onChange={(evt) => {
                       setFilter(evt.target.value);
                       if (evt.target.value === '') {
-                        requestCategories({ setCategories, filter: '' });
+                        filterFunction({ setCategories, filter: '', categoriesForFilter });
                       }
                     }}
                     onKeyUp={(evt) => {
                       if (evt.key === 'Enter') {
-                        requestCategories({ setCategories, filter });
+                        filterFunction({ setCategories, filter, categoriesForFilter });
                       }
                     }}
                   />

@@ -1,12 +1,28 @@
+/* eslint-disable no-plusplus */
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
 import {
+  IMaintenanceForPDF,
   IRequestDeleteMaintenanceHistory,
   IRequestReportsData,
   IRequestReportsDataForSelect,
 } from './types';
+
+async function getImageBase64(link: string): Promise<string | null> {
+  const response = await fetch(link);
+  const blob = await response.blob();
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      resolve(base64String);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
 
 export const requestReportsData = async ({
   setOnQuery,
@@ -21,10 +37,28 @@ export const requestReportsData = async ({
   await Api.get(
     `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
   )
-    .then((res) => {
+    .then(async (res) => {
       setMaintenances(res.data.maintenances);
       setCounts(res.data.counts);
-      setMaintenancesForPDF(res.data.maintenancesForPDF);
+
+      const { maintenancesForPDF }: { maintenancesForPDF: IMaintenanceForPDF[] } = res.data;
+
+      for (let i = 0; i < maintenancesForPDF.length; i++) {
+        const { data } = maintenancesForPDF[i];
+
+        for (let j = 0; j < data.length; j++) {
+          const { images } = data[j];
+
+          for (let k = 0; k < images.length; k++) {
+            const { url } = images[k];
+            // eslint-disable-next-line no-await-in-loop
+            const base64Url = await getImageBase64(url);
+            images[k].url = base64Url || '';
+          }
+        }
+      }
+
+      setMaintenancesForPDF([...maintenancesForPDF]);
     })
     .catch((err) => {
       catchHandler(err);

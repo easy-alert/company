@@ -29,18 +29,30 @@ export const filterFunction = ({
   filter,
 }: IFilterFunction) => {
   if (filter !== '') {
-    setAddedMaintenances((prevState) => {
-      let newState = [...prevState];
-      newState = addedMaintenancesForFilter.filter((e) =>
-        String(e.Category.name).toLowerCase().includes(String(filter).toLowerCase()),
-      );
+    setAddedMaintenances(() => {
+      let newState = [...addedMaintenancesForFilter];
+      newState = newState
+        .map((item) => ({
+          ...item,
+          Maintenances: item.Maintenances.filter((maintenance) => {
+            const m = maintenance.Maintenance;
+            return (
+              m.element.toLowerCase().includes(filter.toLowerCase()) ||
+              m.activity.toLowerCase().includes(filter.toLowerCase()) ||
+              m.frequency.toString().includes(filter) ||
+              m.responsible.toLowerCase().includes(filter.toLowerCase()) ||
+              m.source.toLowerCase().includes(filter.toLowerCase())
+            );
+          }),
+        }))
+        .filter(
+          (item) =>
+            item.Maintenances.length > 0 ||
+            item.Category.name.toLowerCase().includes(filter.toLowerCase()),
+        );
       return newState;
     });
   } else {
-    setAddedMaintenances((prevState) => {
-      let newState = [...prevState];
-      newState = addedMaintenancesForFilter;
-      return newState;
-    });
+    setAddedMaintenances(addedMaintenancesForFilter);
   }
 };
