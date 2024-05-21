@@ -292,14 +292,12 @@ const MyDocument = ({
 
                               <View style={Style.pdf.contentColumn3}>
                                 <Text style={Style.pdf.bold500}>
-                                  Imagens ({maintenance.images.slice(0, 4).length}):
+                                  Imagens ({maintenance.images.length}):
                                 </Text>
                                 <View style={Style.pdf.images}>
-                                  {maintenance.images.slice(0, 4).map(({ url }) => (
+                                  {maintenance.images.slice(0, 4).map(({ url, base64 }) => (
                                     <Link key={url} src={url} style={Style.pdf.image}>
-                                      <Image
-                                        source={url.endsWith('jpeg') ? image.imagePlaceholder : url}
-                                      />
+                                      <Image source={base64} />
                                     </Link>
                                   ))}
                                 </View>

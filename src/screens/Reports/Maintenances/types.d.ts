@@ -94,6 +94,7 @@ export interface IMaintenanceForPDF {
 
     images: {
       url: string;
+      base64?: string;
     }[];
 
     annexes: {
