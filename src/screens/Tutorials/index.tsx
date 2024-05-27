@@ -1,83 +1,90 @@
-/* eslint-disable no-alert */
-// LIBS
 import { useState } from 'react';
-
-import { figure } from '../../assets/figures';
-
-// COMPONENTS
+import { icon } from '../../assets/icons';
 import * as Style from './styles';
-import { Card } from './components/Card';
-
-// CONTENTS
-import { WelcomeTutorial } from './contents/Welcome';
-import { Modal } from '../../components/Modal';
-
-interface IContent {
-  title: string;
-  content: JSX.Element | null;
-}
-
-// interface IHistory extends Location {
-//   state: {
-//     from: string;
-//   };
-// }
-
-const contents = [
-  {
-    title: 'Bem-vindo a Easy Alert!',
-    description: 'Guia introdutório das funcionalidades e recursos.',
-    content: <WelcomeTutorial />,
-    figure: figure.web,
-  },
-];
+import { IFrameModal } from './IFrameModal';
 
 export const Tutorials = () => {
-  // const history = useLocation() as IHistory;
+  const [iframeModalOpen, setIframeModalOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const [content, setContent] = useState<IContent>({
-    title: contents[0].title,
-    content: contents[0].content,
+  const videos = [
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/ZmAId85nywI',
+      name: 'Bem-vindo à Easy Alert!',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/PEulFq2tE3o',
+      name: 'Introdução plataforma',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/8VNDmvTYHFE',
+      name: 'Cadastro de edificação',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/_L1f4AYAuWg',
+      name: 'Como usar os QRCodes',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/SeXoANy7Atk',
+      name: 'Como usar os checklists',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/hOp3MlaJm6M',
+      name: 'Abertura de chamado',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/LUCUx4oeZcQ',
+      name: 'Dashboard',
+    },
+    {
+      thumbnail: icon.paper,
+      link: 'https://youtu.be/JUWu0JbJu8c',
+      name: 'Como responder manutenção',
+    },
+  ];
+
+  videos.forEach((video) => {
+    const splittedUrl = video.link.split('/');
+    const videoId = splittedUrl[splittedUrl.length - 1];
+
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+    // eslint-disable-next-line no-param-reassign
+    video.thumbnail = thumbnailUrl;
   });
-
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (
-  //     localStorage.getItem('viewedTutorial') === 'false' &&
-  //     history.state &&
-  //     history.state.from === 'login'
-  //   ) {
-  //     setModalOpen(true);
-  //   }
-  // }, []);
 
   return (
     <>
-      {modalOpen && content.content && (
-        <Modal title={content.title} setModal={setModalOpen} bodyWidth="900px">
-          {content.content}
-        </Modal>
+      {iframeModalOpen && selectedIndex !== null && (
+        <IFrameModal
+          setModal={setIframeModalOpen}
+          name={videos[selectedIndex].name}
+          link={videos[selectedIndex].link}
+        />
       )}
       <Style.Container>
-        <Style.Header>
-          <h2>Tutorial</h2>
-        </Style.Header>
-
-        <Style.TutorialsContainer>
-          {contents.map((card) => (
-            <Card
-              key={content.title}
+        <h2>Tutoriais</h2>
+        <Style.Wrapper>
+          {videos.map((video, index) => (
+            <Style.Card
+              key={video.link}
               onClick={() => {
-                setContent({ title: card.title, content: card.content });
-                setModalOpen(true);
+                setSelectedIndex(index);
+                setIframeModalOpen(true);
               }}
-              figure={card.figure}
-              title={card.title}
-              description={card.description}
-            />
+            >
+              <h5>{video.name}</h5>
+              <img alt="" src={video.thumbnail} />
+            </Style.Card>
           ))}
-        </Style.TutorialsContainer>
+        </Style.Wrapper>
       </Style.Container>
     </>
   );
