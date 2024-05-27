@@ -65,6 +65,8 @@ export interface IBuildingDetail {
   MaintenancesCount: MaintenanceCount[];
   Banners: Banner[];
   mandatoryReportProof: boolean;
+  residentPassword: string | null;
+  syndicPassword: string | null;
 }
 
 export interface IRequestBuildingDetails {

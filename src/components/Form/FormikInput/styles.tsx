@@ -99,3 +99,14 @@ export const ErrorMessage = styled.div<{ errorColor: string }>`
     }
   }
 `;
+
+export const PasswordDiv = styled.div`
+  position: relative;
+  display: flex;
+
+  > :nth-child(2) {
+    position: absolute;
+    top: 6px;
+    right: 16px;
+  }
+`;

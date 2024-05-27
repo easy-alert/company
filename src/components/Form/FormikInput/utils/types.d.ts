@@ -8,4 +8,5 @@ export interface IInput extends InputHTMLAttributes<HTMLInputElement> {
   error?: string | null | any;
   passwordPlaceholder?: boolean;
   typeDatePlaceholderValue?: string;
+  passwordShowToggle?: boolean;
 }

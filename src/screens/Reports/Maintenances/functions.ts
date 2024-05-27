@@ -53,7 +53,7 @@ export const requestReportsData = async ({
             const { url } = images[k];
             // eslint-disable-next-line no-await-in-loop
             const base64Url = await getImageBase64(url);
-            images[k].url = base64Url || '';
+            images[k].base64 = base64Url || '';
           }
         }
       }

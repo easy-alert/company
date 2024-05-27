@@ -47,6 +47,7 @@ import { FileComponent, FolderComponent } from '../../../components/FileSystem';
 import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
 import { ModalEditFolder } from './utils/modals/ModalEditFolder';
 import { ModalEditFile } from './utils/modals/ModalEditFile';
+import { ModalChangeClientPassword } from './utils/modals/ModalChangeClientPassword';
 // #endregion
 
 export const BuildingDetails = () => {
@@ -78,6 +79,11 @@ export const BuildingDetails = () => {
 
   const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
     useState<boolean>(false);
+
+  const [modalChangeClientPasswordOpen, setModalChangeClientPasswordOpen] =
+    useState<boolean>(false);
+
+  const [passwordType, setPasswordType] = useState<'resident' | 'responsible'>('resident');
 
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
@@ -263,9 +269,26 @@ export const BuildingDetails = () => {
           buildingName={building?.name}
           buildingNanoId={building.nanoId}
           notificationsConfigurations={building.NotificationsConfigurations.map((syndic) => ({
-              name:syndic.name,
-              nanoId: syndic.nanoId
-            }))}
+            name: syndic.name,
+            nanoId: syndic.nanoId,
+          }))}
+        />
+      )}
+
+      {modalChangeClientPasswordOpen && building && (
+        <ModalChangeClientPassword
+          setModal={setModalChangeClientPasswordOpen}
+          type={passwordType}
+          onThen={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
         />
       )}
 
@@ -573,6 +596,7 @@ export const BuildingDetails = () => {
                           )}
                           <IconButton
                             size="16px"
+                            className="p4"
                             icon={icon.edit}
                             label="Editar"
                             onClick={() => {
@@ -593,6 +617,91 @@ export const BuildingDetails = () => {
                   ]}
                 />
               ))}
+            </NotificationTable>
+          ) : (
+            <Style.NoDataContainer>
+              <h5>Nenhum dado cadastrado.</h5>
+            </Style.NoDataContainer>
+          )}
+        </Style.Card>
+
+        <Style.Card>
+          <Style.CardHeader>
+            <h5>Senhas de acesso</h5>
+          </Style.CardHeader>
+
+          {building ? (
+            <NotificationTable
+              colsHeader={[
+                { label: 'Acesso', cssProps: { width: '20%' } },
+                { label: 'Status', cssProps: { width: '20%' } },
+                { label: '' },
+              ]}
+            >
+              <NotificationTableContent
+                onClick={() => {
+                  //
+                }}
+                colsBody={[
+                  {
+                    cell: 'Morador',
+                  },
+                  {
+                    cell: building.residentPassword ? 'Cadastrada' : 'Não cadastrada',
+                  },
+                  {
+                    cell: (
+                      <Style.PasswordDiv>
+                        <IconButton
+                          size="16px"
+                          icon={icon.edit}
+                          label="Editar"
+                          className="p4"
+                          onClick={() => {
+                            setPasswordType('resident');
+                            setModalChangeClientPasswordOpen(true);
+                          }}
+                        />
+                      </Style.PasswordDiv>
+                    ),
+                  },
+                ]}
+              />
+              <NotificationTableContent
+                onClick={() => {
+                  //
+                }}
+                colsBody={[
+                  {
+                    cell: 'Responsável',
+                    cssProps: {
+                      borderBottomLeftRadius: theme.size.xsm,
+                    },
+                  },
+                  {
+                    cell: building.syndicPassword ? 'Cadastrada' : 'Não cadastrada',
+                  },
+                  {
+                    cell: (
+                      <Style.PasswordDiv>
+                        <IconButton
+                          size="16px"
+                          icon={icon.edit}
+                          label="Editar"
+                          className="p4"
+                          onClick={() => {
+                            setPasswordType('responsible');
+                            setModalChangeClientPasswordOpen(true);
+                          }}
+                        />
+                      </Style.PasswordDiv>
+                    ),
+                    cssProps: {
+                      borderBottomRightRadius: theme.size.xsm,
+                    },
+                  },
+                ]}
+              />
             </NotificationTable>
           ) : (
             <Style.NoDataContainer>
