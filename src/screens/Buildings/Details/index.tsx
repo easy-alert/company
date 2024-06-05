@@ -155,142 +155,144 @@ export const BuildingDetails = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalEditBuildingOpen && building && (
-        <ModalEditBuilding
-          setModal={setModalEditBuildingOpen}
-          building={building}
-          buildingTypes={buildingTypes}
-          requestBuildingDetailsCall={async () => {
-            requestBuildingDetails({
-              buildingId: buildingId!,
-              setLoading,
-              setBuilding,
-              setUsedMaintenancesCount,
-              setTotalMaintenancesCount,
-              setRootFolder,
-            });
-          }}
-        />
-      )}
+      <>
+        {modalEditBuildingOpen && building && (
+          <ModalEditBuilding
+            setModal={setModalEditBuildingOpen}
+            building={building}
+            buildingTypes={buildingTypes}
+            requestBuildingDetailsCall={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
 
-      {modalCreateNotificationConfigurationOpen && building && (
-        <ModalCreateNotificationConfiguration
-          setModal={setModalCreateNotificationConfigurationOpen}
-          buildingId={building.id}
-          emailConfirmUrl={emailConfirmUrl}
-          phoneConfirmUrl={phoneConfirmUrl}
-          requestBuildingDetailsCall={async () => {
-            requestBuildingDetails({
-              buildingId: buildingId!,
-              setLoading,
-              setBuilding,
-              setUsedMaintenancesCount,
-              setTotalMaintenancesCount,
-              setRootFolder,
-            });
-          }}
-        />
-      )}
+        {modalCreateNotificationConfigurationOpen && building && (
+          <ModalCreateNotificationConfiguration
+            setModal={setModalCreateNotificationConfigurationOpen}
+            buildingId={building.id}
+            emailConfirmUrl={emailConfirmUrl}
+            phoneConfirmUrl={phoneConfirmUrl}
+            requestBuildingDetailsCall={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
 
-      {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
-        <ModalEditNotificationConfiguration
-          setModal={setModalEditNotificationConfigurationOpen}
-          buildingId={building.id}
-          selectedNotificationRow={selectedNotificationRow}
-          emailConfirmUrl={emailConfirmUrl}
-          phoneConfirmUrl={phoneConfirmUrl}
-          requestBuildingDetailsCall={async () => {
-            requestBuildingDetails({
-              buildingId: buildingId!,
-              setLoading,
-              setBuilding,
-              setUsedMaintenancesCount,
-              setTotalMaintenancesCount,
-              setRootFolder,
-            });
-          }}
-        />
-      )}
+        {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
+          <ModalEditNotificationConfiguration
+            setModal={setModalEditNotificationConfigurationOpen}
+            buildingId={building.id}
+            selectedNotificationRow={selectedNotificationRow}
+            emailConfirmUrl={emailConfirmUrl}
+            phoneConfirmUrl={phoneConfirmUrl}
+            requestBuildingDetailsCall={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
 
-      {modalAddFilesOpen && building && rootFolder && (
-        <ModalAddFiles
-          setModal={setModalAddFilesOpen}
-          setBuilding={setBuilding}
-          folderId={folderId || building?.Folders.id}
-        />
-      )}
+        {modalAddFilesOpen && building && rootFolder && (
+          <ModalAddFiles
+            setModal={setModalAddFilesOpen}
+            setBuilding={setBuilding}
+            folderId={folderId || building?.Folders.id}
+          />
+        )}
 
-      {modalCreateFolderOpen && building && rootFolder && (
-        <ModalCreateFolder
-          setModal={setModalCreateFolderOpen}
-          buildingId={building.id}
-          setBuilding={setBuilding}
-          parentId={folderId || building?.Folders.id}
-        />
-      )}
+        {modalCreateFolderOpen && building && rootFolder && (
+          <ModalCreateFolder
+            setModal={setModalCreateFolderOpen}
+            buildingId={building.id}
+            setBuilding={setBuilding}
+            parentId={folderId || building?.Folders.id}
+          />
+        )}
 
-      {modalEditFolderOpen && building && folderToEdit && (
-        <ModalEditFolder
-          setModal={setModalEditFolderOpen}
-          setBuilding={setBuilding}
-          folder={folderToEdit}
-        />
-      )}
+        {modalEditFolderOpen && building && folderToEdit && (
+          <ModalEditFolder
+            setModal={setModalEditFolderOpen}
+            setBuilding={setBuilding}
+            folder={folderToEdit}
+          />
+        )}
 
-      {modalEditFileOpen && building && fileToEdit && (
-        <ModalEditFile
-          setModal={setModalEditFileOpen}
-          setBuilding={setBuilding}
-          file={fileToEdit}
-        />
-      )}
+        {modalEditFileOpen && building && fileToEdit && (
+          <ModalEditFile
+            setModal={setModalEditFileOpen}
+            setBuilding={setBuilding}
+            file={fileToEdit}
+          />
+        )}
 
-      {modalManageBannersOpen && building && (
-        <ModalManageBanners
-          setModal={setModalManageBannersOpen}
-          buildingId={building.id}
-          currentBanners={building?.Banners}
-          requestBuildingDetailsCall={async () => {
-            requestBuildingDetails({
-              buildingId: buildingId!,
-              setLoading,
-              setBuilding,
-              setUsedMaintenancesCount,
-              setTotalMaintenancesCount,
-              setRootFolder,
-            });
-          }}
-        />
-      )}
+        {modalManageBannersOpen && building && (
+          <ModalManageBanners
+            setModal={setModalManageBannersOpen}
+            buildingId={building.id}
+            currentBanners={building?.Banners}
+            requestBuildingDetailsCall={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
 
-      {modalPrintQRCodeOpen && building && (
-        <ModalPrintQRCode
-          setModal={setModalPrintQRCodeOpen}
-          buildingName={building?.name}
-          buildingNanoId={building.nanoId}
-          notificationsConfigurations={building.NotificationsConfigurations.map((syndic) => ({
-            name: syndic.name,
-            nanoId: syndic.nanoId,
-          }))}
-        />
-      )}
+        {modalPrintQRCodeOpen && building && (
+          <ModalPrintQRCode
+            setModal={setModalPrintQRCodeOpen}
+            buildingName={building?.name}
+            buildingNanoId={building.nanoId}
+            notificationsConfigurations={building.NotificationsConfigurations.map((syndic) => ({
+              name: syndic.name,
+              nanoId: syndic.nanoId,
+            }))}
+          />
+        )}
 
-      {modalChangeClientPasswordOpen && building && (
-        <ModalChangeClientPassword
-          setModal={setModalChangeClientPasswordOpen}
-          type={passwordType}
-          onThen={async () => {
-            requestBuildingDetails({
-              buildingId: buildingId!,
-              setLoading,
-              setBuilding,
-              setUsedMaintenancesCount,
-              setTotalMaintenancesCount,
-              setRootFolder,
-            });
-          }}
-        />
-      )}
+        {modalChangeClientPasswordOpen && building && (
+          <ModalChangeClientPassword
+            setModal={setModalChangeClientPasswordOpen}
+            type={passwordType}
+            onThen={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
+      </>
 
       <Style.Header>
         <h2>Detalhes de edificação</h2>
@@ -625,91 +627,8 @@ export const BuildingDetails = () => {
           )}
         </Style.Card>
 
-        <Style.Card>
-          <Style.CardHeader>
-            <h5>Senhas de acesso</h5>
-          </Style.CardHeader>
-
-          {building ? (
-            <NotificationTable
-              colsHeader={[
-                { label: 'Acesso', cssProps: { width: '20%' } },
-                { label: 'Status', cssProps: { width: '20%' } },
-                { label: '' },
-              ]}
-            >
-              <NotificationTableContent
-                onClick={() => {
-                  //
-                }}
-                colsBody={[
-                  {
-                    cell: 'Morador',
-                  },
-                  {
-                    cell: building.residentPassword ? 'Cadastrada' : 'Não cadastrada',
-                  },
-                  {
-                    cell: (
-                      <Style.PasswordDiv>
-                        <IconButton
-                          size="16px"
-                          icon={icon.edit}
-                          label="Editar"
-                          className="p4"
-                          onClick={() => {
-                            setPasswordType('resident');
-                            setModalChangeClientPasswordOpen(true);
-                          }}
-                        />
-                      </Style.PasswordDiv>
-                    ),
-                  },
-                ]}
-              />
-              <NotificationTableContent
-                onClick={() => {
-                  //
-                }}
-                colsBody={[
-                  {
-                    cell: 'Responsável',
-                    cssProps: {
-                      borderBottomLeftRadius: theme.size.xsm,
-                    },
-                  },
-                  {
-                    cell: building.syndicPassword ? 'Cadastrada' : 'Não cadastrada',
-                  },
-                  {
-                    cell: (
-                      <Style.PasswordDiv>
-                        <IconButton
-                          size="16px"
-                          icon={icon.edit}
-                          label="Editar"
-                          className="p4"
-                          onClick={() => {
-                            setPasswordType('responsible');
-                            setModalChangeClientPasswordOpen(true);
-                          }}
-                        />
-                      </Style.PasswordDiv>
-                    ),
-                    cssProps: {
-                      borderBottomRightRadius: theme.size.xsm,
-                    },
-                  },
-                ]}
-              />
-            </NotificationTable>
-          ) : (
-            <Style.NoDataContainer>
-              <h5>Nenhum dado cadastrado.</h5>
-            </Style.NoDataContainer>
-          )}
-        </Style.Card>
-        <Style.Card>
+        {/* Alterado o layout no SA-6419 */}
+        {/* <Style.Card>
           <Style.MaintenanceCardHeader>
             <h5>
               Plano de manutenção ({usedMaintenancesCount}/{totalMaintenancesCount})
@@ -738,7 +657,133 @@ export const BuildingDetails = () => {
               />
             </Style.ButtonWrapper>
           </Style.MaintenanceCardHeader>
-        </Style.Card>
+        </Style.Card> */}
+
+        <Style.CardGrid>
+          <Style.AnnexCard>
+            <Style.AnnexCardTitle>
+              <Style.AnnexCardHeader>
+                <h5>Senhas de acesso</h5>
+              </Style.AnnexCardHeader>
+            </Style.AnnexCardTitle>
+            {building ? (
+              <NotificationTable
+                colsHeader={[{ label: 'Acesso' }, { label: 'Status' }, { label: '' }]}
+              >
+                <NotificationTableContent
+                  onClick={() => {
+                    //
+                  }}
+                  colsBody={[
+                    {
+                      cell: 'Morador',
+                    },
+                    {
+                      cell: building.residentPassword ? 'Cadastrada' : 'Não cadastrada',
+                    },
+                    {
+                      cell: (
+                        <Style.PasswordDiv>
+                          <IconButton
+                            size="16px"
+                            icon={icon.edit}
+                            label="Editar"
+                            className="p4"
+                            onClick={() => {
+                              setPasswordType('resident');
+                              setModalChangeClientPasswordOpen(true);
+                            }}
+                          />
+                        </Style.PasswordDiv>
+                      ),
+                    },
+                  ]}
+                />
+                <NotificationTableContent
+                  onClick={() => {
+                    //
+                  }}
+                  colsBody={[
+                    {
+                      cell: 'Responsável',
+                      cssProps: {
+                        borderBottomLeftRadius: theme.size.xsm,
+                      },
+                    },
+                    {
+                      cell: building.syndicPassword ? 'Cadastrada' : 'Não cadastrada',
+                    },
+                    {
+                      cell: (
+                        <Style.PasswordDiv>
+                          <IconButton
+                            size="16px"
+                            icon={icon.edit}
+                            label="Editar"
+                            className="p4"
+                            onClick={() => {
+                              setPasswordType('responsible');
+                              setModalChangeClientPasswordOpen(true);
+                            }}
+                          />
+                        </Style.PasswordDiv>
+                      ),
+                      cssProps: {
+                        borderBottomRightRadius: theme.size.xsm,
+                      },
+                    },
+                  ]}
+                />
+              </NotificationTable>
+            ) : (
+              <Style.NoDataContainer>
+                <h5>Nenhum dado cadastrado.</h5>
+              </Style.NoDataContainer>
+            )}
+          </Style.AnnexCard>
+
+          <Style.AnnexCard>
+            <Style.AnnexCardTitle>
+              <Style.AnnexCardHeader>
+                <h5>Plano de manutenção</h5>
+              </Style.AnnexCardHeader>
+
+              <Style.AnnexCardButtons>
+                <IconButton
+                  icon={icon.listWithBg}
+                  label="Visualizar"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    if (building?.id) {
+                      navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
+                    }
+                  }}
+                />
+
+                <IconButton
+                  icon={icon.editWithBg}
+                  label="Editar"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    if (building?.id) {
+                      navigate(`/buildings/details/${building?.id}/maintenances/manage${search}`);
+                    }
+                  }}
+                />
+              </Style.AnnexCardButtons>
+            </Style.AnnexCardTitle>
+            <Style.CountWrapper>
+              <Style.CountDiv>
+                <h6>Total de manutenções</h6>
+                <h3 className="grayDot">{totalMaintenancesCount}</h3>
+              </Style.CountDiv>
+              <Style.CountDiv>
+                <h6>Manutenções selecionadas</h6>
+                <h3 className="redDot">{usedMaintenancesCount}</h3>
+              </Style.CountDiv>
+            </Style.CountWrapper>
+          </Style.AnnexCard>
+        </Style.CardGrid>
 
         <Style.CardGrid>
           <Style.AnnexCard>

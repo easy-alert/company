@@ -26,6 +26,7 @@ export const theme = {
     gray3: '#D5D5D5',
     gray4: '#999999',
     gray5: '#2B2B2B',
+    gray6: '#3F3E3E',
 
     orange1: '#FF7B1C',
 

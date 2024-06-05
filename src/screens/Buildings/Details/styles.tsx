@@ -76,7 +76,7 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
-  min-height: 162px;
+  min-height: 164px;
 
   @media (max-width: 1100px) {
     min-height: fit-content;
@@ -308,4 +308,53 @@ export const PasswordDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+`;
+
+export const CountDiv = styled.div`
+  display: grid;
+  place-items: center;
+  gap: ${theme.size.sm};
+  border: 1px solid ${theme.color.gray3};
+  background-color: ${theme.color.gray0};
+  border-radius: ${theme.size.xxsm};
+  padding: 16px;
+  text-align: center;
+
+  > h6 {
+    color: ${theme.color.gray6};
+    font-weight: 700;
+  }
+
+  > h3 {
+    display: flex;
+    align-items: center;
+  }
+
+  .grayDot::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px; /* Espaçamento entre a bolinha e o texto */
+    background-color: ${theme.color.gray4}; /* Você pode alterar a cor conforme necessário */
+  }
+
+  .redDot::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px; /* Espaçamento entre a bolinha e o texto */
+    background-color: ${theme.color.primary}; /* Você pode alterar a cor conforme necessário */
+  }
+`;
+
+export const CountWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 `;
