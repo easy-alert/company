@@ -72,6 +72,7 @@ export const pdf = StyleSheet.create({
   headerSide: {
     display: 'flex',
     flexDirection: 'row',
+    gap: 8,
   },
 
   headerColumn: {
