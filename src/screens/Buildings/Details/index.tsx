@@ -744,7 +744,7 @@ export const BuildingDetails = () => {
           <Style.AnnexCard>
             <Style.AnnexCardTitle>
               <Style.AnnexCardHeader>
-                <h5>Anexos</h5>
+                <h5>Documentos</h5>
                 <Style.BreadcrumbWrapper>
                   {breadcrumb.map((element, i) => (
                     <React.Fragment key={element.id}>
