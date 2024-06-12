@@ -471,7 +471,7 @@ export const MaintenanceReports = () => {
                         }}
                         disabled={maintenances.length === 0}
                       />
-                      <Button label="Filtrar" type="submit" disabled={onQuery} />
+                      <Button label="Filtrar" type="submit" disable={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>

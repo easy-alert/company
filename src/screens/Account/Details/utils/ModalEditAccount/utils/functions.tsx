@@ -20,6 +20,7 @@ export const requestEditAccount = async ({
   setOnQuery,
 }: IRequestEditAccount) => {
   let imageUrl: any;
+  setOnQuery(true);
 
   if (!values.image.length) {
     const { Location } = await uploadFile(values.image);
@@ -44,8 +45,6 @@ export const requestEditAccount = async ({
     );
     return;
   }
-
-  setOnQuery(true);
 
   const formattedSupportLink =
     values.supportLink &&

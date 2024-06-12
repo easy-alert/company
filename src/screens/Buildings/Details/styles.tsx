@@ -76,7 +76,7 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
-  min-height: 162px;
+  min-height: 164px;
 
   @media (max-width: 1100px) {
     min-height: fit-content;
@@ -308,4 +308,29 @@ export const PasswordDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+`;
+
+export const CountDiv = styled.div`
+  color: ${theme.color.gray6};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.size.xsm};
+  height: 92px;
+  font-weight: 500;
+
+  > h3 {
+    font-size: 40px;
+    line-height: 42px;
+  }
+
+  > h4 {
+    font-size: 20px;
+    line-height: 22px;
+  }
+
+  > h5 {
+    font-size: 16px;
+    line-height: 18px;
+  }
 `;

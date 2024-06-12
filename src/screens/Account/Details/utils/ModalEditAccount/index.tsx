@@ -169,6 +169,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
 
               <Style.PasswordDiv>
                 <FormikInput
+                  autoComplete="one-time-code"
                   type={showPassword ? 'text' : 'password'}
                   label="Senha"
                   name="password"
@@ -193,6 +194,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
 
               <Style.PasswordDiv>
                 <FormikInput
+                  autoComplete="one-time-code"
                   type={showPassword2 ? 'text' : 'password'}
                   label="Confirmar senha"
                   name="confirmPassword"

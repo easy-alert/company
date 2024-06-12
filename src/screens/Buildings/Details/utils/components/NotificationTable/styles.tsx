@@ -88,7 +88,6 @@ export const TableColBody = styled.td<{
   ${({ cssProps }) => cssProps}
 
   @media (max-width: 900px) {
-    min-width: 160px;
     ${({ cssOnMedia }) => cssOnMedia}
   }
 `;
