@@ -311,50 +311,26 @@ export const PasswordDiv = styled.div`
 `;
 
 export const CountDiv = styled.div`
-  display: grid;
-  place-items: center;
-  gap: ${theme.size.sm};
-  border: 1px solid ${theme.color.gray3};
-  background-color: ${theme.color.gray0};
-  border-radius: ${theme.size.xxsm};
-  padding: 16px;
-  text-align: center;
-
-  > h6 {
-    color: ${theme.color.gray6};
-    font-weight: 700;
-  }
+  color: ${theme.color.gray6};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${theme.size.xsm};
+  height: 92px;
+  font-weight: 500;
 
   > h3 {
-    display: flex;
-    align-items: center;
+    font-size: 40px;
+    line-height: 42px;
   }
 
-  .grayDot::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px; /* Espaçamento entre a bolinha e o texto */
-    background-color: ${theme.color.gray4}; /* Você pode alterar a cor conforme necessário */
+  > h4 {
+    font-size: 20px;
+    line-height: 22px;
   }
 
-  .redDot::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px; /* Espaçamento entre a bolinha e o texto */
-    background-color: ${theme.color.primary}; /* Você pode alterar a cor conforme necessário */
-  }
-`;
-
-export const CountWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: ${theme.size.xsm};
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+  > h5 {
+    font-size: 16px;
+    line-height: 18px;
   }
 `;

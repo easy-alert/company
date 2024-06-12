@@ -772,16 +772,11 @@ export const BuildingDetails = () => {
                 />
               </Style.AnnexCardButtons>
             </Style.AnnexCardTitle>
-            <Style.CountWrapper>
-              <Style.CountDiv>
-                <h6>Total de manutenções</h6>
-                <h3 className="grayDot">{totalMaintenancesCount}</h3>
-              </Style.CountDiv>
-              <Style.CountDiv>
-                <h6>Manutenções selecionadas</h6>
-                <h3 className="redDot">{usedMaintenancesCount}</h3>
-              </Style.CountDiv>
-            </Style.CountWrapper>
+            <Style.CountDiv>
+              <h3>{usedMaintenancesCount}</h3>
+              <h4>/</h4>
+              <h5>({totalMaintenancesCount} disponíveis)</h5>
+            </Style.CountDiv>
           </Style.AnnexCard>
         </Style.CardGrid>
 
