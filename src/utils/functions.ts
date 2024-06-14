@@ -13,6 +13,15 @@ import {
 } from './types';
 // #endregion
 
+export const catchHandler = (err: any) => {
+  toast.dismiss();
+  if (err.response) {
+    toast.error(err.response.data.ServerMessage.message);
+  } else {
+    toast.error('Erro de comunicação');
+  }
+};
+
 // #region DATES
 export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
 
@@ -41,9 +50,13 @@ export async function uploadFile(file: any) {
   const formData = new FormData();
   formData.append('file', file);
 
-  await Api.post('upload/file', formData).then((res) => {
-    response = res.data;
-  });
+  await Api.post('upload/file', formData)
+    .then((res) => {
+      response = res.data;
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
 
   return response as IUploadFile;
 }
@@ -57,9 +70,13 @@ export async function uploadManyFiles(files: any) {
     formData.append('files', files[i]);
   }
 
-  await Api.post('/upload/files', formData).then((res) => {
-    response = res.data;
-  });
+  await Api.post('/upload/files', formData)
+    .then((res) => {
+      response = res.data;
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
 
   return response as IUploadFile[];
 }
@@ -268,14 +285,6 @@ export const detectFileExtension = (fileName: string): string | null => {
 // #endregion
 
 // #region REQUESTS
-export const catchHandler = (err: any) => {
-  toast.dismiss();
-  if (err.response) {
-    toast.error(err.response.data.ServerMessage.message);
-  } else {
-    toast.error('Erro de comunicação');
-  }
-};
 
 export const requestListIntervals = async ({ setTimeIntervals }: IRequestListIntervals) => {
   await Api.get('/timeinterval/list')
