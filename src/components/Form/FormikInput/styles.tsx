@@ -24,7 +24,7 @@ export const InputContainer = styled.div<{
     type === 'date' &&
     typeDatePlaceholderValue === '' &&
     `
-      > input {
+      input {
         border-color: ${theme.color.gray3};
         color: #757575
       }
@@ -35,7 +35,7 @@ export const InputContainer = styled.div<{
   ${({ passwordPlaceholder }) =>
     passwordPlaceholder &&
     `
-    > .opera input[type="password"],
+    .opera input[type="password"],
     .webkit input[type="password"],
     input[type="password"] {
 
@@ -71,7 +71,7 @@ export const InputContainer = styled.div<{
   ${({ error }) =>
     error &&
     `
-   > input {
+   input {
     border-color: ${theme.color.danger} !important;
     color: ${theme.color.danger};
     margin-bottom: 2px;
