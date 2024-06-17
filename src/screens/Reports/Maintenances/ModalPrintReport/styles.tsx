@@ -9,6 +9,7 @@ export const Container = styled.div`
   position: relative;
   background-color: ${theme.color.white};
   z-index: 1;
+  min-height: 600px;
 
   > :last-child {
     margin-top: ${theme.size.xsm};

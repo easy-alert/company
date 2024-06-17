@@ -174,6 +174,7 @@ export const MaintenanceReports = () => {
         <ModalPrintReport
           setModal={setModalPrintReportOpen}
           maintenancesForPDF={maintenancesForPDF}
+          setMaintenancesForPDF={setMaintenancesForPDF}
           filterforPDF={filterforPDF}
           counts={counts}
         />
