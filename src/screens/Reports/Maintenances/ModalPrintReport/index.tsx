@@ -304,7 +304,7 @@ const MyDocument = ({
                                 </View>
                               </View>
                             </View>
-                            <Text style={Style.pdf.bold500}>
+                            <Text style={{ ...Style.pdf.bold500, width: 750 }}>
                               Observação do relato:{' '}
                               <Text style={Style.pdf.normal}>
                                 {maintenance.reportObservation || '-'}
