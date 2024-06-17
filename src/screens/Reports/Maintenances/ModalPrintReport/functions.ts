@@ -68,3 +68,17 @@ export const getStatusBackgroundColor = (
 
   return backgroundColor[status];
 };
+
+export async function getImageBase64(link: string): Promise<string | null> {
+  const response = await fetch(link);
+  const blob = await response.blob();
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      resolve(base64String);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}

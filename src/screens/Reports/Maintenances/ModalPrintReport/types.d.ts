@@ -5,4 +5,5 @@ export interface IModalPrintQRCode {
   maintenancesForPDF: IMaintenanceForPDF[];
   filterforPDF: IFilterforPDF;
   counts: ICounts;
+  setMaintenancesForPDF: React.Dispatch<React.SetStateAction<IMaintenanceForPDF[]>>;
 }

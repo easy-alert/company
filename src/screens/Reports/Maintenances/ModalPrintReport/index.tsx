@@ -1,7 +1,8 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 // #region imports
 // COMPONENTS
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Page,
   Text,
@@ -29,7 +30,7 @@ import { image } from '../../../../assets/images';
 
 // FUNCTIONS
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { getSingularStatusNameforPdf, getStatusBackgroundColor } from './functions';
+import { getImageBase64, getSingularStatusNameforPdf, getStatusBackgroundColor } from './functions';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../../utils/functions';
 import { theme } from '../../../../styles/theme';
 
@@ -372,39 +373,71 @@ export const ModalPrintReport = ({
   maintenancesForPDF,
   filterforPDF,
   counts,
+  setMaintenancesForPDF,
 }: IModalPrintQRCode) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [base64Loading, setBase64Loading] = useState<boolean>(true);
   const { account } = useAuthContext();
+
+  const createBase64Images = async () => {
+    const maintenancesForPDFClone = structuredClone(maintenancesForPDF);
+
+    for (let i = 0; i < maintenancesForPDFClone.length; i++) {
+      const { data } = maintenancesForPDFClone[i];
+
+      for (let j = 0; j < data.length; j++) {
+        const { images } = data[j];
+
+        for (let k = 0; k < images.length; k++) {
+          const { url } = images[k];
+          // eslint-disable-next-line no-await-in-loop
+          const base64Url = await getImageBase64(url);
+          images[k].base64 = base64Url || '';
+        }
+      }
+    }
+
+    setMaintenancesForPDF([...maintenancesForPDFClone]);
+    setBase64Loading(false);
+  };
+
+  useEffect(() => {
+    createBase64Images();
+  }, []);
 
   return (
     <Modal bodyWidth="90vw" title="Relatório" setModal={setModal}>
       <>
-        {loading && <Style.SmallLoading />}
+        {(loading || base64Loading) && <Style.SmallLoading />}
 
         <Style.Container>
-          <PDFViewer style={{ width: '100%', height: '60vh' }}>
-            <MyDocument
-              counts={counts}
-              setLoading={setLoading}
-              maintenancesForPDF={maintenancesForPDF}
-              companyImage={account?.Company.image!}
-              filterforPDF={filterforPDF}
-            />
-          </PDFViewer>
-          <PDFDownloadLink
-            document={
-              <MyDocument
-                counts={counts}
-                setLoading={setLoading}
-                maintenancesForPDF={maintenancesForPDF}
-                companyImage={account?.Company.image!}
-                filterforPDF={filterforPDF}
-              />
-            }
-            fileName={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
-          >
-            <Button label="Download" disable={loading} />
-          </PDFDownloadLink>
+          {!base64Loading && (
+            <>
+              <PDFViewer style={{ width: '100%', height: '60vh' }}>
+                <MyDocument
+                  counts={counts}
+                  setLoading={setLoading}
+                  maintenancesForPDF={maintenancesForPDF}
+                  companyImage={account?.Company.image!}
+                  filterforPDF={filterforPDF}
+                />
+              </PDFViewer>
+              <PDFDownloadLink
+                document={
+                  <MyDocument
+                    counts={counts}
+                    setLoading={setLoading}
+                    maintenancesForPDF={maintenancesForPDF}
+                    companyImage={account?.Company.image!}
+                    filterforPDF={filterforPDF}
+                  />
+                }
+                fileName={`Relatório ${new Date().toLocaleDateString('pt-BR')}`}
+              >
+                <Button label="Download" disable={loading} />
+              </PDFDownloadLink>
+            </>
+          )}
         </Style.Container>
       </>
     </Modal>
