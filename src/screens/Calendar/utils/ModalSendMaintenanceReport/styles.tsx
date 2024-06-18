@@ -85,7 +85,7 @@ export const Tag = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 400;
-    max-width: 154px;
+    max-width: 120px;
   }
 `;
 

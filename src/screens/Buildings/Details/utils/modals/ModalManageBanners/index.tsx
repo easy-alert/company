@@ -46,6 +46,7 @@ export const ModalManageBanners = ({
       'image/png': ['.png'],
       'image/jpg': ['.jpg'],
       'image/jpeg': ['.jpeg'],
+      'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
     },
     disabled: onWebQuery,
   });
@@ -61,6 +62,7 @@ export const ModalManageBanners = ({
       'image/png': ['.png'],
       'image/jpg': ['.jpg'],
       'image/jpeg': ['.jpeg'],
+      'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
     },
     disabled: onMobileQuery,
   });
