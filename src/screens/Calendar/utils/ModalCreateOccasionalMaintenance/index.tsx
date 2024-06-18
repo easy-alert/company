@@ -60,6 +60,7 @@ export const ModalCreateOccasionalMaintenance = ({
       'image/png': ['.png'],
       'image/jpg': ['.jpg'],
       'image/jpeg': ['.jpeg'],
+      'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
     },
     disabled: onImageQuery,
   });
