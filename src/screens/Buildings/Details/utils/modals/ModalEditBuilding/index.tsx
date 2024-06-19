@@ -54,6 +54,7 @@ export const ModalEditBuilding = ({
           warrantyExpiration: convertToFormikDate(new Date(building.warrantyExpiration)),
           keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
           mandatoryReportProof: building.mandatoryReportProof,
+          nextMaintenanceCreationBasis: building.nextMaintenanceCreationBasis,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
@@ -165,6 +166,21 @@ export const ModalEditBuilding = ({
                     : null
                 }
               />
+
+              <FormikSelect
+                selectPlaceholderValue={values.nextMaintenanceCreationBasis}
+                label="Próxima manutenção baseada em *"
+                name="nextMaintenanceCreationBasis"
+                error={
+                  touched.nextMaintenanceCreationBasis && errors.nextMaintenanceCreationBasis
+                    ? errors.nextMaintenanceCreationBasis
+                    : null
+                }
+              >
+                <option value="executionDate">Data de execução</option>
+                <option value="notificationDate">Data de notificação</option>
+              </FormikSelect>
+
               <FormikCheckbox
                 name="keepNotificationAfterWarrantyEnds"
                 labelColor={theme.color.gray4}

@@ -151,6 +151,11 @@ export const BuildingDetails = () => {
   }, [folderId]);
   // #endregion
 
+  const nextMaintenanceCreationBasisLabel = {
+    executionDate: 'Data de execução',
+    notificationDate: 'Data de notificação',
+  };
+
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -410,6 +415,15 @@ export const BuildingDetails = () => {
               <Style.BuildingCardData>
                 <p className="p3">Notificar após garantia?</p>
                 <p className="p3">{building?.keepNotificationAfterWarrantyEnds ? 'Sim' : 'Não'}</p>
+              </Style.BuildingCardData>
+
+              <Style.BuildingCardData>
+                <p className="p3">Próxima manutenção baseada em:</p>
+                <p className="p3">
+                  {building
+                    ? nextMaintenanceCreationBasisLabel[building?.nextMaintenanceCreationBasis]
+                    : '-'}
+                </p>
               </Style.BuildingCardData>
             </Style.BuildingCardColumn>
 

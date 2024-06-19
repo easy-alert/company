@@ -44,6 +44,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           warrantyExpiration: '',
           keepNotificationAfterWarrantyEnds: true,
           mandatoryReportProof: false,
+          nextMaintenanceCreationBasis: 'executionDate',
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {
@@ -171,6 +172,20 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                     : null
                 }
               />
+
+              <FormikSelect
+                selectPlaceholderValue={values.nextMaintenanceCreationBasis}
+                label="Próxima manutenção baseada em *"
+                name="nextMaintenanceCreationBasis"
+                error={
+                  touched.nextMaintenanceCreationBasis && errors.nextMaintenanceCreationBasis
+                    ? errors.nextMaintenanceCreationBasis
+                    : null
+                }
+              >
+                <option value="executionDate">Data de execução</option>
+                <option value="notificationDate">Data de notificação</option>
+              </FormikSelect>
 
               <FormikCheckbox
                 name="keepNotificationAfterWarrantyEnds"
