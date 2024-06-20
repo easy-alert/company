@@ -32,6 +32,7 @@ export const requestEditBuilding = async ({
       warrantyExpiration: new Date(new Date(values.warrantyExpiration).setUTCHours(3, 0, 0, 0)),
       keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
       mandatoryReportProof: values.mandatoryReportProof,
+      nextMaintenanceCreationBasis: values.nextMaintenanceCreationBasis,
     },
   })
     .then((res) => {
@@ -78,6 +79,7 @@ export const schemaModalEditBuilding = yup
     cep: yup.string().min(9, 'Digite um CEP válido.').required('Campo obrigatório.'),
     city: yup.string().required('Campo obrigatório.'),
     state: yup.string().required('Campo obrigatório.'),
+    nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),
     neighborhood: yup.string(),
     streetName: yup.string(),
     area: yup.string().not(['0,00'], 'Digite um número maior que zero.'),

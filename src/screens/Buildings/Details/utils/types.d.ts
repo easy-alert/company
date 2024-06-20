@@ -67,6 +67,7 @@ export interface IBuildingDetail {
   mandatoryReportProof: boolean;
   residentPassword: string | null;
   syndicPassword: string | null;
+  nextMaintenanceCreationBasis: 'executionDate' | 'notificationDate';
 }
 
 export interface IRequestBuildingDetails {

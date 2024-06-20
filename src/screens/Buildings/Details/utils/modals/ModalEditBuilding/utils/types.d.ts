@@ -14,6 +14,7 @@ interface IEditBuilding {
   warrantyExpiration: string;
   keepNotificationAfterWarrantyEnds: boolean;
   mandatoryReportProof: boolean;
+  nextMaintenanceCreationBasis: string;
 }
 
 export interface IModalEditBuilding {

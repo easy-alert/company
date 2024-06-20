@@ -12,6 +12,7 @@ interface ICreateBuilding {
   warrantyExpiration: string;
   keepNotificationAfterWarrantyEnds: boolean;
   mandatoryReportProof: boolean;
+  nextMaintenanceCreationBasis: string;
 }
 
 export interface IModalCreateBuilding {
