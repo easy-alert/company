@@ -8,7 +8,7 @@ import { IconButton } from '../../../components/Buttons/IconButton';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { ModalCreateSupplier } from './ModalCreateSupplier';
 import { Pagination } from '../../../components/Pagination';
-import { PaginationFooter } from '../../Tickets/styles';
+import { NoDataContainer, PaginationFooter } from '../../Tickets/styles';
 import { ListTag } from '../../../components/ListTag';
 
 interface ISupplier {
@@ -54,19 +54,20 @@ export const SuppliersList = () => {
   return loading ? (
     <DotSpinLoading />
   ) : (
-    <Style.Container>
-      {modalCreateSupplierOpen && (
-        <ModalCreateSupplier
-          setModal={setModalCreateSupplierOpen}
-          onThenRequest={async () => {
-            findManySuppliers();
-          }}
-        />
-      )}
-      <Style.Header>
-        <Style.LeftSide>
-          <h2>Fornecedores</h2>
-          {/*
+    <>
+      <Style.Container>
+        {modalCreateSupplierOpen && (
+          <ModalCreateSupplier
+            setModal={setModalCreateSupplierOpen}
+            onThenRequest={async () => {
+              findManySuppliers();
+            }}
+          />
+        )}
+        <Style.Header>
+          <Style.LeftSide>
+            <h2>Fornecedores</h2>
+            {/*
           <Style.SearchField>
             <IconButton
               icon={icon.search}
@@ -93,73 +94,77 @@ export const SuppliersList = () => {
               }}
             />
           </Style.SearchField> */}
-        </Style.LeftSide>
-        <IconButton
-          hideLabelOnMedia
-          fontWeight="500"
-          label="Cadastrar"
-          className="p2"
-          icon={icon.plusWithBg}
-          onClick={() => {
-            setModalCreateSupplierOpen(true);
-          }}
-        />
-      </Style.Header>
+          </Style.LeftSide>
+          <IconButton
+            hideLabelOnMedia
+            fontWeight="500"
+            label="Cadastrar"
+            className="p2"
+            icon={icon.plusWithBg}
+            onClick={() => {
+              setModalCreateSupplierOpen(true);
+            }}
+          />
+        </Style.Header>
 
-      {suppliers?.length > 0 ? (
-        <Style.PaginationContainer>
-          <Style.Wrapper>
-            {suppliers.map((supplier) => (
-              <Style.Card key={supplier.id} to={`/suppliers/${supplier.id}`}>
-                <Style.ImageDiv>
-                  <Image img={supplier.image} size="100px" />
-                </Style.ImageDiv>
+        {suppliers?.length > 0 && (
+          <Style.PaginationContainer>
+            <Style.Wrapper>
+              {suppliers.map((supplier) => (
+                <Style.Card key={supplier.id} to={`/suppliers/${supplier.id}`}>
+                  <Style.ImageDiv>
+                    <Image img={supplier.image} size="100px" />
+                  </Style.ImageDiv>
 
-                <Style.CardContent>
-                  <h5>{supplier.name}</h5>
+                  <Style.CardContent>
+                    <h5>{supplier.name}</h5>
 
-                  <Style.Tags>
-                    {supplier.serviceTypes.map(({ type }) => (
-                      <ListTag
-                        key={type.label}
-                        label={type.label}
-                        fontSize="14px"
-                        lineHeight="16px"
-                      />
-                    ))}
-                  </Style.Tags>
+                    <Style.Tags>
+                      {supplier.serviceTypes.map(({ type }) => (
+                        <ListTag
+                          key={type.label}
+                          label={type.label}
+                          fontSize="14px"
+                          lineHeight="16px"
+                        />
+                      ))}
+                    </Style.Tags>
 
-                  <p className="p">{`${supplier.city} / ${supplier.state}`}</p>
-                </Style.CardContent>
+                    <p className="p">{`${supplier.city} / ${supplier.state}`}</p>
+                  </Style.CardContent>
 
-                <Style.CardFooter>
-                  <Style.Line />
-                  <p className="p4">
-                    {supplier.phone ? applyMask({ mask: 'TEL', value: supplier.phone }).value : '-'}
-                  </p>
-                  <p className="p4">{supplier.email || '-'}</p>
-                </Style.CardFooter>
-              </Style.Card>
-            ))}
-          </Style.Wrapper>
-          <PaginationFooter>
-            <Pagination
-              totalCountOfRegister={supplierCounts}
-              currentPage={page}
-              registerPerPage={10}
-              onPageChange={(pageParam) => {
-                setPage(pageParam);
-                findManySuppliers();
-              }}
-            />
-          </PaginationFooter>
-        </Style.PaginationContainer>
-      ) : (
-        <Style.Container>
+                  <Style.CardFooter>
+                    <Style.Line />
+                    <p className="p4">
+                      {supplier.phone
+                        ? applyMask({ mask: 'TEL', value: supplier.phone }).value
+                        : '-'}
+                    </p>
+                    <p className="p4">{supplier.email || '-'}</p>
+                  </Style.CardFooter>
+                </Style.Card>
+              ))}
+            </Style.Wrapper>
+            <PaginationFooter>
+              <Pagination
+                totalCountOfRegister={supplierCounts}
+                currentPage={page}
+                registerPerPage={10}
+                onPageChange={(pageParam) => {
+                  setPage(pageParam);
+                  findManySuppliers();
+                }}
+              />
+            </PaginationFooter>
+          </Style.PaginationContainer>
+        )}
+      </Style.Container>
+      {suppliers.length === 0 && (
+        <NoDataContainer>
           <Image img={icon.paper} size="80px" radius="0" />
           <h3>Nenhum fornecedor encontrado.</h3>
-        </Style.Container>
+        </NoDataContainer>
       )}
-    </Style.Container>
+    </>
   );
 };
