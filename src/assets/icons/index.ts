@@ -72,8 +72,16 @@ import checklistsRed from './checklistsRed.svg';
 import redDot from './redDot.svg';
 import csvLogo2 from './csvLogo2.svg';
 import suppliers from './suppliers.svg';
+import letter from './letter.svg';
+import whatsApp from './whatsApp.svg';
+import link from './link.svg';
+import unlink from './unlink.svg';
 
 export const icon = {
+  link,
+  unlink,
+  letter,
+  whatsApp,
   leftArrow,
   paper,
   eye,

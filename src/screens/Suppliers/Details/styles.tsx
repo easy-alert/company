@@ -26,7 +26,7 @@ export const Card = styled.div`
   border-radius: ${theme.size.xxsm};
 
   > a {
-    color: ${theme.color.black};
+    color: ${theme.color.actionBlue};
     width: fit-content;
   }
 

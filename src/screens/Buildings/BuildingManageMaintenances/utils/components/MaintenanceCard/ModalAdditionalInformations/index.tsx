@@ -68,6 +68,8 @@ export const ModalAdditionalInformations = ({
     })
     .required();
 
+  // MODAL EDITAR/ENVIAR RELATO
+
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
     observation: '',
