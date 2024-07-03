@@ -8,7 +8,7 @@ export const ReactSelectDiv = styled.div`
   line-height: 17px;
   font-style: normal;
 
-  > p {
+  > h6 {
     margin-bottom: 3px;
   }
 `;

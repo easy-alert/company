@@ -39,7 +39,7 @@ export const ReactSelectCreatableComponent = ({
   onChange,
   options,
   placeholder,
-  isClearable = true,
+  isClearable = false,
   isMulti = false,
   value,
   isOptionDisabled,
@@ -48,7 +48,7 @@ export const ReactSelectCreatableComponent = ({
   error,
 }: IReactSelectCreatableComponent) => (
   <Style.ReactSelectDiv>
-    {label && <p className="p5">{label}</p>}
+    {label && <h6>{label}</h6>}
     <Select
       defaultValue={defaultValue}
       isMulti={isMulti}
@@ -68,7 +68,7 @@ export const ReactSelectCreatableComponent = ({
     />
     {!!error && (
       <Style.ErrorMessage>
-        <p className="p9">{error}</p>
+        <p className="p3">{error}</p>
       </Style.ErrorMessage>
     )}
   </Style.ReactSelectDiv>
