@@ -97,9 +97,9 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           await Api.post('/suppliers', {
             ...data,
             image: imageURL,
-            phone: unMask(data.phone),
+            phone: data.phone ? unMask(data.phone) : null,
             cnpj: unMask(data.cnpj),
-            link: ensureHttps(data.link),
+            link: data.link ? ensureHttps(data.link) : null,
           })
             .then((res) => {
               onThenRequest();
@@ -119,7 +119,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
             <Form>
               <FormikImageInput
                 name="image"
-                label="Imagem/Logo *"
+                label="Imagem/Logo"
                 error={touched.image && errors.image ? errors.image : null}
                 defaultImage={values.image}
                 onChange={(event: any) => {
@@ -139,7 +139,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
 
               <FormikInput
                 name="cnpj"
-                label="CNPJ"
+                label="CNPJ *"
                 maxLength={applyMask({ value: values.cnpj, mask: 'CNPJ' }).length}
                 value={values.cnpj}
                 error={touched.cnpj && errors.cnpj ? errors.cnpj : null}
@@ -179,7 +179,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
                 id="serviceType"
                 name="serviceType"
                 placeholder="Selecione ou digite para criar"
-                label="Área de atuação"
+                label="Área de atuação *"
                 options={serviceTypes.map(({ label, id }) => ({
                   label,
                   value: id,
@@ -197,7 +197,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectComponent
-                label="Estado"
+                label="Estado *"
                 id="state"
                 name="state"
                 options={states.map(({ nome }) => ({
@@ -215,7 +215,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectComponent
-                label="Cidade"
+                label="Cidade *"
                 id="city"
                 name="city"
                 options={cities.map(({ nome }) => ({

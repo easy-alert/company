@@ -18,11 +18,17 @@ export interface ISupplier {
   id: string;
   image: string;
   name: string;
+  state: string;
+  city: string;
   cnpj: string;
-  link: string;
 
   phone: string | null;
   email: string | null;
+  link: string | null;
+
+  serviceTypes: {
+    type: { label: string };
+  }[];
 }
 
 export const SupplierDetails = () => {
@@ -41,6 +47,9 @@ export const SupplierDetails = () => {
     name: '',
     phone: '',
     cnpj: '',
+    city: '',
+    serviceTypes: [],
+    state: '',
   });
 
   const deleteSupplier = async () => {
@@ -107,10 +116,13 @@ export const SupplierDetails = () => {
             </Style.Card>
 
             <Style.Card>
-              <h6>Link</h6>
-              <a target="_blank" rel="noreferrer" className="p2" href={supplier.link}>
-                RRUMAR
-              </a>
+              <h6>CNPJ</h6>
+              <p className="p2">{applyMask({ mask: 'CNPJ', value: supplier.cnpj }).value}</p>
+            </Style.Card>
+
+            <Style.Card>
+              <h6>E-mail</h6>
+              <p className="p2">{supplier.email || '-'}</p>
             </Style.Card>
 
             <Style.Card>
@@ -121,8 +133,29 @@ export const SupplierDetails = () => {
             </Style.Card>
 
             <Style.Card>
-              <h6>E-mail</h6>
-              <p className="p2">{supplier.email || '-'}</p>
+              <h6>Área de atuação</h6>
+              <p className="p2">{supplier.serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+            </Style.Card>
+
+            <Style.Card>
+              <h6>Estado</h6>
+              <p className="p2">{supplier.state || '-'}</p>
+            </Style.Card>
+
+            <Style.Card>
+              <h6>Cidade</h6>
+              <p className="p2">{supplier.city || '-'}</p>
+            </Style.Card>
+
+            <Style.Card>
+              <h6>Link</h6>
+              {supplier.link ? (
+                <a target="_blank" rel="noreferrer" className="p2" href={supplier.link}>
+                  {supplier.link}
+                </a>
+              ) : (
+                '-'
+              )}
             </Style.Card>
           </Style.CardSection>
 
@@ -131,6 +164,7 @@ export const SupplierDetails = () => {
               disabled={onQuery}
               actionButtonBgColor={theme.color.actionDanger}
               type="IconButton"
+              hideLabelOnMedia
               label="Excluir"
               buttonIcon={icon.trashWithBg}
               message={{

@@ -18,6 +18,7 @@ export default createGlobalStyle`
     line-height: 20px;
     color: #4339F2;
     text-decoration: none;
+    word-break:break-all;
   }
 
   body {

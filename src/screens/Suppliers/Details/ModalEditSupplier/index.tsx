@@ -7,11 +7,23 @@ import { Button } from '../../../../components/Buttons/Button';
 import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
 import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Modal } from '../../../../components/Modal';
-import { applyMask, catchHandler, unMask, uploadFile } from '../../../../utils/functions';
+import {
+  applyMask,
+  catchHandler,
+  convertStateName,
+  ensureHttps,
+  unMask,
+  uploadFile,
+} from '../../../../utils/functions';
 import * as Style from './styles';
 import { Api } from '../../../../services/api';
 // eslint-disable-next-line import/no-cycle
 import { ISupplier } from '..';
+import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
+import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent ';
+import { useBrasilCities } from '../../../../hooks/useBrasilCities';
+import { useBrasilStates } from '../../../../hooks/useBrasilStates';
+import { useServiceTypes } from '../../../../hooks/useServiceTypes';
 
 interface IModalEditSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +35,7 @@ export const schemaEditSupplier = yup
   .object({
     image: yup
       .mixed()
+      .required('Campo obrigatório.')
       .notRequired()
       .test(
         'FileSize',
@@ -41,42 +54,44 @@ export const schemaEditSupplier = yup
       ),
 
     name: yup.string().required('Campo obrigatório.'),
-    cnpj: yup.string().required('O cnpj deve ser preenchido.').min(18, 'O cnpj deve ser válido.'),
-    link: yup.string().required('Campo obrigatório.'),
+    cnpj: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
+    link: yup.string(),
+    city: yup.string().required('Campo obrigatório.'),
+    state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
+    serviceTypeLabels: yup
+      .array()
+      .of(yup.string().required('Campo obrigatório.'))
+      .min(1, 'Campo obrigatório.')
+      .required('Campo obrigatório.'),
   })
   .required();
 
 export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalEditSupplier) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [selectedState, setSelectedState] = useState('');
+  const { states } = useBrasilStates();
+  const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
+  const { serviceTypes } = useServiceTypes();
 
   return (
     <Modal title="Editar fornecedor" setModal={setModal}>
       <Formik
         initialValues={{
           id: supplier.id,
-          name: supplier.name,
-          image: supplier.image,
-          link: supplier.link,
+          image: supplier.image || '',
+          name: supplier.name || '',
+          link: supplier.link || '',
+          phone: supplier.phone ? applyMask({ value: supplier.phone, mask: 'TEL' }).value : '',
+          cnpj: supplier.cnpj ? applyMask({ value: supplier.cnpj, mask: 'CNPJ' }).value : '',
           email: supplier.email || '',
-          phone: supplier.phone ? applyMask({ mask: 'TEL', value: supplier.phone }).value : '',
-          cnpj: supplier.cnpj ? applyMask({ mask: 'TEL', value: supplier.cnpj }).value : '',
+          serviceTypeLabels: supplier.serviceTypes.map(({ type }) => type.label),
+          city: supplier.city || '',
+          state: supplier.state || '',
         }}
         validationSchema={schemaEditSupplier}
         onSubmit={async (data) => {
-          // const URLValid = isURLValid(data.link);
-          // if (!URLValid) {
-          //   toast.error(
-          //     <div>
-          //       Informe um link válido.
-          //       <br />
-          //       Ex: www.easyalert.com.br
-          //     </div>,
-          //   );
-          //   return;
-          // }
-
           setOnQuery(true);
 
           let imageURL: any;
@@ -91,8 +106,9 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
           await Api.put('/suppliers', {
             ...data,
             image: imageURL,
-            phone: unMask(data.phone),
-            link: data.link,
+            phone: data.phone ? unMask(data.phone) : null,
+            cnpj: unMask(data.cnpj),
+            link: data.link ? ensureHttps(data.link) : null,
           })
             .then((res) => {
               onThenRequest();
@@ -107,12 +123,12 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
             });
         }}
       >
-        {({ errors, values, touched, setFieldValue }) => (
+        {({ errors, values, touched, setFieldValue, setFieldError }) => (
           <Style.FormContainer>
             <Form>
               <FormikImageInput
                 name="image"
-                label="Imagem/Logo *"
+                label="Imagem/Logo"
                 error={touched.image && errors.image ? errors.image : null}
                 defaultImage={values.image}
                 onChange={(event: any) => {
@@ -125,16 +141,14 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
               <FormikInput
                 label="Nome *"
                 name="name"
-                value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: João Silva"
               />
 
               <FormikInput
                 name="cnpj"
-                label="cnpj"
+                label="CNPJ *"
                 maxLength={applyMask({ value: values.cnpj, mask: 'CNPJ' }).length}
-                value={values.cnpj}
                 error={touched.cnpj && errors.cnpj ? errors.cnpj : null}
                 placeholder="00.000.000/0000-00"
                 onChange={(e) => {
@@ -143,17 +157,8 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
               />
 
               <FormikInput
-                label="Link *"
-                name="link"
-                value={values.link}
-                error={touched.link && errors.link ? errors.link : null}
-                placeholder="Ex: www.easyalert.com.br"
-              />
-
-              <FormikInput
                 label="E-mail"
                 name="email"
-                value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
                 placeholder="Informe o email"
               />
@@ -161,18 +166,95 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
               <FormikInput
                 label="Telefone/Celular"
                 name="phone"
-                maxLength={
-                  applyMask({
-                    value: values.phone,
-                    mask: 'TEL',
-                  }).length
-                }
-                value={values.phone}
+                maxLength={15}
                 error={touched.phone && errors.phone ? errors.phone : null}
                 placeholder="Ex: (00) 00000-0000"
                 onChange={(e) => {
                   setFieldValue('phone', applyMask({ value: e.target.value, mask: 'TEL' }).value);
                 }}
+              />
+
+              <ReactSelectCreatableComponent
+                isMulti
+                id="serviceType"
+                name="serviceType"
+                placeholder="Selecione ou digite para criar"
+                label="Área de atuação *"
+                options={serviceTypes.map(({ label }) => ({
+                  label,
+                  value: label,
+                }))}
+                onChange={(data) => {
+                  const serviceTypeLabels = data.map(({ label }: { label: string }) => label);
+                  setFieldValue('serviceTypeLabels', serviceTypeLabels);
+                  setFieldError('serviceTypeLabels', '');
+                }}
+                defaultValue={supplier.serviceTypes.map((data) => ({
+                  label: data.type.label,
+                  value: data.type.label,
+                }))}
+                error={
+                  touched.serviceTypeLabels && errors.serviceTypeLabels
+                    ? errors.serviceTypeLabels
+                    : null
+                }
+              />
+
+              <ReactSelectComponent
+                label="Estado *"
+                id="state"
+                name="state"
+                options={states.map(({ nome }) => ({
+                  label: nome,
+                  value: nome,
+                }))}
+                placeholder="Selecione"
+                value={
+                  values.state
+                    ? {
+                        label: values.state,
+                        value: values.state,
+                      }
+                    : []
+                }
+                onChange={(evt) => {
+                  setSelectedState(evt.value);
+                  setFieldValue('state', evt.value);
+                  setFieldError('state', '');
+                  setFieldValue('city', '');
+                }}
+                error={touched.state && errors.state ? errors.state : null}
+              />
+
+              <ReactSelectComponent
+                label="Cidade *"
+                id="city"
+                name="city"
+                options={cities.map(({ nome }) => ({
+                  label: nome,
+                  value: nome,
+                }))}
+                value={
+                  values.city
+                    ? {
+                        label: values.city,
+                        value: values.city,
+                      }
+                    : []
+                }
+                placeholder="Selecione"
+                onChange={(evt) => {
+                  setFieldValue('city', evt.value);
+                  setFieldError('city', '');
+                }}
+                error={touched.city && errors.city ? errors.city : null}
+              />
+
+              <FormikInput
+                label="Link *"
+                name="link"
+                error={touched.link && errors.link ? errors.link : null}
+                placeholder="Ex: www.easyalert.com.br"
               />
 
               <Button center label="Salvar" type="submit" loading={onQuery} />
