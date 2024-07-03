@@ -13,6 +13,7 @@ export interface IReactSelectComponent {
   onChange?: ((newValue: any, actionMeta: ActionMeta<any>) => void) | undefined;
   isOptionDisabled?: ((option: any, selectValue: Options<any>) => boolean) | undefined;
   value?: any;
+  inputValue?: any;
   options: {
     label: any;
     value: any;

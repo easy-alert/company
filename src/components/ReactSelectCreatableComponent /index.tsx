@@ -1,5 +1,5 @@
-import Select from 'react-select';
-import { IReactSelectComponent } from './types';
+import Select from 'react-select/creatable';
+import { IReactSelectCreatableComponent } from './types';
 import * as Style from './styles';
 import { theme } from '../../styles/theme';
 
@@ -12,42 +12,24 @@ const customStyles = {
     '&:hover': {
       border: `1px solid ${theme.color.gray4}`,
     },
+
     padding: 0,
     margin: 0,
   }),
+
   menu: (base: any) => ({
     ...base,
     marginTop: 2,
-  }),
-
-  option: (base: any) => ({
-    ...base,
-    cursor: 'pointer',
-    paddingLeft: '16px',
+    zIndex: 999,
   }),
 
   valueContainer: (base: any) => ({
     ...base,
-    padding: 0,
-    paddingLeft: '13px',
-  }),
-
-  input: (base: any) => ({
-    ...base,
-    padding: 0,
-    margin: 0,
-    paddingLeft: '3px',
-  }),
-
-  placeholder: (base: any) => ({
-    ...base,
-    padding: 0,
-    margin: 0,
-    paddingLeft: '3px',
+    paddingLeft: '14px',
   }),
 };
 
-export const ReactSelectComponent = ({
+export const ReactSelectCreatableComponent = ({
   maxMenuHeight = 250,
   noOptionsMessage = () => 'Sem resultados',
   isDisabled,
@@ -64,12 +46,11 @@ export const ReactSelectComponent = ({
   newCustomStyle,
   defaultValue,
   error,
-  inputValue,
-}: IReactSelectComponent) => (
+}: IReactSelectCreatableComponent) => (
   <Style.ReactSelectDiv>
     {label && <h6>{label}</h6>}
     <Select
-      inputValue={inputValue}
+      defaultValue={defaultValue}
       isMulti={isMulti}
       value={value}
       isDisabled={isDisabled}
@@ -83,7 +64,7 @@ export const ReactSelectComponent = ({
       options={options}
       onChange={onChange}
       isOptionDisabled={isOptionDisabled}
-      defaultValue={defaultValue}
+      formatCreateLabel={(data) => `Criar "${data}"`}
     />
     {!!error && (
       <Style.ErrorMessage>

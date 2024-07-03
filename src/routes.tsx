@@ -46,6 +46,8 @@ import { Checklists } from './screens/Checklists';
 import { Tickets } from './screens/Tickets';
 import { ChecklistReports } from './screens/Reports/Checklists';
 import { TicketReports } from './screens/Reports/Tickets';
+import { SupplierDetails } from './screens/Suppliers/Details';
+import { SuppliersList } from './screens/Suppliers/List';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -103,6 +105,11 @@ const AppRoutes = () => (
           <Route path="/checklists" element={<Checklists />} />
 
           <Route path="/tickets" element={<Tickets />} />
+
+          <Route path="/suppliers" element={<Outlet />}>
+            <Route index element={<SuppliersList />} />
+            <Route path=":supplierId" element={<SupplierDetails />} />
+          </Route>
         </Route>
 
         <Route path="/confirm/phone" element={<PhoneConfirm />} />
