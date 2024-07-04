@@ -12,8 +12,8 @@ interface IModalLinkSupplier {
 export const ModalLinkSupplier = ({ setModal, maintenanceHistoryId }: IModalLinkSupplier) => {
   const findCompanySuppliers = async () => {
     await Api.get(`/route/${maintenanceHistoryId}`)
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
+        // console.log(res.data);
       })
       .catch((err) => {
         catchHandler(err);

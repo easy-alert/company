@@ -40,7 +40,6 @@ export const LinkSupplierToMaintenanceHistory = ({
   const findMaintenanceHistorySupplier = async () => {
     await Api.get(`/suppliers/maintenance-history/${maintenanceHistoryId}`)
       .then((res) => {
-        console.log(res.data);
         setSupplier(res.data.supplier);
       })
       .catch((err) => {
