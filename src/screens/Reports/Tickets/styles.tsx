@@ -54,6 +54,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  white-space: nowrap;
 
   @media (max-width: 900px) {
     margin-top: 8px;

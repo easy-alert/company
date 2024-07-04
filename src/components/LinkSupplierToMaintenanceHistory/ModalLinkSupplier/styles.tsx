@@ -37,4 +37,9 @@ export const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+
+  > .opacity {
+    opacity: 0.7;
+    font-weight: 400;
+  }
 `;
