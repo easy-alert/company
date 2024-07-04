@@ -11,18 +11,11 @@ interface ILinkSupplierToMaintenanceHistory {
   maintenanceHistoryId: string;
 }
 
-export interface ISupplier {
+interface ISupplier {
   id: string;
-  image: string;
   name: string;
-  state: string;
-  city: string;
-  cnpj: string;
-
-  phone: string | null;
   email: string | null;
-  link: string | null;
-
+  phone: string | null;
   serviceTypes: {
     type: { label: string };
   }[];
@@ -35,12 +28,12 @@ export const LinkSupplierToMaintenanceHistory = ({
   const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
   const ref = useRef<HTMLDivElement>(null);
 
-  const [supplier, setSupplier] = useState<ISupplier>();
+  const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
 
   const findMaintenanceHistorySupplier = async () => {
-    await Api.get(`/suppliers/maintenance-history/${maintenanceHistoryId}`)
+    await Api.get(`/suppliers/selected/${maintenanceHistoryId}`)
       .then((res) => {
-        setSupplier(res.data.supplier);
+        setSuppliers(res.data.suppliers);
       })
       .catch((err) => {
         catchHandler(err);
@@ -58,6 +51,7 @@ export const LinkSupplierToMaintenanceHistory = ({
         <ModalLinkSupplier
           setModal={setModalLinkSupplierOpen}
           maintenanceHistoryId={maintenanceHistoryId}
+          findMaintenanceHistorySupplier={findMaintenanceHistorySupplier}
         />
       )}
       {modalLinkSupplierOpen && (
@@ -73,30 +67,37 @@ export const LinkSupplierToMaintenanceHistory = ({
           <h6>Fornecedor</h6>
           <IconButton
             hideLabelOnMedia
-            icon={supplier ? icon.unlink : icon.link}
-            label={supplier ? 'Desvincular' : 'Vincular'}
+            icon={suppliers.length > 0 ? icon.unlink : icon.link}
+            label={suppliers.length > 0 ? 'Desvincular' : 'Vincular'}
             onClick={() => {
               ref.current?.scrollIntoView();
               setModalLinkSupplierOpen(true);
             }}
           />
         </Style.Header>
-        {!supplier && <p className="p2 opacity">Nenhum fornecedor vinculado.</p>}
-        {supplier && (
-          <Style.SupplierInfo>
-            <p className="p2">Nome do fornecedor</p>
-            <div>
-              <ImageComponent src={icon.letter} size="16px" />
-              <a href="mailto:email@provedor.com.br">email@email.com</a>
-            </div>
+        {suppliers.length > 0 ? (
+          suppliers.map(({ name, id, email, phone }, index) => (
+            <Style.SupplierInfo key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
+              <p className="p2">{name}</p>
+              <div>
+                <ImageComponent src={icon.letter} size="16px" />
+                {email ? <a href="mailto:email@provedor.com.br">email@email.com</a> : '-'}
+              </div>
 
-            <div>
-              <ImageComponent src={icon.whatsApp} size="16px" />
-              <a href={whatsappLink('48999283494')} target="_blank" rel="noreferrer">
-                {applyMask({ mask: 'TEL', value: '48999283494' }).value}
-              </a>
-            </div>
-          </Style.SupplierInfo>
+              <div>
+                <ImageComponent src={icon.whatsApp} size="16px" />
+                {phone ? (
+                  <a href={whatsappLink('48999283494')} target="_blank" rel="noreferrer">
+                    {applyMask({ mask: 'TEL', value: '48999283494' }).value}
+                  </a>
+                ) : (
+                  '-'
+                )}
+              </div>
+            </Style.SupplierInfo>
+          ))
+        ) : (
+          <p className="p2 opacity">Nenhum fornecedor vinculado.</p>
         )}
       </Style.Container>
     </>

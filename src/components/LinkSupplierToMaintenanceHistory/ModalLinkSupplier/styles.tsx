@@ -17,7 +17,8 @@ export const Content = styled.div`
   gap: ${theme.size.sm};
 `;
 
-export const Card = styled.div<{ selected: boolean }>`
+export const Card = styled.button<{ selected: boolean }>`
+  all: unset;
   background-color: ${({ selected }) => (selected ? theme.color.gray3 : theme.color.gray1)};
   padding: ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};

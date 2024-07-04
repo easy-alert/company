@@ -32,7 +32,6 @@ import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../../../Reports/Maintenances/functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
-import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -255,7 +254,7 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
-            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            {/* <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} /> */}
 
             {!!maintenance.daysInAdvance && (
               <Style.Row>
