@@ -5,6 +5,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+
+  .opacity {
+    opacity: 0.7;
+  }
 `;
 
 export const Header = styled.div`
@@ -17,10 +21,6 @@ export const SupplierInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
-
-  > .opacity {
-    opacity: 0.7;
-  }
 
   > div {
     display: flex;

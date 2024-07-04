@@ -146,7 +146,6 @@ export const BuildingManageMaintenances = () => {
           />
           <input
             type="text"
-            maxLength={80}
             placeholder="Procurar"
             onChange={(evt) => {
               inputRef.current = evt.target.value;

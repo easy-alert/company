@@ -219,7 +219,6 @@ export const ModalAdditionalInformations = ({
                       : null
                   }
                   placeholder="Ex: João Silva"
-                  maxLength={40}
                 />
               </Style.Wrapper>
 
@@ -252,7 +251,6 @@ export const ModalAdditionalInformations = ({
                       : null
                   }
                   placeholder="Ex: João Silva"
-                  maxLength={40}
                 />
 
                 {values.hasLastResolutionDate && (
@@ -274,7 +272,6 @@ export const ModalAdditionalInformations = ({
                     <TextArea
                       label="Observação do relato"
                       placeholder="Digite aqui"
-                      maxLength={600}
                       value={maintenanceReport.observation}
                       onChange={(e) => {
                         setMaintenanceReport((prevState) => {

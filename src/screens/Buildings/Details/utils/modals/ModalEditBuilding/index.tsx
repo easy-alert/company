@@ -75,7 +75,6 @@ export const ModalEditBuilding = ({
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: Monte Ravello"
-                maxLength={80}
               />
               <FormikSelect
                 label="Tipo *"
@@ -116,7 +115,6 @@ export const ModalEditBuilding = ({
                 value={values.state}
                 error={touched.state && errors.state ? errors.state : null}
                 placeholder="Ex: Santa Catarina"
-                maxLength={20}
               />
               <FormikInput
                 disabled
@@ -125,7 +123,6 @@ export const ModalEditBuilding = ({
                 value={values.city}
                 error={touched.city && errors.city ? errors.city : null}
                 placeholder="Ex: Criciúma"
-                maxLength={30}
               />
               <FormikInput
                 label="Bairro"
@@ -133,7 +130,6 @@ export const ModalEditBuilding = ({
                 value={values.neighborhood}
                 error={touched.neighborhood && errors.neighborhood ? errors.neighborhood : null}
                 placeholder="Ex: Centro"
-                maxLength={20}
               />
               <FormikInput
                 label="Logradouro"
@@ -141,7 +137,6 @@ export const ModalEditBuilding = ({
                 value={values.streetName}
                 error={touched.streetName && errors.streetName ? errors.streetName : null}
                 placeholder="Ex: Rua Henrique Lage"
-                maxLength={40}
               />
 
               <FormikInput

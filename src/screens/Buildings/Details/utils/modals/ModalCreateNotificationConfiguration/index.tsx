@@ -77,7 +77,6 @@ export const ModalCreateNotificationConfiguration = ({
                 placeholder="Ex: João Silva"
                 datalistId="autoComplete"
                 error={touched.name && errors.name ? errors.name : null}
-                maxLength={60}
                 onChange={(evt) => {
                   const name = evt.target.value;
                   setFieldValue('name', name);
@@ -115,7 +114,6 @@ export const ModalCreateNotificationConfiguration = ({
                 error={touched.name && errors.name ? errors.name : null}
                 label="Nome"
                 name="name"
-                maxLength={60}
                 getValue={({ value }) => {
                   const customId = value;
 
@@ -160,7 +158,7 @@ export const ModalCreateNotificationConfiguration = ({
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: João Silva"
-                maxLength={60}
+
               /> */}
 
               <FormikInput
@@ -169,7 +167,6 @@ export const ModalCreateNotificationConfiguration = ({
                 value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
                 placeholder="Ex: joaosilva@gmail.com"
-                maxLength={50}
               />
               <FormikInput
                 label="WhatsApp"
@@ -191,7 +188,6 @@ export const ModalCreateNotificationConfiguration = ({
                 value={values.role}
                 error={touched.role && errors.role ? errors.role : null}
                 placeholder="Ex: Síndico"
-                maxLength={50}
               />
 
               <Style.MainContactObservation>

@@ -6,12 +6,20 @@ import { ImageComponent } from '../ImageComponent';
 import { ModalLinkSupplier } from './ModalLinkSupplier';
 import * as Style from './styles';
 
-export const LinkSupplierToMaintenanceHistory = () => {
+interface ILinkSupplierToMaintenanceHistory {
+  maintenanceHistoryId: string;
+}
+
+export const LinkSupplierToMaintenanceHistory = ({
+  maintenanceHistoryId,
+}: ILinkSupplierToMaintenanceHistory) => {
   const [modalLinkSupplierOpen, setModalLinkSupplierOpen] = useState(false);
   const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
   const ref = useRef<HTMLDivElement>(null);
 
-  const hasSupplier = true;
+  const hasSupplier = false;
+  // eslint-disable-next-line no-console
+  console.log(maintenanceHistoryId);
 
   return (
     <>
