@@ -13,6 +13,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { theme } from '../../../styles/theme';
 import { Image } from '../../../components/Image';
 import { ModalEditSupplier } from './ModalEditSupplier';
+import { NoDataFound } from '../../../components/NoDataFound';
 
 export interface ISupplier {
   id: string;
@@ -28,6 +29,15 @@ export interface ISupplier {
 
   serviceTypes: {
     type: { label: string };
+  }[];
+
+  maintenances: {
+    maintenance: {
+      id: string;
+      activity: string;
+      element: string;
+      Category: { name: string };
+    };
   }[];
 }
 
@@ -50,6 +60,7 @@ export const SupplierDetails = () => {
     city: '',
     serviceTypes: [],
     state: '',
+    maintenances: [],
   });
 
   const deleteSupplier = async () => {
@@ -78,6 +89,25 @@ export const SupplierDetails = () => {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const unlinkToMaintenance = async (maintenanceId: string) => {
+    setOnQuery(true);
+
+    await Api.post(`/suppliers/unlink-to-maintenance`, {
+      maintenanceId,
+      supplierId,
+    })
+      .then((res) => {
+        toast.success(res.data.ServerMessage.message);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+        findSupplierById();
       });
   };
 
@@ -187,6 +217,44 @@ export const SupplierDetails = () => {
               }}
             />
           </Style.Footer>
+
+          <h2>Manutenções vinculadas</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <Style.MaintenancesContainer>
+              <Style.MaintenaceHeader>
+                <p className="p2">Categoria</p>
+                <p className="p2">Elemento</p>
+                <p className="p2">Atividade</p>
+              </Style.MaintenaceHeader>
+              {supplier.maintenances.length > 0 ? (
+                supplier.maintenances.map(
+                  ({ maintenance: { Category, activity, element, id } }) => (
+                    <Style.MaintenanceCard key={id}>
+                      <p className="p2">{Category.name}</p>
+                      <p className="p2">{element}</p>
+                      <p className="p2">{activity}</p>
+                      <PopoverButton
+                        label="Desvincular"
+                        hiddenIconButtonLabel
+                        type="IconButton"
+                        actionButtonClick={() => {
+                          unlinkToMaintenance(id);
+                        }}
+                        message={{
+                          title: 'Deseja desvincular essa manutenção?',
+                          content: 'Esta ação é reversível.',
+                        }}
+                        buttonIconSize="18px"
+                        buttonIcon={icon.unlink2}
+                      />
+                    </Style.MaintenanceCard>
+                  ),
+                )
+              ) : (
+                <NoDataFound label="Nenhuma manutenção vinculada." height="200px" />
+              )}
+            </Style.MaintenancesContainer>
+          </div>
         </>
       )}
     </>

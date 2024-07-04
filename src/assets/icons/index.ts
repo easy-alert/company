@@ -76,10 +76,12 @@ import letter from './letter.svg';
 import whatsApp from './whatsApp.svg';
 import link from './link.svg';
 import unlink from './unlink.svg';
+import unlink2 from './unlink2.svg';
 
 export const icon = {
   link,
   unlink,
+  unlink2,
   letter,
   whatsApp,
   leftArrow,
