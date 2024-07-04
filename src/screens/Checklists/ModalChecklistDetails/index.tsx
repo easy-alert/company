@@ -184,7 +184,6 @@ export const ModalChecklistDetails = ({
                 <TextArea
                   label="Observação"
                   placeholder="Digite aqui"
-                  maxLength={200}
                   value={checklistReport.observation || ''}
                   onChange={(e) => {
                     setChecklistReport((prevState) => {

@@ -84,6 +84,8 @@ export const ModalSendMaintenanceReport = ({
 
   const { account } = useAuthContext();
 
+  // MODAL EDITAR/ENVIAR RELATO
+
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
     observation: '',
@@ -252,6 +254,8 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
+            {/* <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} /> */}
+
             {!!maintenance.daysInAdvance && (
               <Style.Row>
                 <h6>Dias antecipados</h6>
@@ -278,7 +282,6 @@ export const ModalSendMaintenanceReport = ({
                 <TextArea
                   label="Observação do relato"
                   placeholder="Digite aqui"
-                  maxLength={600}
                   value={maintenanceReport.observation}
                   onChange={(e) => {
                     setMaintenanceReport((prevState) => {

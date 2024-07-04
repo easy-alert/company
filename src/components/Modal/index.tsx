@@ -9,11 +9,11 @@ import { theme } from '../../styles/theme';
 import { IconButton } from '../Buttons/IconButton';
 import { query } from '../../utils/functions';
 
-export const Modal = ({ children, setModal, title, bodyWidth }: IModal) => (
+export const Modal = ({ children, setModal, title, bodyWidth, id = 'background' }: IModal) => (
   <Style.Background
-    id="background"
+    id={id}
     onMouseDown={(evt: any) => {
-      if (evt.target.id === 'background' && !query.get('flow')) setModal(false);
+      if (evt.target.id === id && !query.get('flow')) setModal(false);
     }}
   >
     <Style.Body bodyWidth={bodyWidth}>

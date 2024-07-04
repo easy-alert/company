@@ -131,6 +131,16 @@ export const Sidebar = () => {
     },
 
     {
+      title: 'Fornecedores',
+      type: 'navigate',
+      icon: icon.suppliers,
+      url: '/suppliers',
+      redirectFunction: () => {
+        navigate('/suppliers');
+      },
+    },
+
+    {
       title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,

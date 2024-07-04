@@ -73,7 +73,6 @@ export const ModalEditNotificationConfiguration = ({
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: João Silva"
-                maxLength={60}
               />
 
               <FormikInput
@@ -82,7 +81,6 @@ export const ModalEditNotificationConfiguration = ({
                 value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
                 placeholder="Ex: joaosilva@gmail.com"
-                maxLength={50}
               />
 
               <FormikInput
@@ -106,7 +104,6 @@ export const ModalEditNotificationConfiguration = ({
                 value={values.role}
                 error={touched.role && errors.role ? errors.role : null}
                 placeholder="Ex: Síndico"
-                maxLength={50}
               />
 
               <Style.MainContactObservation>

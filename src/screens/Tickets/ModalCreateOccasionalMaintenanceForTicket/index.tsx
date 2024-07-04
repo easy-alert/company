@@ -367,7 +367,6 @@ export const ModalCreateOccasionalMaintenanceForTicket = ({
               <TextArea
                 label="Observação do relato"
                 placeholder="Digite aqui"
-                maxLength={600}
                 value={data.reportData.observation}
                 onChange={(evt) => {
                   setData((prevState) => ({

@@ -49,7 +49,6 @@ export const ModalEditCategory = ({
           <Style.FormContainer>
             <Form>
               <FormikInput
-                maxLength={80}
                 autoFocus
                 label="Nome da categoria"
                 name="categoryName"
