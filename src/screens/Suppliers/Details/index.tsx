@@ -20,7 +20,7 @@ export interface ISupplier {
   name: string;
   state: string;
   city: string;
-  cnpj: string;
+  cnpj: string | null;
 
   phone: string | null;
   email: string | null;
@@ -117,7 +117,9 @@ export const SupplierDetails = () => {
 
             <Style.Card>
               <h6>CNPJ</h6>
-              <p className="p2">{applyMask({ mask: 'CNPJ', value: supplier.cnpj }).value}</p>
+              <p className="p2">
+                {supplier.cnpj ? applyMask({ mask: 'CNPJ', value: supplier.cnpj }).value : '-'}
+              </p>
             </Style.Card>
 
             <Style.Card>

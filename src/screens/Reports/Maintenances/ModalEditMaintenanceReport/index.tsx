@@ -30,6 +30,7 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../functions';
+import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
@@ -234,6 +235,8 @@ export const ModalEditMaintenanceReport = ({
                 <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
               </Style.Row>
             )}
+
+            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
 
             <Style.Row>
               <h6>Data de conclusão</h6>

@@ -40,7 +40,7 @@ export const Background = styled.div`
   top: -48px;
 
   width: 100vw;
-  min-height: calc(100% + 96px);
+  min-height: 100vh;
 
   transform: translateX(-50%);
   background: rgba(128, 128, 128, 0.6);

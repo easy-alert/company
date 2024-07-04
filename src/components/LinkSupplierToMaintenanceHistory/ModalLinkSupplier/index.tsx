@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
@@ -20,12 +22,14 @@ interface IModalLinkSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   maintenanceHistoryId: string;
   findMaintenanceHistorySupplier: () => Promise<void>;
+  setModalCreateAndLinkSupplierOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalLinkSupplier = ({
   setModal,
   maintenanceHistoryId,
   findMaintenanceHistorySupplier,
+  setModalCreateAndLinkSupplierOpen,
 }: IModalLinkSupplier) => {
   const [suggestedSuppliers, setSuggestedSuppliers] = useState<ISupplier[]>([]);
   const [remainingSuppliers, setRemainingSuppliers] = useState<ISupplier[]>([]);
@@ -58,6 +62,7 @@ export const ModalLinkSupplier = ({
         toast.success(res.data.ServerMessage.message);
         findCompanySuppliers();
         findMaintenanceHistorySupplier();
+        setModal(false);
       })
       .catch((err) => {
         catchHandler(err);
@@ -124,11 +129,18 @@ export const ModalLinkSupplier = ({
               )}
             </Style.Section>
           </Style.Content>
-          {/*
-        <p className="p2">
-          Não encontrou o fornecedor que procura?{' '}
-          <button type="button">Clique aqui para cadastrar!</button>
-        </p> */}
+
+          <p className="p3">
+            Não encontrou o fornecedor que procura?{' '}
+            <span
+              role="button"
+              onClick={() => {
+                setModalCreateAndLinkSupplierOpen(true);
+              }}
+            >
+              Clique aqui para cadastrar!
+            </span>
+          </p>
         </Style.Container>
       )}
     </CustomModal>

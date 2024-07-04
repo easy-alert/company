@@ -51,7 +51,7 @@ export const ModalCreateOccasionalMaintenance = ({
     disabled: onFileQuery,
   });
 
-  // MODAL EDITAR/ENVIAR RELATO AVULSO
+  // MODAL CRIAR MANUTENÇÃO AVULSA
 
   const {
     acceptedFiles: acceptedImages,

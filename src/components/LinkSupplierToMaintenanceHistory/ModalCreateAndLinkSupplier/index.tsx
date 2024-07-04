@@ -3,29 +3,30 @@ import * as yup from 'yup';
 import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
-import { Button } from '../../../../components/Buttons/Button';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { FormikInput } from '../../../../components/Form/FormikInput';
-import { Modal } from '../../../../components/Modal';
-import {
-  applyMask,
-  catchHandler,
-  convertStateName,
-  ensureHttps,
-  unMask,
-  uploadFile,
-} from '../../../../utils/functions';
 import * as Style from './styles';
-import { Api } from '../../../../services/api';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent ';
-import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
-import { useBrasilCities } from '../../../../hooks/useBrasilCities';
-import { useBrasilStates } from '../../../../hooks/useBrasilStates';
-import { useServiceTypes } from '../../../../hooks/useServiceTypes';
+import { useBrasilCities } from '../../../hooks/useBrasilCities';
+import { useBrasilStates } from '../../../hooks/useBrasilStates';
+import { useServiceTypes } from '../../../hooks/useServiceTypes';
+import { Api } from '../../../services/api';
+import {
+  convertStateName,
+  uploadFile,
+  unMask,
+  ensureHttps,
+  catchHandler,
+  applyMask,
+} from '../../../utils/functions';
+import { Button } from '../../Buttons/Button';
+import { FormikImageInput } from '../../Form/FormikImageInput';
+import { FormikInput } from '../../Form/FormikInput';
+import { ReactSelectComponent } from '../../ReactSelectComponent';
+import { ReactSelectCreatableComponent } from '../../ReactSelectCreatableComponent ';
+import { CustomModal } from '../CustomModal';
 
 interface IModalCreateSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   onThenRequest: () => Promise<void>;
+  maintenanceHistoryId: string;
 }
 
 export const schemaCreateSupplier = yup
@@ -62,7 +63,11 @@ export const schemaCreateSupplier = yup
   })
   .required();
 
-export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSupplier) => {
+export const ModalCreateAndLinkSupplier = ({
+  setModal,
+  onThenRequest,
+  maintenanceHistoryId,
+}: IModalCreateSupplier) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState('');
   const { states } = useBrasilStates();
@@ -70,7 +75,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
   const { serviceTypes } = useServiceTypes();
 
   return (
-    <Modal title="Cadastrar fornecedor" setModal={setModal}>
+    <CustomModal title="Cadastrar e vincular fornecedor" setModal={setModal}>
       <Formik
         initialValues={{
           image: '',
@@ -82,6 +87,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           serviceTypeLabels: [],
           city: '',
           state: '',
+          maintenanceHistoryId,
         }}
         validationSchema={schemaCreateSupplier}
         onSubmit={async (data) => {
@@ -94,7 +100,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
             imageURL = Location;
           }
 
-          await Api.post('/suppliers', {
+          await Api.post('/suppliers/create-and-link', {
             ...data,
             image: imageURL,
             phone: data.phone ? unMask(data.phone) : null,
@@ -251,6 +257,6 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           </Style.FormContainer>
         )}
       </Formik>
-    </Modal>
+    </CustomModal>
   );
 };

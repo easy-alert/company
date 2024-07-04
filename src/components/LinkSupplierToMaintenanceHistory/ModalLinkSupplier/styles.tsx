@@ -8,6 +8,12 @@ export const Container = styled.div`
 
   > p {
     color: ${theme.color.gray5};
+
+    > span {
+      text-decoration: underline;
+      color: ${theme.color.primary};
+      cursor: pointer;
+    }
   }
 `;
 
