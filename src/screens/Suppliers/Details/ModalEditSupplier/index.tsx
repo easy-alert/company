@@ -54,7 +54,7 @@ export const schemaEditSupplier = yup
       ),
 
     name: yup.string().required('Campo obrigatório.'),
-    cnpj: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
+    cnpj: yup.string().min(18, 'O CNPJ deve ser válido.'),
     link: yup.string(),
     city: yup.string().required('Campo obrigatório.'),
     state: yup.string().required('Campo obrigatório.'),
@@ -107,7 +107,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
             ...data,
             image: imageURL,
             phone: data.phone ? unMask(data.phone) : null,
-            cnpj: unMask(data.cnpj),
+            cnpj: data.cnpj ? unMask(data.cnpj) : null,
             link: data.link ? ensureHttps(data.link) : null,
           })
             .then((res) => {
@@ -147,7 +147,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
 
               <FormikInput
                 name="cnpj"
-                label="CNPJ *"
+                label="CNPJ"
                 maxLength={applyMask({ value: values.cnpj, mask: 'CNPJ' }).length}
                 error={touched.cnpj && errors.cnpj ? errors.cnpj : null}
                 placeholder="00.000.000/0000-00"
