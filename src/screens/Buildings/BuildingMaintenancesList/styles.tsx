@@ -40,7 +40,6 @@ export const HeaderTitle = styled.div`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
 
   > h2 {
     margin-right: ${theme.size.sm};

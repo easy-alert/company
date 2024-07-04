@@ -255,14 +255,14 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
-            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
-
             {!!maintenance.daysInAdvance && (
               <Style.Row>
                 <h6>Dias antecipados</h6>
                 <p className="p2">{maintenance.daysInAdvance}</p>
               </Style.Row>
             )}
+
+            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
 
             {maintenance.canReport && (
               <>

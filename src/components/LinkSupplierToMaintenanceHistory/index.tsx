@@ -53,12 +53,12 @@ export const LinkSupplierToMaintenanceHistory = ({
     })
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
-        findMaintenanceHistorySupplier();
       })
       .catch((err) => {
         catchHandler(err);
       })
       .finally(() => {
+        findMaintenanceHistorySupplier();
         setOnQuery(false);
       });
   };

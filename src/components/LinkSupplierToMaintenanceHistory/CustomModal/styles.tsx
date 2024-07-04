@@ -23,7 +23,7 @@ export const Body = styled.div<{ bodyWidth?: string }>`
 
   @media (max-width: 900px) {
     width: 100vw;
-    min-height: 200%;
+    min-height: 160%;
     border-radius: 0px;
     overflow-y: scroll;
     margin: 0px;
