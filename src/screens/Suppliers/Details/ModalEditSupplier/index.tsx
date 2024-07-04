@@ -251,7 +251,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
               />
 
               <FormikInput
-                label="Link *"
+                label="Link"
                 name="link"
                 error={touched.link && errors.link ? errors.link : null}
                 placeholder="Ex: www.easyalert.com.br"

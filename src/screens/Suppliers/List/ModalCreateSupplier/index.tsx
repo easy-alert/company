@@ -239,7 +239,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <FormikInput
-                label="Link *"
+                label="Link"
                 name="link"
                 value={values.link}
                 error={touched.link && errors.link ? errors.link : null}

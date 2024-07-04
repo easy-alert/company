@@ -245,7 +245,7 @@ export const ModalCreateAndLinkSupplier = ({
               />
 
               <FormikInput
-                label="Link *"
+                label="Link"
                 name="link"
                 value={values.link}
                 error={touched.link && errors.link ? errors.link : null}
