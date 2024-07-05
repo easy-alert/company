@@ -194,6 +194,7 @@ export const MaintenancesCalendar = () => {
 
   useKeyPressEvent('w', () => {
     if (
+      !modalMaintenanceDetailsOpen &&
       !modalSendMaintenanceReportOpen &&
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
@@ -204,6 +205,7 @@ export const MaintenancesCalendar = () => {
 
   useKeyPressEvent('m', () => {
     if (
+      !modalMaintenanceDetailsOpen &&
       !modalSendMaintenanceReportOpen &&
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
