@@ -14,6 +14,8 @@ import { theme } from '../../../styles/theme';
 import { Image } from '../../../components/Image';
 import { ModalEditSupplier } from './ModalEditSupplier';
 import { NoDataFound } from '../../../components/NoDataFound';
+import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
+import { ImageComponent } from '../../../components/ImageComponent';
 
 export interface ISupplier {
   id: string;
@@ -114,6 +116,54 @@ export const SupplierDetails = () => {
   useEffect(() => {
     findSupplierById();
   }, []);
+
+  type MaintenanceKey = 'id' | 'activity' | 'element' | 'Category.name';
+
+  const [sortConfig, setSortConfig] = useState<{ key: MaintenanceKey; ascending: boolean }>({
+    key: 'Category.name',
+    ascending: true,
+  });
+
+  const sortMaintenances = (key: MaintenanceKey) => {
+    const ascending = sortConfig.key === key ? !sortConfig.ascending : true;
+
+    const sortedMaintenances = [...supplier.maintenances].sort((a, b) => {
+      let aValue;
+      let bValue;
+
+      switch (key) {
+        case 'id':
+          aValue = a.maintenance.id;
+          bValue = b.maintenance.id;
+          break;
+        case 'activity':
+          aValue = a.maintenance.activity;
+          bValue = b.maintenance.activity;
+          break;
+        case 'element':
+          aValue = a.maintenance.element;
+          bValue = b.maintenance.element;
+          break;
+        case 'Category.name':
+          aValue = a.maintenance.Category.name;
+          bValue = b.maintenance.Category.name;
+          break;
+        default:
+          return 0;
+      }
+
+      return ascending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    });
+
+    setSupplier((prevSupplier) => ({
+      ...prevSupplier,
+      maintenances: sortedMaintenances,
+    }));
+
+    setSortConfig({ key, ascending });
+  };
+
+  const checkConfigKey = (key: MaintenanceKey) => sortConfig.key === key;
 
   return (
     <>
@@ -221,35 +271,84 @@ export const SupplierDetails = () => {
           <h2>Manutenções vinculadas</h2>
           <div style={{ overflowX: 'auto' }}>
             <Style.MaintenancesContainer>
-              <Style.MaintenaceHeader>
-                <p className="p2">Categoria</p>
-                <p className="p2">Elemento</p>
-                <p className="p2">Atividade</p>
-              </Style.MaintenaceHeader>
               {supplier.maintenances.length > 0 ? (
-                supplier.maintenances.map(
-                  ({ maintenance: { Category, activity, element, id } }) => (
-                    <Style.MaintenanceCard key={id}>
-                      <p className="p2">{Category.name}</p>
-                      <p className="p2">{element}</p>
-                      <p className="p2">{activity}</p>
-                      <PopoverButton
-                        label="Desvincular"
-                        hiddenIconButtonLabel
-                        type="IconButton"
-                        actionButtonClick={() => {
-                          unlinkToMaintenance(id);
-                        }}
-                        message={{
-                          title: 'Deseja desvincular essa manutenção?',
-                          content: 'Esta ação é reversível.',
-                        }}
-                        buttonIconSize="18px"
-                        buttonIcon={icon.unlink2}
+                <>
+                  <Style.MaintenaceHeader>
+                    <SortHeader
+                      highlighted={checkConfigKey('Category.name')}
+                      onClick={() => {
+                        sortMaintenances('Category.name');
+                      }}
+                    >
+                      <p className="p2">Categoria</p>
+                      <ImageComponent
+                        src={
+                          checkConfigKey('Category.name') && sortConfig.ascending
+                            ? icon.downTriangle
+                            : icon.upTriangle
+                        }
+                        size="8px"
                       />
-                    </Style.MaintenanceCard>
-                  ),
-                )
+                    </SortHeader>
+                    <SortHeader
+                      highlighted={checkConfigKey('element')}
+                      onClick={() => {
+                        sortMaintenances('element');
+                      }}
+                    >
+                      <p className="p2">Elemento</p>
+                      <ImageComponent
+                        src={
+                          checkConfigKey('element') && sortConfig.ascending
+                            ? icon.downTriangle
+                            : icon.upTriangle
+                        }
+                        size="8px"
+                      />
+                    </SortHeader>
+                    <SortHeader
+                      highlighted={checkConfigKey('activity')}
+                      onClick={() => {
+                        sortMaintenances('activity');
+                      }}
+                    >
+                      <p className="p2">Atividade</p>
+                      <ImageComponent
+                        src={
+                          checkConfigKey('activity') && sortConfig.ascending
+                            ? icon.downTriangle
+                            : icon.upTriangle
+                        }
+                        size="8px"
+                      />
+                    </SortHeader>
+                  </Style.MaintenaceHeader>
+                  <>
+                    {supplier.maintenances.map(
+                      ({ maintenance: { Category, activity, element, id } }) => (
+                        <Style.MaintenanceCard key={id}>
+                          <p className="p2">{Category.name}</p>
+                          <p className="p2">{element}</p>
+                          <p className="p2">{activity}</p>
+                          <PopoverButton
+                            label="Desvincular"
+                            hiddenIconButtonLabel
+                            type="IconButton"
+                            actionButtonClick={() => {
+                              unlinkToMaintenance(id);
+                            }}
+                            message={{
+                              title: 'Deseja remover a sugestão deste fornecedor na manutenção?',
+                              content: 'Esta ação é reversível.',
+                            }}
+                            buttonIconSize="18px"
+                            buttonIcon={icon.unlink2}
+                          />
+                        </Style.MaintenanceCard>
+                      ),
+                    )}
+                  </>
+                </>
               ) : (
                 <NoDataFound label="Nenhuma manutenção vinculada." height="200px" />
               )}
