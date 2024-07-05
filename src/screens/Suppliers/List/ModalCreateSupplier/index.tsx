@@ -134,7 +134,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
-                placeholder="Ex: João Silva"
+                placeholder="Informe o nome do fornecedor"
               />
 
               <FormikInput
