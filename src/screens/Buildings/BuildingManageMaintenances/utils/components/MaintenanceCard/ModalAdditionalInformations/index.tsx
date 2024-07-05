@@ -216,7 +216,6 @@ export const ModalAdditionalInformations = ({
                       ? errors.firstNotificationDate
                       : null
                   }
-                  placeholder="Ex: João Silva"
                 />
               </Style.Wrapper>
 
@@ -248,7 +247,6 @@ export const ModalAdditionalInformations = ({
                       ? errors.lastResolutionDate
                       : null
                   }
-                  placeholder="Ex: João Silva"
                 />
 
                 {values.hasLastResolutionDate && (
