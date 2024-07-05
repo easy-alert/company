@@ -139,14 +139,14 @@ export const LinkSupplierToMaintenanceHistory = ({
                 <p className="p2">{name}</p>
                 <div>
                   <ImageComponent src={icon.letter} size="16px" />
-                  {email ? <a href="mailto:email@provedor.com.br">email@email.com</a> : '-'}
+                  {email ? <a href={`mailto:${email}`}>{email}</a> : '-'}
                 </div>
 
                 <div>
                   <ImageComponent src={icon.whatsApp} size="16px" />
                   {phone ? (
-                    <a href={whatsappLink('48999283494')} target="_blank" rel="noreferrer">
-                      {applyMask({ mask: 'TEL', value: '48999283494' }).value}
+                    <a href={whatsappLink(phone)} target="_blank" rel="noreferrer">
+                      {applyMask({ mask: 'TEL', value: phone }).value}
                     </a>
                   ) : (
                     '-'
