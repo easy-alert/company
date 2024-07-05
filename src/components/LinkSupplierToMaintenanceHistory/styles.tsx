@@ -34,13 +34,14 @@ export const SupplierInfo = styled.div`
 `;
 
 export const Background = styled.div`
-  position: fixed;
+  position: absolute;
   z-index: 14;
   left: 50%;
   top: -48px;
 
   width: 100vw;
-  min-height: 100vh;
+  min-height: 150%;
+  overflow: hidden;
 
   transform: translateX(-50%);
   background: rgba(128, 128, 128, 0.6);
@@ -48,7 +49,6 @@ export const Background = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: scroll;
 
   animation: fade-in 0.1s ease-in both;
   @keyframes fade-in {
