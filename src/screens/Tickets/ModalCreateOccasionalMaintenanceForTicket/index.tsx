@@ -352,7 +352,7 @@ export const ModalCreateOccasionalMaintenanceForTicket = ({
             Iniciar em execução
           </Style.Label>
 
-          {new Date(data.executionDate) < new Date() && (
+          {!data.inProgress && new Date(data.executionDate) < new Date() && (
             <>
               <Input
                 disabled={data.inProgress}
