@@ -228,7 +228,7 @@ const MyDocument = ({
 
                               <View style={Style.pdf.contentColumn3}>
                                 <Text style={Style.pdf.bold500}>
-                                  Imagens ({ticket.images.slice(0, 4).length}):
+                                  Imagens ({ticket.images.length}):
                                 </Text>
                                 <View style={Style.pdf.images}>
                                   {ticket.images.slice(0, 4).map(({ url }) => (

@@ -14,10 +14,8 @@ import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } f
 import {
   ICounts,
   IFilterData,
-  IFilterforPDF,
   IFilterforRequest,
   IFiltersOptions,
-  IMaintenanceForPDF,
   IMaintenanceReportData,
 } from './types';
 import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
@@ -47,7 +45,6 @@ export const MaintenanceReports = () => {
     totalCost: 0,
   });
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
-  const [maintenancesForPDF, setMaintenancesForPDF] = useState<IMaintenanceForPDF[]>([]);
 
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
@@ -63,20 +60,14 @@ export const MaintenanceReports = () => {
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
-  const [filterforPDF, setFilterForPDF] = useState<IFilterforPDF>({
-    buildingNames: '',
-    categoryNames: '',
-    endDate: '',
-    startDate: '',
-    statusNames: '',
-  });
-
   const [filterforRequest, setFilterforRequest] = useState<IFilterforRequest>({
     startDate: '',
     endDate: '',
     maintenanceStatusIds: [],
     categoryNames: [],
     buildingIds: [],
+    buildingNames: [],
+    maintenanceStatusNames: [],
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
@@ -147,7 +138,6 @@ export const MaintenanceReports = () => {
               setLoading,
               setMaintenances,
               setOnQuery,
-              setMaintenancesForPDF,
             })
           }
         />
@@ -162,7 +152,6 @@ export const MaintenanceReports = () => {
               setLoading,
               setMaintenances,
               setOnQuery,
-              setMaintenancesForPDF,
             })
           }
           setModal={setModalEditReport}
@@ -171,13 +160,7 @@ export const MaintenanceReports = () => {
       )}
 
       {modalPrintReportOpen && (
-        <ModalPrintReport
-          setModal={setModalPrintReportOpen}
-          maintenancesForPDF={maintenancesForPDF}
-          setMaintenancesForPDF={setMaintenancesForPDF}
-          filterforPDF={filterforPDF}
-          counts={counts}
-        />
+        <ModalPrintReport setModal={setModalPrintReportOpen} filters={filterforRequest} />
       )}
 
       <s.Container>
@@ -196,28 +179,12 @@ export const MaintenanceReports = () => {
 
               setFilterforRequest({
                 buildingIds: buildingsForFilter.map((e) => e.id),
+                buildingNames: buildingsForFilter.map((e) => e.name),
                 categoryNames: categoriesForFilter.map((e) => e.name),
                 maintenanceStatusIds: statusForFilter.map((e) => e.id),
+                maintenanceStatusNames: statusForFilter.map((e) => e.name),
                 endDate: values.endDate,
                 startDate: values.startDate,
-              });
-
-              setFilterForPDF((prevState) => {
-                const newState = { ...prevState };
-
-                newState.buildingNames = buildingsForFilter.map((e) => e.name).join(', ');
-
-                newState.categoryNames = categoriesForFilter.map((e) => e.name).join(', ');
-
-                newState.statusNames = statusForFilter
-                  .map((e) => getPluralStatusNameforPdf(e.name))
-                  .join(', ');
-
-                newState.startDate = values.startDate;
-
-                newState.endDate = values.endDate;
-
-                return newState;
               });
 
               await requestReportsData({
@@ -227,12 +194,13 @@ export const MaintenanceReports = () => {
                 setLoading,
                 filters: {
                   buildingIds: buildingsForFilter.map((e) => e.id),
+                  buildingNames: buildingsForFilter.map((e) => e.name),
                   categoryNames: categoriesForFilter.map((e) => e.name),
                   maintenanceStatusIds: statusForFilter.map((e) => e.id),
-                  startDate: values.startDate,
+                  maintenanceStatusNames: statusForFilter.map((e) => e.name),
                   endDate: values.endDate,
+                  startDate: values.startDate,
                 },
-                setMaintenancesForPDF,
               });
             }}
           >
