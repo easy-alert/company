@@ -40,6 +40,8 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 export const ModalCreateOccasionalMaintenance = ({
   setModal,
   getCalendarData,
+  checklistTitle,
+  checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -48,7 +50,7 @@ export const ModalCreateOccasionalMaintenance = ({
   const { account } = useAuthContext();
 
   const [data, setData] = useState<ICreateOccasionalMaintenanceData>({
-    buildingId: '',
+    buildingId: checklistBuildingId || '',
     executionDate: '',
 
     inProgress: false,
@@ -60,7 +62,7 @@ export const ModalCreateOccasionalMaintenance = ({
 
     maintenanceData: {
       element: '',
-      activity: '',
+      activity: checklistTitle || '',
       responsible: '',
     },
 
@@ -169,6 +171,7 @@ export const ModalCreateOccasionalMaintenance = ({
       ) : (
         <Style.FormContainer>
           <Select
+            disabled={!!checklistBuildingId}
             label="Edificação *"
             value={data.buildingId}
             selectPlaceholderValue={data.buildingId}

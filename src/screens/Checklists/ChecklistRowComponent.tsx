@@ -12,6 +12,7 @@ import { theme } from '../../styles/theme';
 import { ModalDeleteChecklist } from './ModalDeleteChecklist';
 import { ModalUpdateChecklist } from './ModalUpdateChecklist';
 import { ITimeInterval } from '../../utils/types';
+import { ModalCreateOccasionalMaintenance } from '../Calendar/utils/ModalCreateOccasionalMaintenance';
 
 interface IChecklistRow {
   checklist: IChecklist;
@@ -20,13 +21,15 @@ interface IChecklistRow {
 }
 
 export const ChecklistRowComponent = ({
-  checklist: { id, name, status, syndic },
+  checklist: { id, name, status, syndic, buildingId },
   onThenRequest,
   timeIntervals,
 }: IChecklistRow) => {
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [modalDeleteChecklistOpen, setModalDeleteChecklistOpen] = useState(false);
   const [modalUpdateChecklistOpen, setModalUpdateChecklistOpen] = useState(false);
+  const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
+    useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -70,6 +73,20 @@ export const ChecklistRowComponent = ({
           timeIntervals={timeIntervals}
           onThenRequest={onThenRequest}
           checklistId={id}
+        />
+      )}
+      {modalCreateOccasionalMaintenance && (
+        <ModalCreateOccasionalMaintenance
+          setModal={setModalCreateOccasionalMaintenance}
+          checklistTitle={name}
+          checklistBuildingId={buildingId}
+          // Ta com nome de calendário mas pode ser qualquer coisa
+          getCalendarData={() =>
+            new Promise<void>((resolve) => {
+              // Não faz nada
+              resolve();
+            })
+          }
         />
       )}
       <Style.ChecklistBackground ref={dropdownRef}>
@@ -130,6 +147,19 @@ export const ChecklistRowComponent = ({
                 setDropdownOpen(false);
               }}
               label="Editar"
+            />
+
+            <IconButton
+              fontWeight="400"
+              color={theme.color.gray5}
+              labelPos="right"
+              icon={icon.addWithCircle}
+              size="16px"
+              onClick={() => {
+                setModalCreateOccasionalMaintenance(true);
+                setDropdownOpen(false);
+              }}
+              label="Manutenção"
             />
           </Style.Dropdown>
         )}

@@ -64,6 +64,8 @@ export interface IRequestCreateOccasionalMaintenance {
 export interface IModalCreateOccasionalMaintenance {
   setModal: (setModal: boolean) => void;
   getCalendarData: () => Promise<void>;
+  checklistTitle?: string;
+  checklistBuildingId?: string;
 }
 
 export interface IModalCreateOccasionalMaintenanceInstructions {
