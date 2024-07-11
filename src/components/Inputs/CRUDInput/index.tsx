@@ -18,7 +18,7 @@ export const CRUDInput = ({
   const [editing, setEditing] = useState(false);
 
   return (
-    <Style.InputContainer>
+    <Style.InputContainer selectPlaceholderValue={value}>
       <h6>{label}</h6>
 
       {!editing && selectProps.options.length ? (

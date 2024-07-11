@@ -2,7 +2,11 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 import { icon } from '../../../assets/icons';
 
-export const InputContainer = styled.div<{ typeDatePlaceholderValue?: string; type?: string }>`
+export const InputContainer = styled.div<{
+  typeDatePlaceholderValue?: string;
+  type?: string;
+  selectPlaceholderValue: any;
+}>`
   display: flex;
   flex-direction: column;
   > h6 {
@@ -21,6 +25,19 @@ export const InputContainer = styled.div<{ typeDatePlaceholderValue?: string; ty
         color: #757575
       }
       `}
+
+  ${({ selectPlaceholderValue }) =>
+    selectPlaceholderValue === 'Selecione' || !selectPlaceholderValue
+      ? `
+      > select {
+        border-color: ${theme.color.gray3};
+        color: #757575
+      }
+      `
+      : `
+      > select {
+          border-color: ${theme.color.gray4};
+      }`}
 `;
 
 export const ErrorMessage = styled.div`

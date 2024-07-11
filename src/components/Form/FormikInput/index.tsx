@@ -35,6 +35,7 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
       passwordPlaceholder={passwordPlaceholder}
       labelColor={labelColor}
       typeDatePlaceholderValue={typeDatePlaceholderValue}
+      type={type}
     >
       {label && <h6>{label}</h6>}
       <PasswordDiv>
