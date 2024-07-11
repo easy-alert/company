@@ -43,7 +43,7 @@ export const TableColBody = styled.td<{
   cssProps: any;
   cssOnMedia: any;
 }>`
-  height: ${theme.size.xxlg};
+  height: 80px;
   text-align: start;
 
   :first-of-type {
@@ -60,10 +60,7 @@ export const TableColBody = styled.td<{
   ${({ cssProps }) => cssProps}
 
   @media (max-width: 900px) {
-    min-width: 150px;
+    min-width: 200px;
     ${({ cssOnMedia }) => cssOnMedia}
-    :first-of-type {
-      min-width: 0px;
-    }
   }
 `;

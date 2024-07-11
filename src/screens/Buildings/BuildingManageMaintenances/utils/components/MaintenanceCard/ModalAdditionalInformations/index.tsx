@@ -206,6 +206,7 @@ export const ModalAdditionalInformations = ({
                   }}
                 />
                 <FormikInput
+                  typeDatePlaceholderValue={values.firstNotificationDate}
                   min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
                   disabled={!values.hasFirstNotificationDate || hasHistory}
                   name="firstNotificationDate"
@@ -237,6 +238,7 @@ export const ModalAdditionalInformations = ({
                   }}
                 />
                 <FormikInput
+                  typeDatePlaceholderValue={values.lastResolutionDate}
                   max={convertToFormikDate(new Date())}
                   disabled={!values.hasLastResolutionDate || hasHistory}
                   name="lastResolutionDate"

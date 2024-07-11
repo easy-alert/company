@@ -15,17 +15,15 @@ export const requestReportsData = async ({
   setMaintenances,
   setLoading,
   filters,
-  setMaintenancesForPDF,
 }: IRequestReportsData) => {
   setOnQuery(true);
   setMaintenances([]);
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}`,
+    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}&buildingNames=${filters.buildingNames}&maintenanceStatusNames=${filters.maintenanceStatusNames}`,
   )
     .then(async (res) => {
       setMaintenances(res.data.maintenances);
       setCounts(res.data.counts);
-      setMaintenancesForPDF(res.data.maintenancesForPDF);
     })
     .catch((err) => {
       catchHandler(err);

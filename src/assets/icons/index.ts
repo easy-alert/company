@@ -77,8 +77,12 @@ import whatsApp from './whatsApp.svg';
 import link from './link.svg';
 import unlink from './unlink.svg';
 import unlink2 from './unlink2.svg';
+import blocks from './blocks.svg';
+import addWithCircle from './addWithCircle.svg';
 
 export const icon = {
+  addWithCircle,
+  blocks,
   link,
   unlink,
   unlink2,

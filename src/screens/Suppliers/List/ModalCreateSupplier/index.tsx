@@ -175,6 +175,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectCreatableComponent
+                selectPlaceholderValue={!!values.serviceTypeLabels.length}
                 isMulti
                 id="serviceType"
                 name="serviceType"
@@ -197,6 +198,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectComponent
+                selectPlaceholderValue={values.state}
                 label="Estado *"
                 id="state"
                 name="state"
@@ -215,6 +217,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectComponent
+                selectPlaceholderValue={values.city}
                 label="Cidade *"
                 id="city"
                 name="city"

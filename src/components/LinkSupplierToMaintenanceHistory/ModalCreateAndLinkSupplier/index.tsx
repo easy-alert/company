@@ -181,6 +181,7 @@ export const ModalCreateAndLinkSupplier = ({
               />
 
               <ReactSelectCreatableComponent
+                selectPlaceholderValue={values.serviceTypeLabels.length}
                 isMulti
                 id="serviceType"
                 name="serviceType"
@@ -203,6 +204,7 @@ export const ModalCreateAndLinkSupplier = ({
               />
 
               <ReactSelectComponent
+                selectPlaceholderValue={values.state}
                 label="Estado *"
                 id="state"
                 name="state"
@@ -221,6 +223,7 @@ export const ModalCreateAndLinkSupplier = ({
               />
 
               <ReactSelectComponent
+                selectPlaceholderValue={values.city}
                 label="Cidade *"
                 id="city"
                 name="city"

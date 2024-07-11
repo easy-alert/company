@@ -35,7 +35,7 @@ interface IChecklist extends IChecklistReport {
   frequency: string | null;
   status: 'pending' | 'completed';
   building: { name: string };
-  syndic: { name: string };
+  syndic: { name: string } | null;
 
   resolutionDate: string | null;
 
@@ -141,7 +141,7 @@ export const ModalChecklistDetails = ({
 
             <Style.Row>
               <h6>Responsável</h6>
-              <p className="p2">{checklist?.syndic.name}</p>
+              <p className="p2">{checklist?.syndic?.name || 'Nenhum'}</p>
             </Style.Row>
 
             <Style.Row>

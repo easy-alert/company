@@ -58,7 +58,7 @@ export const ContentRow = styled.div`
   display: grid;
   grid-template-columns: 226px 1fr;
   gap: ${theme.size.xsm};
-  min-height: 240px;
+  min-height: 220px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -241,6 +241,8 @@ export const Checklists = styled.div`
 
   max-height: 600px;
   overflow-y: auto;
+
+  min-height: 200px;
 `;
 
 export const NavigateButtons = styled.div`
@@ -345,7 +347,7 @@ export const Dropdown = styled.div`
 
   position: absolute;
   right: 8px;
-  top: -8px;
+  top: -16px;
   z-index: 9;
 `;
 

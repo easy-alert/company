@@ -40,6 +40,8 @@ import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 export const ModalCreateOccasionalMaintenance = ({
   setModal,
   getCalendarData,
+  checklistTitle,
+  checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -47,8 +49,33 @@ export const ModalCreateOccasionalMaintenance = ({
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const { account } = useAuthContext();
 
+  const [data, setData] = useState<ICreateOccasionalMaintenanceData>({
+    buildingId: checklistBuildingId || '',
+    executionDate: '',
+
+    inProgress: false,
+
+    categoryData: {
+      id: '',
+      name: '',
+    },
+
+    maintenanceData: {
+      element: '',
+      activity: checklistTitle || '',
+      responsible: '',
+    },
+
+    reportData: {
+      cost: 'R$ 0,00',
+      observation: '',
+      files: [],
+      images: [],
+    },
+  });
+
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    disabled: onFileQuery,
+    disabled: onFileQuery || data.inProgress,
   });
 
   // MODAL CRIAR MANUTENÇÃO AVULSA
@@ -64,7 +91,7 @@ export const ModalCreateOccasionalMaintenance = ({
       'image/jpeg': ['.jpeg'],
       'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
     },
-    disabled: onImageQuery,
+    disabled: onImageQuery || data.inProgress,
   });
 
   const [view, setView] = useState<number>(0);
@@ -72,31 +99,6 @@ export const ModalCreateOccasionalMaintenance = ({
   const [auxiliaryData, setAuxiliaryData] = useState<IAuxiliaryData>({
     Buildings: [],
     Categories: [],
-  });
-
-  const [data, setData] = useState<ICreateOccasionalMaintenanceData>({
-    buildingId: '',
-    executionDate: '',
-
-    inProgress: false,
-
-    categoryData: {
-      id: '',
-      name: '',
-    },
-
-    maintenanceData: {
-      element: '',
-      activity: '',
-      responsible: '',
-    },
-
-    reportData: {
-      cost: 'R$ 0,00',
-      observation: '',
-      files: [],
-      images: [],
-    },
   });
 
   useEffect(() => {
@@ -169,6 +171,7 @@ export const ModalCreateOccasionalMaintenance = ({
       ) : (
         <Style.FormContainer>
           <Select
+            disabled={!!checklistBuildingId}
             label="Edificação *"
             value={data.buildingId}
             selectPlaceholderValue={data.buildingId}
@@ -335,6 +338,7 @@ export const ModalCreateOccasionalMaintenance = ({
             label="Data de execução *"
             type="date"
             value={data.executionDate}
+            typeDatePlaceholderValue={data.executionDate}
             onChange={(evt) =>
               setData((prevState) => ({
                 ...prevState,
@@ -343,23 +347,31 @@ export const ModalCreateOccasionalMaintenance = ({
             }
           />
 
-          {new Date(data.executionDate) > new Date() && (
-            <Style.Label htmlFor="inProgress">
-              <input
-                id="inProgress"
-                type="checkbox"
-                checked={data.inProgress}
-                onChange={() => {
-                  setData((prevState) => ({ ...prevState, inProgress: !prevState.inProgress }));
-                }}
-              />
-              Iniciar em execução
-            </Style.Label>
-          )}
+          <Style.Label htmlFor="inProgress">
+            <input
+              id="inProgress"
+              type="checkbox"
+              checked={data.inProgress}
+              onChange={() => {
+                setData((prevState) => ({
+                  ...prevState,
+                  inProgress: !prevState.inProgress,
+                  reportData: {
+                    cost: 'R$ 0,00',
+                    observation: '',
+                    files: [],
+                    images: [],
+                  },
+                }));
+              }}
+            />
+            Iniciar em execução
+          </Style.Label>
 
-          {new Date(data.executionDate) < new Date() && (
+          {!data.inProgress && new Date(data.executionDate) < new Date() && (
             <>
               <Input
+                disabled={data.inProgress}
                 label="Custo"
                 placeholder="Ex: R$ 100,00"
                 maxLength={14}
@@ -377,6 +389,7 @@ export const ModalCreateOccasionalMaintenance = ({
               />
 
               <TextArea
+                disabled={data.inProgress}
                 label="Observação do relato"
                 placeholder="Digite aqui"
                 value={data.reportData.observation}

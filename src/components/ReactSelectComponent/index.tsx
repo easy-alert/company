@@ -65,8 +65,9 @@ export const ReactSelectComponent = ({
   defaultValue,
   error,
   inputValue,
+  selectPlaceholderValue,
 }: IReactSelectComponent) => (
-  <Style.ReactSelectDiv>
+  <Style.ReactSelectDiv selectPlaceholderValue={selectPlaceholderValue}>
     {label && <h6>{label}</h6>}
     <Select
       inputValue={inputValue}

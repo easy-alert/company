@@ -17,7 +17,8 @@ import { ChecklistRowComponent } from './ChecklistRowComponent';
 export interface IChecklist {
   id: string;
   name: string;
-  syndic: { name: string };
+  buildingId: string;
+  syndic: { name: string } | null;
   status: 'pending' | 'completed';
 }
 

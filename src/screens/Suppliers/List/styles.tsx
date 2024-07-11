@@ -17,15 +17,13 @@ export const Header = styled.header`
 export const LeftSide = styled.div`
   display: flex;
   align-items: center;
-  width: 30%;
-  > h2 {
-    margin-right: ${theme.size.sm};
-  }
+  gap: ${theme.size.sm};
 
   @media (max-width: 900px) {
     width: 60%;
     flex-direction: column;
     align-items: flex-start;
+    gap: ${theme.size.xxsm};
   }
 `;
 
@@ -114,4 +112,10 @@ export const Tags = styled.div`
   flex-wrap: wrap;
   gap: ${theme.size.xxsm};
   margin-top: ${theme.size.xsm};
+`;
+
+export const NameAndImage = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
 `;

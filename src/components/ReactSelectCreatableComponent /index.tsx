@@ -46,8 +46,9 @@ export const ReactSelectCreatableComponent = ({
   newCustomStyle,
   defaultValue,
   error,
+  selectPlaceholderValue,
 }: IReactSelectCreatableComponent) => (
-  <Style.ReactSelectDiv>
+  <Style.ReactSelectDiv selectPlaceholderValue={selectPlaceholderValue}>
     {label && <h6>{label}</h6>}
     <Select
       defaultValue={defaultValue}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { Api } from '../../../services/api';
 import { applyMask, catchHandler } from '../../../utils/functions';
@@ -10,6 +11,8 @@ import { ModalCreateSupplier } from './ModalCreateSupplier';
 import { Pagination } from '../../../components/Pagination';
 import { NoDataContainer, PaginationFooter } from '../../Tickets/styles';
 import { ListTag } from '../../../components/ListTag';
+import { Table, TableContent } from '../../../components/Table';
+import { ImageComponent } from '../../../components/ImageComponent';
 
 interface ISupplier {
   id: string;
@@ -26,12 +29,20 @@ interface ISupplier {
   }[];
 }
 
+type TListView = 'blocks' | 'table';
+
 export const SuppliersList = () => {
   const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
   const [supplierCounts, setSupplierCounts] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const [modalCreateSupplierOpen, setModalCreateSupplierOpen] = useState(false);
+  const [listView, setListView] = useState<TListView>('blocks');
+  const navigate = useNavigate();
+
+  const handleListView = (view: TListView) => {
+    setListView(view);
+  };
 
   const findManySuppliers = async () => {
     await Api.get(`/suppliers`)
@@ -67,6 +78,15 @@ export const SuppliersList = () => {
         <Style.Header>
           <Style.LeftSide>
             <h2>Fornecedores</h2>
+            <IconButton
+              labelPos="right"
+              label={listView === 'table' ? 'Visualizar em blocos' : 'Visualizar em lista'}
+              icon={listView === 'table' ? icon.blocks : icon.listWithBg}
+              onClick={() => {
+                handleListView(listView === 'table' ? 'blocks' : 'table');
+              }}
+            />
+
             {/*
           <Style.SearchField>
             <IconButton
@@ -108,42 +128,86 @@ export const SuppliersList = () => {
 
         {suppliers?.length > 0 && (
           <Style.PaginationContainer>
-            <Style.Wrapper>
-              {suppliers.map((supplier) => (
-                <Style.Card key={supplier.id} to={`/suppliers/${supplier.id}`}>
-                  <Style.ImageDiv>
-                    <Image img={supplier.image} size="100px" />
-                  </Style.ImageDiv>
+            {listView === 'blocks' ? (
+              <Style.Wrapper>
+                {suppliers.map((supplier) => (
+                  <Style.Card key={supplier.id} to={`/suppliers/${supplier.id}`}>
+                    <Style.ImageDiv>
+                      <Image img={supplier.image} size="100px" />
+                    </Style.ImageDiv>
 
-                  <Style.CardContent>
-                    <h5>{supplier.name}</h5>
+                    <Style.CardContent>
+                      <h5>{supplier.name}</h5>
 
-                    <Style.Tags>
-                      {supplier.serviceTypes.map(({ type }) => (
-                        <ListTag
-                          key={type.label}
-                          label={type.label}
-                          fontSize="14px"
-                          lineHeight="16px"
-                        />
-                      ))}
-                    </Style.Tags>
+                      <Style.Tags>
+                        {supplier.serviceTypes.map(({ type }) => (
+                          <ListTag
+                            key={type.label}
+                            label={type.label}
+                            fontSize="14px"
+                            lineHeight="16px"
+                          />
+                        ))}
+                      </Style.Tags>
 
-                    <p className="p">{`${supplier.city} / ${supplier.state}`}</p>
-                  </Style.CardContent>
+                      <p className="p">{`${supplier.city} / ${supplier.state}`}</p>
+                    </Style.CardContent>
 
-                  <Style.CardFooter>
-                    <Style.Line />
-                    <p className="p4">
-                      {supplier.phone
-                        ? applyMask({ mask: 'TEL', value: supplier.phone }).value
-                        : '-'}
-                    </p>
-                    <p className="p4">{supplier.email || '-'}</p>
-                  </Style.CardFooter>
-                </Style.Card>
-              ))}
-            </Style.Wrapper>
+                    <Style.CardFooter>
+                      <Style.Line />
+                      <p className="p4">
+                        {supplier.phone
+                          ? applyMask({ mask: 'TEL', value: supplier.phone }).value
+                          : '-'}
+                      </p>
+                      <p className="p4">{supplier.email || '-'}</p>
+                    </Style.CardFooter>
+                  </Style.Card>
+                ))}
+              </Style.Wrapper>
+            ) : (
+              <Table
+                colsHeader={[
+                  { label: 'Nome', cssProps: { paddingLeft: '56px' } },
+                  { label: 'Área de atuação' },
+                  { label: 'Cidade / Estado' },
+                  { label: 'Email' },
+                  { label: 'Telefone' },
+                ]}
+              >
+                {suppliers.map((supplier) => (
+                  <TableContent
+                    onClick={() => {
+                      navigate(`/suppliers/${supplier.id}`);
+                    }}
+                    key={supplier.id}
+                    colsBody={[
+                      {
+                        cell: (
+                          <Style.NameAndImage>
+                            <ImageComponent src={supplier.image} size="32px" radius="100%" />
+                            {supplier.name}
+                          </Style.NameAndImage>
+                        ),
+                        cssProps: { width: '20%' },
+                      },
+                      {
+                        cell: supplier.serviceTypes.map(({ type }) => type.label).join(', '),
+                        cssProps: { width: '40%' },
+                      },
+                      { cell: `${supplier.city} / ${supplier.state}`, cssProps: { width: '15%' } },
+                      {
+                        cell: supplier.phone
+                          ? applyMask({ mask: 'TEL', value: supplier.phone }).value
+                          : '-',
+                        cssProps: { width: '10%' },
+                      },
+                      { cell: supplier.email || '-', cssProps: { width: '10%' } },
+                    ]}
+                  />
+                ))}
+              </Table>
+            )}
             <PaginationFooter>
               <Pagination
                 totalCountOfRegister={supplierCounts}
