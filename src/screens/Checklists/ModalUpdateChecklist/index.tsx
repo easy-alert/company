@@ -42,7 +42,7 @@ interface IChecklist {
   frequency: string | null;
   status: 'pending' | 'completed';
   building: { name: string; id: string };
-  syndic: { name: string; id: string };
+  syndic: { name: string; id: string } | null;
   frequencyTimeInterval: { id: string } | null;
 
   resolutionDate: string | null;
@@ -174,7 +174,7 @@ export const ModalUpdateChecklist = ({
               frequency: checklist.frequency || '',
               frequencyTimeIntervalId: checklist.frequencyTimeInterval?.id || timeIntervals[0].id,
               description: checklist.description || '',
-              syndicId: checklist.syndic.id,
+              syndicId: checklist.syndic?.id || '',
               hasFrequency: !!checklist.frequency,
             }}
             validationSchema={schema}
@@ -299,6 +299,7 @@ export const ModalUpdateChecklist = ({
                   label="Data *"
                   type="date"
                   error={touched.date && (errors.date || null)}
+                  typeDatePlaceholderValue={values.date}
                 />
 
                 <FormikCheckbox

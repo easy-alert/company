@@ -222,6 +222,7 @@ export const ModalCreateChecklist = ({
                 label="Data *"
                 type="date"
                 error={touched.date && (errors.date || null)}
+                typeDatePlaceholderValue={values.date}
               />
 
               <FormikCheckbox
