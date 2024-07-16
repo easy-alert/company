@@ -50,3 +50,8 @@ export const Section = styled.div`
     font-weight: 400;
   }
 `;
+
+export const ScrollDiv = styled(Section)`
+  max-height: 300px;
+  overflow-y: auto;
+`;

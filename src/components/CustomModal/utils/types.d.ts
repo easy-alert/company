@@ -4,4 +4,5 @@ export interface IModal {
   setModal: (setModal: boolean) => void;
   bodyWidth?: string;
   id?: string;
+  zIndex: number;
 }
