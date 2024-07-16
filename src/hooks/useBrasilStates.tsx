@@ -10,6 +10,7 @@ interface IState {
 
 export const useBrasilStates = () => {
   const [rawStates, setRawStates] = useState<IState[]>([]);
+  const [selectedStateAcronym, setSelectedStateAcronym] = useState<string>('');
 
   const states = rawStates.sort((a, b) => a.nome.localeCompare(b.nome));
 
@@ -27,5 +28,5 @@ export const useBrasilStates = () => {
     getStates();
   }, []);
 
-  return { states };
+  return { states, selectedStateAcronym, setSelectedStateAcronym };
 };

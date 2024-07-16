@@ -214,7 +214,9 @@ const MyDocument = ({
 
                                 <Text style={Style.pdf.bold500}>
                                   Responsável:{' '}
-                                  <Text style={Style.pdf.normal}>{checklist.syndic.name}</Text>
+                                  <Text style={Style.pdf.normal}>
+                                    {checklist.syndic?.name || '-'}
+                                  </Text>
                                 </Text>
 
                                 <Text style={Style.pdf.bold500}>
