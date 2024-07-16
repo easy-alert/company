@@ -70,7 +70,7 @@ export const ChecklistReports = () => {
     Status: getSingularStatusNameforPdf(data.status),
     'Nome do checklist': data.name,
     Descrição: data.description,
-    Responsável: data.syndic.name,
+    Responsável: data.syndic?.name || '-',
     Periodicidade: data.frequency ? 'Sim' : 'Não',
     Data: dateFormatter(data.date),
     Observações: data.observation || '',
@@ -389,7 +389,7 @@ export const ChecklistReports = () => {
                     { cell: checklist.building.name },
                     { cell: checklist.name },
                     { cell: checklist.description },
-                    { cell: checklist.syndic.name },
+                    { cell: checklist.syndic?.name || '-' },
                     { cell: checklist.frequency ? 'Sim' : 'Não' },
                     { cell: dateFormatter(checklist.date) },
                   ]}

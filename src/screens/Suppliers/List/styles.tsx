@@ -119,3 +119,26 @@ export const NameAndImage = styled.div`
   align-items: center;
   gap: ${theme.size.xsm};
 `;
+
+export const FilterWrapper = styled.div`
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+  margin-bottom: ${theme.size.md};
+
+  > h5 {
+    margin-bottom: ${theme.size.sm};
+  }
+`;
+
+export const FilterInputs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 71px;
+  gap: ${theme.size.xsm};
+  align-items: flex-end;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    justify-items: flex-end;
+  }
+`;

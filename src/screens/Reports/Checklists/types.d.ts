@@ -10,7 +10,7 @@ export interface IChecklists {
   name: string;
   description: string;
   date: string;
-  syndic: { name: string };
+  syndic: { name: string } | null;
   building: { name: string };
   status: 'pending' | 'completed';
   frequency: number | null;
