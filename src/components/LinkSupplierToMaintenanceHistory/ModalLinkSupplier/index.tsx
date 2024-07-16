@@ -4,10 +4,10 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { catchHandler } from '../../../utils/functions';
-import { CustomModal } from '../CustomModal';
 import * as Style from './styles';
 import { DotSpinLoading } from '../../Loadings/DotSpinLoading';
 import { LoadingWrapper } from '../../Loadings/LoadingWrapper';
+import { CustomModal } from '../../CustomModal';
 
 interface ISupplier {
   id: string;
@@ -77,7 +77,7 @@ export const ModalLinkSupplier = ({
   }, []);
 
   return (
-    <CustomModal setModal={setModal} title="Vincular fornecedor" id="supplier">
+    <CustomModal setModal={setModal} title="Vincular fornecedor" id="supplier" zIndex={20}>
       {loading ? (
         <LoadingWrapper minHeight="300px">
           <DotSpinLoading />
@@ -90,19 +90,21 @@ export const ModalLinkSupplier = ({
             <Style.Section>
               <h6>Sugeridos</h6>
               {suggestedSuppliers.length > 0 ? (
-                suggestedSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
-                  <Style.Card
-                    disabled={onQuery}
-                    selected={isSelected}
-                    key={id}
-                    onClick={() => {
-                      linkToMaintenanceHistory(id);
-                    }}
-                  >
-                    <p className="p4">{name}</p>
-                    <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
-                  </Style.Card>
-                ))
+                <Style.ScrollDiv>
+                  {suggestedSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
+                    <Style.Card
+                      disabled={onQuery}
+                      selected={isSelected}
+                      key={id}
+                      onClick={() => {
+                        linkToMaintenanceHistory(id);
+                      }}
+                    >
+                      <p className="p4">{name}</p>
+                      <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+                    </Style.Card>
+                  ))}
+                </Style.ScrollDiv>
               ) : (
                 <p className="p4 opacity">Nenhum fornecedor encontrado.</p>
               )}
@@ -111,19 +113,21 @@ export const ModalLinkSupplier = ({
             <Style.Section>
               <h6>Outros</h6>
               {remainingSuppliers.length > 0 ? (
-                remainingSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
-                  <Style.Card
-                    disabled={onQuery}
-                    selected={isSelected}
-                    key={id}
-                    onClick={() => {
-                      linkToMaintenanceHistory(id);
-                    }}
-                  >
-                    <p className="p4">{name}</p>
-                    <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
-                  </Style.Card>
-                ))
+                <Style.ScrollDiv>
+                  {remainingSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
+                    <Style.Card
+                      disabled={onQuery}
+                      selected={isSelected}
+                      key={id}
+                      onClick={() => {
+                        linkToMaintenanceHistory(id);
+                      }}
+                    >
+                      <p className="p4">{name}</p>
+                      <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+                    </Style.Card>
+                  ))}
+                </Style.ScrollDiv>
               ) : (
                 <p className="p4 opacity">Nenhum fornecedor encontrado.</p>
               )}

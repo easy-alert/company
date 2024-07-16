@@ -8,6 +8,7 @@ import { ModalLinkSupplier } from './ModalLinkSupplier';
 import * as Style from './styles';
 import { Api } from '../../services/api';
 import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
+import { CustomBackground } from '../CustomModal/CustomBackground';
 
 interface ILinkSupplierToMaintenanceHistory {
   maintenanceHistoryId: string;
@@ -92,14 +93,20 @@ export const LinkSupplierToMaintenanceHistory = ({
         />
       )}
 
-      {(modalLinkSupplierOpen || modalCreateAndLinkSupplierOpen) && (
-        <Style.Background
+      {modalLinkSupplierOpen && (
+        <CustomBackground
+          zIndex={19}
           onClick={() => {
-            if (modalCreateAndLinkSupplierOpen) {
-              setModalCreateAndLinkSupplierOpen(false);
-            } else {
-              setModalLinkSupplierOpen(false);
-            }
+            setModalLinkSupplierOpen(false);
+          }}
+        />
+      )}
+
+      {modalCreateAndLinkSupplierOpen && (
+        <CustomBackground
+          zIndex={21}
+          onClick={() => {
+            setModalCreateAndLinkSupplierOpen(false);
           }}
         />
       )}
