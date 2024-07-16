@@ -92,6 +92,8 @@ export const MaintenanceCard = ({
           <Style.MaintenancesCardTopContent>
             <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
               <input
+                id={maintenance.id}
+                name={maintenance.id}
                 type="checkbox"
                 checked={maintenance.isSelected ?? false}
                 onClick={(e) => {
@@ -102,12 +104,17 @@ export const MaintenanceCard = ({
                     setToCopyBuilding('');
                   }
 
-                  const updatedCategories = categories;
+                  setCategories((prev) => {
+                    const newState = [...prev];
 
-                  updatedCategories[categoryIndex].Maintenances[maintenanceIndex].isSelected =
-                    !maintenance.isSelected;
+                    const newMaintenanceIndex = categories[categoryIndex].Maintenances.findIndex(
+                      (maintenanceParam) => maintenanceParam.id === maintenance.id,
+                    );
 
-                  setCategories([...updatedCategories]);
+                    newState[categoryIndex].Maintenances[newMaintenanceIndex].isSelected =
+                      !newState[categoryIndex].Maintenances[newMaintenanceIndex].isSelected;
+                    return newState;
+                  });
                 }}
               />
               <p className="p2">{maintenance.element}</p>
