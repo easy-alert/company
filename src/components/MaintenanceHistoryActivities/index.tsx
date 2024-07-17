@@ -21,9 +21,9 @@ export const MaintenanceHistoryActivities = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   const findMaintenanceHistoryActivities = async () => {
-    await Api.get(`/suppliers/selected/${maintenanceHistoryId}`)
+    await Api.get(`/maintenance-history-activities/${maintenanceHistoryId}`)
       .then((res) => {
-        setActivities([]);
+        setActivities(res.data.maintenanceHistoryActivities);
       })
       .catch((err) => {
         catchHandler(err);

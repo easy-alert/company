@@ -31,6 +31,7 @@ import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../functions';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
@@ -237,6 +238,7 @@ export const ModalEditMaintenanceReport = ({
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             <Style.Row>
               <h6>Data de conclusão</h6>

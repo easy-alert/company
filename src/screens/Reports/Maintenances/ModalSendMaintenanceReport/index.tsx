@@ -33,6 +33,7 @@ import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -247,6 +248,7 @@ export const ModalSendMaintenanceReport = ({
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             {!!maintenance.daysInAdvance && (
               <Style.Row>

@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
-import { catchHandler } from '../../../utils/functions';
+import { catchHandler, dateTimeFormatter } from '../../../utils/functions';
 import * as Style from './styles';
 import { DotSpinLoading } from '../../Loadings/DotSpinLoading';
 import { LoadingWrapper } from '../../Loadings/LoadingWrapper';
@@ -13,6 +12,7 @@ import { Input } from '../../Inputs/Input';
 import { IconButton } from '../../Buttons/IconButton';
 import { icon } from '../../../assets/icons';
 import { ImageComponent } from '../../ImageComponent';
+import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 interface IModalCreateAndViewActivities {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,14 +29,17 @@ export const ModalCreateAndViewActivities = ({
   loading,
   findMaintenanceHistoryActivitiesCall,
 }: IModalCreateAndViewActivities) => {
+  const { account } = useAuthContext();
   const [comment, setComment] = useState('');
   const [onQuery, setOnQuery] = useState(false);
 
   const createActivity = async () => {
     setOnQuery(true);
 
-    await Api.post(`/suppliers/link-to-maintenance-history`, {
+    await Api.post(`/maintenance-history-activities`, {
       maintenanceHistoryId,
+      content: comment,
+      userId: account?.User.id,
     })
       .then(() => {
         findMaintenanceHistoryActivitiesCall();
@@ -85,18 +88,23 @@ export const ModalCreateAndViewActivities = ({
 
           {activities.length > 0 ? (
             <Style.ScrollDiv>
-              {activities.map(({ id }) => (
-                <Style.Comment key={id}>
-                  <Style.CommentHeader>
-                    <ImageComponent src={icon.activityComment} />
-                    <Style.CommentInfo>
-                      <h6>Mudar aqui de Fulano</h6>
-                      <p className="p3">Mudar aqui</p>
-                    </Style.CommentInfo>
-                  </Style.CommentHeader>
-                  <p className="p2">Mudar aqui</p>
-                </Style.Comment>
-              ))}
+              {activities.map(({ id, content, createdAt, title, type }) => {
+                if (type === 'comment') {
+                  return (
+                    <Style.Comment key={id}>
+                      <Style.CommentHeader>
+                        <ImageComponent src={icon.activityComment} />
+                        <Style.CommentInfo>
+                          <h6>{title}</h6>
+                          <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                        </Style.CommentInfo>
+                      </Style.CommentHeader>
+                      <p className="p2">{content}</p>
+                    </Style.Comment>
+                  );
+                }
+                return null;
+              })}
             </Style.ScrollDiv>
           ) : (
             <p className="p2 opacity">Não há registros no momento.</p>
