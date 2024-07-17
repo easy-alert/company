@@ -237,9 +237,6 @@ export const ModalEditMaintenanceReport = ({
               </Style.Row>
             )}
 
-            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
-            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
-
             <Style.Row>
               <h6>Data de conclusão</h6>
               <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
@@ -251,6 +248,9 @@ export const ModalEditMaintenanceReport = ({
                 <p className="p2">{maintenance.daysInAdvance}</p>
               </Style.Row>
             )}
+
+            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             <Input
               label="Custo"
