@@ -76,7 +76,7 @@ export const ModalSendMaintenanceReport = ({
 
   const { account } = useAuthContext();
 
-  // MODAL EDITAR/ENVIAR RELATO
+  // MODAL ENVIAR RELATO
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',

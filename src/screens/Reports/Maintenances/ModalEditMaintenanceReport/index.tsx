@@ -74,7 +74,7 @@ export const ModalEditMaintenanceReport = ({
     MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
   });
 
-  // MODAL EDITAR/ENVIAR RELATO
+  // MODAL EDITAR RELATO
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
