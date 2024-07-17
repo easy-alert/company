@@ -1,10 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ModalCreateAndViewActivities } from './ModalCreateAndViewActivities';
-import { Api } from '../../services/api';
 import { CustomBackground } from '../CustomModal/CustomBackground';
 import { Button } from '../Buttons/Button';
-import { catchHandler } from '../../utils/functions';
-import { IActivity } from './types';
 import { ButtonContainer } from './styles';
 
 interface IMaintenanceHistoryActivities {
@@ -17,26 +14,6 @@ export const MaintenanceHistoryActivities = ({
   const [modalCreateAndViewActivitiesOpen, setModalCreateAndViewActivitiesOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const [activities, setActivities] = useState<IActivity[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const findMaintenanceHistoryActivities = async () => {
-    await Api.get(`/maintenance-history-activities/${maintenanceHistoryId}`)
-      .then((res) => {
-        setActivities(res.data.maintenanceHistoryActivities);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    findMaintenanceHistoryActivities();
-  }, []);
-
   return (
     <>
       {/* PRA SCROLLAR A TELA PRA CIMA QUANDO ABRIR A MODAL, PORQUE SE NAO APARECE FORA DA TELA */}
@@ -45,9 +22,6 @@ export const MaintenanceHistoryActivities = ({
         <ModalCreateAndViewActivities
           setModal={setModalCreateAndViewActivitiesOpen}
           maintenanceHistoryId={maintenanceHistoryId}
-          loading={loading}
-          activities={activities}
-          findMaintenanceHistoryActivitiesCall={findMaintenanceHistoryActivities}
         />
       )}
 

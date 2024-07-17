@@ -732,7 +732,7 @@ export const Dashboard = () => {
                 ))}
 
                 {maintenancesData?.completed?.length === 0 && (
-                  <h6>Nenhuma informação encontrada.</h6>
+                  <h6>Nenhuma informação encontrada</h6>
                 )}
               </Style.CardContent>
             </Style.Card>
@@ -759,7 +759,7 @@ export const Dashboard = () => {
                     </p>
                   </Style.LeastAccomplishedMaintenance>
                 ))}
-                {maintenancesData?.expired?.length === 0 && <h6>Nenhuma informação encontrada.</h6>}
+                {maintenancesData?.expired?.length === 0 && <h6>Nenhuma informação encontrada</h6>}
               </Style.CardContent>
             </Style.Card>
           </Style.PanelWrapper>

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Api } from '../../../services/api';
 import { catchHandler, dateTimeFormatter } from '../../../utils/functions';
 import * as Style from './styles';
@@ -17,21 +17,34 @@ import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 interface IModalCreateAndViewActivities {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   maintenanceHistoryId: string;
-  loading: boolean;
-  activities: IActivity[];
-  findMaintenanceHistoryActivitiesCall: () => Promise<void>;
 }
 
 export const ModalCreateAndViewActivities = ({
   setModal,
   maintenanceHistoryId,
-  activities,
-  loading,
-  findMaintenanceHistoryActivitiesCall,
 }: IModalCreateAndViewActivities) => {
   const { account } = useAuthContext();
   const [comment, setComment] = useState('');
   const [onQuery, setOnQuery] = useState(false);
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const findMaintenanceHistoryActivities = async () => {
+    await Api.get(`/maintenance-history-activities/${maintenanceHistoryId}`)
+      .then((res) => {
+        setActivities(res.data.maintenanceHistoryActivities);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    findMaintenanceHistoryActivities();
+  }, []);
 
   const createActivity = async () => {
     setOnQuery(true);
@@ -42,7 +55,7 @@ export const ModalCreateAndViewActivities = ({
       userId: account?.User.id,
     })
       .then(() => {
-        findMaintenanceHistoryActivitiesCall();
+        findMaintenanceHistoryActivities();
         setComment('');
         // toast.success(res.data.ServerMessage.message);
       })
