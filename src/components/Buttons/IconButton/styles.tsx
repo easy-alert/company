@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { theme } from '../../../styles/theme';
 
 export const ContainerButton = styled.div<{
   labelPos?: string;
@@ -44,4 +45,32 @@ export const ContainerButton = styled.div<{
   ${({ labelPos }) => labelPos === 'right' && 'flex-direction: row;'}
   ${({ labelPos }) => labelPos === 'left' && 'flex-direction: row-reverse;'}
   ${({ labelPos }) => labelPos === 'bottom' && 'flex-direction: column;'}
+`;
+
+export const SpinnerContent = styled.div<{ $size: string }>`
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid ${theme.color.dangerL};
+  border-top: 4px solid ${theme.color.primary};
+  border-radius: 50%;
+
+  ${({ $size }) =>
+    $size &&
+    css`
+      width: ${$size};
+      height: ${$size};
+    `}
+
+  animation: spin 0.75s linear infinite;
+  display: flex;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;

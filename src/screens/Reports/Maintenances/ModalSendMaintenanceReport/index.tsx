@@ -33,6 +33,7 @@ import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -76,7 +77,7 @@ export const ModalSendMaintenanceReport = ({
 
   const { account } = useAuthContext();
 
-  // MODAL EDITAR/ENVIAR RELATO
+  // MODAL ENVIAR RELATO
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -247,6 +248,7 @@ export const ModalSendMaintenanceReport = ({
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             {!!maintenance.daysInAdvance && (
               <Style.Row>

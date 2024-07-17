@@ -15,6 +15,7 @@ interface IEditBuilding {
   keepNotificationAfterWarrantyEnds: boolean;
   mandatoryReportProof: boolean;
   nextMaintenanceCreationBasis: string;
+  isActivityLogPublic: boolean;
 }
 
 export interface IModalEditBuilding {

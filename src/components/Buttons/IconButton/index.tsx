@@ -1,6 +1,6 @@
 // COMPONENTS
 import { theme } from '../../../styles/theme';
-import { ContainerButton } from './styles';
+import { ContainerButton, SpinnerContent } from './styles';
 import { Image } from '../../Image';
 
 // TYPES
@@ -22,6 +22,7 @@ export const IconButton = ({
   size = '24px;',
   disabled = false,
   title,
+  loading,
 }: IIconButton) => (
   <ContainerButton
     title={title}
@@ -34,7 +35,7 @@ export const IconButton = ({
     fontWeight={fontWeight}
     disable={disabled}
     onClick={(evt) => {
-      if (!disabled) {
+      if (!disabled && !loading) {
         onClick(evt);
       }
     }}
@@ -42,7 +43,8 @@ export const IconButton = ({
       if (onAuxClick) onAuxClick(evt);
     }}
   >
-    <Image img={icon} size={size} radius="0px" />
+    {loading ? <SpinnerContent $size={size} /> : <Image img={icon} size={size} radius="0px" />}
+
     {label && <p className={className}>{label}</p>}
   </ContainerButton>
 );

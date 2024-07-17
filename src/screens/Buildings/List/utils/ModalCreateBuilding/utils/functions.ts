@@ -32,6 +32,7 @@ export const requestCreateBuilding = async ({
     keepNotificationAfterWarrantyEnds: values.keepNotificationAfterWarrantyEnds,
     mandatoryReportProof: values.mandatoryReportProof,
     nextMaintenanceCreationBasis: values.nextMaintenanceCreationBasis,
+    isActivityLogPublic: values.isActivityLogPublic,
   })
     .then((res) => {
       setModal(false);
@@ -64,5 +65,6 @@ export const schemaModalCreateBuilding = yup
       .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de início.'),
     keepNotificationAfterWarrantyEnds: yup.boolean(),
     nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),
+    isActivityLogPublic: yup.boolean(),
   })
   .required();

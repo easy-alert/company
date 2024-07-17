@@ -55,8 +55,8 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   ${({ cardIsOpen }) =>
     cardIsOpen
       ? css`
-          -webkit-max-height: 250px;
-          max-height: 250px;
+          -webkit-max-height: 500px;
+          max-height: 500px;
           min-height: fit-content;
         `
       : css`
@@ -123,9 +123,15 @@ export const MaintenancesMoreGrid = styled.div`
     color: ${theme.color.primary};
     font-weight: 500;
   }
+
   > p {
-    overflow: hidden;
+    line-height: 17px;
     word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 15;
+    -webkit-box-orient: vertical;
   }
 `;
 

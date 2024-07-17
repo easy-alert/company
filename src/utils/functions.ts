@@ -25,6 +25,9 @@ export const catchHandler = (err: any) => {
 // #region DATES
 export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
 
+export const dateTimeFormatter = (date: string) =>
+  new Date(date).toLocaleString('pt-BR').substring(0, 17);
+
 export const convertToFormikDate = (date: Date) => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
