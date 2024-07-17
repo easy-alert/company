@@ -458,6 +458,11 @@ export const BuildingDetails = () => {
                 <p className="p3">Comprovantes de relato obrigatórios?</p>
                 <p className="p3">{building?.mandatoryReportProof ? 'Sim' : 'Não'}</p>
               </Style.BuildingCardData>
+
+              <Style.BuildingCardData>
+                <p className="p3">Tornar logs de atividade público?</p>
+                <p className="p3">{building?.isActivityLogPublic ? 'Sim' : 'Não'}</p>
+              </Style.BuildingCardData>
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>

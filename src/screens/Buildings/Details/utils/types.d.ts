@@ -68,6 +68,7 @@ export interface IBuildingDetail {
   residentPassword: string | null;
   syndicPassword: string | null;
   nextMaintenanceCreationBasis: 'executionDate' | 'notificationDate';
+  isActivityLogPublic: boolean;
 }
 
 export interface IRequestBuildingDetails {

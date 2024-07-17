@@ -72,12 +72,13 @@ export const ModalCreateAndViewActivities = ({
                 setComment(evt.target.value);
               }}
               onKeyUp={(evt) => {
-                if (evt.key === 'Enter') {
+                if (evt.key === 'Enter' && comment) {
                   createActivity();
                 }
               }}
             />
             <IconButton
+              disabled={!comment}
               loading={onQuery}
               icon={icon.send}
               onClick={() => {

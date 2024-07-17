@@ -45,6 +45,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           keepNotificationAfterWarrantyEnds: true,
           mandatoryReportProof: false,
           nextMaintenanceCreationBasis: 'executionDate',
+          isActivityLogPublic: false,
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) => {
@@ -192,6 +193,12 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 name="mandatoryReportProof"
                 labelColor={theme.color.gray4}
                 label="Comprovantes de relato obrigatórios?"
+              />
+
+              <FormikCheckbox
+                name="isActivityLogPublic"
+                labelColor={theme.color.gray4}
+                label="Tornar logs de atividade público?"
               />
 
               <Button center label="Cadastrar" type="submit" loading={onQuery} />
