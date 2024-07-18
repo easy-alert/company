@@ -14,4 +14,5 @@ export interface IIconButton {
   size?: string;
   disabled?: boolean;
   title?: string;
+  loading?: boolean;
 }

@@ -31,6 +31,7 @@ import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../functions';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalEditMaintenanceReport = ({
   setModal,
@@ -74,7 +75,7 @@ export const ModalEditMaintenanceReport = ({
     MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
   });
 
-  // MODAL EDITAR/ENVIAR RELATO
+  // MODAL EDITAR RELATO
 
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
@@ -236,8 +237,6 @@ export const ModalEditMaintenanceReport = ({
               </Style.Row>
             )}
 
-            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
-
             <Style.Row>
               <h6>Data de conclusão</h6>
               <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
@@ -249,6 +248,9 @@ export const ModalEditMaintenanceReport = ({
                 <p className="p2">{maintenance.daysInAdvance}</p>
               </Style.Row>
             )}
+
+            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             <Input
               label="Custo"

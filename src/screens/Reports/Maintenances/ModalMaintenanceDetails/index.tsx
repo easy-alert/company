@@ -23,6 +23,7 @@ import { ImagePreview } from '../../../../components/ImagePreview';
 import { EventTag } from '../../../Calendar/utils/EventTag';
 import { IMaintenance } from '../../../Calendar/types';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalMaintenanceDetails = ({
   setModal,
@@ -166,6 +167,7 @@ export const ModalMaintenanceDetails = ({
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
             {maintenance.MaintenanceReport.length > 0 && (
               <>

@@ -13,6 +13,7 @@ interface ICreateBuilding {
   keepNotificationAfterWarrantyEnds: boolean;
   mandatoryReportProof: boolean;
   nextMaintenanceCreationBasis: string;
+  isActivityLogPublic: boolean;
 }
 
 export interface IModalCreateBuilding {
