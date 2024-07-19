@@ -263,8 +263,8 @@ export const SuppliersList = () => {
                   { label: 'Nome', cssProps: { paddingLeft: '56px' } },
                   { label: 'Área de atuação' },
                   { label: 'Cidade / Estado' },
-                  { label: 'Email' },
                   { label: 'Telefone' },
+                  { label: 'Email' },
                 ]}
               >
                 {suppliers.map((supplier) => (
@@ -281,18 +281,21 @@ export const SuppliersList = () => {
                             {supplier.name}
                           </Style.NameAndImage>
                         ),
-                        cssProps: { width: '20%' },
+                        cssProps: { width: '20%', minWidth: '200px' },
                       },
                       {
                         cell: supplier.serviceTypes.map(({ type }) => type.label).join(', '),
-                        cssProps: { width: '40%' },
+                        cssProps: { width: '40%', minWidth: '200px' },
                       },
-                      { cell: `${supplier.city} / ${supplier.state}`, cssProps: { width: '15%' } },
+                      {
+                        cell: `${supplier.city} / ${supplier.state}`,
+                        cssProps: { width: '15%', minWidth: '150px' },
+                      },
                       {
                         cell: supplier.phone
                           ? applyMask({ mask: 'TEL', value: supplier.phone }).value
                           : '-',
-                        cssProps: { width: '10%' },
+                        cssProps: { width: '10%', minWidth: '150px' },
                       },
                       { cell: supplier.email || '-', cssProps: { width: '10%' } },
                     ]}

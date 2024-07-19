@@ -64,10 +64,6 @@ export const Background = styled.div<{ zIndex: number }>`
     }
   }
 
-  @media only screen and (max-width: 900px) {
-    padding: 0;
-  }
-
   scrollbar-width: none;
   scrollbar-color: transparent;
   ::-webkit-scrollbar {
