@@ -43,7 +43,7 @@ export const Background = styled.div<{ zIndex: number }>`
   top: -48px;
 
   width: 100vw;
-  min-height: 150%;
+  min-height: calc(100dvh + 48px);
   overflow: hidden;
 
   transform: translateX(-50%);
