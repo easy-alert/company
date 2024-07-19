@@ -23,6 +23,7 @@ export const Body = styled.div<{ bodyWidth?: string; zIndex: number }>`
 
   @media (max-width: 900px) {
     width: 100vw;
+    min-height: 160%;
     border-radius: 0px;
     overflow-y: scroll;
     margin: 0px;
@@ -43,7 +44,7 @@ export const Background = styled.div<{ zIndex: number }>`
   top: -48px;
 
   width: 100vw;
-  min-height: calc(100dvh + 48px);
+  min-height: 200%;
   overflow: hidden;
 
   transform: translateX(-50%);
