@@ -340,7 +340,6 @@ export const ModalEditMaintenanceReport = ({
                     width="132px"
                     height="136px"
                     imageCustomName={e.name}
-                    imageOriginalName={e.name}
                     downloadUrl={e.url}
                     src={e.url}
                     onTrashClick={() => {

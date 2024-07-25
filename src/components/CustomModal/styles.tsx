@@ -4,7 +4,8 @@ import { theme } from '../../styles/theme';
 export const Body = styled.div<{ bodyWidth?: string; zIndex: number }>`
   width: ${({ bodyWidth }) => bodyWidth ?? '460px'};
   position: fixed;
-  left: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
   top: 0;
   animation: fade-in-scale 0.25s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   @keyframes fade-in-scale {

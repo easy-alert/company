@@ -338,7 +338,6 @@ export const ModalSendMaintenanceReport = ({
                         width="132px"
                         height="136px"
                         imageCustomName={e.name}
-                        imageOriginalName={e.name}
                         src={e.url}
                         onTrashClick={() => {
                           setImages((prevState) => {
