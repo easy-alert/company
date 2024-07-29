@@ -483,8 +483,8 @@ export const BuildingDetails = () => {
               colsHeader={[
                 { label: 'Nome do responsável' },
                 { label: 'E-mail' },
-                { label: 'Função' },
                 { label: 'WhatsApp' },
+                { label: 'Função' },
                 {
                   label: 'Exibir',
                   cssProps: {
@@ -543,7 +543,6 @@ export const BuildingDetails = () => {
                       ),
                       cssProps: { width: '20%' },
                     },
-                    { cell: notificationRow.role, cssProps: { width: '15%' } },
                     {
                       cell: (
                         <Style.TableDataWrapper>
@@ -551,8 +550,7 @@ export const BuildingDetails = () => {
                             ? applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value
                             : '-'}
 
-                          {notificationRow.isMain &&
-                            notificationRow.contactNumber &&
+                          {notificationRow.contactNumber &&
                             (notificationRow.contactNumberIsConfirmed ? (
                               <Image img={icon.checkedNoBg} size="16px" />
                             ) : (
@@ -578,8 +576,10 @@ export const BuildingDetails = () => {
                             ))}
                         </Style.TableDataWrapper>
                       ),
-                      cssProps: { width: '10%' },
+                      cssProps: { width: '15%' },
                     },
+                    { cell: notificationRow.role, cssProps: { width: '15%' } },
+
                     {
                       cell: (
                         <input

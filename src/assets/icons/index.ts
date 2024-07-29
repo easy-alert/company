@@ -81,8 +81,10 @@ import blocks from './blocks.svg';
 import addWithCircle from './addWithCircle.svg';
 import send from './send.svg';
 import activityComment from './activityComment.svg';
+import upload from './upload.svg';
 
 export const icon = {
+  upload,
   activityComment,
   send,
   addWithCircle,
