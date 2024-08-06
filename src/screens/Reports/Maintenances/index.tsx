@@ -3,6 +3,7 @@
 import { Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
+import { toast } from 'react-toastify';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Button } from '../../../components/Buttons/Button';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
@@ -18,11 +19,15 @@ import {
   IFiltersOptions,
   IMaintenanceReportData,
 } from './types';
-import { applyMask, capitalizeFirstLetter, dateFormatter } from '../../../utils/functions';
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  catchHandler,
+  dateFormatter,
+} from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
-import { ModalPrintReport } from './ModalPrintReport';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 import { Select } from '../../../components/Inputs/Select';
@@ -31,11 +36,14 @@ import {
   getSingularStatusNameforPdf,
 } from './ModalPrintReport/functions';
 import { InProgressTag } from '../../../components/InProgressTag';
+import { Api } from '../../../services/api';
+import { PDFList } from './PDFList';
 // #endregion
 
 export const MaintenanceReports = () => {
   // #region states
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onPdfQuery, setOnPdfQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   const [counts, setCounts] = useState<ICounts>({
@@ -53,7 +61,7 @@ export const MaintenanceReports = () => {
 
   const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
-  const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
+  // const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
     useState<boolean>(false);
@@ -75,6 +83,8 @@ export const MaintenanceReports = () => {
   const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
 
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
+
+  const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
   // #endregion
 
   const csvHeaders = [
@@ -114,6 +124,23 @@ export const MaintenanceReports = () => {
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
   }, []);
+
+  const requestPdf = async () => {
+    setOnPdfQuery(true);
+
+    await Api.get(
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}`,
+    )
+      .then((res) => {
+        toast.success(res.data.ServerMessage.message);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnPdfQuery(false);
+      });
+  };
 
   return loading ? (
     <DotSpinLoading />
@@ -158,10 +185,10 @@ export const MaintenanceReports = () => {
           maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
-
+      {/*
       {modalPrintReportOpen && (
         <ModalPrintReport setModal={setModalPrintReportOpen} filters={filterforRequest} />
-      )}
+      )} */}
 
       <s.Container>
         <h2>Relatórios de manutenções</h2>
@@ -436,9 +463,9 @@ export const MaintenanceReports = () => {
                         color={theme.color.primary}
                         size="20px"
                         onClick={() => {
-                          setModalPrintReportOpen(true);
+                          requestPdf();
                         }}
-                        disabled={maintenances.length === 0}
+                        disabled={maintenances.length === 0 || onPdfQuery}
                       />
                       <Button label="Filtrar" type="submit" disable={onQuery} />
                     </s.ButtonWrapper>
@@ -457,7 +484,28 @@ export const MaintenanceReports = () => {
           </s.NoMaintenanceCard>
         )}
 
-        {!onQuery && maintenances.length > 0 && (
+        <s.ViewButtons>
+          <s.CustomButton
+            type="button"
+            active={reportView === 'reports'}
+            onClick={() => {
+              setReportView('reports');
+            }}
+          >
+            Relatório
+          </s.CustomButton>
+          <s.CustomButton
+            type="button"
+            active={reportView === 'pdfs'}
+            onClick={() => {
+              setReportView('pdfs');
+            }}
+          >
+            Histórico de relatórios
+          </s.CustomButton>
+        </s.ViewButtons>
+
+        {reportView === 'reports' && !onQuery && maintenances.length > 0 && (
           <>
             <s.CountContainer>
               <s.Counts>
@@ -539,6 +587,8 @@ export const MaintenanceReports = () => {
             </ReportDataTable>
           </>
         )}
+
+        {reportView === 'pdfs' && <PDFList />}
       </s.Container>
     </>
   );
