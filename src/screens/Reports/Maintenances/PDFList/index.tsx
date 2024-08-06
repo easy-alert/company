@@ -48,50 +48,60 @@ export const PDFList = () => {
   return loading ? (
     <DotSpinLoading />
   ) : (
-    <Style.TableCard>
-      <ColorfulTable
-        colsHeader={[
-          { label: 'Datas filtradas' },
-          { label: 'Criado em' },
-          { label: 'Criado por' },
-          { label: 'Status' },
-          {
-            label: (
-              <IconButton
-                label="Atualizar"
-                icon={icon.update}
-                onClick={() => {
-                  requestPdf();
-                }}
-              />
-            ),
-          },
-        ]}
-      >
-        {pdfs.map(({ author, createdAt, id, status, url, name }) => (
-          <ColorfulTableContent
-            key={id}
-            colsBody={[
-              { cell: name },
-              { cell: dateTimeFormatter(createdAt) },
-              { cell: author.name },
-              { cell: statusTranslation[status] },
+    <>
+      {!loading && pdfs.length === 0 && (
+        <Style.NoMaintenanceCard>
+          <h4>Nenhum histórico encontrado.</h4>
+        </Style.NoMaintenanceCard>
+      )}
+
+      {!loading && pdfs.length > 0 && (
+        <Style.TableCard>
+          <ColorfulTable
+            colsHeader={[
+              { label: 'Datas filtradas' },
+              { label: 'Criado em' },
+              { label: 'Criado por' },
+              { label: 'Status' },
               {
-                cell: (
+                label: (
                   <IconButton
-                    disabled={status !== 'finished'}
-                    label="Visualizar"
-                    icon={icon.pdfLogo}
+                    label="Atualizar"
+                    icon={icon.update}
                     onClick={() => {
-                      window.open(url, '_blank');
+                      requestPdf();
                     }}
                   />
                 ),
               },
             ]}
-          />
-        ))}
-      </ColorfulTable>
-    </Style.TableCard>
+          >
+            {pdfs.map(({ author, createdAt, id, status, url, name }) => (
+              <ColorfulTableContent
+                key={id}
+                colsBody={[
+                  { cell: name },
+                  { cell: dateTimeFormatter(createdAt) },
+                  { cell: author.name },
+                  { cell: statusTranslation[status] },
+                  {
+                    cell: (
+                      <IconButton
+                        disabled={status !== 'finished'}
+                        label="Visualizar"
+                        icon={icon.pdfLogo}
+                        onClick={() => {
+                          window.open(url, '_blank');
+                        }}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            ))}
+          </ColorfulTable>
+        </Style.TableCard>
+      )}
+    </>
   );
 };

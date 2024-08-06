@@ -476,8 +476,6 @@ export const MaintenanceReports = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {onQuery && <DotSpinLoading />}
-
         {!onQuery && maintenances.length === 0 && showNoDataMessage && (
           <s.NoMaintenanceCard>
             <h4>Nenhuma manutenção encontrada.</h4>
@@ -504,6 +502,8 @@ export const MaintenanceReports = () => {
             Histórico de relatórios
           </s.CustomButton>
         </s.ViewButtons>
+
+        {onQuery && <DotSpinLoading />}
 
         {reportView === 'reports' && !onQuery && maintenances.length > 0 && (
           <>

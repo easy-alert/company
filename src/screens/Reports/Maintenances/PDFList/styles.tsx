@@ -6,3 +6,10 @@ export const TableCard = styled.div`
   padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
 `;
+
+export const NoMaintenanceCard = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: ${theme.color.gray4};
+`;
