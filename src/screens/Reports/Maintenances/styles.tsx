@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const Counts = styled.div`
@@ -45,7 +45,7 @@ export const FiltersGrid = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   gap: ${theme.size.xsm};
 
-  @media (max-width: 900px) {
+  @media (max-width: 975px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -112,4 +112,31 @@ export const TagContainer = styled.div`
   justify-content: center;
   gap: ${theme.size.xxsm};
   flex-direction: column;
+`;
+
+export const ViewButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+`;
+
+export const CustomButton = styled.button<{ active: boolean }>`
+  padding: 0;
+  background-color: unset;
+
+  font-weight: 500;
+  border-radius: 0;
+  padding-bottom: ${theme.size.xsm};
+  font-size: 14px;
+  line-height: 16px;
+
+  ${({ active }) =>
+    active
+      ? css`
+          color: ${theme.color.primary};
+          border-bottom: 1px solid ${theme.color.primary};
+        `
+      : css`
+          color: ${theme.color.gray4};
+        `}
 `;
