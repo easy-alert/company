@@ -476,12 +476,6 @@ export const MaintenanceReports = () => {
           </Formik>
         </s.FiltersContainer>
 
-        {!onQuery && maintenances.length === 0 && showNoDataMessage && (
-          <s.NoMaintenanceCard>
-            <h4>Nenhuma manutenção encontrada.</h4>
-          </s.NoMaintenanceCard>
-        )}
-
         <s.ViewButtons>
           <s.CustomButton
             type="button"
@@ -586,6 +580,12 @@ export const MaintenanceReports = () => {
               ))}
             </ReportDataTable>
           </>
+        )}
+
+        {reportView === 'reports' && !onQuery && maintenances.length === 0 && showNoDataMessage && (
+          <s.NoMaintenanceCard>
+            <h4>Nenhuma manutenção encontrada.</h4>
+          </s.NoMaintenanceCard>
         )}
 
         {reportView === 'pdfs' && <PDFList />}
