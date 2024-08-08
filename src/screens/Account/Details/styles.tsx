@@ -70,3 +70,32 @@ export const Footer = styled.footer`
   justify-content: flex-end;
   gap: ${theme.size.sm};
 `;
+
+export const UsersCardHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${theme.size.sm};
+  margin-bottom: ${theme.size.sm};
+`;
+
+export const UsersCard = styled.div`
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+  margin-top: ${theme.size.md};
+
+  > h5 {
+    color: ${theme.color.gray4};
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+`;
+
+export const TableButtons = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: ${theme.size.sm};
+`;

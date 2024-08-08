@@ -15,7 +15,7 @@ export const Pagination = ({
   currentPage = 1,
   onPageChange,
 }: IPagination) => {
-  const lastPage = Math.ceil((totalCountOfRegister || 1) / registerPerPage);
+  const lastPage = Math.ceil(totalCountOfRegister / registerPerPage) || 1;
 
   const previousPages =
     currentPage > 1 ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1) : [];

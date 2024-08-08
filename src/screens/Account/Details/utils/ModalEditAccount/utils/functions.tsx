@@ -59,7 +59,7 @@ export const requestEditAccount = async ({
     email: values.email,
     password: values.password !== '' ? values.password : null,
     image: imageUrl,
-    supportLink: formattedSupportLink || null,
+    supportLink: formattedSupportLink === '//' ? null : formattedSupportLink,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
@@ -77,6 +77,7 @@ export const requestEditAccount = async ({
           CPF: values.CPF,
           createdAt: account.Company.createdAt,
           id: account.Company.id,
+          UserCompanies: account.Company.UserCompanies,
         },
         User: {
           createdAt: account.User.createdAt,

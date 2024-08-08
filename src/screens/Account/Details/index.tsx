@@ -10,10 +10,14 @@ import { IconButton } from '../../../components/Buttons/IconButton';
 import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
-import { applyMask, dateFormatter } from '../../../utils/functions';
+import { applyMask, dateFormatter, dateTimeFormatter } from '../../../utils/functions';
 
 // MODALS
 import { ModalEditAccount } from './utils/ModalEditAccount';
+import { ColorfulTable, ColorfulTableContent } from '../../../components/ColorfulTable';
+import { Tag } from '../../../components/Tag';
+import { theme } from '../../../styles/theme';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
 
 export const AccountDetails = () => {
   const { account, setAccount } = useAuthContext();
@@ -113,6 +117,85 @@ export const AccountDetails = () => {
           }}
         />
       </Style.Footer>
+
+      <Style.UsersCard>
+        <Style.UsersCardHeader>
+          <h5>Usuários</h5>
+          {/* <IconButton
+            hideLabelOnMedia
+            icon={icon.plusWithBg}
+            label="Cadastrar"
+            onClick={() => {
+              //
+            }}
+          /> */}
+        </Style.UsersCardHeader>
+
+        {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
+          <ColorfulTable
+            colsHeader={[
+              { label: 'Nome' },
+              { label: 'Email' },
+              { label: 'Status' },
+              { label: 'Último acesso' },
+              { label: 'Data de cadastro' },
+              // { label: '' },
+            ]}
+          >
+            {account?.Company.UserCompanies.map(({ User }) => (
+              <ColorfulTableContent
+                key={User.id}
+                colsBody={[
+                  { cell: User.name },
+                  { cell: User.email },
+                  { cell: <Tag isInvalid={User.isBlocked} /> },
+                  { cell: User.lastAccess ? dateTimeFormatter(User.lastAccess) : '-' },
+                  { cell: dateTimeFormatter(User.createdAt) },
+                  // {
+                  //   cell: (
+                  //     <Style.TableButtons>
+                  //       <PopoverButton
+                  //         // disabled={onQuery}
+                  //         buttonIconSize="16px"
+                  //         iconButtonClassName="p4"
+                  //         actionButtonBgColor={theme.color.actionDanger}
+                  //         type="IconButton"
+                  //         label="Excluir"
+                  //         buttonIcon={icon.trash}
+                  //         message={{
+                  //           title: 'Deseja excluir este usuário?',
+                  //           content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                  //           contentColor: theme.color.danger,
+                  //         }}
+                  //         actionButtonClick={() => {
+                  //           // requestDeleteCompany({
+                  //           //   company: company!,
+                  //           //   navigate,
+                  //           //   setOnQuery,
+                  //           // });
+                  //         }}
+                  //       />
+                  //       <IconButton
+                  //         className="p4"
+                  //         size="16px"
+                  //         hideLabelOnMedia
+                  //         icon={icon.edit}
+                  //         label="Editar"
+                  //         onClick={() => {
+                  //           //
+                  //         }}
+                  //       />
+                  //     </Style.TableButtons>
+                  //   ),
+                  // },
+                ]}
+              />
+            ))}
+          </ColorfulTable>
+        ) : (
+          <h5>Nenhum usuário cadastrado</h5>
+        )}
+      </Style.UsersCard>
     </>
   );
 };
