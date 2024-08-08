@@ -5,23 +5,23 @@ import { useNavigate } from 'react-router-dom';
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import * as Style from './styles';
-import { Button } from '../../../../../components/Buttons/Button';
-import { FormikImageInput } from '../../../../../components/Form/FormikImageInput';
-import { FormikInput } from '../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../components/Modal';
 
 // TYPES
-import { IModalEditAccount } from './utils/types';
+import { IModalEditAccount } from './types';
 
 // FUNCTIONS
-import { applyMask } from '../../../../../utils/functions';
 import {
   requestEditAccount,
   schemaModalEditAccountWithCNPJ,
   schemaModalEditAccountWithCPF,
-} from './utils/functions';
-import { IconButton } from '../../../../../components/Buttons/IconButton';
-import { icon } from '../../../../../assets/icons';
+} from './functions';
+import { icon } from '../../../../assets/icons';
+import { Button } from '../../../../components/Buttons/Button';
+import { IconButton } from '../../../../components/Buttons/IconButton';
+import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
+import { FormikInput } from '../../../../components/Form/FormikInput';
+import { Modal } from '../../../../components/Modal';
+import { applyMask } from '../../../../utils/functions';
 
 export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
   const navigate = useNavigate();
@@ -172,8 +172,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   name="password"
                   value={values.password}
                   error={touched.password && errors.password ? errors.password : null}
-                  passwordPlaceholder
-                  placeholder="••••••••••"
+                  placeholder="Informe a nova senha"
                   maxLength={120}
                 />
 
@@ -201,8 +200,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                       ? errors.confirmPassword
                       : null
                   }
-                  passwordPlaceholder
-                  placeholder="••••••••••"
+                  placeholder="Confirme a nova senha"
                   maxLength={120}
                 />
                 {values.confirmPassword && (

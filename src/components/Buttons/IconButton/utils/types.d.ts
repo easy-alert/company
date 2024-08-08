@@ -15,4 +15,5 @@ export interface IIconButton {
   disabled?: boolean;
   title?: string;
   loading?: boolean;
+  tabIndex?: number;
 }
