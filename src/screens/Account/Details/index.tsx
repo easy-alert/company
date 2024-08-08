@@ -211,6 +211,7 @@ export const AccountDetails = () => {
                     cell: (
                       <Style.TableButtons>
                         <PopoverButton
+                          hideLabelOnMedia
                           disabled={onQuery}
                           buttonIconSize="16px"
                           iconButtonClassName="p4"
