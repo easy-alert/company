@@ -227,9 +227,6 @@ export const Tickets = () => {
                 </option>
               ))}
             </Select>
-          </Style.HeaderLeftSide>
-
-          <Style.HeaderRightSide>
             <IconButton
               icon={icon.filter}
               size="16px"
@@ -239,19 +236,21 @@ export const Tickets = () => {
                 setShowFilter(!showFilter);
               }}
             />
+          </Style.HeaderLeftSide>
 
-            <IconButton
-              icon={icon.siren}
-              label="Responder chamados"
-              onClick={() => {
-                if (ticketsToAnswer.length === 0) {
-                  toast.error('Selecione pelo menos um chamado.');
-                  return;
-                }
-                setModalChooseAnswerType(true);
-              }}
-            />
-          </Style.HeaderRightSide>
+          {/* <Style.HeaderRightSide> */}
+          <IconButton
+            icon={icon.siren}
+            label="Responder chamados"
+            onClick={() => {
+              if (ticketsToAnswer.length === 0) {
+                toast.error('Selecione pelo menos um chamado.');
+                return;
+              }
+              setModalChooseAnswerType(true);
+            }}
+          />
+          {/* </Style.HeaderRightSide> */}
         </Style.Header>
         {showFilter && (
           <Style.FilterWrapper>

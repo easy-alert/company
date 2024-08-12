@@ -255,6 +255,7 @@ export const HeaderLeftSide = styled.div`
   align-items: center;
   gap: ${theme.size.sm};
   width: 100%;
+  flex-wrap: wrap;
 
   > :nth-child(2) {
     max-width: 300px;
