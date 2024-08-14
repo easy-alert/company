@@ -78,8 +78,7 @@ export const MaintenanceReports = () => {
     buildingIds: [],
     buildingNames: [],
     maintenanceStatusNames: [],
-    endDueDate: '',
-    startDueDate: '',
+    filterBy: 'notificationDate',
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
@@ -104,6 +103,7 @@ export const MaintenanceReports = () => {
     { label: 'Edificação', key: 'Edificação' },
     { label: 'Status', key: 'Status' },
     { label: 'Data de notificação', key: 'Data de notificação' },
+    { label: 'Data de vencimento', key: 'Data de vencimento' },
     { label: 'Data de conclusão', key: 'Data de conclusão' },
     { label: 'Categoria', key: 'Categoria' },
     { label: 'Elemento', key: 'Elemento' },
@@ -121,6 +121,7 @@ export const MaintenanceReports = () => {
     Edificação: data.buildingName,
     Status: getSingularStatusNameforPdf(data.status),
     'Data de notificação': dateFormatter(data.notificationDate),
+    'Data de vencimento': dateFormatter(data.dueDate),
     'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
     Categoria: data.categoryName,
     Elemento: data.element,
@@ -142,7 +143,7 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&startDueDate=${filterforRequest.startDueDate}&endDueDate=${filterforRequest.endDueDate}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
@@ -214,6 +215,7 @@ export const MaintenanceReports = () => {
               endDate: '',
               endDueDate: '',
               startDueDate: '',
+              filterBy: 'notificationDate',
               // Só pra entrar no form
               buildingId: '',
             }}
@@ -229,8 +231,7 @@ export const MaintenanceReports = () => {
                 maintenanceStatusNames: statusForFilter.map((e) => e.name),
                 endDate: values.endDate,
                 startDate: values.startDate,
-                endDueDate: values.endDueDate,
-                startDueDate: values.startDueDate,
+                filterBy: values.filterBy,
               });
 
               await requestReportsData({
@@ -246,8 +247,7 @@ export const MaintenanceReports = () => {
                   maintenanceStatusNames: statusForFilter.map((e) => e.name),
                   endDate: values.endDate,
                   startDate: values.startDate,
-                  endDueDate: values.endDueDate,
-                  startDueDate: values.startDueDate,
+                  filterBy: values.filterBy,
                 },
               });
             }}
@@ -375,8 +375,18 @@ export const MaintenanceReports = () => {
                 </s.FiltersGrid>
 
                 <s.FiltersSecondGrid>
+                  <FormikSelect
+                    label="Filtrar por"
+                    name="filterBy"
+                    selectPlaceholderValue={values.filterBy}
+                    error={touched.filterBy && errors.filterBy ? errors.filterBy : null}
+                  >
+                    <option value="notificationDate">Data de notificação</option>
+                    <option value="dueDate">Data de vencimento</option>
+                  </FormikSelect>
+
                   <FormikInput
-                    label="Data de notificação inicial"
+                    label="Data inicial"
                     typeDatePlaceholderValue={values.startDate}
                     name="startDate"
                     type="date"
@@ -385,30 +395,12 @@ export const MaintenanceReports = () => {
                   />
 
                   <FormikInput
-                    label="Data de notificação final"
+                    label="Data final"
                     typeDatePlaceholderValue={values.endDate}
                     name="endDate"
                     type="date"
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
-                  />
-
-                  <FormikInput
-                    label="Data de vencimento inicial"
-                    typeDatePlaceholderValue={values.startDueDate}
-                    name="startDueDate"
-                    type="date"
-                    value={values.startDueDate}
-                    error={touched.startDueDate && errors.startDueDate ? errors.startDueDate : null}
-                  />
-
-                  <FormikInput
-                    label="Data de vencimento final"
-                    typeDatePlaceholderValue={values.endDueDate}
-                    name="endDueDate"
-                    type="date"
-                    value={values.endDueDate}
-                    error={touched.endDueDate && errors.endDueDate ? errors.endDueDate : null}
                   />
 
                   <s.TagWrapper>
@@ -573,6 +565,7 @@ export const MaintenanceReports = () => {
                 { label: 'Atividade' },
                 { label: 'Responsável' },
                 { label: 'Data de notificação' },
+                { label: 'Data de vencimento' },
                 { label: 'Valor' },
               ]}
             >
@@ -598,6 +591,7 @@ export const MaintenanceReports = () => {
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
                     { cell: dateFormatter(maintenance.notificationDate) },
+                    { cell: dateFormatter(maintenance.dueDate) },
                     {
                       cell:
                         maintenance.cost !== null
