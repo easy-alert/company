@@ -27,7 +27,7 @@ import {
 } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
+import { ModalMaintenanceDetails } from '../../Calendar/utils/ModalMaintenanceDetails';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 import { Select } from '../../../components/Inputs/Select';
@@ -38,6 +38,8 @@ import {
 import { InProgressTag } from '../../../components/InProgressTag';
 import { Api } from '../../../services/api';
 import { PDFList } from './PDFList';
+import { FormikSelect } from '../../../components/Form/FormikSelect';
+import { IModalAdditionalInformations } from '../../Calendar/types';
 // #endregion
 
 export const MaintenanceReports = () => {
@@ -76,6 +78,8 @@ export const MaintenanceReports = () => {
     buildingIds: [],
     buildingNames: [],
     maintenanceStatusNames: [],
+    endDueDate: '',
+    startDueDate: '',
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
@@ -85,6 +89,15 @@ export const MaintenanceReports = () => {
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
 
   const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
+
+  const [modalAdditionalInformations, setModalAdditionalInformations] =
+    useState<IModalAdditionalInformations>({
+      id: '',
+      expectedNotificationDate: '',
+      expectedDueDate: '',
+      isFuture: false,
+    });
+
   // #endregion
 
   const csvHeaders = [
@@ -117,8 +130,8 @@ export const MaintenanceReports = () => {
     Responsável: data.responsible,
     'Valor (R$)': data.cost ? data.cost / 100 : 0,
     'Observação do relato': data.reportObservation || '',
-    Anexos: data.annexes.map(({ url }) => url).join('; '),
-    Imagens: data.images.map(({ url }) => url).join('; '),
+    Anexos: data?.annexes?.map(({ url }) => url).join('; '),
+    Imagens: data?.images?.map(({ url }) => url).join('; '),
   }));
 
   useEffect(() => {
@@ -129,7 +142,7 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&startDueDate=${filterforRequest.startDueDate}&endDueDate=${filterforRequest.endDueDate}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
@@ -149,8 +162,8 @@ export const MaintenanceReports = () => {
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
-          maintenanceHistoryId={maintenanceHistoryId}
           setModalEditReport={setModalEditReport}
+          modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
 
@@ -199,6 +212,10 @@ export const MaintenanceReports = () => {
               maintenanceStatusId: '',
               startDate: '',
               endDate: '',
+              endDueDate: '',
+              startDueDate: '',
+              // Só pra entrar no form
+              buildingId: '',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
@@ -212,6 +229,8 @@ export const MaintenanceReports = () => {
                 maintenanceStatusNames: statusForFilter.map((e) => e.name),
                 endDate: values.endDate,
                 startDate: values.startDate,
+                endDueDate: values.endDueDate,
+                startDueDate: values.startDueDate,
               });
 
               await requestReportsData({
@@ -227,40 +246,45 @@ export const MaintenanceReports = () => {
                   maintenanceStatusNames: statusForFilter.map((e) => e.name),
                   endDate: values.endDate,
                   startDate: values.startDate,
+                  endDueDate: values.endDueDate,
+                  startDueDate: values.startDueDate,
                 },
               });
             }}
           >
-            {({ errors, values, touched }) => (
+            {({ errors, values, touched, setFieldValue }) => (
               <Form>
                 <s.FiltersGrid>
-                  <Select
+                  {/* TASK SA-7138 LIMITOU 1 BUILDING POR RELATÓRIO */}
+                  <FormikSelect
+                    name="buildingId"
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
                     value=""
+                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
                     onChange={(e) => {
                       const selectedBuilding = filtersOptions?.buildings.find(
                         (building) => building.id === e.target.value,
                       );
 
                       if (selectedBuilding) {
-                        setBuildingsForFilter((prevState) => [
-                          ...prevState,
+                        setBuildingsForFilter([
                           { id: selectedBuilding.id, name: selectedBuilding.name },
                         ]);
+                        setFieldValue('buildingId', selectedBuilding.id);
                       }
 
-                      if (e.target.value === 'all') {
-                        setBuildingsForFilter([]);
-                      }
+                      // if (e.target.value === 'all') {
+                      //   setBuildingsForFilter([]);
+                      // }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    <option value="all" disabled={buildingsForFilter.length === 0}>
+                    {/* <option value="all" disabled={buildingsForFilter.length === 0}>
                       Todas
-                    </option>
+                    </option> */}
 
                     {filtersOptions?.buildings.map((building) => (
                       <option
@@ -271,7 +295,7 @@ export const MaintenanceReports = () => {
                         {building.name}
                       </option>
                     ))}
-                  </Select>
+                  </FormikSelect>
 
                   <Select
                     selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
@@ -348,7 +372,9 @@ export const MaintenanceReports = () => {
                       </option>
                     ))}
                   </Select>
+                </s.FiltersGrid>
 
+                <s.FiltersSecondGrid>
                   <FormikInput
                     label="Data de notificação inicial"
                     typeDatePlaceholderValue={values.startDate}
@@ -366,13 +392,26 @@ export const MaintenanceReports = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
-                  <s.TagWrapper>
-                    {buildingsForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todas as edificações</p>
-                      </s.Tag>
-                    )}
 
+                  <FormikInput
+                    label="Data de vencimento inicial"
+                    typeDatePlaceholderValue={values.startDueDate}
+                    name="startDueDate"
+                    type="date"
+                    value={values.startDueDate}
+                    error={touched.startDueDate && errors.startDueDate ? errors.startDueDate : null}
+                  />
+
+                  <FormikInput
+                    label="Data de vencimento final"
+                    typeDatePlaceholderValue={values.endDueDate}
+                    name="endDueDate"
+                    type="date"
+                    value={values.endDueDate}
+                    error={touched.endDueDate && errors.endDueDate ? errors.endDueDate : null}
+                  />
+
+                  <s.TagWrapper>
                     {buildingsForFilter.map((building, i: number) => (
                       <s.Tag key={building.id}>
                         <p className="p3">{building.name}</p>
@@ -380,6 +419,7 @@ export const MaintenanceReports = () => {
                           size="14px"
                           icon={icon.xBlack}
                           onClick={() => {
+                            setFieldValue('buildingId', '');
                             setBuildingsForFilter((prevState) => {
                               const newState = [...prevState];
                               newState.splice(i, 1);
@@ -470,7 +510,7 @@ export const MaintenanceReports = () => {
                       <Button label="Filtrar" type="submit" disable={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
-                </s.FiltersGrid>
+                </s.FiltersSecondGrid>
               </Form>
             )}
           </Formik>
@@ -536,9 +576,9 @@ export const MaintenanceReports = () => {
                 { label: 'Valor' },
               ]}
             >
-              {maintenances?.map((maintenance) => (
+              {maintenances?.map((maintenance, i) => (
                 <ReportDataTableContent
-                  key={maintenance.id}
+                  key={maintenance.id + i}
                   colsBody={[
                     {
                       cell: (
@@ -567,13 +607,22 @@ export const MaintenanceReports = () => {
                   ]}
                   onClick={() => {
                     setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
+                    setModalAdditionalInformations({
+                      expectedDueDate: maintenance.expectedDueDate || '',
+                      expectedNotificationDate: maintenance.expectedNotificationDate || '',
+                      id: maintenance.maintenanceHistoryId,
+                      isFuture: maintenance.isFuture || false,
+                    });
 
-                    if (maintenance.status === 'pending' || maintenance.status === 'expired') {
-                      setModalSendMaintenanceReportOpen(true);
-                    }
-
-                    if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
+                    if (
+                      (maintenance.status === 'completed' ||
+                        maintenance.status === 'overdue' ||
+                        maintenance.isFuture) &&
+                      maintenance.id
+                    ) {
                       setModalMaintenanceDetails(true);
+                    } else if (!maintenance.isFuture && maintenance.id) {
+                      setModalSendMaintenanceReportOpen(true);
                     }
                   }}
                 />

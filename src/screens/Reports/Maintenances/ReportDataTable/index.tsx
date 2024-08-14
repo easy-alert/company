@@ -35,7 +35,11 @@ export const ReportDataTableContent = ({ colsBody, onClick }: ITableBody) => (
     }}
   >
     {colsBody.map((col, i: number) => (
-      <Style.TableColBody key={col.cell + i} cssOnMedia={col.cssOnMedia} cssProps={col.cssProps}>
+      <Style.TableColBody
+        key={String(col.cell) + String(i)}
+        cssOnMedia={col.cssOnMedia}
+        cssProps={col.cssProps}
+      >
         {col.cell}
       </Style.TableColBody>
     ))}

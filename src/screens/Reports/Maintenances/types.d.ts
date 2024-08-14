@@ -6,6 +6,8 @@ export interface IReportsFilters {
   endDate: string;
   buildingNames: string[];
   maintenanceStatusNames: string[];
+  startDueDate: string;
+  endDueDate: string;
 }
 
 export interface IFilterforPDF {
@@ -14,6 +16,8 @@ export interface IFilterforPDF {
   statusNames: string;
   startDate: string;
   endDate: string;
+  startDueDate: string;
+  endDueDate: string;
 }
 
 export interface IFilterforRequest {
@@ -24,6 +28,8 @@ export interface IFilterforRequest {
   categoryNames: string[];
   startDate: string;
   endDate: string;
+  startDueDate: string;
+  endDueDate: string;
 }
 
 interface IFilterData {
@@ -66,6 +72,9 @@ export interface IMaintenanceReportData {
   inProgress: boolean;
   maintenanceObservation: string | null;
   reportObservation: string | null;
+  expectedDueDate?: string;
+  expectedNotificationDate?: string;
+  isFuture?: boolean;
 
   images: {
     url: string;

@@ -24,7 +24,6 @@ import { AnnexesAndImages, IMaintenance } from '../../../Calendar/types';
 
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
-import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
 import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
@@ -34,6 +33,7 @@ import { requestDeleteMaintenanceHistory } from '../functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
+import { requestMaintenanceDetails } from '../../../Calendar/utils/ModalMaintenanceDetails/functions';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
