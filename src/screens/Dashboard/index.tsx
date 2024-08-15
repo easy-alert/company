@@ -175,7 +175,7 @@ export const Dashboard = () => {
 
   const [dataFilter, setDataFilter] = useState<IDataFilter>(dataFilterInitialValues);
 
-  const [periodFilter, setPeriodFilter] = useState<string>('365');
+  const [periodFilter, setPeriodFilter] = useState<string>('30');
 
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
