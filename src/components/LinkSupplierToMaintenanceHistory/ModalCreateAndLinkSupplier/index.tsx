@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import * as Style from './styles';
 import { useBrasilCities } from '../../../hooks/useBrasilCities';
 import { useBrasilStates } from '../../../hooks/useBrasilStates';
-import { useServiceTypes } from '../../../hooks/useServiceTypes';
 import { Api } from '../../../services/api';
 import {
   convertStateName,
@@ -22,6 +21,7 @@ import { FormikInput } from '../../Form/FormikInput';
 import { ReactSelectComponent } from '../../ReactSelectComponent';
 import { ReactSelectCreatableComponent } from '../../ReactSelectCreatableComponent ';
 import { CustomModal } from '../../CustomModal';
+import { useAreaOfActivities } from '../../../hooks/useAreaOfActivities';
 
 interface IModalCreateSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -55,7 +55,7 @@ export const schemaCreateSupplier = yup
     state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
-    serviceTypeLabels: yup
+    areaOfActivityLabels: yup
       .array()
       .of(yup.string().required('Campo obrigatório.'))
       .min(1, 'Campo obrigatório.')
@@ -72,7 +72,7 @@ export const ModalCreateAndLinkSupplier = ({
   const [selectedState, setSelectedState] = useState('');
   const { states } = useBrasilStates();
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
-  const { serviceTypes } = useServiceTypes();
+  const { areaOfActivities } = useAreaOfActivities({ findAll: false });
 
   return (
     <CustomModal title="Cadastrar e vincular fornecedor" setModal={setModal} zIndex={22}>
@@ -84,7 +84,7 @@ export const ModalCreateAndLinkSupplier = ({
           link: '',
           phone: '',
           email: '',
-          serviceTypeLabels: [],
+          areaOfActivityLabels: [],
           city: '',
           state: '',
           maintenanceHistoryId,
@@ -181,24 +181,24 @@ export const ModalCreateAndLinkSupplier = ({
               />
 
               <ReactSelectCreatableComponent
-                selectPlaceholderValue={values.serviceTypeLabels.length}
+                selectPlaceholderValue={values.areaOfActivityLabels.length}
                 isMulti
-                id="serviceType"
-                name="serviceType"
+                id="areaOfActivity"
+                name="areaOfActivity"
                 placeholder="Selecione ou digite para criar"
                 label="Área de atuação *"
-                options={serviceTypes.map(({ label, id }) => ({
+                options={areaOfActivities.map(({ label, id }) => ({
                   label,
                   value: id,
                 }))}
                 onChange={(data) => {
-                  const serviceTypeLabels = data.map(({ label }: { label: string }) => label);
-                  setFieldValue('serviceTypeLabels', serviceTypeLabels);
-                  setFieldError('serviceTypeLabels', '');
+                  const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
+                  setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
+                  setFieldError('areaOfActivityLabels', '');
                 }}
                 error={
-                  touched.serviceTypeLabels && errors.serviceTypeLabels
-                    ? errors.serviceTypeLabels
+                  touched.areaOfActivityLabels && errors.areaOfActivityLabels
+                    ? errors.areaOfActivityLabels
                     : null
                 }
               />

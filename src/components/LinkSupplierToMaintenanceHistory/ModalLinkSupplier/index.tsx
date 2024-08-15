@@ -12,8 +12,8 @@ import { CustomModal } from '../../CustomModal';
 interface ISupplier {
   id: string;
   name: string;
-  serviceTypes: {
-    type: { label: string };
+  areaOfActivities: {
+    areaOfActivity: { label: string };
   }[];
   isSelected: boolean;
 }
@@ -91,7 +91,7 @@ export const ModalLinkSupplier = ({
               <h6>Sugeridos</h6>
               {suggestedSuppliers.length > 0 ? (
                 <Style.ScrollDiv>
-                  {suggestedSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
+                  {suggestedSuppliers.map(({ id, name, areaOfActivities, isSelected }) => (
                     <Style.Card
                       disabled={onQuery}
                       selected={isSelected}
@@ -101,7 +101,11 @@ export const ModalLinkSupplier = ({
                       }}
                     >
                       <p className="p4">{name}</p>
-                      <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+                      <p className="p5">
+                        {areaOfActivities
+                          .map(({ areaOfActivity }) => areaOfActivity.label)
+                          .join(', ')}
+                      </p>
                     </Style.Card>
                   ))}
                 </Style.ScrollDiv>
@@ -114,7 +118,7 @@ export const ModalLinkSupplier = ({
               <h6>Outros</h6>
               {remainingSuppliers.length > 0 ? (
                 <Style.ScrollDiv>
-                  {remainingSuppliers.map(({ id, name, serviceTypes, isSelected }) => (
+                  {remainingSuppliers.map(({ id, name, areaOfActivities, isSelected }) => (
                     <Style.Card
                       disabled={onQuery}
                       selected={isSelected}
@@ -124,7 +128,11 @@ export const ModalLinkSupplier = ({
                       }}
                     >
                       <p className="p4">{name}</p>
-                      <p className="p5">{serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+                      <p className="p5">
+                        {areaOfActivities
+                          .map(({ areaOfActivity }) => areaOfActivity.label)
+                          .join(', ')}
+                      </p>
                     </Style.Card>
                   ))}
                 </Style.ScrollDiv>
