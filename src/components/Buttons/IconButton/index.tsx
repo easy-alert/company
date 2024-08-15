@@ -23,8 +23,10 @@ export const IconButton = ({
   disabled = false,
   title,
   loading,
+  tabIndex,
 }: IIconButton) => (
   <ContainerButton
+    tabIndex={tabIndex}
     title={title}
     hideLabelOnMedia={hideLabelOnMedia}
     labelPos={labelPos}

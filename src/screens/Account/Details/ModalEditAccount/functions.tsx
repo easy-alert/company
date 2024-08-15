@@ -2,13 +2,9 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-
-// FUNCTIONS
-import { Api } from '../../../../../../services/api';
-import { catchHandler, unMask, uploadFile } from '../../../../../../utils/functions';
-
-// TYPES
-import { IAccount } from '../../../../../../utils/types';
+import { Api } from '../../../../services/api';
+import { uploadFile, unMask, catchHandler } from '../../../../utils/functions';
+import { IAccount } from '../../../../utils/types';
 import { IRequestEditAccount } from './types';
 
 export const requestEditAccount = async ({
@@ -59,7 +55,7 @@ export const requestEditAccount = async ({
     email: values.email,
     password: values.password !== '' ? values.password : null,
     image: imageUrl,
-    supportLink: formattedSupportLink || null,
+    supportLink: formattedSupportLink === '//' ? null : formattedSupportLink,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
@@ -77,6 +73,7 @@ export const requestEditAccount = async ({
           CPF: values.CPF,
           createdAt: account.Company.createdAt,
           id: account.Company.id,
+          UserCompanies: account.Company.UserCompanies,
         },
         User: {
           createdAt: account.User.createdAt,

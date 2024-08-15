@@ -1,4 +1,4 @@
-image: node:16.13.0
+image: node:19.0.1
 
 stages:
   - staging_build

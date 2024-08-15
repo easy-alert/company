@@ -1,3 +1,16 @@
+interface IUserCompany {
+  id: string;
+  name: string;
+  email: string;
+  lastAccess: string | null;
+  createdAt: string;
+  isBlocked: boolean;
+}
+
+interface IUserCompanyRelation {
+  User: IUserCompany;
+}
+
 export interface IAccount {
   origin: 'Backoffice' | 'Company' | 'Client';
   User: {
@@ -23,6 +36,7 @@ export interface IAccount {
     createdAt: string;
     image: string;
     supportLink: string | null;
+    UserCompanies: IUserCompanyRelation[];
   };
 }
 

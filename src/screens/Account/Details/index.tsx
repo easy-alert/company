@@ -1,6 +1,7 @@
 // LIBS
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 // COMPONENTS
@@ -10,23 +11,82 @@ import { IconButton } from '../../../components/Buttons/IconButton';
 import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
-import { applyMask, dateFormatter } from '../../../utils/functions';
+import {
+  applyMask,
+  catchHandler,
+  dateFormatter,
+  dateTimeFormatter,
+} from '../../../utils/functions';
 
 // MODALS
-import { ModalEditAccount } from './utils/ModalEditAccount';
+import { ColorfulTable, ColorfulTableContent } from '../../../components/ColorfulTable';
+import { Tag } from '../../../components/Tag';
+import { theme } from '../../../styles/theme';
+import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+import { ModalEditAccount } from './ModalEditAccount';
+import { ModalUpdateUser } from './ModalUpdateUser';
+import { Api } from '../../../services/api';
+import { ModalCreateUser } from './ModalCreateUser';
+
+export interface ISelectedUser {
+  name: string;
+  email: string;
+  status: string;
+  id: string;
+}
 
 export const AccountDetails = () => {
   const { account, setAccount } = useAuthContext();
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
+  const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
+  const [modalCreateUserOpen, setModalCreateUserOpen] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
+  const [onQuery, setOnQuery] = useState(false);
+
+  const validateToken = async () => {
+    await Api.get('/auth/validate/token')
+      .then((res) => {
+        setAccount(res.data);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      });
+  };
+
+  const requestDeleteUser = async (id: string) => {
+    setOnQuery(true);
+    await Api.delete(`/usercompany/delete/${id}`)
+      .then((res) => {
+        validateToken();
+        toast.success(res.data.ServerMessage.message);
+        setOnQuery(false);
+      })
+      .catch((err) => {
+        setOnQuery(false);
+        catchHandler(err);
+      });
+  };
 
   return (
     <>
-      {modalEditAccountOpen && (
+      {modalEditAccountOpen && account && (
         <ModalEditAccount
           setModal={setModalEditAccountOpen}
-          account={account!}
+          account={account}
           setAccount={setAccount}
         />
+      )}
+
+      {modalUpdateUserOpen && selectedUser && (
+        <ModalUpdateUser
+          setModal={setModalUpdateUserOpen}
+          selectedUser={selectedUser}
+          onThenRequest={validateToken}
+        />
+      )}
+
+      {modalCreateUserOpen && (
+        <ModalCreateUser onThenRequest={validateToken} setModal={setModalCreateUserOpen} />
       )}
 
       <Style.Header>
@@ -113,6 +173,88 @@ export const AccountDetails = () => {
           }}
         />
       </Style.Footer>
+
+      <Style.UsersCard>
+        <Style.UsersCardHeader>
+          <h5>Usuários</h5>
+          <IconButton
+            hideLabelOnMedia
+            icon={icon.plusWithBg}
+            label="Cadastrar"
+            onClick={() => {
+              setModalCreateUserOpen(true);
+            }}
+          />
+        </Style.UsersCardHeader>
+
+        {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
+          <ColorfulTable
+            colsHeader={[
+              { label: 'Nome' },
+              { label: 'Email' },
+              { label: 'Status' },
+              { label: 'Último acesso' },
+              { label: 'Data de cadastro' },
+              { label: '' },
+            ]}
+          >
+            {account?.Company.UserCompanies.map(({ User }) => (
+              <ColorfulTableContent
+                key={User.id}
+                colsBody={[
+                  { cell: User.name },
+                  { cell: User.email },
+                  { cell: <Tag isInvalid={User.isBlocked} /> },
+                  { cell: User.lastAccess ? dateTimeFormatter(User.lastAccess) : '-' },
+                  { cell: dateTimeFormatter(User.createdAt) },
+                  {
+                    cell: (
+                      <Style.TableButtons>
+                        <PopoverButton
+                          hideLabelOnMedia
+                          disabled={onQuery}
+                          buttonIconSize="16px"
+                          iconButtonClassName="p4"
+                          actionButtonBgColor={theme.color.actionDanger}
+                          type="IconButton"
+                          label="Excluir"
+                          buttonIcon={icon.trash}
+                          message={{
+                            title: 'Deseja excluir este usuário?',
+                            content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                            contentColor: theme.color.danger,
+                          }}
+                          actionButtonClick={() => {
+                            requestDeleteUser(User.id);
+                          }}
+                        />
+                        <IconButton
+                          className="p4"
+                          size="16px"
+                          hideLabelOnMedia
+                          icon={icon.edit}
+                          label="Editar"
+                          onClick={() => {
+                            setSelectedUser({
+                              email: User.email,
+                              name: User.name,
+                              status: User.isBlocked ? 'blocked' : 'active',
+                              id: User.id,
+                            });
+                            setModalUpdateUserOpen(true);
+                          }}
+                        />
+                      </Style.TableButtons>
+                    ),
+                  },
+                ]}
+              />
+            ))}
+          </ColorfulTable>
+        ) : (
+          <h5>Nenhum usuário cadastrado</h5>
+        )}
+      </Style.UsersCard>
     </>
   );
 };

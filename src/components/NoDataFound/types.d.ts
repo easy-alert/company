@@ -1,4 +1,4 @@
 export interface INoDataFound {
-  label: string
-  height?: string
+  label: string;
+  height?: string;
 }

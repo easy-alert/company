@@ -20,6 +20,8 @@ export const TableBody = styled.tbody``;
 export const TableRowHead = styled.tr<{ bgColor?: string }>``;
 
 export const TableRow = styled.tr<{ $bgColor?: string }>`
+  white-space: nowrap;
+
   ${({ $bgColor }) =>
     $bgColor &&
     css`

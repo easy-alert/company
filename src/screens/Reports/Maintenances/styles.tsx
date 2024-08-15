@@ -50,11 +50,21 @@ export const FiltersGrid = styled.div`
   }
 `;
 
+export const FiltersSecondGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 975px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const ButtonContainer = styled.div`
-  margin-top: 20px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  margin-top: 20px;
 
   @media (max-width: 900px) {
     margin-top: 8px;
@@ -65,6 +75,7 @@ export const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.sm};
+  white-space: nowrap;
 `;
 
 export const CountContainer = styled.div`
@@ -88,9 +99,9 @@ export const TagWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${theme.size.xsm};
-  grid-area: 3 / 1 / 3 / 4;
+  grid-area: 2 / 1 / 2 / 4;
 
-  @media (max-width: 900px) {
+  @media (max-width: 975px) {
     grid-area: 6 / 1 / 6 / 2;
   }
 `;

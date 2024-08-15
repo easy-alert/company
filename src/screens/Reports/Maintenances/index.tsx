@@ -27,7 +27,7 @@ import {
 } from '../../../utils/functions';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
+import { ModalMaintenanceDetails } from '../../Calendar/utils/ModalMaintenanceDetails';
 import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 import { Select } from '../../../components/Inputs/Select';
@@ -38,6 +38,8 @@ import {
 import { InProgressTag } from '../../../components/InProgressTag';
 import { Api } from '../../../services/api';
 import { PDFList } from './PDFList';
+import { FormikSelect } from '../../../components/Form/FormikSelect';
+import { IModalAdditionalInformations } from '../../Calendar/types';
 // #endregion
 
 export const MaintenanceReports = () => {
@@ -76,6 +78,7 @@ export const MaintenanceReports = () => {
     buildingIds: [],
     buildingNames: [],
     maintenanceStatusNames: [],
+    filterBy: 'notificationDate',
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
@@ -85,12 +88,22 @@ export const MaintenanceReports = () => {
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
 
   const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
+
+  const [modalAdditionalInformations, setModalAdditionalInformations] =
+    useState<IModalAdditionalInformations>({
+      id: '',
+      expectedNotificationDate: '',
+      expectedDueDate: '',
+      isFuture: false,
+    });
+
   // #endregion
 
   const csvHeaders = [
     { label: 'Edificação', key: 'Edificação' },
     { label: 'Status', key: 'Status' },
     { label: 'Data de notificação', key: 'Data de notificação' },
+    { label: 'Data de vencimento', key: 'Data de vencimento' },
     { label: 'Data de conclusão', key: 'Data de conclusão' },
     { label: 'Categoria', key: 'Categoria' },
     { label: 'Elemento', key: 'Elemento' },
@@ -108,6 +121,7 @@ export const MaintenanceReports = () => {
     Edificação: data.buildingName,
     Status: getSingularStatusNameforPdf(data.status),
     'Data de notificação': dateFormatter(data.notificationDate),
+    'Data de vencimento': dateFormatter(data.dueDate),
     'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
     Categoria: data.categoryName,
     Elemento: data.element,
@@ -117,8 +131,8 @@ export const MaintenanceReports = () => {
     Responsável: data.responsible,
     'Valor (R$)': data.cost ? data.cost / 100 : 0,
     'Observação do relato': data.reportObservation || '',
-    Anexos: data.annexes.map(({ url }) => url).join('; '),
-    Imagens: data.images.map(({ url }) => url).join('; '),
+    Anexos: data?.annexes?.map(({ url }) => url).join('; '),
+    Imagens: data?.images?.map(({ url }) => url).join('; '),
   }));
 
   useEffect(() => {
@@ -129,7 +143,7 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
@@ -149,8 +163,8 @@ export const MaintenanceReports = () => {
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           setModal={setModalMaintenanceDetails}
-          maintenanceHistoryId={maintenanceHistoryId}
           setModalEditReport={setModalEditReport}
+          modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
 
@@ -199,6 +213,11 @@ export const MaintenanceReports = () => {
               maintenanceStatusId: '',
               startDate: '',
               endDate: '',
+              endDueDate: '',
+              startDueDate: '',
+              filterBy: 'notificationDate',
+              // Só pra entrar no form
+              buildingId: '',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
@@ -212,6 +231,7 @@ export const MaintenanceReports = () => {
                 maintenanceStatusNames: statusForFilter.map((e) => e.name),
                 endDate: values.endDate,
                 startDate: values.startDate,
+                filterBy: values.filterBy,
               });
 
               await requestReportsData({
@@ -227,40 +247,44 @@ export const MaintenanceReports = () => {
                   maintenanceStatusNames: statusForFilter.map((e) => e.name),
                   endDate: values.endDate,
                   startDate: values.startDate,
+                  filterBy: values.filterBy,
                 },
               });
             }}
           >
-            {({ errors, values, touched }) => (
+            {({ errors, values, touched, setFieldValue }) => (
               <Form>
                 <s.FiltersGrid>
-                  <Select
+                  {/* TASK SA-7138 LIMITOU 1 BUILDING POR RELATÓRIO */}
+                  <FormikSelect
+                    name="buildingId"
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
                     value=""
+                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
                     onChange={(e) => {
                       const selectedBuilding = filtersOptions?.buildings.find(
                         (building) => building.id === e.target.value,
                       );
 
                       if (selectedBuilding) {
-                        setBuildingsForFilter((prevState) => [
-                          ...prevState,
+                        setBuildingsForFilter([
                           { id: selectedBuilding.id, name: selectedBuilding.name },
                         ]);
+                        setFieldValue('buildingId', selectedBuilding.id);
                       }
 
-                      if (e.target.value === 'all') {
-                        setBuildingsForFilter([]);
-                      }
+                      // if (e.target.value === 'all') {
+                      //   setBuildingsForFilter([]);
+                      // }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    <option value="all" disabled={buildingsForFilter.length === 0}>
+                    {/* <option value="all" disabled={buildingsForFilter.length === 0}>
                       Todas
-                    </option>
+                    </option> */}
 
                     {filtersOptions?.buildings.map((building) => (
                       <option
@@ -271,7 +295,7 @@ export const MaintenanceReports = () => {
                         {building.name}
                       </option>
                     ))}
-                  </Select>
+                  </FormikSelect>
 
                   <Select
                     selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
@@ -348,9 +372,21 @@ export const MaintenanceReports = () => {
                       </option>
                     ))}
                   </Select>
+                </s.FiltersGrid>
+
+                <s.FiltersSecondGrid>
+                  <FormikSelect
+                    label="Filtrar por"
+                    name="filterBy"
+                    selectPlaceholderValue={values.filterBy}
+                    error={touched.filterBy && errors.filterBy ? errors.filterBy : null}
+                  >
+                    <option value="notificationDate">Data de notificação</option>
+                    <option value="dueDate">Data de vencimento</option>
+                  </FormikSelect>
 
                   <FormikInput
-                    label="Data de notificação inicial"
+                    label="Data inicial"
                     typeDatePlaceholderValue={values.startDate}
                     name="startDate"
                     type="date"
@@ -359,20 +395,15 @@ export const MaintenanceReports = () => {
                   />
 
                   <FormikInput
-                    label="Data de notificação final"
+                    label="Data final"
                     typeDatePlaceholderValue={values.endDate}
                     name="endDate"
                     type="date"
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
-                  <s.TagWrapper>
-                    {buildingsForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todas as edificações</p>
-                      </s.Tag>
-                    )}
 
+                  <s.TagWrapper>
                     {buildingsForFilter.map((building, i: number) => (
                       <s.Tag key={building.id}>
                         <p className="p3">{building.name}</p>
@@ -380,6 +411,7 @@ export const MaintenanceReports = () => {
                           size="14px"
                           icon={icon.xBlack}
                           onClick={() => {
+                            setFieldValue('buildingId', '');
                             setBuildingsForFilter((prevState) => {
                               const newState = [...prevState];
                               newState.splice(i, 1);
@@ -470,7 +502,7 @@ export const MaintenanceReports = () => {
                       <Button label="Filtrar" type="submit" disable={onQuery} />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
-                </s.FiltersGrid>
+                </s.FiltersSecondGrid>
               </Form>
             )}
           </Formik>
@@ -533,12 +565,13 @@ export const MaintenanceReports = () => {
                 { label: 'Atividade' },
                 { label: 'Responsável' },
                 { label: 'Data de notificação' },
+                { label: 'Data de vencimento' },
                 { label: 'Valor' },
               ]}
             >
-              {maintenances?.map((maintenance) => (
+              {maintenances?.map((maintenance, i) => (
                 <ReportDataTableContent
-                  key={maintenance.id}
+                  key={maintenance.id + i}
                   colsBody={[
                     {
                       cell: (
@@ -558,6 +591,7 @@ export const MaintenanceReports = () => {
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
                     { cell: dateFormatter(maintenance.notificationDate) },
+                    { cell: dateFormatter(maintenance.dueDate) },
                     {
                       cell:
                         maintenance.cost !== null
@@ -567,13 +601,22 @@ export const MaintenanceReports = () => {
                   ]}
                   onClick={() => {
                     setMaintenanceHistoryId(maintenance.maintenanceHistoryId);
+                    setModalAdditionalInformations({
+                      expectedDueDate: maintenance.expectedDueDate || '',
+                      expectedNotificationDate: maintenance.expectedNotificationDate || '',
+                      id: maintenance.maintenanceHistoryId,
+                      isFuture: maintenance.isFuture || false,
+                    });
 
-                    if (maintenance.status === 'pending' || maintenance.status === 'expired') {
-                      setModalSendMaintenanceReportOpen(true);
-                    }
-
-                    if (maintenance.status === 'completed' || maintenance.status === 'overdue') {
+                    if (
+                      (maintenance.status === 'completed' ||
+                        maintenance.status === 'overdue' ||
+                        maintenance.isFuture) &&
+                      maintenance.id
+                    ) {
                       setModalMaintenanceDetails(true);
+                    } else if (!maintenance.isFuture && maintenance.id) {
+                      setModalSendMaintenanceReportOpen(true);
                     }
                   }}
                 />
