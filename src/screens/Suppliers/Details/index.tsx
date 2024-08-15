@@ -29,8 +29,8 @@ export interface ISupplier {
   email: string | null;
   link: string | null;
 
-  serviceTypes: {
-    type: { label: string };
+  areaOfActivities: {
+    areaOfActivity: { label: string };
   }[];
 
   maintenances: {
@@ -60,7 +60,7 @@ export const SupplierDetails = () => {
     phone: '',
     cnpj: '',
     city: '',
-    serviceTypes: [],
+    areaOfActivities: [],
     state: '',
     maintenances: [],
   });
@@ -216,7 +216,11 @@ export const SupplierDetails = () => {
 
             <Style.Card>
               <h6>Área de atuação</h6>
-              <p className="p2">{supplier.serviceTypes.map(({ type }) => type.label).join(', ')}</p>
+              <p className="p2">
+                {supplier.areaOfActivities
+                  .map(({ areaOfActivity }) => areaOfActivity.label)
+                  .join(', ')}
+              </p>
             </Style.Card>
 
             <Style.Card>

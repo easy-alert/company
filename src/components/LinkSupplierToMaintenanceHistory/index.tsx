@@ -19,9 +19,6 @@ interface ISupplier {
   name: string;
   email: string | null;
   phone: string | null;
-  serviceTypes: {
-    type: { label: string };
-  }[];
 }
 
 export const LinkSupplierToMaintenanceHistory = ({

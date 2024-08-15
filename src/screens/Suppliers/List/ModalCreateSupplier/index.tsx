@@ -21,7 +21,7 @@ import { ReactSelectCreatableComponent } from '../../../../components/ReactSelec
 import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
 import { useBrasilCities } from '../../../../hooks/useBrasilCities';
 import { useBrasilStates } from '../../../../hooks/useBrasilStates';
-import { useServiceTypes } from '../../../../hooks/useServiceTypes';
+import { useAreaOfActivities } from '../../../../hooks/useAreaOfActivities';
 
 interface IModalCreateSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -54,7 +54,7 @@ export const schemaCreateSupplier = yup
     state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
-    serviceTypeLabels: yup
+    areaOfActivityLabels: yup
       .array()
       .of(yup.string().required('Campo obrigatório.'))
       .min(1, 'Campo obrigatório.')
@@ -67,7 +67,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
   const [selectedState, setSelectedState] = useState('');
   const { states } = useBrasilStates();
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
-  const { serviceTypes } = useServiceTypes();
+  const { areaOfActivities } = useAreaOfActivities({ findAll: false });
 
   return (
     <Modal title="Cadastrar fornecedor" setModal={setModal}>
@@ -79,7 +79,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           link: '',
           phone: '',
           email: '',
-          serviceTypeLabels: [],
+          areaOfActivityLabels: [],
           city: '',
           state: '',
         }}
@@ -175,24 +175,24 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectCreatableComponent
-                selectPlaceholderValue={!!values.serviceTypeLabels.length}
+                selectPlaceholderValue={!!values.areaOfActivityLabels.length}
                 isMulti
-                id="serviceType"
-                name="serviceType"
+                id="areaOfActivity"
+                name="areaOfActivity"
                 placeholder="Selecione ou digite para criar"
                 label="Área de atuação *"
-                options={serviceTypes.map(({ label, id }) => ({
+                options={areaOfActivities.map(({ label, id }) => ({
                   label,
                   value: id,
                 }))}
                 onChange={(data) => {
-                  const serviceTypeLabels = data.map(({ label }: { label: string }) => label);
-                  setFieldValue('serviceTypeLabels', serviceTypeLabels);
-                  setFieldError('serviceTypeLabels', '');
+                  const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
+                  setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
+                  setFieldError('areaOfActivityLabels', '');
                 }}
                 error={
-                  touched.serviceTypeLabels && errors.serviceTypeLabels
-                    ? errors.serviceTypeLabels
+                  touched.areaOfActivityLabels && errors.areaOfActivityLabels
+                    ? errors.areaOfActivityLabels
                     : null
                 }
               />
