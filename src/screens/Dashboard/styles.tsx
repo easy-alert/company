@@ -213,3 +213,49 @@ export const LeastAccomplishedMaintenance = styled(MaintenanceCard)`
     rgba(250, 250, 250, 1) 100%
   );
 `;
+
+export const Counts = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: ${theme.size.sm};
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+export const CountCard = styled.div`
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+
+  width: 100%;
+
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+`;
+
+export const CountCardContent = styled.div`
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+
+  > h2 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  > p.p4 {
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  @media (max-width: 1100px) {
+    flex-direction: column;
+  }
+`;

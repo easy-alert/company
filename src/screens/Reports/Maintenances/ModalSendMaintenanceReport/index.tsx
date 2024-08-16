@@ -34,6 +34,7 @@ import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 import { requestMaintenanceDetails } from '../../../Calendar/utils/ModalMaintenanceDetails/functions';
+import { ShareMaintenanceHistoryButton } from '../../../../components/ShareMaintenanceHistoryButton';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -186,6 +187,8 @@ export const ModalSendMaintenanceReport = ({
         </Style.LoadingContainer>
       ) : (
         <Style.Container>
+          <ShareMaintenanceHistoryButton maintenanceHistoryId={maintenanceHistoryId} />
+
           <h3>{maintenance?.Building.name}</h3>
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}

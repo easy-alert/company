@@ -1,7 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 // LIBS
 import { useDropzone } from 'react-dropzone';
-
 // COMPONENTS
 import { useEffect, useState } from 'react';
 import { Button } from '../../../../components/Buttons/Button';
@@ -34,6 +33,7 @@ import { requestDeleteMaintenanceHistory } from '../../../Reports/Maintenances/f
 import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
+import { ShareMaintenanceHistoryButton } from '../../../../components/ShareMaintenanceHistoryButton';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -195,6 +195,8 @@ export const ModalSendMaintenanceReport = ({
         </Style.LoadingContainer>
       ) : (
         <Style.Container>
+          <ShareMaintenanceHistoryButton maintenanceHistoryId={modalAdditionalInformations.id} />
+
           <h3>{maintenance?.Building.name}</h3>
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}

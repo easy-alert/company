@@ -86,6 +86,19 @@ interface IMaintenancesData {
 }
 
 type IRatingStatus = '' | 'completed' | 'expired';
+
+interface IMaintenanceInfo {
+  total: number;
+  info: string;
+}
+
+interface ICounts {
+  occasionalMaintenances: IMaintenanceInfo;
+  commonMaintenances: IMaintenanceInfo;
+  totalMaintenances: IMaintenanceInfo;
+  tickets: IMaintenanceInfo;
+}
+
 // #endregion
 
 export const Dashboard = () => {
@@ -147,6 +160,13 @@ export const Dashboard = () => {
     labels: [],
   });
 
+  const [counts, setCounts] = useState<ICounts>({
+    commonMaintenances: { info: '', total: 0 },
+    occasionalMaintenances: { info: '', total: 0 },
+    totalMaintenances: { info: '', total: 0 },
+    tickets: { info: '', total: 0 },
+  });
+
   const dataFilterInitialValues: IDataFilter = {
     buildings: [],
     categories: [],
@@ -155,7 +175,7 @@ export const Dashboard = () => {
 
   const [dataFilter, setDataFilter] = useState<IDataFilter>(dataFilterInitialValues);
 
-  const [periodFilter, setPeriodFilter] = useState<string>('365');
+  const [periodFilter, setPeriodFilter] = useState<string>('30');
 
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
@@ -192,7 +212,8 @@ export const Dashboard = () => {
         setTimeLine(data.timeLine);
         setInvestments(data.investments);
         setScore(data.score);
-        await getAuxiliaryData();
+        setCounts(data.counts);
+        getAuxiliaryData();
       })
       .catch((err) => {
         catchHandler(err);
@@ -649,6 +670,37 @@ export const Dashboard = () => {
         </Style.FilterSection>
 
         <Style.Wrappers>
+          <Style.Counts>
+            <Style.CountCard>
+              <h5>Total de avulsas</h5>
+              <Style.CountCardContent>
+                <h2>{counts.occasionalMaintenances.total}</h2>
+                <p className="p4">{counts.occasionalMaintenances.info}</p>
+              </Style.CountCardContent>
+            </Style.CountCard>
+            <Style.CountCard>
+              <h5>Total de preventivas</h5>
+              <Style.CountCardContent>
+                <h2>{counts.commonMaintenances.total}</h2>
+                <p className="p4">{counts.commonMaintenances.info}</p>
+              </Style.CountCardContent>
+            </Style.CountCard>
+            <Style.CountCard>
+              <h5>Total de manunteções</h5>
+              <Style.CountCardContent>
+                <h2>{counts.totalMaintenances.total}</h2>
+                <p className="p4">{counts.totalMaintenances.info}</p>
+              </Style.CountCardContent>
+            </Style.CountCard>
+            <Style.CountCard>
+              <h5>Total de chamados</h5>
+              <Style.CountCardContent>
+                <h2>{counts.tickets.total}</h2>
+                <p className="p4">{counts.tickets.info}</p>
+              </Style.CountCardContent>
+            </Style.CountCard>
+          </Style.Counts>
+
           <Style.ChartsWrapper>
             <Style.Card>
               <h5>Linha do tempo - Manutenções</h5>

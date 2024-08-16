@@ -83,8 +83,10 @@ import send from './send.svg';
 import activityComment from './activityComment.svg';
 import upload from './upload.svg';
 import update from './update.svg';
+import uploadLine from './uploadLine.svg';
 
 export const icon = {
+  uploadLine,
   update,
   upload,
   activityComment,
