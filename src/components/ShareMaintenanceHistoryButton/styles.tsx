@@ -35,9 +35,10 @@ export const PopoverBody = styled.div<{ contentColor?: string }>`
   min-height: fit-content;
   padding: ${theme.size.sm};
 
-  > h2 {
+  > h3 {
     display: flex;
     justify-content: space-between;
+    font-weight: 700;
   }
 
   > .p4 {

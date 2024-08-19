@@ -90,7 +90,7 @@ export const ShareMaintenanceHistoryButton = ({
               >
                 <Style.PopoverBackground>
                   <Style.PopoverBody contentColor={theme.color.gray4}>
-                    <h2>
+                    <h3>
                       Compartilhar manutenção
                       <IconButton
                         onClick={() => {
@@ -98,7 +98,7 @@ export const ShareMaintenanceHistoryButton = ({
                         }}
                         icon={icon.x}
                       />
-                    </h2>
+                    </h3>
                     <Style.Hr />
                     <TextArea
                       style={{ wordBreak: 'break-all' }}
