@@ -35,9 +35,10 @@ export const PopoverBody = styled.div<{ contentColor?: string }>`
   min-height: fit-content;
   padding: ${theme.size.sm};
 
-  > h2 {
+  > h3 {
     display: flex;
     justify-content: space-between;
+    font-weight: 700;
   }
 
   > .p4 {
@@ -95,4 +96,9 @@ export const ButtonContainer = styled.div`
   position: absolute;
   top: 24px;
   right: 64px;
+
+  @media (max-width: 400px) {
+    top: 64px;
+    right: 24px;
+  }
 `;
