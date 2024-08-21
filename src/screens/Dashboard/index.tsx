@@ -160,6 +160,11 @@ export const Dashboard = () => {
     labels: [],
   });
 
+  const [ticketTypes, setTicketTypes] = useState<IScore>({
+    data: [],
+    labels: [],
+  });
+
   const [counts, setCounts] = useState<ICounts>({
     commonMaintenances: { info: '', total: 0 },
     occasionalMaintenances: { info: '', total: 0 },
@@ -213,6 +218,7 @@ export const Dashboard = () => {
         setInvestments(data.investments);
         setScore(data.score);
         setCounts(data.counts);
+        setTicketTypes(data.ticketTypes);
         getAuxiliaryData();
       })
       .catch((err) => {
@@ -396,6 +402,92 @@ export const Dashboard = () => {
       },
 
       colors: getLabelColor(score.labels),
+      dataLabels: {
+        enabled: false,
+        style: {
+          fontSize: '14px',
+          fontWeight: 400,
+        },
+      },
+      legend: {
+        position: 'bottom' as const,
+        offsetY: -10,
+      },
+    },
+  };
+
+  const ticketTypesChart = {
+    series: ticketTypes.data,
+    options: {
+      labels: ticketTypes.labels,
+
+      chart: {
+        toolbar: {
+          show: false,
+        },
+      },
+
+      tooltip: {
+        enabled: true,
+      },
+
+      plotOptions: {
+        pie: {
+          startAngle: 0,
+          endAngle: 360,
+          expandOnClick: true,
+          offsetX: 0,
+          offsetY: 0,
+          customScale: 1,
+          dataLabels: {
+            offset: 0,
+            minAngleToShowLabel: 10,
+          },
+          donut: {
+            labels: {
+              show: true,
+              name: {
+                show: true,
+                fontSize: '16px',
+                fontFamily: 'Helvetica, Arial, sans-serif',
+                fontWeight: 600,
+                offsetY: 4,
+                color: '#000000',
+              },
+              value: {
+                show: true,
+                fontSize: '16px',
+                fontWeight: 600,
+                color: '#000000',
+                formatter(val: any, w: any) {
+                  const percent =
+                    (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+                  return `${percent.toFixed(1)} %`;
+                },
+              },
+              total: {
+                show: true,
+                showAlways: false,
+
+                label: ticketTypes.labels[findLargestValueAndIndex(ticketTypes.data).index],
+                fontSize: '16px',
+                fontWeight: 600,
+                color: '#000000',
+
+                formatter(w: any) {
+                  const percent =
+                    (w.globals.seriesTotals[findLargestValueAndIndex(ticketTypes.data).index] *
+                      100) /
+                    w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+
+                  return `${percent.toFixed(1)} %`;
+                },
+              },
+            },
+          },
+        },
+      },
+
       dataLabels: {
         enabled: false,
         style: {
@@ -703,7 +795,7 @@ export const Dashboard = () => {
 
           <Style.ChartsWrapper>
             <Style.Card>
-              <h5>Linha do tempo - Manutenções</h5>
+              <h5>Linha do tempo de manutenções</h5>
               <Style.ChartContent>
                 {timeLine?.series.some((element) => element?.data.length > 0) ? (
                   <Style.ChartWrapperX
@@ -733,23 +825,42 @@ export const Dashboard = () => {
               </Style.ChartContent>
             </Style.Card>
 
-            <Style.Card>
-              <h5>Score - Manutenções</h5>
-              <Style.ChartContent>
-                {score?.data?.some((e) => e > 0) ? (
-                  <Chart
-                    type="donut"
-                    options={scoreChart.options as any}
-                    series={scoreChart.series}
-                    height={335}
-                  />
-                ) : (
-                  <Style.NoDataWrapper>
-                    <h6>Nenhuma informação encontrada</h6>
-                  </Style.NoDataWrapper>
-                )}
-              </Style.ChartContent>
-            </Style.Card>
+            <Style.PieWrapper>
+              <Style.Card>
+                <h5>Score de manutenções</h5>
+                <Style.ChartContent>
+                  {score?.data?.some((e) => e > 0) ? (
+                    <Chart
+                      type="donut"
+                      options={scoreChart.options as any}
+                      series={scoreChart.series}
+                      height={335}
+                    />
+                  ) : (
+                    <Style.NoDataWrapper>
+                      <h6>Nenhuma informação encontrada</h6>
+                    </Style.NoDataWrapper>
+                  )}
+                </Style.ChartContent>
+              </Style.Card>
+              <Style.Card>
+                <h5>Tipos de chamados</h5>
+                <Style.ChartContent>
+                  {ticketTypes?.data?.some((e) => e > 0) ? (
+                    <Chart
+                      type="donut"
+                      options={ticketTypesChart.options as any}
+                      series={ticketTypesChart.series}
+                      height={335}
+                    />
+                  ) : (
+                    <Style.NoDataWrapper>
+                      <h6>Nenhuma informação encontrada</h6>
+                    </Style.NoDataWrapper>
+                  )}
+                </Style.ChartContent>
+              </Style.Card>
+            </Style.PieWrapper>
           </Style.ChartsWrapper>
 
           <Style.PanelWrapper>
