@@ -22,6 +22,10 @@ export const getStatusName = (status: string) => {
       statusName = 'Avulsa';
       break;
 
+    case 'common':
+      statusName = 'Preventiva';
+      break;
+
     default:
       break;
   }

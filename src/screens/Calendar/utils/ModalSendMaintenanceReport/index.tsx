@@ -24,7 +24,12 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
-import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
+import {
+  requestReportProgress,
+  requestSaveReportProgress,
+  requestSendReport,
+  requestToggleInProgress,
+} from './functions';
 import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
@@ -201,8 +206,10 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
             {(maintenance?.MaintenancesStatus.name === 'expired' ||
               maintenance?.MaintenancesStatus.name === 'pending') &&
@@ -396,7 +403,7 @@ export const ModalSendMaintenanceReport = ({
             )}
             {maintenance.canReport ? (
               <>
-                {/* {!onQuery && (
+                {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
                     actionButtonClick={() => {
@@ -419,7 +426,7 @@ export const ModalSendMaintenanceReport = ({
                     }}
                     type="Button"
                   />
-                )} */}
+                )}
 
                 {!onQuery && (
                   <PopoverButton

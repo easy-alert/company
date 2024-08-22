@@ -35,6 +35,7 @@ import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSup
 import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 import { requestMaintenanceDetails } from '../../../Calendar/utils/ModalMaintenanceDetails/functions';
 import { ShareMaintenanceHistoryButton } from '../../../../components/ShareMaintenanceHistoryButton';
+import { requestToggleInProgress } from '../../../Calendar/utils/ModalSendMaintenanceReport/functions';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -193,8 +194,10 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
             {(maintenance?.MaintenancesStatus.name === 'expired' ||
               maintenance?.MaintenancesStatus.name === 'pending') &&
@@ -389,7 +392,7 @@ export const ModalSendMaintenanceReport = ({
 
             {maintenance.canReport ? (
               <>
-                {/* {!onModalQuery && (
+                {!onModalQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onModalQuery}
                     actionButtonClick={() => {
@@ -397,8 +400,8 @@ export const ModalSendMaintenanceReport = ({
                         maintenanceHistoryId,
                         setModal,
                         setOnQuery: setOnModalQuery,
-                        onThenActionRequest,
                         inProgressChange: !maintenance.inProgress,
+                        onThenActionRequest: async () => onThenRequest(),
                       });
                     }}
                     textColor={theme.color.actionBlue}
@@ -412,7 +415,7 @@ export const ModalSendMaintenanceReport = ({
                     }}
                     type="Button"
                   />
-                )} */}
+                )}
 
                 {!onModalQuery && (
                   <PopoverButton

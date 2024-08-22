@@ -183,8 +183,10 @@ export const ModalEditMaintenanceReport = ({
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
 
-            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
           </Style.StatusTagWrapper>
           <Style.Content>

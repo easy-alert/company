@@ -39,4 +39,10 @@ export const TagContainer = styled.div<IEventTag>`
     css`
       background-color: ${theme.color.purple};
     `};
+
+  ${({ status }) =>
+    status === 'common' &&
+    css`
+      background-color: ${theme.color.primary};
+    `};
 `;

@@ -578,7 +578,11 @@ export const MaintenanceReports = () => {
                         <s.TagContainer>
                           {maintenance.status === 'overdue' && <EventTag status="completed" />}
                           <EventTag status={maintenance.status} />
-                          {maintenance.type === 'occasional' && <EventTag status="occasional" />}
+                          {maintenance.type === 'occasional' ? (
+                            <EventTag status="occasional" />
+                          ) : (
+                            <EventTag status="common" />
+                          )}
                           {(maintenance.status === 'expired' || maintenance.status === 'pending') &&
                             maintenance.inProgress && <InProgressTag />}
                         </s.TagContainer>
