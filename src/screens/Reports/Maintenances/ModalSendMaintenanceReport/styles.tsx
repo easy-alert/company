@@ -14,7 +14,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const StatusTagWrapper = styled.div`
@@ -24,6 +24,32 @@ export const StatusTagWrapper = styled.div`
 `;
 
 export const Row = styled.div<{ disabled?: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border: 1px solid ${theme.color.gray4};
+  background-color: ${theme.color.gray1};
+  border-radius: ${theme.size.xsm};
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: default;
+      pointer-events: none;
+
+      :hover {
+        opacity: 1;
+      }
+    `}
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+export const FileStyleRow = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
@@ -40,19 +66,13 @@ export const Row = styled.div<{ disabled?: boolean }>`
     `}
 `;
 
-export const FileRow = styled.div`
-  display: flex;
-  gap: ${theme.size.xsm};
-  justify-content: flex-start;
-  align-items: flex-start;
-`;
-
 export const DragAndDropZoneFile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 136px;
-  min-width: 132px;
+  height: 97px;
+  width: 97px;
+
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
@@ -64,9 +84,17 @@ export const DragAndDropZoneFile = styled.div`
   }
 `;
 
+export const FileRow = styled.div`
+  display: flex;
+  gap: ${theme.size.xsm};
+  justify-content: flex-start;
+  align-items: flex-start;
+`;
+
 export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: ${theme.size.xsm};
 `;
 
@@ -85,7 +113,7 @@ export const Tag = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 400;
-    max-width: 120px;
+    max-width: 100px;
   }
 `;
 
@@ -93,6 +121,7 @@ export const FileLoadingTag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 8px 12px;
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
   width: 130px;
@@ -106,8 +135,8 @@ export const ImageLoadingTag = styled.div`
   padding: 8px 12px;
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
-  height: 136px;
-  width: 132px;
+  height: 97px;
+  width: 97px;
 `;
 
 export const DragAndDropZoneImage = styled.div`
@@ -117,8 +146,8 @@ export const DragAndDropZoneImage = styled.div`
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
-  height: 136px;
-  width: 132px;
+  height: 97px;
+  width: 97px;
   cursor: pointer;
   transition: 0.25s;
   :hover {
@@ -135,7 +164,7 @@ export const LoadingContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: ${theme.size.sm};
-  justify-content: center;
 `;

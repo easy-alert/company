@@ -117,33 +117,6 @@ export const FileLoadingTag = styled.div`
   width: 130px;
 `;
 
-export const ImageLoadingTag = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background-color: ${theme.color.primaryL};
-  border-radius: ${theme.size.xxsm};
-  height: 136px;
-  width: 132px;
-`;
-
-export const DragAndDropZoneImage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dashed ${theme.color.gray4};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm} ${theme.size.md};
-  height: 136px;
-  width: 132px;
-  cursor: pointer;
-  transition: 0.25s;
-  :hover {
-    opacity: 0.7;
-  }
-`;
-
 export const LoadingContainer = styled.div`
   display: flex;
   align-items: center;

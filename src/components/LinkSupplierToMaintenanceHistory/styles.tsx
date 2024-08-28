@@ -5,9 +5,14 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+  margin-top: 12px;
 
   .opacity {
     opacity: 0.7;
+    padding: ${theme.size.xsm} ${theme.size.sm};
+    border: 1px solid ${theme.color.gray4};
+    background-color: ${theme.color.gray1};
+    border-radius: ${theme.size.xsm};
   }
 `;
 
@@ -19,14 +24,12 @@ export const Header = styled.div`
 
 export const SupplierInfo = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
 
-  > div {
-    display: flex;
-    align-items: center;
-    gap: ${theme.size.xxsm};
-  }
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border: 1px solid ${theme.color.gray4};
+  background-color: ${theme.color.gray1};
+  border-radius: ${theme.size.xsm};
 
   a {
     color: ${theme.color.actionBlue};
@@ -69,5 +72,17 @@ export const Background = styled.div`
   ::-webkit-scrollbar {
     width: 0;
     background: transparent;
+  }
+`;
+
+export const ColumnInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xxsm};
   }
 `;

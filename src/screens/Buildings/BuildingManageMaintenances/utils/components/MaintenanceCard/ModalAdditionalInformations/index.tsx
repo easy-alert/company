@@ -27,7 +27,6 @@ import { IModalAdditionalInformations } from './types';
 import { IMaintenanceReport } from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
 import { AnnexesAndImages } from '../../../../../../Calendar/types';
 import { Input } from '../../../../../../../components/Inputs/Input';
-import { TextArea } from '../../../../../../../components/Inputs/TextArea';
 import { IconButton } from '../../../../../../../components/Buttons/IconButton';
 import { ImagePreview } from '../../../../../../../components/ImagePreview';
 
@@ -267,7 +266,7 @@ export const ModalAdditionalInformations = ({
                       }}
                     />
 
-                    <TextArea
+                    {/* <TextArea
                       label="Observação do relato"
                       placeholder="Digite aqui"
                       value={maintenanceReport.observation}
@@ -278,7 +277,7 @@ export const ModalAdditionalInformations = ({
                           return newState;
                         });
                       }}
-                    />
+                    /> */}
 
                     <Style.Row disabled={onFileQuery}>
                       <h6>Anexar</h6>
@@ -286,7 +285,7 @@ export const ModalAdditionalInformations = ({
                         <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                           <input {...getInputProps()} />
 
-                          <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                          <Image img={icon.addFile} width="40px" height="32px" radius="0" />
                         </Style.DragAndDropZoneFile>
 
                         {(files.length > 0 || onFileQuery) && (
@@ -325,14 +324,14 @@ export const ModalAdditionalInformations = ({
                           {...getRootPropsImages({ className: 'dropzone' })}
                         >
                           <input {...getInputPropsImages()} />
-                          <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                          <Image img={icon.addImage} width="40px" height="38px" radius="0" />
                         </Style.DragAndDropZoneImage>
 
                         {images.map((e, i: number) => (
                           <ImagePreview
                             key={e.url}
-                            width="132px"
-                            height="136px"
+                            width="97px"
+                            height="97px"
                             imageCustomName={e.name}
                             src={e.url}
                             onTrashClick={() => {
