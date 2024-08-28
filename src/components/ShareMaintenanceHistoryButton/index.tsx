@@ -105,7 +105,7 @@ export const ShareMaintenanceHistoryButton = ({
                       label="Link de compartilhamento"
                       defaultValue={guestLink}
                       readOnly
-                      height="50px"
+                      height="70px"
                     />
                     <Button
                       style={{ marginTop: '16px' }}
