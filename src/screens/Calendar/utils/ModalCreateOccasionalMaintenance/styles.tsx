@@ -32,8 +32,8 @@ export const DragAndDropZoneFile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 136px;
-  min-width: 132px;
+  height: 97px;
+  min-width: 97px;
 
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
@@ -53,8 +53,8 @@ export const DragAndDropZoneImage = styled.div`
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
-  height: 136px;
-  width: 132px;
+  height: 97px;
+  width: 97px;
   cursor: pointer;
   transition: 0.25s;
   :hover {
@@ -113,8 +113,8 @@ export const ImageLoadingTag = styled.div`
   padding: 8px 12px;
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
-  height: 136px;
-  width: 132px;
+  height: 97px;
+  width: 97px;
 `;
 
 export const customStyles = {

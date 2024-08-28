@@ -67,6 +67,16 @@ export const ChartsWrapper = styled.div`
   }
 `;
 
+export const PieWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: ${theme.size.sm};
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 export const PanelWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

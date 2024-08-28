@@ -112,7 +112,7 @@ export const MaintenanceReports = () => {
     { label: 'Observação da manutenção', key: 'Observação da manutenção' },
     { label: 'Responsável', key: 'Responsável' },
     { label: 'Valor (R$)', key: 'Valor (R$)' },
-    { label: 'Observação do relato', key: 'Observação do relato' },
+    // { label: 'Observação do relato', key: 'Observação do relato' },
     { label: 'Anexos', key: 'Anexos' },
     { label: 'Imagens', key: 'Imagens' },
   ];
@@ -130,7 +130,7 @@ export const MaintenanceReports = () => {
     'Observação da manutenção': data.maintenanceObservation || '',
     Responsável: data.responsible,
     'Valor (R$)': data.cost ? data.cost / 100 : 0,
-    'Observação do relato': data.reportObservation || '',
+    // 'Observação do relato': data.reportObservation || '',
     Anexos: data?.annexes?.map(({ url }) => url).join('; '),
     Imagens: data?.images?.map(({ url }) => url).join('; '),
   }));
@@ -578,7 +578,11 @@ export const MaintenanceReports = () => {
                         <s.TagContainer>
                           {maintenance.status === 'overdue' && <EventTag status="completed" />}
                           <EventTag status={maintenance.status} />
-                          {maintenance.type === 'occasional' && <EventTag status="occasional" />}
+                          {maintenance.type === 'occasional' ? (
+                            <EventTag status="occasional" />
+                          ) : (
+                            <EventTag status="common" />
+                          )}
                           {(maintenance.status === 'expired' || maintenance.status === 'pending') &&
                             maintenance.inProgress && <InProgressTag />}
                         </s.TagContainer>

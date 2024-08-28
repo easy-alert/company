@@ -86,8 +86,10 @@ export const ModalMaintenanceDetails = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
             {/* Aqui não deve precisar da tag in progress porque quando clica na vencida ele abre sempre a modal de enviar relato */}
             {/* {(maintenance?.MaintenancesStatus.name === 'expired' ||
@@ -202,13 +204,13 @@ export const ModalMaintenanceDetails = ({
                     }
                   </p>
                 </Style.Row>
-
+                {/*
                 <Style.Row>
                   <h6>Observação do relato</h6>
                   <pre className="p2">{maintenance.MaintenanceReport[0].observation ?? '-'}</pre>
-                </Style.Row>
+                </Style.Row> */}
 
-                <Style.Row>
+                <Style.FileStyleRow>
                   <h6>Anexos</h6>
                   <Style.FileAndImageRow>
                     {maintenance.MaintenanceReport[0].ReportAnnexes.length > 0 ? (
@@ -230,9 +232,9 @@ export const ModalMaintenanceDetails = ({
                       <p className="p2">Nenhum anexo enviado.</p>
                     )}
                   </Style.FileAndImageRow>
-                </Style.Row>
+                </Style.FileStyleRow>
 
-                <Style.Row>
+                <Style.FileStyleRow>
                   <h6>Imagens</h6>
                   <Style.FileAndImageRow>
                     {maintenance.MaintenanceReport[0].ReportImages.length > 0 ? (
@@ -242,15 +244,15 @@ export const ModalMaintenanceDetails = ({
                           src={image.url}
                           downloadUrl={image.url}
                           imageCustomName={image.name}
-                          width="132px"
-                          height="136px"
+                          width="97px"
+                          height="97px"
                         />
                       ))
                     ) : (
                       <p className="p2">Nenhuma imagem enviada.</p>
                     )}
                   </Style.FileAndImageRow>
-                </Style.Row>
+                </Style.FileStyleRow>
               </>
             )}
           </Style.Content>

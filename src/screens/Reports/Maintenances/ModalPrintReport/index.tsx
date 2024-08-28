@@ -352,6 +352,13 @@ export const ModalPrintReport = ({ setModal, filters }: IModalPrintQRCode) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [pdfLink, setPdfLink] = useState('');
 
+  //  DESATIVADA
+  //  DESATIVADA
+  //  DESATIVADA
+  //  DESATIVADA
+  //  DESATIVADA
+  //  DESATIVADA
+
   const requestReportsData = async () => {
     await Api.get(
       `/buildings/reports/list/pdf?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}&buildingNames=${filters.buildingNames}&maintenanceStatusNames=${filters.maintenanceStatusNames}`,

@@ -84,8 +84,10 @@ import activityComment from './activityComment.svg';
 import upload from './upload.svg';
 import update from './update.svg';
 import uploadLine from './uploadLine.svg';
+import smallPaper from './smallPaper.svg';
 
 export const icon = {
+  smallPaper,
   uploadLine,
   update,
   upload,

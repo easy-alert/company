@@ -81,7 +81,11 @@ export const requestCalendarData = async ({
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
               <EventTag status={e.MaintenancesStatus.name} />
               {/* {show occasional maintenance tag } */}
-              {e.Maintenance.frequency < 1 && <EventTag status="occasional" />}
+              {e.Maintenance.frequency < 1 ? (
+                <EventTag status="occasional" />
+              ) : (
+                <EventTag status="common" />
+              )}
               {(e.MaintenancesStatus.name === 'expired' ||
                 e.MaintenancesStatus.name === 'pending') &&
                 e.inProgress &&

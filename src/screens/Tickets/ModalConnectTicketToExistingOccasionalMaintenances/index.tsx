@@ -164,7 +164,7 @@ export const ModalConnectTicketToExistingOccasionalMaintenances = ({
                       {maintenance.MaintenancesStatus.name === 'overdue' && (
                         <EventTag status="completed" />
                       )}
-                      <EventTag status={maintenance.MaintenancesStatus.name} />
+                      <EventTag status={maintenance.MaintenancesStatus.name as any} />
 
                       {(maintenance.MaintenancesStatus.name === 'expired' ||
                         maintenance.MaintenancesStatus.name === 'pending') &&

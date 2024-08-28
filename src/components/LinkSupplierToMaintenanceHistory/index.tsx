@@ -17,6 +17,7 @@ interface ILinkSupplierToMaintenanceHistory {
 interface ISupplier {
   id: string;
   name: string;
+  image: string;
   email: string | null;
   phone: string | null;
 }
@@ -111,7 +112,7 @@ export const LinkSupplierToMaintenanceHistory = ({
       <Style.Container>
         {suppliers.length === 0 && (
           <Style.Header>
-            <h6>Fornecedor</h6>
+            <h3>Fornecedor</h3>
             <IconButton
               hideLabelOnMedia
               icon={icon.link}
@@ -125,10 +126,10 @@ export const LinkSupplierToMaintenanceHistory = ({
         )}
 
         {suppliers.length > 0 ? (
-          suppliers.map(({ name, id, email, phone }, index) => (
+          suppliers.map(({ name, id, email, phone, image }, index) => (
             <Style.Container key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
               <Style.Header>
-                <h6>Fornecedor</h6>
+                <h3>Fornecedor</h3>
                 <IconButton
                   disabled={onQuery}
                   hideLabelOnMedia
@@ -140,22 +141,26 @@ export const LinkSupplierToMaintenanceHistory = ({
                 />
               </Style.Header>
               <Style.SupplierInfo>
-                <p className="p2">{name}</p>
-                <div>
-                  <ImageComponent src={icon.letter} size="16px" />
-                  {email ? <a href={`mailto:${email}`}>{email}</a> : '-'}
-                </div>
+                <ImageComponent src={image} size="32px" radius="100%" />
 
-                <div>
-                  <ImageComponent src={icon.whatsApp} size="16px" />
-                  {phone ? (
-                    <a href={whatsappLink(phone)} target="_blank" rel="noreferrer">
-                      {applyMask({ mask: 'TEL', value: phone }).value}
-                    </a>
-                  ) : (
-                    '-'
-                  )}
-                </div>
+                <Style.ColumnInfo>
+                  <p className="p2">{name}</p>
+                  <div>
+                    <ImageComponent src={icon.letter} size="16px" />
+                    {email ? <a href={`mailto:${email}`}>{email}</a> : '-'}
+                  </div>
+
+                  <div>
+                    <ImageComponent src={icon.whatsApp} size="16px" />
+                    {phone ? (
+                      <a href={whatsappLink(phone)} target="_blank" rel="noreferrer">
+                        {applyMask({ mask: 'TEL', value: phone }).value}
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </div>
+                </Style.ColumnInfo>
               </Style.SupplierInfo>
             </Style.Container>
           ))

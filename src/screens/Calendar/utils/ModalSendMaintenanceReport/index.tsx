@@ -24,16 +24,20 @@ import { AnnexesAndImages, IMaintenance } from '../../types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
 import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
-import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
-import { TextArea } from '../../../../components/Inputs/TextArea';
+import {
+  requestReportProgress,
+  requestSaveReportProgress,
+  requestSendReport,
+  requestToggleInProgress,
+} from './functions';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
 import { requestDeleteMaintenanceHistory } from '../../../Reports/Maintenances/functions';
 import { InProgressTag } from '../../../../components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
-import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 import { ShareMaintenanceHistoryButton } from '../../../../components/ShareMaintenanceHistoryButton';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalSendMaintenanceReport = ({
   setModal,
@@ -201,8 +205,10 @@ export const ModalSendMaintenanceReport = ({
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
             {(maintenance?.MaintenancesStatus.name === 'expired' ||
               maintenance?.MaintenancesStatus.name === 'pending') &&
@@ -284,7 +290,7 @@ export const ModalSendMaintenanceReport = ({
                   }}
                 />
 
-                <TextArea
+                {/* <TextArea
                   label="Observação do relato"
                   placeholder="Digite aqui"
                   value={maintenanceReport.observation}
@@ -295,15 +301,14 @@ export const ModalSendMaintenanceReport = ({
                       return newState;
                     });
                   }}
-                />
+                /> */}
 
-                <Style.Row disabled={onFileQuery}>
+                <Style.FileStyleRow disabled={onFileQuery}>
                   <h6>Anexar</h6>
                   <Style.FileRow>
                     <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                       <input {...getInputProps()} />
-
-                      <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                      <Image img={icon.addFile} width="40px" height="32px" radius="0" />
                     </Style.DragAndDropZoneFile>
 
                     {(files.length > 0 || onFileQuery) && (
@@ -333,21 +338,21 @@ export const ModalSendMaintenanceReport = ({
                       </Style.FileAndImageRow>
                     )}
                   </Style.FileRow>
-                </Style.Row>
-                <Style.Row disabled={onImageQuery}>
+                </Style.FileStyleRow>
+                <Style.FileStyleRow disabled={onImageQuery}>
                   <h6>Imagens</h6>
 
                   <Style.FileAndImageRow>
                     <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
                       <input {...getInputPropsImages()} />
-                      <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                      <Image img={icon.addImage} width="40px" height="38px" radius="0" />
                     </Style.DragAndDropZoneImage>
 
                     {images.map((e, i: number) => (
                       <ImagePreview
                         key={e.name + i}
-                        width="132px"
-                        height="136px"
+                        width="97px"
+                        height="97px"
                         imageCustomName={e.name}
                         src={e.url}
                         onTrashClick={() => {
@@ -367,7 +372,7 @@ export const ModalSendMaintenanceReport = ({
                         </Style.ImageLoadingTag>
                       ))}
                   </Style.FileAndImageRow>
-                </Style.Row>
+                </Style.FileStyleRow>
               </>
             )}
           </Style.Content>
@@ -396,7 +401,7 @@ export const ModalSendMaintenanceReport = ({
             )}
             {maintenance.canReport ? (
               <>
-                {/* {!onQuery && (
+                {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
                     actionButtonClick={() => {
@@ -419,7 +424,7 @@ export const ModalSendMaintenanceReport = ({
                     }}
                     type="Button"
                   />
-                )} */}
+                )}
 
                 {!onQuery && (
                   <PopoverButton

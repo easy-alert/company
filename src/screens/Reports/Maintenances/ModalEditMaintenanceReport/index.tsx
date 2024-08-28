@@ -25,7 +25,6 @@ import { AnnexesAndImages, IMaintenance } from '../../../Calendar/types';
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
 import { requestMaintenanceDetailsForEdit, requestEditReport } from './functions';
-import { TextArea } from '../../../../components/Inputs/TextArea';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
 import { theme } from '../../../../styles/theme';
@@ -183,8 +182,10 @@ export const ModalEditMaintenanceReport = ({
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
 
-            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' && (
+            {maintenance?.Maintenance.MaintenanceType.name === 'occasional' ? (
               <EventTag status="occasional" />
+            ) : (
+              <EventTag status="common" />
             )}
           </Style.StatusTagWrapper>
           <Style.Content>
@@ -266,7 +267,7 @@ export const ModalEditMaintenanceReport = ({
               }}
             />
 
-            <TextArea
+            {/* <TextArea
               label="Observação do relato"
               placeholder="Digite aqui"
               value={maintenanceReport.observation ?? ''}
@@ -277,15 +278,15 @@ export const ModalEditMaintenanceReport = ({
                   return newState;
                 });
               }}
-            />
+            /> */}
 
-            <Style.Row disabled={onFileQuery}>
+            <Style.FileStyleRow disabled={onFileQuery}>
               <h6>Anexar</h6>
               <Style.FileRow>
                 <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                   <input {...getInputProps()} />
 
-                  <Image img={icon.addFile} width="60px" height="48px" radius="0" />
+                  <Image img={icon.addFile} width="40px" height="32px" radius="0" />
                 </Style.DragAndDropZoneFile>
 
                 {(files.length > 0 || onFileQuery) && (
@@ -324,21 +325,21 @@ export const ModalEditMaintenanceReport = ({
                   </Style.FileAndImageRow>
                 )}
               </Style.FileRow>
-            </Style.Row>
-            <Style.Row disabled={onImageQuery}>
+            </Style.FileStyleRow>
+            <Style.FileStyleRow disabled={onImageQuery}>
               <h6>Imagens</h6>
 
               <Style.FileAndImageRow>
                 <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
                   <input {...getInputPropsImages()} />
-                  <Image img={icon.addImage} width="48px" height="46px" radius="0" />
+                  <Image img={icon.addImage} width="40px" height="38px" radius="0" />
                 </Style.DragAndDropZoneImage>
 
                 {images.map((e, i: number) => (
                   <ImagePreview
                     key={e.name + i}
-                    width="132px"
-                    height="136px"
+                    width="97px"
+                    height="97px"
                     imageCustomName={e.name}
                     downloadUrl={e.url}
                     src={e.url}
@@ -359,7 +360,7 @@ export const ModalEditMaintenanceReport = ({
                     </Style.ImageLoadingTag>
                   ))}
               </Style.FileAndImageRow>
-            </Style.Row>
+            </Style.FileStyleRow>
           </Style.Content>
 
           <Style.ButtonContainer>
