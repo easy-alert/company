@@ -347,14 +347,16 @@ export const BuildingDetails = () => {
                     window.open(
                       `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/syndicarea/${
                         building.nanoId
-                      }?syndicNanoId=${building.NotificationsConfigurations[0].nanoId}`,
+                      }?syndicNanoId=${building.NotificationsConfigurations[0].nanoId}&password=${
+                        building.syndicPassword
+                      }`,
                       '_blank',
                     );
                   } else {
                     window.open(
                       `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${
                         building.nanoId
-                      }`,
+                      }?password=${building.residentPassword}`,
                       '_blank',
                     );
                   }
