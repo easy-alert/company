@@ -229,16 +229,21 @@ const MyDocument = ({
 
                               <View style={Style.pdf.contentColumn3}>
                                 <Text style={Style.pdf.bold500}>
-                                  Imagens do relato ({checklist.images.slice(0, 4).length}):
+                                  Imagens ({checklist.images.length + checklist.detailImages.length}
+                                  ):
                                 </Text>
                                 <View style={Style.pdf.images}>
-                                  {checklist.images.slice(0, 4).map(({ url }) => (
-                                    <Link key={url} src={url} style={Style.pdf.image}>
-                                      <Image
-                                        source={url.endsWith('jpeg') ? image.imagePlaceholder : url}
-                                      />
-                                    </Link>
-                                  ))}
+                                  {[...checklist.images, ...checklist.detailImages]
+                                    .slice(0, 4)
+                                    .map(({ url }) => (
+                                      <Link key={url} src={url} style={Style.pdf.image}>
+                                        <Image
+                                          source={
+                                            url.endsWith('jpeg') ? image.imagePlaceholder : url
+                                          }
+                                        />
+                                      </Link>
+                                    ))}
                                 </View>
                               </View>
                             </View>

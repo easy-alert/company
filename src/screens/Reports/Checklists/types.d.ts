@@ -19,6 +19,10 @@ export interface IChecklists {
     url: string;
     name: string;
   }[];
+  detailImages: {
+    url: string;
+    name: string;
+  }[];
 }
 
 export interface IChecklistsForPDF {
