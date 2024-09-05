@@ -22,7 +22,9 @@ export const ImagePreview = ({
   maxWidth = '500px',
 }: IImagePreview) => {
   const imagesExtensions = ['png', 'jpg', 'jpeg'];
-  const isImage = imagesExtensions.includes(src.split('.').pop() || '');
+  const isImage = imagesExtensions.includes(
+    (src.split('.').pop()?.toLowerCase() || '').toLowerCase(),
+  );
 
   return (
     <Style.Container height={height} width={width} maxHeight={maxHeight} maxWidth={maxWidth}>
