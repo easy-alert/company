@@ -243,9 +243,14 @@ const MyDocument = ({
                                     {allImagesFiltered.map(({ url }) => (
                                       <Link key={url} src={url} style={Style.pdf.image}>
                                         <Image
-                                          source={
-                                            url.endsWith('jpeg') ? image.imagePlaceholder : url
-                                          }
+                                          src={{
+                                            uri: url.endsWith('jpeg')
+                                              ? image.imagePlaceholder
+                                              : url,
+                                            method: 'GET',
+                                            headers: { 'Cache-Control': 'no-cache' },
+                                            body: '',
+                                          }}
                                         />
                                       </Link>
                                     ))}
