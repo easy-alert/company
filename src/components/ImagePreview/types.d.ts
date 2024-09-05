@@ -1,6 +1,5 @@
 export interface IImagePreview {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  src: any;
+  src: string;
   width: string;
   height: string;
   imageCustomName: string;
