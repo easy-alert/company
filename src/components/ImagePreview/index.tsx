@@ -21,9 +21,8 @@ export const ImagePreview = ({
   maxHeight = '500px',
   maxWidth = '500px',
 }: IImagePreview) => {
-  const re = /(?:\.([^.]+))?$/;
-  const imagesExtensions = ['.png', '.jpg', '.jpeg'];
-  const isImage = imagesExtensions.includes(re.exec(imageCustomName)?.[0] || '');
+  const imagesExtensions = ['png', 'jpg', 'jpeg'];
+  const isImage = imagesExtensions.includes(src.split('.').pop() || '');
 
   return (
     <Style.Container height={height} width={width} maxHeight={maxHeight} maxWidth={maxWidth}>

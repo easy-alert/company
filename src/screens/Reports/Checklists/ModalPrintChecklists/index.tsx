@@ -153,108 +153,119 @@ const MyDocument = ({
                 {checklistsForPDF.map(({ data, month }) => (
                   <View style={Style.pdf.cardWrapper} key={month}>
                     <Text style={Style.pdf.month}>{month}</Text>
-                    {data.map((checklist) => (
-                      <View style={Style.pdf.cardRow} key={month} wrap={false}>
-                        <View style={Style.pdf.cardDateColumn}>
-                          <Text>{String(new Date(checklist.date).getDate()).padStart(2, '0')}</Text>
-                          <Text>
-                            {capitalizeFirstLetter(
-                              new Date(checklist.date)
-                                .toLocaleString('pt-br', {
-                                  weekday: 'long',
-                                })
-                                .substring(0, 3),
-                            )}
-                          </Text>
-                        </View>
+                    {data.map((checklist) => {
+                      const allImages = [...checklist.images, ...checklist.detailImages];
+                      const allImagesFiltered = allImages.slice(0, 4);
 
-                        <View style={Style.pdf.card}>
-                          <View
-                            style={{
-                              ...Style.pdf.tag,
-                              backgroundColor: getStatusBackgroundColor(checklist.status),
-                            }}
-                          />
+                      return (
+                        <View style={Style.pdf.cardRow} key={month} wrap={false}>
+                          <View style={Style.pdf.cardDateColumn}>
+                            <Text>
+                              {String(new Date(checklist.date).getDate()).padStart(2, '0')}
+                            </Text>
+                            <Text>
+                              {capitalizeFirstLetter(
+                                new Date(checklist.date)
+                                  .toLocaleString('pt-br', {
+                                    weekday: 'long',
+                                  })
+                                  .substring(0, 3),
+                              )}
+                            </Text>
+                          </View>
 
-                          <View style={Style.pdf.content}>
-                            <View style={Style.pdf.contentHeader}>
-                              <Text>{checklist.building.name}</Text>
+                          <View style={Style.pdf.card}>
+                            <View
+                              style={{
+                                ...Style.pdf.tag,
+                                backgroundColor: getStatusBackgroundColor(checklist.status),
+                              }}
+                            />
 
-                              <View style={Style.pdf.tagsRow}>
-                                <Text
-                                  style={{
-                                    ...Style.pdf.maintenanceTag,
-                                    backgroundColor: getStatusBackgroundColor(checklist.status),
-                                  }}
-                                >
-                                  {getSingularStatusNameforPdf(checklist.status)}
-                                </Text>
-                              </View>
-                            </View>
+                            <View style={Style.pdf.content}>
+                              <View style={Style.pdf.contentHeader}>
+                                <Text>{checklist.building.name}</Text>
 
-                            <View style={Style.pdf.contentData}>
-                              <View style={Style.pdf.contentColumn1}>
-                                <Text style={Style.pdf.bold500}>
-                                  Nome: <Text style={Style.pdf.normal}>{checklist.name}</Text>
-                                </Text>
-
-                                <Text style={Style.pdf.bold500}>
-                                  Descrição:{' '}
-                                  <Text style={Style.pdf.normal}>{checklist.description}</Text>
-                                </Text>
+                                <View style={Style.pdf.tagsRow}>
+                                  <Text
+                                    style={{
+                                      ...Style.pdf.maintenanceTag,
+                                      backgroundColor: getStatusBackgroundColor(checklist.status),
+                                    }}
+                                  >
+                                    {getSingularStatusNameforPdf(checklist.status)}
+                                  </Text>
+                                </View>
                               </View>
 
-                              <View style={Style.pdf.contentColumn2}>
-                                <Text style={Style.pdf.bold500}>
-                                  Data:{' '}
-                                  <Text style={Style.pdf.normal}>
-                                    {dateFormatter(checklist.date)}
+                              <View style={Style.pdf.contentData}>
+                                <View style={Style.pdf.contentColumn1}>
+                                  <Text style={Style.pdf.bold500}>
+                                    Nome: <Text style={Style.pdf.normal}>{checklist.name}</Text>
                                   </Text>
-                                </Text>
 
-                                <Text style={Style.pdf.bold500}>
-                                  Responsável:{' '}
-                                  <Text style={Style.pdf.normal}>
-                                    {checklist.syndic?.name || '-'}
+                                  <Text style={Style.pdf.bold500}>
+                                    Descrição:{' '}
+                                    <Text style={Style.pdf.normal}>{checklist.description}</Text>
                                   </Text>
-                                </Text>
+                                </View>
 
-                                <Text style={Style.pdf.bold500}>
-                                  Periodicidade:{' '}
-                                  <Text style={Style.pdf.normal}>
-                                    {checklist.frequency ? 'Sim' : 'Não'}
+                                <View style={Style.pdf.contentColumn2}>
+                                  <Text style={Style.pdf.bold500}>
+                                    Data:{' '}
+                                    <Text style={Style.pdf.normal}>
+                                      {dateFormatter(checklist.date)}
+                                    </Text>
                                   </Text>
-                                </Text>
-                              </View>
 
-                              <View style={Style.pdf.contentColumn3}>
-                                <Text style={Style.pdf.bold500}>
-                                  Imagens ({checklist.images.length + checklist.detailImages.length}
-                                  ):
-                                </Text>
-                                <View style={Style.pdf.images}>
-                                  {[...checklist.images, ...checklist.detailImages]
-                                    .slice(0, 4)
-                                    .map(({ url }) => (
+                                  <Text style={Style.pdf.bold500}>
+                                    Responsável:{' '}
+                                    <Text style={Style.pdf.normal}>
+                                      {checklist.syndic?.name || '-'}
+                                    </Text>
+                                  </Text>
+
+                                  <Text style={Style.pdf.bold500}>
+                                    Periodicidade:{' '}
+                                    <Text style={Style.pdf.normal}>
+                                      {checklist.frequency ? 'Sim' : 'Não'}
+                                    </Text>
+                                  </Text>
+                                </View>
+
+                                <View style={Style.pdf.contentColumn3}>
+                                  <Text style={Style.pdf.bold500}>
+                                    Imagens (
+                                    {checklist.images.length + checklist.detailImages.length}
+                                    ):
+                                  </Text>
+                                  <View style={Style.pdf.images}>
+                                    {allImagesFiltered.map(({ url }) => (
                                       <Link key={url} src={url} style={Style.pdf.image}>
                                         <Image
-                                          source={
-                                            url.endsWith('jpeg') ? image.imagePlaceholder : url
-                                          }
+                                          src={{
+                                            uri: url.endsWith('jpeg')
+                                              ? image.imagePlaceholder
+                                              : url,
+                                            method: 'GET',
+                                            headers: { 'Cache-Control': 'no-cache' },
+                                            body: '',
+                                          }}
                                         />
                                       </Link>
                                     ))}
+                                  </View>
                                 </View>
                               </View>
+                              <Text style={Style.pdf.bold500}>
+                                Observação do relato:{' '}
+                                <Text style={Style.pdf.normal}>{checklist.observation || '-'}</Text>
+                              </Text>
                             </View>
-                            <Text style={Style.pdf.bold500}>
-                              Observação do relato:{' '}
-                              <Text style={Style.pdf.normal}>{checklist.observation || '-'}</Text>
-                            </Text>
                           </View>
                         </View>
-                      </View>
-                    ))}
+                      );
+                    })}
                   </View>
                 ))}
               </View>
