@@ -40,6 +40,7 @@ interface IMaintenance {
   lastResolutionDate?: string;
   lastNotificationDate?: string;
   lastNotificationStatus?: string;
+  instructions?: { name: string; url: string }[];
 }
 
 export interface ICategories {
