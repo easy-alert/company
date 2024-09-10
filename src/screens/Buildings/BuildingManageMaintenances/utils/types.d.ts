@@ -35,6 +35,7 @@ interface IMaintenance {
     singularLabel: string;
     unitTime: number;
   };
+  instructions?: { name: string; url: string }[];
   observation: string;
   resolutionDate?: Date | null;
   notificationDate?: Date | null;

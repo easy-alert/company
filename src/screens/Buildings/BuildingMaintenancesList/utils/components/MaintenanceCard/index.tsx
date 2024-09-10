@@ -11,6 +11,7 @@ import * as Style from './styles';
 // TYPES
 import { IMaintenanceCard } from './utils/types';
 import { capitalizeFirstLetter } from '../../../../../../utils/functions';
+import { ListTag } from '../../../../../../components/ListTag';
 
 export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
@@ -63,6 +64,18 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                   : maintenance.Maintenance.PeriodTimeInterval.singularLabel
               }`}
             </p>
+
+            {maintenance?.Maintenance.instructions &&
+              maintenance?.Maintenance.instructions?.length > 0 && (
+                <p className="p2 instructions">
+                  <span>Instruções: </span>
+                  <Style.FileRow>
+                    {maintenance?.Maintenance.instructions?.map(({ url, name }) => (
+                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
+                    ))}
+                  </Style.FileRow>
+                </p>
+              )}
 
             {/* <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
               <Image img={icon.alert} size="16px" />
