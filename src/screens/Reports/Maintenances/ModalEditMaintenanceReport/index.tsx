@@ -65,6 +65,7 @@ export const ModalEditMaintenanceReport = ({
       observation: '',
       responsible: '',
       source: '',
+      instructions: [],
     },
     resolutionDate: '',
     notificationDate: '',

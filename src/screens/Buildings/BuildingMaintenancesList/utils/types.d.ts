@@ -6,6 +6,7 @@ export interface IMaintenance {
   daysToAnticipate?: number;
 
   Maintenance: {
+    instructions?: { name: string; url: string }[];
     hasHistory?: boolean;
     isSelected?: boolean;
     id: string;

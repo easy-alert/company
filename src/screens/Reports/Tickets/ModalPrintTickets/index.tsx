@@ -234,7 +234,12 @@ const MyDocument = ({
                                   {ticket.images.slice(0, 4).map(({ url }) => (
                                     <Link key={url} src={url} style={Style.pdf.image}>
                                       <Image
-                                        source={url.endsWith('jpeg') ? image.imagePlaceholder : url}
+                                        src={{
+                                          uri: url,
+                                          method: 'GET',
+                                          headers: { 'Cache-Control': 'no-cache' },
+                                          body: '',
+                                        }}
                                       />
                                     </Link>
                                   ))}

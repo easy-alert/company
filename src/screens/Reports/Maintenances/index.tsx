@@ -216,8 +216,6 @@ export const MaintenanceReports = () => {
               endDueDate: '',
               startDueDate: '',
               filterBy: 'notificationDate',
-              // Só pra entrar no form
-              buildingId: '',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
@@ -255,36 +253,34 @@ export const MaintenanceReports = () => {
             {({ errors, values, touched, setFieldValue }) => (
               <Form>
                 <s.FiltersGrid>
-                  {/* TASK SA-7138 LIMITOU 1 BUILDING POR RELATÓRIO */}
                   <FormikSelect
                     name="buildingId"
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
                     value=""
-                    error={touched.buildingId && errors.buildingId ? errors.buildingId : null}
                     onChange={(e) => {
                       const selectedBuilding = filtersOptions?.buildings.find(
                         (building) => building.id === e.target.value,
                       );
 
                       if (selectedBuilding) {
-                        setBuildingsForFilter([
+                        setBuildingsForFilter((prevState) => [
+                          ...prevState,
                           { id: selectedBuilding.id, name: selectedBuilding.name },
                         ]);
-                        setFieldValue('buildingId', selectedBuilding.id);
                       }
 
-                      // if (e.target.value === 'all') {
-                      //   setBuildingsForFilter([]);
-                      // }
+                      if (e.target.value === 'all') {
+                        setBuildingsForFilter([]);
+                      }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    {/* <option value="all" disabled={buildingsForFilter.length === 0}>
+                    <option value="all" disabled={buildingsForFilter.length === 0}>
                       Todas
-                    </option> */}
+                    </option>
 
                     {filtersOptions?.buildings.map((building) => (
                       <option

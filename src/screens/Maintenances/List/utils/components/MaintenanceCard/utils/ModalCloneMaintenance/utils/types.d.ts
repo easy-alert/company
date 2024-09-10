@@ -31,5 +31,6 @@ export interface IRequestCloneMaintenance {
     delay: string;
     delayTimeInterval: string;
     observation: string;
+    instructions: any;
   };
 }

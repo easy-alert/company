@@ -14,6 +14,7 @@ interface IDragAndDropFiles {
   error?: any;
   width?: string;
   height?: string;
+  label?: string;
 }
 
 export const DragAndDropFiles = ({
@@ -25,10 +26,14 @@ export const DragAndDropFiles = ({
   error,
   width,
   height,
+  label,
 }: IDragAndDropFiles) => {
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    getAcceptedFiles({ acceptedFiles });
-  }, []);
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      getAcceptedFiles({ acceptedFiles });
+    },
+    [getAcceptedFiles],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     disabled: loading || disabled,
@@ -45,7 +50,9 @@ export const DragAndDropFiles = ({
   });
 
   return (
-    <>
+    <Style.Background>
+      {label && <h6>{label}</h6>}
+
       <Style.DragAndDropZone
         {...getRootProps({ className: 'dropzone' })}
         width={width}
@@ -59,8 +66,8 @@ export const DragAndDropFiles = ({
           ) : (
             <ImageComponent
               src={onlyImages ? icon.addImage : icon.addFile}
-              width={onlyImages ? '48px' : '60px'}
-              height={onlyImages ? '46px' : '48px'}
+              width="40px"
+              height={onlyImages ? '38px' : '32px'}
               radius="0"
             />
           )}
@@ -71,6 +78,6 @@ export const DragAndDropFiles = ({
           <p className="p3">{error}</p>
         </Style.ErrorMessage>
       )}
-    </>
+    </Style.Background>
   );
 };

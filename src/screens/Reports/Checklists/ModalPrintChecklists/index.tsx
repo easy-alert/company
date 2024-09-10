@@ -244,9 +244,7 @@ const MyDocument = ({
                                       <Link key={url} src={url} style={Style.pdf.image}>
                                         <Image
                                           src={{
-                                            uri: url.endsWith('jpeg')
-                                              ? image.imagePlaceholder
-                                              : url,
+                                            uri: url,
                                             method: 'GET',
                                             headers: { 'Cache-Control': 'no-cache' },
                                             body: '',

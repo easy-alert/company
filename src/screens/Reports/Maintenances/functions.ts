@@ -55,7 +55,6 @@ export const schemaReportFilter = yup
     maintenanceStatusId: yup.string(),
     responsibleSyndicId: yup.string(),
     filterBy: yup.string().required('Campo obrigatório.'),
-    buildingId: yup.string().required('Campo obrigatório.'),
     startDate: yup.date().required('A data inicial é obrigatória.'),
     endDate: yup
       .date()

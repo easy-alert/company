@@ -25,6 +25,7 @@ import { IModalEditMaintenance } from './utils/types';
 import { theme } from '../../../../../../../../styles/theme';
 import { PopoverButton } from '../../../../../../../../components/Buttons/PopoverButton';
 import { Input } from '../../../../../../../../components/Inputs/Input';
+import { MaintenanceInstructionsComponent } from '../../../../../../../../components/MaintenanceInstructionsComponent';
 
 export const ModalEditMaintenance = ({
   setModal,
@@ -35,6 +36,7 @@ export const ModalEditMaintenance = ({
   categoryId,
 }: IModalEditMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
 
   const categoryIndex = categories.findIndex((category) => category.id === categoryId);
   const categoryName = categories[categoryIndex].name;
@@ -58,6 +60,9 @@ export const ModalEditMaintenance = ({
             selectedMaintenance.observation && selectedMaintenance.observation !== ''
               ? selectedMaintenance.observation
               : '',
+          instructions: selectedMaintenance.instructions
+            ? selectedMaintenance.instructions.map(({ name, url }) => ({ name, url }))
+            : [],
         }}
         validationSchema={schemaEditMaintenance}
         onSubmit={async (values) => {
@@ -193,6 +198,13 @@ export const ModalEditMaintenance = ({
                 </FormikSelect>
               </Style.SelectWrapper>
 
+              <MaintenanceInstructionsComponent
+                instructions={values.instructions}
+                onFileQuery={onFileQuery}
+                setFieldValue={setFieldValue}
+                setOnFileQuery={setFileOnQuery}
+              />
+
               {/* <Style.SelectWrapper>
                 <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">
                   <FormikInput
@@ -259,7 +271,7 @@ export const ModalEditMaintenance = ({
                     }}
                   />
                 )}
-                <Button label="Salvar" type="submit" loading={onQuery} />
+                <Button label="Salvar" type="submit" loading={onQuery} disable={onFileQuery} />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

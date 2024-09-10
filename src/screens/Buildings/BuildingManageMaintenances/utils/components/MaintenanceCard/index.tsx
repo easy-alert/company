@@ -17,6 +17,7 @@ import { capitalizeFirstLetter, dateFormatter } from '../../../../../../utils/fu
 import { IMaintenance } from '../../types';
 import { ModalCloneMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCard/utils/ModalCloneMaintenance';
 import { IconButton } from '../../../../../../components/Buttons/IconButton';
+import { ListTag } from '../../../../../../components/ListTag';
 
 export const MaintenanceCard = ({
   maintenance,
@@ -173,6 +174,17 @@ export const MaintenanceCard = ({
                     : maintenance.PeriodTimeInterval.singularLabel
                 }`}
               </p>
+
+              {maintenance?.instructions && maintenance?.instructions?.length > 0 && (
+                <p className="p2 instructions">
+                  <span>Instruções: </span>
+                  <Style.FileRow>
+                    {maintenance?.instructions?.map(({ url, name }) => (
+                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
+                    ))}
+                  </Style.FileRow>
+                </p>
+              )}
 
               {/* <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
                 <Image img={icon.alert} size="16px" />

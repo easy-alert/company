@@ -56,3 +56,9 @@ export const ErrorMessage = styled.div`
     }
   }
 `;
+
+export const Background = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;

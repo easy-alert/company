@@ -119,6 +119,10 @@ export interface Maintenance {
   MaintenanceType: {
     name: string;
   };
+  instructions: {
+    name: string;
+    url: string;
+  }[];
 }
 
 export interface IMaintenance {
