@@ -27,6 +27,7 @@ export interface IRequestEditMaintenance {
     delay: string;
     delayTimeInterval: string;
     observation: string;
+    instructions: any;
   };
   setOnQuery: (setOnQuery: boolean) => void;
   setModal: (setModal: boolean) => void;

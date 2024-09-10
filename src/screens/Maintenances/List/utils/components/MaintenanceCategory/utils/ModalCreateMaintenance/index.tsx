@@ -20,6 +20,7 @@ import { applyMask, capitalizeFirstLetter } from '../../../../../../../../utils/
 
 import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
 import { FormikCheckbox } from '../../../../../../../../components/Form/FormikCheckbox';
+import { MaintenanceInstructionsComponent } from '../../../../../../../../components/MaintenanceInstructionsComponent';
 
 export const ModalCreateMaintenance = ({
   setModal,
@@ -30,6 +31,7 @@ export const ModalCreateMaintenance = ({
   categoriesOptions,
 }: IModalCreateMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
 
   return (
     <Modal title="Criar manutenção" setModal={setModal}>
@@ -48,6 +50,7 @@ export const ModalCreateMaintenance = ({
           delayTimeInterval: timeIntervals[0].id,
           observation: '',
           createAgain: false,
+          instructions: [],
         }}
         validationSchema={schemaCreateMaintenance}
         onSubmit={async (values, actions) => {
@@ -192,6 +195,13 @@ export const ModalCreateMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
+
+              <MaintenanceInstructionsComponent
+                instructions={values.instructions}
+                onFileQuery={onFileQuery}
+                setFieldValue={setFieldValue}
+                setOnFileQuery={setFileOnQuery}
+              />
 
               {/* <Style.SelectWrapper>
                 <Style.DelayIcon title="Tempo para iniciar a notificação após a entrega da obra.">

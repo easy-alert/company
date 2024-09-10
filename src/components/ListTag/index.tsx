@@ -14,6 +14,7 @@ export const ListTag = ({
   fontSize = '12px',
   padding = '6px',
   lineHeight = '14px',
+  downloadUrl,
 }: IListTag) => (
   <Style.TagContainer
     backgroundColor={backgroundColor}
@@ -26,6 +27,11 @@ export const ListTag = ({
     <p className="p4" title={label}>
       {label}
     </p>
+    {downloadUrl && (
+      <a href={downloadUrl} download target="_blank" rel="noreferrer">
+        <ImageComponent src={icon.download} size="16px" />
+      </a>
+    )}
     {onClick && (
       <button onClick={onClick} disabled={disabled} type="button">
         <ImageComponent src={icon.xBlack} size="14px" />

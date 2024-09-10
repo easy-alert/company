@@ -17,6 +17,7 @@ import { schemaCloneMaintenance, requestCloneMaintenance } from './utils/functio
 import { applyMask, capitalizeFirstLetter } from '../../../../../../../../utils/functions';
 
 import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
+import { MaintenanceInstructionsComponent } from '../../../../../../../../components/MaintenanceInstructionsComponent';
 
 export const ModalCloneMaintenance = ({
   setModal,
@@ -28,6 +29,7 @@ export const ModalCloneMaintenance = ({
   categoriesOptions,
 }: IModalCloneMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
 
   return (
     <Modal title="Clonar manutenção" setModal={setModal}>
@@ -50,6 +52,9 @@ export const ModalCloneMaintenance = ({
             maintenance.observation && maintenance.observation !== ''
               ? maintenance.observation
               : '',
+          instructions: maintenance.instructions
+            ? maintenance.instructions.map(({ name, url }) => ({ name, url }))
+            : [],
         }}
         validationSchema={schemaCloneMaintenance}
         onSubmit={async (values) => {
@@ -193,6 +198,13 @@ export const ModalCloneMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
+
+              <MaintenanceInstructionsComponent
+                instructions={values.instructions}
+                onFileQuery={onFileQuery}
+                setFieldValue={setFieldValue}
+                setOnFileQuery={setFileOnQuery}
+              />
 
               {/* <Style.SelectWrapper>
                 <FormikInput

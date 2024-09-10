@@ -55,8 +55,8 @@ export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean 
   ${({ cardIsOpen }) =>
     cardIsOpen
       ? css`
-          -webkit-max-height: 500px;
-          max-height: 500px;
+          -webkit-max-height: 700px;
+          max-height: 700px;
           min-height: fit-content;
         `
       : css`
@@ -133,6 +133,14 @@ export const MaintenancesMoreGrid = styled.div`
     -webkit-line-clamp: 15;
     -webkit-box-orient: vertical;
   }
+
+  .instructions {
+    grid-area: 4 / 1 / 4 /3;
+
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
 `;
 
 export const AdditionalInformationsWrapper = styled.div`
@@ -146,4 +154,11 @@ export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
 
 export const DaysToAncitipateWrapper = styled(AdditionalInformationsWrapper)`
   grid-area: auto / 1 / auto / 3;
+`;
+
+export const FileRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: ${theme.size.xsm};
 `;

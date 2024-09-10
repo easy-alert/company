@@ -7,7 +7,6 @@ export const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 11px;
 
   .dot-spin {
     border: 6px solid ${theme.color.primaryL};

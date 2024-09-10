@@ -65,7 +65,7 @@ export async function uploadFile(file: any) {
 }
 
 export async function uploadManyFiles(files: any) {
-  let response = {};
+  let response: IUploadFile[] = [];
 
   const formData = new FormData();
 
@@ -81,7 +81,7 @@ export async function uploadManyFiles(files: any) {
       catchHandler(err);
     });
 
-  return response as IUploadFile[];
+  return response;
 }
 // #endregion
 
