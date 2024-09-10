@@ -146,6 +146,7 @@ export const Row = styled.div<{ disabled?: boolean }>`
   border: 1px solid ${theme.color.gray4};
   background-color: ${theme.color.gray1};
   border-radius: ${theme.size.xsm};
+  align-items: center;
 
   ${({ disabled }) =>
     disabled &&
@@ -157,8 +158,10 @@ export const Row = styled.div<{ disabled?: boolean }>`
         opacity: 1;
       }
     `}
+
   @media (max-width: 600px) {
     flex-direction: column;
+    align-items: flex-start;
   }
 `;
 

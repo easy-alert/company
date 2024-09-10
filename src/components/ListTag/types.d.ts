@@ -8,4 +8,5 @@ export interface IListTag {
   fontSize?: string;
   lineHeight?: string;
   padding?: string;
+  downloadUrl?: string;
 }
