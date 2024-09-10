@@ -85,6 +85,11 @@ export async function uploadManyFiles(files: any) {
 }
 // #endregion
 
+export const isImage = (src: string) => {
+  const imagesExtensions = ['png', 'jpg', 'jpeg'];
+  return imagesExtensions.includes((src.split('.').pop()?.toLowerCase() || '').toLowerCase());
+};
+
 // #region ERRORS
 export const handleError = async ({ error }: { error: Error }) => {
   if (import.meta.env.PROD) {
