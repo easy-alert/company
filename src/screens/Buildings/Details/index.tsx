@@ -947,7 +947,7 @@ export const BuildingDetails = () => {
                       });
                     }}
                     onUpdateClick={() => {
-                      setSelectedBanner(element);
+                      setSelectedBanner({ ...element, redirectUrl: element.redirectUrl || '' });
                       setModalUpdateBannerOpen(true);
                     }}
                   />
