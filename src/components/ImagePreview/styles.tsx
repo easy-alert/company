@@ -60,7 +60,7 @@ export const ActionsHover = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${theme.size.sm};
+  gap: ${theme.size.xsm};
   background-color: #00000066;
   opacity: 0;
 

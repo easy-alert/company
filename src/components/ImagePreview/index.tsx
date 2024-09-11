@@ -20,6 +20,7 @@ export const ImagePreview = ({
   onTrashClick,
   maxHeight = '500px',
   maxWidth = '500px',
+  onUpdateClick,
 }: IImagePreview) => (
   <Style.Container height={height} width={width} maxHeight={maxHeight} maxWidth={maxWidth}>
     <ImageComponent src={src} alt="" />
@@ -34,7 +35,7 @@ export const ImagePreview = ({
       )}
     </Style.Label>
 
-    {(onTrashClick || downloadUrl) && (
+    {(onTrashClick || downloadUrl || onUpdateClick) && (
       <Style.ActionsHover>
         {onTrashClick && (
           <IconButton
@@ -42,6 +43,15 @@ export const ImagePreview = ({
             size="24px"
             onClick={() => {
               onTrashClick();
+            }}
+          />
+        )}
+        {onUpdateClick && (
+          <IconButton
+            icon={icon.editWithBg}
+            size="24px"
+            onClick={() => {
+              onUpdateClick();
             }}
           />
         )}

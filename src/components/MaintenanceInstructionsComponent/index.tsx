@@ -21,6 +21,8 @@ export const MaintenanceInstructionsComponent = ({
       onlyImages={false}
       loading={onFileQuery}
       multiple
+      width="97px"
+      height="97px"
       getAcceptedFiles={async ({ acceptedFiles }) => {
         setOnFileQuery(true);
         const uploadedFiles = await uploadManyFiles(acceptedFiles);

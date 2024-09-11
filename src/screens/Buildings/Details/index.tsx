@@ -14,12 +14,12 @@ import { Image } from '../../../components/Image';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
-import { ModalManageBanners } from './utils/modals/ModalManageBanners';
 import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 
 // FUNCTIONS
 import {
   changeShowContactStatus,
+  deleteBanner,
   requestBuildingDetails,
   requestDeleteFile,
   requestDeleteFolder,
@@ -40,7 +40,7 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 
 // TYPES
-import { Folder, IBuildingDetail, INotificationConfiguration, File } from './utils/types';
+import { Folder, IBuildingDetail, INotificationConfiguration, File, IBanner } from './utils/types';
 import { IBuildingTypes } from '../../../utils/types';
 import { Button } from '../../../components/Buttons/Button';
 import { FileComponent, FolderComponent } from '../../../components/FileSystem';
@@ -48,6 +48,8 @@ import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
 import { ModalEditFolder } from './utils/modals/ModalEditFolder';
 import { ModalEditFile } from './utils/modals/ModalEditFile';
 import { ModalChangeClientPassword } from './utils/modals/ModalChangeClientPassword';
+import { ModalAddBanner } from './utils/modals/ModalAddBanner';
+import { ModalUpdateBanner } from './utils/modals/ModalUpdateBanner';
 // #endregion
 
 export const BuildingDetails = () => {
@@ -87,7 +89,9 @@ export const BuildingDetails = () => {
 
   const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
 
-  const [modalManageBannersOpen, setModalManageBannersOpen] = useState<boolean>(false);
+  const [modalAddBannerOpen, setModalAddBannerOpen] = useState<boolean>(false);
+  const [modalUpdateBannerOpen, setModalUpdateBannerOpen] = useState<boolean>(false);
+  const [selectedBanner, setSelectedBanner] = useState<IBanner>();
 
   const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
 
@@ -251,12 +255,26 @@ export const BuildingDetails = () => {
           />
         )}
 
-        {modalManageBannersOpen && building && (
-          <ModalManageBanners
-            setModal={setModalManageBannersOpen}
-            buildingId={building.id}
-            currentBanners={building?.Banners}
-            requestBuildingDetailsCall={async () => {
+        {modalAddBannerOpen && building && (
+          <ModalAddBanner
+            setModal={setModalAddBannerOpen}
+            onThenRequest={async () => {
+              requestBuildingDetails({
+                buildingId: buildingId!,
+                setLoading,
+                setBuilding,
+                setUsedMaintenancesCount,
+                setTotalMaintenancesCount,
+                setRootFolder,
+              });
+            }}
+          />
+        )}
+        {modalUpdateBannerOpen && selectedBanner && building && (
+          <ModalUpdateBanner
+            setModal={setModalUpdateBannerOpen}
+            selectedBanner={selectedBanner}
+            onThenRequest={async () => {
               requestBuildingDetails({
                 buildingId: buildingId!,
                 setLoading,
@@ -898,27 +916,40 @@ export const BuildingDetails = () => {
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
-                icon={building && building?.Banners.length > 0 ? icon.editWithBg : icon.plusWithBg}
-                label={building && building?.Banners.length > 0 ? 'Editar' : 'Cadastrar'}
+                icon={icon.plusWithBg}
+                label="Cadastrar"
                 size="24px"
                 hideLabelOnMedia
                 onClick={() => {
-                  setModalManageBannersOpen(true);
+                  setModalAddBannerOpen(true);
                 }}
               />
             </Style.CardHeader>
             {building && building?.Banners.length > 0 ? (
               <Style.BannerWrapper>
-                {building.Banners.map((element, i: number) => (
+                {building.Banners.map((element) => (
                   <ImagePreview
-                    // eslint-disable-next-line react/no-array-index-key
-                    key={element.url + i}
-                    width="200px"
-                    height="200px"
+                    key={element.url}
+                    width="auto"
+                    height="97px"
                     downloadUrl={element.url}
                     src={element.url}
-                    imageCustomName={`${element.bannerName} ${element.type}`}
-                    imageOriginalName={element.originalName}
+                    imageCustomName={element.originalName}
+                    onTrashClick={async () => {
+                      await deleteBanner(element.id);
+                      requestBuildingDetails({
+                        buildingId: buildingId!,
+                        setLoading,
+                        setBuilding,
+                        setUsedMaintenancesCount,
+                        setTotalMaintenancesCount,
+                        setRootFolder,
+                      });
+                    }}
+                    onUpdateClick={() => {
+                      setSelectedBanner(element);
+                      setModalUpdateBannerOpen(true);
+                    }}
                   />
                 ))}
               </Style.BannerWrapper>

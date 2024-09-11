@@ -186,3 +186,13 @@ export const requestDeleteFile = async ({
       catchHandler(err);
     });
 };
+
+export const deleteBanner = async (id: string) => {
+  await Api.delete(`/buildings/banners/delete/${id}`)
+    .then((res) => {
+      toast.success(res.data.ServerMessage.message);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    });
+};
