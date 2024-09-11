@@ -15,6 +15,7 @@ interface IDragAndDropFiles {
   width?: string;
   height?: string;
   label?: string;
+  showMessage?: boolean;
 }
 
 export const DragAndDropFiles = ({
@@ -27,6 +28,7 @@ export const DragAndDropFiles = ({
   width,
   height,
   label,
+  showMessage,
 }: IDragAndDropFiles) => {
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -64,12 +66,20 @@ export const DragAndDropFiles = ({
           {loading ? (
             <DotSpinLoading />
           ) : (
-            <ImageComponent
-              src={onlyImages ? icon.addImage : icon.addFile}
-              width="40px"
-              height={onlyImages ? '38px' : '32px'}
-              radius="0"
-            />
+            <>
+              <ImageComponent
+                src={onlyImages ? icon.addImage : icon.addFile}
+                width="40px"
+                height={onlyImages ? '38px' : '32px'}
+                radius="0"
+              />
+              {showMessage && (
+                <Style.ContentMessage>
+                  <p className="p3">Clique para selecionar ou arraste e solte aqui.</p>
+                  {onlyImages && <p className="p3">Formatos aceitos: JPG, JPEG ou PNG.</p>}
+                </Style.ContentMessage>
+              )}
+            </>
           )}
         </Style.Content>
       </Style.DragAndDropZone>

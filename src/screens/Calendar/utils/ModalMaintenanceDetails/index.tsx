@@ -77,7 +77,7 @@ export const ModalMaintenanceDetails = ({
   }, []);
 
   return (
-    <Modal title="Detalhes de manutenção" setModal={setModal}>
+    <Modal bodyWidth="475px" title="Detalhes de manutenção" setModal={setModal}>
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />

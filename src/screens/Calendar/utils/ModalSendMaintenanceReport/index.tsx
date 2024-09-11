@@ -192,6 +192,7 @@ export const ModalSendMaintenanceReport = ({
 
   return (
     <Modal
+      bodyWidth="475px"
       title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
       setModal={setModal}
     >

@@ -76,7 +76,7 @@ export const AnnexCard = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
   height: fit-content;
-  min-height: 164px;
+  min-height: 169px;
 
   @media (max-width: 1100px) {
     min-height: fit-content;
@@ -268,9 +268,9 @@ export const TagWrapper = styled.div`
 
 export const BannerWrapper = styled.div`
   margin-top: ${theme.size.xsm};
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: ${theme.size.xsm};
+  grid-template-columns: repeat(auto-fill, minmax(97px, 1fr));
 `;
 
 export const Tag = styled.div`

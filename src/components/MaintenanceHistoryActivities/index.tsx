@@ -72,6 +72,53 @@ export const MaintenanceHistoryActivities = ({
     findMaintenanceHistoryActivities();
   }, []);
 
+  const sortFiles = (a: AnnexesAndImages, b: AnnexesAndImages) => {
+    const imageExtensions = ['png', 'jpeg', 'jpg'];
+
+    const extA = a.originalName.split('.').pop() || '';
+    const extB = b.originalName.split('.').pop() || '';
+
+    const isImageA = imageExtensions.includes(extA);
+    const isImageB = imageExtensions.includes(extB);
+
+    if (isImageA && !isImageB) {
+      return -1; // Place A before B
+    }
+    if (!isImageA && isImageB) {
+      return 1; // Place B before A
+    }
+    return 0; // Keep original order if both are in the same group
+  };
+
+  const sortFiles2 = (
+    a: {
+      id: string;
+      url: string;
+      name: string;
+    },
+    b: {
+      id: string;
+      url: string;
+      name: string;
+    },
+  ) => {
+    const imageExtensions = ['png', 'jpeg', 'jpg'];
+
+    const extA = a.name.split('.').pop() || '';
+    const extB = b.name.split('.').pop() || '';
+
+    const isImageA = imageExtensions.includes(extA);
+    const isImageB = imageExtensions.includes(extB);
+
+    if (isImageA && !isImageB) {
+      return -1; // Place A before B
+    }
+    if (!isImageA && isImageB) {
+      return 1; // Place B before A
+    }
+    return 0; // Keep original order if both are in the same group
+  };
+
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     disabled: onImageQuery,
@@ -137,7 +184,7 @@ export const MaintenanceHistoryActivities = ({
         </Style.InputRow>
         {(imagesToUpload.length > 0 || onImageQuery) && (
           <Style.FileAndImageRow>
-            {imagesToUpload.map((e, i: number) => {
+            {imagesToUpload.sort(sortFiles).map((e, i: number) => {
               if (isImage(e.url)) {
                 return (
                   <ImagePreview
@@ -163,6 +210,7 @@ export const MaintenanceHistoryActivities = ({
                   key={e.url}
                   padding="4px 12px"
                   label={e.originalName}
+                  maxWidth="100px"
                   onClick={() => {
                     setImagesToUpload((prevState) => {
                       const newState = [...prevState];
@@ -203,7 +251,7 @@ export const MaintenanceHistoryActivities = ({
 
                     {images.length > 0 && (
                       <Style.FileAndImageRow>
-                        {images.map((e) => {
+                        {images.sort(sortFiles2).map((e) => {
                           if (isImage(e.url)) {
                             return (
                               <ImagePreview
@@ -223,6 +271,7 @@ export const MaintenanceHistoryActivities = ({
                               key={e.url}
                               padding="4px 12px"
                               label={e.name}
+                              maxWidth="100px"
                             />
                           );
                         })}

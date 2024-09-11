@@ -106,7 +106,7 @@ export const ImageLoadingTag = styled.div`
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
   height: 97px;
-  width: 97px;
+  min-width: 97px;
 `;
 
 export const DragAndDropZoneImage = styled.div`
@@ -117,7 +117,7 @@ export const DragAndDropZoneImage = styled.div`
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
   height: 97px;
-  width: 97px;
+  min-width: 97px;
   cursor: pointer;
   transition: 0.25s;
   :hover {

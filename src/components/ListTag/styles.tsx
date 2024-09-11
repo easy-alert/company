@@ -8,6 +8,7 @@ export const TagContainer = styled.div<{
   fontSize: string;
   lineHeight: string;
   padding: string;
+  maxWidth: string;
 }>`
   display: flex;
   align-items: center;
@@ -39,7 +40,7 @@ export const TagContainer = styled.div<{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 145px;
+    max-width: ${({ maxWidth }) => maxWidth};
 
     text-align: center;
   }

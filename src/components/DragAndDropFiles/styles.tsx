@@ -11,6 +11,8 @@ export const DragAndDropZone = styled.div<{ width?: string; height?: string }>`
 
   width: ${({ width }) => width || '100%'};
   height: ${({ height }) => height || '100px'};
+  width: ${({ width }) => width || '100%'};
+  height: ${({ height }) => height || '100px'};
 
   display: flex;
   align-items: center;
@@ -38,7 +40,7 @@ export const ErrorMessage = styled.div`
   width: 100%;
 
   color: ${theme.color.danger};
-  margin-top: -6px;
+  margin-top: -4px;
 
   > p {
     animation: scale-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -61,4 +63,10 @@ export const Background = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+`;
+
+export const ContentMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
 `;

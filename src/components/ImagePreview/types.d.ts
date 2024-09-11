@@ -6,6 +6,7 @@ export interface IImagePreview {
   imageOriginalName?: string;
   downloadUrl?: string;
   onTrashClick?: () => void;
+  onUpdateClick?: () => void;
   maxHeight?: string;
   maxWidth?: string;
 }

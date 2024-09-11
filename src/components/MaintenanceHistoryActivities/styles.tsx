@@ -96,7 +96,7 @@ export const ImageLoadingTag = styled.div`
   background-color: ${theme.color.primaryL};
   border-radius: ${theme.size.xxsm};
   height: 97px;
-  width: 97px;
+  min-width: 97px;
 `;
 
 export const History = styled.div`

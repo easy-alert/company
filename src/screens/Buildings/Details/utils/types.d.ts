@@ -29,12 +29,11 @@ interface Folders {
   Folders: Folder[];
 }
 
-interface Banner {
-  bannerName: string;
+export interface IBanner {
   originalName: string;
   redirectUrl: string | null;
-  type: 'Web' | 'Mobile';
   url: string;
+  id: string;
 }
 
 interface MaintenanceCount {
@@ -63,7 +62,7 @@ export interface IBuildingDetail {
   Folders: Folders;
   NotificationsConfigurations: INotificationConfiguration[];
   MaintenancesCount: MaintenanceCount[];
-  Banners: Banner[];
+  Banners: IBanner[];
   mandatoryReportProof: boolean;
   residentPassword: string | null;
   syndicPassword: string | null;
