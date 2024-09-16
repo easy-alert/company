@@ -11,6 +11,8 @@ interface IUserCompanyRelation {
   User: IUserCompany;
 }
 
+export type TTranslateTicketType = 'none' | 'whatsapp' | 'email' | 'link' | 'platform';
+
 export interface IAccount {
   origin: 'Backoffice' | 'Company' | 'Client';
   User: {
@@ -35,7 +37,8 @@ export interface IAccount {
     CPF?: string;
     createdAt: string;
     image: string;
-    supportLink: string | null;
+    ticketType: TTranslateTicketType;
+    ticketInfo: string | null;
     UserCompanies: IUserCompanyRelation[];
   };
 }

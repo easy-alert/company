@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { IAccount } from '../../../../../../utils/types';
+import { IAccount } from '../../../../utils/types';
 
 interface IFormEditAccount {
   image: string;
@@ -10,7 +9,8 @@ interface IFormEditAccount {
   CPF: string;
   CNPJ: string;
   password: string;
-  supportLink: string | null;
+  ticketType: TTranslateTicketType | null;
+  ticketInfo: string | null;
 }
 
 export interface IModalEditAccount {
