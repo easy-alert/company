@@ -56,6 +56,7 @@ export const ModalEditBuilding = ({
           mandatoryReportProof: building.mandatoryReportProof,
           nextMaintenanceCreationBasis: building.nextMaintenanceCreationBasis,
           isActivityLogPublic: building.isActivityLogPublic,
+          guestCanCompleteMaintenance: building.guestCanCompleteMaintenance,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
@@ -193,6 +194,12 @@ export const ModalEditBuilding = ({
                 name="isActivityLogPublic"
                 labelColor={theme.color.gray4}
                 label="Tornar logs de atividade público?"
+              />
+
+              <FormikCheckbox
+                name="guestCanCompleteMaintenance"
+                labelColor={theme.color.gray4}
+                label="Convidado pode concluir manutenção?"
               />
 
               <Style.ButtonContainer>

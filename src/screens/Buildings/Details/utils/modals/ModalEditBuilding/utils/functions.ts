@@ -34,6 +34,7 @@ export const requestEditBuilding = async ({
       mandatoryReportProof: values.mandatoryReportProof,
       nextMaintenanceCreationBasis: values.nextMaintenanceCreationBasis,
       isActivityLogPublic: values.isActivityLogPublic,
+      guestCanCompleteMaintenance: values.guestCanCompleteMaintenance,
     },
   })
     .then((res) => {
@@ -91,5 +92,6 @@ export const schemaModalEditBuilding = yup
       .min(yup.ref('deliveryDate'), 'O término da garantia deve ser maior que a data de início.'),
     keepNotificationAfterWarrantyEnds: yup.boolean(),
     isActivityLogPublic: yup.boolean(),
+    guestCanCompleteMaintenance: yup.boolean(),
   })
   .required();

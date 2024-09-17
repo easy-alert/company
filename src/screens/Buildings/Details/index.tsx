@@ -445,6 +445,11 @@ export const BuildingDetails = () => {
                     : '-'}
                 </p>
               </Style.BuildingCardData>
+
+              <Style.BuildingCardData>
+                <p className="p3">Convidado pode concluir manutenção:</p>
+                <p className="p3">{building?.guestCanCompleteMaintenance ? 'Sim' : 'Não'}</p>
+              </Style.BuildingCardData>
             </Style.BuildingCardColumn>
 
             <Style.BuildingCardColumn>

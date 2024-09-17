@@ -16,6 +16,7 @@ interface IEditBuilding {
   mandatoryReportProof: boolean;
   nextMaintenanceCreationBasis: string;
   isActivityLogPublic: boolean;
+  guestCanCompleteMaintenance: boolean;
 }
 
 export interface IModalEditBuilding {
