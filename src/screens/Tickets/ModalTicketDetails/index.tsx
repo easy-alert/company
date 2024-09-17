@@ -4,7 +4,7 @@ import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 import { Modal } from '../../../components/Modal';
 import * as Style from './styles';
 import { Api } from '../../../services/api';
-import { catchHandler } from '../../../utils/functions';
+import { catchHandler, isImage } from '../../../utils/functions';
 import { ImagePreview } from '../../../components/ImagePreview';
 import { ListTag } from '../../../components/ListTag';
 import { theme } from '../../../styles/theme';
@@ -158,19 +158,33 @@ export const ModalTicketDetails = ({ setModal, ticketId, onThenRequest }: IModal
             </Style.Row>
 
             <Style.Row>
-              <h6>Imagens</h6>
+              <h6>Anexos</h6>
               <Style.FileAndImageRow>
                 {ticket && ticket.images.length > 0 ? (
-                  ticket?.images.map((image) => (
-                    <ImagePreview
-                      key={image.url}
-                      src={image.url}
-                      downloadUrl={image.url}
-                      imageCustomName={image.name}
-                      width="132px"
-                      height="136px"
-                    />
-                  ))
+                  ticket?.images.map((image) => {
+                    if (isImage(image.url)) {
+                      return (
+                        <ImagePreview
+                          key={image.url}
+                          src={image.url}
+                          downloadUrl={image.url}
+                          imageCustomName={image.name}
+                          width="132px"
+                          height="136px"
+                        />
+                      );
+                    }
+
+                    return (
+                      <ListTag
+                        downloadUrl={image.url}
+                        key={image.url}
+                        padding="4px 12px"
+                        label={image.name}
+                        maxWidth="100px"
+                      />
+                    );
+                  })
                 ) : (
                   <p className="p2">Nenhuma imagem enviada.</p>
                 )}
