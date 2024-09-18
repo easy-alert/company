@@ -16,6 +16,7 @@ import { ModalEditSupplier } from './ModalEditSupplier';
 import { NoDataFound } from '../../../components/NoDataFound';
 import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
 import { ImageComponent } from '../../../components/ImageComponent';
+import { SupplierMaintenanceHistory } from './SupplierMaintenanceHistory';
 
 export interface ISupplier {
   id: string;
@@ -358,6 +359,8 @@ export const SupplierDetails = () => {
               )}
             </Style.MaintenancesContainer>
           </div>
+
+          <SupplierMaintenanceHistory />
         </>
       )}
     </>

@@ -280,6 +280,21 @@ export const MaintenanceHistoryActivities = ({
                   </Style.Comment>
                 );
               }
+
+              if (type === 'notification') {
+                return (
+                  <Style.Comment key={id}>
+                    <Style.CommentHeader>
+                      <ImageComponent src={icon.activityNotification} />
+                      <Style.CommentInfo>
+                        <h6>{title}</h6>
+                        <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                      </Style.CommentInfo>
+                    </Style.CommentHeader>
+                    {content && <pre className="p2">{content}</pre>}
+                  </Style.Comment>
+                );
+              }
               return null;
             })}
           </Style.ScrollDiv>
