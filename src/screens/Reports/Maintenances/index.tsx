@@ -121,7 +121,7 @@ export const MaintenanceReports = () => {
     Edificação: data.buildingName,
     Status: getSingularStatusNameforPdf(data.status),
     'Data de notificação': dateFormatter(data.notificationDate),
-    'Data de vencimento': dateFormatter(data.dueDate),
+    'Data de vencimento': data.type === 'common' ? dateFormatter(data.dueDate) : '-',
     'Data de conclusão': data.resolutionDate ? dateFormatter(data.resolutionDate) : '',
     Categoria: data.categoryName,
     Elemento: data.element,
@@ -591,7 +591,10 @@ export const MaintenanceReports = () => {
                     { cell: maintenance.activity },
                     { cell: maintenance.responsible ?? 'Sem responsável cadastrado' },
                     { cell: dateFormatter(maintenance.notificationDate) },
-                    { cell: dateFormatter(maintenance.dueDate) },
+                    {
+                      cell:
+                        maintenance.type === 'common' ? dateFormatter(maintenance.dueDate) : '-',
+                    },
                     {
                       cell:
                         maintenance.cost !== null
