@@ -16,6 +16,35 @@ export const requestEditAccount = async ({
   setOnQuery,
 }: IRequestEditAccount) => {
   let imageUrl: any;
+
+  let ticketLink;
+
+  if (values.ticketType === 'link') {
+    if (
+      values.ticketInfo &&
+      !values.ticketInfo.startsWith('www.') &&
+      !values.ticketInfo.startsWith('https://') &&
+      !values.ticketInfo.startsWith('http://') &&
+      !values.ticketInfo.startsWith('//')
+    ) {
+      toast.error(
+        <div>
+          Informe um link válido.
+          <br />
+          Ex: www.easyalert.com.br
+        </div>,
+      );
+      return;
+    }
+
+    // eslint-disable-next-line no-nested-ternary
+    ticketLink = values.ticketInfo
+      ? values.ticketInfo.startsWith('https://') || values.ticketInfo.startsWith('http://')
+        ? values.ticketInfo
+        : `https://${values.ticketInfo}`
+      : '';
+  }
+
   setOnQuery(true);
 
   if (!values.image.length) {
@@ -25,41 +54,17 @@ export const requestEditAccount = async ({
     imageUrl = account.Company.image;
   }
 
-  if (
-    values.supportLink &&
-    !values.supportLink.startsWith('www.') &&
-    !values.supportLink.startsWith('https://') &&
-    !values.supportLink.startsWith('http://') &&
-    !values.supportLink.startsWith('//')
-  ) {
-    toast.error(
-      <div>
-        Informe um link válido.
-        <br />
-        Ex: www.easyalert.com.br
-      </div>,
-    );
-    return;
-  }
-
-  const formattedSupportLink =
-    values.supportLink &&
-    (values.supportLink.startsWith('https://') ||
-      values.supportLink.startsWith('http://') ||
-      values.supportLink.startsWith('//'))
-      ? values.supportLink
-      : `//${values.supportLink}`;
-
   await Api.put('/account/edit', {
     name: values.name,
     email: values.email,
     password: values.password !== '' ? values.password : null,
     image: imageUrl,
-    supportLink: formattedSupportLink === '//' ? null : formattedSupportLink,
     companyName: values.companyName,
     CNPJ: values.CNPJ !== '' ? unMask(values.CNPJ) : null,
     CPF: values.CPF !== '' ? unMask(values.CPF) : null,
     contactNumber: unMask(values.contactNumber),
+    ticketInfo: ticketLink || values.ticketInfo,
+    ticketType: values.ticketType,
   })
     .then((res) => {
       const updatedAccount: IAccount = {
@@ -69,11 +74,12 @@ export const requestEditAccount = async ({
           image: imageUrl,
           name: values.companyName,
           CNPJ: values.CNPJ,
-          supportLink: values.supportLink ? values.supportLink : null,
           CPF: values.CPF,
           createdAt: account.Company.createdAt,
           id: account.Company.id,
           UserCompanies: account.Company.UserCompanies,
+          ticketInfo: values.ticketInfo,
+          ticketType: values.ticketType,
         },
         User: {
           createdAt: account.User.createdAt,
@@ -141,8 +147,6 @@ export const schemaModalEditAccountWithCNPJ = yup
 
     CNPJ: yup.string().required('O CNPJ deve ser preenchido.').min(18, 'O CNPJ deve ser válido.'),
 
-    supportLink: yup.string().nullable(),
-
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 
     confirmPassword: yup
@@ -152,6 +156,10 @@ export const schemaModalEditAccountWithCNPJ = yup
         is: (password: string) => password && password.length > 0,
         then: yup.string().required('Confirme a nova senha.'),
       }),
+
+    ticketType: yup.string(),
+
+    ticketInfo: yup.string(),
   })
   .required();
 
@@ -199,8 +207,6 @@ export const schemaModalEditAccountWithCPF = yup
       .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
 
     CPF: yup.string().required('O CPF deve ser preenchido.').min(14, 'O CPF deve ser válido.'),
-
-    supportLink: yup.string().nullable(),
 
     password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 

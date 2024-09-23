@@ -16,6 +16,7 @@ import {
   catchHandler,
   dateFormatter,
   dateTimeFormatter,
+  translateTicketType,
 } from '../../../utils/functions';
 
 // MODALS
@@ -141,19 +142,18 @@ export const AccountDetails = () => {
         </Style.Card>
 
         <Style.Card>
-          <h6>Link para chamado</h6>
-          <p className="p2 link">
-            {account?.Company.supportLink ? (
-              <a href={account?.Company.supportLink} target="_blank" rel="noreferrer">
-                {account?.Company.supportLink.startsWith('//')
-                  ? account?.Company.supportLink.slice(2)
-                  : account?.Company.supportLink}
-              </a>
-            ) : (
-              '-'
-            )}
-          </p>
+          <h6>Abertura de chamados</h6>
+          <p className="p2">{translateTicketType(account?.Company.ticketType || 'platform')}</p>
         </Style.Card>
+
+        {account?.Company.ticketInfo && (
+          <Style.Card>
+            <h6>{`${translateTicketType(
+              account?.Company.ticketType || 'platform',
+            )} para chamado`}</h6>
+            <p className="p2">{account?.Company.ticketInfo}</p>
+          </Style.Card>
+        )}
 
         <Style.Card>
           <h6>Termos de uso</h6>

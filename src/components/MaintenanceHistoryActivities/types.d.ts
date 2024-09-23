@@ -3,7 +3,7 @@ export interface IActivity {
   createdAt: string;
   title: string;
   content: string | null;
-  type: 'comment';
+  type: 'comment' | 'notification';
   images: {
     id: string;
     url: string;

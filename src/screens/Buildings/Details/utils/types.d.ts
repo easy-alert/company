@@ -68,6 +68,7 @@ export interface IBuildingDetail {
   syndicPassword: string | null;
   nextMaintenanceCreationBasis: 'executionDate' | 'notificationDate';
   isActivityLogPublic: boolean;
+  guestCanCompleteMaintenance: boolean;
 }
 
 export interface IRequestBuildingDetails {

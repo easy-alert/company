@@ -33,6 +33,7 @@ export const requestCreateBuilding = async ({
     mandatoryReportProof: values.mandatoryReportProof,
     nextMaintenanceCreationBasis: values.nextMaintenanceCreationBasis,
     isActivityLogPublic: values.isActivityLogPublic,
+    guestCanCompleteMaintenance: values.guestCanCompleteMaintenance,
   })
     .then((res) => {
       setModal(false);
@@ -66,5 +67,6 @@ export const schemaModalCreateBuilding = yup
     keepNotificationAfterWarrantyEnds: yup.boolean(),
     nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),
     isActivityLogPublic: yup.boolean(),
+    guestCanCompleteMaintenance: yup.boolean(),
   })
   .required();

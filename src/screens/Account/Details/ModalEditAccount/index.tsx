@@ -21,13 +21,25 @@ import { IconButton } from '../../../../components/Buttons/IconButton';
 import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
 import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Modal } from '../../../../components/Modal';
-import { applyMask } from '../../../../utils/functions';
+import { applyMask, translateTicketType } from '../../../../utils/functions';
+import { FormikSelect } from '../../../../components/Form/FormikSelect';
+import { TTranslateTicketType } from '../../../../utils/types';
 
 export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
+
+  const ticketTypes = [
+    'none',
+    'whatsapp',
+    'email',
+    'link',
+    'platform',
+  ].sort() as TTranslateTicketType[];
+
+  const displayExtraTicketField = ['whatsapp', 'email', 'link'].sort() as TTranslateTicketType[];
 
   return (
     <Modal title="Editar usuário" setModal={setModal}>
@@ -37,12 +49,6 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
           name: account.User.name,
           email: account.User.email,
           companyName: account.Company.name,
-          // eslint-disable-next-line no-nested-ternary
-          supportLink: account.Company.supportLink
-            ? account?.Company.supportLink.startsWith('//')
-              ? account?.Company.supportLink.slice(2)
-              : account?.Company.supportLink
-            : '',
           contactNumber: applyMask({
             value: account.Company.contactNumber,
             mask: 'TEL',
@@ -55,6 +61,8 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
             : '',
           password: '',
           confirmPassword: '',
+          ticketType: account.Company.ticketType,
+          ticketInfo: account.Company.ticketInfo || '',
         }}
         validationSchema={
           account.Company.CPF ? schemaModalEditAccountWithCPF : schemaModalEditAccountWithCNPJ
@@ -94,6 +102,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: João Silva"
               />
+
               <FormikInput
                 label="E-mail"
                 name="email"
@@ -101,6 +110,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 error={touched.email && errors.email ? errors.email : null}
                 placeholder="Ex: joao.silva@easyalert.com"
               />
+
               <FormikInput
                 label="Nome da empresa"
                 name="companyName"
@@ -108,6 +118,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 error={touched.companyName && errors.companyName ? errors.companyName : null}
                 placeholder="Ex: Easy Alert"
               />
+
               <FormikInput
                 label="Telefone"
                 name="contactNumber"
@@ -156,13 +167,42 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 />
               )}
 
-              <FormikInput
-                label="Link para chamado"
-                name="supportLink"
-                value={values.supportLink ?? ''}
-                error={touched.supportLink && errors.supportLink ? errors.supportLink : null}
-                placeholder="Ex: www.easyalert.com.br"
-              />
+              <FormikSelect
+                label="Abertura de chamados"
+                name="ticketType"
+                error={touched.ticketType && errors.ticketType ? errors.ticketType : null}
+                selectPlaceholderValue={values.ticketType}
+                onChange={(evt) => {
+                  setFieldValue('ticketType', evt.target.value);
+                  setFieldValue('ticketInfo', '');
+                }}
+              >
+                {ticketTypes.map((data) => (
+                  <option key={data} value={data}>
+                    {translateTicketType(data)}
+                  </option>
+                ))}
+              </FormikSelect>
+
+              {displayExtraTicketField.includes(values.ticketType) && (
+                <FormikInput
+                  label={`${translateTicketType(values.ticketType)} para chamado`}
+                  name="ticketInfo"
+                  maxLength={values.ticketType === 'whatsapp' ? 15 : 500}
+                  error={touched.ticketInfo && errors.ticketInfo ? errors.ticketInfo : null}
+                  placeholder={`Informe o ${translateTicketType(values.ticketType).toLowerCase()}`}
+                  onChange={(e) => {
+                    if (values.ticketType === 'whatsapp') {
+                      setFieldValue(
+                        'ticketInfo',
+                        applyMask({ value: e.target.value, mask: 'TEL' }).value,
+                      );
+                    } else {
+                      setFieldValue('ticketInfo', e.target.value);
+                    }
+                  }}
+                />
+              )}
 
               <Style.PasswordDiv>
                 <FormikInput

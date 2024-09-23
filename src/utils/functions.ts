@@ -10,6 +10,7 @@ import {
   IRequestAddressData,
   IRequestBuildingTypes,
   IIncreaseDaysInDate,
+  TTranslateTicketType,
 } from './types';
 // #endregion
 
@@ -448,3 +449,15 @@ export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddress
 
 export const query = new URLSearchParams(window.location.search);
 // #endregion
+
+export const translateTicketType = (type: TTranslateTicketType): string => {
+  const translations: { [key: string]: string } = {
+    none: 'Nenhum',
+    whatsapp: 'WhatsApp',
+    email: 'Email',
+    link: 'Link',
+    platform: 'Plataforma',
+  };
+
+  return translations[type] || '-';
+};
