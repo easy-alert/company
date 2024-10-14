@@ -19,7 +19,7 @@ import { Button } from '../../Buttons/Button';
 import { FormikImageInput } from '../../Form/FormikImageInput';
 import { FormikInput } from '../../Form/FormikInput';
 import { ReactSelectComponent } from '../../ReactSelectComponent';
-import { ReactSelectCreatableComponent } from '../../ReactSelectCreatableComponent ';
+import { ReactSelectCreatableComponent } from '../../ReactSelectCreatableComponent';
 import { CustomModal } from '../../CustomModal';
 import { useAreaOfActivities } from '../../../hooks/useAreaOfActivities';
 
