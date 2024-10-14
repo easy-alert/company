@@ -17,7 +17,7 @@ import {
 } from '../../../../utils/functions';
 import * as Style from './styles';
 import { Api } from '../../../../services/api';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent ';
+import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
 import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
 import { useBrasilCities } from '../../../../hooks/useBrasilCities';
 import { useBrasilStates } from '../../../../hooks/useBrasilStates';

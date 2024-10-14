@@ -20,7 +20,7 @@ import { Api } from '../../../../services/api';
 // eslint-disable-next-line import/no-cycle
 import { ISupplier } from '..';
 import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent ';
+import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
 import { useBrasilCities } from '../../../../hooks/useBrasilCities';
 import { useBrasilStates } from '../../../../hooks/useBrasilStates';
 import { useAreaOfActivities } from '../../../../hooks/useAreaOfActivities';
