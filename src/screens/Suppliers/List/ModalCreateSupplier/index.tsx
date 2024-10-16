@@ -1,12 +1,31 @@
+// REACT
+import { useState } from 'react';
+
 // LIBS
 import * as yup from 'yup';
-import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
+
+// SERVICES
+import { Api } from '../../../../services/api';
+
+// CONTEXTS
+import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+
+// HOOKS
+import { useBrasilCities } from '../../../../hooks/useBrasilCities';
+import { useBrasilStates } from '../../../../hooks/useBrasilStates';
+import { useCategoriesByCompanyId } from '../../../../hooks/useCategoriesByCompanyId';
+
+// COMPONENTS
 import { Button } from '../../../../components/Buttons/Button';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Modal } from '../../../../components/Modal';
+import { FormikInput } from '../../../../components/Form/FormikInput';
+import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
+import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
+import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
+
+// UTILS
 import {
   applyMask,
   catchHandler,
@@ -15,20 +34,14 @@ import {
   unMask,
   uploadFile,
 } from '../../../../utils/functions';
+
+// TYPES
+import { IModalCreateSupplier } from './utils/types';
+
+// STYLES
 import * as Style from './styles';
-import { Api } from '../../../../services/api';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
-import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
-import { useBrasilCities } from '../../../../hooks/useBrasilCities';
-import { useBrasilStates } from '../../../../hooks/useBrasilStates';
-import { useAreaOfActivities } from '../../../../hooks/useAreaOfActivities';
 
-interface IModalCreateSupplier {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onThenRequest: () => Promise<void>;
-}
-
-export const schemaCreateSupplier = yup
+const schemaCreateSupplier = yup
   .object({
     image: yup
       .mixed()
@@ -63,11 +76,14 @@ export const schemaCreateSupplier = yup
   .required();
 
 export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSupplier) => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [selectedState, setSelectedState] = useState('');
+  const { account } = useAuthContext();
   const { states } = useBrasilStates();
+  const categories = account && useCategoriesByCompanyId(account.Company.id);
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [selectedState, setSelectedState] = useState<string>('');
+
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
-  const { areaOfActivities } = useAreaOfActivities({ findAll: false });
 
   return (
     <Modal title="Cadastrar fornecedor" setModal={setModal}>
@@ -175,16 +191,15 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
               />
 
               <ReactSelectCreatableComponent
-                selectPlaceholderValue={!!values.areaOfActivityLabels.length}
+                selectPlaceholderValue={!!values.areaOfActivityLabels?.length}
                 isMulti
                 id="areaOfActivity"
                 name="areaOfActivity"
                 placeholder="Selecione ou digite para criar"
                 label="Área de atuação *"
-                options={areaOfActivities.map(({ label, id }) => ({
-                  label,
-                  value: id,
-                }))}
+                options={
+                  categories?.allCategories.map(({ name }) => ({ label: name, value: name })) || []
+                }
                 onChange={(data) => {
                   const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
                   setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
