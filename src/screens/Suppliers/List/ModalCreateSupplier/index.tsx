@@ -22,13 +22,10 @@ import { ReactSelectComponent } from '../../../../components/ReactSelectComponen
 import { useBrasilCities } from '../../../../hooks/useBrasilCities';
 import { useBrasilStates } from '../../../../hooks/useBrasilStates';
 import { useAreaOfActivities } from '../../../../hooks/useAreaOfActivities';
+import { IModalCreateSupplier } from './utils/types';
+import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
 
-interface IModalCreateSupplier {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onThenRequest: () => Promise<void>;
-}
-
-export const schemaCreateSupplier = yup
+const schemaCreateSupplier = yup
   .object({
     image: yup
       .mixed()
@@ -63,11 +60,17 @@ export const schemaCreateSupplier = yup
   .required();
 
 export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSupplier) => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [selectedState, setSelectedState] = useState('');
+  const [selectedState, setSelectedState] = useState<string>('');
+
+  const { account } = useAuthContext();
+  console.log('🚀 ~ ModalCreateSupplier ~ user:', account);
+
   const { states } = useBrasilStates();
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
   const { areaOfActivities } = useAreaOfActivities({ findAll: false });
+  // const { useMaintenancesByBuildingId } = useMaintenancesByBuildingId({ buildingId });
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Modal title="Cadastrar fornecedor" setModal={setModal}>
