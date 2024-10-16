@@ -30,6 +30,8 @@ export const theme = {
 
     orange1: '#FF7B1C',
 
+    common: '#087EB4',
+
     black: '#000000',
     white: '#FFFFFF',
   } as const,
