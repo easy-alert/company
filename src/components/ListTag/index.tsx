@@ -15,7 +15,7 @@ export const ListTag = ({
   padding = '6px',
   lineHeight = '14px',
   downloadUrl,
-  maxWidth = '145px',
+  maxWidth = '200px',
 }: IListTag) => (
   <Style.TagContainer
     backgroundColor={backgroundColor}
