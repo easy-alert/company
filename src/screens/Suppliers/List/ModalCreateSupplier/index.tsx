@@ -3,27 +3,26 @@ import { useState } from 'react';
 
 // LIBS
 import * as yup from 'yup';
-import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
+import { Form, Formik } from 'formik';
 
 // SERVICES
-import { Api } from '../../../../services/api';
+import { Api } from '@services/api';
 
 // CONTEXTS
-import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
-import { useBrasilCities } from '../../../../hooks/useBrasilCities';
-import { useBrasilStates } from '../../../../hooks/useBrasilStates';
-import { useCategoriesByCompanyId } from '../../../../hooks/useCategoriesByCompanyId';
+import { useBrasilCities } from '@hooks/useBrasilCities';
+import { useBrasilStates } from '@hooks/useBrasilStates';
+import { useCategoriesByCompanyId } from '@hooks/useCategoriesByCompanyId';
 
 // COMPONENTS
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
-import { FormikInput } from '../../../../components/Form/FormikInput';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 
 // UTILS
 import {
@@ -33,13 +32,13 @@ import {
   ensureHttps,
   unMask,
   uploadFile,
-} from '../../../../utils/functions';
-
-// TYPES
-import { IModalCreateSupplier } from './utils/types';
+} from '@utils/functions';
 
 // STYLES
 import * as Style from './styles';
+
+// TYPES
+import type { IModalCreateSupplier } from './types';
 
 const schemaCreateSupplier = yup
   .object({
@@ -67,7 +66,7 @@ const schemaCreateSupplier = yup
     state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
-    areaOfActivityLabels: yup
+    categoriesIds: yup
       .array()
       .of(yup.string().required('Campo obrigatório.'))
       .min(1, 'Campo obrigatório.')
@@ -78,7 +77,9 @@ const schemaCreateSupplier = yup
 export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSupplier) => {
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
-  const categories = account && useCategoriesByCompanyId(account.Company.id);
+  const { allCategories } = account
+    ? useCategoriesByCompanyId(account.Company.id)
+    : { allCategories: [] };
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState<string>('');
@@ -95,9 +96,9 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           link: '',
           phone: '',
           email: '',
-          areaOfActivityLabels: [],
           city: '',
           state: '',
+          categoriesIds: [],
         }}
         validationSchema={schemaCreateSupplier}
         onSubmit={async (data) => {
@@ -108,6 +109,12 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
           if (data.image) {
             const { Location } = await uploadFile(data.image);
             imageURL = Location;
+          }
+
+          if (!data.email && !data.phone) {
+            setOnQuery(false);
+            toast.error('Informe um e-mail ou telefone para o fornecedor.');
+            return;
           }
 
           await Api.post('/suppliers', {
@@ -190,26 +197,21 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
                 }}
               />
 
-              <ReactSelectCreatableComponent
-                selectPlaceholderValue={!!values.areaOfActivityLabels?.length}
+              <ReactSelectComponent
+                selectPlaceholderValue={!!values.categoriesIds?.length}
                 isMulti
-                id="areaOfActivity"
-                name="areaOfActivity"
-                placeholder="Selecione ou digite para criar"
-                label="Área de atuação *"
-                options={
-                  categories?.allCategories.map(({ name }) => ({ label: name, value: name })) || []
-                }
+                id="categoriesIds"
+                name="categoriesIds"
+                placeholder="Selecione uma ou mais categorias"
+                label="Categoria(s) *"
+                options={allCategories.map(({ id, name }) => ({ label: name, value: id }))}
                 onChange={(data) => {
-                  const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
-                  setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
-                  setFieldError('areaOfActivityLabels', '');
+                  const categoriesIds = data.map(({ value }: { value: string }) => value);
+
+                  setFieldValue('categoriesIds', categoriesIds);
+                  setFieldError('categoriesIds', '');
                 }}
-                error={
-                  touched.areaOfActivityLabels && errors.areaOfActivityLabels
-                    ? errors.areaOfActivityLabels
-                    : null
-                }
+                error={touched.categoriesIds && errors.categoriesIds ? errors.categoriesIds : null}
               />
 
               <ReactSelectComponent
