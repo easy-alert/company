@@ -7,23 +7,22 @@ import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
 
 // SERVICES
-import { Api } from '../../../../services/api';
+import { Api } from '@services/api';
 
 // CONTEXTS
-import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
-import { useBrasilCities } from '../../../../hooks/useBrasilCities';
-import { useBrasilStates } from '../../../../hooks/useBrasilStates';
-import { useCategoriesByCompanyId } from '../../../../hooks/useCategoriesByCompanyId';
+import { useBrasilCities } from '@hooks/useBrasilCities';
+import { useBrasilStates } from '@hooks/useBrasilStates';
+import { useCategoriesByCompanyId } from '@hooks/useCategoriesByCompanyId';
 
 // COMPONENTS
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
-import { FormikInput } from '../../../../components/Form/FormikInput';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { ReactSelectComponent } from '../../../../components/ReactSelectComponent';
-import { ReactSelectCreatableComponent } from '../../../../components/ReactSelectCreatableComponent';
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 
 // UTILS
 import {
@@ -33,19 +32,13 @@ import {
   ensureHttps,
   unMask,
   uploadFile,
-} from '../../../../utils/functions';
-
-// TYPES
-import { ISupplier } from '..';
+} from '@utils/functions';
 
 // STYLES
 import * as Style from './styles';
 
-interface IModalEditSupplier {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onThenRequest: () => Promise<void>;
-  supplier: ISupplier;
-}
+// TYPES
+import type { IModalEditSupplier } from './types';
 
 const schemaEditSupplier = yup
   .object({
@@ -75,7 +68,7 @@ const schemaEditSupplier = yup
     state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
-    areaOfActivityLabels: yup
+    categoriesIds: yup
       .array()
       .of(yup.string().required('Campo obrigatório.'))
       .min(1, 'Campo obrigatório.')
@@ -86,12 +79,14 @@ const schemaEditSupplier = yup
 export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalEditSupplier) => {
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
-  const categories = account && useCategoriesByCompanyId(account.Company.id);
+  const { allCategories } = account
+    ? useCategoriesByCompanyId(account.Company.id)
+    : { allCategories: [] };
+
+  const [selectedState, setSelectedState] = useState<string>('');
+  const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [selectedState, setSelectedState] = useState<string>('');
-
-  const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
 
   return (
     <Modal title="Editar fornecedor" setModal={setModal}>
@@ -104,11 +99,9 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
           phone: supplier.phone ? applyMask({ value: supplier.phone, mask: 'TEL' }).value : '',
           cnpj: supplier.cnpj ? applyMask({ value: supplier.cnpj, mask: 'CNPJ' }).value : '',
           email: supplier.email || '',
-          areaOfActivityLabels: supplier.areaOfActivities.map(
-            ({ areaOfActivity }) => areaOfActivity.label,
-          ),
           city: supplier.city || '',
           state: supplier.state || '',
+          categoriesIds: supplier.categories.map(({ category }) => category.id),
         }}
         validationSchema={schemaEditSupplier}
         onSubmit={async (data) => {
@@ -194,30 +187,25 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
                 }}
               />
 
-              <ReactSelectCreatableComponent
-                selectPlaceholderValue={values.areaOfActivityLabels.length}
+              <ReactSelectComponent
+                selectPlaceholderValue={values.categoriesIds.length}
                 isMulti
-                id="areaOfActivity"
-                name="areaOfActivity"
-                placeholder="Selecione ou digite para criar"
-                label="Área de atuação *"
-                options={
-                  categories?.allCategories.map(({ name }) => ({ label: name, value: name })) || []
-                }
+                id="categoriesIds"
+                name="categoriesIds"
+                placeholder="Selecione uma ou mais categorias"
+                label="Categoria(s) *"
+                options={allCategories.map(({ id, name }) => ({ label: name, value: id }))}
                 onChange={(data) => {
-                  const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
-                  setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
-                  setFieldError('areaOfActivityLabels', '');
+                  const categoriesIds = data.map(({ value }: { value: string }) => value);
+
+                  setFieldValue('categoriesIds', categoriesIds);
+                  setFieldError('categoriesIds', '');
                 }}
-                defaultValue={supplier.areaOfActivities.map((data) => ({
-                  label: data.areaOfActivity.label,
-                  value: data.areaOfActivity.label,
+                defaultValue={supplier.categories.map(({ category }) => ({
+                  label: category.name,
+                  value: category.id,
                 }))}
-                error={
-                  touched.areaOfActivityLabels && errors.areaOfActivityLabels
-                    ? errors.areaOfActivityLabels
-                    : null
-                }
+                error={touched.categoriesIds && errors.categoriesIds ? errors.categoriesIds : null}
               />
 
               <ReactSelectComponent
