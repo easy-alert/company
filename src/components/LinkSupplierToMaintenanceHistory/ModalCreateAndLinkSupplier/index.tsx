@@ -7,22 +7,22 @@ import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
 
 // SERVICES
-import { Api } from '../../../services/api';
+import { Api } from '@services/api';
 
 // CONTEXTS
-import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
-import { useBrasilStates } from '../../../hooks/useBrasilStates';
-import { useBrasilCities } from '../../../hooks/useBrasilCities';
-import { useCategoriesByCompanyId } from '../../../hooks/useCategoriesByCompanyId';
+import { useBrasilStates } from '@hooks/useBrasilStates';
+import { useBrasilCities } from '@hooks/useBrasilCities';
+import { useCategoriesByCompanyId } from '@hooks/useCategoriesByCompanyId';
 
-// COMPONENTS
-import { Button } from '../../Buttons/Button';
-import { CustomModal } from '../../CustomModal';
-import { FormikInput } from '../../Form/FormikInput';
-import { FormikImageInput } from '../../Form/FormikImageInput';
-import { ReactSelectComponent } from '../../ReactSelectComponent';
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { CustomModal } from '@components/CustomModal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 
 // UTILS
 import {
@@ -32,7 +32,7 @@ import {
   ensureHttps,
   catchHandler,
   applyMask,
-} from '../../../utils/functions';
+} from '@utils/functions';
 
 // STYLES
 import * as Style from './styles';
@@ -84,7 +84,9 @@ export const ModalCreateAndLinkSupplier = ({
 }: IModalCreateSupplier) => {
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
-  const categories = account && useCategoriesByCompanyId(account.Company.id);
+  const { allCategories } = account
+    ? useCategoriesByCompanyId(account.Company.id)
+    : { allCategories: [] };
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState('');
@@ -114,6 +116,12 @@ export const ModalCreateAndLinkSupplier = ({
           if (data.image) {
             const { Location } = await uploadFile(data.image);
             imageURL = Location;
+          }
+
+          if (!data.email && !data.phone) {
+            setOnQuery(false);
+            toast.error('Informe um e-mail ou telefone para o fornecedor.');
+            return;
           }
 
           await Api.post('/suppliers/create-and-link', {
@@ -199,18 +207,13 @@ export const ModalCreateAndLinkSupplier = ({
               <ReactSelectComponent
                 selectPlaceholderValue={values.categoriesIds.length}
                 isMulti
-                id="categories"
-                name="categories"
-                placeholder="Selecione uma categoria"
-                label="Categorias *"
-                options={
-                  categories?.allCategories.map(({ id, name }) => ({
-                    value: id,
-                    label: name,
-                  })) || []
-                }
+                id="categoriesIds"
+                name="categoriesIds"
+                placeholder="Selecione uma ou mais categorias"
+                label="Categoria(s) *"
+                options={allCategories.map(({ id, name }) => ({ label: name, value: id }))}
                 onChange={(data) => {
-                  const categoriesIds = data.map(({ id }: { id: string }) => id);
+                  const categoriesIds = data.map(({ value }: { value: string }) => value);
 
                   setFieldValue('categoriesIds', categoriesIds);
                   setFieldError('categoriesIds', '');
