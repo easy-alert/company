@@ -2,13 +2,22 @@
 import { useState, useEffect } from 'react';
 
 // SERVICES
-import { Api } from '../services/api';
+import { Api } from '@services/api';
 
 // FUNCTIONS
-import { catchHandler } from '../utils/functions';
+import { catchHandler } from '@utils/functions';
 
 // TYPES
-import { ICategory } from '../types/ICategory';
+import type { ICategory } from '@customTypes/ICategory';
+import type { IResponse } from '@customTypes/IResponse';
+
+interface IResponseData extends IResponse {
+  data: {
+    allCategories: ICategory[];
+    defaultCategories: ICategory[];
+    companyCategories: ICategory[];
+  };
+}
 
 export const useCategoriesByCompanyId = (companyId: string) => {
   const [allCategories, setAllCategories] = useState<ICategory[]>([]);
@@ -16,15 +25,17 @@ export const useCategoriesByCompanyId = (companyId: string) => {
   const [companyCategories, setCompanyCategories] = useState<ICategory[]>([]);
 
   const getCategoriesByCompanyId = async () => {
-    await Api.get(`/categories/list/${companyId}`)
-      .then((res) => {
-        setAllCategories(res.data.allCategories);
-        setDefaultCategories(res.data.defaultCategories);
-        setCompanyCategories(res.data.companyCategories);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
+    const uri = `/categories/listByCompanyId/${companyId}`;
+
+    try {
+      const response: IResponseData = await Api.get(uri);
+
+      setAllCategories(response.data.allCategories);
+      setDefaultCategories(response.data.defaultCategories);
+      setCompanyCategories(response.data.companyCategories);
+    } catch (error) {
+      catchHandler(error);
+    }
   };
 
   useEffect(() => {

@@ -1,12 +1,30 @@
+// REACT
+import { useState } from 'react';
+
 // LIBS
 import * as yup from 'yup';
-import { useState } from 'react';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
-import * as Style from './styles';
-import { useBrasilCities } from '../../../hooks/useBrasilCities';
-import { useBrasilStates } from '../../../hooks/useBrasilStates';
-import { Api } from '../../../services/api';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// HOOKS
+import { useBrasilStates } from '@hooks/useBrasilStates';
+import { useBrasilCities } from '@hooks/useBrasilCities';
+import { useCategoriesByCompanyId } from '@hooks/useCategoriesByCompanyId';
+
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { CustomModal } from '@components/CustomModal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
+
+// UTILS
 import {
   convertStateName,
   uploadFile,
@@ -14,14 +32,10 @@ import {
   ensureHttps,
   catchHandler,
   applyMask,
-} from '../../../utils/functions';
-import { Button } from '../../Buttons/Button';
-import { FormikImageInput } from '../../Form/FormikImageInput';
-import { FormikInput } from '../../Form/FormikInput';
-import { ReactSelectComponent } from '../../ReactSelectComponent';
-import { ReactSelectCreatableComponent } from '../../ReactSelectCreatableComponent';
-import { CustomModal } from '../../CustomModal';
-import { useAreaOfActivities } from '../../../hooks/useAreaOfActivities';
+} from '@utils/functions';
+
+// STYLES
+import * as Style from './styles';
 
 interface IModalCreateSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,7 +43,7 @@ interface IModalCreateSupplier {
   maintenanceHistoryId: string;
 }
 
-export const schemaCreateSupplier = yup
+const schemaCreateSupplier = yup
   .object({
     image: yup
       .mixed()
@@ -55,7 +69,7 @@ export const schemaCreateSupplier = yup
     state: yup.string().required('Campo obrigatório.'),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
-    areaOfActivityLabels: yup
+    categoriesIds: yup
       .array()
       .of(yup.string().required('Campo obrigatório.'))
       .min(1, 'Campo obrigatório.')
@@ -68,11 +82,15 @@ export const ModalCreateAndLinkSupplier = ({
   onThenRequest,
   maintenanceHistoryId,
 }: IModalCreateSupplier) => {
+  const { account } = useAuthContext();
+  const { states } = useBrasilStates();
+  const { allCategories } = account
+    ? useCategoriesByCompanyId(account.Company.id)
+    : { allCategories: [] };
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState('');
-  const { states } = useBrasilStates();
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
-  const { areaOfActivities } = useAreaOfActivities({ findAll: false });
 
   return (
     <CustomModal title="Cadastrar e vincular fornecedor" setModal={setModal} zIndex={22}>
@@ -84,10 +102,10 @@ export const ModalCreateAndLinkSupplier = ({
           link: '',
           phone: '',
           email: '',
-          areaOfActivityLabels: [],
           city: '',
           state: '',
           maintenanceHistoryId,
+          categoriesIds: [],
         }}
         validationSchema={schemaCreateSupplier}
         onSubmit={async (data) => {
@@ -98,6 +116,12 @@ export const ModalCreateAndLinkSupplier = ({
           if (data.image) {
             const { Location } = await uploadFile(data.image);
             imageURL = Location;
+          }
+
+          if (!data.email && !data.phone) {
+            setOnQuery(false);
+            toast.error('Informe um e-mail ou telefone para o fornecedor.');
+            return;
           }
 
           await Api.post('/suppliers/create-and-link', {
@@ -180,27 +204,21 @@ export const ModalCreateAndLinkSupplier = ({
                 }}
               />
 
-              <ReactSelectCreatableComponent
-                selectPlaceholderValue={values.areaOfActivityLabels.length}
+              <ReactSelectComponent
+                selectPlaceholderValue={values.categoriesIds.length}
                 isMulti
-                id="areaOfActivity"
-                name="areaOfActivity"
-                placeholder="Selecione ou digite para criar"
-                label="Área de atuação *"
-                options={areaOfActivities.map(({ label, id }) => ({
-                  label,
-                  value: id,
-                }))}
+                id="categoriesIds"
+                name="categoriesIds"
+                placeholder="Selecione uma ou mais categorias"
+                label="Categoria(s) *"
+                options={allCategories.map(({ id, name }) => ({ label: name, value: id }))}
                 onChange={(data) => {
-                  const areaOfActivityLabels = data.map(({ label }: { label: string }) => label);
-                  setFieldValue('areaOfActivityLabels', areaOfActivityLabels);
-                  setFieldError('areaOfActivityLabels', '');
+                  const categoriesIds = data.map(({ value }: { value: string }) => value);
+
+                  setFieldValue('categoriesIds', categoriesIds);
+                  setFieldError('categoriesIds', '');
                 }}
-                error={
-                  touched.areaOfActivityLabels && errors.areaOfActivityLabels
-                    ? errors.areaOfActivityLabels
-                    : null
-                }
+                error={touched.categoriesIds && errors.categoriesIds ? errors.categoriesIds : null}
               />
 
               <ReactSelectComponent
