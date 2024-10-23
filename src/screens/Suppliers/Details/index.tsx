@@ -1,52 +1,49 @@
-/* eslint-disable import/no-cycle */
+// REACT
 import { useState, useEffect } from 'react';
+
+// LIBS
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Api } from '../../../services/api';
-import { applyMask, catchHandler } from '../../../utils/functions';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { ReturnButton } from '@components/Buttons/ReturnButton';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Image } from '@components/Image';
+import { NoDataFound } from '@components/NoDataFound';
+import { ImageComponent } from '@components/ImageComponent';
+
+// UTILS
+import { applyMask, catchHandler } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL TYPES
+import type { ISupplier } from '@customTypes/ISupplier';
+
+// TYPES
+import type { IMaintenanceReportData } from '@screens/Reports/Maintenances/types';
+
+// STYLES
 import * as Style from './styles';
-import { icon } from '../../../assets/icons';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { ReturnButton } from '../../../components/Buttons/ReturnButton';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { theme } from '../../../styles/theme';
-import { Image } from '../../../components/Image';
-import { ModalEditSupplier } from './ModalEditSupplier';
-import { NoDataFound } from '../../../components/NoDataFound';
 import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
-import { ImageComponent } from '../../../components/ImageComponent';
+
+// COMPONENTS
+import { ModalEditSupplier } from './ModalEditSupplier';
 import { SupplierMaintenanceHistory } from './SupplierMaintenanceHistory';
-
-export interface ISupplier {
-  id: string;
-  image: string;
-  name: string;
-  state: string;
-  city: string;
-  cnpj: string | null;
-
-  phone: string | null;
-  email: string | null;
-  link: string | null;
-
-  areaOfActivities: {
-    areaOfActivity: { label: string };
-  }[];
-
-  maintenances: {
-    maintenance: {
-      id: string;
-      activity: string;
-      element: string;
-      Category: { name: string };
-    };
-  }[];
-}
+import { SupplierOverview } from './SupplierOverview';
 
 export const SupplierDetails = () => {
-  const { supplierId } = useParams() as { supplierId: string };
   const navigate = useNavigate();
+  const { supplierId } = useParams() as { supplierId: string };
 
   const [loading, setLoading] = useState(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -61,10 +58,11 @@ export const SupplierDetails = () => {
     phone: '',
     cnpj: '',
     city: '',
-    areaOfActivities: [],
     state: '',
+    categories: [],
     maintenances: [],
   });
+  const [maintenancesHistory, setMaintenancesHistory] = useState<IMaintenanceReportData[]>([]);
 
   const deleteSupplier = async () => {
     setOnQuery(true);
@@ -114,8 +112,19 @@ export const SupplierDetails = () => {
       });
   };
 
+  const getMaintenanceHistory = async () => {
+    await Api.get(`/suppliers/${supplierId}/maintenance-history`)
+      .then((res) => {
+        setMaintenancesHistory(res.data.maintenances);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      });
+  };
+
   useEffect(() => {
     findSupplierById();
+    getMaintenanceHistory();
   }, []);
 
   type MaintenanceKey = 'id' | 'activity' | 'element' | 'Category.name';
@@ -216,11 +225,9 @@ export const SupplierDetails = () => {
             </Style.Card>
 
             <Style.Card>
-              <h6>Área de atuação</h6>
+              <h6>Categoria(s)</h6>
               <p className="p2">
-                {supplier.areaOfActivities
-                  .map(({ areaOfActivity }) => areaOfActivity.label)
-                  .join(', ')}
+                {supplier.categories?.map(({ category }) => category.name).join(', ')}
               </p>
             </Style.Card>
 
@@ -272,6 +279,8 @@ export const SupplierDetails = () => {
               }}
             />
           </Style.Footer>
+
+          <SupplierOverview maintenancesHistory={maintenancesHistory} />
 
           <h2>Manutenções vinculadas</h2>
           <div style={{ overflowX: 'auto' }}>
@@ -360,7 +369,10 @@ export const SupplierDetails = () => {
             </Style.MaintenancesContainer>
           </div>
 
-          <SupplierMaintenanceHistory />
+          <SupplierMaintenanceHistory
+            maintenancesHistory={maintenancesHistory}
+            getMaintenanceHistory={getMaintenanceHistory}
+          />
         </>
       )}
     </>

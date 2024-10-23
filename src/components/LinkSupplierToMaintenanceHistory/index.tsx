@@ -1,25 +1,35 @@
+// REACT
 import { useEffect, useRef, useState } from 'react';
+
+// LIBS
 import { toast } from 'react-toastify';
-import { icon } from '../../assets/icons';
-import { applyMask, catchHandler } from '../../utils/functions';
-import { IconButton } from '../Buttons/IconButton';
-import { ImageComponent } from '../ImageComponent';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { ImageComponent } from '@components/ImageComponent';
+import { CustomBackground } from '@components/CustomModal/CustomBackground';
+
+// UTILS
+import { applyMask, catchHandler } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import type { ISupplier } from '@customTypes/ISupplier';
+
+// COMPONENTS
 import { ModalLinkSupplier } from './ModalLinkSupplier';
-import * as Style from './styles';
-import { Api } from '../../services/api';
 import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
-import { CustomBackground } from '../CustomModal/CustomBackground';
+
+// STYLES
+import * as Style from './styles';
 
 interface ILinkSupplierToMaintenanceHistory {
   maintenanceHistoryId: string;
-}
-
-interface ISupplier {
-  id: string;
-  name: string;
-  image: string;
-  email: string | null;
-  phone: string | null;
 }
 
 export const LinkSupplierToMaintenanceHistory = ({

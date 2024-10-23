@@ -1,54 +1,66 @@
+// REACT
 import { useEffect, useState } from 'react';
+
+// LIBS
 import { useNavigate } from 'react-router-dom';
-import * as Style from './styles';
-import { Api } from '../../../services/api';
-import { applyMask, catchHandler, convertStateName } from '../../../utils/functions';
-import { Image } from '../../../components/Image';
-import { icon } from '../../../assets/icons';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// HOOKS
+import { useBrasilStates } from '@hooks/useBrasilStates';
+import { useBrasilCities } from '@hooks/useBrasilCities';
+import { useCategoriesByCompanyId } from '@hooks/useCategoriesByCompanyId';
+
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { Input } from '@components/Inputs/Input';
+import { Select } from '@components/Inputs/Select';
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+import { Pagination } from '@components/Pagination';
+import { ListTag } from '@components/ListTag';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { ImageComponent } from '@components/ImageComponent';
+import { Table, TableContent } from '@components/Table';
+
+// UTILS
+import { applyMask, catchHandler, convertStateName } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import type { ISupplier } from '@customTypes/ISupplier';
+
+// COMPONENTS
 import { ModalCreateSupplier } from './ModalCreateSupplier';
-import { Pagination } from '../../../components/Pagination';
+
+// STYLES
+import * as Style from './styles';
 import { NoDataContainer, PaginationFooter } from '../../Tickets/styles';
-import { ListTag } from '../../../components/ListTag';
-import { Table, TableContent } from '../../../components/Table';
-import { ImageComponent } from '../../../components/ImageComponent';
-import { Input } from '../../../components/Inputs/Input';
-import { Select } from '../../../components/Inputs/Select';
-import { Button } from '../../../components/Buttons/Button';
-import { useBrasilStates } from '../../../hooks/useBrasilStates';
-import { useBrasilCities } from '../../../hooks/useBrasilCities';
-import { useAreaOfActivities } from '../../../hooks/useAreaOfActivities';
-
-interface ISupplier {
-  id: string;
-  image: string;
-  name: string;
-  state: string;
-  city: string;
-
-  phone: string | null;
-  email: string | null;
-
-  areaOfActivities: {
-    areaOfActivity: { label: string };
-  }[];
-}
 
 type TListView = 'blocks' | 'table';
 
 export const SuppliersList = () => {
+  const navigate = useNavigate();
+
+  const { account } = useAuthContext();
+  const { states, selectedStateAcronym, setSelectedStateAcronym } = useBrasilStates();
+  const { cities } = useBrasilCities({ UF: selectedStateAcronym });
+  const { allCategories } = account
+    ? useCategoriesByCompanyId(account.Company.id)
+    : { allCategories: [] };
+
   const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
   const [supplierCounts, setSupplierCounts] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const [modalCreateSupplierOpen, setModalCreateSupplierOpen] = useState(false);
   const [listView, setListView] = useState<TListView>('blocks');
-  const navigate = useNavigate();
-
-  const { states, selectedStateAcronym, setSelectedStateAcronym } = useBrasilStates();
-  const { cities } = useBrasilCities({ UF: selectedStateAcronym });
-  const { areaOfActivities, getAuxiliaryData } = useAreaOfActivities({ findAll: true });
   const [onQuery, setOnQuery] = useState(false);
   const [filter, setFilter] = useState({ search: '', serviceTypeLabel: '', state: '', city: '' });
 
@@ -87,13 +99,14 @@ export const SuppliersList = () => {
             setModal={setModalCreateSupplierOpen}
             onThenRequest={async () => {
               findManySuppliers();
-              getAuxiliaryData();
             }}
           />
         )}
+
         <Style.Header>
           <Style.LeftSide>
             <h2>Fornecedores</h2>
+
             <IconButton
               labelPos="right"
               label={listView === 'table' ? 'Visualizar em blocos' : 'Visualizar em lista'}
@@ -144,6 +157,7 @@ export const SuppliersList = () => {
 
         <Style.FilterWrapper>
           <h5>Filtros</h5>
+
           <Style.FilterInputs>
             <Input
               label="Busca"
@@ -160,7 +174,7 @@ export const SuppliersList = () => {
             />
 
             <Select
-              label="Área de atuação"
+              label="Categorias"
               value={filter.serviceTypeLabel}
               selectPlaceholderValue={filter.serviceTypeLabel}
               onChange={(evt) => {
@@ -168,9 +182,10 @@ export const SuppliersList = () => {
               }}
             >
               <option value="">Todas</option>
-              {areaOfActivities.map(({ label }) => (
-                <option value={label} key={label}>
-                  {label}
+
+              {allCategories.map(({ id, name }) => (
+                <option value={id} key={id}>
+                  {name}
                 </option>
               ))}
             </Select>
@@ -202,6 +217,7 @@ export const SuppliersList = () => {
               }}
             >
               <option value="">Todas</option>
+
               {cities.map(({ nome }) => (
                 <option value={nome} key={nome}>
                   {nome}
@@ -233,10 +249,10 @@ export const SuppliersList = () => {
                       <h5>{supplier.name}</h5>
 
                       <Style.Tags>
-                        {supplier.areaOfActivities.map(({ areaOfActivity }) => (
+                        {supplier.categories.map(({ category }) => (
                           <ListTag
-                            key={areaOfActivity.label}
-                            label={areaOfActivity.label}
+                            key={category.id}
+                            label={category.name}
                             fontSize="14px"
                             lineHeight="16px"
                           />
@@ -285,9 +301,7 @@ export const SuppliersList = () => {
                         cssProps: { width: '20%', minWidth: '200px' },
                       },
                       {
-                        cell: supplier.areaOfActivities
-                          .map(({ areaOfActivity }) => areaOfActivity.label)
-                          .join(', '),
+                        cell: supplier.categories.map(({ category }) => category.name).join(', '),
                         cssProps: { width: '40%', minWidth: '200px' },
                       },
                       {
