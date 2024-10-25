@@ -35,6 +35,8 @@ import {
 import { applyMask, uploadManyFiles } from '../../../../utils/functions';
 import { CRUDInput } from '../../../../components/Inputs/CRUDInput';
 import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalCreateOccasionalMaintenance = ({
   setModal,
@@ -42,11 +44,18 @@ export const ModalCreateOccasionalMaintenance = ({
   checklistTitle,
   checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
+  const { account } = useAuthContext();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-  const { account } = useAuthContext();
+
+  const responsibleArray = [
+    { id: '1', name: 'Equipe de manutenção local' },
+    { id: '2', name: 'Equipe capacitada' },
+    { id: '3', name: 'Equipe Especializada' },
+  ];
 
   const [data, setData] = useState<ICreateOccasionalMaintenanceData>({
     buildingId: checklistBuildingId || '',
@@ -321,17 +330,27 @@ export const ModalCreateOccasionalMaintenance = ({
             }
           />
 
-          <Input
+          <Select
             label="Responsável *"
-            placeholder="Ex: João da Silva"
             value={data.maintenanceData.responsible}
+            selectPlaceholderValue={data.maintenanceData.responsible}
             onChange={(evt) =>
               setData((prevState) => ({
                 ...prevState,
                 maintenanceData: { ...prevState.maintenanceData, responsible: evt.target.value },
               }))
             }
-          />
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+
+            {responsibleArray.map((responsible) => (
+              <option key={responsible.id} value={responsible.id}>
+                {responsible.name}
+              </option>
+            ))}
+          </Select>
 
           <Input
             label="Data de execução *"
@@ -369,6 +388,10 @@ export const ModalCreateOccasionalMaintenance = ({
 
           {!data.inProgress && new Date(data.executionDate) < new Date() && (
             <>
+              <LinkSupplierToMaintenanceHistory maintenanceType="occasional" />
+
+              <MaintenanceHistoryActivities maintenanceType="occasional" />
+
               <Input
                 disabled={data.inProgress}
                 label="Custo"
@@ -386,22 +409,6 @@ export const ModalCreateOccasionalMaintenance = ({
                   }));
                 }}
               />
-              {/*
-              <TextArea
-                disabled={data.inProgress}
-                label="Observação do relato"
-                placeholder="Digite aqui"
-                value={data.reportData.observation}
-                onChange={(evt) => {
-                  setData((prevState) => ({
-                    ...prevState,
-                    reportData: {
-                      ...prevState.reportData,
-                      observation: evt.target.value,
-                    },
-                  }));
-                }}
-              /> */}
 
               <Style.Row disabled={onFileQuery}>
                 <h6>Anexar</h6>

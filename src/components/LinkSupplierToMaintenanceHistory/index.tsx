@@ -29,19 +29,22 @@ import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
 import * as Style from './styles';
 
 interface ILinkSupplierToMaintenanceHistory {
-  maintenanceHistoryId: string;
+  maintenanceHistoryId?: string;
+  maintenanceType: 'occasional' | 'common';
 }
 
 export const LinkSupplierToMaintenanceHistory = ({
   maintenanceHistoryId,
+  maintenanceType,
 }: ILinkSupplierToMaintenanceHistory) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [modalCreateAndLinkSupplierOpen, setModalCreateAndLinkSupplierOpen] = useState(false);
   const [modalLinkSupplierOpen, setModalLinkSupplierOpen] = useState(false);
-  const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
-  const ref = useRef<HTMLDivElement>(null);
   const [onQuery, setOnQuery] = useState(false);
-
   const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
+
+  const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
 
   const findMaintenanceHistorySupplier = async () => {
     await Api.get(`/suppliers/selected/${maintenanceHistoryId}`)
@@ -73,6 +76,8 @@ export const LinkSupplierToMaintenanceHistory = ({
   };
 
   useEffect(() => {
+    if (!maintenanceHistoryId) return;
+
     findMaintenanceHistorySupplier();
   }, []);
 
@@ -84,6 +89,7 @@ export const LinkSupplierToMaintenanceHistory = ({
         <ModalLinkSupplier
           setModal={setModalLinkSupplierOpen}
           maintenanceHistoryId={maintenanceHistoryId}
+          maintenanceType={maintenanceType}
           findMaintenanceHistorySupplier={findMaintenanceHistorySupplier}
           setModalCreateAndLinkSupplierOpen={setModalCreateAndLinkSupplierOpen}
         />
@@ -93,6 +99,7 @@ export const LinkSupplierToMaintenanceHistory = ({
         <ModalCreateAndLinkSupplier
           setModal={setModalCreateAndLinkSupplierOpen}
           maintenanceHistoryId={maintenanceHistoryId}
+          maintenanceType={maintenanceType}
           onThenRequest={async () => {
             await findMaintenanceHistorySupplier();
             setModalCreateAndLinkSupplierOpen(false);

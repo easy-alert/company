@@ -23,7 +23,8 @@ import * as Style from './styles';
 
 interface IModalLinkSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  maintenanceHistoryId: string;
+  maintenanceHistoryId?: string;
+  maintenanceType: 'occasional' | 'common';
   findMaintenanceHistorySupplier: () => Promise<void>;
   setModalCreateAndLinkSupplierOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -31,9 +32,11 @@ interface IModalLinkSupplier {
 export const ModalLinkSupplier = ({
   setModal,
   maintenanceHistoryId,
+  maintenanceType = 'common',
   findMaintenanceHistorySupplier,
   setModalCreateAndLinkSupplierOpen,
 }: IModalLinkSupplier) => {
+  console.log('🚀 ~ maintenanceType:', maintenanceType);
   const [suggestedSuppliers, setSuggestedSuppliers] = useState<ISupplier[]>([]);
   const [remainingSuppliers, setRemainingSuppliers] = useState<ISupplier[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,6 +79,8 @@ export const ModalLinkSupplier = ({
   };
 
   useEffect(() => {
+    if (!maintenanceHistoryId) return;
+
     findCompanySuppliers();
   }, []);
 
