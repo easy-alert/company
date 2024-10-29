@@ -22,21 +22,18 @@ import type { ISupplier } from '@customTypes/ISupplier';
 import * as Style from './styles';
 
 interface IModalLinkSupplier {
+  maintenanceHistoryId: string;
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  maintenanceHistoryId?: string;
-  maintenanceType: 'occasional' | 'common';
   findMaintenanceHistorySupplier: () => Promise<void>;
   setModalCreateAndLinkSupplierOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalLinkSupplier = ({
-  setModal,
   maintenanceHistoryId,
-  maintenanceType = 'common',
+  setModal,
   findMaintenanceHistorySupplier,
   setModalCreateAndLinkSupplierOpen,
 }: IModalLinkSupplier) => {
-  console.log('🚀 ~ maintenanceType:', maintenanceType);
   const [suggestedSuppliers, setSuggestedSuppliers] = useState<ISupplier[]>([]);
   const [remainingSuppliers, setRemainingSuppliers] = useState<ISupplier[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +41,12 @@ export const ModalLinkSupplier = ({
 
   // tirar o delete many no linkWithMaintenanceHistory se for vincular a mais de 1 fornecedor
   const findCompanySuppliers = async () => {
+    if (!maintenanceHistoryId) {
+      setModal(false);
+      toast.error('Erro ao buscar fornecedores. Tente novamente.');
+      return;
+    }
+
     await Api.get(`/suppliers/to-select/${maintenanceHistoryId}`)
       .then((res) => {
         setRemainingSuppliers(res.data.remainingSuppliers);
@@ -79,8 +82,6 @@ export const ModalLinkSupplier = ({
   };
 
   useEffect(() => {
-    if (!maintenanceHistoryId) return;
-
     findCompanySuppliers();
   }, []);
 

@@ -40,8 +40,7 @@ import * as Style from './styles';
 interface IModalCreateSupplier {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   onThenRequest: () => Promise<void>;
-  maintenanceHistoryId?: string;
-  maintenanceType: 'occasional' | 'common';
+  maintenanceHistoryId: string;
 }
 
 const schemaCreateSupplier = yup
@@ -82,9 +81,7 @@ export const ModalCreateAndLinkSupplier = ({
   setModal,
   onThenRequest,
   maintenanceHistoryId,
-  maintenanceType = 'common',
 }: IModalCreateSupplier) => {
-  console.log('🚀 ~ maintenanceType:', maintenanceType);
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
   const { allCategories } = account

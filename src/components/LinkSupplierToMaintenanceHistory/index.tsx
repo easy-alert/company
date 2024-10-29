@@ -29,13 +29,11 @@ import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
 import * as Style from './styles';
 
 interface ILinkSupplierToMaintenanceHistory {
-  maintenanceHistoryId?: string;
-  maintenanceType: 'occasional' | 'common';
+  maintenanceHistoryId: string;
 }
 
 export const LinkSupplierToMaintenanceHistory = ({
   maintenanceHistoryId,
-  maintenanceType,
 }: ILinkSupplierToMaintenanceHistory) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -47,6 +45,12 @@ export const LinkSupplierToMaintenanceHistory = ({
   const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
 
   const findMaintenanceHistorySupplier = async () => {
+    if (!maintenanceHistoryId) {
+      setModalLinkSupplierOpen(false);
+      toast.error('Erro ao buscar fornecedores vinculados.');
+      return;
+    }
+
     await Api.get(`/suppliers/selected/${maintenanceHistoryId}`)
       .then((res) => {
         setSuppliers(res.data.suppliers);
@@ -76,8 +80,6 @@ export const LinkSupplierToMaintenanceHistory = ({
   };
 
   useEffect(() => {
-    if (!maintenanceHistoryId) return;
-
     findMaintenanceHistorySupplier();
   }, []);
 
@@ -89,7 +91,6 @@ export const LinkSupplierToMaintenanceHistory = ({
         <ModalLinkSupplier
           setModal={setModalLinkSupplierOpen}
           maintenanceHistoryId={maintenanceHistoryId}
-          maintenanceType={maintenanceType}
           findMaintenanceHistorySupplier={findMaintenanceHistorySupplier}
           setModalCreateAndLinkSupplierOpen={setModalCreateAndLinkSupplierOpen}
         />
@@ -99,7 +100,6 @@ export const LinkSupplierToMaintenanceHistory = ({
         <ModalCreateAndLinkSupplier
           setModal={setModalCreateAndLinkSupplierOpen}
           maintenanceHistoryId={maintenanceHistoryId}
-          maintenanceType={maintenanceType}
           onThenRequest={async () => {
             await findMaintenanceHistorySupplier();
             setModalCreateAndLinkSupplierOpen(false);
