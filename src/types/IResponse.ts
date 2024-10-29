@@ -1,7 +1,4 @@
-export interface IResponse {
+export interface IResponse extends Response {
   config: any;
-  headers: any;
   request: any;
-  status: number;
-  statusText: string;
 }
