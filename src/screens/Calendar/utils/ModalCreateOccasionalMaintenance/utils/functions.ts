@@ -1,12 +1,18 @@
+// LIBS
 import { toast } from 'react-toastify';
 
-import {
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL UTILS
+import { catchHandler, unMaskBRL } from '@utils/functions';
+
+// TYPES
+import type {
   ICategories,
   IRequestAuxiliaryDataForCreateOccasionalMaintenance,
   IRequestCreateOccasionalMaintenance,
 } from './types';
-import { catchHandler, unMaskBRL } from '../../../../../utils/functions';
-import { Api } from '../../../../../services/api';
 
 export const requestCreateOccasionalMaintenance = async ({
   setModal,
@@ -59,6 +65,7 @@ export const requestCreateOccasionalMaintenance = async ({
 
       catchHandler(err);
     });
+
   return null;
 };
 
