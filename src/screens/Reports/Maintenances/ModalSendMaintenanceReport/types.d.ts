@@ -1,8 +1,9 @@
-import { IMaintenance } from '../../../Calendar/types';
+import type { IMaintenance } from '@customTypes/IMaintenance';
+import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 
 export interface IModalSendMaintenanceReport {
-  setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
+  setModal: (setModal: boolean) => void;
   onThenRequest: () => Promise<void>;
 }
 
@@ -10,11 +11,6 @@ export interface IRequestMaintenanceDetails {
   maintenanceHistoryId: string;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setMaintenance: React.Dispatch<React.SetStateAction<IMaintenance>>;
-}
-
-export interface IMaintenanceReport {
-  cost: string;
-  observation: string;
 }
 
 export interface IRequestSendReport {

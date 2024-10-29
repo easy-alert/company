@@ -1,6 +1,13 @@
+// LIBS
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL UTILS
+import { applyMask, catchHandler, unMaskBRL } from '@utils/functions';
+
+// TYPES
 import { IRequestReportProgress, IRequestSaveReportProgress, IRequestSendReport } from './types';
 
 export const requestSendReport = async ({
@@ -18,7 +25,7 @@ export const requestSendReport = async ({
   await Api.post('/maintenances/create/report', {
     origin,
     maintenanceHistoryId,
-    cost: Number(unMaskBRL(maintenanceReport.cost)),
+    cost: Number(unMaskBRL(String(maintenanceReport.cost))),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,
     ReportImages: images,
