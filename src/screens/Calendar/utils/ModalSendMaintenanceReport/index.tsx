@@ -3,6 +3,8 @@
 import { useDropzone } from 'react-dropzone';
 // COMPONENTS
 import { useEffect, useState } from 'react';
+import { IMaintenance } from '@customTypes/IMaintenance';
+import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import { Button } from '../../../../components/Buttons/Button';
 import { Input } from '../../../../components/Inputs/Input';
 import { Modal } from '../../../../components/Modal';
@@ -19,7 +21,6 @@ import { icon } from '../../../../assets/icons';
 
 // TYPES
 import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
-import { AnnexesAndImages, IMaintenance } from '../../types';
 
 // FUNCTIONS
 import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
@@ -54,6 +55,8 @@ export const ModalSendMaintenanceReport = ({
   onThenActionRequest,
   modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
+  const { account } = useAuthContext();
+
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
       name: '',
@@ -90,10 +93,6 @@ export const ModalSendMaintenanceReport = ({
     MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
   });
 
-  const { account } = useAuthContext();
-
-  // MODAL ENVIAR RELATO
-
   const [maintenanceReport, setMaintenanceReport] = useState<IMaintenanceReport>({
     cost: 'R$ 0,00',
     observation: '',
@@ -103,13 +102,13 @@ export const ModalSendMaintenanceReport = ({
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
-  const [files, setFiles] = useState<AnnexesAndImages[]>([]);
+  const [files, setFiles] = useState<IAnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     disabled: onFileQuery,
   });
 
-  const [images, setImages] = useState<AnnexesAndImages[]>([]);
+  const [images, setImages] = useState<IAnnexesAndImages[]>([]);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const {
     acceptedFiles: acceptedImages,
@@ -205,10 +204,11 @@ export const ModalSendMaintenanceReport = ({
           <ShareMaintenanceHistoryButton maintenanceHistoryId={modalAdditionalInformations.id} />
 
           <h3>{maintenance?.Building.name}</h3>
+
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
             <EventTag status={maintenance?.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' ? (
+            {maintenance.Maintenance.MaintenanceType?.name === 'occasional' ? (
               <EventTag status="occasional" />
             ) : (
               <EventTag status="common" />
@@ -220,7 +220,7 @@ export const ModalSendMaintenanceReport = ({
           <Style.Content>
             <Style.Row>
               <h6>Categoria</h6>
-              <p className="p2">{maintenance.Maintenance.Category.name}</p>
+              <p className="p2">{maintenance.Maintenance.Category?.name}</p>
             </Style.Row>
             <Style.Row>
               <h6>Elemento</h6>
@@ -246,22 +246,22 @@ export const ModalSendMaintenanceReport = ({
             <Style.Row>
               <h6>Instruções</h6>
               <Style.FileAndImageRow>
-                {maintenance.Maintenance.instructions.length > 0
-                  ? maintenance.Maintenance.instructions.map(({ url, name }) => (
-                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
+                {(maintenance.Maintenance.instructions?.length || 0) > 0
+                  ? maintenance.Maintenance.instructions?.map(({ url, name }) => (
+                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name || ''} />
                     ))
                   : '-'}
               </Style.FileAndImageRow>
             </Style.Row>
 
-            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
               <Style.Row>
                 <h6>Periodicidade</h6>
                 <p className="p2">
                   A cada{' '}
-                  {maintenance.Maintenance.frequency > 1
-                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
-                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}
+                  {(maintenance.Maintenance.frequency || 0) > 1
+                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.pluralLabel}`
+                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.singularLabel}`}
                 </p>
               </Style.Row>
             )}
@@ -271,7 +271,7 @@ export const ModalSendMaintenanceReport = ({
               <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
             </Style.Row>
 
-            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
               <Style.Row>
                 <h6>Data de vencimento</h6>
                 <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
@@ -391,7 +391,7 @@ export const ModalSendMaintenanceReport = ({
             )}
           </Style.Content>
           <Style.ButtonContainer>
-            {!onQuery && maintenance.Maintenance.MaintenanceType.name === 'occasional' && (
+            {!onQuery && maintenance.Maintenance.MaintenanceType?.name === 'occasional' && (
               <PopoverButton
                 actionButtonBgColor={theme.color.actionDanger}
                 borderless
