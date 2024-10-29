@@ -1,4 +1,4 @@
-import { IMaintenance } from '../../types';
+import type { IMaintenance } from '@customTypes/IMaintenance';
 
 export interface IModalAdditionalInformations {
   id: string;
