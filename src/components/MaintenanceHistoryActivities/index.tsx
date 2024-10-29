@@ -1,11 +1,16 @@
+// REACT
 import { useState, useEffect } from 'react';
 
+// LIBS
 import { useDropzone } from 'react-dropzone';
 
+// SERVICES
 import { Api } from '@services/api';
 
+// CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
+// GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
 import { ImageComponent } from '@components/ImageComponent';
 import { ImagePreview } from '@components/ImagePreview';
@@ -13,23 +18,24 @@ import { DotLoading } from '@components/Loadings/DotLoading';
 import { TextArea } from '@components/Inputs/TextArea';
 import { ListTag } from '@components/ListTag';
 
+// GLOBAL UTILS
 import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '@utils/functions';
 
+// ASSETS
 import { icon } from '@assets/icons';
 
+// GLOBAL TYPES
+import type { IActivity } from '@customTypes/IActivity';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+
+// STYLES
 import * as Style from './styles';
 
-import type {
-  IAnnexesAndImages,
-  IActivity,
-  IMaintenanceHistoryActivities,
-  IOccasionallyActivities,
-  IOccasionallyActivitiesImages,
-} from './types';
+// TYPES
+import type { IMaintenanceHistoryActivities } from './types';
 
 export const MaintenanceHistoryActivities = ({
   maintenanceHistoryId,
-  maintenanceType = 'common',
 }: IMaintenanceHistoryActivities) => {
   const { account } = useAuthContext();
 
@@ -41,9 +47,7 @@ export const MaintenanceHistoryActivities = ({
   const [comment, setComment] = useState('');
   const [onQuery, setOnQuery] = useState(false);
   const [activities, setActivities] = useState<IActivity[]>([]);
-  const [occasionallyActivities, setOccasionallyActivities] = useState<IOccasionallyActivities[]>(
-    [],
-  );
+
   const [imagesToUpload, setImagesToUpload] = useState<IAnnexesAndImages[]>([]);
 
   const sortFiles = (a: IAnnexesAndImages, b: IAnnexesAndImages) => {
@@ -129,56 +133,77 @@ export const MaintenanceHistoryActivities = ({
       });
   };
 
-  const createOccasionalActivity = () => {
-    setOccasionallyActivities((prevState) => {
-      const newState = [...prevState];
+  // const addOccasionalActivity = () => {
+  //   setOccasionallyActivities((prevState) => {
+  //     const newState = [...prevState];
 
-      newState.push({
-        id: Math.random().toString(),
-        content: comment,
-        images: acceptedFiles as IOccasionallyActivitiesImages[],
-        userId: account?.User.id,
-        createdAt: new Date().toISOString(),
-      });
+  //     const newImages = imagesToUpload.map((image) => ({
+  //       name: image.name,
+  //       url: image.url,
+  //       type: image.type,
+  //     }));
 
-      return newState.sort((a, b) => {
-        const dateA = new Date(a.createdAt).getTime();
-        const dateB = new Date(b.createdAt).getTime();
+  //     newState.push({
+  //       id: Math.random().toString(),
+  //       content: comment,
+  //       images: newImages as IOccasionallyActivitiesImages[],
+  //       userId: account?.User.id,
+  //       createdAt: new Date().toISOString(),
+  //     });
 
-        return dateB - dateA;
-      });
-    });
+  //     return newState.sort((a, b) => {
+  //       const dateA = new Date(a.createdAt).getTime();
+  //       const dateB = new Date(b.createdAt).getTime();
 
-    setComment('');
-    setImagesToUpload([]);
-  };
+  //       return dateB - dateA;
+  //     });
+  //   });
+
+  //   setComment('');
+  //   setImagesToUpload([]);
+  // };
 
   useEffect(() => {
-    if (maintenanceType === 'common') findMaintenanceHistoryActivities();
+    findMaintenanceHistoryActivities();
   }, []);
 
   useEffect(() => {
-    if (maintenanceType === 'common' && acceptedFiles.length > 0) {
-      const uploadAcceptedImages = async () => {
-        setOnImageQuery(true);
+    const uploadAcceptedImages = async () => {
+      setOnImageQuery(true);
 
-        const uploadedImages = await uploadManyFiles(acceptedFiles);
+      const uploadedImages = await uploadManyFiles(acceptedFiles);
 
-        const formattedImages = uploadedImages.map((file) => ({
-          originalName: file.originalname,
-          url: file.Location,
-        }));
+      const formattedImages = uploadedImages.map((file) => ({
+        name: file.originalname,
+        originalName: file.originalname,
+        url: file.Location,
+      }));
 
-        setImagesToUpload((prevState) => {
-          let newState = [...prevState];
-          newState = [...newState, ...formattedImages];
-          return newState;
-        });
-        setOnImageQuery(false);
-      };
+      setImagesToUpload((prevState) => {
+        let newState = [...prevState];
+        newState = [...newState, ...formattedImages];
+        return newState;
+      });
+      setOnImageQuery(false);
+    };
 
-      uploadAcceptedImages();
-    }
+    uploadAcceptedImages();
+
+    // if (maintenanceType === 'occasional' && acceptedFiles.length > 0) {
+    //   const formattedImages = acceptedFiles.map((file) => ({
+    //     name: file.name,
+    //     originalName: file.name,
+    //     url: URL.createObjectURL(file),
+    //     type: file.type,
+    //   }));
+
+    //   setImagesToUpload((prevState) => {
+    //     let newState = [...prevState];
+    //     newState = [...newState, ...formattedImages];
+
+    //     return newState;
+    //   });
+    // }
   }, [acceptedFiles]);
 
   return (
@@ -212,11 +237,7 @@ export const MaintenanceHistoryActivities = ({
               loading={onQuery}
               icon={icon.send}
               onClick={() => {
-                if (maintenanceType === 'occasional') {
-                  createOccasionalActivity();
-                } else {
-                  createActivity();
-                }
+                createActivity();
               }}
             />
           </Style.InputButtons>
@@ -272,90 +293,81 @@ export const MaintenanceHistoryActivities = ({
         )}
       </Style.SendDataSection>
 
-      {maintenanceType === 'common' &&
-        (activities.length > 0 ? (
-          <Style.History>
-            <h3>Históricos</h3>
+      <Style.History>
+        <h3>Históricos</h3>
 
-            <Style.ScrollDiv>
-              {activities.map(({ id, content, createdAt, title, type, images }) => {
-                if (type === 'comment') {
-                  return (
-                    <Style.Comment key={id}>
-                      <Style.CommentHeader>
-                        <ImageComponent src={icon.activityComment} />
+        {activities.length > 0 ? (
+          <Style.ScrollDiv>
+            {activities.map(({ id, content, createdAt, title, type, images }) => {
+              if (type === 'comment') {
+                return (
+                  <Style.Comment key={id}>
+                    <Style.CommentHeader>
+                      <ImageComponent src={icon.activityComment} />
 
-                        <Style.CommentInfo>
-                          <h6>{title}</h6>
-                          <p className="p3">{dateTimeFormatter(createdAt)}</p>
-                        </Style.CommentInfo>
-                      </Style.CommentHeader>
+                      <Style.CommentInfo>
+                        <h6>{title}</h6>
+                        <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                      </Style.CommentInfo>
+                    </Style.CommentHeader>
 
-                      {content && <pre className="p2">{content}</pre>}
+                    {content && <pre className="p2">{content}</pre>}
 
-                      {images.length > 0 && (
-                        <Style.FileAndImageRow>
-                          {images.sort(sortFiles2).map((e) => {
-                            if (isImage(e.url)) {
-                              return (
-                                <ImagePreview
-                                  key={e.url}
-                                  width="97px"
-                                  height="97px"
-                                  imageCustomName={e.name}
-                                  src={e.url}
-                                  downloadUrl={e.url}
-                                />
-                              );
-                            }
-
+                    {images.length > 0 && (
+                      <Style.FileAndImageRow>
+                        {images.sort(sortFiles2).map((e) => {
+                          if (isImage(e.url)) {
                             return (
-                              <ListTag
-                                downloadUrl={e.url}
+                              <ImagePreview
                                 key={e.url}
-                                padding="4px 12px"
-                                label={e.name}
-                                maxWidth="100px"
+                                width="97px"
+                                height="97px"
+                                imageCustomName={e.name}
+                                src={e.url}
+                                downloadUrl={e.url}
                               />
                             );
-                          })}
-                        </Style.FileAndImageRow>
-                      )}
-                    </Style.Comment>
-                  );
-                }
+                          }
 
-                if (type === 'notification') {
-                  return (
-                    <Style.Comment key={id}>
-                      <Style.CommentHeader>
-                        <ImageComponent src={icon.activityNotification} />
-                        <Style.CommentInfo>
-                          <h6>{title}</h6>
-                          <p className="p3">{dateTimeFormatter(createdAt)}</p>
-                        </Style.CommentInfo>
-                      </Style.CommentHeader>
-                      {content && <pre className="p2">{content}</pre>}
-                    </Style.Comment>
-                  );
-                }
-                return null;
-              })}
-            </Style.ScrollDiv>
-          </Style.History>
+                          return (
+                            <ListTag
+                              downloadUrl={e.url}
+                              key={e.url}
+                              padding="4px 12px"
+                              label={e.name}
+                              maxWidth="100px"
+                            />
+                          );
+                        })}
+                      </Style.FileAndImageRow>
+                    )}
+                  </Style.Comment>
+                );
+              }
+
+              if (type === 'notification') {
+                return (
+                  <Style.Comment key={id}>
+                    <Style.CommentHeader>
+                      <ImageComponent src={icon.activityNotification} />
+                      <Style.CommentInfo>
+                        <h6>{title}</h6>
+                        <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                      </Style.CommentInfo>
+                    </Style.CommentHeader>
+                    {content && <pre className="p2">{content}</pre>}
+                  </Style.Comment>
+                );
+              }
+              return null;
+            })}
+          </Style.ScrollDiv>
         ) : (
-          <Style.History>
-            <h3>Históricos</h3>
+          <p className="p2 opacity">Não há registros no momento.</p>
+        )}
 
-            <p className="p2 opacity">Não há registros no momento.</p>
-          </Style.History>
-        ))}
-
-      {maintenanceType === 'occasional' &&
-        (occasionallyActivities.length > 0 ? (
-          <Style.History>
-            <h3>Históricos</h3>
-
+        {/* {maintenanceType === 'occasional' &&
+          (occasionallyActivities.length > 0 ? (
             <Style.ScrollDiv>
               {occasionallyActivities.map(({ id, content, createdAt, images }) => (
                 <Style.Comment key={id}>
@@ -367,7 +379,7 @@ export const MaintenanceHistoryActivities = ({
                       <p className="p3">{dateTimeFormatter(createdAt)}</p>
                     </Style.CommentInfo>
 
-                    <div style={{ marginLeft: 'auto' }}>
+                    <div style={{ marginLeft: 'auto', marginRight: '8px' }}>
                       <IconButton
                         icon={icon.trash}
                         onClick={() => {
@@ -392,9 +404,9 @@ export const MaintenanceHistoryActivities = ({
                         if (isImage(image.type)) {
                           return (
                             <ImagePreview
-                              key={image.path}
-                              src={image.path}
-                              downloadUrl={image.path}
+                              key={image.url}
+                              src={image.url || ''}
+                              downloadUrl={image.url}
                               imageCustomName={image.name}
                               width="97px"
                               height="97px"
@@ -404,8 +416,8 @@ export const MaintenanceHistoryActivities = ({
 
                         return (
                           <ListTag
-                            key={image.path}
-                            downloadUrl={image.path}
+                            key={image.url}
+                            downloadUrl={image.url}
                             label={image.name}
                             padding="4px 12px"
                             maxWidth="100px"
@@ -417,14 +429,10 @@ export const MaintenanceHistoryActivities = ({
                 </Style.Comment>
               ))}
             </Style.ScrollDiv>
-          </Style.History>
-        ) : (
-          <Style.History>
-            <h3>Históricos</h3>
-
+          ) : (
             <p className="p2 opacity">Não há registros no momento.</p>
-          </Style.History>
-        ))}
+          ))} */}
+      </Style.History>
     </Style.Container>
   );
 };

@@ -68,7 +68,7 @@ export const CommentInfo = styled.div`
 export const CommentHeader = styled.div`
   display: flex;
   gap: ${theme.size.xsm};
-  align-items: flex-start;
+  align-items: center;
 `;
 
 export const SendDataSection = styled.div`

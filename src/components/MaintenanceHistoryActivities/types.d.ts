@@ -1,22 +1,17 @@
 export interface IMaintenanceHistoryActivities {
-  maintenanceHistoryId?: string;
-  maintenanceType?: 'occasional' | 'common';
-}
-
-export interface IAnnexesAndImages {
-  originalName: string;
-  url: string;
+  maintenanceHistoryId: string;
 }
 
 export interface IOccasionallyActivitiesImages extends File {
-  path: string;
+  path?: string;
+  url?: string;
 }
 
 export interface IOccasionallyActivities {
   id: string;
+  userId?: string;
   content: string;
   images: IOccasionallyActivitiesImages[];
-  userId?: string;
   createdAt: string;
 }
 
