@@ -8,9 +8,9 @@ export interface IModalAdditionalInformations {
 }
 
 export interface IModalMaintenanceDetails {
-  setModal: (setModal: boolean) => void;
-  setModalEditReport: (setModal: boolean) => void;
   modalAdditionalInformations: IModalAdditionalInformations;
+  handleModalMaintenanceDetails: (modalState: boolean) => void;
+  handleModalEditReport: (modalState: boolean) => void;
 }
 
 export interface IRequestMaintenanceDetails {

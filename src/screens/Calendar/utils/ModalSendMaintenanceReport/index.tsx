@@ -1,48 +1,63 @@
-/* eslint-disable react/no-array-index-key */
+// REACT
+import { useEffect, useState } from 'react';
+
 // LIBS
 import { useDropzone } from 'react-dropzone';
-// COMPONENTS
-import { useEffect, useState } from 'react';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
 import { IMaintenance } from '@customTypes/IMaintenance';
 import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
-import { Button } from '../../../../components/Buttons/Button';
-import { Input } from '../../../../components/Inputs/Input';
-import { Modal } from '../../../../components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { Input } from '@components/Inputs/Input';
+import { Modal } from '@components/Modal';
+import { Image } from '@components/Image';
+import { DotLoading } from '@components/Loadings/DotLoading';
+import { ImagePreview } from '@components/ImagePreview';
+import { IconButton } from '@components/Buttons/IconButton';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { InProgressTag } from '@components/InProgressTag';
+import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
+import { ShareMaintenanceHistoryButton } from '@components/ShareMaintenanceHistoryButton';
+import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
+import { ListTag } from '@components/ListTag';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+
+// GLOBAL UTILS
+import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+
+// COMPONENTS
+import { handleToastify } from '@utils/toastifyResponses';
 import { EventTag } from '../EventTag';
-import { Image } from '../../../../components/Image';
-import { DotLoading } from '../../../../components/Loadings/DotLoading';
-import { ImagePreview } from '../../../../components/ImagePreview';
-import { IconButton } from '../../../../components/Buttons/IconButton';
-import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
 
-// STYLES
-import * as Style from './styles';
-import { icon } from '../../../../assets/icons';
-
-// TYPES
-import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
-
-// FUNCTIONS
-import { applyMask, dateFormatter, uploadManyFiles } from '../../../../utils/functions';
-import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
+// UTILS
 import {
   requestReportProgress,
   requestSaveReportProgress,
   requestSendReport,
   requestToggleInProgress,
 } from './functions';
-import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
-import { PopoverButton } from '../../../../components/Buttons/PopoverButton';
-import { theme } from '../../../../styles/theme';
+import { requestMaintenanceDetails } from '../ModalMaintenanceDetails/functions';
 import { requestDeleteMaintenanceHistory } from '../../../Reports/Maintenances/functions';
-import { InProgressTag } from '../../../../components/InProgressTag';
-import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
-import { ShareMaintenanceHistoryButton } from '../../../../components/ShareMaintenanceHistoryButton';
-import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
-import { ListTag } from '../../../../components/ListTag';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
 
 export const ModalSendMaintenanceReport = ({
-  setModal,
+  handleModalSendMaintenanceReport,
   buildingId,
   calendarType,
   setBuildingOptions,
@@ -175,6 +190,17 @@ export const ModalSendMaintenanceReport = ({
   }, [acceptedImages]);
 
   useEffect(() => {
+    if (!modalAdditionalInformations.id) {
+      setLoading(false);
+
+      handleToastify({
+        statusCode: 400,
+        message: 'Erro ao tentar carrregar detalhes da manutenção.',
+      });
+
+      return;
+    }
+
     requestReportProgress({
       maintenanceHistoryId: modalAdditionalInformations.id,
       setFiles,
@@ -193,7 +219,7 @@ export const ModalSendMaintenanceReport = ({
     <Modal
       bodyWidth="475px"
       title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
-      setModal={setModal}
+      setModal={handleModalSendMaintenanceReport}
     >
       {modalLoading ? (
         <Style.LoadingContainer>
@@ -304,21 +330,9 @@ export const ModalSendMaintenanceReport = ({
                   }}
                 />
 
-                {/* <TextArea
-                  label="Observação do relato"
-                  placeholder="Digite aqui"
-                  value={maintenanceReport.observation}
-                  onChange={(e) => {
-                    setMaintenanceReport((prevState) => {
-                      const newState = { ...prevState };
-                      newState.observation = e.target.value;
-                      return newState;
-                    });
-                  }}
-                /> */}
-
                 <Style.FileStyleRow disabled={onFileQuery}>
                   <h6>Anexar</h6>
+
                   <Style.FileRow>
                     <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                       <input {...getInputProps()} />
@@ -327,9 +341,9 @@ export const ModalSendMaintenanceReport = ({
 
                     {(files.length > 0 || onFileQuery) && (
                       <Style.FileAndImageRow>
-                        {files.map((e, i: number) => (
-                          <Style.Tag title={e.name} key={i}>
-                            <p className="p3">{e.name}</p>
+                        {files.map((file, i: number) => (
+                          <Style.Tag title={file.name} key={file.originalName}>
+                            <p className="p3">{file.name}</p>
                             <IconButton
                               size="16px"
                               icon={icon.xBlack}
@@ -343,6 +357,7 @@ export const ModalSendMaintenanceReport = ({
                             />
                           </Style.Tag>
                         ))}
+
                         {onFileQuery &&
                           acceptedFiles.map((e) => (
                             <Style.FileLoadingTag key={e.name}>
@@ -353,6 +368,7 @@ export const ModalSendMaintenanceReport = ({
                     )}
                   </Style.FileRow>
                 </Style.FileStyleRow>
+
                 <Style.FileStyleRow disabled={onImageQuery}>
                   <h6>Imagens</h6>
 
@@ -362,13 +378,13 @@ export const ModalSendMaintenanceReport = ({
                       <Image img={icon.addImage} width="40px" height="38px" radius="0" />
                     </Style.DragAndDropZoneImage>
 
-                    {images.map((e, i: number) => (
+                    {images.map((file, i: number) => (
                       <ImagePreview
-                        key={e.name + i}
+                        key={file.originalName}
                         width="97px"
                         height="97px"
-                        imageCustomName={e.name}
-                        src={e.url}
+                        imageCustomName={file.name}
+                        src={file.url}
                         onTrashClick={() => {
                           setImages((prevState) => {
                             const newState = [...prevState];
@@ -390,6 +406,7 @@ export const ModalSendMaintenanceReport = ({
               </>
             )}
           </Style.Content>
+
           <Style.ButtonContainer>
             {!onQuery && maintenance.Maintenance.MaintenanceType?.name === 'occasional' && (
               <PopoverButton
@@ -406,13 +423,14 @@ export const ModalSendMaintenanceReport = ({
                 actionButtonClick={() => {
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId: modalAdditionalInformations.id,
-                    setModal,
+                    handleModalSendMaintenanceReport,
                     onThenRequest: async () => onThenActionRequest(),
                     setOnModalQuery: setOnQuery,
                   });
                 }}
               />
             )}
+
             {maintenance.canReport ? (
               <>
                 {!onQuery && (
@@ -421,7 +439,7 @@ export const ModalSendMaintenanceReport = ({
                     actionButtonClick={() => {
                       requestToggleInProgress({
                         maintenanceHistoryId: modalAdditionalInformations.id,
-                        setModal,
+                        handleModalSendMaintenanceReport,
                         setOnQuery,
                         onThenActionRequest,
                         inProgressChange: !maintenance.inProgress,
@@ -448,7 +466,7 @@ export const ModalSendMaintenanceReport = ({
                         setOnQuery,
                         maintenanceHistoryId: modalAdditionalInformations.id,
                         maintenanceReport,
-                        setModal,
+                        handleModalSendMaintenanceReport,
                         files,
                         images,
                         buildingId,
@@ -472,6 +490,7 @@ export const ModalSendMaintenanceReport = ({
                     type="Button"
                   />
                 )}
+
                 <PopoverButton
                   disabled={onFileQuery || onImageQuery}
                   loading={onQuery}
@@ -480,7 +499,7 @@ export const ModalSendMaintenanceReport = ({
                       setOnQuery,
                       maintenanceHistoryId: modalAdditionalInformations.id,
                       maintenanceReport,
-                      setModal,
+                      handleModalSendMaintenanceReport,
                       files,
                       images,
                       buildingId,
@@ -510,7 +529,7 @@ export const ModalSendMaintenanceReport = ({
                 disable={onQuery}
                 loading={onQuery}
                 onClick={() => {
-                  setModal(false);
+                  handleModalSendMaintenanceReport(false);
                 }}
               />
             )}

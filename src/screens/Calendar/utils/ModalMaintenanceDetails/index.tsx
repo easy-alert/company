@@ -23,7 +23,7 @@ import { IMaintenance } from '@customTypes/IMaintenance';
 // COMPONENTS
 import { EventTag } from '../EventTag';
 
-// FUNCTIONS
+// UTILS
 import { requestMaintenanceDetails } from './functions';
 
 // STYLES
@@ -33,13 +33,10 @@ import * as Style from './styles';
 import type { IModalMaintenanceDetails } from './types';
 
 export const ModalMaintenanceDetails = ({
-  setModal,
   modalAdditionalInformations,
-  setModalEditReport,
+  handleModalMaintenanceDetails,
+  handleModalEditReport,
 }: IModalMaintenanceDetails) => {
-  const [modalLoading, setModalLoading] = useState<boolean>(true);
-  // MODAL DETALHE DE MANUTENÇÃO
-
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
       name: '',
@@ -76,16 +73,24 @@ export const ModalMaintenanceDetails = ({
     MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
   });
 
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
+
   useEffect(() => {
+    if (!modalAdditionalInformations.id) return;
+
     requestMaintenanceDetails({
       maintenanceHistoryId: modalAdditionalInformations.id,
       setMaintenance,
       setModalLoading,
     });
-  }, []);
+  }, [maintenance.id]);
 
   return (
-    <Modal bodyWidth="475px" title="Detalhes de manutenção" setModal={setModal}>
+    <Modal
+      bodyWidth="475px"
+      title="Detalhes de manutenção"
+      setModal={handleModalMaintenanceDetails}
+    >
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
@@ -286,8 +291,8 @@ export const ModalMaintenanceDetails = ({
               <Button
                 label="Editar relato"
                 onClick={() => {
-                  setModalEditReport(true);
-                  setModal(false);
+                  handleModalEditReport(true);
+                  handleModalMaintenanceDetails(false);
                 }}
               />
             )}
@@ -295,7 +300,7 @@ export const ModalMaintenanceDetails = ({
               label="Fechar"
               borderless={maintenance.MaintenanceReport.length > 0}
               onClick={() => {
-                setModal(false);
+                handleModalMaintenanceDetails(false);
               }}
             />
           </Style.ButtonContainer>
