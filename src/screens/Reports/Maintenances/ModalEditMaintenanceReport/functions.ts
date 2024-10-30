@@ -5,7 +5,7 @@ import { IRequestMaintenanceDetailsForEdit, IRequestEditReport } from './types';
 
 export const requestEditReport = async ({
   maintenanceReport,
-  setModal,
+  handleModalEditReport,
   maintenanceHistoryId,
   files,
   images,
@@ -28,7 +28,7 @@ export const requestEditReport = async ({
       onThenRequest();
 
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalEditReport(false);
     })
     .catch((err) => {
       catchHandler(err);

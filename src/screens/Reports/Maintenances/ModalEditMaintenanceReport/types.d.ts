@@ -1,8 +1,8 @@
 import { IMaintenance, AnnexesAndImages } from '../../types';
 
 export interface IModalEditMaintenanceReport {
-  setModal: (setModal: boolean) => void;
   maintenanceHistoryId: string;
+  handleModalEditReport: (modalState: boolean) => void;
   onThenActionRequest: () => Promise<void>;
 }
 
@@ -15,7 +15,7 @@ export interface IMaintenanceReport {
 export interface IRequestEditReport {
   maintenanceHistoryId: string;
   maintenanceReport: IMaintenanceReport;
-  setModal: (setModal: boolean) => void;
+  handleModalEditReport: (modalState: boolean) => void;
   setOnModalQuery: (setOnModalQuery: boolean) => void;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];

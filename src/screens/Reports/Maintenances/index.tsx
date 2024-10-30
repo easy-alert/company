@@ -135,9 +135,9 @@ export const MaintenanceReports = () => {
     Imagens: data?.images?.map(({ url }) => url).join('; '),
   }));
 
-  useEffect(() => {
-    requestReportsDataForSelect({ setFiltersOptions, setLoading });
-  }, []);
+  const handleModalMaintenanceDetails = (modalState: boolean) => {
+    setModalMaintenanceDetails(modalState);
+  };
 
   const requestPdf = async () => {
     setOnPdfQuery(true);
@@ -156,22 +156,34 @@ export const MaintenanceReports = () => {
       });
   };
 
+  const handleModalEditReport = (modalState: boolean) => {
+    setModalEditReport(modalState);
+  };
+
+  const handleModalSendMaintenanceReport = (modalState: boolean) => {
+    setModalSendMaintenanceReportOpen(modalState);
+  };
+
+  useEffect(() => {
+    requestReportsDataForSelect({ setFiltersOptions, setLoading });
+  }, []);
+
   return loading ? (
     <DotSpinLoading />
   ) : (
     <>
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
-          setModal={setModalMaintenanceDetails}
-          setModalEditReport={setModalEditReport}
+          handleModalEditReport={handleModalEditReport}
+          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
           modalAdditionalInformations={modalAdditionalInformations}
         />
       )}
 
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
         <ModalSendMaintenanceReport
-          setModal={setModalSendMaintenanceReportOpen}
           maintenanceHistoryId={maintenanceHistoryId}
+          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
           onThenRequest={async () =>
             requestReportsData({
               filters: filterforRequest,
@@ -186,6 +198,8 @@ export const MaintenanceReports = () => {
 
       {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
+          maintenanceHistoryId={maintenanceHistoryId}
+          handleModalEditReport={handleModalEditReport}
           onThenActionRequest={async () =>
             requestReportsData({
               filters: filterforRequest,
@@ -195,8 +209,6 @@ export const MaintenanceReports = () => {
               setOnQuery,
             })
           }
-          setModal={setModalEditReport}
-          maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
       {/*

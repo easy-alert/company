@@ -38,7 +38,7 @@ import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 // COMPONENTS
 import { EventTag } from '../../../Calendar/utils/EventTag';
 
-// FUNCTIONS
+// UTILS
 import { requestReportProgress, requestSaveReportProgress, requestSendReport } from './functions';
 import { requestDeleteMaintenanceHistory } from '../functions';
 import { requestMaintenanceDetails } from '../../../Calendar/utils/ModalMaintenanceDetails/functions';
@@ -52,7 +52,7 @@ import type { IModalSendMaintenanceReport } from './types';
 
 export const ModalSendMaintenanceReport = ({
   maintenanceHistoryId,
-  setModal,
+  handleModalSendMaintenanceReport,
   onThenRequest,
 }: IModalSendMaintenanceReport) => {
   const [maintenance, setMaintenance] = useState<IMaintenance>({
@@ -195,7 +195,7 @@ export const ModalSendMaintenanceReport = ({
     <Modal
       bodyWidth="475px"
       title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
-      setModal={setModal}
+      setModal={handleModalSendMaintenanceReport}
     >
       {modalLoading ? (
         <Style.LoadingContainer>
@@ -414,7 +414,7 @@ export const ModalSendMaintenanceReport = ({
                 actionButtonClick={() => {
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
-                    setModal,
+                    handleModalSendMaintenanceReport,
                     setOnModalQuery,
                     onThenRequest: async () => onThenRequest(),
                   });
@@ -430,7 +430,7 @@ export const ModalSendMaintenanceReport = ({
                     actionButtonClick={() => {
                       requestToggleInProgress({
                         maintenanceHistoryId,
-                        setModal,
+                        handleModalSendMaintenanceReport,
                         setOnQuery: setOnModalQuery,
                         inProgressChange: !maintenance.inProgress,
                         onThenActionRequest: async () => onThenRequest(),
@@ -456,7 +456,7 @@ export const ModalSendMaintenanceReport = ({
                       requestSaveReportProgress({
                         files,
                         images,
-                        setModal,
+                        handleModalSendMaintenanceReport,
                         maintenanceHistoryId,
                         maintenanceReport,
                         setOnModalQuery,
@@ -482,7 +482,7 @@ export const ModalSendMaintenanceReport = ({
                       setOnModalQuery,
                       maintenanceHistoryId,
                       maintenanceReport,
-                      setModal,
+                      handleModalSendMaintenanceReport,
                       files,
                       images,
                       origin: account?.origin ?? 'Company',
@@ -502,7 +502,7 @@ export const ModalSendMaintenanceReport = ({
               <Button
                 label="Fechar"
                 onClick={() => {
-                  setModal(false);
+                  handleModalSendMaintenanceReport(false);
                 }}
               />
             )}

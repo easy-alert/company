@@ -12,7 +12,7 @@ import { IRequestReportProgress, IRequestSaveReportProgress, IRequestSendReport 
 
 export const requestSendReport = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -33,7 +33,7 @@ export const requestSendReport = async ({
     .then((res) => {
       onThenRequest();
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);
@@ -67,7 +67,7 @@ export const requestReportProgress = async ({
 
 export const requestSaveReportProgress = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -86,7 +86,7 @@ export const requestSaveReportProgress = async ({
     .then((res) => {
       onThenRequest();
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);

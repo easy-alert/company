@@ -3,7 +3,7 @@ import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 
 export interface IModalSendMaintenanceReport {
   maintenanceHistoryId: string;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   onThenRequest: () => Promise<void>;
 }
 
@@ -15,7 +15,7 @@ export interface IRequestMaintenanceDetails {
 
 export interface IRequestSendReport {
   maintenanceReport: IMaintenanceReport;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   maintenanceHistoryId: string;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
@@ -34,7 +34,7 @@ export interface IRequestReportProgress {
 
 export interface IRequestSaveReportProgress {
   maintenanceReport: IMaintenanceReport;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   maintenanceHistoryId: string;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
