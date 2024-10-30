@@ -3,16 +3,23 @@ import { Api } from '@services/api';
 import { handleToastify } from '@utils/toastifyResponses';
 import { unMaskBRL } from '@utils/functions';
 
-import type { IOccasionalMaintenanceData } from '@components/ModalCreateOccasionalMaintenance/types';
+import type {
+  IOccasionalMaintenanceData,
+  IOccasionalMaintenanceType,
+} from '@components/ModalCreateOccasionalMaintenance/types';
 import type { IResponse } from '@customTypes/IResponse';
 
 interface IRequestCreateOccasionalMaintenance {
   origin: string;
-  occasionalMaintenanceData: IOccasionalMaintenanceData;
+  occasionalMaintenanceType: IOccasionalMaintenanceType;
+  occasionalMaintenanceBody: IOccasionalMaintenanceData;
 }
 
 interface IResponseCreateOccasionalMaintenance extends IResponse {
   data: {
+    maintenance: {
+      id: string;
+    };
     ServerMessage: {
       statusCode: number;
       message: string;
@@ -22,7 +29,8 @@ interface IResponseCreateOccasionalMaintenance extends IResponse {
 
 export const createOccasionalMaintenance = async ({
   origin,
-  occasionalMaintenanceData: {
+  occasionalMaintenanceType,
+  occasionalMaintenanceBody: {
     buildingId,
     executionDate,
     categoryData,
@@ -37,8 +45,9 @@ export const createOccasionalMaintenance = async ({
 
   try {
     const response: IResponseCreateOccasionalMaintenance = await Api.post(uri, {
-      buildingId: buildingId || null,
       origin,
+      occasionalMaintenanceType,
+      buildingId: buildingId || null,
       executionDate: new Date(new Date(executionDate).setUTCHours(3, 0, 0, 0)) || null,
       categoryData: {
         id: categoryData.id || null,
@@ -58,7 +67,11 @@ export const createOccasionalMaintenance = async ({
       },
     });
 
-    handleToastify(response.data.ServerMessage);
+    handleToastify({
+      statusCode: 200,
+      message: 'Manutenção avulsa criada com sucesso',
+    });
+
     return response.data;
   } catch (error: any) {
     handleToastify(error.response.data.ServerMessage);
