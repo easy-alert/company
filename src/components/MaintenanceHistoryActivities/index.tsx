@@ -21,7 +21,7 @@ import { ListTag } from '@components/ListTag';
 // GLOBAL UTILS
 import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '@utils/functions';
 
-// ASSETS
+// GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
@@ -39,16 +39,20 @@ export const MaintenanceHistoryActivities = ({
 }: IMaintenanceHistoryActivities) => {
   const { account } = useAuthContext();
 
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [filteredActivities, setFilteredActivities] = useState<IActivity[]>([]);
+
+  const [comment, setComment] = useState('');
+
+  const [activeTab, setActiveTab] = useState<'comments' | 'notifications'>('comments');
+
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
+  const [imagesToUpload, setImagesToUpload] = useState<IAnnexesAndImages[]>([]);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     disabled: onImageQuery,
   });
 
-  const [comment, setComment] = useState('');
   const [onQuery, setOnQuery] = useState(false);
-  const [activities, setActivities] = useState<IActivity[]>([]);
-
-  const [imagesToUpload, setImagesToUpload] = useState<IAnnexesAndImages[]>([]);
 
   const sortFiles = (a: IAnnexesAndImages, b: IAnnexesAndImages) => {
     const imageExtensions = ['png', 'jpeg', 'jpg'];
@@ -133,41 +137,13 @@ export const MaintenanceHistoryActivities = ({
       });
   };
 
-  // const addOccasionalActivity = () => {
-  //   setOccasionallyActivities((prevState) => {
-  //     const newState = [...prevState];
-
-  //     const newImages = imagesToUpload.map((image) => ({
-  //       name: image.name,
-  //       url: image.url,
-  //       type: image.type,
-  //     }));
-
-  //     newState.push({
-  //       id: Math.random().toString(),
-  //       content: comment,
-  //       images: newImages as IOccasionallyActivitiesImages[],
-  //       userId: account?.User.id,
-  //       createdAt: new Date().toISOString(),
-  //     });
-
-  //     return newState.sort((a, b) => {
-  //       const dateA = new Date(a.createdAt).getTime();
-  //       const dateB = new Date(b.createdAt).getTime();
-
-  //       return dateB - dateA;
-  //     });
-  //   });
-
-  //   setComment('');
-  //   setImagesToUpload([]);
-  // };
-
   useEffect(() => {
     findMaintenanceHistoryActivities();
   }, []);
 
   useEffect(() => {
+    if (acceptedFiles.length === 0) return;
+
     const uploadAcceptedImages = async () => {
       setOnImageQuery(true);
 
@@ -184,27 +160,44 @@ export const MaintenanceHistoryActivities = ({
         newState = [...newState, ...formattedImages];
         return newState;
       });
+
       setOnImageQuery(false);
     };
 
     uploadAcceptedImages();
-
-    // if (maintenanceType === 'occasional' && acceptedFiles.length > 0) {
-    //   const formattedImages = acceptedFiles.map((file) => ({
-    //     name: file.name,
-    //     originalName: file.name,
-    //     url: URL.createObjectURL(file),
-    //     type: file.type,
-    //   }));
-
-    //   setImagesToUpload((prevState) => {
-    //     let newState = [...prevState];
-    //     newState = [...newState, ...formattedImages];
-
-    //     return newState;
-    //   });
-    // }
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    if (activities.length === 0) return;
+
+    if (activeTab === 'comments') {
+      activities.sort((a, b) => {
+        if (a.createdAt < b.createdAt) {
+          return 1;
+        }
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+        return 0;
+      });
+
+      setFilteredActivities(activities.filter((e) => e.type === 'comment'));
+    }
+
+    if (activeTab === 'notifications') {
+      activities.sort((a, b) => {
+        if (a.createdAt < b.createdAt) {
+          return 1;
+        }
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+        return 0;
+      });
+
+      setFilteredActivities(activities.filter((e) => e.type === 'notification'));
+    }
+  }, [activities, activeTab]);
 
   return (
     <Style.Container>
@@ -296,21 +289,31 @@ export const MaintenanceHistoryActivities = ({
       <Style.History>
         <h3>Históricos</h3>
 
-        {activities.length > 0 ? (
+        <Style.Tabs>
+          <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
+            Comentários
+          </Style.Tab>
+          <Style.Tab
+            onClick={() => setActiveTab('notifications')}
+            active={activeTab === 'notifications'}
+          >
+            Notificações
+          </Style.Tab>
+        </Style.Tabs>
+
+        {filteredActivities.length > 0 ? (
           <Style.ScrollDiv>
-            {activities.map(({ id, content, createdAt, title, type, images }) => {
+            {filteredActivities.map(({ id, content, createdAt, title, type, images }) => {
               if (type === 'comment') {
                 return (
                   <Style.Comment key={id}>
                     <Style.CommentHeader>
                       <ImageComponent src={icon.activityComment} />
-
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>
                       </Style.CommentInfo>
                     </Style.CommentHeader>
-
                     {content && <pre className="p2">{content}</pre>}
 
                     {images.length > 0 && (
@@ -359,79 +362,13 @@ export const MaintenanceHistoryActivities = ({
                   </Style.Comment>
                 );
               }
+
               return null;
             })}
           </Style.ScrollDiv>
         ) : (
           <p className="p2 opacity">Não há registros no momento.</p>
         )}
-
-        {/* {maintenanceType === 'occasional' &&
-          (occasionallyActivities.length > 0 ? (
-            <Style.ScrollDiv>
-              {occasionallyActivities.map(({ id, content, createdAt, images }) => (
-                <Style.Comment key={id}>
-                  <Style.CommentHeader>
-                    <ImageComponent src={icon.activityComment} />
-
-                    <Style.CommentInfo>
-                      <h6>{`Nova atividade de ${account?.User.name}`}</h6>
-                      <p className="p3">{dateTimeFormatter(createdAt)}</p>
-                    </Style.CommentInfo>
-
-                    <div style={{ marginLeft: 'auto', marginRight: '8px' }}>
-                      <IconButton
-                        icon={icon.trash}
-                        onClick={() => {
-                          setOccasionallyActivities((prevState) => {
-                            const newState = [...prevState];
-                            newState.splice(
-                              newState.findIndex((e) => e.id === id),
-                              1,
-                            );
-                            return newState;
-                          });
-                        }}
-                      />
-                    </div>
-                  </Style.CommentHeader>
-
-                  {content && <pre className="p2">{content}</pre>}
-
-                  {images.length > 0 && (
-                    <Style.FileAndImageRow>
-                      {images.sort().map((image) => {
-                        if (isImage(image.type)) {
-                          return (
-                            <ImagePreview
-                              key={image.url}
-                              src={image.url || ''}
-                              downloadUrl={image.url}
-                              imageCustomName={image.name}
-                              width="97px"
-                              height="97px"
-                            />
-                          );
-                        }
-
-                        return (
-                          <ListTag
-                            key={image.url}
-                            downloadUrl={image.url}
-                            label={image.name}
-                            padding="4px 12px"
-                            maxWidth="100px"
-                          />
-                        );
-                      })}
-                    </Style.FileAndImageRow>
-                  )}
-                </Style.Comment>
-              ))}
-            </Style.ScrollDiv>
-          ) : (
-            <p className="p2 opacity">Não há registros no momento.</p>
-          ))} */}
       </Style.History>
     </Style.Container>
   );
