@@ -1,5 +1,8 @@
 import type { IBuilding } from '@customTypes/IBuilding';
 import type { ICategory } from '@customTypes/ICategory';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+
+export type IOccasionalMaintenanceType = 'pending' | 'finished' | '';
 
 export interface IOccasionalMaintenanceData {
   buildingId: string;
@@ -34,9 +37,17 @@ export interface IRequestCreateOccasionalMaintenance {
 
 export interface IModalCreateOccasionalMaintenance {
   handleGetCalendarData: () => Promise<void>;
+  handleMaintenanceHistoryIdChange: (id: string) => void;
   handleModalCreateOccasionalMaintenance: (modalState: boolean) => void;
+  handleModalMaintenanceDetails: (modalState: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   checklistTitle?: string;
   checklistBuildingId?: string;
+}
+
+export interface IHandleCreateOccasionalMaintenance {
+  occasionalMaintenanceType: IOccasionalMaintenanceType;
+  inProgress?: boolean;
 }
 
 export interface IModalFirstView {
@@ -53,6 +64,13 @@ export interface IModalSecondView {
   buildingsData: IBuilding[];
   categoriesData: ICategory[];
   occasionalMaintenanceData: IOccasionalMaintenanceData;
-  handleSetOccasionalMaintenanceData: (data: IHandleSetOccasionalMaintenanceData) => void;
-  handleCreateOccasionalMaintenance: () => Promise<void>;
+  handleSetView: (setView: number) => void;
+  handleOccasionalMaintenanceDataChange: (data: IHandleSetOccasionalMaintenanceData) => void;
+  handleCreateOccasionalMaintenance: (data: IHandleCreateOccasionalMaintenance) => Promise<void>;
+}
+export interface IModalThirdView {
+  occasionalMaintenanceData: IOccasionalMaintenanceData;
+  handleOccasionalMaintenanceDataChange: (data: IHandleSetOccasionalMaintenanceData) => void;
+  handleSetView: (setView: number) => void;
+  handleCreateOccasionalMaintenance: (data: IHandleCreateOccasionalMaintenance) => Promise<void>;
 }

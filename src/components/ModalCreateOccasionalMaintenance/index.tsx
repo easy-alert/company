@@ -1,9 +1,6 @@
 // REACT
 import { useEffect, useState } from 'react';
 
-// LIBS
-import { useDropzone } from 'react-dropzone';
-
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
@@ -14,9 +11,6 @@ import { createOccasionalMaintenance } from '@services/apis/createOccasionalMain
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 
-// GLOBAL UTILS
-import { uploadManyFiles } from '@utils/functions';
-
 // GLOBAL TYPES
 import type { IBuilding } from '@customTypes/IBuilding';
 import type { ICategory } from '@customTypes/ICategory';
@@ -25,17 +19,22 @@ import type { ICategory } from '@customTypes/ICategory';
 import ModalLoading from './ModalCreateOccasionalMaintenanceViews/ModalLoading';
 import ModalFirstView from './ModalCreateOccasionalMaintenanceViews/ModalFirstView';
 import ModalSecondView from './ModalCreateOccasionalMaintenanceViews/ModalSecondView';
+import ModalThirdView from './ModalCreateOccasionalMaintenanceViews/ModalThirdView';
 
 // TYPES
 import type {
   IOccasionalMaintenanceData,
   IModalCreateOccasionalMaintenance,
   IHandleSetOccasionalMaintenanceData,
+  IHandleCreateOccasionalMaintenance,
 } from './types';
 
 export const ModalCreateOccasionalMaintenance = ({
-  handleModalCreateOccasionalMaintenance,
   handleGetCalendarData,
+  handleMaintenanceHistoryIdChange,
+  handleModalCreateOccasionalMaintenance,
+  handleModalMaintenanceDetails,
+  handleModalSendMaintenanceReport,
   checklistTitle,
   checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
@@ -67,38 +66,14 @@ export const ModalCreateOccasionalMaintenance = ({
   const [buildingsData, setBuildingsData] = useState<IBuilding[]>([]);
   const [categoriesData, setCategoriesData] = useState<ICategory[]>([]);
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
-  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-
   const [view, setView] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-
-  // const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-  //   disabled: onFileQuery || data.inProgress,
-  // });
-
-  // MODAL CRIAR MANUTENÇÃO AVULSA
-
-  // const {
-  //   acceptedFiles: acceptedImages,
-  //   getRootProps: getRootPropsImages,
-  //   getInputProps: getInputPropsImages,
-  // } = useDropzone({
-  //   accept: {
-  //     'image/png': ['.png'],
-  //     'image/jpg': ['.jpg'],
-  //     'image/jpeg': ['.jpeg'],
-  //     'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
-  //   },
-  //   disabled: onImageQuery || data.inProgress,
-  // });
 
   const handleSetView = (viewSate: number) => {
     setView(viewSate);
   };
 
-  const handleSetOccasionalMaintenanceData = ({
+  const handleOccasionalMaintenanceDataChange = ({
     primaryKey,
     value,
     secondaryKey,
@@ -138,18 +113,50 @@ export const ModalCreateOccasionalMaintenance = ({
     setLoading(false);
   };
 
-  const handleCreateOccasionalMaintenance = async () => {
+  const handleCreateOccasionalMaintenance = async ({
+    occasionalMaintenanceType,
+    inProgress = false,
+  }: IHandleCreateOccasionalMaintenance) => {
     setLoading(true);
 
+    const reportDataBody =
+      occasionalMaintenanceType === 'finished'
+        ? occasionalMaintenanceData.reportData
+        : {
+            cost: 'R$ 0,00',
+            observation: '',
+            files: [],
+            images: [],
+          };
+
+    const occasionalMaintenanceBody = {
+      ...occasionalMaintenanceData,
+      reportData: reportDataBody,
+      inProgress,
+    };
+
     const response = await createOccasionalMaintenance({
-      occasionalMaintenanceData,
       origin: account?.origin || 'Company',
+      occasionalMaintenanceType,
+      occasionalMaintenanceBody,
     });
 
-    if (response?.ServerMessage.statusCode === 200) {
-      handleGetCalendarData();
+    if (response?.ServerMessage?.statusCode === 200) {
+      if (!response?.maintenance?.id) return;
+
+      handleMaintenanceHistoryIdChange(response.maintenance.id);
+
+      await handleGetCalendarData();
+
+      if (occasionalMaintenanceType === 'finished') {
+        handleModalMaintenanceDetails(true);
+      } else {
+        handleModalSendMaintenanceReport(true);
+      }
+
       handleModalCreateOccasionalMaintenance(false);
       setLoading(false);
+      return;
     }
 
     setLoading(false);
@@ -158,62 +165,6 @@ export const ModalCreateOccasionalMaintenance = ({
   useEffect(() => {
     handleGetBuildingsAndCategories();
   }, []);
-
-  // useEffect(() => {
-  //   if (acceptedFiles.length > 0) {
-  //     const uploadAcceptedFiles = async () => {
-  //       setOnFileQuery(true);
-
-  //       const uploadedFiles = await uploadManyFiles(acceptedFiles);
-
-  //       const formattedFiles = uploadedFiles.map((file) => ({
-  //         name: file.originalname,
-  //         originalName: file.originalname,
-  //         url: file.Location,
-  //       }));
-
-  //       setData((prevState) => ({
-  //         ...prevState,
-  //         reportData: {
-  //           ...prevState.reportData,
-  //           files: [...prevState.reportData.files, ...formattedFiles],
-  //         },
-  //       }));
-  //       setOnFileQuery(false);
-  //     };
-
-  //     uploadAcceptedFiles();
-  //   }
-
-  // }, [acceptedFiles]);
-
-  // useEffect(() => {
-  //   if (acceptedImages.length > 0) {
-  //     const uploadAcceptedImages = async () => {
-  //       setOnImageQuery(true);
-
-  //       const uploadedImages = await uploadManyFiles(acceptedImages);
-
-  //       const formattedImages = uploadedImages.map((file) => ({
-  //         name: file.originalname,
-  //         originalName: file.originalname,
-  //         url: file.Location,
-  //       }));
-
-  //       setData((prevState) => ({
-  //         ...prevState,
-  //         reportData: {
-  //           ...prevState.reportData,
-  //           images: [...prevState.reportData.images, ...formattedImages],
-  //         },
-  //       }));
-
-  //       setOnImageQuery(false);
-  //     };
-
-  //     uploadAcceptedImages();
-  //   }
-  // }, [acceptedImages]);
 
   return (
     <Modal title="Manutenção avulsa" setModal={handleModalCreateOccasionalMaintenance}>
@@ -228,7 +179,17 @@ export const ModalCreateOccasionalMaintenance = ({
               buildingsData={buildingsData}
               categoriesData={categoriesData}
               occasionalMaintenanceData={occasionalMaintenanceData}
-              handleSetOccasionalMaintenanceData={handleSetOccasionalMaintenanceData}
+              handleSetView={handleSetView}
+              handleOccasionalMaintenanceDataChange={handleOccasionalMaintenanceDataChange}
+              handleCreateOccasionalMaintenance={handleCreateOccasionalMaintenance}
+            />
+          )}
+
+          {view === 3 && (
+            <ModalThirdView
+              occasionalMaintenanceData={occasionalMaintenanceData}
+              handleOccasionalMaintenanceDataChange={handleOccasionalMaintenanceDataChange}
+              handleSetView={handleSetView}
               handleCreateOccasionalMaintenance={handleCreateOccasionalMaintenance}
             />
           )}
