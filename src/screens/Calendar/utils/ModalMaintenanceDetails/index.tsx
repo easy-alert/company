@@ -1,37 +1,42 @@
-/* eslint-disable react/no-array-index-key */
+// REACT
+import { useEffect, useState } from 'react';
+
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Image } from '@components/Image';
+import { ImagePreview } from '@components/ImagePreview';
+import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
+import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
+import { ListTag } from '@components/ListTag';
+
+// GLOBAL UTILS
+import { applyMask, dateFormatter } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons';
+
+// CUSTOM TYPES
+import { IMaintenance } from '@customTypes/IMaintenance';
 
 // COMPONENTS
-import { useEffect, useState } from 'react';
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
 import { EventTag } from '../EventTag';
-import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
-import { Image } from '../../../../components/Image';
+
+// UTILS
+import { requestMaintenanceDetails } from './functions';
 
 // STYLES
 import * as Style from './styles';
-import { icon } from '../../../../assets/icons';
 
 // TYPES
-import { IModalMaintenanceDetails } from './types';
-
-// FUNCTIONS
-import { requestMaintenanceDetails } from './functions';
-import { IMaintenance } from '../../types';
-import { applyMask, dateFormatter } from '../../../../utils/functions';
-import { ImagePreview } from '../../../../components/ImagePreview';
-import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSupplierToMaintenanceHistory';
-import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
-import { ListTag } from '../../../../components/ListTag';
+import type { IModalMaintenanceDetails } from './types';
 
 export const ModalMaintenanceDetails = ({
-  setModal,
   modalAdditionalInformations,
-  setModalEditReport,
+  handleModalMaintenanceDetails,
+  handleModalEditReport,
 }: IModalMaintenanceDetails) => {
-  const [modalLoading, setModalLoading] = useState<boolean>(true);
-  // MODAL DETALHE DE MANUTENÇÃO
-
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
       name: '',
@@ -68,16 +73,24 @@ export const ModalMaintenanceDetails = ({
     MaintenanceReport: [{ cost: 0, id: '', observation: '', ReportAnnexes: [], ReportImages: [] }],
   });
 
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
+
   useEffect(() => {
+    if (!modalAdditionalInformations.id) return;
+
     requestMaintenanceDetails({
       maintenanceHistoryId: modalAdditionalInformations.id,
       setMaintenance,
       setModalLoading,
     });
-  }, []);
+  }, [maintenance.id]);
 
   return (
-    <Modal bodyWidth="475px" title="Detalhes de manutenção" setModal={setModal}>
+    <Modal
+      bodyWidth="475px"
+      title="Detalhes de manutenção"
+      setModal={handleModalMaintenanceDetails}
+    >
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
@@ -87,12 +100,15 @@ export const ModalMaintenanceDetails = ({
           <h3>{maintenance?.Building?.name}</h3>
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
+
             <EventTag status={maintenance.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType.name === 'occasional' ? (
+
+            {maintenance.Maintenance.MaintenanceType?.name === 'occasional' ? (
               <EventTag status="occasional" />
             ) : (
               <EventTag status="common" />
             )}
+
             {/* Aqui não deve precisar da tag in progress porque quando clica na vencida ele abre sempre a modal de enviar relato */}
             {/* {(maintenance?.MaintenancesStatus.name === 'expired' ||
               maintenance?.MaintenancesStatus.name === 'pending') &&
@@ -102,7 +118,7 @@ export const ModalMaintenanceDetails = ({
           <Style.Content>
             <Style.Row>
               <h6>Categoria</h6>
-              <p className="p2">{maintenance.Maintenance.Category.name}</p>
+              <p className="p2">{maintenance.Maintenance.Category?.name}</p>
             </Style.Row>
 
             <Style.Row>
@@ -133,22 +149,22 @@ export const ModalMaintenanceDetails = ({
             <Style.Row>
               <h6>Instruções</h6>
               <Style.FileAndImageRow>
-                {maintenance.Maintenance.instructions.length > 0
-                  ? maintenance.Maintenance.instructions.map(({ url, name }) => (
-                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
+                {(maintenance.Maintenance.instructions?.length || 0) > 0
+                  ? maintenance.Maintenance.instructions?.map(({ url, name }) => (
+                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name || ''} />
                     ))
                   : '-'}
               </Style.FileAndImageRow>
             </Style.Row>
 
-            {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+            {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
               <Style.Row>
                 <h6>Periodicidade</h6>
                 <p className="p2">
                   A cada{' '}
-                  {maintenance.Maintenance.frequency > 1
-                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.pluralLabel}`
-                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval.singularLabel}`}
+                  {(maintenance.Maintenance.frequency || 0) > 1
+                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.pluralLabel}`
+                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.singularLabel}`}
                 </p>
               </Style.Row>
             )}
@@ -174,7 +190,7 @@ export const ModalMaintenanceDetails = ({
                   <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
                 </Style.Row>
 
-                {maintenance.Maintenance.MaintenanceType.name !== 'occasional' && (
+                {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
                   <Style.Row>
                     <h6>Data de vencimento</h6>
                     <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
@@ -226,9 +242,9 @@ export const ModalMaintenanceDetails = ({
                 <Style.FileStyleRow>
                   <h6>Anexos</h6>
                   <Style.FileAndImageRow>
-                    {maintenance.MaintenanceReport[0].ReportAnnexes.length > 0 ? (
-                      maintenance.MaintenanceReport[0].ReportAnnexes.map((annex, i: number) => (
-                        <Style.Tag key={annex.name + i}>
+                    {(maintenance.MaintenanceReport[0].ReportAnnexes?.length || 0) > 0 ? (
+                      maintenance.MaintenanceReport[0].ReportAnnexes?.map((annex) => (
+                        <Style.Tag key={annex.url}>
                           <a
                             title={annex.originalName}
                             href={annex.url}
@@ -250,10 +266,10 @@ export const ModalMaintenanceDetails = ({
                 <Style.FileStyleRow>
                   <h6>Imagens</h6>
                   <Style.FileAndImageRow>
-                    {maintenance.MaintenanceReport[0].ReportImages.length > 0 ? (
-                      maintenance.MaintenanceReport[0].ReportImages.map((image, i: number) => (
+                    {(maintenance.MaintenanceReport[0].ReportImages?.length || 0) > 0 ? (
+                      maintenance.MaintenanceReport[0].ReportImages?.map((image) => (
                         <ImagePreview
-                          key={image.name + i}
+                          key={image.url}
                           src={image.url}
                           downloadUrl={image.url}
                           imageCustomName={image.name}
@@ -275,8 +291,8 @@ export const ModalMaintenanceDetails = ({
               <Button
                 label="Editar relato"
                 onClick={() => {
-                  setModalEditReport(true);
-                  setModal(false);
+                  handleModalEditReport(true);
+                  handleModalMaintenanceDetails(false);
                 }}
               />
             )}
@@ -284,7 +300,7 @@ export const ModalMaintenanceDetails = ({
               label="Fechar"
               borderless={maintenance.MaintenanceReport.length > 0}
               onClick={() => {
-                setModal(false);
+                handleModalMaintenanceDetails(false);
               }}
             />
           </Style.ButtonContainer>

@@ -22,15 +22,15 @@ import type { ISupplier } from '@customTypes/ISupplier';
 import * as Style from './styles';
 
 interface IModalLinkSupplier {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
   maintenanceHistoryId: string;
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
   findMaintenanceHistorySupplier: () => Promise<void>;
   setModalCreateAndLinkSupplierOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalLinkSupplier = ({
-  setModal,
   maintenanceHistoryId,
+  setModal,
   findMaintenanceHistorySupplier,
   setModalCreateAndLinkSupplierOpen,
 }: IModalLinkSupplier) => {
@@ -41,6 +41,12 @@ export const ModalLinkSupplier = ({
 
   // tirar o delete many no linkWithMaintenanceHistory se for vincular a mais de 1 fornecedor
   const findCompanySuppliers = async () => {
+    if (!maintenanceHistoryId) {
+      setModal(false);
+      toast.error('Erro ao buscar fornecedores. Tente novamente.');
+      return;
+    }
+
     await Api.get(`/suppliers/to-select/${maintenanceHistoryId}`)
       .then((res) => {
         setRemainingSuppliers(res.data.remainingSuppliers);

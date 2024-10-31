@@ -131,5 +131,6 @@ export interface IRequestDeleteMaintenanceHistory {
   maintenanceHistoryId: string;
   onThenRequest: () => Promise<void>;
   setOnModalQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport?: (modalState: boolean) => void;
+  handleModalEditReport?: (modalState: boolean) => void;
 }

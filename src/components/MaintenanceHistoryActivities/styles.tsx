@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { theme } from '../../styles/theme';
+
+import { theme } from '@styles/theme';
+
+interface TabProps {
+  active: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -68,7 +73,7 @@ export const CommentInfo = styled.div`
 export const CommentHeader = styled.div`
   display: flex;
   gap: ${theme.size.xsm};
-  align-items: flex-start;
+  align-items: center;
 `;
 
 export const SendDataSection = styled.div`
@@ -103,4 +108,27 @@ export const History = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xxsm};
+`;
+
+export const Tabs = styled.div`
+  display: flex;
+  gap: ${theme.size.xsm};
+
+  margin-top: ${theme.size.xsm};
+  margin-bottom: ${theme.size.xsm};
+`;
+
+export const Tab = styled.div<TabProps>`
+  width: 50%;
+
+  display: flex;
+  justify-content: center;
+
+  padding: 8px 12px;
+  border-radius: ${theme.size.xsm};
+
+  background-color: ${({ active }) => (active ? theme.color.primaryL : 'transparent')};
+  transition: background-color 0.4s ease;
+
+  cursor: pointer;
 `;

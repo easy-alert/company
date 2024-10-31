@@ -1,78 +1,60 @@
+// REACT
 import { useState, useEffect } from 'react';
+
+// LIBS
 import { useDropzone } from 'react-dropzone';
-import { Api } from '../../services/api';
-import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '../../utils/functions';
-import { IActivity } from './types';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { ImageComponent } from '@components/ImageComponent';
+import { ImagePreview } from '@components/ImagePreview';
+import { DotLoading } from '@components/Loadings/DotLoading';
+import { TextArea } from '@components/Inputs/TextArea';
+import { ListTag } from '@components/ListTag';
+
+// GLOBAL UTILS
+import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import type { IActivity } from '@customTypes/IActivity';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+
+// STYLES
 import * as Style from './styles';
-import { icon } from '../../assets/icons';
-import { IconButton } from '../Buttons/IconButton';
-import { ImageComponent } from '../ImageComponent';
-import { ImagePreview } from '../ImagePreview';
-import { DotLoading } from '../Loadings/DotLoading';
-import { TextArea } from '../Inputs/TextArea';
-import { useAuthContext } from '../../contexts/Auth/UseAuthContext';
-import { ListTag } from '../ListTag';
 
-interface IMaintenanceHistoryActivities {
-  maintenanceHistoryId: string;
-}
-
-interface AnnexesAndImages {
-  originalName: string;
-  url: string;
-}
+// TYPES
+import type { IMaintenanceHistoryActivities } from './types';
 
 export const MaintenanceHistoryActivities = ({
   maintenanceHistoryId,
 }: IMaintenanceHistoryActivities) => {
-  const [comment, setComment] = useState('');
-  const [onQuery, setOnQuery] = useState(false);
-  const [activities, setActivities] = useState<IActivity[]>([]);
   const { account } = useAuthContext();
 
-  const [imagesToUpload, setImagesToUpload] = useState<AnnexesAndImages[]>([]);
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [filteredActivities, setFilteredActivities] = useState<IActivity[]>([]);
 
-  const findMaintenanceHistoryActivities = async () => {
-    await Api.get(`/maintenance-history-activities/${maintenanceHistoryId}`)
-      .then((res) => {
-        setActivities(res.data.maintenanceHistoryActivities);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        // setLoading(false);
-      });
-  };
+  const [comment, setComment] = useState('');
 
-  const createActivity = async () => {
-    setOnQuery(true);
+  const [activeTab, setActiveTab] = useState<'comments' | 'notifications'>('comments');
 
-    await Api.post(`/maintenance-history-activities`, {
-      maintenanceHistoryId,
-      content: comment || null,
-      images: imagesToUpload,
-      userId: account?.User.id,
-    })
-      .then(() => {
-        findMaintenanceHistoryActivities();
-        setComment('');
-        setImagesToUpload([]);
-        // toast.success(res.data.ServerMessage.message);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setOnQuery(false);
-      });
-  };
+  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
+  const [imagesToUpload, setImagesToUpload] = useState<IAnnexesAndImages[]>([]);
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    disabled: onImageQuery,
+  });
 
-  useEffect(() => {
-    findMaintenanceHistoryActivities();
-  }, []);
+  const [onQuery, setOnQuery] = useState(false);
 
-  const sortFiles = (a: AnnexesAndImages, b: AnnexesAndImages) => {
+  const sortFiles = (a: IAnnexesAndImages, b: IAnnexesAndImages) => {
     const imageExtensions = ['png', 'jpeg', 'jpg'];
 
     const extA = a.originalName.split('.').pop() || '';
@@ -119,34 +101,103 @@ export const MaintenanceHistoryActivities = ({
     return 0; // Keep original order if both are in the same group
   };
 
-  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    disabled: onImageQuery,
-  });
+  const findMaintenanceHistoryActivities = async () => {
+    await Api.get(`/maintenance-history-activities/${maintenanceHistoryId}`)
+      .then((res) => {
+        setActivities(res.data.maintenanceHistoryActivities);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        // setLoading(false);
+      });
+  };
+
+  const createActivity = async () => {
+    setOnQuery(true);
+
+    await Api.post(`/maintenance-history-activities`, {
+      maintenanceHistoryId,
+      content: comment || null,
+      images: imagesToUpload,
+      userId: account?.User.id,
+    })
+      .then(() => {
+        findMaintenanceHistoryActivities();
+        setComment('');
+        setImagesToUpload([]);
+        // toast.success(res.data.ServerMessage.message);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setOnQuery(false);
+      });
+  };
 
   useEffect(() => {
-    if (acceptedFiles.length > 0) {
-      const uploadAcceptedImages = async () => {
-        setOnImageQuery(true);
+    findMaintenanceHistoryActivities();
+  }, []);
 
-        const uploadedImages = await uploadManyFiles(acceptedFiles);
+  useEffect(() => {
+    if (acceptedFiles.length === 0) return;
 
-        const formattedImages = uploadedImages.map((file) => ({
-          originalName: file.originalname,
-          url: file.Location,
-        }));
+    const uploadAcceptedImages = async () => {
+      setOnImageQuery(true);
 
-        setImagesToUpload((prevState) => {
-          let newState = [...prevState];
-          newState = [...newState, ...formattedImages];
-          return newState;
-        });
-        setOnImageQuery(false);
-      };
+      const uploadedImages = await uploadManyFiles(acceptedFiles);
 
-      uploadAcceptedImages();
-    }
+      const formattedImages = uploadedImages.map((file) => ({
+        name: file.originalname,
+        originalName: file.originalname,
+        url: file.Location,
+      }));
+
+      setImagesToUpload((prevState) => {
+        let newState = [...prevState];
+        newState = [...newState, ...formattedImages];
+        return newState;
+      });
+
+      setOnImageQuery(false);
+    };
+
+    uploadAcceptedImages();
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    if (activities.length === 0) return;
+
+    if (activeTab === 'comments') {
+      activities.sort((a, b) => {
+        if (a.createdAt < b.createdAt) {
+          return 1;
+        }
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+        return 0;
+      });
+
+      setFilteredActivities(activities.filter((e) => e.type === 'comment'));
+    }
+
+    if (activeTab === 'notifications') {
+      activities.sort((a, b) => {
+        if (a.createdAt < b.createdAt) {
+          return 1;
+        }
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+        return 0;
+      });
+
+      setFilteredActivities(activities.filter((e) => e.type === 'notification'));
+    }
+  }, [activities, activeTab]);
 
   return (
     <Style.Container>
@@ -161,9 +212,11 @@ export const MaintenanceHistoryActivities = ({
               setComment(evt.target.value);
             }}
           />
+
           <Style.InputButtons>
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
+
               <IconButton
                 icon={icon.upload}
                 onClick={() => {
@@ -182,6 +235,7 @@ export const MaintenanceHistoryActivities = ({
             />
           </Style.InputButtons>
         </Style.InputRow>
+
         {(imagesToUpload.length > 0 || onImageQuery) && (
           <Style.FileAndImageRow>
             {imagesToUpload.sort(sortFiles).map((e, i: number) => {
@@ -232,11 +286,24 @@ export const MaintenanceHistoryActivities = ({
         )}
       </Style.SendDataSection>
 
-      {activities.length > 0 ? (
-        <Style.History>
-          <h3>Históricos</h3>
+      <Style.History>
+        <h3>Históricos</h3>
+
+        <Style.Tabs>
+          <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
+            Comentários
+          </Style.Tab>
+          <Style.Tab
+            onClick={() => setActiveTab('notifications')}
+            active={activeTab === 'notifications'}
+          >
+            Notificações
+          </Style.Tab>
+        </Style.Tabs>
+
+        {filteredActivities.length > 0 ? (
           <Style.ScrollDiv>
-            {activities.map(({ id, content, createdAt, title, type, images }) => {
+            {filteredActivities.map(({ id, content, createdAt, title, type, images }) => {
               if (type === 'comment') {
                 return (
                   <Style.Comment key={id}>
@@ -295,16 +362,14 @@ export const MaintenanceHistoryActivities = ({
                   </Style.Comment>
                 );
               }
+
               return null;
             })}
           </Style.ScrollDiv>
-        </Style.History>
-      ) : (
-        <Style.History>
-          <h3>Históricos</h3>
+        ) : (
           <p className="p2 opacity">Não há registros no momento.</p>
-        </Style.History>
-      )}
+        )}
+      </Style.History>
     </Style.Container>
   );
 };

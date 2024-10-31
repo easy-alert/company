@@ -1,40 +1,54 @@
-// LIBS
+// REACT
 import { useEffect, useState } from 'react';
 
-// COMPONENTS
-
+// LIBS
 import { useDropzone } from 'react-dropzone';
-import * as Style from './styles';
-import { Image } from '../../../../components/Image';
 
-import { DotSpinLoading } from '../../../../components/Loadings/DotSpinLoading';
-import { Select } from '../../../../components/Inputs/Select';
-import { Modal } from '../../../../components/Modal';
-import { Input } from '../../../../components/Inputs/Input';
-import { Button } from '../../../../components/Buttons/Button';
-import { icon } from '../../../../assets/icons';
-import { IconButton } from '../../../../components/Buttons/IconButton';
-import { DotLoading } from '../../../../components/Loadings/DotLoading';
-import { ImagePreview } from '../../../../components/ImagePreview';
+// SERVICES
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
-// TYPES
-import {
-  IAuxiliaryData,
-  ICreateOccasionalMaintenanceData,
-  IModalCreateOccasionalMaintenance,
-} from './utils/types';
+// HOOKS
 
-// FUNCTIONS
+// GLOBAL COMPONENTS
+import { Image } from '@components/Image';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Select } from '@components/Inputs/Select';
+import { Modal } from '@components/Modal';
+import { Input } from '@components/Inputs/Input';
+import { Button } from '@components/Buttons/Button';
+import { IconButton } from '@components/Buttons/IconButton';
+import { DotLoading } from '@components/Loadings/DotLoading';
+import { ImagePreview } from '@components/ImagePreview';
+import { CRUDInput } from '@components/Inputs/CRUDInput';
+
+// GLOBAL UTILS
+import { applyMask, uploadManyFiles } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL STYLES
+// GLOBAL TYPES
+// COMPONENTS
 import { ModalCreateOccasionalMaintenanceInstructions } from './ModalCreateOccasionalMaintenance';
+
+// UTILS
 import {
   findCategoryById,
   requestAuxiliaryDataForCreateOccasionalMaintenance,
   requestCreateOccasionalMaintenance,
 } from './utils/functions';
 
-import { applyMask, uploadManyFiles } from '../../../../utils/functions';
-import { CRUDInput } from '../../../../components/Inputs/CRUDInput';
-import { useAuthContext } from '../../../../contexts/Auth/UseAuthContext';
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type {
+  IAuxiliaryData,
+  ICreateOccasionalMaintenanceData,
+  IModalCreateOccasionalMaintenance,
+} from './utils/types';
 
 export const ModalCreateOccasionalMaintenance = ({
   setModal,
@@ -42,11 +56,18 @@ export const ModalCreateOccasionalMaintenance = ({
   checklistTitle,
   checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
+  const { account } = useAuthContext();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-  const { account } = useAuthContext();
+
+  const responsibleArray = [
+    { id: '1', name: 'Equipe de manutenção local' },
+    { id: '2', name: 'Equipe capacitada' },
+    { id: '3', name: 'Equipe Especializada' },
+  ];
 
   const [data, setData] = useState<ICreateOccasionalMaintenanceData>({
     buildingId: checklistBuildingId || '',
@@ -99,6 +120,18 @@ export const ModalCreateOccasionalMaintenance = ({
     Buildings: [],
     Categories: [],
   });
+
+  const createOccasionalMaintenance = async () => {
+    await requestCreateOccasionalMaintenance({
+      getCalendarData,
+      data,
+      setModal,
+      setOnQuery,
+      origin: account?.origin || 'Company',
+    });
+
+    setView(0);
+  };
 
   useEffect(() => {
     requestAuxiliaryDataForCreateOccasionalMaintenance({ setAuxiliaryData, setLoading });
@@ -181,6 +214,7 @@ export const ModalCreateOccasionalMaintenance = ({
             <option value="" disabled>
               Selecione
             </option>
+
             {auxiliaryData.Buildings.map((building) => (
               <option key={building.id} value={building.id}>
                 {building.name}
@@ -201,12 +235,6 @@ export const ModalCreateOccasionalMaintenance = ({
                       findCategoryById({ id: value, categoriesData: auxiliaryData.Categories })
                         ?.name ?? '',
                   },
-                  // maintenanceData: {
-                  //   id: '',
-                  //   activity: '',
-                  //   element: '',
-                  //   responsible: '',
-                  // },
                 })),
               createLabel: 'Criar categoria',
               options: auxiliaryData.Categories.map((category) => ({
@@ -231,71 +259,9 @@ export const ModalCreateOccasionalMaintenance = ({
                     id: '',
                     name: '',
                   },
-                  // maintenanceData: {
-                  //   id: '',
-                  //   activity: '',
-                  //   element: '',
-                  //   responsible: '',
-                  // },
                 })),
             }}
           />
-
-          {/* <CRUDInput
-            label="Elemento *"
-            disabled={!data.categoryData.name}
-            value={data.maintenanceData.element}
-            select={{
-              getEvtValue: (value) => {
-                const maintenance = findCategoryById({
-                  id: data.categoryData.id,
-                  categoriesData: auxiliaryData.Categories,
-                })?.Maintenances?.find((maintenanceData) => maintenanceData.id === value);
-
-                setData((prevState) => ({
-                  ...prevState,
-                  maintenanceData: {
-                    ...prevState.maintenanceData,
-                    element: maintenance?.element ?? '',
-                    responsible: maintenance?.responsible ?? '',
-                    activity: maintenance?.activity ?? '',
-                    executionDate: '',
-                  },
-                }));
-              },
-
-              createLabel: 'Criar manutenção',
-              options:
-                findCategoryById({
-                  id: data.categoryData.id,
-                  categoriesData: auxiliaryData.Categories,
-                })?.Maintenances?.map((maintenance) => ({
-                  value: maintenance.id,
-                  label: maintenance.element,
-                })) || [],
-            }}
-            input={{
-              placeholder: 'Digite o nome da manutenção',
-              getEvtValue: (value) =>
-                setData((prevState) => ({
-                  ...prevState,
-                  maintenanceData: {
-                    ...prevState.maintenanceData,
-                    element: value,
-                  },
-                })),
-              onXClick: () =>
-                setData((prevState) => ({
-                  ...prevState,
-                  maintenanceData: {
-                    element: '',
-                    activity: '',
-                    responsible: '',
-                    executionDate: '',
-                  },
-                })),
-            }}
-          /> */}
 
           <Input
             label="Elemento *"
@@ -321,17 +287,27 @@ export const ModalCreateOccasionalMaintenance = ({
             }
           />
 
-          <Input
+          <Select
             label="Responsável *"
-            placeholder="Ex: João da Silva"
             value={data.maintenanceData.responsible}
+            selectPlaceholderValue={data.maintenanceData.responsible}
             onChange={(evt) =>
               setData((prevState) => ({
                 ...prevState,
                 maintenanceData: { ...prevState.maintenanceData, responsible: evt.target.value },
               }))
             }
-          />
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+
+            {responsibleArray.map((responsible) => (
+              <option key={responsible.id} value={responsible.id}>
+                {responsible.name}
+              </option>
+            ))}
+          </Select>
 
           <Input
             label="Data de execução *"
@@ -346,7 +322,7 @@ export const ModalCreateOccasionalMaintenance = ({
             }
           />
 
-          <Style.Label htmlFor="inProgress">
+          {/* <Style.Label htmlFor="inProgress">
             <input
               id="inProgress"
               type="checkbox"
@@ -365,9 +341,9 @@ export const ModalCreateOccasionalMaintenance = ({
               }}
             />
             Iniciar em execução
-          </Style.Label>
+          </Style.Label> */}
 
-          {!data.inProgress && new Date(data.executionDate) < new Date() && (
+          {/* {!data.inProgress && new Date(data.executionDate) < new Date() && (
             <>
               <Input
                 disabled={data.inProgress}
@@ -386,22 +362,6 @@ export const ModalCreateOccasionalMaintenance = ({
                   }));
                 }}
               />
-              {/*
-              <TextArea
-                disabled={data.inProgress}
-                label="Observação do relato"
-                placeholder="Digite aqui"
-                value={data.reportData.observation}
-                onChange={(evt) => {
-                  setData((prevState) => ({
-                    ...prevState,
-                    reportData: {
-                      ...prevState.reportData,
-                      observation: evt.target.value,
-                    },
-                  }));
-                }}
-              /> */}
 
               <Style.Row disabled={onFileQuery}>
                 <h6>Anexar</h6>
@@ -484,22 +444,14 @@ export const ModalCreateOccasionalMaintenance = ({
                 </Style.FileAndImageRow>
               </Style.Row>
             </>
-          )}
+          )} */}
+
           <Style.ButtonContainer>
             <Button
               loading={onQuery}
               disable={onQuery || onFileQuery}
-              label="Confirmar"
-              center
-              onClick={() =>
-                requestCreateOccasionalMaintenance({
-                  getCalendarData,
-                  data,
-                  setModal,
-                  setOnQuery,
-                  origin: account?.origin || 'Company',
-                })
-              }
+              label="Continuar"
+              onClick={createOccasionalMaintenance}
             />
           </Style.ButtonContainer>
         </Style.FormContainer>
