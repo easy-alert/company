@@ -36,13 +36,22 @@ export interface IRequestCreateOccasionalMaintenance {
 }
 
 export interface IModalCreateOccasionalMaintenance {
-  handleGetCalendarData: () => Promise<void>;
-  handleMaintenanceHistoryIdChange: (id: string) => void;
   handleModalCreateOccasionalMaintenance: (modalState: boolean) => void;
-  handleModalMaintenanceDetails: (modalState: boolean) => void;
-  handleModalSendMaintenanceReport: (modalState: boolean) => void;
-  checklistTitle?: string;
-  checklistBuildingId?: string;
+
+  handleMaintenanceHistoryIdChange?: (id: string) => void;
+
+  handleModalMaintenanceDetails?: (modalState: boolean) => void;
+  handleModalSendMaintenanceReport?: (modalState: boolean) => void;
+
+  handleGetBackgroundData?: () => Promise<void>;
+
+  externalBuildingId?: string;
+
+  checklistActivity?: string;
+
+  handleResetTickets?: () => void;
+  ticketsIds?: string[];
+  ticketsToAnswer?: string;
 }
 
 export interface IHandleCreateOccasionalMaintenance {
@@ -64,6 +73,8 @@ export interface IModalSecondView {
   buildingsData: IBuilding[];
   categoriesData: ICategory[];
   occasionalMaintenanceData: IOccasionalMaintenanceData;
+  externalBuildingId?: string;
+  checklistActivity?: string;
   handleSetView: (setView: number) => void;
   handleOccasionalMaintenanceDataChange: (data: IHandleSetOccasionalMaintenanceData) => void;
   handleCreateOccasionalMaintenance: (data: IHandleCreateOccasionalMaintenance) => Promise<void>;
