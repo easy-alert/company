@@ -164,7 +164,7 @@ export const LoadingContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: ${theme.size.sm};
 `;
