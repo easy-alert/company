@@ -198,10 +198,15 @@ function ModalThirdView({
       </Style.Row>
 
       <Style.ButtonContainer>
-        <Button label="Voltar" onClick={() => handleSetView(2)} />
+        <Button
+          label="Voltar"
+          bgColor="transparent"
+          textColor="actionBlue"
+          onClick={() => handleSetView(2)}
+        />
 
         <Button
-          label="Finalizar"
+          label="Finalizar manutenção"
           disable={onFileQuery || onImageQuery}
           onClick={() =>
             handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'finished' })
