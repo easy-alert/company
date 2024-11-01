@@ -45,14 +45,6 @@ export const createOccasionalMaintenance = async ({
   },
 }: IRequestCreateOccasionalMaintenance) => {
   const uri = '/buildings/reports/occasional/create';
-  if (ticketsIds.length === 0) {
-    handleToastify({
-      statusCode: 400,
-      message: 'Nenhum chamado selecionado.',
-    });
-
-    return null;
-  }
 
   try {
     const response: IResponseCreateOccasionalMaintenance = await Api.post(uri, {
