@@ -30,22 +30,27 @@ import type {
 } from './types';
 
 export const ModalCreateOccasionalMaintenance = ({
-  handleGetCalendarData,
+  externalBuildingId,
+  checklistActivity,
+  ticketsIds,
+  ticketsToAnswer,
+  handleGetBackgroundData,
   handleMaintenanceHistoryIdChange,
+  handleResetTickets,
   handleModalCreateOccasionalMaintenance,
   handleModalMaintenanceDetails,
   handleModalSendMaintenanceReport,
-  checklistTitle,
-  checklistBuildingId,
 }: IModalCreateOccasionalMaintenance) => {
+  if (!handleModalCreateOccasionalMaintenance) return null;
+
   const { account } = useAuthContext();
 
   const [occasionalMaintenanceData, setOccasionalMaintenanceData] =
     useState<IOccasionalMaintenanceData>({
-      buildingId: checklistBuildingId || '',
+      buildingId: externalBuildingId || '',
 
       element: '',
-      activity: checklistTitle || '',
+      activity: checklistActivity || '',
       responsible: '',
       executionDate: '',
       inProgress: false,
@@ -139,23 +144,35 @@ export const ModalCreateOccasionalMaintenance = ({
       origin: account?.origin || 'Company',
       occasionalMaintenanceType,
       occasionalMaintenanceBody,
+      ticketsIds,
     });
 
     if (response?.ServerMessage?.statusCode === 200) {
       if (!response?.maintenance?.id) return;
 
-      handleMaintenanceHistoryIdChange(response.maintenance.id);
-
-      await handleGetCalendarData();
-
-      if (occasionalMaintenanceType === 'finished') {
-        handleModalMaintenanceDetails(true);
-      } else {
-        handleModalSendMaintenanceReport(true);
+      if (handleMaintenanceHistoryIdChange) {
+        handleMaintenanceHistoryIdChange(response.maintenance.id);
       }
 
-      handleModalCreateOccasionalMaintenance(false);
-      setLoading(false);
+      if (handleResetTickets) {
+        handleResetTickets();
+      }
+
+      if (handleGetBackgroundData) {
+        await handleGetBackgroundData();
+      }
+
+      setTimeout(() => {
+        if (occasionalMaintenanceType === 'finished' && handleModalMaintenanceDetails) {
+          handleModalMaintenanceDetails(true);
+        } else if (occasionalMaintenanceType === 'pending' && handleModalSendMaintenanceReport) {
+          handleModalSendMaintenanceReport(true);
+        }
+
+        handleModalCreateOccasionalMaintenance(false);
+        setLoading(false);
+      }, 1000);
+
       return;
     }
 
@@ -172,11 +189,15 @@ export const ModalCreateOccasionalMaintenance = ({
         <ModalLoading />
       ) : (
         <>
+          {ticketsToAnswer && <p className="p1">{ticketsToAnswer}</p>}
+
           {view === 1 && <ModalFirstView handleSetView={handleSetView} />}
 
           {view === 2 && (
             <ModalSecondView
               buildingsData={buildingsData}
+              checklistActivity={checklistActivity}
+              externalBuildingId={externalBuildingId}
               categoriesData={categoriesData}
               occasionalMaintenanceData={occasionalMaintenanceData}
               handleSetView={handleSetView}

@@ -112,20 +112,20 @@ export const History = styled.div`
 
 export const Tabs = styled.div`
   display: flex;
-  gap: ${theme.size.xsm};
+  gap: ${theme.size.xxsm};
 
   margin-top: ${theme.size.xsm};
   margin-bottom: ${theme.size.xsm};
 `;
 
 export const Tab = styled.div<TabProps>`
-  width: 50%;
-
   display: flex;
   justify-content: center;
 
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-radius: ${theme.size.xsm};
+
+  font-size: 12px;
 
   background-color: ${({ active }) => (active ? theme.color.primaryL : 'transparent')};
   transition: background-color 0.4s ease;

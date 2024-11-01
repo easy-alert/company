@@ -277,7 +277,7 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && modalAdditionalInformations.id && (
+      {modalSendMaintenanceReportOpen && (
         <ModalSendMaintenanceReport
           modalAdditionalInformations={{
             ...modalAdditionalInformations,
@@ -309,7 +309,7 @@ export const MaintenancesCalendar = () => {
         />
       )}
 
-      {modalMaintenanceDetailsOpen && modalAdditionalInformations.id && (
+      {modalMaintenanceDetailsOpen && (
         <ModalMaintenanceDetails
           modalAdditionalInformations={{
             ...modalAdditionalInformations,
@@ -322,7 +322,7 @@ export const MaintenancesCalendar = () => {
 
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
-          handleGetCalendarData={handleGetCalendarData}
+          handleGetBackgroundData={handleGetCalendarData}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}
           handleModalMaintenanceDetails={handleModalMaintenanceDetails}
@@ -330,7 +330,7 @@ export const MaintenancesCalendar = () => {
         />
       )}
 
-      {modalEditReport && modalAdditionalInformations.id && (
+      {modalEditReport && (
         <ModalEditMaintenanceReport
           maintenanceHistoryId={maintenanceHistoryId || modalAdditionalInformations.id}
           handleModalEditReport={handleModalEditReport}

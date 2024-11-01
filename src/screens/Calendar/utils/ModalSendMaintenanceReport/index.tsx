@@ -482,7 +482,7 @@ export const ModalSendMaintenanceReport = ({
                     }}
                     textColor={theme.color.actionBlue}
                     borderless
-                    label="Salvar progresso"
+                    label="Salvar"
                     message={{
                       title: 'Tem certeza que deseja salvar o progresso?',
                       content: '',
