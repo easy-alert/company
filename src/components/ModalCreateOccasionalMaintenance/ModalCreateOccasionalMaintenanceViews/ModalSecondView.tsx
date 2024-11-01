@@ -17,6 +17,8 @@ const ModalSecondView = ({
   buildingsData,
   categoriesData,
   occasionalMaintenanceData,
+  externalBuildingId,
+  checklistActivity,
   handleSetView,
   handleOccasionalMaintenanceDataChange,
   handleCreateOccasionalMaintenance,
@@ -38,6 +40,7 @@ const ModalSecondView = ({
         label="Edificação *"
         value={occasionalMaintenanceData.buildingId}
         selectPlaceholderValue={occasionalMaintenanceData.buildingId}
+        disabled={!!externalBuildingId}
         onChange={(e) =>
           handleOccasionalMaintenanceDataChange({ primaryKey: 'buildingId', value: e.target.value })
         }
@@ -112,6 +115,7 @@ const ModalSecondView = ({
         label="Atividade *"
         placeholder="Ex: Troca de lâmpada"
         value={occasionalMaintenanceData.activity}
+        disabled={!!checklistActivity}
         onChange={(e) =>
           handleOccasionalMaintenanceDataChange({
             primaryKey: 'activity',
@@ -158,12 +162,17 @@ const ModalSecondView = ({
       <Style.ButtonContainer>
         <Button
           label="Criar"
+          bgColor="transparent"
+          textColor="actionBlue"
           onClick={() =>
             handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
           }
         />
+
         <Button
-          label="Criar em progresso"
+          label="Iniciar execução"
+          bgColor="transparent"
+          textColor="actionBlue"
           onClick={() => {
             handleCreateOccasionalMaintenance({
               occasionalMaintenanceType: 'pending',
@@ -171,6 +180,7 @@ const ModalSecondView = ({
             });
           }}
         />
+
         <Button
           label="Criar finalizada"
           onClick={() => handleSetView(3)}
