@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// LIBS
+// REACT
 import { useCallback, useEffect, useState } from 'react';
+
+// LIBS
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { useKeyPressEvent } from 'react-use';
 import format from 'date-fns/format';
@@ -8,23 +9,29 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { icon } from '../../assets/icons';
 
-// STYLES
-import * as Style from './styles';
+// GLOBAL COMPONENTS
+import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
+import { IconButton } from '@components/Buttons/IconButton';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
-// MODALS
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// COMPONENTS
 import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
 import { ModalMaintenanceDetails } from './utils/ModalMaintenanceDetails';
+import { ModalEditMaintenanceReport } from '../Reports/Maintenances/ModalEditMaintenanceReport';
 
 // FUNCTIONS
 import { requestCalendarData } from './functions';
-import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
-import { IconButton } from '../../components/Buttons/IconButton';
-import { ModalCreateOccasionalMaintenance } from './utils/ModalCreateOccasionalMaintenance';
-import { ModalEditMaintenanceReport } from '../Reports/Maintenances/ModalEditMaintenanceReport';
+
+// STYLES
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import * as Style from './styles';
+
+// TYPES
+import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -55,6 +62,8 @@ export const MaintenancesCalendar = () => {
       expectedDueDate: '',
       isFuture: false,
     });
+
+  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
 
   const [calendarType, setCalendarType] = useState<
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
@@ -109,6 +118,42 @@ export const MaintenancesCalendar = () => {
     showMore: (total: any) => `+${total}`,
   };
 
+  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
+
+  const handleModalMaintenanceDetails = (modalState: boolean) => {
+    setModalMaintenanceDetailsOpen(modalState);
+  };
+
+  const handleModalSendMaintenanceReport = (modalState: boolean) => {
+    setModalSendMaintenanceReportOpen(modalState);
+  };
+
+  const handleModalCreateOccasionalMaintenance = (modalState: boolean) => {
+    setModalCreateOccasionalMaintenance(modalState);
+  };
+
+  const handleModalEditReport = (modalState: boolean) => {
+    setModalEditReport(modalState);
+  };
+
+  const handleMaintenanceHistoryIdChange = (id: string) => {
+    setMaintenanceHistoryId(id);
+  };
+
+  const handleGetCalendarData = async () => {
+    await requestCalendarData({
+      setLoading,
+      setMaintenancesWeekView,
+      setMaintenancesMonthView,
+      setMaintenancesDisplay,
+      yearToRequest,
+      setYearChangeLoading,
+      setBuildingOptions,
+      buildingId,
+      calendarType,
+    });
+  };
+
   const eventPropGetter = useCallback(
     (event: any) => ({
       ...(event.status === 'expired' && {
@@ -143,6 +188,8 @@ export const MaintenancesCalendar = () => {
       if (yearChangeloading) return;
 
       if (calendarType === 'week') {
+        handleMaintenanceHistoryIdChange(event.id);
+
         setModalAdditionalInformations({
           id: event.id,
           expectedNotificationDate: event.expectedNotificationDate,
@@ -190,8 +237,6 @@ export const MaintenancesCalendar = () => {
     [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
   );
 
-  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
-
   useKeyPressEvent('w', () => {
     if (
       !modalMaintenanceDetailsOpen &&
@@ -232,10 +277,13 @@ export const MaintenancesCalendar = () => {
     <DotSpinLoading />
   ) : (
     <>
-      {modalSendMaintenanceReportOpen && modalAdditionalInformations.id && (
+      {modalSendMaintenanceReportOpen && (
         <ModalSendMaintenanceReport
-          setModal={setModalSendMaintenanceReportOpen}
-          modalAdditionalInformations={modalAdditionalInformations}
+          modalAdditionalInformations={{
+            ...modalAdditionalInformations,
+            id: maintenanceHistoryId || modalAdditionalInformations.id,
+          }}
+          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
           setLoading={setLoading}
           setMaintenancesWeekView={setMaintenancesWeekView}
           setMaintenancesMonthView={setMaintenancesMonthView}
@@ -260,35 +308,32 @@ export const MaintenancesCalendar = () => {
           }
         />
       )}
-      {modalMaintenanceDetailsOpen && modalAdditionalInformations.id && (
+
+      {modalMaintenanceDetailsOpen && (
         <ModalMaintenanceDetails
-          setModal={setModalMaintenanceDetailsOpen}
-          setModalEditReport={setModalEditReport}
-          modalAdditionalInformations={modalAdditionalInformations}
+          modalAdditionalInformations={{
+            ...modalAdditionalInformations,
+            id: maintenanceHistoryId || modalAdditionalInformations.id,
+          }}
+          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
+          handleModalEditReport={handleModalEditReport}
         />
       )}
 
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
-          setModal={setModalCreateOccasionalMaintenance}
-          getCalendarData={async () =>
-            requestCalendarData({
-              setLoading,
-              setMaintenancesWeekView,
-              setMaintenancesMonthView,
-              setMaintenancesDisplay,
-              yearToRequest,
-              setYearChangeLoading,
-              setBuildingOptions,
-              buildingId,
-              calendarType,
-            })
-          }
+          handleGetBackgroundData={handleGetCalendarData}
+          handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
+          handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}
+          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
+          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
         />
       )}
 
-      {modalEditReport && modalAdditionalInformations.id && (
+      {modalEditReport && (
         <ModalEditMaintenanceReport
+          maintenanceHistoryId={maintenanceHistoryId || modalAdditionalInformations.id}
+          handleModalEditReport={handleModalEditReport}
           onThenActionRequest={async () =>
             requestCalendarData({
               setLoading,
@@ -302,14 +347,13 @@ export const MaintenancesCalendar = () => {
               calendarType,
             })
           }
-          setModal={setModalEditReport}
-          maintenanceHistoryId={modalAdditionalInformations.id}
         />
       )}
 
       <Style.Container>
         <Style.Header>
           <h2>Calendário</h2>
+
           <select
             disabled={yearChangeloading}
             value={buildingId}
@@ -331,6 +375,7 @@ export const MaintenancesCalendar = () => {
             onClick={() => setModalCreateOccasionalMaintenance(true)}
           />
         </Style.Header>
+
         <Style.CalendarScroll>
           <Style.CalendarWrapper
             view={calendarType}
@@ -338,6 +383,7 @@ export const MaintenancesCalendar = () => {
             yearChangeloading={yearChangeloading}
           >
             {yearChangeloading && <Style.YearLoading />}
+
             <Calendar
               date={date}
               onNavigate={onNavigate}

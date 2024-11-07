@@ -1,18 +1,30 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
+// REACT
 import { useEffect, useRef, useState } from 'react';
-// eslint-disable-next-line import/no-cycle
-import { IChecklist } from '.';
-import { icon } from '../../assets/icons';
-import { IconButton } from '../../components/Buttons/IconButton';
-import { ImageComponent } from '../../components/ImageComponent';
-import * as Style from './styles';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { ImageComponent } from '@components/ImageComponent';
+import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
+
+// GLOBAL UTILS
+import { ITimeInterval } from '@utils/types';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// COMPONENTS
 import { ModalChecklistDetails } from './ModalChecklistDetails';
-import { theme } from '../../styles/theme';
 import { ModalDeleteChecklist } from './ModalDeleteChecklist';
 import { ModalUpdateChecklist } from './ModalUpdateChecklist';
-import { ITimeInterval } from '../../utils/types';
-import { ModalCreateOccasionalMaintenance } from '../Calendar/utils/ModalCreateOccasionalMaintenance';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IChecklist } from '.';
 
 interface IChecklistRow {
   checklist: IChecklist;
@@ -25,16 +37,22 @@ export const ChecklistRowComponent = ({
   onThenRequest,
   timeIntervals,
 }: IChecklistRow) => {
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [modalDeleteChecklistOpen, setModalDeleteChecklistOpen] = useState(false);
   const [modalUpdateChecklistOpen, setModalUpdateChecklistOpen] = useState(false);
   const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
     useState<boolean>(false);
+
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const toggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
+  };
+
+  const handleModalCreateOccasionalMaintenance = (modalState: boolean) => {
+    setModalCreateOccasionalMaintenance(modalState);
   };
 
   useEffect(() => {
@@ -60,6 +78,7 @@ export const ChecklistRowComponent = ({
           onThenRequest={onThenRequest}
         />
       )}
+
       {modalDeleteChecklistOpen && (
         <ModalDeleteChecklist
           onThenRequest={onThenRequest}
@@ -67,6 +86,7 @@ export const ChecklistRowComponent = ({
           checklistId={id}
         />
       )}
+
       {modalUpdateChecklistOpen && (
         <ModalUpdateChecklist
           setModal={setModalUpdateChecklistOpen}
@@ -75,20 +95,15 @@ export const ChecklistRowComponent = ({
           checklistId={id}
         />
       )}
+
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
-          setModal={setModalCreateOccasionalMaintenance}
-          checklistTitle={name}
-          checklistBuildingId={buildingId}
-          // Ta com nome de calendário mas pode ser qualquer coisa
-          getCalendarData={() =>
-            new Promise<void>((resolve) => {
-              // Não faz nada
-              resolve();
-            })
-          }
+          checklistActivity={name}
+          externalBuildingId={buildingId}
+          handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}
         />
       )}
+
       <Style.ChecklistBackground ref={dropdownRef}>
         <Style.ChecklistWrapper>
           <Style.ChecklistRow

@@ -66,10 +66,12 @@ export const schemaReportFilter = yup
 export const requestDeleteMaintenanceHistory = async ({
   maintenanceHistoryId,
   onThenRequest,
-  setModal,
+  handleModalSendMaintenanceReport,
+  handleModalEditReport,
   setOnModalQuery,
 }: IRequestDeleteMaintenanceHistory) => {
   setOnModalQuery(true);
+
   await Api.delete(`/maintenances/occasional/delete/${maintenanceHistoryId}`)
     .then((res) => {
       onThenRequest();
@@ -79,7 +81,14 @@ export const requestDeleteMaintenanceHistory = async ({
       catchHandler(err);
     })
     .finally(() => {
-      setModal(false);
+      if (handleModalSendMaintenanceReport) {
+        handleModalSendMaintenanceReport(false);
+      }
+
+      if (handleModalEditReport) {
+        handleModalEditReport(false);
+      }
+
       setOnModalQuery(false);
     });
 };

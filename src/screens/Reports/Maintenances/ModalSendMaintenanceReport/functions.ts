@@ -1,11 +1,18 @@
+// LIBS
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL UTILS
+import { applyMask, catchHandler, unMaskBRL } from '@utils/functions';
+
+// TYPES
 import { IRequestReportProgress, IRequestSaveReportProgress, IRequestSendReport } from './types';
 
 export const requestSendReport = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -18,7 +25,7 @@ export const requestSendReport = async ({
   await Api.post('/maintenances/create/report', {
     origin,
     maintenanceHistoryId,
-    cost: Number(unMaskBRL(maintenanceReport.cost)),
+    cost: Number(unMaskBRL(String(maintenanceReport.cost))),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,
     ReportImages: images,
@@ -26,7 +33,7 @@ export const requestSendReport = async ({
     .then((res) => {
       onThenRequest();
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);
@@ -60,7 +67,7 @@ export const requestReportProgress = async ({
 
 export const requestSaveReportProgress = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -79,7 +86,7 @@ export const requestSaveReportProgress = async ({
     .then((res) => {
       onThenRequest();
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);

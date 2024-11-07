@@ -186,7 +186,9 @@ export const ModalInfoContainer = styled.div`
 `;
 
 export const ButtonContainer = styled.div`
-  margin-top: ${theme.size.xsm};
+  display: flex;
+  justify-content: flex-end;
+  margin-top: ${theme.size.sm};
 `;
 
 export const Label = styled.label`

@@ -35,15 +35,22 @@ interface ILinkSupplierToMaintenanceHistory {
 export const LinkSupplierToMaintenanceHistory = ({
   maintenanceHistoryId,
 }: ILinkSupplierToMaintenanceHistory) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [modalCreateAndLinkSupplierOpen, setModalCreateAndLinkSupplierOpen] = useState(false);
   const [modalLinkSupplierOpen, setModalLinkSupplierOpen] = useState(false);
-  const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
-  const ref = useRef<HTMLDivElement>(null);
   const [onQuery, setOnQuery] = useState(false);
-
   const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
 
+  const whatsappLink = (phone: string) => `https://api.whatsapp.com/send?phone=${phone}`;
+
   const findMaintenanceHistorySupplier = async () => {
+    if (!maintenanceHistoryId) {
+      setModalLinkSupplierOpen(false);
+      toast.error('Erro ao buscar fornecedores vinculados.');
+      return;
+    }
+
     await Api.get(`/suppliers/selected/${maintenanceHistoryId}`)
       .then((res) => {
         setSuppliers(res.data.suppliers);

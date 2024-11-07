@@ -1,7 +1,7 @@
 import { IMaintenance, AnnexesAndImages, IModalAdditionalInformations } from '../../types';
 
 export interface IModalSendMaintenanceReport {
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   modalAdditionalInformations: IModalAdditionalInformations;
   setMaintenancesWeekView: (setMaintenancesWeekView: ICalendarView[]) => void;
   setMaintenancesMonthView: (setMaintenancesMonthView: ICalendarView[]) => void;
@@ -30,7 +30,7 @@ export interface IMaintenanceReport {
 export interface IRequestSendReport {
   maintenanceHistoryId: string;
   maintenanceReport: IMaintenanceReport;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
@@ -49,7 +49,7 @@ export interface IRequestSendReport {
 export interface IRequestSaveReportProgress {
   maintenanceHistoryId: string;
   maintenanceReport: IMaintenanceReport;
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
@@ -65,7 +65,7 @@ export interface IRequestSaveReportProgress {
 }
 
 export interface IRequestToggleInProgress {
-  setModal: (setModal: boolean) => void;
+  handleModalSendMaintenanceReport: (modalState: boolean) => void;
   maintenanceHistoryId: string;
   setOnQuery: React.Dispatch<React.SetStateAction<boolean>>;
   inProgressChange: boolean;

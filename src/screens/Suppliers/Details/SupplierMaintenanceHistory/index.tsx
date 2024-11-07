@@ -34,24 +34,36 @@ export const SupplierMaintenanceHistory = ({
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
     useState<boolean>(false);
 
+  const handleModalMaintenanceDetails = (modalState: boolean) => {
+    setModalMaintenanceDetails(modalState);
+  };
+
+  const handleModalEditReport = (modalState: boolean) => {
+    setModalEditReport(modalState);
+  };
+
+  const handleModalSendMaintenanceReport = (modalState: boolean) => {
+    setModalSendMaintenanceReportOpen(modalState);
+  };
+
   return (
     <>
       {modalMaintenanceDetails && maintenanceHistoryId && (
         <ModalMaintenanceDetails
-          setModal={setModalMaintenanceDetails}
-          setModalEditReport={setModalEditReport}
           modalAdditionalInformations={{
             expectedDueDate: '',
             expectedNotificationDate: '',
             id: maintenanceHistoryId,
             isFuture: false,
           }}
+          handleModalEditReport={handleModalEditReport}
+          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
         />
       )}
 
       {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
         <ModalSendMaintenanceReport
-          setModal={setModalSendMaintenanceReportOpen}
+          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
           maintenanceHistoryId={maintenanceHistoryId}
           onThenRequest={async () => {
             getMaintenanceHistory();
@@ -61,11 +73,11 @@ export const SupplierMaintenanceHistory = ({
 
       {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
+          handleModalEditReport={handleModalEditReport}
+          maintenanceHistoryId={maintenanceHistoryId}
           onThenActionRequest={async () => {
             getMaintenanceHistory();
           }}
-          setModal={setModalEditReport}
-          maintenanceHistoryId={maintenanceHistoryId}
         />
       )}
 
@@ -137,7 +149,7 @@ export const SupplierMaintenanceHistory = ({
                   ) {
                     setModalMaintenanceDetails(true);
                   } else if (!maintenanceHistory.isFuture && maintenanceHistory.id) {
-                    setModalSendMaintenanceReportOpen(true);
+                    handleModalSendMaintenanceReport(true);
                   }
                 }}
               />

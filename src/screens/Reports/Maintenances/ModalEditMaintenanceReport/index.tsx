@@ -33,8 +33,8 @@ import { LinkSupplierToMaintenanceHistory } from '../../../../components/LinkSup
 import { MaintenanceHistoryActivities } from '../../../../components/MaintenanceHistoryActivities';
 
 export const ModalEditMaintenanceReport = ({
-  setModal,
   maintenanceHistoryId,
+  handleModalEditReport,
   onThenActionRequest,
 }: IModalEditMaintenanceReport) => {
   const { account } = useAuthContext();
@@ -171,7 +171,7 @@ export const ModalEditMaintenanceReport = ({
   }, []);
 
   return (
-    <Modal title="Editar relato" setModal={setModal}>
+    <Modal title="Editar relato" setModal={handleModalEditReport}>
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
@@ -380,7 +380,7 @@ export const ModalEditMaintenanceReport = ({
                 actionButtonClick={() => {
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
-                    setModal,
+                    handleModalEditReport,
                     onThenRequest: async () => onThenActionRequest(),
                     setOnModalQuery,
                   });
@@ -396,7 +396,7 @@ export const ModalEditMaintenanceReport = ({
                 requestEditReport({
                   setOnModalQuery,
                   maintenanceReport,
-                  setModal,
+                  handleModalEditReport,
                   files,
                   images,
                   origin: account?.origin ?? 'Company',

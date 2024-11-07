@@ -11,7 +11,7 @@ import { requestCalendarData } from '../../functions';
 
 export const requestSendReport = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -51,7 +51,7 @@ export const requestSendReport = async ({
       });
 
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);
@@ -63,7 +63,7 @@ export const requestSendReport = async ({
 
 export const requestSaveReportProgress = async ({
   maintenanceReport,
-  setModal,
+  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
   files,
   images,
@@ -101,7 +101,7 @@ export const requestSaveReportProgress = async ({
       });
 
       toast.success(res.data.ServerMessage.message);
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);
@@ -112,10 +112,10 @@ export const requestSaveReportProgress = async ({
 };
 
 export const requestToggleInProgress = async ({
-  setModal,
   maintenanceHistoryId,
-  setOnQuery,
   inProgressChange,
+  setOnQuery,
+  handleModalSendMaintenanceReport,
   onThenActionRequest,
 }: IRequestToggleInProgress) => {
   setOnQuery(true);
@@ -127,7 +127,7 @@ export const requestToggleInProgress = async ({
     .then((res) => {
       toast.success(res.data.ServerMessage.message);
       onThenActionRequest();
-      setModal(false);
+      handleModalSendMaintenanceReport(false);
     })
     .catch((err) => {
       catchHandler(err);

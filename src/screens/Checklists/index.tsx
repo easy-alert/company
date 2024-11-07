@@ -1,18 +1,34 @@
-/* eslint-disable import/no-cycle */
+// REACT
 import { useEffect, useState } from 'react';
+
+// LIBS
 import { toast } from 'react-toastify';
-import { icon } from '../../assets/icons';
-import { IconButton } from '../../components/Buttons/IconButton';
-import { Select } from '../../components/Inputs/Select';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { Select } from '@components/Inputs/Select';
+import { Button } from '@components/Buttons/Button';
+import { NoDataFound } from '@components/NoDataFound';
+
+// GLOBAL UTILS
+import { catchHandler, requestListIntervals } from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import type { ITimeInterval } from '@utils/types';
+
+// COMPONENTS
 import { MiniCalendarComponent } from './MiniCalendarComponent';
-import * as Style from './styles';
-import { Button } from '../../components/Buttons/Button';
-import { NoDataFound } from '../../components/NoDataFound';
 import { ModalCreateChecklist } from './ModalCreateChecklist';
-import { ITimeInterval } from '../../utils/types';
-import { catchHandler, requestListIntervals } from '../../utils/functions';
-import { Api } from '../../services/api';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
+
+// STYLES
+import * as Style from './styles';
 
 export interface IChecklist {
   id: string;
@@ -123,6 +139,7 @@ export const Checklists = () => {
         <Style.Header>
           <Style.HeaderLeftSide>
             <h2>Checklists</h2>
+
             <Select
               id="customFilterForChecklist"
               disabled={loading}
@@ -137,6 +154,7 @@ export const Checklists = () => {
               <option value="" disabled hidden>
                 Selecione
               </option>
+
               {buildingOptions.map(({ nanoId, name }) => (
                 <option value={nanoId} key={nanoId}>
                   {name}
@@ -144,6 +162,7 @@ export const Checklists = () => {
               ))}
             </Select>
           </Style.HeaderLeftSide>
+
           <IconButton
             disabled={loading}
             icon={icon.plusWithBg}
@@ -169,6 +188,7 @@ export const Checklists = () => {
                   setDate(new Date());
                 }}
               />
+
               <Button
                 disable={loading}
                 label="Anterior"
@@ -176,6 +196,7 @@ export const Checklists = () => {
                   setDate((prev) => new Date(prev.setDate(prev.getDate() - 1)));
                 }}
               />
+
               <Button
                 disable={loading}
                 label="Próximo"
@@ -184,6 +205,7 @@ export const Checklists = () => {
                 }}
               />
             </Style.NavigateButtons>
+
             <p className="p1">
               {date.toLocaleDateString('pt-BR', {
                 weekday: 'long',
@@ -198,6 +220,7 @@ export const Checklists = () => {
             <Style.CalendarDiv style={{ pointerEvents: loading ? 'none' : 'auto' }}>
               <MiniCalendarComponent date={date} setDate={setDate} calendarDates={calendarDates} />
             </Style.CalendarDiv>
+
             <Style.Checklists>
               {!loading &&
                 checklists.map((checklist) => (

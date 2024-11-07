@@ -1,13 +1,12 @@
 // COMPONENTS
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
 
+// STYLES
 import * as Style from './styles';
 
 // TYPES
-import { IModalCreateOccasionalMaintenanceInstructions } from './utils/types';
-
-// FUNCTIONS
-import { Modal } from '../../../../components/Modal';
-import { Button } from '../../../../components/Buttons/Button';
+import type { IModalCreateOccasionalMaintenanceInstructions } from './utils/types';
 
 export const ModalCreateOccasionalMaintenanceInstructions = ({
   setView,
@@ -16,6 +15,7 @@ export const ModalCreateOccasionalMaintenanceInstructions = ({
   <Modal title="Manutenção avulsa" setModal={setModal}>
     <Style.ModalInfoContainer>
       <h6>Atenção</h6>
+
       <p className="p2">
         O recurso de manutenções avulsas somente deve ser utilizado para indicar o relato de uma
         manutenção não prevista no plano de manutenção da edificação.
