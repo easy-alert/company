@@ -1,213 +1,147 @@
+// REACT
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { Modal } from '../../../components/Modal';
-import * as Style from './styles';
-import { Api } from '../../../services/api';
-import { catchHandler, isImage } from '../../../utils/functions';
-import { ImagePreview } from '../../../components/ImagePreview';
-import { ListTag } from '../../../components/ListTag';
-import { theme } from '../../../styles/theme';
-import { TagsArray } from '../../../components/TagsArray';
-import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+
+// LIBS
+// CONTEXTS
+// HOOKS
+// SERVICES
+import { getTicketById } from '@services/apis/getTicketById';
+import { putTicketById } from '@services/apis/putTicketById';
+import { getAllTicketDismissReasons } from '@services/apis/getAllTicketDismissReasons';
+
+// GLOBAL COMPONENTS
+import { Modal } from '@components/Modal';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+
+// GLOBAL UTILS
+import { handleToastify } from '@utils/toastifyResponses';
+
+// GLOBAL ASSETS
+// GLOBAL TYPES
+import type { ITicket } from '@customTypes/ITicket';
+import type { ITicketDismissReason } from '@customTypes/ITicketDismissReason';
+
+// COMPONENTS
+import TicketDismiss from './components/TicketDismiss';
+import TicketDetails from './components/TicketDetails';
+
+// UTILS
+// STYLES
 
 interface IModalTicketDetails {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
   ticketId: string;
-  onThenRequest: () => Promise<void>;
+  userId?: string;
+  showButtons?: boolean;
+  handleTicketDetailsModal: (modalState: boolean) => void;
+  handleRefresh?: () => void;
 }
 
-interface Image {
-  id: string;
-  ticketId: string;
-  name: string;
-  url: string;
-  createdAt: string;
-  updatedAt: string;
-}
-interface Status {
-  name: string;
-  label: string;
-  color: string;
-  backgroundColor: string;
-}
-interface Place {
-  id: string;
-  label: string;
-}
-interface Type {
-  type: Place;
-}
-interface Company {
-  canAccessTickets: boolean;
-}
-interface Building {
-  nanoId: string;
-  id: string;
-  name: string;
-  Company: Company;
-}
+type IViewState = 'details' | 'dismiss';
 
-interface ITicket {
-  id: string;
-  residentName: string;
-  residentApartment: string;
-  residentEmail: string;
-  description: string;
-  placeId: string;
-  statusName: string;
-  buildingId: string;
-  ticketNumber: number;
-  createdAt: string;
-  updatedAt: string;
-  images: Image[];
-  status: Status;
-  place: Place;
-  types: Type[];
-  building: Building;
-}
-
-export const ModalTicketDetails = ({ setModal, ticketId, onThenRequest }: IModalTicketDetails) => {
-  const [loading, setLoading] = useState<boolean>(true);
+function ModalTicketDetails({
+  ticketId,
+  userId,
+  showButtons = true,
+  handleTicketDetailsModal,
+  handleRefresh,
+}: IModalTicketDetails) {
   const [ticket, setTicket] = useState<ITicket>();
-  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [dismissReasons, setDismissReasons] = useState<ITicketDismissReason[]>([]);
 
-  const deleteTicket = async () => {
-    setOnQuery(true);
+  const [view, setView] = useState<IViewState>('details');
 
-    await Api.delete(`/tickets/${ticket?.id}`)
-      .then((res) => {
-        onThenRequest();
-        toast.success(res.data.ServerMessage.message);
-        setModal(false);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setOnQuery(false);
-      });
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const handleSetView = (viewState: IViewState) => {
+    setView(viewState);
   };
 
-  const findChecklistById = async () => {
-    await Api.get(`/tickets/${ticketId}`)
-      .then((res) => {
-        setTicket(res.data.ticket);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const handleGetTicketById = async () => {
+    setLoading(true);
+
+    try {
+      const ticketData = await getTicketById(ticketId);
+
+      setTicket(ticketData);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateOneTicket = async (updatedTicket: ITicket) => {
+    setLoading(true);
+
+    try {
+      await putTicketById(updatedTicket);
+
+      if (handleRefresh) {
+        handleRefresh();
+      }
+
+      handleTicketDetailsModal(false);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetTicketDismissReasons = async () => {
+    try {
+      const ticketDismissReasons = await getAllTicketDismissReasons();
+
+      setDismissReasons(ticketDismissReasons);
+    } catch (error: any) {
+      handleToastify(error);
+    }
   };
 
   useEffect(() => {
-    findChecklistById();
-  }, []);
+    handleGetTicketById();
+    handleGetTicketDismissReasons();
+  }, [ticketId]);
+
+  if (!ticket) return null;
 
   return (
-    <Modal title={`Detalhes do chamado #${ticket?.ticketNumber}`} setModal={setModal}>
+    <Modal
+      title={
+        view === 'details'
+          ? `Detalhes do chamado #${ticket?.ticketNumber}`
+          : `Indeferir chamado #${ticket?.ticketNumber}`
+      }
+      bodyWidth="475px"
+      setModal={handleTicketDetailsModal}
+    >
       {loading ? (
-        <Style.LoadingContainer>
-          <DotSpinLoading />
-        </Style.LoadingContainer>
+        <DotSpinLoading />
       ) : (
-        <Style.Container>
-          <Style.Content>
-            <Style.Row>
-              <h6>Edificação</h6>
-              <p className="p2">{ticket?.building.name}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Nome do morador</h6>
-              <p className="p2">{ticket?.residentName}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Apartamento do morador</h6>
-              <p className="p2">{ticket?.residentApartment}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>E-mail do morador</h6>
-              <p className="p2">{ticket?.residentEmail || '-'}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Local da ocorrência</h6>
-              <ListTag
-                label={ticket?.place.label || '-'}
-                backgroundColor={theme.color.gray4}
-                color="#ffffff"
-                fontWeight={500}
-                padding="2px 4px"
-                fontSize="12px"
-              />
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Tipo da manutenção</h6>
-              <TagsArray data={ticket?.types.map(({ type }) => type.label)} />
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Descrição</h6>
-              <pre className="p2">{ticket?.description}</pre>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Anexos</h6>
-              <Style.FileAndImageRow>
-                {ticket && ticket.images.length > 0 ? (
-                  ticket?.images.map((image) => {
-                    if (isImage(image.url)) {
-                      return (
-                        <ImagePreview
-                          key={image.url}
-                          src={image.url}
-                          downloadUrl={image.url}
-                          imageCustomName={image.name}
-                          width="132px"
-                          height="136px"
-                        />
-                      );
-                    }
-
-                    return (
-                      <ListTag
-                        downloadUrl={image.url}
-                        key={image.url}
-                        padding="4px 12px"
-                        label={image.name}
-                        maxWidth="100px"
-                      />
-                    );
-                  })
-                ) : (
-                  <p className="p2">Nenhuma imagem enviada.</p>
-                )}
-              </Style.FileAndImageRow>
-            </Style.Row>
-          </Style.Content>
-          <Style.Buttons>
-            <PopoverButton
-              borderless
-              disabled={onQuery}
-              actionButtonBgColor={theme.color.actionDanger}
-              type="Button"
-              label="Excluir"
-              message={{
-                title: 'Deseja excluir este chamado?',
-                content: 'Atenção, essa ação é irreversível.',
-                contentColor: theme.color.danger,
-              }}
-              actionButtonClick={deleteTicket}
+        <>
+          {view === 'details' && (
+            <TicketDetails
+              ticket={ticket}
+              userId={userId}
+              showButtons={showButtons}
+              handleSetView={handleSetView}
+              handleUpdateOneTicket={handleUpdateOneTicket}
             />
-          </Style.Buttons>
-        </Style.Container>
+          )}
+
+          {view === 'dismiss' && (
+            <TicketDismiss
+              ticketId={ticketId}
+              userId={userId}
+              dismissReasons={dismissReasons}
+              handleSetView={handleSetView}
+              handleUpdateOneTicket={handleUpdateOneTicket}
+            />
+          )}
+        </>
       )}
     </Modal>
   );
-};
+}
+
+export default ModalTicketDetails;
