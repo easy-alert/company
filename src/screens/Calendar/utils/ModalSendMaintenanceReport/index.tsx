@@ -194,8 +194,12 @@ export const ModalSendMaintenanceReport = ({
       setLoading(false);
 
       handleToastify({
-        statusCode: 400,
-        message: 'Erro ao tentar carrregar detalhes da manutenção.',
+        status: 400,
+        data: {
+          ServerMessage: {
+            message: 'Erro ao tentar carregar detalhes da manutenção.',
+          },
+        },
       });
 
       return;
