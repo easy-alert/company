@@ -1,59 +1,120 @@
-import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
+import styled from 'styled-components';
 
-export const Container = styled.div`
+import { theme } from '@styles/theme';
+
+export const TicketDetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${theme.size.sm};
+`;
 
-  > :last-child {
-    margin-top: ${theme.size.xsm};
+export const TicketDetailsTitle = styled.h3`
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+`;
+
+export const TicketDetailsColumnContainer = styled.div`
+  display: flex;
+  gap: ${theme.size.xxsm};
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
   }
 `;
 
-export const Content = styled.div`
+export const TicketDetailsLeftColumn = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+
+  width: 50%;
+  float: left;
+
   gap: ${theme.size.xsm};
 `;
 
-export const Row = styled.div<{ disabled?: boolean }>`
+export const TicketDetailsRightColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xxsm};
+  align-items: flex-start;
 
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      cursor: default;
-      pointer-events: none;
+  width: 50%;
+  float: right;
 
-      :hover {
-        opacity: 1;
-      }
-    `}
+  gap: ${theme.size.xsm};
 `;
 
-export const FileAndImageRow = styled.div`
+export const TicketDetailsColumnContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: ${theme.size.xxsm};
+`;
+
+export const TicketDetailsImagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  gap: ${theme.size.xsm};
+`;
+
+export const TicketDetailsImagesContent = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+
   gap: ${theme.size.xsm};
-
-  > .p2 {
-    opacity: 0.7;
-  }
 `;
 
-export const LoadingContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
+export const TicketDetailsRowLabel = styled.span`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
 `;
 
-export const Buttons = styled.div`
+export const TicketDetailsRowValue = styled.span`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+`;
+
+export const TicketDetailsDismissedContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+
+  margin-top: ${theme.size.xsm};
+  gap: ${theme.size.xsm};
+`;
+
+export const TicketDetailsDismissedContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+`;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+
+  margin-top: ${theme.size.sm};
+`;
+
+// styles for DismissTicket.tsx
+export const DismissTicketContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+`;
+
+export const DismissTicketText = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  margin-bottom: ${theme.size.xsm};
 `;

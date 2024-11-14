@@ -36,6 +36,13 @@ export const theme = {
     white: '#FFFFFF',
   } as const,
 
+  background: {
+    open: '#FFFFFF',
+    awaitingToFinish: '#FFB200',
+    dismissed: '#B21D1D',
+    finished: '#34B53A',
+  } as const,
+
   size: {
     xxsm: '0.25rem', // 4px
     xsm: '0.5rem', // 8px

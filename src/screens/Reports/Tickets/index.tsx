@@ -1,24 +1,42 @@
-/* eslint-disable react/no-array-index-key */
-// #region imports
-import { Form, Formik } from 'formik';
+// REACT
 import { useEffect, useState } from 'react';
+
+// LIBS
+import { Form, Formik } from 'formik';
 import { CSVLink } from 'react-csv';
 import * as yup from 'yup';
-import { Api } from '../../../services/api';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { Button } from '../../../components/Buttons/Button';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { icon } from '../../../assets/icons';
-import * as s from './styles';
-import { theme } from '../../../styles/theme';
-import { FormikInput } from '../../../components/Form/FormikInput';
-import { ITicket, ITicketsForPDF, IFilter } from './types';
-import { catchHandler, dateFormatter } from '../../../utils/functions';
-import { Select } from '../../../components/Inputs/Select';
+
+// API
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { Button } from '@components/Buttons/Button';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Select } from '@components/Inputs/Select';
+import { ListTag } from '@components/ListTag';
+
+// GLOBAL UTILS
+import { catchHandler, dateFormatter } from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
-import { ModalTicketDetails } from '../../Tickets/ModalTicketDetails';
-import { ListTag } from '../../../components/ListTag';
+import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
+
+// STYLES
+import * as s from './styles';
+
+// TYPES
+import type { ITicket, ITicketsForPDF, IFilter } from './types';
+
 // #endregion
 
 export const TicketReports = () => {
@@ -33,7 +51,8 @@ export const TicketReports = () => {
   const [filtersOptions, setFiltersOptions] = useState<{ buildings: { name: string }[] }>();
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
-  const [modalTicketDetailsOpen, setModalTicketDetailsOpen] = useState(false);
+  const [ticketDetailsModal, setTicketDetailsModal] = useState<boolean>(false);
+
   const [ticketId, setTicketId] = useState<string>('');
 
   const [filterforRequest, setFilterforRequest] = useState<IFilter>({
@@ -95,6 +114,9 @@ export const TicketReports = () => {
     return statusName;
   };
 
+  const handleTicketDetailsModal = (modalState: boolean) => {
+    setTicketDetailsModal(modalState);
+  };
   // #region csv
   const csvHeaders = [
     { label: 'Status', key: 'Status' },
@@ -170,7 +192,7 @@ export const TicketReports = () => {
 
   return (
     <>
-      {modalPrintReportOpen && (
+      {modalPrintReportOpen && ticketsForPDF.length > 0 && (
         <ModalPrintTickets
           setModal={setModalPrintReportOpen}
           ticketsForPDF={ticketsForPDF}
@@ -181,18 +203,17 @@ export const TicketReports = () => {
         />
       )}
 
-      {modalTicketDetailsOpen && (
+      {ticketDetailsModal && (
         <ModalTicketDetails
           ticketId={ticketId}
-          setModal={setModalTicketDetailsOpen}
-          onThenRequest={async () => {
-            requestReportsData(filterforRequest);
-          }}
+          showButtons={false}
+          handleTicketDetailsModal={handleTicketDetailsModal}
         />
       )}
 
       <s.Container>
         <h2>Relatórios de chamados</h2>
+
         <s.FiltersContainer>
           <h5>Filtros</h5>
           <Formik
@@ -454,14 +475,14 @@ export const TicketReports = () => {
                     },
                     { cell: ticket.building.name },
                     { cell: ticket.place.label },
-                    { cell: ticket.types.map((e) => e.type.label).join(', ') },
+                    { cell: ticket.types.map((e) => e.type.singularLabel).join(', ') },
                     { cell: ticket.description },
                     { cell: ticket.residentName },
                     { cell: dateFormatter(ticket.createdAt) },
                   ]}
                   onClick={() => {
                     setTicketId(ticket.id);
-                    setModalTicketDetailsOpen(true);
+                    handleTicketDetailsModal(true);
                   }}
                 />
               ))}

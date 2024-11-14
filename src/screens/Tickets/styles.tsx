@@ -1,11 +1,15 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
+
 import { theme } from '../../styles/theme';
 
 export const Container = styled.div`
-  padding-top: ${theme.size.sm};
   display: flex;
   flex-direction: column;
+
+  margin-top: ${theme.size.sm};
+
   gap: ${theme.size.sm};
+  height: 100%;
 `;
 
 export const Header = styled.div`
@@ -13,7 +17,6 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.xxsm};
-  width: 100%;
 
   @media (max-width: 900px) {
     flex-direction: column;
@@ -21,66 +24,200 @@ export const Header = styled.div`
   }
 `;
 
-export const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(325px, 1fr));
-  gap: ${theme.size.md};
+export const HeaderSide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 600px) {
+    gap: ${theme.size.sm};
+  }
 `;
 
-export const Card = styled.div`
+export const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+
+  .select {
+    max-width: 300px;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+export const Kanban = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: ${theme.size.sm};
+  overflow: auto;
+  height: 100%;
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+  scroll-snap-type: x mandatory;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+`;
+
+export const KanbanCard = styled.div`
   background-color: ${theme.color.white};
-  padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+  scroll-snap-align: start;
+  min-width: 300px;
+  overflow: auto;
+  padding-bottom: ${theme.size.sm};
+
+  scrollbar-width: none;
+  scrollbar-color: transparent;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+`;
+
+export const KanbanHeader = styled.div`
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: ${theme.color.white};
+  z-index: 9;
+  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${theme.size.sm};
+
+  > label {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.xxsm};
+
+    cursor: pointer;
+    color: ${theme.color.gray4};
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+  }
+`;
+
+export const KanbanTicketWrapper = styled.div`
+  padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+`;
+
+export const KanbanTicketInfo = styled.div<{
+  statusBgColor?: string;
+}>`
+  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.sm} 23px;
+  background-color: ${theme.color.gray0};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
 
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
 
-  cursor: pointer;
-  transition: 0.1s;
   :hover {
-    scale: 1.05;
+    opacity: 0.8;
+    cursor: pointer;
   }
+
+  > h6 {
+    > span {
+      display: flex;
+      align-items: center;
+      gap: ${theme.size.xxsm};
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+  }
+
+  word-break: break-word;
+
+  ${({ statusBgColor }) =>
+    statusBgColor &&
+    `
+    background: linear-gradient(90deg, ${statusBgColor} 0%, ${statusBgColor} 7px, white 7px, white 100%);
+    `}
 `;
 
-export const CardHeader = styled.div`
+export const KanbanTicketInfoHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  > h5 {
-    font-weight: 500;
-    color: ${theme.color.primary};
-  }
+  margin-bottom: ${theme.size.xsm};
 `;
 
-export const CardHeaderRightSide = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
+export const KanbanTicketNumber = styled.h1`
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 16px;
+  color: ${theme.color.primary};
 `;
 
-export const CardRow = styled.div`
+export const KanbanTicketNewTag = styled.span`
+  background-color: ${theme.color.primary};
+  padding: 4px 4px;
+  border-radius: 100%;
+`;
+
+export const KanbanTicketGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-row: 1fr 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+`;
+
+export const KanbanTicketGridBox = styled.div`
+  font-size: 40px;
+  font-family: sans-serif;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xxsm};
+  justify-content: center;
+`;
 
-  > p {
-    font-weight: 500;
-  }
+export const KanbanTicketTitle = styled.h6`
+  font-size: 10px;
+  line-height: 16px;
+  color: ${theme.color.gray4};
+  margin-bottom: ${theme.size.xxsm};
+`;
 
-  > :first-child {
-    color: ${theme.color.gray4};
-  }
+export const KanbanTicketDescription = styled.p`
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: ${theme.color.black};
+`;
+
+export const KanbanTicketListTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${theme.size.xsm};
 `;
 
 export const FilterWrapper = styled.div`
   display: grid;
-  grid-template-columns: 0.6fr 0.6fr 0.8fr 71px;
+  grid-template-columns: 0.8fr 1fr 1fr 1fr 1fr 71px;
 
   align-items: flex-end;
   gap: ${theme.size.xsm};
-  max-width: 70%;
+  max-width: 80%;
 
   > :last-child {
     margin-left: ${theme.size.xsm};
@@ -101,140 +238,12 @@ export const FilterWrapper = styled.div`
   }
 `;
 
-export const SelectedTickets = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: ${theme.color.primary};
-  font-weight: 500;
-`;
-
 export const PaginationFooter = styled.footer`
   margin-top: 8px;
   width: 100%;
   height: fit-content;
   display: flex;
   justify-content: flex-end;
-`;
-
-export const PaginationContainer = styled.div`
-  min-height: calc(100vh - 80px);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-export const DayWrapper = styled.div<{ reduceOpacity?: boolean }>`
-  display: flex;
-  align-items: center;
-  transition: 0.25s;
-
-  ${({ reduceOpacity }) =>
-    reduceOpacity &&
-    css`
-      opacity: 0.3;
-      :hover {
-        opacity: 0.3 !important;
-      }
-    `}
-
-  :hover {
-    opacity: 0.7;
-    cursor: pointer;
-  }
-`;
-
-export const NoDataDayWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  transition: 0.25s;
-`;
-
-export const DayInfo = styled.div<{ width?: string }>`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: ${theme.size.xxsm};
-  width: ${({ width }) => width || '45px'};
-
-  > p {
-    color: ${theme.color.gray4};
-    font-weight: 500;
-  }
-`;
-
-export const Maintenance = styled.div<{
-  status: 'expired' | 'pending' | 'completed' | 'overdue' | string;
-}>`
-  min-height: 62px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.sm} ${theme.size.md};
-
-  ${({ status }) =>
-    (status === 'completed' || status === 'overdue') &&
-    css`
-      background: linear-gradient(
-        90deg,
-        rgba(52, 181, 58, 1) 0%,
-        rgba(52, 181, 58, 1) 7px,
-        rgba(250, 250, 250, 1) 7px,
-        rgba(250, 250, 250, 1) 100%
-      );
-    `}
-
-  ${({ status }) =>
-    status === 'expired' &&
-    css`
-      background: linear-gradient(
-        90deg,
-        rgba(255, 53, 8, 1) 0%,
-        rgba(255, 53, 8, 1) 7px,
-        rgba(250, 250, 250, 1) 7px,
-        rgba(250, 250, 250, 1) 100%
-      );
-    `}
-
-    ${({ status }) =>
-    status === 'pending' &&
-    css`
-      background: linear-gradient(
-        90deg,
-        rgba(255, 178, 0, 1) 0%,
-        rgba(255, 178, 0, 1) 7px,
-        rgba(250, 250, 250, 1) 7px,
-        rgba(250, 250, 250, 1) 100%
-      );
-    `}
-`;
-
-export const MaintenanceTags = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
-  flex-wrap: wrap;
-
-  margin-bottom: ${theme.size.xsm};
-`;
-
-export const NoMaintenanceCard = styled.div`
-  width: 100%;
-  min-height: 62px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.sm} ${theme.size.md};
-  background: linear-gradient(
-    90deg,
-    rgb(217, 217, 217) 0%,
-    rgb(217, 217, 217) 7px,
-    rgba(250, 250, 250, 1) 7px,
-    rgba(250, 250, 250, 1) 100%
-  );
 `;
 
 export const NoDataContainer = styled.footer`
@@ -248,24 +257,4 @@ export const NoDataContainer = styled.footer`
     color: ${theme.color.gray4};
     text-align: center;
   }
-`;
-
-export const HeaderLeftSide = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.sm};
-  width: 100%;
-  flex-wrap: wrap;
-
-  > :nth-child(2) {
-    max-width: 300px;
-  }
-`;
-
-export const HeaderRightSide = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${theme.size.sm};
-  justify-content: flex-end;
-  width: fit-content;
 `;

@@ -1,14 +1,18 @@
 import { toast } from 'react-toastify';
 
 interface IServerResponse {
-  statusCode: number;
-  message: string;
+  status: number;
+  data: {
+    ServerMessage: {
+      message: string;
+    };
+  };
 }
 
 export const handleToastify = (serverResponse: IServerResponse) => {
-  if (serverResponse.statusCode === 200) {
-    toast.success(serverResponse.message);
+  if (serverResponse.status === 200) {
+    toast.success(serverResponse.data?.ServerMessage.message);
   } else {
-    toast.error(serverResponse.message);
+    toast.error(serverResponse.data?.ServerMessage.message);
   }
 };
