@@ -15,6 +15,7 @@ interface Image {
 }
 interface Place {
   label: string;
+  singularLabel?: string;
 }
 interface Type {
   type: Place;

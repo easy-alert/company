@@ -147,9 +147,7 @@ export const ModalCreateOccasionalMaintenance = ({
       ticketsIds,
     });
 
-    if (response?.ServerMessage?.statusCode === 200) {
-      if (!response?.maintenance?.id) return;
-
+    if (response?.maintenance?.id) {
       if (handleMaintenanceHistoryIdChange) {
         handleMaintenanceHistoryIdChange(response.maintenance.id);
       }
