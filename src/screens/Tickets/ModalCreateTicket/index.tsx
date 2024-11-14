@@ -48,7 +48,7 @@ const schema = yup
     buildingNanoId: yup.string().required('Campo obrigatório.'),
     residentName: yup.string().required('Campo obrigatório.'),
     residentApartment: yup.string().required('Campo obrigatório.'),
-    residentEmail: yup.string().email('E-mail inválido.'),
+    residentEmail: yup.string().email('E-mail inválido.').required('Campo obrigatório.'),
     description: yup.string().required('Campo obrigatório.'),
     placeId: yup.string().required('Campo obrigatório.'),
     types: yup
