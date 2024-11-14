@@ -1,6 +1,7 @@
 import { Api } from '@services/api';
 
 import { handleToastify } from '@utils/toastifyResponses';
+
 import { unMaskBRL } from '@utils/functions';
 
 import type {
@@ -23,7 +24,6 @@ interface IResponseCreateOccasionalMaintenance extends IResponse {
       id: string;
     };
     ServerMessage: {
-      statusCode: number;
       message: string;
     };
   };
@@ -72,8 +72,8 @@ export const createOccasionalMaintenance = async ({
     });
 
     handleToastify({
-      statusCode: 200,
-      message: 'Manutenção avulsa criada com sucesso',
+      status: 200,
+      data: response.data,
     });
 
     return response.data;
