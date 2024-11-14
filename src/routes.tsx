@@ -1,53 +1,53 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 // COMPONENTS
-import { AuthProvider } from './contexts/Auth/AuthProvider';
-import { RequireAuth } from './contexts/Auth/RequireAuth';
-import { Sidebar } from './components/Sidebar';
+import { AuthProvider } from '@contexts/Auth/AuthProvider';
+import { RequireAuth } from '@contexts/Auth/RequireAuth';
+import { Sidebar } from '@components/Sidebar';
 
 // AUTHENTICATION
-import { Login } from './screens/Authentication/Login';
-import { Register } from './screens/Authentication/Register';
+import { Login } from '@screens/Authentication/Login';
+import { Register } from '@screens/Authentication/Register';
 
 // ACCOUNT
-import { AccountDetails } from './screens/Account/Details';
+import { AccountDetails } from '@screens/Account/Details';
 
 // MAINTENANCES
-import { MaintenancesList } from './screens/Maintenances/List';
+import { MaintenancesList } from '@screens/Maintenances/List';
 
 // BUILDINGS
-import { BuildingsList } from './screens/Buildings/List';
-import { BuildingDetails } from './screens/Buildings/Details';
-import { BuildingManageMaintenances } from './screens/Buildings/BuildingManageMaintenances';
-import { BuildingMaintenancesList } from './screens/Buildings/BuildingMaintenancesList';
+import { BuildingsList } from '@screens/Buildings/List';
+import { BuildingDetails } from '@screens/Buildings/Details';
+import { BuildingManageMaintenances } from '@screens/Buildings/BuildingManageMaintenances';
+import { BuildingMaintenancesList } from '@screens/Buildings/BuildingMaintenancesList';
 
 // NOTIFICATIONS CONFIRMATION
-import { PhoneConfirm } from './screens/NotificationsConfirmation/Phone';
-import { EmailConfirm } from './screens/NotificationsConfirmation/Email';
+import { PhoneConfirm } from '@screens/NotificationsConfirmation/Phone';
+import { EmailConfirm } from '@screens/NotificationsConfirmation/Email';
 
 // CALENDAR
-import { MaintenancesCalendar } from './screens/Calendar';
+import { MaintenancesCalendar } from '@screens/Calendar';
 
 // REPORT
-import { MaintenanceReports } from './screens/Reports/Maintenances';
+import { MaintenanceReports } from '@screens/Reports/Maintenances';
 
 // TERMS OF USE
-import { TermsOfUse } from './screens/TermsOfUse';
+import { TermsOfUse } from '@screens/TermsOfUse';
 
 // RECOVERPASSWORD
-import { SendPasswordRecoverEmail } from './screens/Authentication/SendPasswordRecoverEmail';
-import { RecoverPassword } from './screens/Authentication/RecoverPassword';
+import { SendPasswordRecoverEmail } from '@screens/Authentication/SendPasswordRecoverEmail';
+import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
 
 // TUTORIALS
-import { Tutorials } from './screens/Tutorials';
+import { Tutorials } from '@screens/Tutorials';
 
 // DASHBOARD
-import { Dashboard } from './screens/Dashboard';
-import { Checklists } from './screens/Checklists';
-import { Tickets } from './screens/Tickets';
-import { ChecklistReports } from './screens/Reports/Checklists';
-import { TicketReports } from './screens/Reports/Tickets';
-import { SupplierDetails } from './screens/Suppliers/Details';
-import { SuppliersList } from './screens/Suppliers/List';
+import { Dashboard } from '@screens/Dashboard';
+import { Checklists } from '@screens/Checklists';
+import { ChecklistReports } from '@screens/Reports/Checklists';
+import { TicketReports } from '@screens/Reports/Tickets';
+import { SupplierDetails } from '@screens/Suppliers/Details';
+import { SuppliersList } from '@screens/Suppliers/List';
+import TicketsPage from '@screens/Tickets';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -104,7 +104,7 @@ const AppRoutes = () => (
 
           <Route path="/checklists" element={<Checklists />} />
 
-          <Route path="/tickets" element={<Tickets />} />
+          <Route path="/tickets" element={<TicketsPage />} />
 
           <Route path="/suppliers" element={<Outlet />}>
             <Route index element={<SuppliersList />} />
