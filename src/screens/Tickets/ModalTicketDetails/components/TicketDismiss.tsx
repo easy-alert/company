@@ -54,7 +54,7 @@ function TicketDismiss({
       return;
     }
 
-    if (dismissReasonName === 'other') {
+    if (dismissReasonName === 'other' && !dismissObservation) {
       handleToastify({
         status: 400,
         data: {
