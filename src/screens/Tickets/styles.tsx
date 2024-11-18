@@ -153,7 +153,7 @@ export const KanbanTicketInfo = styled.div<{
     `}
 `;
 
-export const KanbanTicketInfoHeader = styled.div`
+export const KanbanTicketHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -161,11 +161,25 @@ export const KanbanTicketInfoHeader = styled.div`
   margin-bottom: ${theme.size.xsm};
 `;
 
+export const KanbanTicketHeaderInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  gap: ${theme.size.xsm};
+`;
+
 export const KanbanTicketNumber = styled.h1`
   font-size: 18px;
   font-weight: 700;
   line-height: 16px;
   color: ${theme.color.primary};
+`;
+
+export const KanbanTicketBuildingName = styled.h6`
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: ${theme.color.gray6};
 `;
 
 export const KanbanTicketNewTag = styled.span`
