@@ -1,9 +1,6 @@
 // REACT
 import { useCallback, useEffect, useState } from 'react';
 
-// HOOKS
-import { useServiceTypes } from '@hooks/useServiceTypes';
-
 // SERVICES
 import { Api } from '@services/api';
 import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
@@ -106,12 +103,14 @@ function TicketsPage() {
   const handleRefresh = () => {
     setRefresh(!refresh);
   };
+
   const handleCreateKanbanTickets = useCallback((responseTickets: ITicket[]) => {
     const openTickets = responseTickets
       .filter((ticket) => ticket.status?.name === 'open')
       .sort((a, b) => new Date(b.createdAt ?? '').getTime() - new Date(a.createdAt ?? '').getTime())
       .sort((a, b) => {
         if (a.seen === b.seen) return 0;
+
         return a.seen ? 1 : -1;
       });
 
@@ -346,7 +345,7 @@ function TicketsPage() {
               ))}
             </Select>
 
-            <Select
+            {/* <Select
               selectPlaceholderValue=""
               label="Status"
               value={filter.status}
@@ -359,7 +358,7 @@ function TicketsPage() {
                   {status.label}
                 </option>
               ))}
-            </Select>
+            </Select> */}
 
             {/* <Select
               label="Tipo"
@@ -376,7 +375,7 @@ function TicketsPage() {
               ))}
             </Select> */}
 
-            <Select
+            {/* <Select
               label="Local"
               selectPlaceholderValue=""
               value={filter.placeId}
@@ -389,7 +388,7 @@ function TicketsPage() {
                   {place.name}
                 </option>
               ))}
-            </Select>
+            </Select> */}
 
             <Button
               type="button"
@@ -453,11 +452,19 @@ function TicketsPage() {
                     }}
                   >
                     <Style.KanbanTicketInfo statusBgColor={ticket?.status?.backgroundColor}>
-                      <Style.KanbanTicketInfoHeader>
-                        <Style.KanbanTicketNumber>#{ticket.ticketNumber}</Style.KanbanTicketNumber>
+                      <Style.KanbanTicketHeader>
+                        <Style.KanbanTicketHeaderInfo>
+                          <Style.KanbanTicketNumber>
+                            #{ticket.ticketNumber}
+                          </Style.KanbanTicketNumber>
+
+                          <Style.KanbanTicketBuildingName>
+                            - {ticket.building?.name}
+                          </Style.KanbanTicketBuildingName>
+                        </Style.KanbanTicketHeaderInfo>
 
                         {!ticket?.seen && <Style.KanbanTicketNewTag />}
-                      </Style.KanbanTicketInfoHeader>
+                      </Style.KanbanTicketHeader>
 
                       <Style.KanbanTicketGrid>
                         <Style.KanbanTicketGridBox>
@@ -478,6 +485,7 @@ function TicketsPage() {
                                 label={type.type.label}
                                 color={type.type.color}
                                 backgroundColor={type.type.backgroundColor}
+                                padding="2px 0.5rem"
                               />
                             ))}
                           </Style.KanbanTicketListTags>
@@ -486,7 +494,9 @@ function TicketsPage() {
                         <Style.KanbanTicketGridBox>
                           <Style.KanbanTicketTitle>Local da ocorrência</Style.KanbanTicketTitle>
 
-                          <ListTag label={ticket.place?.label || ''} />
+                          <Style.KanbanTicketDescription>
+                            {ticket.place?.label}
+                          </Style.KanbanTicketDescription>
                         </Style.KanbanTicketGridBox>
 
                         <Style.KanbanTicketGridBox>
