@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 
 // LIBS
 import { useDropzone } from 'react-dropzone';
-import { useLocation, useSearchParams } from 'react-router-dom';
 
 // SERVICES
 import { getTicketHistoryActivities } from '@services/apis/getTicketHistoryActivities';
@@ -35,16 +34,15 @@ import * as Style from './styles';
 
 interface ITicketHistoryActivities {
   ticketId: string;
+  userId?: string;
   disableComment?: boolean;
 }
 
 export const TicketHistoryActivities = ({
   ticketId,
+  userId,
   disableComment = false,
 }: ITicketHistoryActivities) => {
-  const location = useLocation();
-  const [query] = useSearchParams();
-
   const [activities, setActivities] = useState<ITicketActivity[]>([]);
   const [filteredActivities, setFilteredActivities] = useState<ITicketActivity[]>([]);
 
@@ -60,15 +58,11 @@ export const TicketHistoryActivities = ({
 
   const [loading, setLoading] = useState(false);
 
-  // Gambiarra, ver lá na nas rotas de atividades
-  const isGuest = location.pathname.includes('guest-maintenance-history');
-  const syndicNanoId = query.get('syndicNanoId') || (isGuest ? 'guest' : '');
-
   const handleGetTicketHistoryActivities = async () => {
     setLoading(true);
 
     try {
-      const responseData = await getTicketHistoryActivities(ticketId, syndicNanoId);
+      const responseData = await getTicketHistoryActivities(ticketId, userId);
 
       setActivities(responseData.ticketActivities);
     } catch (error: any) {
@@ -84,7 +78,7 @@ export const TicketHistoryActivities = ({
     try {
       await postTicketHistoryActivity({
         ticketId,
-        syndicNanoId,
+        userId,
         activityContent,
         activityImages: imagesToUpload,
       });
@@ -209,7 +203,7 @@ export const TicketHistoryActivities = ({
 
   return (
     <Style.Container>
-      {syndicNanoId && !disableComment && (
+      {userId && !disableComment && (
         <Style.SendDataSection>
           <Style.InputRow>
             <TextArea
