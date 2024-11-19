@@ -17,12 +17,14 @@ interface IGetTicketHistoryActivities {
 
 export async function getTicketHistoryActivities(
   ticketId: string,
-  syndicNanoId: string,
+  userId?: string,
+  syndicNanoId?: string,
 ): Promise<IGetTicketHistoryActivities> {
   const uri = `/ticketHistoryActivities/${ticketId}`;
 
   const params = {
     syndicNanoId,
+    userId,
   };
 
   try {

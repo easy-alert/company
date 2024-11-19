@@ -9,7 +9,6 @@ import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 
 interface IPostTicketHistoryActivity {
   ticketId: string;
-  syndicNanoId: string;
   userId?: string;
   activityContent: string;
   activityImages: IAnnexesAndImages[];
@@ -17,7 +16,7 @@ interface IPostTicketHistoryActivity {
 
 export async function postTicketHistoryActivity({
   ticketId,
-  syndicNanoId,
+  userId,
   activityContent,
   activityImages,
 }: IPostTicketHistoryActivity) {
@@ -25,7 +24,7 @@ export async function postTicketHistoryActivity({
 
   const body = {
     ticketId,
-    syndicNanoId,
+    userId,
     activityContent,
     activityImages,
   };

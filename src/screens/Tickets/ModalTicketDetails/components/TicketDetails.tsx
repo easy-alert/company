@@ -161,7 +161,11 @@ function TicketDetails({
         </Style.TicketDetailsImagesContent>
       </Style.TicketDetailsImagesContainer>
 
-      <TicketHistoryActivities ticketId={ticket.id} disableComment={disableComment} />
+      <TicketHistoryActivities
+        ticketId={ticket.id}
+        userId={userId}
+        disableComment={disableComment}
+      />
 
       {ticket?.statusName === 'dismissed' && (
         <Style.TicketDetailsColumnContent>
