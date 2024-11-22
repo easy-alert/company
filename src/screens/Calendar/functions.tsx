@@ -93,12 +93,6 @@ export const requestCalendarData = async ({
                 e.MaintenancesStatus.name === 'pending') &&
                 e.inProgress &&
                 !e.isFuture && <InProgressTag />}
-
-              <EventTag
-                label={e.priority?.label}
-                color={e.priority?.color}
-                backgroundColor={e.priority?.backgroundColor}
-              />
             </div>
 
             <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
