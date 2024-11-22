@@ -1,33 +1,45 @@
-// LIBS
+// REACT
 import { useState } from 'react';
+
+// LIBS
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
-// COMPONENTS
-import * as Style from './styles';
-import { Image } from '../../../components/Image';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { icon } from '../../../assets/icons';
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
-// FUNCTIONS
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+import { ColorfulTable, ColorfulTableContent } from '@components/ColorfulTable';
+import { Tag } from '@components/Tag';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+
+// GLOBAL UTILS
 import {
   applyMask,
   catchHandler,
   dateFormatter,
   dateTimeFormatter,
   translateTicketType,
-} from '../../../utils/functions';
+} from '@utils/functions';
 
-// MODALS
-import { ColorfulTable, ColorfulTableContent } from '../../../components/ColorfulTable';
-import { Tag } from '../../../components/Tag';
-import { theme } from '../../../styles/theme';
-import { PopoverButton } from '../../../components/Buttons/PopoverButton';
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import { theme } from '@styles/theme';
+
+// COMPONENTS
 import { ModalEditAccount } from './ModalEditAccount';
 import { ModalUpdateUser } from './ModalUpdateUser';
-import { Api } from '../../../services/api';
 import { ModalCreateUser } from './ModalCreateUser';
+
+// STYLES
+import * as Style from './styles';
 
 export interface ISelectedUser {
   name: string;
@@ -38,6 +50,7 @@ export interface ISelectedUser {
 
 export const AccountDetails = () => {
   const { account, setAccount } = useAuthContext();
+
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
   const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
   const [modalCreateUserOpen, setModalCreateUserOpen] = useState<boolean>(false);
