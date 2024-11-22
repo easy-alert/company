@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ListTag } from '@components/ListTag';
 import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
 import { Api } from '../../services/api';
 import { catchHandler } from '../../utils/functions';
@@ -79,17 +80,25 @@ export const requestCalendarData = async ({
           >
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
+
               <EventTag status={e.MaintenancesStatus.name} />
-              {/* {show occasional maintenance tag } */}
+
               {e.Maintenance.frequency < 1 ? (
                 <EventTag status="occasional" />
               ) : (
                 <EventTag status="common" />
               )}
+
               {(e.MaintenancesStatus.name === 'expired' ||
                 e.MaintenancesStatus.name === 'pending') &&
                 e.inProgress &&
                 !e.isFuture && <InProgressTag />}
+
+              <EventTag
+                label={e.priority?.label}
+                color={e.priority?.color}
+                backgroundColor={e.priority?.backgroundColor}
+              />
             </div>
 
             <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
