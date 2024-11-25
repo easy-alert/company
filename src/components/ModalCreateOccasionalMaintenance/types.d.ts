@@ -1,6 +1,7 @@
 import type { IBuilding } from '@customTypes/IBuilding';
 import type { ICategory } from '@customTypes/ICategory';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+import type { IPriority } from '@customTypes/IPriority';
 
 export type IOccasionalMaintenanceType = 'pending' | 'finished' | '';
 
@@ -13,6 +14,8 @@ export interface IOccasionalMaintenanceData {
   executionDate: string;
 
   inProgress: boolean;
+
+  priorityName: string;
 
   categoryData: {
     id: string;
@@ -72,6 +75,7 @@ export interface IHandleSetOccasionalMaintenanceData {
 export interface IModalSecondView {
   buildingsData: IBuilding[];
   categoriesData: ICategory[];
+  priorityData: IPriority[];
   occasionalMaintenanceData: IOccasionalMaintenanceData;
   externalBuildingId?: string;
   checklistActivity?: string;

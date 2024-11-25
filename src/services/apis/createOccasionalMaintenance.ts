@@ -42,6 +42,7 @@ export const createOccasionalMaintenance = async ({
     element,
     activity,
     responsible,
+    priorityName,
   },
 }: IRequestCreateOccasionalMaintenance) => {
   const uri = '/buildings/reports/occasional/create';
@@ -62,6 +63,7 @@ export const createOccasionalMaintenance = async ({
         responsible: responsible || null,
       },
       inProgress,
+      priorityName: priorityName || 'low',
       reportData: {
         cost: unMaskBRL(reportData.cost) || null,
         observation: reportData.observation || null,
