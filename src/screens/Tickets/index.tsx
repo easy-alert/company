@@ -96,6 +96,7 @@ function TicketsPage() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
+  const [ticketAccess, setTicketAccess] = useState<boolean>(false);
 
   const handleRefresh = () => {
     setRefresh(!refresh);
@@ -298,11 +299,13 @@ function TicketsPage() {
             </Style.HeaderSide>
           </Style.HeaderWrapper>
 
-          <IconButton
-            icon={icon.siren}
-            label="Abrir chamado"
-            onClick={() => handleCreateTicketModal(true)}
-          />
+          {ticketAccess && (
+            <IconButton
+              icon={icon.siren}
+              label="Abrir chamado"
+              onClick={() => handleCreateTicketModal(true)}
+            />
+          )}
         </Style.Header>
 
         {showFilter && (
