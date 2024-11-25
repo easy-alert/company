@@ -57,7 +57,7 @@ export const FilterSection = styled.div`
 
 export const FilterWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: ${theme.size.xsm};
   margin-top: ${theme.size.sm};
 

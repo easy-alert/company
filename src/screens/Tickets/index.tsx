@@ -1,8 +1,13 @@
 // REACT
 import { useCallback, useEffect, useState } from 'react';
 
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
 // HOOKS
 import { useServiceTypes } from '@hooks/useServiceTypes';
+import { useTicketPlaces } from '@hooks/useTicketPlaces';
+import { useTicketStatus } from '@hooks/useTicketStatus';
 
 // SERVICES
 import { Api } from '@services/api';
@@ -28,10 +33,9 @@ import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
+import type { IBuilding } from '@customTypes/IBuilding';
 
 // COMPONENTS
-import { IBuilding } from '@customTypes/IBuilding';
-import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 import ModalTicketDetails from './ModalTicketDetails';
 import { ModalCreateTicket } from './ModalCreateTicket';
 
@@ -44,13 +48,13 @@ interface IKanbanTicket {
 }
 
 export interface ITicketFilter {
-  buildings?: string[];
-  status?: string[];
-  places?: string[];
-  serviceTypes?: string[];
-  year?: string;
-  month?: string;
-  seen?: boolean;
+  buildings: string[];
+  status: string[];
+  places: string[];
+  serviceTypes: string[];
+  year: string;
+  month: string;
+  seen: string;
 }
 
 interface ITicketFilterOptions {
@@ -72,7 +76,10 @@ interface ITicketFilterOptions {
 
 function TicketsPage() {
   const { account } = useAuthContext();
+
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
+  const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
+  const { ticketStatus } = useTicketStatus({ statusName: 'all' });
 
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [kanbanTickets, setKanbanTickets] = useState<IKanbanTicket[]>([]);
@@ -87,7 +94,7 @@ function TicketsPage() {
     serviceTypes: [],
     year: '',
     month: '',
-    seen: false,
+    seen: '',
   });
   const [filterOptions, setFilterOptions] = useState<ITicketFilterOptions>({
     buildings: [],
@@ -115,7 +122,7 @@ function TicketsPage() {
       serviceTypes: [],
       year: '',
       month: '',
-      seen: false,
+      seen: '',
     });
   };
 
@@ -212,7 +219,6 @@ function TicketsPage() {
       setLoading(true);
 
       const response = await getTicketsByBuildingNanoId({
-        buildingNanoId: 'all',
         filter,
       });
 
@@ -321,21 +327,130 @@ function TicketsPage() {
 
             <Style.FilterWrapper>
               <Select
-                selectPlaceholderValue=""
+                selectPlaceholderValue={filter.buildings.length > 0 ? ' ' : ''}
                 label="Edificação"
                 value=""
-                onChange={(e) => handleFilterChange('buildings', e.target.value)}
+                onChange={(e) => {
+                  handleFilterChange('buildings', e.target.value);
+
+                  if (e.target.value === 'all') {
+                    setFilter((prevState) => ({ ...prevState, buildings: [] }));
+                  }
+                }}
               >
-                <option value="">Todos</option>
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+
+                <option value="all" disabled={filter.buildings.length === 0}>
+                  Todas
+                </option>
 
                 {filterOptions.buildings.map((building) => (
-                  <option key={building.id} value={building.nanoId}>
+                  <option
+                    value={building.nanoId}
+                    key={building.nanoId}
+                    disabled={filter.buildings.some((b) => b === building.nanoId)}
+                  >
                     {building.name}
                   </option>
                 ))}
               </Select>
 
               <Select
+                selectPlaceholderValue={filter.status.length > 0 ? ' ' : ''}
+                label="Status"
+                value=""
+                onChange={(e) => {
+                  handleFilterChange('status', e.target.value);
+
+                  if (e.target.value === 'all') {
+                    setFilter((prevState) => ({ ...prevState, status: [] }));
+                  }
+                }}
+              >
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+
+                <option value="all" disabled={filter.status.length === 0}>
+                  Todos
+                </option>
+
+                {ticketStatus.map((status) => (
+                  <option
+                    value={status.name}
+                    key={status.name}
+                    disabled={filter.status.some((s) => s === status.name)}
+                  >
+                    {status.label}
+                  </option>
+                ))}
+              </Select>
+
+              <Select
+                selectPlaceholderValue={filter.places.length > 0 ? ' ' : ''}
+                label="Local"
+                value=""
+                onChange={(e) => {
+                  handleFilterChange('places', e.target.value);
+
+                  if (e.target.value === 'all') {
+                    setFilter((prevState) => ({ ...prevState, places: [] }));
+                  }
+                }}
+              >
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+
+                <option value="all" disabled={filter.places.length === 0}>
+                  Todos
+                </option>
+
+                {ticketPlaces.map((place) => (
+                  <option
+                    value={place.id}
+                    key={place.id}
+                    disabled={filter.places.some((p) => p === place.id)}
+                  >
+                    {place.label}
+                  </option>
+                ))}
+              </Select>
+
+              <Select
+                selectPlaceholderValue={filter.serviceTypes.length > 0 ? ' ' : ''}
+                label="Tipo de serviço"
+                value=""
+                onChange={(e) => {
+                  handleFilterChange('serviceTypes', e.target.value);
+
+                  if (e.target.value === 'all') {
+                    setFilter((prevState) => ({ ...prevState, serviceTypes: [] }));
+                  }
+                }}
+              >
+                <option value="" disabled hidden>
+                  Selecione
+                </option>
+
+                <option value="all" disabled={filter.serviceTypes.length === 0}>
+                  Todos
+                </option>
+
+                {serviceTypes.map((type) => (
+                  <option
+                    value={type.id}
+                    key={type.id}
+                    disabled={filter.serviceTypes.some((s) => s === type.id)}
+                  >
+                    {type.label}
+                  </option>
+                ))}
+              </Select>
+
+              {/* <Select
                 selectPlaceholderValue=""
                 label="Ano"
                 value={filter.year}
@@ -364,7 +479,7 @@ function TicketsPage() {
                     {month.name}
                   </option>
                 ))}
-              </Select>
+              </Select> */}
 
               {/* <Select
                 label="Período"
@@ -379,38 +494,9 @@ function TicketsPage() {
                     {period.label}
                   </option>
                 ))}
-              </Select>
+              </Select> */}
 
-              <Select
-                selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
-                label="Edificação"
-                value=""
-                onChange={(e) => {
-                  handleSelectClick('buildings', e.target.value);
-
-                  if (e.target.value === 'all') {
-                    setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
-                  }
-                }}
-              >
-                <option value="" disabled hidden>
-                  Selecione
-                </option>
-                <option value="all" disabled={dataFilter.buildings.length === 0}>
-                  Todas
-                </option>
-                {filterOptions.buildings.map((building) => (
-                  <option
-                    value={building}
-                    key={building}
-                    disabled={dataFilter.buildings.some((e) => e === building)}
-                  >
-                    {building}
-                  </option>
-                ))}
-              </Select>
-
-              <Select
+              {/* <Select
                 selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
                 label="Categoria"
                 value=""
@@ -439,9 +525,9 @@ function TicketsPage() {
                     {category}
                   </option>
                 ))}
-              </Select>
+              </Select> */}
 
-              <Select
+              {/* <Select
                 selectPlaceholderValue={dataFilter.responsibles.length > 0 ? ' ' : ''}
                 label="Responsável"
                 value=""
@@ -493,25 +579,20 @@ function TicketsPage() {
                 {filter.buildings?.length === 0 ? (
                   <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
                 ) : (
-                  filter.buildings?.map((building) => {
-                    const findBuildingName =
-                      filterOptions.buildings.find((b) => b.nanoId === building)?.name || '';
-
-                    return (
-                      <ListTag
-                        key={building}
-                        label={findBuildingName}
-                        padding="4px 12px"
-                        fontWeight={500}
-                        onClick={() => {
-                          setFilter((prevState) => ({
-                            ...prevState,
-                            buildings: prevState.buildings?.filter((b) => b !== building),
-                          }));
-                        }}
-                      />
-                    );
-                  })
+                  filter.buildings?.map((building) => (
+                    <ListTag
+                      key={building}
+                      label={filterOptions.buildings.find((b) => b.nanoId === building)?.name || ''}
+                      padding="4px 12px"
+                      fontWeight={500}
+                      onClick={() => {
+                        setFilter((prevState) => ({
+                          ...prevState,
+                          buildings: prevState.buildings?.filter((b) => b !== building),
+                        }));
+                      }}
+                    />
+                  ))
                 )}
 
                 {filter.status?.length === 0 ? (
@@ -520,7 +601,7 @@ function TicketsPage() {
                   filter.status?.map((status) => (
                     <ListTag
                       key={status}
-                      label={status}
+                      label={ticketStatus.find((s) => s.name === status)?.label || ''}
                       padding="4px 12px"
                       fontWeight={500}
                       onClick={() => {
@@ -539,7 +620,7 @@ function TicketsPage() {
                   filter.places?.map((place) => (
                     <ListTag
                       key={place}
-                      label={place}
+                      label={ticketPlaces.find((p) => p.id === place)?.label || ''}
                       padding="4px 12px"
                       fontWeight={500}
                       onClick={() => {
@@ -558,7 +639,7 @@ function TicketsPage() {
                   filter.serviceTypes?.map((serviceType) => (
                     <ListTag
                       key={serviceType}
-                      label={serviceType}
+                      label={serviceTypes.find((s) => s.id === serviceType)?.label || ''}
                       padding="4px 12px"
                       fontWeight={500}
                       onClick={() => {
