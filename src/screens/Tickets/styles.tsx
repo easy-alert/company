@@ -57,9 +57,8 @@ export const FilterSection = styled.div`
 
 export const FilterWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
   gap: ${theme.size.xsm};
-  margin-top: ${theme.size.sm};
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
@@ -73,10 +72,6 @@ export const FilterButtonWrapper = styled.div`
   gap: ${theme.size.sm};
   grid-area: 2 / 4;
   align-self: flex-start;
-
-  @media (max-width: 1100px) {
-    grid-area: unset;
-  }
 `;
 
 export const FilterTags = styled.div`
@@ -86,17 +81,12 @@ export const FilterTags = styled.div`
   flex-wrap: wrap;
 
   grid-area: 2 / 1 / 2 / 4;
-
-  @media (max-width: 1100px) {
-    grid-area: unset;
-  }
 `;
 
 export const FilterWrapperFooter = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: ${theme.size.sm};
-  margin-top: ${theme.size.xsm};
 `;
 
 export const Kanban = styled.div`
