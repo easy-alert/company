@@ -7,7 +7,6 @@ import type { ITicket } from '@customTypes/ITicket';
 import type { ITicketFilter } from '@screens/Tickets';
 
 interface IGetTickets {
-  buildingNanoId: string;
   filter?: ITicketFilter;
   page?: number;
   take?: number;
@@ -27,25 +26,26 @@ interface IResponseGetTicketsByBuildingNanoId extends IResponse {
 }
 
 export const getTicketsByBuildingNanoId = async ({
-  buildingNanoId,
   filter,
   page = 1,
   take = 10,
   count = '',
 }: IGetTickets) => {
   const params = {
+    placesId: filter?.places?.length === 0 ? '' : filter?.places?.join(','),
+    serviceTypesId: filter?.serviceTypes?.length === 0 ? '' : filter?.serviceTypes?.join(','),
+    status: filter?.status?.length === 0 ? '' : filter?.status?.join(','),
     year: filter?.year || '',
     month: filter?.month || '',
-    status: filter?.status || '',
-    placeId: filter?.places || '',
-    serviceTypeId: filter?.serviceTypes || '',
     seen: filter?.seen,
     page,
     take,
     count,
   };
 
-  const uri = `/tickets/buildings/${buildingNanoId}`;
+  const uri = `/tickets/buildings/${
+    filter?.buildings?.length === 0 ? 'all' : filter?.buildings?.join(',')
+  }`;
 
   try {
     const response: IResponseGetTicketsByBuildingNanoId = await Api.get(uri, { params });
