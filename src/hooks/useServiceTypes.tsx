@@ -23,7 +23,7 @@ export const useServiceTypes = ({ buildingNanoId, page, take }: IUseServiceTypes
   const [serviceTypes, setServiceTypes] = useState<IServiceTypes[]>([]);
 
   const getServiceTypes = useCallback(async () => {
-    const uri = `/serviceTypes/findMany?buildingNanoId=${buildingNanoId}&page=${page}&take=${take}`;
+    const uri = `/serviceTypes?buildingNanoId=${buildingNanoId}&page=${page}&take=${take}`;
 
     const params = {
       buildingNanoId,

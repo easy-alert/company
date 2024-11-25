@@ -49,6 +49,46 @@ export const HeaderWrapper = styled.div`
   }
 `;
 
+export const FilterSection = styled.div`
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+`;
+
+export const FilterWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const FilterButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: ${theme.size.sm};
+  grid-area: 2 / 4;
+  align-self: flex-start;
+`;
+
+export const FilterTags = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+  flex-wrap: wrap;
+
+  grid-area: 2 / 1 / 2 / 4;
+`;
+
+export const FilterWrapperFooter = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: ${theme.size.sm};
+`;
+
 export const Kanban = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -223,33 +263,6 @@ export const KanbanTicketListTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${theme.size.xsm};
-`;
-
-export const FilterWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 0.8fr 1fr 1fr 1fr 1fr 71px;
-
-  align-items: flex-end;
-  gap: ${theme.size.xsm};
-  max-width: 80%;
-
-  > :last-child {
-    margin-left: ${theme.size.xsm};
-  }
-
-  @media (max-width: 900px) {
-    max-width: 100%;
-    grid-template-columns: 1fr;
-
-    background-color: ${theme.color.white};
-    padding: ${theme.size.sm};
-    border-radius: ${theme.size.xxsm};
-
-    > :last-child {
-      margin-left: auto;
-      margin-top: ${theme.size.xsm};
-    }
-  }
 `;
 
 export const PaginationFooter = styled.footer`

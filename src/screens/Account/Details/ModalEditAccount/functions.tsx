@@ -65,6 +65,7 @@ export const requestEditAccount = async ({
     contactNumber: unMask(values.contactNumber),
     ticketInfo: ticketLink || values.ticketInfo,
     ticketType: values.ticketType,
+    showMaintenancePriority: values.showMaintenancePriority,
   })
     .then((res) => {
       const updatedAccount: IAccount = {
@@ -80,6 +81,7 @@ export const requestEditAccount = async ({
           UserCompanies: account.Company.UserCompanies,
           ticketInfo: values.ticketInfo,
           ticketType: values.ticketType,
+          showMaintenancePriority: values.showMaintenancePriority,
         },
         User: {
           createdAt: account.User.createdAt,

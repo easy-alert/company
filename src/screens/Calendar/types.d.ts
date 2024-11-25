@@ -63,6 +63,12 @@ export interface IRequestCalendarDataResData {
           id: string;
           expectedDueDate: string;
           expectedNotificationDate: string;
+          priority: {
+            name: string;
+            label: string;
+            color: string;
+            backgroundColor: string;
+          };
         },
       ];
       Months: [

@@ -11,6 +11,7 @@ interface IFormEditAccount {
   password: string;
   ticketType: TTranslateTicketType | null;
   ticketInfo: string | null;
+  showMaintenancePriority: boolean;
 }
 
 export interface IModalEditAccount {

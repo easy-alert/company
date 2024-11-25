@@ -585,8 +585,10 @@ export const Dashboard = () => {
 
       <Style.Container>
         <h2>Dashboard</h2>
+
         <Style.FilterSection>
           <h5>Filtros</h5>
+
           <Style.FilterWrapper>
             <Select
               label="Período"
@@ -602,6 +604,7 @@ export const Dashboard = () => {
                 </option>
               ))}
             </Select>
+
             <Select
               selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
               label="Edificação"
@@ -709,6 +712,7 @@ export const Dashboard = () => {
                 }}
               />
             </Style.ButtonWrapper>
+
             <Style.Tags>
               {dataFilter.buildings.length === 0 && (
                 <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />

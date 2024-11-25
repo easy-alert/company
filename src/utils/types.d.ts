@@ -40,6 +40,7 @@ export interface IAccount {
     ticketType: TTranslateTicketType;
     ticketInfo: string | null;
     UserCompanies: IUserCompanyRelation[];
+    showMaintenancePriority: boolean;
   };
 }
 

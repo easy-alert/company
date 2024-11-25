@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+
 import * as Style from './styles';
 
 // TYPES
@@ -63,6 +65,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
           confirmPassword: '',
           ticketType: account.Company.ticketType,
           ticketInfo: account.Company.ticketInfo || '',
+          showMaintenancePriority: account.Company.showMaintenancePriority || false,
         }}
         validationSchema={
           account.Company.CPF ? schemaModalEditAccountWithCPF : schemaModalEditAccountWithCNPJ
@@ -70,6 +73,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
         onSubmit={async (values) => {
           setShowPassword(false);
           setShowPassword2(false);
+
           await requestEditAccount({
             values,
             account,
@@ -88,7 +92,6 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 label="Logo"
                 error={touched.image && errors.image ? errors.image : null}
                 defaultImage={values.image}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onChange={(event: any) => {
                   if (event.target.files?.length) {
                     setFieldValue('image', event.target.files[0]);
@@ -254,6 +257,15 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                   />
                 )}
               </Style.PasswordDiv>
+
+              <FormikCheckbox
+                name="showMaintenancePriority"
+                label="Mostrar prioridade de manutenção"
+                checked={values.showMaintenancePriority}
+                onChange={() =>
+                  setFieldValue('showMaintenancePriority', !values.showMaintenancePriority)
+                }
+              />
 
               <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>
