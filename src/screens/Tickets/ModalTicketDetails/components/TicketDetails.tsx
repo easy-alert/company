@@ -3,6 +3,7 @@ import { ListTag } from '@components/ListTag';
 import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
 import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
+import { TicketShareButton } from '@components/TicketShareButton';
 
 // GLOBAL THEMES
 import { theme } from '@styles/theme';
@@ -90,6 +91,8 @@ function TicketDetails({
 
   return (
     <Style.TicketDetailsContainer>
+      <TicketShareButton ticketId={ticket.id} />
+
       <Style.TicketDetailsColumnContainer>
         <Style.TicketDetailsLeftColumn>
           {ticketDetailsRows.leftColumn.map(({ label, value }) => (
