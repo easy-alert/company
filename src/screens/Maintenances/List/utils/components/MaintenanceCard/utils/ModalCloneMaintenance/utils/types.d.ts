@@ -1,3 +1,4 @@
+import type { IPriority } from '@customTypes/IPriority';
 import { ICategories, ICategoriesOptions, IMaintenance } from '../../../../../types';
 import { ITimeInterval } from '../../../../../../../../../utils/types';
 
@@ -9,6 +10,7 @@ export interface IModalCloneMaintenance {
   setModal: (setModal: boolean) => void;
   maintenance: IMaintenance;
   categoriesOptions: ICategoriesOptions[];
+  maintenancePriorities: IPriority[];
 }
 
 export interface IRequestCloneMaintenance {
@@ -32,5 +34,6 @@ export interface IRequestCloneMaintenance {
     delayTimeInterval: string;
     observation: string;
     instructions: any;
+    priorityName: string;
   };
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 // COMPONENTS
+import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
 import * as Style from './styles';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
@@ -22,6 +23,8 @@ import { requestListIntervals } from '../../../utils/functions';
 import { ModalCreateCategory } from './utils/ModalCreateCategory';
 
 export const MaintenancesList = () => {
+  const { maintenancePriorities } = useMaintenancePriorities();
+
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>('');
   const [categories, setCategories] = useState<ICategories[]>([]);
@@ -110,6 +113,7 @@ export const MaintenancesList = () => {
                   categories={categories}
                   timeIntervals={timeIntervals}
                   categoriesOptions={categoriesOptions}
+                  maintenancePriorities={maintenancePriorities}
                 />
               ))}
             </Style.CategoriesContainer>

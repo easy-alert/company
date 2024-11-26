@@ -29,6 +29,7 @@ export const MaintenanceCategory = ({
   setCategories,
   timeIntervals,
   categoriesOptions,
+  maintenancePriorities,
 }: IMaintenanceCategory) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
@@ -218,6 +219,7 @@ export const MaintenanceCategory = ({
               setCategories={setCategories}
               categoryId={category.id}
               categoriesOptions={categoriesOptions}
+              maintenancePriorities={maintenancePriorities}
             />
           ))}
         </Style.MaintenancesContainer>

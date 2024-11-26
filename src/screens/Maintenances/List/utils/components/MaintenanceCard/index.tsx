@@ -25,12 +25,27 @@ export const MaintenanceCard = ({
   setCategories,
   categoryId,
   categoriesOptions,
+  maintenancePriorities,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalEditMaintenanceOpen, setModalEditMaintenanceOpen] = useState<boolean>(false);
   const [modalCloneMaintenanceOpen, setModalCloneMaintenanceOpen] = useState<boolean>(false);
 
   const [toCloneMaintenance, setToCloneMaintenance] = useState<IMaintenance>();
+
+  const handlePriorityName = (priorityName: string) => {
+    switch (priorityName) {
+      case 'low':
+        return 'Baixa';
+      case 'medium':
+        return 'Média';
+      case 'high':
+        return 'Alta';
+
+      default:
+        return '-';
+    }
+  };
 
   return (
     <>
@@ -42,6 +57,7 @@ export const MaintenanceCard = ({
           categories={categories}
           setCategories={setCategories}
           categoryId={categoryId}
+          maintenancePriorities={maintenancePriorities}
         />
       )}
 
@@ -54,6 +70,7 @@ export const MaintenanceCard = ({
           timeIntervals={timeIntervals}
           maintenance={toCloneMaintenance}
           categoriesOptions={categoriesOptions}
+          maintenancePriorities={maintenancePriorities}
         />
       )}
 
