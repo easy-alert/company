@@ -64,6 +64,7 @@ export const ModalSendMaintenanceReport = ({
     dueDate: '',
     id: '',
     inProgress: false,
+    priorityName: '',
     Maintenance: {
       activity: '',
       Category: {
