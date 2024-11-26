@@ -13,6 +13,7 @@ export interface IMaintenance {
     element: string;
     activity: string;
     frequency: number;
+    priorityName: string;
     FrequencyTimeInterval: {
       name: string;
       id: string;
