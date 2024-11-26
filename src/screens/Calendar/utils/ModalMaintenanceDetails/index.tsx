@@ -46,6 +46,7 @@ export const ModalMaintenanceDetails = ({
     dueDate: '',
     id: '',
     inProgress: false,
+    priorityName: '',
     Maintenance: {
       activity: '',
       Category: {
