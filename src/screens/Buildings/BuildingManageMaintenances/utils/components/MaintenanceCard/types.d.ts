@@ -1,3 +1,4 @@
+import type { IPriority } from '@customTypes/IPriority';
 import { IMaintenance, ICategories, ICategoriesOptions } from '../../types';
 import { ITimeInterval } from '../../../../../../utils/types';
 
@@ -12,4 +13,5 @@ export interface IMaintenanceCard {
   timeIntervals: ITimeInterval[];
   categoryId: string;
   categoriesOptions: ICategoriesOptions[];
+  maintenancePriorities: IPriority[];
 }

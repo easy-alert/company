@@ -25,6 +25,7 @@ export const requestListCategoriesToManage = async ({
     currentBuildingId,
   })
     .then((res) => {
+      console.log('🚀 ~ .then ~ res:', res);
       setBuildingName(res.data.buildingName);
       setCategories(res.data.CategoriesData);
       setLoading(false);

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 // COMPONENTS
 import { useNavigate, useParams } from 'react-router-dom';
+import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
 import * as Style from './styles';
 import { IconButton } from '../../../components/Buttons/IconButton';
 import { Image } from '../../../components/Image';
@@ -31,6 +32,7 @@ import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
 
 export const BuildingManageMaintenances = () => {
   const { account } = useAuthContext();
+  const { maintenancePriorities } = useMaintenancePriorities();
 
   const navigate = useNavigate();
 
@@ -99,11 +101,13 @@ export const BuildingManageMaintenances = () => {
           setCategories={setCategories}
         />
       )}
+
       <Style.Header>
         <Style.HeaderWrapper>
           <Style.LeftSide>
             <h2>{buildingName} / Plano de manutenção</h2>
           </Style.LeftSide>
+
           <Style.RightSide>
             {!onQuery && (
               <IconButton
@@ -136,6 +140,7 @@ export const BuildingManageMaintenances = () => {
             )}
           </Style.RightSide>
         </Style.HeaderWrapper>
+
         <Style.SearchField>
           <IconButton
             icon={icon.search}
@@ -161,8 +166,10 @@ export const BuildingManageMaintenances = () => {
             }}
           />
         </Style.SearchField>
+
         <ReturnButton path={`/buildings/details/${buildingId}${search}`} />
       </Style.Header>
+
       {categories.length > 0 ? (
         <>
           <Style.SelectWrapper>
@@ -191,6 +198,7 @@ export const BuildingManageMaintenances = () => {
                 </option>
               ))}
             </Select>
+
             {!tableloading && (
               <label htmlFor="selectAll">
                 <input
@@ -228,6 +236,7 @@ export const BuildingManageMaintenances = () => {
               </label>
             )}
           </Style.SelectWrapper>
+
           {tableloading ? (
             <Style.TableLoadingContainer>
               <DotLoading label="Carregando tabela" />
@@ -265,6 +274,7 @@ export const BuildingManageMaintenances = () => {
                       toCopyBuilding={toCopyBuilding}
                       timeIntervals={timeIntervals}
                       categoriesOptions={categoriesOptions}
+                      maintenancePriorities={maintenancePriorities}
                     />
                   );
                 }
