@@ -94,4 +94,5 @@ export interface IMaintenance {
   inProgress: boolean;
   daysInAdvance: number;
   daysToAnticipate?: number;
+  priorityName: string;
 }

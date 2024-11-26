@@ -32,6 +32,7 @@ export const requestEditMaintenance = async ({
     period: Number(values.period),
     periodTimeIntervalId: values.periodTimeInterval,
     instructions: values.instructions,
+    priorityName: values.priorityName,
 
     // OCULTADO DA PLATAFORMA
     delay: 0,

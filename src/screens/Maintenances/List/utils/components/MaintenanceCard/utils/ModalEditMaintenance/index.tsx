@@ -34,6 +34,7 @@ export const ModalEditMaintenance = ({
   categories,
   setCategories,
   categoryId,
+  maintenancePriorities,
 }: IModalEditMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
@@ -56,6 +57,7 @@ export const ModalEditMaintenance = ({
           periodTimeInterval: selectedMaintenance.PeriodTimeInterval.id,
           delay: String(selectedMaintenance.delay),
           delayTimeInterval: selectedMaintenance.DelayTimeInterval.id,
+          priorityName: selectedMaintenance.priorityName,
           observation:
             selectedMaintenance.observation && selectedMaintenance.observation !== ''
               ? selectedMaintenance.observation
@@ -160,6 +162,7 @@ export const ModalEditMaintenance = ({
                 error={touched.observation && errors.observation ? errors.observation : null}
                 placeholder="Ex: Atenção no acabamento"
               />
+
               <Style.SelectWrapper>
                 <FormikInput
                   label="Prazo para execução"
@@ -175,6 +178,7 @@ export const ModalEditMaintenance = ({
                     );
                   }}
                 />
+
                 <FormikSelect
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
@@ -197,6 +201,23 @@ export const ModalEditMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
+
+              <FormikSelect
+                selectPlaceholderValue={values.priorityName}
+                name="priorityName"
+                label="Prioridade"
+                error={touched.priorityName && errors.priorityName ? errors.priorityName : null}
+              >
+                <option value="" disabled>
+                  Selecione
+                </option>
+
+                {maintenancePriorities.map((priority) => (
+                  <option key={priority.name} value={priority.name}>
+                    {priority.label}
+                  </option>
+                ))}
+              </FormikSelect>
 
               <MaintenanceInstructionsComponent
                 instructions={values.instructions}

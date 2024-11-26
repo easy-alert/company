@@ -1,4 +1,6 @@
-import { IMaintenance, AnnexesAndImages, IModalAdditionalInformations } from '../../types';
+import { IMaintenance } from '@customTypes/IMaintenance';
+
+import { AnnexesAndImages, IModalAdditionalInformations } from '../../types';
 
 export interface IModalSendMaintenanceReport {
   handleModalSendMaintenanceReport: (modalState: boolean) => void;
@@ -49,6 +51,7 @@ export interface IRequestSendReport {
 export interface IRequestSaveReportProgress {
   maintenanceHistoryId: string;
   maintenanceReport: IMaintenanceReport;
+  maintenance: IMaintenance;
   handleModalSendMaintenanceReport: (modalState: boolean) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   files: AnnexesAndImages[];

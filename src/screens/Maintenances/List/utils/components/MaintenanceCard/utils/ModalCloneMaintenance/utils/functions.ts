@@ -11,7 +11,6 @@ import { IRequestCloneMaintenance } from './types';
 
 export const requestCloneMaintenance = async ({
   values,
-
   setModal,
   categories,
   setCategories,
@@ -30,6 +29,7 @@ export const requestCloneMaintenance = async ({
     period: Number(values.period),
     periodTimeIntervalId: values.periodTimeInterval,
     instructions: values.instructions,
+    priorityName: values.priorityName,
 
     // OCULTADO DA PLATAFORMA
     delay: 0,

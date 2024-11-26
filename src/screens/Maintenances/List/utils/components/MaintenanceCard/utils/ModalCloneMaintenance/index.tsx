@@ -27,6 +27,7 @@ export const ModalCloneMaintenance = ({
   timeIntervals,
   maintenance,
   categoriesOptions,
+  maintenancePriorities,
 }: IModalCloneMaintenance) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
@@ -48,6 +49,7 @@ export const ModalCloneMaintenance = ({
           periodTimeInterval: maintenance.PeriodTimeInterval.id,
           delay: String(maintenance.delay),
           delayTimeInterval: maintenance.DelayTimeInterval.id,
+          priorityName: maintenance.priorityName,
           observation:
             maintenance.observation && maintenance.observation !== ''
               ? maintenance.observation
@@ -198,6 +200,23 @@ export const ModalCloneMaintenance = ({
                   ))}
                 </FormikSelect>
               </Style.SelectWrapper>
+
+              <FormikSelect
+                selectPlaceholderValue={values.priorityName}
+                name="priorityName"
+                label="Prioridade"
+                error={touched.priorityName && errors.priorityName ? errors.priorityName : null}
+              >
+                <option value="" disabled>
+                  Selecione
+                </option>
+
+                {maintenancePriorities.map((priority) => (
+                  <option key={priority.name} value={priority.name}>
+                    {priority.label}
+                  </option>
+                ))}
+              </FormikSelect>
 
               <MaintenanceInstructionsComponent
                 instructions={values.instructions}

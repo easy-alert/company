@@ -62,9 +62,10 @@ export const requestSendReport = async ({
 };
 
 export const requestSaveReportProgress = async ({
-  maintenanceReport,
-  handleModalSendMaintenanceReport,
   maintenanceHistoryId,
+  maintenanceReport,
+  maintenance,
+  handleModalSendMaintenanceReport,
   files,
   images,
   setLoading,
@@ -82,6 +83,7 @@ export const requestSaveReportProgress = async ({
 
   await Api.post('/maintenances/create/report/progress', {
     maintenanceHistoryId,
+    maintenancePriorityName: maintenance.priorityName,
     cost: Number(unMaskBRL(String(maintenanceReport.cost))),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,

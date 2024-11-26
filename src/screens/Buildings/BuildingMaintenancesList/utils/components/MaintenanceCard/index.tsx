@@ -4,6 +4,7 @@
 import { useState } from 'react';
 
 // COMPONENTS
+import { handlePriorityName } from '@utils/handlePriorityName';
 import { icon } from '../../../../../../assets/icons';
 import { Image } from '../../../../../../components/Image';
 import * as Style from './styles';
@@ -77,25 +78,18 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                 </p>
               )}
 
-            {/* <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
-              <Image img={icon.alert} size="16px" />
-              <p className="p2">
-                <span>Delay: </span>
-                {maintenance.Maintenance.delay > 0
-                  ? `${maintenance.Maintenance.delay} ${
-                      maintenance.Maintenance.delay > 1
-                        ? maintenance.Maintenance.DelayTimeInterval.pluralLabel
-                        : maintenance.Maintenance.DelayTimeInterval.singularLabel
-                    }`
-                  : '-'}
-              </p>
-            </Style.PeriodIconWrapper> */}
             {/* div pra suprir o espaço do delay */}
+
             <div />
             {/*  */}
             <div />
             <div />
             <div />
+
+            <p className="p2">
+              <span>Prioridade: </span>
+              {handlePriorityName(maintenance.Maintenance.priorityName)}
+            </p>
 
             {maintenance.Maintenance.nextNotificationDate && (
               <Style.AdditionalInformationsWrapper>

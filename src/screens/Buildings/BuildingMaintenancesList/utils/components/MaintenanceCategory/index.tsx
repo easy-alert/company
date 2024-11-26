@@ -36,6 +36,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
           setModal={setModalPrintCategoryQrCodeOpen}
         />
       )}
+
       <Style.Background>
         <Style.HeaderCategory>
           <Style.HeaderTitle>

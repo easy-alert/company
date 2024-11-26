@@ -4,6 +4,7 @@
 import { useState } from 'react';
 
 // COMPONENTS
+import { handlePriorityName } from '@utils/handlePriorityName';
 import { icon } from '../../../../../../assets/icons';
 import { Button } from '../../../../../../components/Buttons/Button';
 import { Image } from '../../../../../../components/Image';
@@ -30,6 +31,7 @@ export const MaintenanceCard = ({
   categoryId,
   timeIntervals,
   categoriesOptions,
+  maintenancePriorities,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
   const [modalAdditionalInformations, setModalAdditionalInformations] = useState<boolean>(false);
@@ -57,8 +59,10 @@ export const MaintenanceCard = ({
           categories={categories}
           categoryId={categoryId}
           setCategories={setCategories}
+          maintenancePriorities={maintenancePriorities}
         />
       )}
+
       {modalCloneMaintenanceOpen && toCloneMaintenance && (
         <ModalCloneMaintenance
           setModal={setModalCloneMaintenanceOpen}
@@ -68,8 +72,10 @@ export const MaintenanceCard = ({
           timeIntervals={timeIntervals}
           maintenance={toCloneMaintenance}
           categoriesOptions={categoriesOptions}
+          maintenancePriorities={maintenancePriorities}
         />
       )}
+
       {modalAdditionalInformations && (
         <ModalAdditionalInformations
           setModal={setModalAdditionalInformations}
@@ -185,6 +191,11 @@ export const MaintenanceCard = ({
                   </Style.FileRow>
                 </p>
               )}
+
+              <p className="p2">
+                <span>Prioridade: </span>
+                {handlePriorityName(maintenance.priorityName)}
+              </p>
 
               {/* <Style.PeriodIconWrapper title="Tempo para iniciar a notificação após a entrega da obra.">
                 <Image img={icon.alert} size="16px" />

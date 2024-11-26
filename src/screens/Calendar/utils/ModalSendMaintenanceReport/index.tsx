@@ -7,6 +7,9 @@ import { useDropzone } from 'react-dropzone';
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
+// HOOKS
+import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
+
 // GLOBAL COMPONENTS
 import { IMaintenance } from '@customTypes/IMaintenance';
 import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
@@ -24,6 +27,7 @@ import { ShareMaintenanceHistoryButton } from '@components/ShareMaintenanceHisto
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
 import { ListTag } from '@components/ListTag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { Select } from '@components/Inputs/Select';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
@@ -71,6 +75,7 @@ export const ModalSendMaintenanceReport = ({
   modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
   const { account } = useAuthContext();
+  const { maintenancePriorities } = useMaintenancePriorities();
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
@@ -81,6 +86,7 @@ export const ModalSendMaintenanceReport = ({
     dueDate: '',
     id: '',
     inProgress: false,
+    priorityName: '',
     Maintenance: {
       activity: '',
       Category: {
@@ -320,19 +326,46 @@ export const ModalSendMaintenanceReport = ({
 
             {maintenance.canReport && (
               <>
-                <Input
-                  label="Custo"
-                  placeholder="Ex: R$ 100,00"
-                  maxLength={14}
-                  value={maintenanceReport.cost}
-                  onChange={(e) => {
-                    setMaintenanceReport((prevState) => {
-                      const newState = { ...prevState };
-                      newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
-                      return newState;
-                    });
-                  }}
-                />
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <Input
+                    label="Custo"
+                    placeholder="Ex: R$ 100,00"
+                    maxLength={14}
+                    value={maintenanceReport.cost}
+                    onChange={(e) => {
+                      setMaintenanceReport((prevState) => {
+                        const newState = { ...prevState };
+                        newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
+                        return newState;
+                      });
+                    }}
+                  />
+
+                  <Select
+                    label="Prioridade"
+                    placeholder="Selecione uma prioridade"
+                    selectPlaceholderValue="Selecione uma prioridade"
+                    value={maintenance.priorityName}
+                    onChange={(e) => {
+                      setMaintenance((prevState) => {
+                        const newState = { ...prevState };
+                        newState.priorityName = e.target.value;
+
+                        return newState;
+                      });
+                    }}
+                  >
+                    <option value="" disabled>
+                      Selecione uma prioridade
+                    </option>
+
+                    {maintenancePriorities.map((priority) => (
+                      <option key={priority.name} value={priority.name}>
+                        {priority.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
 
                 <Style.FileStyleRow disabled={onFileQuery}>
                   <h6>Anexar</h6>
@@ -467,9 +500,10 @@ export const ModalSendMaintenanceReport = ({
                     disabled={onFileQuery || onImageQuery || onQuery}
                     actionButtonClick={() => {
                       requestSaveReportProgress({
-                        setOnQuery,
                         maintenanceHistoryId: modalAdditionalInformations.id,
                         maintenanceReport,
+                        maintenance,
+                        setOnQuery,
                         handleModalSendMaintenanceReport,
                         files,
                         images,
