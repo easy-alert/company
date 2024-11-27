@@ -86,6 +86,8 @@ import update from './update.svg';
 import uploadLine from './uploadLine.svg';
 import smallPaper from './smallPaper.svg';
 import activityNotification from './activityNotification.svg';
+import qrCodeUnchecked from './qrCodeUnchecked.svg';
+import qrCodeChecked from './qrCodeChecked.svg';
 
 export const icon = {
   activityNotification,
@@ -176,4 +178,6 @@ export const icon = {
   redDot,
   csvLogo2,
   suppliers,
+  qrCodeUnchecked,
+  qrCodeChecked,
 };
