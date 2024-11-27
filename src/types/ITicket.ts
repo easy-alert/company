@@ -53,6 +53,8 @@ export interface ITicket {
   seen?: boolean;
   seenAt?: string;
 
+  showToResident?: boolean;
+
   dismissReason?: string;
   dismissReasonName?: string;
   dismissObservation?: string;
