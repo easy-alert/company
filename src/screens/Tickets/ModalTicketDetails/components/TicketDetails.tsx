@@ -4,6 +4,7 @@ import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
 import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
 import { TicketShareButton } from '@components/TicketShareButton';
+import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
 
 // GLOBAL THEMES
 import { theme } from '@styles/theme';
@@ -89,9 +90,18 @@ function TicketDetails({
     { label: 'Observação', value: ticket?.dismissObservation },
   ];
 
+  const handleToggleShowToResident = () => {
+    handleUpdateOneTicket({ id: ticket.id, showToResident: !ticket.showToResident });
+  };
+
   return (
     <Style.TicketDetailsContainer>
       <TicketShareButton ticketId={ticket.id} />
+
+      <TicketShowResidentButton
+        showToResident={ticket.showToResident}
+        handleToggleShowToResident={handleToggleShowToResident}
+      />
 
       <Style.TicketDetailsColumnContainer>
         <Style.TicketDetailsLeftColumn>
