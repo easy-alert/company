@@ -19,6 +19,7 @@ import { ListTag } from '@components/ListTag';
 
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
+import { generateTicketReportPDF } from '@services/apis/generateTicketReportPDF';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -185,6 +186,15 @@ export const TicketReports = () => {
   };
 
   // #endregion
+
+  const handleGenerateTicketReportPDF = async () => {
+    try {
+      const response = await generateTicketReportPDF({ filter: filterforRequest });
+      console.log('🚀 ~ handleGenerateTicketReportPDF ~ response:', response);
+    } catch (error: any) {
+      catchHandler(error.response);
+    }
+  };
 
   useEffect(() => {
     requestBuildings();
@@ -398,9 +408,10 @@ export const TicketReports = () => {
                         label="Exportar"
                         color={theme.color.primary}
                         size="20px"
-                        onClick={() => {
-                          setModalPrintReportOpen(true);
-                        }}
+                        onClick={handleGenerateTicketReportPDF}
+                        // onClick={() => {
+                        //   setModalPrintReportOpen(true);
+                        // }}
                         disabled={tickets.length === 0}
                       />
                       <Button label="Filtrar" type="submit" disable={onQuery} />
