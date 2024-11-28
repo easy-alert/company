@@ -6,10 +6,15 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
+  height: 96vh;
+
   margin-top: ${theme.size.sm};
 
   gap: ${theme.size.sm};
-  height: 100%;
+
+  @media (max-width: 1100px) {
+    height: auto;
+  }
 `;
 
 export const Header = styled.div`
@@ -95,6 +100,7 @@ export const Kanban = styled.div`
   gap: ${theme.size.sm};
   overflow: auto;
   height: 100%;
+
   scrollbar-width: none;
   scrollbar-color: transparent;
   scroll-snap-type: x mandatory;
