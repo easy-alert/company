@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 
-export function formatDateString(isoString: string, dateFormat?: string): string {
+export function formatDateString(isoString?: string, dateFormat?: string): string {
   if (!isoString) return '';
 
   const date = parseISO(isoString);
