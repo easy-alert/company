@@ -54,7 +54,7 @@ export const HeaderWrapper = styled.div`
   }
 `;
 
-export const FilterSection = styled.div`
+export const FiltersContainer = styled.div`
   background-color: ${theme.color.white};
   padding: ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
