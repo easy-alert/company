@@ -8,16 +8,14 @@ export const Counts = styled.div`
   gap: ${theme.size.sm};
 `;
 
-export const CountsInfo = styled.div`
-  .finished {
-    color: ${theme.color.success};
-  }
-  .open {
-    color: ${theme.color.primary};
-  }
+export const CountsInfo = styled.div<{ color?: string }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.size.xsm};
 
-  .awaitingToFinish {
-    color: ${theme.color.warning};
+  > h5 {
+    color: ${({ color }) => color || theme.color.black};
   }
 
   > p {
@@ -35,8 +33,42 @@ export const Container = styled.div`
 
 export const FiltersContainer = styled.div`
   background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+`;
+
+export const FilterWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const FilterWrapperFooter = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: ${theme.size.sm};
+`;
+
+export const FilterButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: ${theme.size.sm};
+  grid-area: 2 / 4;
+  align-self: flex-start;
+`;
+
+export const FilterTags = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+  flex-wrap: wrap;
+
+  grid-area: 2 / 1 / 2 / 4;
 `;
 
 export const FiltersGrid = styled.div`
