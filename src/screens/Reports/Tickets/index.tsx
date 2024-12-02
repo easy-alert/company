@@ -1,5 +1,5 @@
 // REACT
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // LIBS
 import { Form, Formik } from 'formik';
@@ -7,9 +7,9 @@ import { CSVLink } from 'react-csv';
 import * as yup from 'yup';
 
 // API
-import { Api } from '@services/api';
 import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
 import { generateTicketReportPDF } from '@services/apis/generateTicketReportPDF';
+import { getTicketReports } from '@services/apis/getTicketReports';
 
 // HOOKS
 import { useServiceTypes } from '@hooks/useServiceTypes';
@@ -24,6 +24,7 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { FormikInput } from '@components/Form/FormikInput';
 import { Select } from '@components/Inputs/Select';
 import { ListTag } from '@components/ListTag';
+import { PdfList } from '@components/PdfList';
 
 // GLOBAL UTILS
 import { catchHandler } from '@utils/functions';
@@ -40,6 +41,7 @@ import { theme } from '@styles/theme';
 import type { ITicket } from '@customTypes/ITicket';
 
 // COMPONENTS
+import { IReportPdf } from '@customTypes/IReportPdf';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
 import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
@@ -62,6 +64,13 @@ export interface ITicketFilter {
   seen: string;
 }
 
+export interface ITicketFilterNames {
+  buildingsNames: string;
+  placesNames: string;
+  serviceTypesNames: string;
+  statusNames: string;
+}
+
 export const TicketReports = () => {
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
@@ -69,6 +78,7 @@ export const TicketReports = () => {
   const { buildings } = useBuildings({ filter: '', page: 1 });
 
   const [tickets, setTickets] = useState<ITicket[]>([]);
+  const [ticketReportPdfs, setTicketReportPdfs] = useState<IReportPdf[]>([]);
   const [ticketsForPDF, setTicketsForPDF] = useState<ITicketsForPDF[]>([]);
   const [openCount, setOpenCount] = useState(0);
   const [finishedCount, setFinishedCount] = useState(0);
@@ -97,11 +107,23 @@ export const TicketReports = () => {
     seen: '',
   });
 
-  const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
-
+  const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
   const [loading, setLoading] = useState<boolean>(false);
 
-  // #endregion
+  const schemaReportFilter = yup
+    .object({
+      buildings: yup.array().of(yup.string()),
+      status: yup.array().of(yup.string()),
+      places: yup.array().of(yup.string()),
+      serviceTypes: yup.array().of(yup.string()),
+      startDate: yup.date().required('A data inicial é obrigatória.'),
+      endDate: yup
+        .date()
+        .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+        .required('A data final é obrigatória.'),
+    })
+    .required();
+
   const handleClearFilter = () => {
     setFilter({
       buildings: [],
@@ -130,29 +152,6 @@ export const TicketReports = () => {
     });
   };
 
-  const getSingularStatusName = (status?: string) => {
-    let statusName = '';
-
-    switch (status) {
-      case 'open':
-        statusName = 'Aberto';
-        break;
-
-      case 'finished':
-        statusName = 'Finalizado';
-        break;
-
-      case 'awaitingToFinish':
-        statusName = 'Aguardando finalização';
-        break;
-
-      default:
-        break;
-    }
-
-    return statusName;
-  };
-
   const handleTicketDetailsModal = (modalState: boolean) => {
     setTicketDetailsModal(modalState);
   };
@@ -170,7 +169,7 @@ export const TicketReports = () => {
   ];
 
   const csvData = tickets.map((ticket) => ({
-    Status: getSingularStatusName(ticket.status?.label),
+    Status: ticket.status?.label,
     Edificação: ticket.building?.name,
     'Local da ocorrência': ticket.place?.label,
     'Tipo da manutenção': ticket.types?.map((e) => e.type.label).join(', '),
@@ -181,7 +180,7 @@ export const TicketReports = () => {
   }));
   // #endregion
 
-  // #region functions
+  // #region tickets
   const handleCountTickets = (countTickets: ITicket[]) => {
     const open = countTickets.filter((ticket) => ticket.status?.name === 'open');
     const awaitingToFinish = countTickets.filter(
@@ -194,26 +193,6 @@ export const TicketReports = () => {
     setAwaitingToFinishCount(awaitingToFinish.length);
     setFinishedCount(finished.length);
     setDismissedCount(dismissed.length);
-  };
-
-  const requestReportsData = async (filters: IFilter) => {
-    setLoading(true);
-    setTickets([]);
-
-    await Api.get(`/tickets/reports?filters=${JSON.stringify(filters)}`)
-      .then((res) => {
-        setTickets(res.data.tickets);
-        setTicketsForPDF(res.data.ticketsForPDF);
-        setOpenCount(res.data.openCount);
-        setFinishedCount(res.data.finishedCount);
-        setAwaitingToFinishCount(res.data.awaitingToFinishCount);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const handleGetTickets = async () => {
@@ -238,15 +217,63 @@ export const TicketReports = () => {
 
   // #endregion
 
+  // #region pdf
+  const handleGetTicketsPdf = async () => {
+    setLoading(true);
+
+    try {
+      const responseData = await getTicketReports();
+
+      setTicketReportPdfs(responseData.ticketPdfs);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGenerateTicketReportPDF = async () => {
     try {
-      const response = await generateTicketReportPDF({ filter });
-      console.log('🚀 ~ handleGenerateTicketReportPDF ~ response:', response);
+      const filterNames: ITicketFilterNames = {
+        buildingsNames:
+          filter.buildings?.length === 0
+            ? 'Todas'
+            : filter.buildings
+                .map((building) => buildings.find((b) => b.nanoId === building)?.name)
+                .join(', '),
+        placesNames:
+          filter.places?.length === 0
+            ? 'Todos'
+            : filter.places
+                .map((place) => ticketPlaces.find((p) => p.id === place)?.label)
+                .join(', '),
+        serviceTypesNames:
+          filter.serviceTypes?.length === 0
+            ? 'Todos'
+            : filter.serviceTypes
+                .map((serviceType) => serviceTypes.find((st) => st.id === serviceType)?.label)
+                .join(', '),
+        statusNames:
+          filter.status?.length === 0
+            ? 'Todos'
+            : filter.status
+                .map((status) => ticketStatus.find((ts) => ts.name === status)?.label)
+                .join(', '),
+      };
+
+      await generateTicketReportPDF({ filter, filterNames });
+
+      handleGetTicketsPdf();
     } catch (error: any) {
-      console.log('🚀 ~ handleGenerateTicketReportPDF ~ error:', error);
       handleToastify(error.response);
     }
   };
+
+  // #endregion
+
+  useEffect(() => {
+    handleGetTicketsPdf();
+  }, []);
 
   return (
     <>
@@ -283,6 +310,7 @@ export const TicketReports = () => {
               endDate: '',
               seen: '',
             }}
+            validationSchema={schemaReportFilter}
             onSubmit={async () => handleGetTickets()}
           >
             {({ errors, values, setFieldValue, touched }) => (
@@ -574,15 +602,37 @@ export const TicketReports = () => {
           </Formik>
         </Style.FiltersContainer>
 
+        <Style.ViewButtons>
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'reports'}
+            onClick={() => {
+              setReportView('reports');
+            }}
+          >
+            Relatório
+          </Style.CustomButton>
+
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'pdfs'}
+            onClick={() => {
+              setReportView('pdfs');
+            }}
+          >
+            Histórico de relatórios
+          </Style.CustomButton>
+        </Style.ViewButtons>
+
         {loading && <DotSpinLoading />}
 
-        {!loading && tickets.length === 0 && showNoDataMessage && (
+        {reportView === 'reports' && !loading && tickets.length === 0 && (
           <Style.NoMaintenanceCard>
             <h4>Nenhum chamado encontrado.</h4>
           </Style.NoMaintenanceCard>
         )}
 
-        {!loading && tickets.length > 0 && (
+        {reportView === 'reports' && !loading && tickets.length > 0 && (
           <>
             <Style.CountContainer>
               <Style.Counts>
@@ -662,6 +712,14 @@ export const TicketReports = () => {
               ))}
             </ReportDataTable>
           </>
+        )}
+
+        {reportView === 'pdfs' && !loading && (
+          <PdfList
+            pdfList={ticketReportPdfs}
+            loading={loading}
+            handleRefreshPdf={handleGetTicketsPdf}
+          />
         )}
       </Style.Container>
     </>

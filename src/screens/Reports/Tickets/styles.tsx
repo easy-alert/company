@@ -99,6 +99,26 @@ export const ButtonWrapper = styled.div`
   gap: ${theme.size.sm};
 `;
 
+export const ViewButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+`;
+
+export const CustomButton = styled.button<{ active: boolean }>`
+  padding: 0;
+  background-color: unset;
+
+  font-weight: 500;
+  border-radius: 0;
+  padding-bottom: ${theme.size.xsm};
+  font-size: 14px;
+  line-height: 16px;
+
+  color: ${({ active }) => (active ? theme.color.primary : theme.color.gray4)};
+  border-bottom: 1px solid ${({ active }) => (active ? theme.color.primary : 'transparent')};
+`;
+
 export const CountContainer = styled.div`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
