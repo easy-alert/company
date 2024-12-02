@@ -2,18 +2,26 @@ import { Api } from '@services/api';
 
 import { handleToastify } from '@utils/toastifyResponses';
 
-import type { ITicketFilter } from '@screens/Reports/Tickets';
+import type { ITicketFilter, ITicketFilterNames } from '@screens/Reports/Tickets';
 
 interface IGenerateTicketReportPDF {
   filter: ITicketFilter;
+  filterNames: ITicketFilterNames;
 }
 
-export const generateTicketReportPDF = async ({ filter }: IGenerateTicketReportPDF) => {
+export const generateTicketReportPDF = async ({
+  filter,
+  filterNames,
+}: IGenerateTicketReportPDF) => {
   const body = {
     buildingsNanoId: filter?.buildings.length === 0 ? '' : filter?.buildings?.join(','),
+    buildingsNames: filterNames?.buildingsNames,
     placesId: filter?.places?.length === 0 ? '' : filter?.places?.join(','),
+    placesNames: filterNames?.placesNames,
     serviceTypesId: filter?.serviceTypes?.length === 0 ? '' : filter?.serviceTypes?.join(','),
+    serviceTypesNames: filterNames?.serviceTypesNames,
     status: filter?.status?.length === 0 ? '' : filter?.status?.join(','),
+    statusNames: filterNames?.statusNames,
     startDate: filter?.startDate,
     endDate: filter?.endDate,
     seen: filter?.seen,
@@ -23,7 +31,8 @@ export const generateTicketReportPDF = async ({ filter }: IGenerateTicketReportP
 
   try {
     const response = await Api.post(uri, body);
-    console.log('🚀 ~ getTicketsByBuildingNanoId ~ response:', response);
+
+    handleToastify(response);
   } catch (error: any) {
     handleToastify(error.response);
   }
