@@ -7,7 +7,15 @@ import { CSVLink } from 'react-csv';
 import * as yup from 'yup';
 
 // API
-import { Api } from '@services/api';
+import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
+import { generateTicketReportPDF } from '@services/apis/generateTicketReportPDF';
+import { getTicketReports } from '@services/apis/getTicketReports';
+
+// HOOKS
+import { useServiceTypes } from '@hooks/useServiceTypes';
+import { useTicketPlaces } from '@hooks/useTicketPlaces';
+import { useTicketStatus } from '@hooks/useTicketStatus';
+import { useBuildings } from '@hooks/useBuildings';
 
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
@@ -16,9 +24,12 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { FormikInput } from '@components/Form/FormikInput';
 import { Select } from '@components/Inputs/Select';
 import { ListTag } from '@components/ListTag';
+import { PdfList } from '@components/PdfList';
 
 // GLOBAL UTILS
-import { catchHandler, dateFormatter } from '@utils/functions';
+import { catchHandler } from '@utils/functions';
+import { handleToastify } from '@utils/toastifyResponses';
+import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -26,29 +37,53 @@ import { icon } from '@assets/icons';
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
+// GLOBAL TYPES
+import type { ITicket } from '@customTypes/ITicket';
+
 // COMPONENTS
+import { IReportPdf } from '@customTypes/IReportPdf';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
 import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
 
 // STYLES
-import * as s from './styles';
+import * as Style from './styles';
 
 // TYPES
-import type { ITicket, ITicketsForPDF, IFilter } from './types';
+import type { ITicketsForPDF, IFilter } from './types';
 
 // #endregion
 
+export interface ITicketFilter {
+  buildings: string[];
+  status: string[];
+  places: string[];
+  serviceTypes: string[];
+  startDate?: string;
+  endDate?: string;
+  seen: string;
+}
+
+export interface ITicketFilterNames {
+  buildingsNames: string;
+  placesNames: string;
+  serviceTypesNames: string;
+  statusNames: string;
+}
+
 export const TicketReports = () => {
-  // #region states
-  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
+  const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
+  const { ticketStatus } = useTicketStatus({ statusName: 'all' });
+  const { buildings } = useBuildings({ filter: '', page: 1 });
 
   const [tickets, setTickets] = useState<ITicket[]>([]);
+  const [ticketReportPdfs, setTicketReportPdfs] = useState<IReportPdf[]>([]);
   const [ticketsForPDF, setTicketsForPDF] = useState<ITicketsForPDF[]>([]);
   const [openCount, setOpenCount] = useState(0);
   const [finishedCount, setFinishedCount] = useState(0);
   const [awaitingToFinishCount, setAwaitingToFinishCount] = useState(0);
-  const [filtersOptions, setFiltersOptions] = useState<{ buildings: { name: string }[] }>();
+  const [dismissedCount, setDismissedCount] = useState(0);
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
   const [ticketDetailsModal, setTicketDetailsModal] = useState<boolean>(false);
@@ -62,61 +97,65 @@ export const TicketReports = () => {
     statusNames: [],
   });
 
-  const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
-  const [buildingsForFilter, setBuildingsForFilter] = useState<string[]>([]);
-  const [statusForFilter, setStatusForFilter] = useState<string[]>([]);
+  const [filter, setFilter] = useState<ITicketFilter>({
+    buildings: [],
+    status: [],
+    places: [],
+    serviceTypes: [],
+    startDate: '',
+    endDate: '',
+    seen: '',
+  });
 
-  // #endregion
+  const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const getPluralStatusName = (status: string) => {
-    let statusName = '';
+  const schemaReportFilter = yup
+    .object({
+      buildings: yup.array().of(yup.string()),
+      status: yup.array().of(yup.string()),
+      places: yup.array().of(yup.string()),
+      serviceTypes: yup.array().of(yup.string()),
+      startDate: yup.date().required('A data inicial é obrigatória.'),
+      endDate: yup
+        .date()
+        .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
+        .required('A data final é obrigatória.'),
+    })
+    .required();
 
-    switch (status) {
-      case 'open':
-        statusName = 'Abertos';
-        break;
-
-      case 'finished':
-        statusName = 'Finalizados';
-        break;
-
-      case 'awaitingToFinish':
-        statusName = 'Aguardando finalizações';
-        break;
-
-      default:
-        break;
-    }
-
-    return statusName;
+  const handleClearFilter = () => {
+    setFilter({
+      buildings: [],
+      status: [],
+      places: [],
+      serviceTypes: [],
+      startDate: '',
+      endDate: '',
+      seen: '',
+    });
   };
 
-  const getSingularStatusName = (status: string) => {
-    let statusName = '';
+  const handleFilterChange = (key: keyof ITicketFilter, value: string) => {
+    setFilter((prevState) => {
+      const checkArray = Array.isArray(prevState[key]);
+      const newFilter = { ...prevState, [key]: value };
 
-    switch (status) {
-      case 'open':
-        statusName = 'Aberto';
-        break;
+      if (checkArray) {
+        return {
+          ...newFilter,
+          [key]: [...(prevState[key] as string[]), value],
+        };
+      }
 
-      case 'finished':
-        statusName = 'Finalizado';
-        break;
-
-      case 'awaitingToFinish':
-        statusName = 'Aguardando finalização';
-        break;
-
-      default:
-        break;
-    }
-
-    return statusName;
+      return newFilter;
+    });
   };
 
   const handleTicketDetailsModal = (modalState: boolean) => {
     setTicketDetailsModal(modalState);
   };
+
   // #region csv
   const csvHeaders = [
     { label: 'Status', key: 'Status' },
@@ -129,65 +168,111 @@ export const TicketReports = () => {
     { label: 'Imagens', key: 'Imagens' },
   ];
 
-  const csvData = tickets.map((data) => ({
-    Status: getSingularStatusName(data.status.name),
-    Edificação: data.building.name,
-    'Local da ocorrência': data.place.label,
-    'Tipo da manutenção': data.types.map((e) => e.type.label).join(', '),
-    Descrição: data.description,
-    Morador: data.residentName,
-    Data: dateFormatter(data.createdAt),
-    Imagens: data.images.map(({ url }) => url).join('; '),
+  const csvData = tickets.map((ticket) => ({
+    Status: ticket.status?.label,
+    Edificação: ticket.building?.name,
+    'Local da ocorrência': ticket.place?.label,
+    'Tipo da manutenção': ticket.types?.map((e) => e.type.label).join(', '),
+    Descrição: ticket.description,
+    Morador: ticket.residentName,
+    Data: formatDateString(ticket.createdAt, 'dd/MM/yyyy'),
+    Imagens: ticket.images?.map(({ url }) => url).join('; '),
   }));
   // #endregion
 
-  // #region functions
-  const schemaReportFilter = yup
-    .object({
-      buildingNames: yup.array().of(yup.string()),
-      status: yup.array().of(yup.string()),
-      startDate: yup.date().required('A data inicial é obrigatória.'),
-      endDate: yup
-        .date()
-        .min(yup.ref('startDate'), 'A data final deve ser maior que a inicial.')
-        .required('A data final é obrigatória.'),
-    })
-    .required();
+  // #region tickets
+  const handleCountTickets = (countTickets: ITicket[]) => {
+    const open = countTickets.filter((ticket) => ticket.status?.name === 'open');
+    const awaitingToFinish = countTickets.filter(
+      (ticket) => ticket.status?.name === 'awaitingToFinish',
+    );
+    const finished = countTickets.filter((ticket) => ticket.status?.name === 'finished');
+    const dismissed = countTickets.filter((ticket) => ticket.status?.name === 'dismissed');
 
-  const requestReportsData = async (filters: IFilter) => {
-    setOnQuery(true);
-    setTickets([]);
-
-    await Api.get(`/tickets/reports?filters=${JSON.stringify(filters)}`)
-      .then((res) => {
-        setTickets(res.data.tickets);
-        setTicketsForPDF(res.data.ticketsForPDF);
-        setOpenCount(res.data.openCount);
-        setFinishedCount(res.data.finishedCount);
-        setAwaitingToFinishCount(res.data.awaitingToFinishCount);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setOnQuery(false);
-      });
+    setOpenCount(open.length);
+    setAwaitingToFinishCount(awaitingToFinish.length);
+    setFinishedCount(finished.length);
+    setDismissedCount(dismissed.length);
   };
 
-  const requestBuildings = async () => {
-    await Api.get(`/buildings/reports/listforselect`)
-      .then((res) => {
-        setFiltersOptions(res.data.filters);
-      })
-      .catch((err) => {
-        catchHandler(err);
+  const handleGetTickets = async () => {
+    try {
+      setLoading(true);
+
+      const response = await getTicketsByBuildingNanoId({
+        filter,
       });
+
+      setTickets(response.tickets);
+
+      handleCountTickets(response.tickets);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
+
+  // #endregion
+
+  // #region pdf
+  const handleGetTicketsPdf = async () => {
+    setLoading(true);
+
+    try {
+      const responseData = await getTicketReports();
+
+      setTicketReportPdfs(responseData.ticketPdfs);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateTicketReportPDF = async () => {
+    try {
+      const filterNames: ITicketFilterNames = {
+        buildingsNames:
+          filter.buildings?.length === 0
+            ? 'Todas'
+            : filter.buildings
+                .map((building) => buildings.find((b) => b.nanoId === building)?.name)
+                .join(', '),
+        placesNames:
+          filter.places?.length === 0
+            ? 'Todos'
+            : filter.places
+                .map((place) => ticketPlaces.find((p) => p.id === place)?.label)
+                .join(', '),
+        serviceTypesNames:
+          filter.serviceTypes?.length === 0
+            ? 'Todos'
+            : filter.serviceTypes
+                .map((serviceType) => serviceTypes.find((st) => st.id === serviceType)?.label)
+                .join(', '),
+        statusNames:
+          filter.status?.length === 0
+            ? 'Todos'
+            : filter.status
+                .map((status) => ticketStatus.find((ts) => ts.name === status)?.label)
+                .join(', '),
+      };
+
+      await generateTicketReportPDF({ filter, filterNames });
+
+      handleGetTicketsPdf();
+    } catch (error: any) {
+      handleToastify(error.response);
+    }
   };
 
   // #endregion
 
   useEffect(() => {
-    requestBuildings();
+    handleGetTicketsPdf();
   }, []);
 
   return (
@@ -211,63 +296,51 @@ export const TicketReports = () => {
         />
       )}
 
-      <s.Container>
+      <Style.Container>
         <h2>Relatórios de chamados</h2>
 
-        <s.FiltersContainer>
-          <h5>Filtros</h5>
+        <Style.FiltersContainer>
           <Formik
             initialValues={{
-              buildingNames: [],
-              statusNames: [],
+              buildings: [],
+              status: [],
+              places: [],
+              serviceTypes: [],
               startDate: '',
               endDate: '',
+              seen: '',
             }}
             validationSchema={schemaReportFilter}
-            onSubmit={async (values) => {
-              setShowNoDataMessage(true);
-
-              setFilterforRequest({
-                endDate: values.endDate,
-                startDate: values.startDate,
-                buildingNames: buildingsForFilter,
-                statusNames: statusForFilter,
-              });
-
-              await requestReportsData({
-                ...values,
-                buildingNames: buildingsForFilter,
-                statusNames: statusForFilter,
-              });
-            }}
+            onSubmit={async () => handleGetTickets()}
           >
-            {({ errors, values, touched }) => (
+            {({ errors, values, setFieldValue, touched }) => (
               <Form>
-                <s.FiltersGrid>
+                <Style.FilterWrapper>
                   <Select
-                    selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
+                    selectPlaceholderValue={filter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
                     value=""
                     onChange={(e) => {
-                      setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
+                      handleFilterChange('buildings', e.target.value);
 
                       if (e.target.value === 'all') {
-                        setBuildingsForFilter([]);
+                        setFilter((prevState) => ({ ...prevState, buildings: [] }));
                       }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    <option value="all" disabled={buildingsForFilter.length === 0}>
+
+                    <option value="all" disabled={filter.buildings.length === 0}>
                       Todas
                     </option>
 
-                    {filtersOptions?.buildings.map((building) => (
+                    {buildings.map((building) => (
                       <option
-                        key={building.name}
-                        value={building.name}
-                        disabled={buildingsForFilter.some((e) => e === building.name)}
+                        value={building.nanoId}
+                        key={building.nanoId}
+                        disabled={filter.buildings.some((b) => b === building.nanoId)}
                       >
                         {building.name}
                       </option>
@@ -275,38 +348,98 @@ export const TicketReports = () => {
                   </Select>
 
                   <Select
-                    selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
-                    label="Status"
+                    selectPlaceholderValue={filter.places.length > 0 ? ' ' : ''}
+                    label="Local"
                     value=""
                     onChange={(e) => {
-                      setStatusForFilter((prevState) => [...prevState, e.target.value]);
+                      handleFilterChange('places', e.target.value);
 
                       if (e.target.value === 'all') {
-                        setStatusForFilter([]);
+                        setFilter((prevState) => ({ ...prevState, places: [] }));
                       }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    <option value="all" disabled={statusForFilter.length === 0}>
+
+                    <option value="all" disabled={filter.places.length === 0}>
                       Todos
                     </option>
-                    <option value="open" disabled={statusForFilter.some((e) => e === 'open')}>
-                      Abertos
+
+                    {ticketPlaces.map((place) => (
+                      <option
+                        value={place.id}
+                        key={place.id}
+                        disabled={filter.places.some((p) => p === place.id)}
+                      >
+                        {place.label}
+                      </option>
+                    ))}
+                  </Select>
+
+                  <Select
+                    selectPlaceholderValue={filter.serviceTypes.length > 0 ? ' ' : ''}
+                    label="Tipo de serviço"
+                    value=""
+                    onChange={(e) => {
+                      handleFilterChange('serviceTypes', e.target.value);
+
+                      if (e.target.value === 'all') {
+                        setFilter((prevState) => ({ ...prevState, serviceTypes: [] }));
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
                     </option>
-                    <option
-                      value="awaitingToFinish"
-                      disabled={statusForFilter.some((e) => e === 'awaitingToFinish')}
-                    >
-                      Aguardando finalizações
+
+                    <option value="all" disabled={filter.serviceTypes.length === 0}>
+                      Todos
                     </option>
-                    <option
-                      value="finished"
-                      disabled={statusForFilter.some((e) => e === 'finished')}
-                    >
-                      Finalizados
+
+                    {serviceTypes.map((type) => (
+                      <option
+                        value={type.id}
+                        key={type.id}
+                        disabled={filter.serviceTypes.some(
+                          (serviceType) => serviceType === type.id,
+                        )}
+                      >
+                        {type.label}
+                      </option>
+                    ))}
+                  </Select>
+
+                  <Select
+                    selectPlaceholderValue={filter.status.length > 0 ? ' ' : ''}
+                    label="Status"
+                    value=""
+                    onChange={(e) => {
+                      handleFilterChange('status', e.target.value);
+
+                      if (e.target.value === 'all') {
+                        setFilter((prevState) => ({ ...prevState, status: [] }));
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
                     </option>
+
+                    <option value="all" disabled={filter.status.length === 0}>
+                      Todos
+                    </option>
+
+                    {ticketStatus.map((status) => (
+                      <option
+                        value={status.name}
+                        key={status.name}
+                        disabled={filter.status.some((s) => s === status.name)}
+                      >
+                        {status.label}
+                      </option>
+                    ))}
                   </Select>
 
                   <FormikInput
@@ -315,6 +448,10 @@ export const TicketReports = () => {
                     name="startDate"
                     type="date"
                     value={values.startDate}
+                    onChange={(e) => {
+                      setFieldValue('startDate', e.target.value);
+                      handleFilterChange('startDate', e.target.value);
+                    }}
                     error={touched.startDate && errors.startDate ? errors.startDate : null}
                   />
 
@@ -324,126 +461,213 @@ export const TicketReports = () => {
                     name="endDate"
                     type="date"
                     value={values.endDate}
+                    onChange={(e) => {
+                      setFieldValue('endDate', e.target.value);
+                      handleFilterChange('endDate', e.target.value);
+                    }}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
-                  <s.TagWrapper>
-                    {buildingsForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todas as edificações</p>
-                      </s.Tag>
-                    )}
+                </Style.FilterWrapper>
 
-                    {buildingsForFilter.map((building, i: number) => (
-                      <s.Tag key={building}>
-                        <p className="p3">{building}</p>
-                        <IconButton
-                          size="14px"
-                          icon={icon.xBlack}
-                          onClick={() => {
-                            setBuildingsForFilter((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
-                          }}
-                        />
-                      </s.Tag>
-                    ))}
-
-                    {statusForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todos os status</p>
-                      </s.Tag>
-                    )}
-
-                    {statusForFilter.map((status, i: number) => (
-                      <s.Tag key={status}>
-                        <p className="p3">{getPluralStatusName(status)}</p>
-                        <IconButton
-                          size="14px"
-                          icon={icon.xBlack}
-                          onClick={() => {
-                            setStatusForFilter((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
-                          }}
-                        />
-                      </s.Tag>
-                    ))}
-                  </s.TagWrapper>
-
-                  <s.ButtonContainer>
-                    <s.ButtonWrapper>
-                      <CSVLink
-                        data={csvData}
-                        headers={csvHeaders}
-                        filename={`Relatório de chamados ${new Date().toLocaleDateString('pt-BR')}`}
-                        onClick={() => tickets.length !== 0}
-                      >
-                        <IconButton
-                          icon={icon.csvLogo}
-                          label="Exportar"
-                          color={theme.color.primary}
-                          size="20px"
-                          onClick={() => {
-                            //
-                          }}
-                          disabled={tickets.length === 0}
-                        />
-                      </CSVLink>
+                <Style.FilterWrapperFooter>
+                  <Style.FilterButtonWrapper>
+                    <CSVLink
+                      data={csvData}
+                      headers={csvHeaders}
+                      filename={`Relatório de chamados ${new Date().toLocaleDateString('pt-BR')}`}
+                      onClick={() => tickets.length !== 0}
+                    >
                       <IconButton
-                        icon={icon.pdfLogo}
+                        icon={icon.csvLogo}
                         label="Exportar"
                         color={theme.color.primary}
                         size="20px"
                         onClick={() => {
-                          setModalPrintReportOpen(true);
+                          //
                         }}
-                        disabled={tickets.length === 0}
+                        disabled={loading || tickets.length === 0}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
-                    </s.ButtonWrapper>
-                  </s.ButtonContainer>
-                </s.FiltersGrid>
+                    </CSVLink>
+
+                    <IconButton
+                      icon={icon.pdfLogo}
+                      label="Exportar"
+                      color={theme.color.primary}
+                      size="20px"
+                      onClick={() => handleGenerateTicketReportPDF()}
+                      disabled={loading || tickets.length === 0}
+                    />
+
+                    <Button
+                      type="button"
+                      borderless
+                      label="Limpar filtros"
+                      textColor={theme.color.primary}
+                      onClick={() => {
+                        setFieldValue('startDate', '');
+                        setFieldValue('endDate', '');
+                        handleClearFilter();
+                      }}
+                    />
+
+                    <Button type="submit" label="Filtrar" disabled={loading} />
+                  </Style.FilterButtonWrapper>
+
+                  <Style.FilterTags>
+                    {filter.buildings?.length === 0 ? (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                    ) : (
+                      filter.buildings?.map((building) => (
+                        <ListTag
+                          key={building}
+                          label={buildings.find((b) => b.nanoId === building)?.name || ''}
+                          padding="4px 12px"
+                          fontWeight={500}
+                          onClick={() => {
+                            setFilter((prevState) => ({
+                              ...prevState,
+                              buildings: prevState.buildings?.filter((b) => b !== building),
+                            }));
+                          }}
+                        />
+                      ))
+                    )}
+
+                    {filter.status?.length === 0 ? (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os status" />
+                    ) : (
+                      filter.status?.map((status) => (
+                        <ListTag
+                          key={status}
+                          label={ticketStatus.find((ts) => ts.name === status)?.label || ''}
+                          padding="4px 12px"
+                          fontWeight={500}
+                          onClick={() => {
+                            setFilter((prevState) => ({
+                              ...prevState,
+                              status: prevState.status?.filter((ts) => ts !== status),
+                            }));
+                          }}
+                        />
+                      ))
+                    )}
+
+                    {filter.places?.length === 0 ? (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os locais" />
+                    ) : (
+                      filter.places?.map((place) => (
+                        <ListTag
+                          key={place}
+                          label={ticketPlaces.find((p) => p.id === place)?.label || ''}
+                          padding="4px 12px"
+                          fontWeight={500}
+                          onClick={() => {
+                            setFilter((prevState) => ({
+                              ...prevState,
+                              places: prevState.places?.filter((p) => p !== place),
+                            }));
+                          }}
+                        />
+                      ))
+                    )}
+
+                    {filter.serviceTypes?.length === 0 ? (
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os tipos de serviço"
+                      />
+                    ) : (
+                      filter.serviceTypes?.map((serviceType) => (
+                        <ListTag
+                          key={serviceType}
+                          label={serviceTypes.find((st) => st.id === serviceType)?.label || ''}
+                          padding="4px 12px"
+                          fontWeight={500}
+                          onClick={() => {
+                            setFilter((prevState) => ({
+                              ...prevState,
+                              serviceTypes: prevState.serviceTypes?.filter(
+                                (st) => st !== serviceType,
+                              ),
+                            }));
+                          }}
+                        />
+                      ))
+                    )}
+                  </Style.FilterTags>
+                </Style.FilterWrapperFooter>
               </Form>
             )}
           </Formik>
-        </s.FiltersContainer>
+        </Style.FiltersContainer>
 
-        {onQuery && <DotSpinLoading />}
+        <Style.ViewButtons>
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'reports'}
+            onClick={() => {
+              setReportView('reports');
+            }}
+          >
+            Relatório
+          </Style.CustomButton>
 
-        {!onQuery && tickets.length === 0 && showNoDataMessage && (
-          <s.NoMaintenanceCard>
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'pdfs'}
+            onClick={() => {
+              setReportView('pdfs');
+            }}
+          >
+            Histórico de relatórios
+          </Style.CustomButton>
+        </Style.ViewButtons>
+
+        {loading && <DotSpinLoading />}
+
+        {reportView === 'reports' && !loading && tickets.length === 0 && (
+          <Style.NoMaintenanceCard>
             <h4>Nenhum chamado encontrado.</h4>
-          </s.NoMaintenanceCard>
+          </Style.NoMaintenanceCard>
         )}
 
-        {!onQuery && tickets.length > 0 && (
+        {reportView === 'reports' && !loading && tickets.length > 0 && (
           <>
-            <s.CountContainer>
-              <s.Counts>
-                <s.CountsInfo>
-                  <h5 className="finished">{finishedCount}</h5>
-                  <p className="p5">{finishedCount > 1 ? 'Finalizados' : 'Finalizado'}</p>
-                </s.CountsInfo>
-
-                <s.CountsInfo>
+            <Style.CountContainer>
+              <Style.Counts>
+                <Style.CountsInfo color="black">
                   <h5 className="open">{openCount}</h5>
                   <p className="p5">{openCount > 1 ? 'Abertos' : 'Aberto'}</p>
-                </s.CountsInfo>
+                </Style.CountsInfo>
 
-                <s.CountsInfo>
+                <Style.CountsInfo
+                  color={ticketStatus.find((ts) => ts.name === 'awaitingToFinish')?.backgroundColor}
+                >
                   <h5 className="awaitingToFinish">{awaitingToFinishCount}</h5>
                   <p className="p5">
                     {awaitingToFinishCount > 1
                       ? 'Aguardando finalizações'
                       : 'Aguardando finalização'}
                   </p>
-                </s.CountsInfo>
-              </s.Counts>
-            </s.CountContainer>
+                </Style.CountsInfo>
+
+                <Style.CountsInfo
+                  color={ticketStatus.find((ts) => ts.name === 'finished')?.backgroundColor}
+                >
+                  <h5 className="finished">{finishedCount}</h5>
+                  <p className="p5">{finishedCount > 1 ? 'Finalizados' : 'Finalizado'}</p>
+                </Style.CountsInfo>
+
+                <Style.CountsInfo
+                  color={ticketStatus.find((ts) => ts.name === 'dismissed')?.backgroundColor}
+                >
+                  <h5 className="dismissed">{dismissedCount}</h5>
+                  <p className="p5">{dismissedCount > 1 ? 'Indeferidos' : 'Indeferido'}</p>
+                </Style.CountsInfo>
+              </Style.Counts>
+            </Style.CountContainer>
+
             <ReportDataTable
               colsHeader={[
                 { label: 'Status' },
@@ -462,9 +686,9 @@ export const TicketReports = () => {
                     {
                       cell: (
                         <ListTag
-                          label={ticket.status.label}
-                          backgroundColor={ticket.status.backgroundColor}
-                          color={ticket.status.color}
+                          label={ticket.status?.label || ''}
+                          backgroundColor={ticket.status?.backgroundColor}
+                          color={ticket.status?.color}
                           padding={`2px ${theme.size.xxsm}`}
                           fontSize="10px"
                           lineHeight="12px"
@@ -473,12 +697,12 @@ export const TicketReports = () => {
                       ),
                       cssProps: { width: '81px' },
                     },
-                    { cell: ticket.building.name },
-                    { cell: ticket.place.label },
-                    { cell: ticket.types.map((e) => e.type.singularLabel).join(', ') },
+                    { cell: ticket.building?.name },
+                    { cell: ticket.place?.label },
+                    { cell: ticket.types?.map((e) => e.type.singularLabel).join(', ') },
                     { cell: ticket.description },
                     { cell: ticket.residentName },
-                    { cell: dateFormatter(ticket.createdAt) },
+                    { cell: formatDateString(ticket.createdAt, 'dd/MM/yyyy') },
                   ]}
                   onClick={() => {
                     setTicketId(ticket.id);
@@ -489,7 +713,15 @@ export const TicketReports = () => {
             </ReportDataTable>
           </>
         )}
-      </s.Container>
+
+        {reportView === 'pdfs' && !loading && (
+          <PdfList
+            pdfList={ticketReportPdfs}
+            loading={loading}
+            handleRefreshPdf={handleGetTicketsPdf}
+          />
+        )}
+      </Style.Container>
     </>
   );
 };
