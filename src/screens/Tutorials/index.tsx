@@ -1,90 +1,100 @@
-import { useState } from 'react';
-import { icon } from '../../assets/icons';
+// REACT
+import { useEffect, useState } from 'react';
+
+// GLOBAL COMPONENTS
+import { IFrameModal } from '@components/IFrameModal/IFrameModal';
+
+// GLOBAL UTILS
+import { catchHandler } from '@utils/functions';
+
+// GLOBAL TYPES
+import type { ITutorial } from '@customTypes/ITutorial';
+
+// COMPONENTS
+import { getTutorials } from '@services/apis/getTutorials';
+
+// STYLES
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import * as Style from './styles';
-import { IFrameModal } from './IFrameModal';
 
 export const Tutorials = () => {
-  const [iframeModalOpen, setIframeModalOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [tutorials, setTutorials] = useState<ITutorial[]>([]);
 
-  const videos = [
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/ZmAId85nywI',
-      name: 'Bem-vindo à Easy Alert!',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/PEulFq2tE3o',
-      name: 'Introdução plataforma',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/8VNDmvTYHFE',
-      name: 'Cadastro de edificação',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/_L1f4AYAuWg',
-      name: 'Como usar os QRCodes',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/SeXoANy7Atk',
-      name: 'Como usar os checklists',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/hOp3MlaJm6M',
-      name: 'Abertura de chamado',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/LUCUx4oeZcQ',
-      name: 'Dashboard',
-    },
-    {
-      thumbnail: icon.paper,
-      link: 'https://youtu.be/JUWu0JbJu8c',
-      name: 'Como responder manutenção',
-    },
-  ];
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  videos.forEach((video) => {
-    const splittedUrl = video.link.split('/');
-    const videoId = splittedUrl[splittedUrl.length - 1];
+  const [iFrameModal, setIFrameModal] = useState(false);
 
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  const [loading, setLoading] = useState(false);
 
-    // eslint-disable-next-line no-param-reassign
-    video.thumbnail = thumbnailUrl;
-  });
+  const handleIFrameModal = (modalState: boolean) => {
+    setIFrameModal(modalState);
+  };
+
+  const handleSelectedIndex = (index: number) => {
+    setSelectedIndex(index);
+  };
+
+  const handleGetTutorials = async () => {
+    setLoading(true);
+
+    try {
+      const responseData = await getTutorials();
+
+      setTutorials(responseData.tutorials);
+    } catch (error) {
+      catchHandler(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetTutorials();
+  }, []);
 
   return (
     <>
-      {iframeModalOpen && selectedIndex !== null && (
+      {iFrameModal && !selectedIndex && (
         <IFrameModal
-          setModal={setIframeModalOpen}
-          name={videos[selectedIndex].name}
-          link={videos[selectedIndex].link}
+          name={tutorials[selectedIndex].title}
+          link={tutorials[selectedIndex].url}
+          handleIFrameModal={handleIFrameModal}
         />
       )}
+
       <Style.Container>
-        <h2>Tutoriais</h2>
-        <Style.Wrapper>
-          {videos.map((video, index) => (
-            <Style.Card
-              key={video.link}
-              onClick={() => {
-                setSelectedIndex(index);
-                setIframeModalOpen(true);
-              }}
-            >
-              <h5>{video.name}</h5>
-              <img alt="" src={video.thumbnail} />
-            </Style.Card>
-          ))}
-        </Style.Wrapper>
+        <Style.HeaderContainer>
+          <h2>Tutoriais</h2>
+        </Style.HeaderContainer>
+
+        {loading && <DotSpinLoading />}
+
+        {!loading && (
+          <Style.Wrapper>
+            {tutorials.length === 0 && (
+              <Style.EmptyContainer>
+                <h4>Nenhum tutorial encontrado</h4>
+              </Style.EmptyContainer>
+            )}
+
+            {tutorials.map((tutorial, index) => (
+              <Style.Card key={tutorial.id}>
+                <Style.CardHeader>
+                  <h5>{tutorial.title}</h5>
+                </Style.CardHeader>
+
+                <Style.CardImageContainer
+                  onClick={() => {
+                    handleSelectedIndex(index);
+                    handleIFrameModal(true);
+                  }}
+                >
+                  <img alt="" src={tutorial.thumbnail} />
+                </Style.CardImageContainer>
+              </Style.Card>
+            ))}
+          </Style.Wrapper>
+        )}
       </Style.Container>
     </>
   );

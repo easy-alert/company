@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { theme } from '../../styles/theme';
+
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   padding-top: ${theme.size.sm};
@@ -9,9 +10,25 @@ export const Container = styled.div`
   height: 100%;
 `;
 
+export const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: ${theme.size.sm};
+`;
+
+export const EmptyContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  > h4 {
+    color: ${theme.color.gray4};
+  }
+`;
+
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: ${theme.size.md};
 
   @media (max-width: 900px) {
@@ -27,13 +44,13 @@ export const Card = styled.div`
   img {
     width: 100%;
     border-radius: ${theme.size.xsm};
-  }
 
-  cursor: pointer;
-  transition: 0.1s;
+    cursor: pointer;
+    transition: 0.1s;
 
-  :hover {
-    scale: 1.05;
+    :hover {
+      scale: 1.02;
+    }
   }
 
   @media (max-width: 900px) {
@@ -53,7 +70,17 @@ export const Card = styled.div`
   }
 `;
 
-export const Iframe = styled.iframe`
-  width: 100%;
-  height: 536px;
+export const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: ${theme.size.xsm};
+`;
+
+export const CardImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
