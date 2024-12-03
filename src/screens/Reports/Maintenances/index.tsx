@@ -1,46 +1,63 @@
 /* eslint-disable react/no-array-index-key */
-// #region imports
-import { Form, Formik } from 'formik';
+// REACT
 import { useEffect, useState } from 'react';
+
+// LIBS
+import { Form, Formik } from 'formik';
 import { CSVLink } from 'react-csv';
 import { toast } from 'react-toastify';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { Button } from '../../../components/Buttons/Button';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { icon } from '../../../assets/icons';
-import * as s from './styles';
-import { theme } from '../../../styles/theme';
-import { FormikInput } from '../../../components/Form/FormikInput';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Select } from '@components/Inputs/Select';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { InProgressTag } from '@components/InProgressTag';
+import { PdfList } from '@components/PdfList';
+
+// GLOBAL UTILS
+import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@utils/functions';
+
+// GLOBAL THEME
+import { theme } from '@styles/theme';
+
+// GLOBAL ICONS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import type { IReportPdf } from '@customTypes/IReportPdf';
+
+// COMPONENTS
+import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
+import { EventTag } from '../../Calendar/utils/EventTag';
+import { ModalMaintenanceDetails } from '../../Calendar/utils/ModalMaintenanceDetails';
+import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
+import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
+
+// UTILS
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
 import {
+  getPluralStatusNameforPdf,
+  getSingularStatusNameforPdf,
+} from './ModalPrintReport/functions';
+
+// STYLES
+import * as s from './styles';
+
+//  TYPES
+import type {
   ICounts,
   IFilterData,
   IFilterforRequest,
   IFiltersOptions,
   IMaintenanceReportData,
 } from './types';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  catchHandler,
-  dateFormatter,
-} from '../../../utils/functions';
-import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
-import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalMaintenanceDetails } from '../../Calendar/utils/ModalMaintenanceDetails';
-import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
-import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
-import { Select } from '../../../components/Inputs/Select';
-import {
-  getPluralStatusNameforPdf,
-  getSingularStatusNameforPdf,
-} from './ModalPrintReport/functions';
-import { InProgressTag } from '../../../components/InProgressTag';
-import { Api } from '../../../services/api';
-import { PDFList } from './PDFList';
-import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { IModalAdditionalInformations } from '../../Calendar/types';
-// #endregion
+import type { IModalAdditionalInformations } from '../../Calendar/types';
 
 export const MaintenanceReports = () => {
   // #region states
@@ -54,7 +71,9 @@ export const MaintenanceReports = () => {
     pending: 0,
     totalCost: 0,
   });
+
   const [maintenances, setMaintenances] = useState<IMaintenanceReportData[]>([]);
+  const [maintenanceReportPdfs, setMaintenanceReportPdfs] = useState<IReportPdf[]>([]);
 
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
@@ -156,6 +175,21 @@ export const MaintenanceReports = () => {
       });
   };
 
+  const requestReportPdfs = async () => {
+    setLoading(true);
+
+    await Api.get(`/buildings/reports/list/pdf`)
+      .then((res) => {
+        setMaintenanceReportPdfs(res.data.pdfs);
+      })
+      .catch((err) => {
+        catchHandler(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   const handleModalEditReport = (modalState: boolean) => {
     setModalEditReport(modalState);
   };
@@ -166,6 +200,7 @@ export const MaintenanceReports = () => {
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
+    requestReportPdfs();
   }, []);
 
   return loading ? (
@@ -646,7 +681,13 @@ export const MaintenanceReports = () => {
           </s.NoMaintenanceCard>
         )}
 
-        {reportView === 'pdfs' && <PDFList />}
+        {reportView === 'pdfs' && (
+          <PdfList
+            pdfList={maintenanceReportPdfs}
+            loading={loading}
+            handleRefreshPdf={requestReportPdfs}
+          />
+        )}
       </s.Container>
     </>
   );

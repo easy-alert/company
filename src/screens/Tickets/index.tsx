@@ -291,7 +291,7 @@ function TicketsPage() {
           )}
         </Style.Header>
 
-        <Style.FilterSection>
+        <Style.FiltersContainer>
           <Formik
             initialValues={{
               buildings: [],
@@ -393,7 +393,9 @@ function TicketsPage() {
                       <option
                         value={type.id}
                         key={type.id}
-                        disabled={filter.serviceTypes.some((s) => s === type.id)}
+                        disabled={filter.serviceTypes.some(
+                          (serviceType) => serviceType === type.id,
+                        )}
                       >
                         {type.label}
                       </option>
@@ -563,7 +565,7 @@ function TicketsPage() {
               </Form>
             )}
           </Formik>
-        </Style.FilterSection>
+        </Style.FiltersContainer>
 
         <Style.Kanban>
           {kanbanTickets.map((kanbanTicket, i: number) => (
