@@ -54,7 +54,7 @@ export const Tutorials = () => {
 
   return (
     <>
-      {iFrameModal && !selectedIndex && (
+      {iFrameModal && selectedIndex !== null && (
         <IFrameModal
           name={tutorials[selectedIndex].title}
           link={tutorials[selectedIndex].url}
