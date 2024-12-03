@@ -70,17 +70,6 @@ export const Sidebar = () => {
         navigate('/tickets');
       },
     },
-
-    // {
-    // title: 'Manutenções',
-    // type:'navigate',
-    //   icon: icon.maintenances,
-    //   url: '/maintenances',
-    //   redirectFunction: () => {
-    //     navigate('/maintenances');
-    //   },
-    // },
-
     {
       title: 'Relatórios',
       label: 'Relatórios',
@@ -119,17 +108,6 @@ export const Sidebar = () => {
         },
       ],
     },
-
-    {
-      title: 'Tutoriais',
-      type: 'navigate',
-      icon: icon.tutorial,
-      url: '/tutorials',
-      redirectFunction: () => {
-        navigate('/tutorials');
-      },
-    },
-
     {
       title: 'Fornecedores',
       type: 'navigate',
@@ -139,7 +117,15 @@ export const Sidebar = () => {
         navigate('/suppliers');
       },
     },
-
+    {
+      title: 'Tutoriais',
+      type: 'navigate',
+      icon: icon.tutorial,
+      url: '/tutorials',
+      redirectFunction: () => {
+        navigate('/tutorials');
+      },
+    },
     {
       title: 'Configurações',
       type: 'navigate',
