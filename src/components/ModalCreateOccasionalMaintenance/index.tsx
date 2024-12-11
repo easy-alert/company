@@ -22,7 +22,6 @@ import type { IPriority } from '@customTypes/IPriority';
 
 // COMPONENTS
 import ModalLoading from './ModalCreateOccasionalMaintenanceViews/ModalLoading';
-import ModalFirstView from './ModalCreateOccasionalMaintenanceViews/ModalFirstView';
 import ModalSecondView from './ModalCreateOccasionalMaintenanceViews/ModalSecondView';
 import ModalThirdView from './ModalCreateOccasionalMaintenanceViews/ModalThirdView';
 
@@ -78,7 +77,7 @@ export const ModalCreateOccasionalMaintenance = ({
   const [categoriesData, setCategoriesData] = useState<ICategory[]>([]);
   const [priorityData, setPriorityData] = useState<IPriority[]>([]);
 
-  const [view, setView] = useState<number>(1);
+  const [view, setView] = useState<number>(2);
   const [loading, setLoading] = useState<boolean>(true);
 
   const handleSetView = (viewSate: number) => {
@@ -204,10 +203,6 @@ export const ModalCreateOccasionalMaintenance = ({
         <ModalLoading />
       ) : (
         <>
-          {ticketsToAnswer && <p className="p1">{ticketsToAnswer}</p>}
-
-          {view === 1 && <ModalFirstView handleSetView={handleSetView} />}
-
           {view === 2 && (
             <ModalSecondView
               buildingsData={buildingsData}
