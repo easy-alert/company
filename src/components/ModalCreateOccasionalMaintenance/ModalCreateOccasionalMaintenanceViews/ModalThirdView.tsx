@@ -56,13 +56,17 @@ function ModalThirdView({
       const uploadAcceptedFiles = async () => {
         setOnFileQuery(true);
 
+        const formattedFiles = [...occasionalMaintenanceData.reportData.files];
+
         const uploadedFiles = await uploadManyFiles(acceptedFiles);
 
-        const formattedFiles = uploadedFiles.map((file) => ({
-          name: file.originalname,
-          originalName: file.originalname,
-          url: file.Location,
-        }));
+        uploadedFiles.forEach((file) => {
+          formattedFiles.push({
+            name: file.originalname,
+            originalName: file.originalname,
+            url: file.Location,
+          });
+        });
 
         handleOccasionalMaintenanceDataChange({
           primaryKey: 'reportData',
@@ -84,11 +88,15 @@ function ModalThirdView({
 
         const uploadedImages = await uploadManyFiles(acceptedImages);
 
-        const formattedImages = uploadedImages.map((file) => ({
-          name: file.originalname,
-          originalName: file.originalname,
-          url: file.Location,
-        }));
+        const formattedImages = [...occasionalMaintenanceData.reportData.images];
+
+        uploadedImages.forEach((file) => {
+          formattedImages.push({
+            name: file.originalname,
+            originalName: file.originalname,
+            url: file.Location,
+          });
+        });
 
         handleOccasionalMaintenanceDataChange({
           primaryKey: 'reportData',
