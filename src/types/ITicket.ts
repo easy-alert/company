@@ -2,7 +2,7 @@ import type { IBuilding } from './IBuilding';
 import type { IBuildingNotificationConfiguration } from './IBuildingNotificationConfiguration';
 import type { ITicketDismissReason } from './ITicketDismissReason';
 
-type ITicketStatusNames = 'open' | 'awaitingToFinish' | 'finished' | 'dismissed';
+export type ITicketStatusNames = 'open' | 'awaitingToFinish' | 'finished' | 'dismissed';
 
 export interface ITicketStatus {
   name: ITicketStatusNames;
