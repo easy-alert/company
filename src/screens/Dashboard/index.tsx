@@ -435,9 +435,9 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, maintenances: true }));
 
     try {
-      handleGetMaintenancesCountAndCost('', resetFilters);
-      handleGetMaintenancesCountAndCost('common', resetFilters);
-      handleGetMaintenancesCountAndCost('occasional', resetFilters);
+      await handleGetMaintenancesCountAndCost('', resetFilters);
+      await handleGetMaintenancesCountAndCost('common', resetFilters);
+      await handleGetMaintenancesCountAndCost('occasional', resetFilters);
     } finally {
       setDashboardLoadings((prevState) => ({ ...prevState, maintenances: false }));
     }
@@ -447,11 +447,11 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, tickets: true }));
 
     try {
-      handleGetTicketsCountAndCost('', resetFilters);
-      handleGetTicketsCountAndCost('open', resetFilters);
-      handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
-      handleGetTicketsCountAndCost('finished', resetFilters);
-      handleGetTicketsCountAndCost('dismissed', resetFilters);
+      await handleGetTicketsCountAndCost('', resetFilters);
+      await handleGetTicketsCountAndCost('open', resetFilters);
+      await handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
+      await handleGetTicketsCountAndCost('finished', resetFilters);
+      await handleGetTicketsCountAndCost('dismissed', resetFilters);
     } finally {
       setDashboardLoadings((prevState) => ({ ...prevState, tickets: false }));
     }
@@ -686,6 +686,8 @@ export const Dashboard = () => {
       },
     },
   };
+
+  console.log('🚀 ~ Dashboard ~ scoreChart.maintenanceChart.data:', maintenanceChart);
 
   const ticketTypesChart = {
     series: ticketsServicesTypeChart.data,
@@ -1172,7 +1174,7 @@ export const Dashboard = () => {
                     <DotSpinLoading />
                   ) : (
                     <>
-                      {maintenanceChart.data.length > 0 && (
+                      {maintenanceChart.data.some((data) => data > 0) && (
                         <Chart
                           type="donut"
                           options={scoreChart.options as any}
@@ -1181,11 +1183,13 @@ export const Dashboard = () => {
                         />
                       )}
 
-                      {maintenanceChart.data.length === 0 && (
-                        <Style.NoDataWrapper>
-                          <h6>Nenhuma informação encontrada</h6>
-                        </Style.NoDataWrapper>
-                      )}
+                      {maintenanceChart.data[0] === 0 &&
+                        maintenanceChart.data[1] === 0 &&
+                        maintenanceChart.data[2] === 0 && (
+                          <Style.NoDataWrapper>
+                            <h6>Nenhuma informação encontrada</h6>
+                          </Style.NoDataWrapper>
+                        )}
                     </>
                   )}
                 </Style.ChartContent>
