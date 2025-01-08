@@ -363,11 +363,8 @@ export const Dashboard = () => {
         default:
           return;
       }
-
-      setLoading(false);
-    } catch (error) {
-      // console.log('🚀 ~ handleGetMaintenanceInfo ~ error:', error);
-      setLoading(false);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
     }
   };
 
@@ -434,30 +431,38 @@ export const Dashboard = () => {
   // #endregion
 
   // #region dashboard functions
-  const handleGetDashboardData = async (resetFilters?: boolean) => {
-    // get count and cost from all maintenance types
-    try {
-      setDashboardLoadings((prevState) => ({ ...prevState, maintenances: true }));
+  const handleGetAllMaintenancesCountAndCost = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, maintenances: true }));
 
-      await handleGetMaintenancesCountAndCost('', resetFilters);
-      await handleGetMaintenancesCountAndCost('common', resetFilters);
-      await handleGetMaintenancesCountAndCost('occasional', resetFilters);
+    try {
+      handleGetMaintenancesCountAndCost('', resetFilters);
+      handleGetMaintenancesCountAndCost('common', resetFilters);
+      handleGetMaintenancesCountAndCost('occasional', resetFilters);
     } finally {
       setDashboardLoadings((prevState) => ({ ...prevState, maintenances: false }));
     }
+  };
 
-    // get count and cost from all ticket status
+  const handleGetAllTicketsCountAndCost = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, tickets: true }));
+
     try {
-      setDashboardLoadings((prevState) => ({ ...prevState, tickets: true }));
-
-      await handleGetTicketsCountAndCost('', resetFilters);
-      await handleGetTicketsCountAndCost('open', resetFilters);
-      await handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
-      await handleGetTicketsCountAndCost('finished', resetFilters);
-      await handleGetTicketsCountAndCost('dismissed', resetFilters);
+      handleGetTicketsCountAndCost('', resetFilters);
+      handleGetTicketsCountAndCost('open', resetFilters);
+      handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
+      handleGetTicketsCountAndCost('finished', resetFilters);
+      handleGetTicketsCountAndCost('dismissed', resetFilters);
     } finally {
       setDashboardLoadings((prevState) => ({ ...prevState, tickets: false }));
     }
+  };
+
+  const handleGetDashboardData = async (resetFilters?: boolean) => {
+    // get count and cost from all maintenance types
+    handleGetAllMaintenancesCountAndCost(resetFilters);
+
+    // get count and cost from all ticket status
+    handleGetAllTicketsCountAndCost(resetFilters);
 
     // get maintenance timeline
     handleGetMaintenancesTimeline(resetFilters);
@@ -917,7 +922,7 @@ export const Dashboard = () => {
                 handleSelectClick('responsible', e.target.value);
 
                 if (e.target.value === 'all') {
-                  setDataFilter((prevState) => ({ ...prevState, responsibles: [] }));
+                  setDataFilter((prevState) => ({ ...prevState, responsible: [] }));
                 }
               }}
             >
@@ -1060,7 +1065,7 @@ export const Dashboard = () => {
               <h5>Chamados abertos</h5>
 
               <Style.CountCardContent>
-                {dashboardLoadings.maintenances ? (
+                {dashboardLoadings.tickets ? (
                   <DotSpinLoading />
                 ) : (
                   <>
@@ -1075,7 +1080,7 @@ export const Dashboard = () => {
               <h5>Chamados pendentes</h5>
 
               <Style.CountCardContent>
-                {dashboardLoadings.maintenances ? (
+                {dashboardLoadings.tickets ? (
                   <DotSpinLoading />
                 ) : (
                   <>
@@ -1090,7 +1095,7 @@ export const Dashboard = () => {
               <h5>Chamados finalizados</h5>
 
               <Style.CountCardContent>
-                {dashboardLoadings.maintenances ? (
+                {dashboardLoadings.tickets ? (
                   <DotSpinLoading />
                 ) : (
                   <>
@@ -1105,7 +1110,7 @@ export const Dashboard = () => {
               <h5>Chamados indeferidos</h5>
 
               <Style.CountCardContent>
-                {dashboardLoadings.maintenances ? (
+                {dashboardLoadings.tickets ? (
                   <DotSpinLoading />
                 ) : (
                   <>
