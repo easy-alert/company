@@ -1,50 +1,31 @@
 // #region imports
-import Chart from 'react-apexcharts';
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import * as Style from './styles';
-import { Select } from '../../components/Inputs/Select';
-import { Button } from '../../components/Buttons/Button';
-import { Api } from '../../services/api';
-import { catchHandler } from '../../utils/functions';
-import { ListTag } from '../../components/ListTag';
+
+import Chart from 'react-apexcharts';
+
+import { getDashboardFilters } from '@services/apis/getDashboardFilters';
+import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
+import { getTicketsCountAndCost } from '@services/apis/getTicketsCountAndCost';
+import { getTicketsByServiceTypes } from '@services/apis/getTicketsByServiceTypes';
+import { getMaintenancesByStatus } from '@services/apis/getMaintenancesByStatus';
+import { getMaintenancesTimeline } from '@services/apis/getMaintenancesTimeline';
+import { getMaintenancesMostCompletedExpired } from '@services/apis/getMaintenancesMostCompletedExpired';
+
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Select } from '@components/Inputs/Select';
+import { Button } from '@components/Buttons/Button';
+import { ListTag } from '@components/ListTag';
+
+import type { ITicketStatusNames } from '@customTypes/ITicket';
+
+import { handleToastify } from '@utils/toastifyResponses';
+
 import { ModalDashboardMaintenanceDetails } from './ModalDashboardMaintenanceDetails';
+
+import * as Style from './styles';
 // #endregion
 
 // #region interfaces
-interface IDataFilter {
-  buildings: string[];
-  categories: string[];
-  responsibles: string[];
-}
-
-interface IPeriods {
-  label: string;
-  period: number;
-}
-
-interface IFilterOptions {
-  buildings: string[];
-  categories: string[];
-  responsibles: string[];
-  periods: IPeriods[];
-}
-
-type IFilterTypes = 'buildings' | 'categories' | 'responsibles';
-
-interface ITimeline {
-  categories: string[];
-  series: {
-    name: string;
-    data: number[];
-  }[];
-}
-
-interface IScore {
-  data: number[];
-  labels: string[];
-}
-
 interface IMaintenance {
   Category: {
     name: string;
@@ -72,6 +53,34 @@ interface IMaintenance {
   observation: string;
 }
 
+export interface IDashboardFilter {
+  buildings: string[];
+  categories: string[];
+  responsible: string[];
+}
+
+interface IPeriods {
+  label: string;
+  period: number;
+}
+
+interface IFilterOptions {
+  buildings: string[];
+  categories: string[];
+  responsible: string[];
+  periods: IPeriods[];
+}
+
+type IFilterTypes = 'buildings' | 'categories' | 'responsible';
+
+interface ITimeline {
+  categories: string[];
+  series: {
+    name: string;
+    data: number[];
+  }[];
+}
+
 interface IRating {
   allCount: number;
   count: number;
@@ -80,29 +89,106 @@ interface IRating {
   rating: number;
 }
 
-interface IMaintenancesData {
+type IRatingStatus = '' | 'completed' | 'expired';
+
+interface IMostCompletedExpired {
   completed: IRating[];
   expired: IRating[];
 }
 
-type IRatingStatus = '' | 'completed' | 'expired';
-
-interface IMaintenanceInfo {
-  total: number;
-  info: string;
+interface ICountAndCost {
+  count: number;
+  cost: string;
 }
 
-interface ICounts {
-  occasionalMaintenances: IMaintenanceInfo;
-  commonMaintenances: IMaintenanceInfo;
-  totalMaintenances: IMaintenanceInfo;
-  tickets: IMaintenanceInfo;
+interface IMaintenancesData {
+  commonMaintenanceData: ICountAndCost;
+  occasionalMaintenanceData: ICountAndCost;
+  totalMaintenanceData: ICountAndCost;
 }
 
+interface ITicketsData {
+  openTickets: ICountAndCost;
+  awaitingToFinishTickets: ICountAndCost;
+  finishedTickets: ICountAndCost;
+  dismissedTickets: ICountAndCost;
+}
+
+interface IPieChart {
+  data: number[];
+  labels: string[];
+  colors: string[];
+}
+
+interface IDashboardLoadings {
+  maintenances: boolean;
+  tickets: boolean;
+  timeline: boolean;
+  score: boolean;
+  ticketTypes: boolean;
+  mostCompletedExpired: boolean;
+}
 // #endregion
 
 export const Dashboard = () => {
   // #region states
+  const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
+    commonMaintenanceData: {
+      count: 0,
+      cost: '',
+    },
+    occasionalMaintenanceData: {
+      count: 0,
+      cost: '',
+    },
+    totalMaintenanceData: {
+      count: 0,
+      cost: '',
+    },
+  });
+
+  const [maintenancesTimeline, setMaintenancesTimeline] = useState<ITimeline>({
+    categories: [],
+    series: [],
+  });
+
+  const [maintenanceChart, setMaintenanceChart] = useState<IPieChart>({
+    data: [],
+    labels: [],
+    colors: [],
+  });
+
+  const [maintenancesMostCompletedExpired, setMaintenancesMostCompletedExpired] =
+    useState<IMostCompletedExpired>({
+      completed: [],
+      expired: [],
+    });
+
+  const [ticketsData, setTicketsData] = useState<ITicketsData>({
+    openTickets: {
+      count: 0,
+      cost: '',
+    },
+    awaitingToFinishTickets: {
+      count: 0,
+      cost: '',
+    },
+    finishedTickets: {
+      count: 0,
+      cost: '',
+    },
+    dismissedTickets: {
+      count: 0,
+      cost: '',
+    },
+  });
+
+  const [ticketsServicesTypeChart, setTicketsServicesTypeChart] = useState<IPieChart>({
+    data: [],
+    labels: [],
+    colors: [],
+  });
+
   const [modalDashboardMaintenanceDetails, setModalDashboardMaintenanceDetails] =
     useState<boolean>(false);
 
@@ -141,97 +227,276 @@ export const Dashboard = () => {
 
   const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [investments, setInvestments] = useState<string>('');
-
-  const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
-    completed: [],
-    expired: [],
-  });
-
-  const [timeLine, setTimeLine] = useState<ITimeline>({
-    categories: [],
-    series: [],
-  });
-
-  const [score, setScore] = useState<IScore>({
-    data: [],
-    labels: [],
-  });
-
-  const [ticketTypes, setTicketTypes] = useState<IScore>({
-    data: [],
-    labels: [],
-  });
-
-  const [counts, setCounts] = useState<ICounts>({
-    commonMaintenances: { info: '', total: 0 },
-    occasionalMaintenances: { info: '', total: 0 },
-    totalMaintenances: { info: '', total: 0 },
-    tickets: { info: '', total: 0 },
-  });
-
-  const dataFilterInitialValues: IDataFilter = {
+  const dataFilterInitialValues: IDashboardFilter = {
     buildings: [],
     categories: [],
-    responsibles: [],
+    responsible: [],
   };
 
-  const [dataFilter, setDataFilter] = useState<IDataFilter>(dataFilterInitialValues);
+  const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
 
   const [periodFilter, setPeriodFilter] = useState<string>('30');
 
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
     categories: [],
-    responsibles: [],
+    responsible: [],
     periods: [],
+  });
+
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [divWidth, setDivWidth] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [dashboardLoadings, setDashboardLoadings] = useState<IDashboardLoadings>({
+    maintenances: true,
+    tickets: true,
+    timeline: true,
+    score: true,
+    ticketTypes: true,
+    mostCompletedExpired: true,
   });
   // #endregion
 
   // #region requests
-  const getAuxiliaryData = async () => {
-    await Api.get('/dashboard/list-auxiliary-data')
-      .then(({ data }) => {
-        setFilterOptions(data);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
+  const handleGetDashboardFilters = async () => {
+    setLoading(true);
+
+    try {
+      const responseData = await getDashboardFilters();
+
+      setFilterOptions(responseData);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getDashboardData = async (resetFilters?: boolean) => {
-    setOnQuery(true);
+  const handleGetMaintenancesCountAndCost = async (
+    maintenanceType: 'common' | 'occasional' | '',
+    resetFilters?: boolean,
+  ) => {
+    try {
+      const responseData = await getMaintenancesCountAndCost(
+        periodFilter,
+        dataFilter,
+        maintenanceType,
+        resetFilters,
+      );
 
-    await Api.get('/dashboard/list-data', {
-      params: {
-        period: periodFilter,
-        buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.buildings),
-        categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.categories),
-        responsibles: resetFilters ? JSON.stringify([]) : JSON.stringify(dataFilter.responsibles),
-      },
-    })
-      .then(async ({ data }) => {
-        setMaintenancesData(data.maintenancesData);
-        setTimeLine(data.timeLine);
-        setInvestments(data.investments);
-        setScore(data.score);
-        setCounts(data.counts);
-        setTicketTypes(data.ticketTypes);
-        getAuxiliaryData();
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-        setOnQuery(false);
-      });
+      const formattedData = {
+        count: responseData.maintenancesCount,
+        cost: responseData.maintenancesCost,
+      };
+
+      switch (maintenanceType) {
+        case 'common':
+          setMaintenancesData((prevState) => ({
+            ...prevState,
+            commonMaintenanceData: formattedData,
+          }));
+          break;
+        case 'occasional':
+          setMaintenancesData((prevState) => ({
+            ...prevState,
+            occasionalMaintenanceData: formattedData,
+          }));
+          break;
+        default:
+          setMaintenancesData((prevState) => ({
+            ...prevState,
+            totalMaintenanceData: formattedData,
+          }));
+          break;
+      }
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    }
   };
+
+  const handleGetTicketsCountAndCost = async (
+    ticketStatus: ITicketStatusNames | '',
+    resetFilters?: boolean,
+  ) => {
+    try {
+      const responseData = await getTicketsCountAndCost(
+        periodFilter,
+        dataFilter,
+        ticketStatus,
+        resetFilters,
+      );
+
+      const formattedData = {
+        count: responseData.ticketsCount,
+        cost: responseData.ticketsCost,
+      };
+
+      switch (ticketStatus) {
+        case 'open':
+          setTicketsData((prevState) => ({
+            ...prevState,
+            openTickets: formattedData,
+          }));
+          break;
+        case 'awaitingToFinish':
+          setTicketsData((prevState) => ({
+            ...prevState,
+            awaitingToFinishTickets: formattedData,
+          }));
+          break;
+        case 'finished':
+          setTicketsData((prevState) => ({
+            ...prevState,
+            finishedTickets: formattedData,
+          }));
+          break;
+        case 'dismissed':
+          setTicketsData((prevState) => ({
+            ...prevState,
+            dismissedTickets: formattedData,
+          }));
+          break;
+        default:
+          return;
+      }
+
+      setLoading(false);
+    } catch (error) {
+      // console.log('🚀 ~ handleGetMaintenanceInfo ~ error:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleGetTicketsByServiceType = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, ticketTypes: true }));
+
+    try {
+      const responseData = await getTicketsByServiceTypes(periodFilter, dataFilter, resetFilters);
+
+      setTicketsServicesTypeChart(responseData);
+      setDashboardLoadings((prevState) => ({ ...prevState, ticketTypes: false }));
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+      setDashboardLoadings((prevState) => ({ ...prevState, ticketTypes: false }));
+    }
+  };
+
+  const handleGetMaintenancesByStatus = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, score: true }));
+
+    try {
+      const responseData = await getMaintenancesByStatus(periodFilter, dataFilter, resetFilters);
+
+      setMaintenanceChart(responseData);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setDashboardLoadings((prevState) => ({ ...prevState, score: false }));
+    }
+  };
+
+  const handleGetMaintenancesTimeline = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, timeline: true }));
+
+    try {
+      const responseData = await getMaintenancesTimeline(periodFilter, dataFilter, resetFilters);
+
+      setMaintenancesTimeline(responseData);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setDashboardLoadings((prevState) => ({ ...prevState, timeline: false }));
+    }
+  };
+
+  const handleGetMaintenancesMostCompletedExpired = async (resetFilters?: boolean) => {
+    setDashboardLoadings((prevState) => ({ ...prevState, mostCompletedExpired: true }));
+
+    try {
+      const responseData = await getMaintenancesMostCompletedExpired(
+        periodFilter,
+        dataFilter,
+        resetFilters,
+      );
+
+      setMaintenancesMostCompletedExpired(responseData);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setDashboardLoadings((prevState) => ({ ...prevState, mostCompletedExpired: false }));
+    }
+  };
+
   // #endregion
 
   // #region dashboard functions
+  const handleGetDashboardData = async (resetFilters?: boolean) => {
+    // get count and cost from all maintenance types
+    try {
+      setDashboardLoadings((prevState) => ({ ...prevState, maintenances: true }));
+
+      await handleGetMaintenancesCountAndCost('', resetFilters);
+      await handleGetMaintenancesCountAndCost('common', resetFilters);
+      await handleGetMaintenancesCountAndCost('occasional', resetFilters);
+    } finally {
+      setDashboardLoadings((prevState) => ({ ...prevState, maintenances: false }));
+    }
+
+    // get count and cost from all ticket status
+    try {
+      setDashboardLoadings((prevState) => ({ ...prevState, tickets: true }));
+
+      await handleGetTicketsCountAndCost('', resetFilters);
+      await handleGetTicketsCountAndCost('open', resetFilters);
+      await handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
+      await handleGetTicketsCountAndCost('finished', resetFilters);
+      await handleGetTicketsCountAndCost('dismissed', resetFilters);
+    } finally {
+      setDashboardLoadings((prevState) => ({ ...prevState, tickets: false }));
+    }
+
+    // get maintenance timeline
+    handleGetMaintenancesTimeline(resetFilters);
+
+    // get maintenance score
+    handleGetMaintenancesByStatus(resetFilters);
+
+    // get ticket types
+    handleGetTicketsByServiceType(resetFilters);
+
+    // get most completed and expired maintenances
+    handleGetMaintenancesMostCompletedExpired(resetFilters);
+  };
+
+  const handleFilterButton = async () => {
+    setOnQuery(true);
+
+    try {
+      await handleGetDashboardData();
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setOnQuery(false);
+    }
+  };
+
+  const handleResetFilterButton = async () => {
+    setOnQuery(true);
+    setDataFilter(dataFilterInitialValues);
+
+    try {
+      await handleGetDashboardData(true);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    } finally {
+      setOnQuery(false);
+    }
+  };
+
   const findLargestValueAndIndex = (array: number[]) => {
     let largestValue = array[0];
     let largestValueIndex = 0;
@@ -247,33 +512,32 @@ export const Dashboard = () => {
     return { value: largestValue, index: largestValueIndex };
   };
 
-  const getLabelColor = (labels: string[]) => {
-    const colors: string[] = [];
-
-    labels.forEach((label: string) => {
-      switch (label) {
-        case 'Concluídas':
-          colors.push('#34B53A');
-          break;
-
-        case 'Vencidas':
-          colors.push('#FF3508');
-          break;
-
-        case 'Pendentes':
-          colors.push('#FFB200');
-          break;
-
-        default:
-          break;
-      }
+  const handleSelectClick = (filterType: IFilterTypes, value: string) => {
+    setDataFilter((prevState) => {
+      const newState = { ...prevState };
+      newState[filterType] = [...newState[filterType], value];
+      return newState;
     });
-
-    return colors;
   };
 
+  const handleRemoveFilter = (filterType: IFilterTypes, index: number) => {
+    setDataFilter((prevState) => {
+      const newState = { ...prevState };
+      newState[filterType].splice(index, 1);
+      return newState;
+    });
+  };
+
+  const handleSelectedMaintenance = (rating: IRating, status: IRatingStatus) => {
+    setSelectedRating(rating);
+    setSelectedRatingStatus(status);
+    setModalDashboardMaintenanceDetails(true);
+  };
+  // #endregion
+
+  // #region charts options
   const timeLineChart = {
-    series: timeLine.series,
+    series: maintenancesTimeline.series,
     options: {
       chart: {
         toolbar: {
@@ -316,7 +580,7 @@ export const Dashboard = () => {
       },
 
       xaxis: {
-        categories: timeLine.categories,
+        categories: maintenancesTimeline.categories,
         axisTicks: {
           show: false,
         },
@@ -331,9 +595,9 @@ export const Dashboard = () => {
   };
 
   const scoreChart = {
-    series: score.data,
+    series: maintenanceChart.data,
     options: {
-      labels: score.labels,
+      labels: maintenanceChart.labels,
 
       chart: {
         toolbar: {
@@ -383,14 +647,16 @@ export const Dashboard = () => {
                 show: true,
                 showAlways: false,
 
-                label: score.labels[findLargestValueAndIndex(score.data).index],
+                label:
+                  maintenanceChart.labels[findLargestValueAndIndex(maintenanceChart.data).index],
                 fontSize: '16px',
                 fontWeight: 600,
                 color: '#000000',
 
                 formatter(w: any) {
                   const percent =
-                    (w.globals.seriesTotals[findLargestValueAndIndex(score.data).index] * 100) /
+                    (w.globals.seriesTotals[findLargestValueAndIndex(maintenanceChart.data).index] *
+                      100) /
                     w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
 
                   return `${percent.toFixed(1)} %`;
@@ -401,7 +667,7 @@ export const Dashboard = () => {
         },
       },
 
-      colors: getLabelColor(score.labels),
+      colors: maintenanceChart.colors,
       dataLabels: {
         enabled: false,
         style: {
@@ -417,9 +683,10 @@ export const Dashboard = () => {
   };
 
   const ticketTypesChart = {
-    series: ticketTypes.data,
+    series: ticketsServicesTypeChart.data,
+
     options: {
-      labels: ticketTypes.labels,
+      labels: ticketsServicesTypeChart.labels,
 
       chart: {
         toolbar: {
@@ -469,14 +736,19 @@ export const Dashboard = () => {
                 show: true,
                 showAlways: false,
 
-                label: ticketTypes.labels[findLargestValueAndIndex(ticketTypes.data).index],
+                label:
+                  ticketsServicesTypeChart.labels[
+                    findLargestValueAndIndex(ticketsServicesTypeChart.data).index
+                  ],
                 fontSize: '16px',
                 fontWeight: 600,
                 color: '#000000',
 
                 formatter(w: any) {
                   const percent =
-                    (w.globals.seriesTotals[findLargestValueAndIndex(ticketTypes.data).index] *
+                    (w.globals.seriesTotals[
+                      findLargestValueAndIndex(ticketsServicesTypeChart.data).index
+                    ] *
                       100) /
                     w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
 
@@ -495,44 +767,16 @@ export const Dashboard = () => {
           fontWeight: 400,
         },
       },
+
       legend: {
         position: 'bottom' as const,
-        offsetY: -10,
+        offsetY: -5,
       },
+
+      colors: ticketsServicesTypeChart.colors,
     },
   };
-
-  const handleSelectClick = (filterType: IFilterTypes, value: string) => {
-    setDataFilter((prevState) => {
-      const newState = { ...prevState };
-      newState[filterType] = [...newState[filterType], value];
-      return newState;
-    });
-  };
-
-  const handleRemoveFilter = (filterType: IFilterTypes, index: number) => {
-    setDataFilter((prevState) => {
-      const newState = { ...prevState };
-      newState[filterType].splice(index, 1);
-      return newState;
-    });
-  };
-
-  const handleResetFilter = () => {
-    setDataFilter(dataFilterInitialValues);
-    const resetFilters = true;
-    getDashboardData(resetFilters);
-  };
-
-  const handleSelectedMaintenance = (rating: IRating, status: IRatingStatus) => {
-    setSelectedRating(rating);
-    setSelectedRatingStatus(status);
-    setModalDashboardMaintenanceDetails(true);
-  };
-
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [divWidth, setDivWidth] = useState(0);
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  // #endregion
 
   const handleScroll = (event: any) => {
     if (!scrollRef.current?.clientWidth) return;
@@ -540,8 +784,6 @@ export const Dashboard = () => {
     const newScrollLeft = event.target.scrollLeft + (scrollRef.current.clientWidth - 261) / 2;
     setScrollLeft(newScrollLeft);
   };
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const refCallback = useCallback(
     (node: any) => {
@@ -554,9 +796,11 @@ export const Dashboard = () => {
     },
     [windowWidth],
   );
+
   const handleWindowResize = () => {
     setWindowWidth(window.innerWidth);
   };
+  // #endregion
 
   useEffect(() => {
     window.addEventListener('resize', handleWindowResize);
@@ -565,10 +809,10 @@ export const Dashboard = () => {
       window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
-  // #endregion
 
   useEffect(() => {
-    getDashboardData();
+    handleGetDashboardFilters();
+    handleGetDashboardData();
   }, []);
 
   return loading ? (
@@ -666,11 +910,11 @@ export const Dashboard = () => {
             </Select>
 
             <Select
-              selectPlaceholderValue={dataFilter.responsibles.length > 0 ? ' ' : ''}
+              selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
               label="Responsável"
               value=""
               onChange={(e) => {
-                handleSelectClick('responsibles', e.target.value);
+                handleSelectClick('responsible', e.target.value);
 
                 if (e.target.value === 'all') {
                   setDataFilter((prevState) => ({ ...prevState, responsibles: [] }));
@@ -681,14 +925,14 @@ export const Dashboard = () => {
                 Selecione
               </option>
 
-              <option value="all" disabled={dataFilter.responsibles.length === 0}>
+              <option value="all" disabled={dataFilter.responsible.length === 0}>
                 Todos
               </option>
-              {filterOptions.responsibles.map((responsible) => (
+              {filterOptions.responsible.map((responsible) => (
                 <option
                   value={responsible}
                   key={responsible}
-                  disabled={dataFilter.responsibles.some((e) => e === responsible)}
+                  disabled={dataFilter.responsible.some((e) => e === responsible)}
                 >
                   {responsible}
                 </option>
@@ -701,15 +945,13 @@ export const Dashboard = () => {
                 borderless
                 label="Limpar filtros"
                 disable={onQuery}
-                onClick={handleResetFilter}
+                onClick={handleResetFilterButton}
               />
               <Button
                 type="button"
                 label="Filtrar"
                 loading={onQuery}
-                onClick={() => {
-                  getDashboardData();
-                }}
+                onClick={handleFilterButton}
               />
             </Style.ButtonWrapper>
 
@@ -746,18 +988,18 @@ export const Dashboard = () => {
                 />
               ))}
 
-              {dataFilter.responsibles.length === 0 && (
+              {dataFilter.responsible.length === 0 && (
                 <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
               )}
 
-              {dataFilter.responsibles.map((e, i) => (
+              {dataFilter.responsible.map((e, i) => (
                 <ListTag
                   padding="4px 12px"
                   fontWeight={500}
                   label={e}
                   key={e}
                   onClick={() => {
-                    handleRemoveFilter('responsibles', i);
+                    handleRemoveFilter('responsible', i);
                   }}
                 />
               ))}
@@ -766,65 +1008,152 @@ export const Dashboard = () => {
         </Style.FilterSection>
 
         <Style.Wrappers>
-          <Style.Counts>
+          <Style.MaintenancesCounts>
             <Style.CountCard>
-              <h5>Total de avulsas</h5>
+              <h5>Manutenções avulsas</h5>
+
               <Style.CountCardContent>
-                <h2>{counts.occasionalMaintenances.total}</h2>
-                <p className="p4">{counts.occasionalMaintenances.info}</p>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{maintenancesData.occasionalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.occasionalMaintenanceData.cost}</p>
+                  </>
+                )}
               </Style.CountCardContent>
             </Style.CountCard>
+
             <Style.CountCard>
-              <h5>Total de preventivas</h5>
+              <h5>Manutenções preventivas</h5>
+
               <Style.CountCardContent>
-                <h2>{counts.commonMaintenances.total}</h2>
-                <p className="p4">{counts.commonMaintenances.info}</p>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{maintenancesData.commonMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.commonMaintenanceData.cost}</p>
+                  </>
+                )}
               </Style.CountCardContent>
             </Style.CountCard>
+
             <Style.CountCard>
-              <h5>Total de manunteções</h5>
+              <h5>Total de manutenções</h5>
+
               <Style.CountCardContent>
-                <h2>{counts.totalMaintenances.total}</h2>
-                <p className="p4">{counts.totalMaintenances.info}</p>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{maintenancesData.totalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.totalMaintenanceData.cost}</p>
+                  </>
+                )}
               </Style.CountCardContent>
             </Style.CountCard>
+          </Style.MaintenancesCounts>
+
+          <Style.TicketsCounts>
             <Style.CountCard>
-              <h5>Total de chamados</h5>
+              <h5>Chamados abertos</h5>
+
               <Style.CountCardContent>
-                <h2>{counts.tickets.total}</h2>
-                <p className="p4">{counts.tickets.info}</p>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{ticketsData.openTickets.count}</h2>
+                    <p className="p4">{ticketsData.openTickets.cost}</p>
+                  </>
+                )}
               </Style.CountCardContent>
             </Style.CountCard>
-          </Style.Counts>
+
+            <Style.CountCard>
+              <h5>Chamados pendentes</h5>
+
+              <Style.CountCardContent>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{ticketsData.awaitingToFinishTickets.count}</h2>
+                    <p className="p4">{ticketsData.awaitingToFinishTickets.cost}</p>
+                  </>
+                )}
+              </Style.CountCardContent>
+            </Style.CountCard>
+
+            <Style.CountCard>
+              <h5>Chamados finalizados</h5>
+
+              <Style.CountCardContent>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{ticketsData.finishedTickets.count}</h2>
+                    <p className="p4">{ticketsData.finishedTickets.cost}</p>
+                  </>
+                )}
+              </Style.CountCardContent>
+            </Style.CountCard>
+
+            <Style.CountCard>
+              <h5>Chamados indeferidos</h5>
+
+              <Style.CountCardContent>
+                {dashboardLoadings.maintenances ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{ticketsData.dismissedTickets.count}</h2>
+                    <p className="p4">{ticketsData.dismissedTickets.cost}</p>
+                  </>
+                )}
+              </Style.CountCardContent>
+            </Style.CountCard>
+          </Style.TicketsCounts>
 
           <Style.ChartsWrapper>
             <Style.Card>
               <h5>Linha do tempo de manutenções</h5>
+
               <Style.ChartContent>
-                {timeLine?.series.some((element) => element?.data.length > 0) ? (
-                  <Style.ChartWrapperX
-                    onScroll={handleScroll}
-                    scrollLeft={scrollLeft}
-                    ref={refCallback}
-                  >
-                    <Chart
-                      options={timeLineChart.options}
-                      series={timeLineChart.series}
-                      type="bar"
-                      height={290}
-                      width={Math.max(
-                        divWidth,
-                        (timeLine.series[0].data.length +
-                          timeLine.series[1].data.length +
-                          timeLine.series[2].data.length) *
-                          30,
-                      )}
-                    />
-                  </Style.ChartWrapperX>
+                {dashboardLoadings.timeline ? (
+                  <DotSpinLoading />
                 ) : (
-                  <Style.NoDataWrapper>
-                    <h6>Nenhuma informação encontrada</h6>
-                  </Style.NoDataWrapper>
+                  <>
+                    {maintenancesTimeline.series[0].data.length > 0 && (
+                      <Style.ChartWrapperX
+                        onScroll={handleScroll}
+                        scrollLeft={scrollLeft}
+                        ref={refCallback}
+                      >
+                        <Chart
+                          options={timeLineChart.options}
+                          series={timeLineChart.series}
+                          type="bar"
+                          height={290}
+                          width={Math.max(
+                            divWidth,
+                            (maintenancesTimeline.series[0].data.length +
+                              maintenancesTimeline.series[1].data.length +
+                              maintenancesTimeline.series[2].data.length) *
+                              30,
+                          )}
+                        />
+                      </Style.ChartWrapperX>
+                    )}
+
+                    {maintenancesTimeline.series[0].data.length === 0 && (
+                      <Style.NoDataWrapper>
+                        <h6>Nenhuma informação encontrada</h6>
+                      </Style.NoDataWrapper>
+                    )}
+                  </>
                 )}
               </Style.ChartContent>
             </Style.Card>
@@ -832,35 +1161,54 @@ export const Dashboard = () => {
             <Style.PieWrapper>
               <Style.Card>
                 <h5>Score de manutenções</h5>
+
                 <Style.ChartContent>
-                  {score?.data?.some((e) => e > 0) ? (
-                    <Chart
-                      type="donut"
-                      options={scoreChart.options as any}
-                      series={scoreChart.series}
-                      height={335}
-                    />
+                  {dashboardLoadings.score ? (
+                    <DotSpinLoading />
                   ) : (
-                    <Style.NoDataWrapper>
-                      <h6>Nenhuma informação encontrada</h6>
-                    </Style.NoDataWrapper>
+                    <>
+                      {maintenanceChart.data.length > 0 && (
+                        <Chart
+                          type="donut"
+                          options={scoreChart.options as any}
+                          series={scoreChart.series}
+                          height={335}
+                        />
+                      )}
+
+                      {maintenanceChart.data.length === 0 && (
+                        <Style.NoDataWrapper>
+                          <h6>Nenhuma informação encontrada</h6>
+                        </Style.NoDataWrapper>
+                      )}
+                    </>
                   )}
                 </Style.ChartContent>
               </Style.Card>
+
               <Style.Card>
                 <h5>Tipos de chamados</h5>
+
                 <Style.ChartContent>
-                  {ticketTypes?.data?.some((e) => e > 0) ? (
-                    <Chart
-                      type="donut"
-                      options={ticketTypesChart.options as any}
-                      series={ticketTypesChart.series}
-                      height={335}
-                    />
+                  {dashboardLoadings.ticketTypes ? (
+                    <DotSpinLoading />
                   ) : (
-                    <Style.NoDataWrapper>
-                      <h6>Nenhuma informação encontrada</h6>
-                    </Style.NoDataWrapper>
+                    <>
+                      {ticketsServicesTypeChart.data.length > 0 && (
+                        <Chart
+                          type="donut"
+                          options={ticketTypesChart.options as any}
+                          series={ticketTypesChart.series}
+                          height={335}
+                        />
+                      )}
+
+                      {ticketsServicesTypeChart.data.length === 0 && (
+                        <Style.NoDataWrapper>
+                          <h6>Nenhuma informação encontrada</h6>
+                        </Style.NoDataWrapper>
+                      )}
+                    </>
                   )}
                 </Style.ChartContent>
               </Style.Card>
@@ -870,63 +1218,85 @@ export const Dashboard = () => {
           <Style.PanelWrapper>
             <Style.Card>
               <h5>Investido em manutenções</h5>
-              <Style.CardContent>
-                <h2>{investments || 'R$ 0,00'}</h2>
-              </Style.CardContent>
+
+              {dashboardLoadings.maintenances ? (
+                <DotSpinLoading />
+              ) : (
+                <Style.CardContent>
+                  <h2>{maintenancesData.totalMaintenanceData.cost.slice(16) || 'R$ 0,00'}</h2>
+                </Style.CardContent>
+              )}
             </Style.Card>
 
             <Style.Card>
               <h5>Manutenções mais realizadas</h5>
-              <Style.CardContent>
-                {maintenancesData?.completed?.map((rating) => (
-                  <Style.MostAccomplishedMaintenance
-                    key={rating.id}
-                    onClick={() => {
-                      handleSelectedMaintenance(rating, 'completed');
-                    }}
-                  >
-                    <h6>{rating.data.Category.name}</h6>
-                    <p className="p2" title={rating.data.activity}>
-                      {rating.data.activity}
-                    </p>
-                    <p className="p3">
-                      A cada{' '}
-                      {rating.data.frequency > 1
-                        ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
-                        : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
-                    </p>
-                  </Style.MostAccomplishedMaintenance>
-                ))}
 
-                {maintenancesData?.completed?.length === 0 && (
-                  <h6>Nenhuma informação encontrada</h6>
+              <Style.CardContent>
+                {dashboardLoadings.mostCompletedExpired ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    {maintenancesMostCompletedExpired?.completed?.map((rating) => (
+                      <Style.MostAccomplishedMaintenance
+                        key={rating.id}
+                        onClick={() => {
+                          handleSelectedMaintenance(rating, 'completed');
+                        }}
+                      >
+                        <h6>{rating.data.Category.name}</h6>
+                        <p className="p2" title={rating.data.activity}>
+                          {rating.data.activity}
+                        </p>
+                        <p className="p3">
+                          A cada{' '}
+                          {rating.data.frequency > 1
+                            ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
+                            : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
+                        </p>
+                      </Style.MostAccomplishedMaintenance>
+                    ))}
+
+                    {maintenancesMostCompletedExpired?.completed?.length === 0 && (
+                      <h6>Nenhuma informação encontrada</h6>
+                    )}
+                  </>
                 )}
               </Style.CardContent>
             </Style.Card>
 
             <Style.Card>
               <h5>Manutenções menos realizadas</h5>
+
               <Style.CardContent>
-                {maintenancesData?.expired?.map((rating) => (
-                  <Style.LeastAccomplishedMaintenance
-                    key={rating.id}
-                    onClick={() => {
-                      handleSelectedMaintenance(rating, 'expired');
-                    }}
-                  >
-                    <h6>{rating.data.Category.name}</h6>
-                    <p className="p2" title={rating.data.activity}>
-                      {rating.data.activity}
-                    </p>
-                    <p className="p3">
-                      A cada{' '}
-                      {rating.data.frequency > 1
-                        ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
-                        : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
-                    </p>
-                  </Style.LeastAccomplishedMaintenance>
-                ))}
-                {maintenancesData?.expired?.length === 0 && <h6>Nenhuma informação encontrada</h6>}
+                {dashboardLoadings.mostCompletedExpired ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    {maintenancesMostCompletedExpired?.expired?.map((rating) => (
+                      <Style.LeastAccomplishedMaintenance
+                        key={rating.id}
+                        onClick={() => {
+                          handleSelectedMaintenance(rating, 'expired');
+                        }}
+                      >
+                        <h6>{rating.data.Category.name}</h6>
+                        <p className="p2" title={rating.data.activity}>
+                          {rating.data.activity}
+                        </p>
+                        <p className="p3">
+                          A cada{' '}
+                          {rating.data.frequency > 1
+                            ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
+                            : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
+                        </p>
+                      </Style.LeastAccomplishedMaintenance>
+                    ))}
+
+                    {maintenancesMostCompletedExpired?.expired?.length === 0 && (
+                      <h6>Nenhuma informação encontrada</h6>
+                    )}
+                  </>
+                )}
               </Style.CardContent>
             </Style.Card>
           </Style.PanelWrapper>
