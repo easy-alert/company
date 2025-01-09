@@ -226,7 +226,7 @@ export const LeastAccomplishedMaintenance = styled(MaintenanceCard)`
 
 export const MaintenancesCounts = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: ${theme.size.sm};
 
   @media (max-width: 900px) {
