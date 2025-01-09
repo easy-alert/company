@@ -112,6 +112,7 @@ interface ITicketsData {
   awaitingToFinishTickets: ICountAndCost;
   finishedTickets: ICountAndCost;
   dismissedTickets: ICountAndCost;
+  totalTickets: ICountAndCost;
 }
 
 interface IPieChart {
@@ -178,6 +179,10 @@ export const Dashboard = () => {
       cost: '',
     },
     dismissedTickets: {
+      count: 0,
+      cost: '',
+    },
+    totalTickets: {
       count: 0,
       cost: '',
     },
@@ -260,6 +265,12 @@ export const Dashboard = () => {
     mostCompletedExpired: true,
   });
   // #endregion
+
+  const totalTicketsCount =
+    ticketsData.openTickets.count +
+    ticketsData.awaitingToFinishTickets.count +
+    ticketsData.finishedTickets.count +
+    ticketsData.dismissedTickets.count;
 
   // #region requests
   const handleGetDashboardFilters = async () => {
@@ -478,27 +489,20 @@ export const Dashboard = () => {
   };
 
   const handleFilterButton = async () => {
-    setOnQuery(true);
-
     try {
-      await handleGetDashboardData();
+      handleGetDashboardData();
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);
-    } finally {
-      setOnQuery(false);
     }
   };
 
   const handleResetFilterButton = async () => {
-    setOnQuery(true);
     setDataFilter(dataFilterInitialValues);
 
     try {
-      await handleGetDashboardData(true);
+      handleGetDashboardData(true);
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);
-    } finally {
-      setOnQuery(false);
     }
   };
 
@@ -687,8 +691,6 @@ export const Dashboard = () => {
     },
   };
 
-  console.log('🚀 ~ Dashboard ~ scoreChart.maintenanceChart.data:', maintenanceChart);
-
   const ticketTypesChart = {
     series: ticketsServicesTypeChart.data,
 
@@ -821,6 +823,21 @@ export const Dashboard = () => {
     handleGetDashboardFilters();
     handleGetDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (
+      dashboardLoadings.maintenances ||
+      dashboardLoadings.tickets ||
+      dashboardLoadings.timeline ||
+      dashboardLoadings.score ||
+      dashboardLoadings.ticketTypes ||
+      dashboardLoadings.mostCompletedExpired
+    ) {
+      setOnQuery(true);
+    } else {
+      setOnQuery(false);
+    }
+  }, [dashboardLoadings]);
 
   return loading ? (
     <DotSpinLoading />
@@ -1060,9 +1077,29 @@ export const Dashboard = () => {
                 )}
               </Style.CountCardContent>
             </Style.CountCard>
+
+            <Style.CountCard>
+              <h5>Total de chamados</h5>
+
+              <Style.CountCardContent>
+                {dashboardLoadings.tickets ? (
+                  <DotSpinLoading />
+                ) : (
+                  <>
+                    <h2>{totalTicketsCount}</h2>
+                    <p className="p4">
+                      Em aberto: {ticketsData.openTickets.count} / Em progresso:{' '}
+                      {ticketsData.awaitingToFinishTickets.count} / Finalizados:{' '}
+                      {ticketsData.finishedTickets.count} / Indeferidos:{' '}
+                      {ticketsData.dismissedTickets.count}
+                    </p>
+                  </>
+                )}
+              </Style.CountCardContent>
+            </Style.CountCard>
           </Style.MaintenancesCounts>
 
-          <Style.TicketsCounts>
+          {/* <Style.TicketsCounts>
             <Style.CountCard>
               <h5>Chamados abertos</h5>
 
@@ -1122,7 +1159,7 @@ export const Dashboard = () => {
                 )}
               </Style.CountCardContent>
             </Style.CountCard>
-          </Style.TicketsCounts>
+          </Style.TicketsCounts> */}
 
           <Style.ChartsWrapper>
             <Style.Card>
