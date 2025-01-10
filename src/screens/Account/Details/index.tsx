@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 // LIBS
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // CONTEXTS
@@ -49,6 +49,7 @@ export interface ISelectedUser {
 }
 
 export const AccountDetails = () => {
+  const navigate = useNavigate();
   const { account, setAccount } = useAuthContext();
 
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
@@ -241,6 +242,7 @@ export const AccountDetails = () => {
                             requestDeleteUser(User.id);
                           }}
                         />
+
                         <IconButton
                           className="p4"
                           size="16px"
@@ -256,6 +258,15 @@ export const AccountDetails = () => {
                             });
                             setModalUpdateUserOpen(true);
                           }}
+                        />
+
+                        <IconButton
+                          className="p4"
+                          size="16px"
+                          hideLabelOnMedia
+                          icon={icon.eye}
+                          label="Visualizar"
+                          onClick={() => navigate(`/user/details/${User.id}`)}
                         />
                       </Style.TableButtons>
                     ),
