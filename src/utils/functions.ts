@@ -24,7 +24,15 @@ export const catchHandler = (err: any) => {
 };
 
 // #region DATES
-export const dateFormatter = (date: string | Date) => new Date(date).toLocaleDateString('pt-BR');
+export const dateFormatter = (date: string | Date) => {
+  if (!date) return '';
+
+  if (typeof date === 'string') {
+    return new Date(date).toLocaleDateString('pt-BR');
+  }
+
+  return new Date(date).toLocaleDateString('pt-BR');
+};
 
 export const dateTimeFormatter = (date: string) =>
   new Date(date).toLocaleString('pt-BR').substring(0, 17);
@@ -113,6 +121,8 @@ export const applyMask = ({
   mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM' | 'DEC';
   value: string;
 }) => {
+  if (!value) return { value: '', length: 0 };
+
   let Mask: IMask = { value: '', length: 0 };
 
   switch (mask) {
