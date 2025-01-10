@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+
 // COMPONENTS
 import { AuthProvider } from '@contexts/Auth/AuthProvider';
 import { RequireAuth } from '@contexts/Auth/RequireAuth';
@@ -10,6 +11,10 @@ import { Register } from '@screens/Authentication/Register';
 
 // ACCOUNT
 import { AccountDetails } from '@screens/Account/Details';
+
+// USERS
+import UsersList from '@screens/UsersList';
+import UserDetails from '@screens/UserDetails';
 
 // MAINTENANCES
 import { MaintenancesList } from '@screens/Maintenances/List';
@@ -73,6 +78,11 @@ const AppRoutes = () => (
           }
         >
           <Route path="/account" element={<AccountDetails />} />
+
+          <Route path="/user" element={<Outlet />}>
+            <Route index element={<UsersList />} />
+            <Route path="details/:userId" element={<UserDetails />} />
+          </Route>
 
           <Route path="/tutorials" element={<Tutorials />} />
 
