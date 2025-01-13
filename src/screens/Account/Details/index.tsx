@@ -229,7 +229,7 @@ export const AccountDetails = () => {
                           disabled={onQuery}
                           buttonIconSize="16px"
                           iconButtonClassName="p4"
-                          actionButtonBgColor={theme.color.actionDanger}
+                          actionButtonBgColor={theme.color.primary}
                           type="IconButton"
                           label="Excluir"
                           buttonIcon={icon.trash}
@@ -265,7 +265,7 @@ export const AccountDetails = () => {
                           size="16px"
                           hideLabelOnMedia
                           icon={icon.eye}
-                          label="Visualizar"
+                          label="Permissões"
                           onClick={() => navigate(`/user/details/${User.id}`)}
                         />
                       </Style.TableButtons>
