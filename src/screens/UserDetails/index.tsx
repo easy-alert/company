@@ -57,36 +57,110 @@ function UserDetails() {
         { name: 'user:delete', label: 'Deletar usuário', value: true },
       ],
     },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
+    {
+      label: 'Usuários',
+      moduleName: 'users',
+      permissions: [
+        { name: 'user:create', label: 'Criar usuário', value: true },
+        { name: 'user:read', label: 'Listar usuários', value: true },
+        { name: 'user:update', label: 'Editar usuário', value: true },
+        { name: 'user:delete', label: 'Deletar usuário', value: true },
+      ],
+    },
   ]);
-
-  const [modalEditAccountOpen, setModalEditAccountOpen] = useState(false);
 
   const [onQuery, setOnQuery] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const validateToken = async () => {
-    await Api.get('/auth/validate/token')
-      .then((res) => {
-        setAccount(res.data);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
-  };
-
-  const requestDeleteUser = async (id: string) => {
-    setOnQuery(true);
-    await Api.delete(`/usercompany/delete/${id}`)
-      .then((res) => {
-        validateToken();
-        toast.success(res.data.ServerMessage.message);
-        setOnQuery(false);
-      })
-      .catch((err) => {
-        setOnQuery(false);
-        catchHandler(err);
-      });
-  };
 
   const handleGetUserById = async () => {
     setLoading(true);
@@ -101,10 +175,6 @@ function UserDetails() {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    handleGetUserById();
-  }, [userId]);
 
   const handleChangeModuloCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -146,68 +216,16 @@ function UserDetails() {
     setUserModulePermissions(newPermissions);
   };
 
+  useEffect(() => {
+    handleGetUserById();
+  }, [userId]);
+
   return (
     <>
       <Style.Header>
         <Style.HeaderTitle>Configurações de usuário</Style.HeaderTitle>
         <ReturnButton path="/account" />
       </Style.Header>
-
-      <Style.CardSection>
-        <Style.Card>
-          <h6>Nome</h6>
-
-          <p className="p2">{userData?.name}</p>
-        </Style.Card>
-
-        <Style.Card>
-          <h6>E-mail</h6>
-
-          <p className="p2">{userData?.email}</p>
-        </Style.Card>
-
-        <Style.Card>
-          <h6>Telefone</h6>
-
-          <p className="p2">{applyMask({ value: userData?.phone!, mask: 'TEL' }).value}</p>
-        </Style.Card>
-
-        <Style.Card>
-          <h6>Status</h6>
-
-          <Tag isInvalid={userData?.isBlocked!} />
-        </Style.Card>
-
-        <Style.Card>
-          <h6>Último acesso</h6>
-
-          <p className="p2">{dateFormatter(userData?.lastAccess!) || 'Nunca acessou'}</p>
-        </Style.Card>
-
-        <Style.Card>
-          <h6>Data de cadastro</h6>
-
-          <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
-        </Style.Card>
-      </Style.CardSection>
-
-      <Style.Footer>
-        <IconButton
-          hideLabelOnMedia
-          icon={icon.editWithBg}
-          label="Editar"
-          onClick={() => {
-            setModalEditAccountOpen(true);
-          }}
-        />
-
-        <IconButton
-          hideLabelOnMedia
-          icon={icon.trashWithPrimaryBg}
-          label="Deletar"
-          onClick={() => requestDeleteUser(account?.User.id!)}
-        />
-      </Style.Footer>
 
       <Style.PermissionsContainer>
         <Style.PermissionsHeader>
