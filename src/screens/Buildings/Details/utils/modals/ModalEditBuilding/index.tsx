@@ -34,8 +34,10 @@ export const ModalEditBuilding = ({
   buildingTypes,
   requestBuildingDetailsCall,
 }: IModalEditBuilding) => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<boolean | null>(null);
 
   return (
     <Modal title="Editar edificação" setModal={setModal}>
@@ -106,12 +108,12 @@ export const ModalEditBuilding = ({
                 onChange={(e) => {
                   setFieldValue('cep', applyMask({ value: e.target.value, mask: 'CEP' }).value);
                   if (applyMask({ value: e.target.value, mask: 'CEP' }).value.length === 9) {
-                    requestAddressData({ cep: e.target.value, setFieldValue });
+                    requestAddressData({ cep: e.target.value, setFieldValue, setApiError });
                   }
                 }}
               />
               <FormikInput
-                disabled
+                disabled={!apiError}
                 label="Estado *"
                 name="state"
                 value={values.state}
@@ -119,7 +121,7 @@ export const ModalEditBuilding = ({
                 placeholder="Ex: Santa Catarina"
               />
               <FormikInput
-                disabled
+                disabled={!apiError}
                 label="Cidade *"
                 name="city"
                 value={values.city}

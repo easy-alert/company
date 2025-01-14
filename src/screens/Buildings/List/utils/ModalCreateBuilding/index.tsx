@@ -26,6 +26,7 @@ import {
 
 export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<boolean | null>(null);
 
   const navigate = useNavigate();
 
@@ -94,12 +95,12 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                     e.target.value.length === 9 ||
                     (e.target.value.length === 8 && !e.target.value.includes('-'))
                   ) {
-                    requestAddressData({ cep: e.target.value, setFieldValue });
+                    requestAddressData({ cep: e.target.value, setFieldValue, setApiError });
                   }
                 }}
               />
               <FormikInput
-                disabled
+                disabled={!apiError}
                 label="Estado *"
                 name="state"
                 value={values.state}
@@ -107,7 +108,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 placeholder="Ex: Santa Catarina"
               />
               <FormikInput
-                disabled
+                disabled={!apiError}
                 label="Cidade *"
                 name="city"
                 value={values.city}
