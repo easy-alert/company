@@ -27,7 +27,6 @@ import {
 export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [apiError, setApiError] = useState<boolean | null>(null);
-  console.log('🚀 ~ ModalCreateBuilding ~ apiError:', apiError);
 
   const navigate = useNavigate();
 
