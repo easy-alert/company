@@ -428,13 +428,18 @@ export const requestBuildingTypes = async ({ setBuildingTypes }: IRequestBuildin
     });
 };
 
-export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddressData) => {
+export const requestAddressData = async ({
+  cep,
+  setFieldValue,
+  setApiError,
+}: IRequestAddressData) => {
   toast.dismiss();
   await axios
     .get(`https://viacep.com.br/ws/${unMask(cep)}/json`)
     .then((res) => {
       if (res?.data?.erro) {
         toast.error('Erro ao buscar dados do CEP.');
+        setApiError(true);
       } else {
         setFieldValue('city', res.data.localidade ?? '');
         setFieldValue('neighborhood', res.data.bairro ?? '');
@@ -444,6 +449,7 @@ export const requestAddressData = async ({ cep, setFieldValue }: IRequestAddress
     })
     .catch(() => {
       toast.error('Erro ao buscar dados do CEP.');
+      setApiError(true);
     });
 };
 
