@@ -79,6 +79,7 @@ export interface IRequestAddressData {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFieldValue: any;
   cep: string;
+  setApiError: (setApiError: boolean) => void;
 }
 
 export interface IIncreaseDaysInDate {
