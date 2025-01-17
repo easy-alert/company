@@ -1,12 +1,16 @@
 import { ErrorBoundary } from 'react-error-boundary';
-import { ThemeProvider } from 'styled-components';
 import { ToastContainer, Slide } from 'react-toastify';
-import { ErrorFallback } from './components/ErrorFallback';
-import { handleError } from './utils/functions';
 
-import AppRoutes from './routes';
-import { theme } from './styles/theme';
-import GlobalCSS from './styles/globalCSS';
+import { ThemeProvider } from 'styled-components';
+
+import { ErrorFallback } from '@components/ErrorFallback';
+
+import { handleError } from '@utils/functions';
+
+import { theme } from '@styles/theme';
+import GlobalCSS from '@styles/globalCSS';
+
+import AppRoutes from './routes/routes';
 
 import 'react-toastify/dist/ReactToastify.css';
 
