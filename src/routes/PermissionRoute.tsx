@@ -11,13 +11,13 @@ interface IPermissionRoute {
 const PermissionRoute = ({ requiredPermission }: IPermissionRoute) => {
   const { account } = useContext(AuthContext);
 
-  // if (
-  //   !account?.User ||
-  //   !account?.User.Permissions?.some((perm) => perm.Permission.name === requiredPermission) ||
-  //   !account?.User.Permissions?.find((perm) => perm.Permission.name.includes('admin'))
-  // ) {
-  //   return <Navigate to="/forbidden" replace />;
-  // }
+  if (
+    !account?.User ||
+    (!account?.User.Permissions?.some((perm) => perm.Permission.name === requiredPermission) &&
+      !account?.User.Permissions?.some((perm) => perm.Permission.name === 'admin:company'))
+  ) {
+    return <Navigate to="/forbidden" replace />;
+  }
 
   return <Outlet />;
 };
