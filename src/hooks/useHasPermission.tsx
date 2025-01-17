@@ -1,21 +1,26 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useCallback } from 'react';
 
 import { AuthContext } from '@contexts/Auth/AuthContext';
 
 interface IUseHasPermission {
-  pagePermission?: string;
+  permToCheck?: string[];
 }
 
-export const useHasPermission = ({ pagePermission }: IUseHasPermission) => {
+export const useHasPermission = ({ permToCheck }: IUseHasPermission) => {
   const { account } = useContext(AuthContext);
 
   const [hasPermission, setHasPermission] = useState<boolean>(false);
 
-  useEffect(() => {
+  const checkPermissions = useCallback(() => {
     if (!account) return;
 
-    const adminPermission = account?.User?.Permissions?.some((perm) =>
-      perm.Permission.name.includes('admin'),
+    if (permToCheck?.length === 0) {
+      setHasPermission(true);
+      return;
+    }
+
+    const adminPermission = account?.User?.Permissions?.some(
+      (perm) => perm.Permission.name === 'admin:company',
     );
 
     if (adminPermission) {
@@ -24,9 +29,15 @@ export const useHasPermission = ({ pagePermission }: IUseHasPermission) => {
     }
 
     setHasPermission(
-      account?.User?.Permissions?.some((perm) => perm.Permission.name === pagePermission) ?? false,
+      account?.User?.Permissions?.some((perm) =>
+        permToCheck?.some((check) => perm.Permission.name.includes(check)),
+      ) ?? false,
     );
-  }, []);
+  }, [account, permToCheck]);
+
+  useEffect(() => {
+    checkPermissions();
+  }, [checkPermissions]);
 
   return { hasPermission };
 };
