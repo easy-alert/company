@@ -49,8 +49,9 @@ export interface ISelectedUser {
 }
 
 export const AccountDetails = () => {
-  const navigate = useNavigate();
   const { account, setAccount } = useAuthContext();
+
+  const navigate = useNavigate();
 
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
   const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
@@ -188,97 +189,99 @@ export const AccountDetails = () => {
         />
       </Style.Footer>
 
-      <Style.UsersCard>
-        <Style.UsersCardHeader>
-          <h5>Usuários</h5>
-          <IconButton
-            hideLabelOnMedia
-            icon={icon.plusWithBg}
-            label="Cadastrar"
-            onClick={() => {
-              setModalCreateUserOpen(true);
-            }}
-          />
-        </Style.UsersCardHeader>
+      {account?.User.isCompanyOwner && (
+        <Style.UsersCard>
+          <Style.UsersCardHeader>
+            <h5>Usuários</h5>
+            <IconButton
+              hideLabelOnMedia
+              icon={icon.plusWithBg}
+              label="Cadastrar"
+              onClick={() => {
+                setModalCreateUserOpen(true);
+              }}
+            />
+          </Style.UsersCardHeader>
 
-        {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
-          <ColorfulTable
-            colsHeader={[
-              { label: 'Nome' },
-              { label: 'Email' },
-              { label: 'Status' },
-              { label: 'Último acesso' },
-              { label: 'Data de cadastro' },
-              { label: '' },
-            ]}
-          >
-            {account?.Company.UserCompanies.map(({ User }) => (
-              <ColorfulTableContent
-                key={User.id}
-                colsBody={[
-                  { cell: User.name },
-                  { cell: User.email },
-                  { cell: <Tag isInvalid={User.isBlocked} /> },
-                  { cell: User.lastAccess ? dateTimeFormatter(User.lastAccess) : '-' },
-                  { cell: dateTimeFormatter(User.createdAt) },
-                  {
-                    cell: (
-                      <Style.TableButtons>
-                        <PopoverButton
-                          hideLabelOnMedia
-                          disabled={onQuery}
-                          buttonIconSize="16px"
-                          iconButtonClassName="p4"
-                          actionButtonBgColor={theme.color.primary}
-                          type="IconButton"
-                          label="Excluir"
-                          buttonIcon={icon.trash}
-                          message={{
-                            title: 'Deseja excluir este usuário?',
-                            content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                            contentColor: theme.color.danger,
-                          }}
-                          actionButtonClick={() => {
-                            requestDeleteUser(User.id);
-                          }}
-                        />
+          {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
+            <ColorfulTable
+              colsHeader={[
+                { label: 'Nome' },
+                { label: 'Email' },
+                { label: 'Status' },
+                { label: 'Último acesso' },
+                { label: 'Data de cadastro' },
+                { label: '' },
+              ]}
+            >
+              {account?.Company.UserCompanies.map(({ User }) => (
+                <ColorfulTableContent
+                  key={User.id}
+                  colsBody={[
+                    { cell: User.name },
+                    { cell: User.email },
+                    { cell: <Tag isInvalid={User.isBlocked} /> },
+                    { cell: User.lastAccess ? dateTimeFormatter(User.lastAccess) : '-' },
+                    { cell: dateTimeFormatter(User.createdAt) },
+                    {
+                      cell: (
+                        <Style.TableButtons>
+                          <PopoverButton
+                            hideLabelOnMedia
+                            disabled={onQuery}
+                            buttonIconSize="16px"
+                            iconButtonClassName="p4"
+                            actionButtonBgColor={theme.color.primary}
+                            type="IconButton"
+                            label="Excluir"
+                            buttonIcon={icon.trash}
+                            message={{
+                              title: 'Deseja excluir este usuário?',
+                              content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                              contentColor: theme.color.danger,
+                            }}
+                            actionButtonClick={() => {
+                              requestDeleteUser(User.id);
+                            }}
+                          />
 
-                        <IconButton
-                          className="p4"
-                          size="16px"
-                          hideLabelOnMedia
-                          icon={icon.edit}
-                          label="Editar"
-                          onClick={() => {
-                            setSelectedUser({
-                              email: User.email,
-                              name: User.name,
-                              status: User.isBlocked ? 'blocked' : 'active',
-                              id: User.id,
-                            });
-                            setModalUpdateUserOpen(true);
-                          }}
-                        />
+                          <IconButton
+                            className="p4"
+                            size="16px"
+                            hideLabelOnMedia
+                            icon={icon.edit}
+                            label="Editar"
+                            onClick={() => {
+                              setSelectedUser({
+                                email: User.email,
+                                name: User.name,
+                                status: User.isBlocked ? 'blocked' : 'active',
+                                id: User.id,
+                              });
+                              setModalUpdateUserOpen(true);
+                            }}
+                          />
 
-                        <IconButton
-                          className="p4"
-                          size="16px"
-                          hideLabelOnMedia
-                          icon={icon.eye}
-                          label="Permissões"
-                          onClick={() => navigate(`/account/${User.id}/permissions`)}
-                        />
-                      </Style.TableButtons>
-                    ),
-                  },
-                ]}
-              />
-            ))}
-          </ColorfulTable>
-        ) : (
-          <h5>Nenhum usuário cadastrado</h5>
-        )}
-      </Style.UsersCard>
+                          <IconButton
+                            className="p4"
+                            size="16px"
+                            hideLabelOnMedia
+                            icon={icon.eye}
+                            label="Permissões"
+                            onClick={() => navigate(`/account/${User.id}/permissions`)}
+                          />
+                        </Style.TableButtons>
+                      ),
+                    },
+                  ]}
+                />
+              ))}
+            </ColorfulTable>
+          ) : (
+            <h5>Nenhum usuário cadastrado</h5>
+          )}
+        </Style.UsersCard>
+      )}
     </>
   );
 };
