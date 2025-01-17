@@ -75,7 +75,7 @@ export const TicketReports = () => {
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
-  const { buildings } = useBuildings({ filter: '', page: 1 });
+  const { buildings } = useBuildings({ checkPerms: true, filter: '', page: 1 });
 
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [ticketReportPdfs, setTicketReportPdfs] = useState<IReportPdf[]>([]);
