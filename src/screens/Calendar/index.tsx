@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // LIBS
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -9,6 +9,9 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
+
+// CONTEXTS
+import { AuthContext } from '@contexts/Auth/AuthContext';
 
 // GLOBAL COMPONENTS
 import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
@@ -34,6 +37,8 @@ import * as Style from './styles';
 import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
+  const { account } = useContext(AuthContext);
+
   const [date, setDate] = useState(new Date());
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
@@ -142,15 +147,15 @@ export const MaintenancesCalendar = () => {
 
   const handleGetCalendarData = async () => {
     await requestCalendarData({
+      buildingId,
+      yearToRequest,
+      calendarType,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
-      yearToRequest,
       setYearChangeLoading,
       setBuildingOptions,
-      buildingId,
-      calendarType,
     });
   };
 
@@ -261,15 +266,15 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     requestCalendarData({
+      buildingId,
+      calendarType,
+      yearToRequest,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
-      yearToRequest,
       setYearChangeLoading,
       setBuildingOptions,
-      buildingId,
-      calendarType,
     });
   }, [buildingId, yearToRequest]);
 
@@ -295,15 +300,15 @@ export const MaintenancesCalendar = () => {
           calendarType={calendarType}
           onThenActionRequest={async () =>
             requestCalendarData({
+              buildingId,
+              calendarType,
+              yearToRequest,
               setLoading,
               setMaintenancesWeekView,
               setMaintenancesMonthView,
               setMaintenancesDisplay,
-              yearToRequest,
               setYearChangeLoading,
               setBuildingOptions,
-              buildingId,
-              calendarType,
             })
           }
         />
@@ -336,15 +341,15 @@ export const MaintenancesCalendar = () => {
           handleModalEditReport={handleModalEditReport}
           onThenActionRequest={async () =>
             requestCalendarData({
+              buildingId,
+              calendarType,
+              yearToRequest,
               setLoading,
               setMaintenancesWeekView,
               setMaintenancesMonthView,
               setMaintenancesDisplay,
-              yearToRequest,
               setYearChangeLoading,
               setBuildingOptions,
-              buildingId,
-              calendarType,
             })
           }
         />
@@ -372,6 +377,7 @@ export const MaintenancesCalendar = () => {
           <IconButton
             icon={icon.plus}
             label="Manutenção avulsa"
+            permToCheck="maintenances:createOccasional"
             onClick={() => setModalCreateOccasionalMaintenance(true)}
           />
         </Style.Header>
