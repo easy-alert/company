@@ -1,9 +1,22 @@
-// COMPONENTS
-import { useEffect, useState } from 'react';
+// REACT
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { icon } from '../../../assets/icons/index';
-import { Image } from '../../../components/Image';
+
+// CONTEXTS
+import { AuthContext } from '@contexts/Auth/AuthContext';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { icon } from '@assets/icons/index';
+import { Image } from '@components/Image';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { Pagination } from '@components/Pagination';
+
+// GLOBAL FUNCTIONS
+import { capitalizeFirstLetter, requestBuildingTypes } from '@utils/functions';
+
+// GLOBAL TYPES
+import type { IBuildingTypes } from '@utils/types';
 
 // STYLES
 import * as Style from './styles';
@@ -11,15 +24,13 @@ import * as Style from './styles';
 // MODALS
 import { ModalCreateBuilding } from './utils/ModalCreateBuilding';
 import { requestBuildingList } from './utils/functions';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 
 // TYPES
-import { IBuildingList } from './utils/types';
-import { Pagination } from '../../../components/Pagination';
-import { capitalizeFirstLetter, requestBuildingTypes } from '../../../utils/functions';
-import { IBuildingTypes } from '../../../utils/types';
+import type { IBuildingList } from './utils/types';
 
 export const BuildingsList = () => {
+  const { account } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [modalCreateBuildingOpen, setModalCreateBuildingOpen] = useState<boolean>(false);
@@ -113,6 +124,7 @@ export const BuildingsList = () => {
             />
           </Style.SearchField>
         </Style.LeftSide>
+
         <IconButton
           hideLabelOnMedia
           fontWeight="500"
@@ -131,6 +143,11 @@ export const BuildingsList = () => {
             {buildingList.map((building) => (
               <Style.BuildingCard
                 key={building.id}
+                disabled={
+                  account?.User.BuildingsPermissions?.findIndex(
+                    (permission) => permission.Building.id === building.id,
+                  ) === -1
+                }
                 onClick={() => {
                   navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`);
                 }}
