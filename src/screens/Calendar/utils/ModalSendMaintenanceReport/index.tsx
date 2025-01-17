@@ -61,18 +61,18 @@ import * as Style from './styles';
 import type { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
 
 export const ModalSendMaintenanceReport = ({
-  handleModalSendMaintenanceReport,
   buildingId,
   calendarType,
+  yearToRequest,
+  modalAdditionalInformations,
+  handleModalSendMaintenanceReport,
   setBuildingOptions,
   setLoading,
   setMaintenancesDisplay,
   setMaintenancesMonthView,
   setMaintenancesWeekView,
   setYearChangeLoading,
-  yearToRequest,
   onThenActionRequest,
-  modalAdditionalInformations,
 }: IModalSendMaintenanceReport) => {
   const { account } = useAuthContext();
   const { maintenancePriorities } = useMaintenancePriorities();
