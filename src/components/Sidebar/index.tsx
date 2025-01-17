@@ -27,7 +27,6 @@ import * as Style from './styles';
 
 export const Sidebar = () => {
   const { account, signout } = useAuthContext();
-  console.log('🚀 ~ Sidebar ~ account:', account);
 
   const navigate = useNavigate();
 
