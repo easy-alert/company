@@ -266,7 +266,7 @@ export const AccountDetails = () => {
                           hideLabelOnMedia
                           icon={icon.eye}
                           label="Permissões"
-                          onClick={() => navigate(`/user/details/${User.id}`)}
+                          onClick={() => navigate(`/account/${User.id}/permissions`)}
                         />
                       </Style.TableButtons>
                     ),
