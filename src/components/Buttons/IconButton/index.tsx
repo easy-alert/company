@@ -1,4 +1,5 @@
 // COMPONENTS
+import { useHasPermission } from '@hooks/useHasPermission';
 import { theme } from '../../../styles/theme';
 import { ContainerButton, SpinnerContent } from './styles';
 import { Image } from '../../Image';
@@ -14,8 +15,6 @@ export const IconButton = ({
   gap = theme.size.xxsm,
   color = theme.color.gray4,
   selected,
-  onClick,
-  onAuxClick,
   className = 'p2',
   hideLabelOnMedia,
   fontWeight = '500',
@@ -24,29 +23,40 @@ export const IconButton = ({
   title,
   loading,
   tabIndex,
-}: IIconButton) => (
-  <ContainerButton
-    tabIndex={tabIndex}
-    title={title}
-    hideLabelOnMedia={hideLabelOnMedia}
-    labelPos={labelPos}
-    selected={selected}
-    opacity={opacity}
-    gap={gap}
-    color={color}
-    fontWeight={fontWeight}
-    disable={disabled}
-    onClick={(evt) => {
-      if (!disabled && !loading) {
-        onClick(evt);
-      }
-    }}
-    onAuxClick={(evt) => {
-      if (onAuxClick) onAuxClick(evt);
-    }}
-  >
-    {loading ? <SpinnerContent $size={size} /> : <Image img={icon} size={size} radius="0px" />}
+  permToCheck,
+  onClick,
+  onAuxClick,
+}: IIconButton) => {
+  const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
-    {label && <p className={className}>{label}</p>}
-  </ContainerButton>
-);
+  if (permToCheck && !hasPermission) {
+    return null;
+  }
+
+  return (
+    <ContainerButton
+      tabIndex={tabIndex}
+      title={title}
+      hideLabelOnMedia={hideLabelOnMedia}
+      labelPos={labelPos}
+      selected={selected}
+      opacity={opacity}
+      gap={gap}
+      color={color}
+      fontWeight={fontWeight}
+      disable={disabled}
+      onClick={(evt) => {
+        if (!disabled && !loading) {
+          onClick(evt);
+        }
+      }}
+      onAuxClick={(evt) => {
+        if (onAuxClick) onAuxClick(evt);
+      }}
+    >
+      {loading ? <SpinnerContent $size={size} /> : <Image img={icon} size={size} radius="0px" />}
+
+      {label && <p className={className}>{label}</p>}
+    </ContainerButton>
+  );
+};

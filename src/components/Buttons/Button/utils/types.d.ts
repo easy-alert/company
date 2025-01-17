@@ -9,4 +9,5 @@ export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   center?: boolean;
   borderless?: boolean;
   textColor?: string;
+  permToCheck?: string;
 }

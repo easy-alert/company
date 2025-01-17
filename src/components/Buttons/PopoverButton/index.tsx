@@ -1,6 +1,9 @@
 // LIBS
 import { useState } from 'react';
 
+// HOOKS
+import { useHasPermission } from '@hooks/useHasPermission';
+
 // COMPONENTS
 import { ArrowContainer, Popover } from 'react-tiny-popover';
 import { IconButton } from '../IconButton';
@@ -39,7 +42,14 @@ export const PopoverButton = ({
   labelPos,
   fontWeight,
   textColor,
+  permToCheck,
 }: IPopoverButton) => {
+  const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
+
+  if (permToCheck && !hasPermission) {
+    return null;
+  }
+
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   function getArrowStyle(position: string | undefined, arrowSize: number) {
