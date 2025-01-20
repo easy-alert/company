@@ -144,6 +144,9 @@ export const BuildingsList = () => {
               <Style.BuildingCard
                 key={building.id}
                 disabled={
+                  account?.User.Permissions?.findIndex(
+                    (permission) => permission.Permission.name === 'admin:company',
+                  ) === -1 &&
                   account?.User.BuildingsPermissions?.findIndex(
                     (permission) => permission.Building.id === building.id,
                   ) === -1
