@@ -127,6 +127,7 @@ export const PermissionsCardItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid ${theme.color.gray3};
 `;
 
 export const PermissionsCardItemTitle = styled.p`
@@ -157,7 +158,15 @@ export const BuildingsCard = styled.div`
 
 export const BuildingsPermissionsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, max-content));
+  grid-template-columns: repeat(auto-fill, minmax(440px, max-content));
   justify-content: space-between;
-  gap: ${theme.size.sm};
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, max-content));
+  }
+
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
 `;

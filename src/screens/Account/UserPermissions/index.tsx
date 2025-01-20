@@ -156,6 +156,18 @@ function UserPermissions() {
     return checked;
   };
 
+  const handleBuildingsModulesCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = e.target;
+
+    if (checked) {
+      const perms = buildings.map((b) => ({ buildingId: b.id } as IUserBuildingsPermissions));
+
+      setUserBuildingsPermissions(perms);
+    } else {
+      setUserBuildingsPermissions([]);
+    }
+  };
+
   const handleChangeCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
 
@@ -185,6 +197,7 @@ function UserPermissions() {
       );
     }
   };
+
   // #endregion
 
   useEffect(() => {
@@ -252,14 +265,18 @@ function UserPermissions() {
             <Style.PermissionsCardHeader>
               <Style.PermissionsCardHeaderTitle>Edificações</Style.PermissionsCardHeaderTitle>
 
-              <Style.Checkbox name="buildings-ids" type="checkbox" />
+              <Style.Checkbox
+                name="buildings-ids"
+                type="checkbox"
+                onChange={handleBuildingsModulesCheckbox}
+              />
             </Style.PermissionsCardHeader>
 
             <Style.BuildingsPermissionsContainer>
               {buildings.map((building) => (
                 <Style.PermissionsCardItem
                   key={building.id}
-                  style={{ maxWidth: '200px', gap: '0.5rem' }}
+                  style={{ gap: '0.5rem', alignItems: 'center' }}
                 >
                   <Style.PermissionsCardItemTitle>{building.name}</Style.PermissionsCardItemTitle>
 
@@ -268,7 +285,7 @@ function UserPermissions() {
                     type="checkbox"
                     checked={userBuildingsPermissions.some((up) => up.buildingId === building.id)}
                     onChange={handleChangeBuildingsCheckbox}
-                    style={{ minWidth: '20px' }}
+                    style={{ minWidth: '16px' }}
                   />
                 </Style.PermissionsCardItem>
               ))}
