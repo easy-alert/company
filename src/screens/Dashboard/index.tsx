@@ -899,7 +899,7 @@ export const Dashboard = () => {
                 <option
                   value={building}
                   key={building}
-                  disabled={filterOptions.buildings.some((e) => e === building)}
+                  disabled={dataFilter.buildings.some((e) => e === building)}
                 >
                   {building}
                 </option>
