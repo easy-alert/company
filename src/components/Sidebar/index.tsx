@@ -7,9 +7,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
-// HOOKS
-import { useHasPermission } from '@hooks/useHasPermission';
-
 // GLOBAL COMPONENTS
 // COMPONENTS
 import { Image } from '@components/Image';
@@ -34,8 +31,8 @@ export const Sidebar = () => {
   const [animate, setAnimate] = useState<boolean>(true);
 
   const handlePermissions = (permission: string) => {
-    const adminPermission = account?.User?.Permissions?.some((perm) =>
-      perm.Permission.name.includes('admin'),
+    const adminPermission = account?.User?.Permissions?.some(
+      (perm) => perm.Permission.name === 'admin:company',
     );
 
     if (adminPermission) {
@@ -102,9 +99,9 @@ export const Sidebar = () => {
       title: 'Relatórios',
       label: 'Relatórios',
       type: 'popover',
-      permission: 'access:reports',
       icon: icon.report,
       url: '/reports',
+      permission: 'access:reports',
       redirectFunction: () => {
         //
       },
@@ -113,6 +110,7 @@ export const Sidebar = () => {
           label: 'Chamados',
           icon: icon.redDot,
           url: '/reports/tickets',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/tickets');
           },
@@ -122,6 +120,7 @@ export const Sidebar = () => {
           label: 'Checklists',
           icon: icon.redDot,
           url: '/reports/checklists',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/checklists');
           },
@@ -131,6 +130,7 @@ export const Sidebar = () => {
           label: 'Manutenções',
           icon: icon.redDot,
           url: '/reports/maintenances',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/maintenances');
           },
