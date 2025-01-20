@@ -138,7 +138,7 @@ const AppRoutes = () => (
           </Route>
 
           {/* reports route */}
-          <Route path="/reports" element={<PermissionRoute requiredPermission="" />}>
+          <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
             <Route path="maintenances" element={<MaintenanceReports />} />
             <Route path="checklists" element={<ChecklistReports />} />
             <Route path="tickets" element={<TicketReports />} />
