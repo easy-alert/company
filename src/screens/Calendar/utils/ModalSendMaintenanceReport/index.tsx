@@ -9,10 +9,9 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
 import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
+import { useHasPermission } from '@hooks/useHasPermission';
 
 // GLOBAL COMPONENTS
-import { IMaintenance } from '@customTypes/IMaintenance';
-import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import { Button } from '@components/Buttons/Button';
 import { Input } from '@components/Inputs/Input';
 import { Modal } from '@components/Modal';
@@ -31,6 +30,7 @@ import { Select } from '@components/Inputs/Select';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
+import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -39,9 +39,10 @@ import { theme } from '@styles/theme';
 import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
+import type { IMaintenance } from '@customTypes/IMaintenance';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 
 // COMPONENTS
-import { handleToastify } from '@utils/toastifyResponses';
 import { EventTag } from '../EventTag';
 
 // UTILS
@@ -75,6 +76,10 @@ export const ModalSendMaintenanceReport = ({
   onThenActionRequest,
 }: IModalSendMaintenanceReport) => {
   const { account } = useAuthContext();
+  const { hasPermission: hasUpdatePermission } = useHasPermission({
+    permToCheck: ['maintenance:update'],
+  });
+
   const { maintenancePriorities } = useMaintenancePriorities();
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({
@@ -332,6 +337,7 @@ export const ModalSendMaintenanceReport = ({
                     placeholder="Ex: R$ 100,00"
                     maxLength={14}
                     value={maintenanceReport.cost}
+                    permToCheck="maintenance:update"
                     onChange={(e) => {
                       setMaintenanceReport((prevState) => {
                         const newState = { ...prevState };
@@ -346,6 +352,7 @@ export const ModalSendMaintenanceReport = ({
                     placeholder="Selecione uma prioridade"
                     selectPlaceholderValue="Selecione uma prioridade"
                     value={maintenance.priorityName}
+                    permToCheck="maintenance:update"
                     onChange={(e) => {
                       setMaintenance((prevState) => {
                         const newState = { ...prevState };
@@ -368,13 +375,15 @@ export const ModalSendMaintenanceReport = ({
                 </div>
 
                 <Style.FileStyleRow disabled={onFileQuery}>
-                  <h6>Anexar</h6>
+                  {images.length > 0 && <h6>Anexos</h6>}
 
                   <Style.FileRow>
-                    <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                      <input {...getInputProps()} />
-                      <Image img={icon.addFile} width="40px" height="32px" radius="0" />
-                    </Style.DragAndDropZoneFile>
+                    {hasUpdatePermission && (
+                      <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                        <input {...getInputProps()} />
+                        <Image img={icon.addFile} width="40px" height="32px" radius="0" />
+                      </Style.DragAndDropZoneFile>
+                    )}
 
                     {(files.length > 0 || onFileQuery) && (
                       <Style.FileAndImageRow>
@@ -407,13 +416,17 @@ export const ModalSendMaintenanceReport = ({
                 </Style.FileStyleRow>
 
                 <Style.FileStyleRow disabled={onImageQuery}>
-                  <h6>Imagens</h6>
+                  {images.length > 0 && <h6>Imagens</h6>}
 
                   <Style.FileAndImageRow>
-                    <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
-                      <input {...getInputPropsImages()} />
-                      <Image img={icon.addImage} width="40px" height="38px" radius="0" />
-                    </Style.DragAndDropZoneImage>
+                    {hasUpdatePermission && (
+                      <Style.DragAndDropZoneImage
+                        {...getRootPropsImages({ className: 'dropzone' })}
+                      >
+                        <input {...getInputPropsImages()} />
+                        <Image img={icon.addImage} width="40px" height="38px" radius="0" />
+                      </Style.DragAndDropZoneImage>
+                    )}
 
                     {images.map((file, i: number) => (
                       <ImagePreview
@@ -452,6 +465,7 @@ export const ModalSendMaintenanceReport = ({
                 disabled={onQuery}
                 type="Button"
                 label="Excluir"
+                permToCheck="maintenance:delete"
                 message={{
                   title: 'Deseja excluir este histórico de manutenção?',
                   content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
@@ -485,6 +499,7 @@ export const ModalSendMaintenanceReport = ({
                     textColor={theme.color.actionBlue}
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
+                    permToCheck="maintenance:update"
                     message={{
                       title: maintenance.inProgress
                         ? 'Tem certeza que deseja alterar a execução?'
@@ -521,6 +536,7 @@ export const ModalSendMaintenanceReport = ({
                     textColor={theme.color.actionBlue}
                     borderless
                     label="Salvar"
+                    permToCheck="maintenance:update"
                     message={{
                       title: 'Tem certeza que deseja salvar o progresso?',
                       content: '',
@@ -553,6 +569,7 @@ export const ModalSendMaintenanceReport = ({
                     });
                   }}
                   label="Finalizar manutenção"
+                  permToCheck="maintenance:finish"
                   message={{
                     title: 'Tem certeza que deseja enviar o relato?',
                     content: 'Esta ação é irreversível.',
