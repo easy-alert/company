@@ -5,4 +5,5 @@ export interface ITextArea extends TextareaHTMLAttributes<TextareaHTMLAttributes
   height?: string;
   showTextLengthCounter?: boolean;
   textLength?: number;
+  permToCheck?: string;
 }
