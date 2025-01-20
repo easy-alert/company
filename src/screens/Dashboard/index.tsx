@@ -894,11 +894,12 @@ export const Dashboard = () => {
               <option value="all" disabled={dataFilter.buildings.length === 0}>
                 Todas
               </option>
+
               {filterOptions.buildings.map((building) => (
                 <option
                   value={building}
                   key={building}
-                  disabled={dataFilter.buildings.some((e) => e === building)}
+                  disabled={filterOptions.buildings.some((e) => e === building)}
                 >
                   {building}
                 </option>
