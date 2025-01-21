@@ -131,6 +131,7 @@ export const BuildingsList = () => {
           label="Cadastrar"
           className="p2"
           icon={icon.plusWithBg}
+          permToCheck="buildings:create"
           onClick={() => {
             setModalCreateBuildingOpen(true);
           }}
