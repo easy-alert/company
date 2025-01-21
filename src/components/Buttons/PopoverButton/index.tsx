@@ -46,11 +46,11 @@ export const PopoverButton = ({
 }: IPopoverButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
-  if (permToCheck && !hasPermission) {
+  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
+
+  if (!hasPermission) {
     return null;
   }
-
-  const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   function getArrowStyle(position: string | undefined, arrowSize: number) {
     switch (position) {

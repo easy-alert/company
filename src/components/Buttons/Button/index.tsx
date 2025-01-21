@@ -21,7 +21,7 @@ export const Button = ({
 }: IButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
-  if (permToCheck && !hasPermission) {
+  if (!hasPermission) {
     return null;
   }
   return (
