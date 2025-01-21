@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState, useCallback } from 'react';
-
 import { AuthContext } from '@contexts/Auth/AuthContext';
 
 interface IUseHasPermission {
@@ -14,7 +13,7 @@ export const useHasPermission = ({ permToCheck }: IUseHasPermission) => {
   const checkPermissions = useCallback(() => {
     if (!account) return;
 
-    if (permToCheck?.length === 0) {
+    if (!permToCheck || permToCheck.length === 0) {
       setHasPermission(true);
       return;
     }
@@ -30,7 +29,7 @@ export const useHasPermission = ({ permToCheck }: IUseHasPermission) => {
 
     setHasPermission(
       account?.User?.Permissions?.some((perm) =>
-        permToCheck?.some((check) => perm.Permission.name.includes(check)),
+        permToCheck.some((check) => perm.Permission.name.includes(check)),
       ) ?? false,
     );
   }, [account, permToCheck]);
