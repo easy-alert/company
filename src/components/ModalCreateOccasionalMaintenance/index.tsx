@@ -45,8 +45,6 @@ export const ModalCreateOccasionalMaintenance = ({
   handleModalMaintenanceDetails,
   handleModalSendMaintenanceReport,
 }: IModalCreateOccasionalMaintenance) => {
-  if (!handleModalCreateOccasionalMaintenance) return null;
-
   const { account } = useAuthContext();
 
   const [occasionalMaintenanceData, setOccasionalMaintenanceData] =
@@ -196,6 +194,8 @@ export const ModalCreateOccasionalMaintenance = ({
     handleGetPriorityNames();
     handleGetBuildingsAndCategories();
   }, []);
+
+  if (!handleModalCreateOccasionalMaintenance) return null;
 
   return (
     <Modal title="Manutenção avulsa" setModal={handleModalCreateOccasionalMaintenance}>

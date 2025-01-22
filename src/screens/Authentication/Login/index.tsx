@@ -57,7 +57,7 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/dashboard');
+              navigate('/account');
 
               // if (!viewedTutorial) {
               //   navigate('/tutorials', { state: { from: 'login' } });

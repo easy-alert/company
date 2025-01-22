@@ -210,6 +210,7 @@ export const TicketHistoryActivities = ({
               name="activity"
               label="Enviar comentário"
               placeholder="Escreva seu comentário"
+              permToCheck="tickets:update"
               value={activityContent}
               onChange={(evt) => {
                 setActivityContent(evt.target.value);
@@ -221,6 +222,7 @@ export const TicketHistoryActivities = ({
                 <input {...getInputProps()} />
                 <IconButton
                   icon={icon.upload}
+                  permToCheck="tickets:update"
                   onClick={() => {
                     //
                   }}
@@ -231,6 +233,7 @@ export const TicketHistoryActivities = ({
                 loading={loading}
                 disabled={(!activityContent && imagesToUpload.length === 0) || onImageQuery}
                 icon={icon.send}
+                permToCheck="tickets:update"
                 onClick={() => handleCreateOneTicketHistoryActivity()}
               />
             </Style.InputButtons>

@@ -37,6 +37,7 @@ import type { ITicket } from '@customTypes/ITicket';
 import type { IBuilding } from '@customTypes/IBuilding';
 
 // COMPONENTS
+import { useBuildings } from '@hooks/useBuildings';
 import ModalTicketDetails from './ModalTicketDetails';
 import { ModalCreateTicket } from './ModalCreateTicket';
 
@@ -58,18 +59,14 @@ export interface ITicketFilter {
   seen: string;
 }
 
-interface ITicketFilterOptions {
-  buildings: IBuilding[];
-}
-
 function TicketsPage() {
   const { account } = useAuthContext();
+  const { buildings } = useBuildings({ checkPerms: true, filter: '', page: 1 });
 
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
 
-  const [tickets, setTickets] = useState<ITicket[]>([]);
   const [kanbanTickets, setKanbanTickets] = useState<IKanbanTicket[]>([]);
   const [selectedTicketId, setSelectedTicketId] = useState<string>('');
 
@@ -81,9 +78,6 @@ function TicketsPage() {
     startDate: '',
     endDate: '',
     seen: '',
-  });
-  const [filterOptions, setFilterOptions] = useState<ITicketFilterOptions>({
-    buildings: [],
   });
 
   const [ticketDetailsModal, setTicketDetailsModal] = useState<boolean>(false);
@@ -176,13 +170,6 @@ function TicketsPage() {
     });
   };
 
-  const handleFilterOptionsChange = (key: string, value: string | string[]) => {
-    setFilterOptions((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
-
   const handleSelectedTicketIdChange = (ticketId: string) => {
     setSelectedTicketId(ticketId);
   };
@@ -208,7 +195,6 @@ function TicketsPage() {
       if (response?.statusCode !== 403) setTicketAccess(true);
 
       handleCreateKanbanTickets(response.tickets);
-      setTickets(response.tickets);
     } catch (error: any) {
       handleToastify(error);
     } finally {
@@ -228,20 +214,6 @@ function TicketsPage() {
     }
   };
 
-  const handleGetBuildings = async () => {
-    await Api.get('/buildings/listforselect')
-      .then((res) => {
-        handleFilterOptionsChange('buildings', res.data);
-        // setBuildingOptions(res.data);
-      })
-      .catch((err) => {
-        // catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   // modal functions
   const handleTicketDetailsModal = (modalState: boolean) => {
     setTicketDetailsModal(modalState);
@@ -252,16 +224,14 @@ function TicketsPage() {
   };
 
   useEffect(() => {
-    handleGetBuildings().then(() => {
-      handleGetTickets();
-    });
+    handleGetTickets();
   }, [refresh]);
 
   return (
     <>
       {createTicketModal && (
         <ModalCreateTicket
-          buildings={filterOptions.buildings}
+          buildings={buildings}
           handleCreateTicketModal={handleCreateTicketModal}
           handleRefresh={handleRefresh}
         />
@@ -286,6 +256,7 @@ function TicketsPage() {
             <IconButton
               icon={icon.siren}
               label="Abrir chamado"
+              permToCheck="tickets:create"
               onClick={() => handleCreateTicketModal(true)}
             />
           )}
@@ -327,7 +298,7 @@ function TicketsPage() {
                       Todas
                     </option>
 
-                    {filterOptions.buildings.map((building) => (
+                    {buildings.map((building) => (
                       <option
                         value={building.nanoId}
                         key={building.nanoId}
@@ -483,9 +454,7 @@ function TicketsPage() {
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
-                          label={
-                            filterOptions.buildings.find((b) => b.nanoId === building)?.name || ''
-                          }
+                          label={buildings.find((b) => b.nanoId === building)?.name || ''}
                           padding="4px 12px"
                           fontWeight={500}
                           onClick={() => {

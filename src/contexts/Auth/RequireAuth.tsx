@@ -1,15 +1,21 @@
-// LIBS
+// REACT
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// LIBS
 import styled from 'styled-components';
-import { Api } from '../../services/api';
 
-// CONTEXTS
-import { AuthContext } from './AuthContext';
+// GLOBAL CONTEXTS
+import { AuthContext } from '@contexts/Auth/AuthContext';
 
-// COMPONENTS
-import { DotSpinLoading } from '../../components/Loadings/DotSpinLoading';
-import { catchHandler, query } from '../../utils/functions';
+// GLOBAL SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+
+// GLOBAL UTILS
+import { catchHandler, query } from '@utils/functions';
 
 // TYPES
 import { IRequireAuth } from './utils/types';
@@ -24,8 +30,9 @@ const Container = styled.div`
 
 export const RequireAuth = ({ children }: IRequireAuth) => {
   const { setAccount, signin, signout } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   const backofficeToken = query.get('backofficeToken') ?? null;
   const userId = query.get('userId') ?? null;

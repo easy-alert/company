@@ -207,7 +207,7 @@ export const MaintenanceHistoryActivities = ({
             name="activity"
             label="Enviar comentário"
             placeholder="Escreva seu comentário"
-            value={comment}
+            permToCheck="maintenance:update"
             onChange={(evt) => {
               setComment(evt.target.value);
             }}
@@ -219,6 +219,7 @@ export const MaintenanceHistoryActivities = ({
 
               <IconButton
                 icon={icon.upload}
+                permToCheck="maintenance:update"
                 onClick={() => {
                   //
                 }}
@@ -229,6 +230,7 @@ export const MaintenanceHistoryActivities = ({
               disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
               loading={onQuery}
               icon={icon.send}
+              permToCheck="maintenance:update"
               onClick={() => {
                 createActivity();
               }}

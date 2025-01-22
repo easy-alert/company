@@ -297,6 +297,7 @@ export const ModalMaintenanceDetails = ({
                 }}
               />
             )}
+
             <Button
               label="Fechar"
               borderless={maintenance.MaintenanceReport.length > 0}

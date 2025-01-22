@@ -130,10 +130,12 @@ export const LinkSupplierToMaintenanceHistory = ({
         {suppliers.length === 0 && (
           <Style.Header>
             <h3>Fornecedor</h3>
+
             <IconButton
               hideLabelOnMedia
               icon={icon.link}
               label="Vincular"
+              permToCheck="maintenance:update"
               onClick={() => {
                 ref.current?.scrollIntoView();
                 setModalLinkSupplierOpen(true);
