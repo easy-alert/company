@@ -6,7 +6,15 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 import type { IBuilding } from '@customTypes/IBuilding';
 
-export const useBuildings = ({ filter = '', page = 1 }: { filter?: string; page?: number }) => {
+export const useBuildings = ({
+  checkPerms = false,
+  filter = '',
+  page = 1,
+}: {
+  checkPerms?: boolean;
+  filter?: string;
+  page?: number;
+}) => {
   const [buildings, setBuildings] = useState<IBuilding[]>([]);
   const [buildingCount, setBuildingCount] = useState<number>(0);
 
@@ -16,6 +24,7 @@ export const useBuildings = ({ filter = '', page = 1 }: { filter?: string; page?
     const params = {
       search: filter,
       page,
+      checkPerms,
     };
 
     try {

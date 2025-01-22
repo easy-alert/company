@@ -380,6 +380,7 @@ export const BuildingDetails = () => {
                   }
                 }}
               />
+
               <Button
                 label="QR Code"
                 onClick={() => {
@@ -393,15 +394,18 @@ export const BuildingDetails = () => {
         <Style.Card>
           <Style.CardHeader>
             <h5>Dados da edificação</h5>
+
             <IconButton
               icon={icon.editWithBg}
               label="Editar"
+              permToCheck="buildings:update"
               hideLabelOnMedia
               onClick={() => {
                 setModalEditBuildingOpen(true);
               }}
             />
           </Style.CardHeader>
+
           <Style.BuildingCardWrapper>
             <Style.BuildingCardColumn>
               <Style.BuildingCardData>
@@ -491,9 +495,11 @@ export const BuildingDetails = () => {
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>
+
         <Style.Card>
           <Style.CardHeader>
             <h5>Responsáveis de manutenção</h5>
+
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
@@ -710,6 +716,7 @@ export const BuildingDetails = () => {
                 <h5>Senhas de acesso</h5>
               </Style.AnnexCardHeader>
             </Style.AnnexCardTitle>
+
             {building ? (
               <NotificationTable
                 colsHeader={[{ label: 'Acesso' }, { label: 'Status' }, { label: '' }]}
@@ -807,6 +814,7 @@ export const BuildingDetails = () => {
                 <IconButton
                   icon={icon.editWithBg}
                   label="Editar"
+                  permToCheck="maintenances:plan"
                   hideLabelOnMedia
                   onClick={() => {
                     if (building?.id) {

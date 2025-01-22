@@ -16,4 +16,5 @@ export interface IIconButton {
   title?: string;
   loading?: boolean;
   tabIndex?: number;
+  permToCheck?: string;
 }

@@ -1,6 +1,6 @@
-import { IMaintenance } from '@customTypes/IMaintenance';
+import type { IMaintenance } from '@customTypes/IMaintenance';
 
-import { AnnexesAndImages, IModalAdditionalInformations } from '../../types';
+import type { AnnexesAndImages, IModalAdditionalInformations } from '../../types';
 
 export interface IModalSendMaintenanceReport {
   handleModalSendMaintenanceReport: (modalState: boolean) => void;
@@ -14,7 +14,6 @@ export interface IModalSendMaintenanceReport {
   setBuildingOptions: React.Dispatch<React.SetStateAction<IBuildingOptions[]>>;
   buildingId: string;
   calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
-
   onThenActionRequest: () => Promise<void>;
 }
 

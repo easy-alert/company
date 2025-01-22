@@ -1,5 +1,6 @@
 /* eslint-disable react/button-has-type */
 // COMPONENTS
+import { useHasPermission } from '@hooks/useHasPermission';
 import { theme } from '../../../styles/theme';
 import { Background, ContainerButton, SpinnerContent } from './styles';
 
@@ -15,20 +16,28 @@ export const Button = ({
   bgColor = theme.color.primary,
   borderless = false,
   textColor,
+  permToCheck,
   ...rest
-}: IButton) => (
-  <Background center={center}>
-    <ContainerButton
-      bgColor={bgColor}
-      loading={+loading}
-      disable={disable}
-      outlined={outlined}
-      borderless={borderless}
-      textColor={textColor}
-    >
-      <button {...rest} disabled={disable || loading}>
-        {loading ? <SpinnerContent /> : <h6>{label}</h6>}
-      </button>
-    </ContainerButton>
-  </Background>
-);
+}: IButton) => {
+  const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
+
+  if (!hasPermission) {
+    return null;
+  }
+  return (
+    <Background center={center}>
+      <ContainerButton
+        bgColor={bgColor}
+        loading={+loading}
+        disable={disable}
+        outlined={outlined}
+        borderless={borderless}
+        textColor={textColor}
+      >
+        <button {...rest} disabled={disable || loading}>
+          {loading ? <SpinnerContent /> : <h6>{label}</h6>}
+        </button>
+      </ContainerButton>
+    </Background>
+  );
+};

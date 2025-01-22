@@ -79,9 +79,7 @@ const schemaEditSupplier = yup
 export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalEditSupplier) => {
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
-  const { allCategories } = account
-    ? useCategoriesByCompanyId(account.Company.id)
-    : { allCategories: [] };
+  const { allCategories } = useCategoriesByCompanyId(account?.Company?.id || '');
 
   const [selectedState, setSelectedState] = useState<string>('');
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });

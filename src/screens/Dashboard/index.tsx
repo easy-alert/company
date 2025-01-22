@@ -507,6 +507,9 @@ export const Dashboard = () => {
   };
 
   const findLargestValueAndIndex = (array: number[]) => {
+    if (!array) return { value: 0, index: 0 };
+    if (array.length === 0) return { value: 0, index: 0 };
+
     let largestValue = array[0];
     let largestValueIndex = 0;
 
@@ -891,6 +894,7 @@ export const Dashboard = () => {
               <option value="all" disabled={dataFilter.buildings.length === 0}>
                 Todas
               </option>
+
               {filterOptions.buildings.map((building) => (
                 <option
                   value={building}
@@ -1170,33 +1174,35 @@ export const Dashboard = () => {
                   <DotSpinLoading />
                 ) : (
                   <>
-                    {maintenancesTimeline.series[0].data.length > 0 && (
-                      <Style.ChartWrapperX
-                        onScroll={handleScroll}
-                        scrollLeft={scrollLeft}
-                        ref={refCallback}
-                      >
-                        <Chart
-                          options={timeLineChart.options}
-                          series={timeLineChart.series}
-                          type="bar"
-                          height={290}
-                          width={Math.max(
-                            divWidth,
-                            (maintenancesTimeline.series[0].data.length +
-                              maintenancesTimeline.series[1].data.length +
-                              maintenancesTimeline.series[2].data.length) *
-                              30,
-                          )}
-                        />
-                      </Style.ChartWrapperX>
-                    )}
+                    {maintenancesTimeline.series.length > 0 &&
+                      maintenancesTimeline.series[0].data.length > 0 && (
+                        <Style.ChartWrapperX
+                          onScroll={handleScroll}
+                          scrollLeft={scrollLeft}
+                          ref={refCallback}
+                        >
+                          <Chart
+                            options={timeLineChart.options}
+                            series={timeLineChart.series}
+                            type="bar"
+                            height={290}
+                            width={Math.max(
+                              divWidth,
+                              (maintenancesTimeline.series[0].data.length +
+                                maintenancesTimeline.series[1].data.length +
+                                maintenancesTimeline.series[2].data.length) *
+                                30,
+                            )}
+                          />
+                        </Style.ChartWrapperX>
+                      )}
 
-                    {maintenancesTimeline.series[0].data.length === 0 && (
-                      <Style.NoDataWrapper>
-                        <h6>Nenhuma informação encontrada</h6>
-                      </Style.NoDataWrapper>
-                    )}
+                    {maintenancesTimeline.series.length > 0 &&
+                      maintenancesTimeline.series[0].data.length === 0 && (
+                        <Style.NoDataWrapper>
+                          <h6>Nenhuma informação encontrada</h6>
+                        </Style.NoDataWrapper>
+                      )}
                   </>
                 )}
               </Style.ChartContent>
