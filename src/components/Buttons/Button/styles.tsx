@@ -54,7 +54,13 @@ export const ContainerButton = styled.div<{
       ${({ outlined, bgColor }) => outlined && `background-color: ${`${bgColor}26`};`}
     }
 
-    ${({ bgColor }) => bgColor && `background-color: ${bgColor};`}
+    ${({ bgColor }) => {
+      const themeColor = theme.color[bgColor as keyof typeof theme.color];
+
+      if (themeColor) return `background-color: ${themeColor};`;
+
+      return bgColor && `background-color: ${bgColor};`;
+    }}
 
     ${({ textColor }) => {
       const themeColor = theme.color[textColor as keyof typeof theme.color];
