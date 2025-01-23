@@ -11,8 +11,8 @@ interface IServerResponse {
 
 export const handleToastify = (serverResponse: IServerResponse) => {
   if (serverResponse.status === 200) {
-    toast.success(serverResponse.data?.ServerMessage.message);
+    toast.success(serverResponse?.data?.ServerMessage?.message || 'Operação realizada com sucesso');
   } else {
-    toast.error(serverResponse.data?.ServerMessage.message);
+    toast.error(serverResponse?.data?.ServerMessage?.message || 'Erro ao realizar operação');
   }
 };
