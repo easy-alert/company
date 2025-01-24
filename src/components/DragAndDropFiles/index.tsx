@@ -57,6 +57,7 @@ export const DragAndDropFiles = ({
 
       <Style.DragAndDropZone
         {...getRootProps({ className: 'dropzone' })}
+        disabled={loading || disabled}
         width={width}
         height={height}
       >
@@ -83,6 +84,7 @@ export const DragAndDropFiles = ({
           )}
         </Style.Content>
       </Style.DragAndDropZone>
+
       {!!error && (
         <Style.ErrorMessage>
           <p className="p3">{error}</p>
