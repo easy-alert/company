@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-export const DragAndDropZone = styled.div<{ width?: string; height?: string }>`
+export const DragAndDropZone = styled.div<{ width?: string; height?: string; disabled?: boolean }>`
   border: 1px dashed ${theme.color.gray4};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm} ${theme.size.md};
@@ -17,6 +17,8 @@ export const DragAndDropZone = styled.div<{ width?: string; height?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${({ disabled }) => disabled && `pointer-events: none; opacity: 0.5;`}
 
   &:hover {
     opacity: 0.7;

@@ -24,6 +24,12 @@ export const CardHeader = styled.div`
   margin-bottom: ${theme.size.sm};
 `;
 
+export const CardHeaderButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+`;
+
 export const AnnexCardTitle = styled.div`
   display: flex;
   align-items: flex-start;

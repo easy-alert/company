@@ -69,6 +69,11 @@ export interface IBuildingDetail {
   nextMaintenanceCreationBasis: 'executionDate' | 'notificationDate';
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
+  BuildingApartments?: {
+    id: string;
+    number: string;
+    floor: string;
+  }[];
 }
 
 export interface IRequestBuildingDetails {
