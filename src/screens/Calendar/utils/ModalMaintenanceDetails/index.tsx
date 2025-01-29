@@ -214,6 +214,11 @@ export const ModalMaintenanceDetails = ({
               </Style.Row>
             )}
 
+            <Style.Row>
+              <h6>Info. Adicional</h6>
+              <p className="p2">{maintenance.additionalInfo}</p>
+            </Style.Row>
+
             {!modalAdditionalInformations.isFuture && (
               <>
                 <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />

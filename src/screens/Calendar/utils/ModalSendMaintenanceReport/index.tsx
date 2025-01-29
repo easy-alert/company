@@ -326,6 +326,11 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
+            <Style.Row>
+              <h6>Info. Adicional</h6>
+              <p className="p2">{maintenance.additionalInfo}</p>
+            </Style.Row>
+
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
             <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
