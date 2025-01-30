@@ -49,5 +49,5 @@ export const ButtonContainer = styled.div`
   justify-content: center;
   gap: ${theme.size.xsm};
 
-  margin-top: ${theme.size.md};
+  margin-top: ${theme.size.sm};
 `;
