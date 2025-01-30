@@ -33,7 +33,7 @@ import type { IBuildingTypes } from '@utils/types';
 
 // COMPONENTS
 import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
-import { handleToastify } from '@utils/toastifyResponses';
+import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
@@ -160,27 +160,49 @@ export const BuildingDetails = () => {
 
   const handleAddApartment = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      if (building) {
-        const prevApartments = structuredClone(building.BuildingApartments) || [];
-
-        prevApartments?.push({
-          id: '',
-          number: apartmentNumber,
-          floor: '',
-        });
-
-        setBuilding((prevBuilding) => {
-          if (prevBuilding) {
-            return {
-              ...prevBuilding,
-              BuildingApartments: prevApartments,
-            };
-          }
-          return prevBuilding;
-        });
-
-        setApartmentNumber('');
+      if (!building) {
+        return;
       }
+
+      if (!apartmentNumber) {
+        handleToastifyMessage({
+          message: 'Informe o número do apartamento.',
+          type: 'error',
+        });
+
+        return;
+      }
+
+      if (building.BuildingApartments?.some((apartment) => apartment.number === apartmentNumber)) {
+        handleToastifyMessage({
+          message: 'O número do apartamento já foi cadastrado.',
+          type: 'error',
+        });
+
+        return;
+      }
+
+      const prevApartments = structuredClone(building.BuildingApartments) || [];
+
+      prevApartments?.push({
+        id: '',
+        number: apartmentNumber,
+        floor: '',
+      });
+
+      prevApartments.sort((a, b) => a.number.localeCompare(b.number));
+
+      setBuilding((prevBuilding) => {
+        if (prevBuilding) {
+          return {
+            ...prevBuilding,
+            BuildingApartments: prevApartments,
+          };
+        }
+        return prevBuilding;
+      });
+
+      setApartmentNumber('');
     }
   };
   // #endregion

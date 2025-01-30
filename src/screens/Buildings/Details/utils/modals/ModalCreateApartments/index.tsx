@@ -48,13 +48,15 @@ export const ModalCreateApartments = ({
       </Style.ModalApartmentsTitle>
 
       <Style.ApartmentList>
-        {apartments?.map((apartment, index) => (
-          <Style.ApartmentItem key={apartment.number}>
-            <Style.ApartmentNumber>{apartment.number}</Style.ApartmentNumber>
+        {apartments
+          ?.sort((a, b) => a.number.localeCompare(b.number))
+          ?.map((apartment, index) => (
+            <Style.ApartmentItem key={apartment.number}>
+              <Style.ApartmentNumber>{apartment.number}</Style.ApartmentNumber>
 
-            <IconButton icon={icon.x} size="16px" onClick={() => handleRemoveApartment(index)} />
-          </Style.ApartmentItem>
-        ))}
+              <IconButton icon={icon.x} size="16px" onClick={() => handleRemoveApartment(index)} />
+            </Style.ApartmentItem>
+          ))}
       </Style.ApartmentList>
 
       <Style.ButtonContainer>
