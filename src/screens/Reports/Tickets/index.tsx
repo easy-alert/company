@@ -15,7 +15,7 @@ import { getTicketReports } from '@services/apis/getTicketReports';
 import { useServiceTypes } from '@hooks/useServiceTypes';
 import { useTicketPlaces } from '@hooks/useTicketPlaces';
 import { useTicketStatus } from '@hooks/useTicketStatus';
-import { useBuildings } from '@hooks/useBuildings';
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
@@ -72,10 +72,10 @@ export interface ITicketFilterNames {
 }
 
 export const TicketReports = () => {
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
-  const { buildings } = useBuildings({ checkPerms: true, filter: '', page: 1 });
 
   const [tickets, setTickets] = useState<ITicket[]>([]);
   const [ticketReportPdfs, setTicketReportPdfs] = useState<IReportPdf[]>([]);
@@ -239,7 +239,7 @@ export const TicketReports = () => {
           filter.buildings?.length === 0
             ? 'Todas'
             : filter.buildings
-                .map((building) => buildings.find((b) => b.nanoId === building)?.name)
+                .map((building) => buildingsForSelect.find((b) => b.nanoId === building)?.name)
                 .join(', '),
         placesNames:
           filter.places?.length === 0
@@ -336,7 +336,7 @@ export const TicketReports = () => {
                       Todas
                     </option>
 
-                    {buildings.map((building) => (
+                    {buildingsForSelect.map((building) => (
                       <option
                         value={building.nanoId}
                         key={building.nanoId}
@@ -520,7 +520,7 @@ export const TicketReports = () => {
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
-                          label={buildings.find((b) => b.nanoId === building)?.name || ''}
+                          label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
                           padding="4px 12px"
                           fontWeight={500}
                           onClick={() => {
