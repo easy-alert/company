@@ -20,11 +20,12 @@ import { applyMask } from '../../../utils/functions';
 import { IconButton } from '../../../components/Buttons/IconButton';
 
 export const Register = () => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const navigate = useNavigate();
   const { signin } = useAuthContext();
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Style.Background>
@@ -103,7 +104,7 @@ export const Register = () => {
                       applyMask({
                         value: values.contactNumber,
                         mask: 'TEL',
-                      }).length
+                      }).length || 1
                     }
                     value={values.contactNumber}
                     error={
@@ -129,7 +130,7 @@ export const Register = () => {
                       applyMask({
                         mask: 'CNPJ',
                         value: values.CNPJorCPF,
-                      }).length
+                      }).length || 1
                     }
                     onChange={(e) => {
                       setFieldValue(

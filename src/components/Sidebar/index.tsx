@@ -1,32 +1,53 @@
-// LIBS
+// REACT
 import React, { useEffect, useState } from 'react';
+
+// LIBS
 import { Outlet, useNavigate } from 'react-router-dom';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
+// COMPONENTS
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+import { PopoverComponent } from '@components/Popover';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons/index';
+
+// TYPES
+import type { SidebarContentProps } from './utils/types';
 
 // STYLES
 import * as Style from './styles';
-import { icon } from '../../assets/icons/index';
-
-// COMPONENTS
-import { Image } from '../Image';
-import { IconButton } from '../Buttons/IconButton';
-
-// TYPES
-import { SidebarContentProps } from './utils/types';
-import { useAuthContext } from '../../contexts/Auth/UseAuthContext';
-import { PopoverComponent } from '../Popover';
 
 export const Sidebar = () => {
-  const { signout } = useAuthContext();
+  const { account, signout } = useAuthContext();
+
   const navigate = useNavigate();
 
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(true);
+
+  const handlePermissions = (permission: string) => {
+    const adminPermission = account?.User?.Permissions?.some(
+      (perm) => perm.Permission.name === 'admin:company',
+    );
+
+    if (adminPermission) {
+      return true;
+    }
+
+    return account?.User?.Permissions?.some((perm) => perm.Permission.name === permission);
+  };
 
   const SidebarContent: SidebarContentProps[] = [
     {
       title: 'Dashboard',
       type: 'navigate',
       icon: icon.dashboard,
+      permission: 'access:dashboard',
       url: '/dashboard',
       redirectFunction: () => {
         navigate('/dashboard');
@@ -36,6 +57,7 @@ export const Sidebar = () => {
       title: 'Calendário',
       type: 'navigate',
       icon: icon.calendar,
+      permission: 'access:calendar',
       url: '/calendar',
       redirectFunction: () => {
         navigate('/calendar');
@@ -45,6 +67,7 @@ export const Sidebar = () => {
       title: 'Edificações',
       type: 'navigate',
       icon: icon.building,
+      permission: 'access:buildings',
       url: '/buildings',
       redirectFunction: () => {
         navigate('/buildings');
@@ -55,6 +78,7 @@ export const Sidebar = () => {
       title: 'Checklists',
       type: 'navigate',
       icon: icon.checklists,
+      permission: 'access:checklist',
       url: '/checklists',
       redirectFunction: () => {
         navigate('/checklists');
@@ -65,6 +89,7 @@ export const Sidebar = () => {
       title: 'Chamados',
       type: 'navigate',
       icon: icon.whiteSiren,
+      permission: 'access:tickets',
       url: '/tickets',
       redirectFunction: () => {
         navigate('/tickets');
@@ -76,6 +101,7 @@ export const Sidebar = () => {
       type: 'popover',
       icon: icon.report,
       url: '/reports',
+      permission: 'access:reports',
       redirectFunction: () => {
         //
       },
@@ -84,6 +110,7 @@ export const Sidebar = () => {
           label: 'Chamados',
           icon: icon.redDot,
           url: '/reports/tickets',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/tickets');
           },
@@ -93,6 +120,7 @@ export const Sidebar = () => {
           label: 'Checklists',
           icon: icon.redDot,
           url: '/reports/checklists',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/checklists');
           },
@@ -102,6 +130,7 @@ export const Sidebar = () => {
           label: 'Manutenções',
           icon: icon.redDot,
           url: '/reports/maintenances',
+          permission: 'access:reports',
           redirectFunction: () => {
             navigate('/reports/maintenances');
           },
@@ -112,6 +141,7 @@ export const Sidebar = () => {
       title: 'Fornecedores',
       type: 'navigate',
       icon: icon.suppliers,
+      permission: 'access:suppliers',
       url: '/suppliers',
       redirectFunction: () => {
         navigate('/suppliers');
@@ -121,6 +151,7 @@ export const Sidebar = () => {
       title: 'Tutoriais',
       type: 'navigate',
       icon: icon.tutorial,
+      permission: 'access:tutorials',
       url: '/tutorials',
       redirectFunction: () => {
         navigate('/tutorials');
@@ -130,6 +161,7 @@ export const Sidebar = () => {
       title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,
+      permission: 'access:account',
       url: '/account',
       redirectFunction: () => {
         navigate('/account');
@@ -194,41 +226,43 @@ export const Sidebar = () => {
           <React.Fragment key={element.url}>
             {i === SidebarContent.length - 1 && <Style.Spacer />}
 
-            {element.type === 'navigate' && (
-              <IconButton
-                title={element.title}
-                opacity="0.5"
-                icon={element.icon}
-                onClick={() => {
-                  const checkKeyPress = window.event as KeyboardEvent;
-                  if (checkKeyPress?.ctrlKey) {
-                    window.open(element.url, '_blank');
-                  } else if (openSidebar) {
-                    setAnimate(false);
-                    setTimeout(() => {
-                      setOpenSidebar(false);
-                      element.redirectFunction();
-                    }, 125);
-                  } else {
-                    element.redirectFunction();
-                  }
-                }}
-                onAuxClick={() => {
-                  if (openSidebar) {
-                    setAnimate(false);
-                    setTimeout(() => {
-                      setOpenSidebar(false);
-                      window.open(element.url, '_blank');
-                    }, 125);
-                  } else {
-                    window.open(element.url, '_blank');
-                  }
-                }}
-                selected={window.location.pathname.startsWith(element.url)}
-              />
-            )}
+            {element.type === 'navigate' &&
+              (handlePermissions(element.permission!) || element.title === 'Sair') && (
+                <IconButton
+                  title={element.title}
+                  opacity="0.5"
+                  icon={element.icon}
+                  onClick={() => {
+                    const checkKeyPress = window.event as KeyboardEvent;
 
-            {element.type === 'popover' && (
+                    if (checkKeyPress?.ctrlKey) {
+                      window.open(element.url, '_blank');
+                    } else if (openSidebar) {
+                      setAnimate(false);
+                      setTimeout(() => {
+                        setOpenSidebar(false);
+                        element.redirectFunction();
+                      }, 125);
+                    } else {
+                      element.redirectFunction();
+                    }
+                  }}
+                  onAuxClick={() => {
+                    if (openSidebar) {
+                      setAnimate(false);
+                      setTimeout(() => {
+                        setOpenSidebar(false);
+                        window.open(element.url, '_blank');
+                      }, 125);
+                    } else {
+                      window.open(element.url, '_blank');
+                    }
+                  }}
+                  selected={window.location.pathname.startsWith(element.url)}
+                />
+              )}
+
+            {element.type === 'popover' && handlePermissions(element.permission!) && (
               <PopoverComponent
                 label={element.label}
                 buttonChildren={

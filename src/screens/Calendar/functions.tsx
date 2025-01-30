@@ -1,21 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
 import { ListTag } from '@components/ListTag';
-import { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
-import { Api } from '../../services/api';
-import { catchHandler } from '../../utils/functions';
+import { InProgressTag } from '@components/InProgressTag';
+
+// GLOBAL UTILS
+import { catchHandler } from '@utils/functions';
+
+// COMPONENTS
 import { EventTag } from './utils/EventTag';
-import { InProgressTag } from '../../components/InProgressTag';
+
+// TYPES
+import type { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
 
 export const requestCalendarData = async ({
+  buildingId,
+  yearToRequest,
+  calendarType,
   setMaintenancesMonthView,
   setMaintenancesWeekView,
   setMaintenancesDisplay,
-  setLoading,
-  yearToRequest,
   setYearChangeLoading,
   setBuildingOptions,
-  buildingId,
-  calendarType,
+  setLoading,
 }: IRequestCalendarData) => {
   setYearChangeLoading(true);
 

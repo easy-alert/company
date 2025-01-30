@@ -20,6 +20,7 @@ export interface IAccount {
     lastAccess: string;
     name: string;
     email: string;
+    isCompanyOwner: boolean;
     createdAt: string;
     Permissions?: [
       {
@@ -28,6 +29,12 @@ export interface IAccount {
         };
       },
     ];
+    BuildingsPermissions?: {
+      Building: {
+        id: string;
+        name: string;
+      };
+    }[];
   };
   Company: {
     id: string;

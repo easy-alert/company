@@ -8,12 +8,12 @@ import { Formik, Form } from 'formik';
 
 // SERVICES
 import { Api } from '@services/api';
+import { getBuildingsApartmentsById } from '@services/apis/getBuildingsApartmentsById';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
-import { Input } from '@components/Inputs/Input';
 import { FormikTextArea } from '@components/Form/FormikTextArea';
 import { DragAndDropFiles } from '@components/DragAndDropFiles';
 import { ImagePreview } from '@components/ImagePreview';
@@ -24,9 +24,11 @@ import { ListTag } from '@components/ListTag';
 
 // GLOBAL UTILS
 import { catchHandler, isImage, uploadManyFiles } from '@utils/functions';
+import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL TYPES
 import type { IBuilding } from '@customTypes/IBuilding';
+import type { IBuildingApartment } from '@customTypes/IBuildingApartments';
 
 // STYLES
 import * as Style from './styles';
@@ -70,6 +72,7 @@ export const ModalCreateTicket = ({
   handleCreateTicketModal,
   handleRefresh,
 }: IModalCreateTicket) => {
+  const [buildingsApartments, setBuildingsApartments] = useState<IBuildingApartment[]>([]);
   const [places, setPlaces] = useState<IAuxiliaryData[]>([]);
   const [types, setTypes] = useState<IAuxiliaryData[]>([]);
 
@@ -87,6 +90,16 @@ export const ModalCreateTicket = ({
       .catch((err) => {
         catchHandler(err);
       });
+  };
+
+  const handleGetBuildingsApartmentsById = async (buildingId: string) => {
+    try {
+      const responseData = await getBuildingsApartmentsById({ buildingId });
+
+      setBuildingsApartments(responseData.buildingApartments);
+    } catch (error: any) {
+      handleToastify(error.response);
+    }
   };
 
   const submitForm = async (values: TSchema) => {
@@ -139,6 +152,11 @@ export const ModalCreateTicket = ({
                 name="buildingNanoId"
                 selectPlaceholderValue={values.buildingNanoId}
                 label="Prédio *"
+                onChange={(evt) => {
+                  setFieldValue('buildingNanoId', evt.target.value);
+                  setFieldValue('residentApartment', '');
+                  handleGetBuildingsApartmentsById(evt.target.value);
+                }}
                 error={touched.buildingNanoId && (errors.buildingNanoId || null)}
               >
                 <option value="" disabled hidden>
@@ -156,20 +174,42 @@ export const ModalCreateTicket = ({
                 name="residentName"
                 label="Nome do morador *"
                 placeholder="Ex: Informe o nome"
+                disabled={!values.buildingNanoId}
                 error={touched.residentName && (errors.residentName || null)}
               />
 
-              <FormikInput
-                name="residentApartment"
-                label="Apartamento do morador *"
-                placeholder="Ex: Informe o apartamento"
-                error={touched.residentName && (errors.residentName || null)}
-              />
+              {buildingsApartments.length > 0 ? (
+                <FormikSelect
+                  name="residentApartment"
+                  label="Apartamento do morador *"
+                  selectPlaceholderValue={values.residentApartment}
+                  error={touched.residentApartment && (errors.residentApartment || null)}
+                >
+                  <option value="" disabled hidden>
+                    Selecione
+                  </option>
+
+                  {buildingsApartments.map(({ id, number }) => (
+                    <option value={number} key={id}>
+                      {number}
+                    </option>
+                  ))}
+                </FormikSelect>
+              ) : (
+                <FormikInput
+                  name="residentApartment"
+                  label="Apartamento do morador *"
+                  placeholder="Ex: Informe o apartamento"
+                  disabled={!values.buildingNanoId}
+                  error={touched.residentName && (errors.residentName || null)}
+                />
+              )}
 
               <FormikInput
                 name="residentEmail"
                 label="E-mail do morador"
                 placeholder="Ex: Informe o e-mail"
+                disabled={!values.buildingNanoId}
                 error={touched.residentEmail && (errors.residentEmail || null)}
               />
 
@@ -177,6 +217,7 @@ export const ModalCreateTicket = ({
                 name="placeId"
                 selectPlaceholderValue={values.placeId}
                 label="Local da ocorrência *"
+                disabled={!values.buildingNanoId}
                 error={touched.placeId && (errors.placeId || null)}
               >
                 <option value="" disabled hidden>
@@ -207,6 +248,7 @@ export const ModalCreateTicket = ({
                   }));
                   setFieldValue('types', data);
                 }}
+                isDisabled={!values.buildingNanoId}
                 error={touched.types && (errors.types || null)}
               />
 
@@ -214,14 +256,16 @@ export const ModalCreateTicket = ({
                 label="Descrição *"
                 placeholder="Informe a descrição"
                 name="description"
+                disabled={!values.buildingNanoId}
                 error={touched.description && (errors.description || null)}
               />
 
               <Style.Row>
                 <h6>Anexos *</h6>
+
                 <Style.FileAndImageRow>
                   <DragAndDropFiles
-                    disabled={onImageQuery}
+                    disabled={onImageQuery || !values.buildingNanoId}
                     width="132px"
                     height="136px"
                     getAcceptedFiles={async ({ acceptedFiles }) => {

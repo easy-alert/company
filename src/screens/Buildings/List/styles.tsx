@@ -61,15 +61,24 @@ export const GridContainer = styled.div`
   }
 `;
 
-export const BuildingCard = styled.div`
+export const BuildingCard = styled.div<{ disabled: boolean }>`
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
   padding: ${theme.size.sm};
 
-  :hover {
-    cursor: pointer;
-    background-color: ${`${theme.color.white}B3`};
-  }
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  transition: all 0.2s ease;
+
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+
+  ${({ disabled }) =>
+    !disabled &&
+    `
+    :hover {
+      background-color: ${`${theme.color.white}B3`};
+    }
+  `}
 `;
 
 export const BuildingCardHeader = styled.div`

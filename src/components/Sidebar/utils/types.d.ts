@@ -4,6 +4,7 @@ interface IBase {
   redirectFunction: () => void;
   label?: string;
   title?: string;
+  permission?: string;
 }
 
 export interface SidebarContentProps extends IBase {

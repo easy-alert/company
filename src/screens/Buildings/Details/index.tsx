@@ -1,22 +1,54 @@
 // #region imports
-// COMPONENTS
+// REACT
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { icon } from '../../../assets/icons';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { ReturnButton } from '../../../components/Buttons/ReturnButton';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { ReturnButton } from '@components/Buttons/ReturnButton';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { ImagePreview } from '@components/ImagePreview';
+import { Image } from '@components/Image';
+import { Button } from '@components/Buttons/Button';
+import { FileComponent, FolderComponent } from '@components/FileSystem';
+
+// GLOBAL UTILS
+import {
+  applyMask,
+  capitalizeFirstLetter,
+  dateFormatter,
+  query,
+  requestBuildingTypes,
+} from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL TYPES
+import type { IBuildingTypes } from '@utils/types';
+
+// COMPONENTS
+import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
+import { handleToastify } from '@utils/toastifyResponses';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
-import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { ImagePreview } from '../../../components/ImagePreview';
-import { Image } from '../../../components/Image';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
 import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
+import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
+import { ModalEditFolder } from './utils/modals/ModalEditFolder';
+import { ModalEditFile } from './utils/modals/ModalEditFile';
+import { ModalChangeClientPassword } from './utils/modals/ModalChangeClientPassword';
+import { ModalAddBanner } from './utils/modals/ModalAddBanner';
+import { ModalUpdateBanner } from './utils/modals/ModalUpdateBanner';
+import { ModalCreateApartments } from './utils/modals/ModalCreateApartments';
 
-// FUNCTIONS
+// UTILS
 import {
   changeShowContactStatus,
   deleteBanner,
@@ -27,29 +59,19 @@ import {
   requestResendEmailConfirmation,
   requestResendPhoneConfirmation,
 } from './utils/functions';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  dateFormatter,
-  query,
-  requestBuildingTypes,
-} from '../../../utils/functions';
 
 // STYLES
 import * as Style from './styles';
-import { theme } from '../../../styles/theme';
 
 // TYPES
-import { Folder, IBuildingDetail, INotificationConfiguration, File, IBanner } from './utils/types';
-import { IBuildingTypes } from '../../../utils/types';
-import { Button } from '../../../components/Buttons/Button';
-import { FileComponent, FolderComponent } from '../../../components/FileSystem';
-import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
-import { ModalEditFolder } from './utils/modals/ModalEditFolder';
-import { ModalEditFile } from './utils/modals/ModalEditFile';
-import { ModalChangeClientPassword } from './utils/modals/ModalChangeClientPassword';
-import { ModalAddBanner } from './utils/modals/ModalAddBanner';
-import { ModalUpdateBanner } from './utils/modals/ModalUpdateBanner';
+import type {
+  Folder,
+  IBuildingDetail,
+  INotificationConfiguration,
+  File,
+  IBanner,
+} from './utils/types';
+
 // #endregion
 
 export const BuildingDetails = () => {
@@ -59,14 +81,9 @@ export const BuildingDetails = () => {
 
   const { search } = window.location;
 
-  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
-  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
-
   const [building, setBuilding] = useState<IBuildingDetail>();
-
+  const [apartmentNumber, setApartmentNumber] = useState<string>('');
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
-
-  const [loading, setLoading] = useState<boolean>(true);
 
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
 
@@ -74,48 +91,120 @@ export const BuildingDetails = () => {
 
   const [totalMaintenancesCount, setTotalMaintenancesCount] = useState<number>(0);
 
-  const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
+  const [passwordType, setPasswordType] = useState<'resident' | 'responsible'>('resident');
+  const [selectedBanner, setSelectedBanner] = useState<IBanner>();
 
+  const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
+  const [modalAddBannerOpen, setModalAddBannerOpen] = useState<boolean>(false);
+  const [modalUpdateBannerOpen, setModalUpdateBannerOpen] = useState<boolean>(false);
+  const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
+  const [modalEditFolderOpen, setModalEditFolderOpen] = useState<boolean>(false);
+  const [modalEditFileOpen, setModalEditFileOpen] = useState<boolean>(false);
+  const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
+  const [modalCreateApartmentOpen, setModalCreateApartmentOpen] = useState<boolean>(false);
+  const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
   const [modalCreateNotificationConfigurationOpen, setModalCreateNotificationConfigurationOpen] =
     useState<boolean>(false);
-
   const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
     useState<boolean>(false);
-
   const [modalChangeClientPasswordOpen, setModalChangeClientPasswordOpen] =
     useState<boolean>(false);
 
-  const [passwordType, setPasswordType] = useState<'resident' | 'responsible'>('resident');
-
-  const [modalAddFilesOpen, setModalAddFilesOpen] = useState<boolean>(false);
-
-  const [modalAddBannerOpen, setModalAddBannerOpen] = useState<boolean>(false);
-  const [modalUpdateBannerOpen, setModalUpdateBannerOpen] = useState<boolean>(false);
-  const [selectedBanner, setSelectedBanner] = useState<IBanner>();
-
-  const [modalCreateFolderOpen, setModalCreateFolderOpen] = useState<boolean>(false);
-
-  const [modalEditFolderOpen, setModalEditFolderOpen] = useState<boolean>(false);
-
-  const [modalEditFileOpen, setModalEditFileOpen] = useState<boolean>(false);
-
-  const [modalPrintQRCodeOpen, setModalPrintQRCodeOpen] = useState<boolean>(false);
-
   const [folderId, setFolderId] = useState<string | null>(null);
-
   const [rootFolder, setRootFolder] = useState<Folder>({ id: '', name: '' });
-
   const [folderToEdit, setFolderToEdit] = useState<Folder>();
-
   const [fileToEdit, setFileToEdit] = useState<File>();
 
   const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
     useState<INotificationConfiguration>();
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
   // #endregion
 
-  // #region useeffects
+  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
+  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+
+  const nextMaintenanceCreationBasisLabel = {
+    executionDate: 'Data de execução',
+    notificationDate: 'Data de notificação',
+  };
+
+  // #region modal functions
+  const handleCreateApartmentModal = (state: boolean) => {
+    setModalCreateApartmentOpen(state);
+  };
+  // #endregion
+
+  // #region functions
+  const handleChangeApartment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setApartmentNumber(e.target.value);
+  };
+
+  const handleRemoveApartment = (index: number) => {
+    const prevApartments = structuredClone(building?.BuildingApartments) || [];
+
+    prevApartments.splice(index, 1);
+    setBuilding((prevBuilding) => {
+      if (prevBuilding) {
+        return {
+          ...prevBuilding,
+          BuildingApartments: prevApartments,
+        };
+      }
+      return prevBuilding;
+    });
+  };
+
+  const handleAddApartment = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      if (building) {
+        const prevApartments = structuredClone(building.BuildingApartments) || [];
+
+        prevApartments?.push({
+          id: '',
+          number: apartmentNumber,
+          floor: '',
+        });
+
+        setBuilding((prevBuilding) => {
+          if (prevBuilding) {
+            return {
+              ...prevBuilding,
+              BuildingApartments: prevApartments,
+            };
+          }
+          return prevBuilding;
+        });
+
+        setApartmentNumber('');
+      }
+    }
+  };
+  // #endregion
+
+  // #region api functions
+  const handleCreateApartment = async () => {
+    setOnQuery(true);
+
+    try {
+      await putBuildingsApartments({
+        buildingId: buildingId!,
+        apartments: building?.BuildingApartments || [],
+      });
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setOnQuery(false);
+      handleCreateApartmentModal(false);
+    }
+  };
+
+  // #endregion
+
+  // #region useEffects
   useEffect(() => {
     requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingDetails({
@@ -154,11 +243,6 @@ export const BuildingDetails = () => {
     }
   }, [folderId]);
   // #endregion
-
-  const nextMaintenanceCreationBasisLabel = {
-    executionDate: 'Data de execução',
-    notificationDate: 'Data de notificação',
-  };
 
   return loading ? (
     <DotSpinLoading />
@@ -270,6 +354,7 @@ export const BuildingDetails = () => {
             }}
           />
         )}
+
         {modalUpdateBannerOpen && selectedBanner && building && (
           <ModalUpdateBanner
             setModal={setModalUpdateBannerOpen}
@@ -315,6 +400,19 @@ export const BuildingDetails = () => {
             }}
           />
         )}
+
+        {modalCreateApartmentOpen && building && (
+          <ModalCreateApartments
+            apartments={building.BuildingApartments}
+            apartmentNumber={apartmentNumber}
+            onQuery={onQuery}
+            handleChangeApartment={handleChangeApartment}
+            handleAddApartment={handleAddApartment}
+            handleRemoveApartment={handleRemoveApartment}
+            handleCreateApartment={handleCreateApartment}
+            handleCreateApartmentModal={handleCreateApartmentModal}
+          />
+        )}
       </>
 
       <Style.Header>
@@ -327,6 +425,7 @@ export const BuildingDetails = () => {
           <Style.FirstCard>
             <Style.CardHeaderLeftSide>
               <h5>Manutenções</h5>
+
               <Style.MaintenanceCardFooter>
                 {/* Não fiz .map pra facilitar a estilização */}
                 <Style.MaintenanceCardFooterInfo>
@@ -380,6 +479,7 @@ export const BuildingDetails = () => {
                   }
                 }}
               />
+
               <Button
                 label="QR Code"
                 onClick={() => {
@@ -393,15 +493,30 @@ export const BuildingDetails = () => {
         <Style.Card>
           <Style.CardHeader>
             <h5>Dados da edificação</h5>
-            <IconButton
-              icon={icon.editWithBg}
-              label="Editar"
-              hideLabelOnMedia
-              onClick={() => {
-                setModalEditBuildingOpen(true);
-              }}
-            />
+
+            <Style.CardHeaderButtonsContainer>
+              <IconButton
+                icon={icon.editWithBg}
+                label="Editar"
+                permToCheck="buildings:update"
+                hideLabelOnMedia
+                onClick={() => {
+                  setModalEditBuildingOpen(true);
+                }}
+              />
+
+              <IconButton
+                icon={icon.plusWithBg}
+                label="Apartamentos"
+                permToCheck="buildings:update"
+                hideLabelOnMedia
+                onClick={() => {
+                  handleCreateApartmentModal(true);
+                }}
+              />
+            </Style.CardHeaderButtonsContainer>
           </Style.CardHeader>
+
           <Style.BuildingCardWrapper>
             <Style.BuildingCardColumn>
               <Style.BuildingCardData>
@@ -491,9 +606,11 @@ export const BuildingDetails = () => {
             </Style.BuildingCardColumn>
           </Style.BuildingCardWrapper>
         </Style.Card>
+
         <Style.Card>
           <Style.CardHeader>
             <h5>Responsáveis de manutenção</h5>
+
             <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
@@ -710,6 +827,7 @@ export const BuildingDetails = () => {
                 <h5>Senhas de acesso</h5>
               </Style.AnnexCardHeader>
             </Style.AnnexCardTitle>
+
             {building ? (
               <NotificationTable
                 colsHeader={[{ label: 'Acesso' }, { label: 'Status' }, { label: '' }]}
@@ -807,6 +925,7 @@ export const BuildingDetails = () => {
                 <IconButton
                   icon={icon.editWithBg}
                   label="Editar"
+                  permToCheck="maintenances:plan"
                   hideLabelOnMedia
                   onClick={() => {
                     if (building?.id) {

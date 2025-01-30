@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 // LIBS
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -9,6 +9,12 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
+
+// CONTEXTS
+import { AuthContext } from '@contexts/Auth/AuthContext';
+
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // GLOBAL COMPONENTS
 import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
@@ -34,6 +40,9 @@ import * as Style from './styles';
 import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
+  const { account } = useContext(AuthContext);
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   const [date, setDate] = useState(new Date());
 
   const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
@@ -82,7 +91,7 @@ export const MaintenancesCalendar = () => {
   const disableCalendarNextButton =
     YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
 
-  const [buildingId, setBuildingId] = useState<string>('');
+  const [buildingId, setBuildingId] = useState<string>('none');
 
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
 
@@ -142,15 +151,15 @@ export const MaintenancesCalendar = () => {
 
   const handleGetCalendarData = async () => {
     await requestCalendarData({
+      buildingId,
+      yearToRequest,
+      calendarType,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
-      yearToRequest,
       setYearChangeLoading,
       setBuildingOptions,
-      buildingId,
-      calendarType,
     });
   };
 
@@ -261,15 +270,15 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     requestCalendarData({
+      buildingId,
+      calendarType,
+      yearToRequest,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
-      yearToRequest,
       setYearChangeLoading,
       setBuildingOptions,
-      buildingId,
-      calendarType,
     });
   }, [buildingId, yearToRequest]);
 
@@ -295,15 +304,15 @@ export const MaintenancesCalendar = () => {
           calendarType={calendarType}
           onThenActionRequest={async () =>
             requestCalendarData({
+              buildingId,
+              calendarType,
+              yearToRequest,
               setLoading,
               setMaintenancesWeekView,
               setMaintenancesMonthView,
               setMaintenancesDisplay,
-              yearToRequest,
               setYearChangeLoading,
               setBuildingOptions,
-              buildingId,
-              calendarType,
             })
           }
         />
@@ -336,15 +345,15 @@ export const MaintenancesCalendar = () => {
           handleModalEditReport={handleModalEditReport}
           onThenActionRequest={async () =>
             requestCalendarData({
+              buildingId,
+              calendarType,
+              yearToRequest,
               setLoading,
               setMaintenancesWeekView,
               setMaintenancesMonthView,
               setMaintenancesDisplay,
-              yearToRequest,
               setYearChangeLoading,
               setBuildingOptions,
-              buildingId,
-              calendarType,
             })
           }
         />
@@ -357,12 +366,15 @@ export const MaintenancesCalendar = () => {
           <select
             disabled={yearChangeloading}
             value={buildingId}
-            onChange={(e) => {
-              setBuildingId(e.target.value);
-            }}
+            onChange={(e) => setBuildingId(e.target.value)}
           >
+            <option value="none" hidden>
+              Selecione
+            </option>
+
             <option value="">Todas</option>
-            {buildingOptions.map((building) => (
+
+            {buildingsForSelect.map((building) => (
               <option value={building.id} key={building.id}>
                 {building.name}
               </option>
@@ -372,6 +384,7 @@ export const MaintenancesCalendar = () => {
           <IconButton
             icon={icon.plus}
             label="Manutenção avulsa"
+            permToCheck="maintenances:createOccasional"
             onClick={() => setModalCreateOccasionalMaintenance(true)}
           />
         </Style.Header>

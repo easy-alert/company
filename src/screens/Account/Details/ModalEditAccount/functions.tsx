@@ -90,6 +90,8 @@ export const requestEditAccount = async ({
           lastAccess: account.User.lastAccess,
           name: values.name,
           Permissions: account.User.Permissions,
+          isCompanyOwner: account.User.isCompanyOwner,
+          BuildingsPermissions: account.User.BuildingsPermissions,
         },
       };
 
