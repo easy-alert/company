@@ -20,7 +20,8 @@ export const ModalApartmentsTitle = styled.h3`
 export const ApartmentList = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  gap: ${theme.size.xsm};
+  column-gap: ${theme.size.xsm};
+  row-gap: ${theme.size.sm};
 
   margin-top: ${theme.size.xsm};
 `;
@@ -48,5 +49,5 @@ export const ButtonContainer = styled.div`
   justify-content: center;
   gap: ${theme.size.xsm};
 
-  margin-top: ${theme.size.md};
+  margin-top: ${theme.size.sm};
 `;
