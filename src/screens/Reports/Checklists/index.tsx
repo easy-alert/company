@@ -1,39 +1,65 @@
 /* eslint-disable react/no-array-index-key */
 // #region imports
-import { Form, Formik } from 'formik';
-import { useEffect, useState } from 'react';
+// REACT
+import { useState } from 'react';
 import { CSVLink } from 'react-csv';
+
+// LIBS
+import { Form, Formik } from 'formik';
 import * as yup from 'yup';
-import { Api } from '../../../services/api';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { Button } from '../../../components/Buttons/Button';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { icon } from '../../../assets/icons';
-import * as s from './styles';
-import { theme } from '../../../styles/theme';
-import { FormikInput } from '../../../components/Form/FormikInput';
-import { IChecklists, IChecklistsForPDF, IFilter } from './types';
-import { catchHandler, dateFormatter } from '../../../utils/functions';
-import { Select } from '../../../components/Inputs/Select';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '@components/Buttons/IconButton';
+import { Button } from '@components/Buttons/Button';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Select } from '@components/Inputs/Select';
+
+// GLOBAL UTILS
+import { catchHandler, dateFormatter } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
+import { ModalPrintChecklists } from './ModalPrintChecklists';
+
+// UTILS
 import {
   getSingularStatusNameforPdf,
   getPluralStatusNameforPdf,
 } from '../Maintenances/ModalPrintReport/functions';
-import { ModalPrintChecklists } from './ModalPrintChecklists';
+
+// STYLES
+import * as s from './styles';
+
+// TYPES
+import type { IChecklists, IChecklistsForPDF, IFilter } from './types';
+
 // #endregion
 
 export const ChecklistReports = () => {
   // #region states
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const [checklists, setChecklists] = useState<IChecklists[]>([]);
   const [checklistsForPDF, setChecklistsForPDF] = useState<IChecklistsForPDF[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
   const [completedCount, setCompletedCount] = useState(0);
-  const [filtersOptions, setFiltersOptions] = useState<{ buildings: { name: string }[] }>();
 
   const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
   const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
@@ -110,21 +136,7 @@ export const ChecklistReports = () => {
       });
   };
 
-  const requestBuildings = async () => {
-    await Api.get(`/buildings/reports/listforselect`)
-      .then((res) => {
-        setFiltersOptions(res.data.filters);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
-  };
-
   // #endregion
-
-  useEffect(() => {
-    requestBuildings();
-  }, []);
 
   return (
     <>
@@ -195,11 +207,12 @@ export const ChecklistReports = () => {
                     <option value="" disabled hidden>
                       Selecione
                     </option>
+
                     <option value="all" disabled={buildingsForFilter.length === 0}>
                       Todas
                     </option>
 
-                    {filtersOptions?.buildings.map((building) => (
+                    {buildingsForSelect?.map((building) => (
                       <option
                         key={building.name}
                         value={building.name}

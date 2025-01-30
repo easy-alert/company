@@ -1,14 +1,17 @@
 /* eslint-disable react/no-array-index-key */
 // REACT
 import { useEffect, useState } from 'react';
-
-// LIBS
-import { Form, Formik } from 'formik';
 import { CSVLink } from 'react-csv';
 import { toast } from 'react-toastify';
 
+// LIBS
+import { Form, Formik } from 'formik';
+
 // SERVICES
 import { Api } from '@services/api';
+
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
@@ -61,6 +64,8 @@ import type { IModalAdditionalInformations } from '../../Calendar/types';
 
 export const MaintenanceReports = () => {
   // #region states
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onPdfQuery, setOnPdfQuery] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -306,7 +311,7 @@ export const MaintenanceReports = () => {
                     label="Edificação"
                     value=""
                     onChange={(e) => {
-                      const selectedBuilding = filtersOptions?.buildings.find(
+                      const selectedBuilding = buildingsForSelect.find(
                         (building) => building.id === e.target.value,
                       );
 
@@ -325,11 +330,12 @@ export const MaintenanceReports = () => {
                     <option value="" disabled hidden>
                       Selecione
                     </option>
+
                     <option value="all" disabled={buildingsForFilter.length === 0}>
                       Todas
                     </option>
 
-                    {filtersOptions?.buildings.map((building) => (
+                    {buildingsForSelect.map((building) => (
                       <option
                         key={building.id}
                         value={building.id}

@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 // LIBS
 import { toast } from 'react-toastify';
 
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+
 // SERVICES
 import { Api } from '@services/api';
 
@@ -43,19 +46,15 @@ export interface ICalendarDates {
   completed: { date: string }[];
 }
 
-interface IBuildingOptions {
-  name: string;
-  nanoId: string;
-}
-
 export const Checklists = () => {
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   const [date, setDate] = useState(new Date());
   const [modalCreateChecklistOpen, setModalCreateChecklistOpen] = useState(false);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [buildingNanoId, setBuildingNanoId] = useState<string>('');
   const [buildingName, setBuildingName] = useState<string>('');
-  const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
   const [checklists, setChecklists] = useState<IChecklist[]>([]);
   const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
     completed: [],
@@ -90,22 +89,8 @@ export const Checklists = () => {
       });
   };
 
-  const findBuildingsForSelect = async () => {
-    await Api.get('/buildings/listforselect')
-      .then((res) => {
-        setBuildingOptions(res.data);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   useEffect(() => {
     requestListIntervals({ setTimeIntervals });
-    findBuildingsForSelect();
   }, []);
 
   useEffect(() => {
@@ -142,11 +127,14 @@ export const Checklists = () => {
 
             <Select
               id="customFilterForChecklist"
-              disabled={loading}
+              disabled={buildingsForSelect.length === 0}
               selectPlaceholderValue=" "
               value={buildingNanoId}
               onChange={(evt) => {
-                const building = buildingOptions.find(({ nanoId }) => nanoId === evt.target.value);
+                const building = buildingsForSelect.find(
+                  ({ nanoId }) => nanoId === evt.target.value,
+                );
+
                 setBuildingName(building?.name ?? '');
                 setBuildingNanoId(evt.target.value);
               }}
@@ -155,7 +143,7 @@ export const Checklists = () => {
                 Selecione
               </option>
 
-              {buildingOptions.map(({ nanoId, name }) => (
+              {buildingsForSelect.map(({ nanoId, name }) => (
                 <option value={nanoId} key={nanoId}>
                   {name}
                 </option>
