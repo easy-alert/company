@@ -1,8 +1,13 @@
 // #region imports
-import { useEffect, useState, useRef, useCallback } from 'react';
 
+// REACT
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Chart from 'react-apexcharts';
 
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+
+// SERVICES
 import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
 import { getTicketsCountAndCost } from '@services/apis/getTicketsCountAndCost';
@@ -11,17 +16,22 @@ import { getMaintenancesByStatus } from '@services/apis/getMaintenancesByStatus'
 import { getMaintenancesTimeline } from '@services/apis/getMaintenancesTimeline';
 import { getMaintenancesMostCompletedExpired } from '@services/apis/getMaintenancesMostCompletedExpired';
 
+// GLOBAL COMPONENTS
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
 
-import type { ITicketStatusNames } from '@customTypes/ITicket';
-
+// GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
 
+// GLOBAL TYPES
+import type { ITicketStatusNames } from '@customTypes/ITicket';
+
+// COMPONENTS
 import { ModalDashboardMaintenanceDetails } from './ModalDashboardMaintenanceDetails';
 
+// STYLES
 import * as Style from './styles';
 // #endregion
 
@@ -132,6 +142,8 @@ interface IDashboardLoadings {
 // #endregion
 
 export const Dashboard = () => {
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   // #region states
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
     commonMaintenanceData: {
@@ -891,17 +903,18 @@ export const Dashboard = () => {
               <option value="" disabled hidden>
                 Selecione
               </option>
+
               <option value="all" disabled={dataFilter.buildings.length === 0}>
                 Todas
               </option>
 
-              {filterOptions.buildings.map((building) => (
+              {buildingsForSelect.map((building) => (
                 <option
-                  value={building}
-                  key={building}
-                  disabled={dataFilter.buildings.some((e) => e === building)}
+                  key={building.id}
+                  value={building.name}
+                  disabled={dataFilter.buildings.some((e) => e === building.name)}
                 >
-                  {building}
+                  {building.name}
                 </option>
               ))}
             </Select>
@@ -956,6 +969,7 @@ export const Dashboard = () => {
               <option value="all" disabled={dataFilter.responsible.length === 0}>
                 Todos
               </option>
+
               {filterOptions.responsible.map((responsible) => (
                 <option
                   value={responsible}
