@@ -13,6 +13,9 @@ import ptBR from 'date-fns/locale/pt';
 // CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
 
+// HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+
 // GLOBAL COMPONENTS
 import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
 import { IconButton } from '@components/Buttons/IconButton';
@@ -38,6 +41,7 @@ import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } fr
 
 export const MaintenancesCalendar = () => {
   const { account } = useContext(AuthContext);
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   const [date, setDate] = useState(new Date());
 
@@ -87,7 +91,7 @@ export const MaintenancesCalendar = () => {
   const disableCalendarNextButton =
     YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
 
-  const [buildingId, setBuildingId] = useState<string>('');
+  const [buildingId, setBuildingId] = useState<string>('none');
 
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
 
@@ -362,12 +366,15 @@ export const MaintenancesCalendar = () => {
           <select
             disabled={yearChangeloading}
             value={buildingId}
-            onChange={(e) => {
-              setBuildingId(e.target.value);
-            }}
+            onChange={(e) => setBuildingId(e.target.value)}
           >
+            <option value="none" hidden>
+              Selecione
+            </option>
+
             <option value="">Todas</option>
-            {buildingOptions.map((building) => (
+
+            {buildingsForSelect.map((building) => (
               <option value={building.id} key={building.id}>
                 {building.name}
               </option>
