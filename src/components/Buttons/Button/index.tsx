@@ -21,9 +21,10 @@ export const Button = ({
 }: IButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
-  if (!hasPermission) {
+  if (permToCheck && !hasPermission) {
     return null;
   }
+
   return (
     <Background center={center}>
       <ContainerButton
