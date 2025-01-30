@@ -11,9 +11,9 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 import { useServiceTypes } from '@hooks/useServiceTypes';
 import { useTicketPlaces } from '@hooks/useTicketPlaces';
 import { useTicketStatus } from '@hooks/useTicketStatus';
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
-import { Api } from '@services/api';
 import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
 import { putTicketById } from '@services/apis/putTicketById';
 
@@ -34,10 +34,8 @@ import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
-import type { IBuilding } from '@customTypes/IBuilding';
 
 // COMPONENTS
-import { useBuildings } from '@hooks/useBuildings';
 import ModalTicketDetails from './ModalTicketDetails';
 import { ModalCreateTicket } from './ModalCreateTicket';
 
@@ -61,7 +59,7 @@ export interface ITicketFilter {
 
 function TicketsPage() {
   const { account } = useAuthContext();
-  const { buildings } = useBuildings({ checkPerms: true, filter: '', page: 1 });
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
@@ -231,7 +229,7 @@ function TicketsPage() {
     <>
       {createTicketModal && (
         <ModalCreateTicket
-          buildings={buildings}
+          buildings={buildingsForSelect}
           handleCreateTicketModal={handleCreateTicketModal}
           handleRefresh={handleRefresh}
         />
@@ -298,7 +296,7 @@ function TicketsPage() {
                       Todas
                     </option>
 
-                    {buildings.map((building) => (
+                    {buildingsForSelect.map((building) => (
                       <option
                         value={building.nanoId}
                         key={building.nanoId}
@@ -454,7 +452,7 @@ function TicketsPage() {
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
-                          label={buildings.find((b) => b.nanoId === building)?.name || ''}
+                          label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
                           padding="4px 12px"
                           fontWeight={500}
                           onClick={() => {
