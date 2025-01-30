@@ -64,6 +64,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 error={touched.name && errors.name ? errors.name : null}
                 placeholder="Ex: Monte Ravello"
               />
+
               <FormikSelect
                 label="Tipo *"
                 name="buildingTypeId"
@@ -76,12 +77,14 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 <option value="" disabled hidden>
                   Selecione
                 </option>
+
                 {buildingTypes.map((e) => (
                   <option key={e.id} value={e.id}>
                     {capitalizeFirstLetter(e.name)}
                   </option>
                 ))}
               </FormikSelect>
+
               <FormikInput
                 label="CEP *"
                 name="cep"
