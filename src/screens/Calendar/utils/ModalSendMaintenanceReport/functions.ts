@@ -1,13 +1,22 @@
+// LIBS
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
-import {
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL UTILS
+import { applyMask, catchHandler, unMaskBRL } from '@utils/functions';
+
+// UTILS
+import { requestCalendarData } from '../../functions';
+
+// TYPES
+import type {
   IRequestReportProgress,
   IRequestSaveReportProgress,
   IRequestSendReport,
   IRequestToggleInProgress,
 } from './types';
-import { requestCalendarData } from '../../functions';
 
 export const requestSendReport = async ({
   maintenanceReport,
@@ -39,15 +48,15 @@ export const requestSendReport = async ({
   })
     .then((res) => {
       requestCalendarData({
+        buildingId,
+        calendarType,
+        yearToRequest,
         setLoading,
         setMaintenancesWeekView,
         setMaintenancesMonthView,
         setMaintenancesDisplay,
-        yearToRequest,
         setYearChangeLoading,
         setBuildingOptions,
-        buildingId,
-        calendarType,
       });
 
       toast.success(res.data.ServerMessage.message);
@@ -91,15 +100,15 @@ export const requestSaveReportProgress = async ({
   })
     .then((res) => {
       requestCalendarData({
+        buildingId,
+        calendarType,
+        yearToRequest,
         setLoading,
         setMaintenancesWeekView,
         setMaintenancesMonthView,
         setMaintenancesDisplay,
-        yearToRequest,
         setYearChangeLoading,
         setBuildingOptions,
-        buildingId,
-        calendarType,
       });
 
       toast.success(res.data.ServerMessage.message);

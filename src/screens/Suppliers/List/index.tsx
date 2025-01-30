@@ -51,9 +51,7 @@ export const SuppliersList = () => {
   const { account } = useAuthContext();
   const { states, selectedStateAcronym, setSelectedStateAcronym } = useBrasilStates();
   const { cities } = useBrasilCities({ UF: selectedStateAcronym });
-  const { allCategories } = account
-    ? useCategoriesByCompanyId(account.Company.id)
-    : { allCategories: [] };
+  const { allCategories } = useCategoriesByCompanyId(account?.Company?.id || '');
 
   const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
   const [supplierCounts, setSupplierCounts] = useState<number>(0);

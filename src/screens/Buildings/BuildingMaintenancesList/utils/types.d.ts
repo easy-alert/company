@@ -50,19 +50,27 @@ export interface IMaintenance {
     lastResolutionDate?: string;
     lastNotificationDate?: string;
     lastNotificationStatus?: string;
+    MaintenanceAdditionalInformation?: {
+      information: string;
+    };
   };
 }
 
 export interface AddedMaintenances {
+  id: string;
+
+  buildingId: string;
+  categoryId: string;
+
+  Building: {
+    name: string;
+    nanoId: string;
+  };
   Category: {
     id: string;
     name: string;
   };
   Maintenances: IMaintenance[];
-  Building: {
-    name: string;
-    nanoId: string;
-  };
 }
 
 // REQUESTS

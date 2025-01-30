@@ -84,9 +84,7 @@ export const ModalCreateAndLinkSupplier = ({
 }: IModalCreateSupplier) => {
   const { account } = useAuthContext();
   const { states } = useBrasilStates();
-  const { allCategories } = account
-    ? useCategoriesByCompanyId(account.Company.id)
-    : { allCategories: [] };
+  const { allCategories } = useCategoriesByCompanyId(account?.Company?.id || '');
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState('');

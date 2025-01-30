@@ -6,6 +6,10 @@ export const ArrowContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: ${theme.size.xsm};
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 export const Arrow = styled.div<{ cardIsOpen: boolean }>`
@@ -21,16 +25,18 @@ export const Hr = styled.div`
   margin-top: ${theme.size.xsm};
 `;
 
-export const MaintenancesCard = styled.div`
+export const MaintenancesCard = styled.div<{ hasAdditionalInformation: boolean }>`
   display: flex;
   padding: ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
-  background-color: ${theme.color.white};
+
+  background-color: ${({ hasAdditionalInformation }) =>
+    hasAdditionalInformation ? theme.color.primaryL : theme.color.white};
 
   transition: 0.25s;
+
   :hover {
-    cursor: pointer;
-    background-color: ${`${theme.color.white}B3`};
+    opacity: 0.7;
   }
 `;
 
@@ -117,7 +123,7 @@ export const MaintenancesMoreGrid = styled.div`
   height: 100%;
   max-height: 100%;
   grid-gap: ${theme.size.xsm} ${theme.size.sm};
-  grid-template-columns: 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px;
+  grid-template-columns: 230px minmax(280px, 0.8fr) 0.5fr 0.5fr 0.5fr 30px;
 
   span {
     color: ${theme.color.primary};

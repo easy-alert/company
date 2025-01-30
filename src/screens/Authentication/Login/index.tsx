@@ -57,7 +57,7 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/dashboard');
+              navigate('/account');
 
               // if (!viewedTutorial) {
               //   navigate('/tutorials', { state: { from: 'login' } });
@@ -74,10 +74,12 @@ export const Login = () => {
         {({ errors, values, touched }) => (
           <>
             <img src={icon.logoTextWhite} alt="" />
+
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
                   <h2>Login/Company</h2>
+
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
@@ -99,6 +101,7 @@ export const Login = () => {
                       placeholder="Insira sua senha"
                       error={touched.password && errors.password ? errors.password : null}
                     />
+
                     <IconButton
                       icon={showPassword ? icon.eye : icon.eyeGray}
                       size="20px"
@@ -109,14 +112,17 @@ export const Login = () => {
                     />
                   </Style.PasswordDiv>
                 </Style.InputWrapper>
+
                 <Style.ButtonContainer loading={+onQuery}>
                   <Link style={{ pointerEvents: onQuery ? 'none' : 'auto' }} to="/register">
                     Cadastrar
                   </Link>
+
                   <Button label="Login" loading={onQuery} type="submit" />
                 </Style.ButtonContainer>
               </Form>
             </Style.LoginContainer>
+
             <p className="p2">
               Esqueceu sua senha? <Link to="/passwordrecover/sendemail">Recuperar senha</Link>
             </p>

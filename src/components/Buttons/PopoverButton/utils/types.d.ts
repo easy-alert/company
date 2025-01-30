@@ -22,4 +22,5 @@ export interface IPopoverButton {
   labelPos?: 'left' | 'right' | 'top' | 'bottom';
   fontWeight?: string;
   textColor?: string;
+  permToCheck?: string;
 }

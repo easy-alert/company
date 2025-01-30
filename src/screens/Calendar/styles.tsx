@@ -12,9 +12,9 @@ export const Header = styled.header`
   margin-bottom: ${theme.size.sm};
   gap: ${theme.size.sm};
 
-  > :last-child {
+  > :nth-child(3) {
     margin-left: auto;
-  } 
+  }
 
   > select {
     max-width: 300px;

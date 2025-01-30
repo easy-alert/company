@@ -5,6 +5,8 @@
 
 // LIBS
 import { useState } from 'react';
+import { updateMaintenanceAdditionalInformation } from '@services/apis/updateMaintenanceAdditionalInformation';
+import { handleToastify } from '@utils/toastifyResponses';
 import { icon } from '../../../../../../assets/icons';
 
 // COMPONENTS
@@ -19,11 +21,58 @@ import { alphabeticalOrder, numericalOrder } from './utils/functions';
 import { IMaintenanceCategory, ISortType } from './utils/types';
 import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
 import { IconButton } from '../../../../../../components/Buttons/IconButton';
+import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
 
 export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
+  const [selectedMaintenance, setSelectedMaintenance] = useState<{
+    maintenanceId: string;
+    additionalInfo: string;
+  }>({
+    maintenanceId: '',
+    additionalInfo: '',
+  });
+
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortType, setSortType] = useState<ISortType>({ type: 'element' });
+
   const [modalPrintCategoryQrCodeOpen, setModalPrintCategoryQrCodeOpen] = useState<boolean>(false);
+  const [modalAdditionalInformation, setModalAdditionalInformation] = useState<boolean>(false);
+
+  const handleModalAdditionalInformation = (modalState: boolean) => {
+    setModalAdditionalInformation(modalState);
+  };
+
+  const handleSelectedMaintenance = ({
+    maintenanceId,
+    additionalInformation,
+  }: {
+    maintenanceId: string;
+    additionalInformation: string;
+  }) => {
+    setSelectedMaintenance({
+      maintenanceId,
+      additionalInfo: additionalInformation,
+    });
+  };
+
+  const handleUpdateAdditionalInformation = async (additionalInfo: string) => {
+    if (!additionalInfo) {
+      handleToastify({
+        status: 400,
+        data: { ServerMessage: { message: 'A informação adicional é obrigatória.' } },
+      });
+
+      return;
+    }
+
+    await updateMaintenanceAdditionalInformation({
+      buildingId: data.buildingId,
+      maintenanceId: selectedMaintenance.maintenanceId,
+      additionalInfo,
+    });
+
+    setModalAdditionalInformation(false);
+  };
 
   return (
     <>
@@ -37,11 +86,20 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
         />
       )}
 
+      {modalAdditionalInformation && (
+        <ModalAdditionalInformation
+          maintenanceAdditionalInfo={selectedMaintenance.additionalInfo}
+          handleUpdateAdditionalInformation={handleUpdateAdditionalInformation}
+          handleModalAdditionalInformation={handleModalAdditionalInformation}
+        />
+      )}
+
       <Style.Background>
         <Style.HeaderCategory>
           <Style.HeaderTitle>
             <Style.Container>
               <h5>{data.Category.name}</h5>
+
               <IconButton
                 icon={icon.qrcode}
                 size="18px"
@@ -102,6 +160,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
                     size="8px"
                   />
                 </Style.SortHeader>
+
                 <Style.SortHeader
                   highlighted={sortType.type === 'frequency'}
                   onClick={() => {
@@ -179,7 +238,12 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
           )}
 
           {data.Maintenances.map((maintenance) => (
-            <MaintenanceCard maintenance={maintenance} key={maintenance.Maintenance.id} />
+            <MaintenanceCard
+              key={maintenance.Maintenance.id}
+              maintenance={maintenance}
+              handleSelectedMaintenance={handleSelectedMaintenance}
+              handleModalAdditionalInformation={handleModalAdditionalInformation}
+            />
           ))}
         </Style.MaintenancesContainer>
       </Style.Background>

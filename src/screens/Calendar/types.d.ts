@@ -1,3 +1,5 @@
+import type { IAccount } from '@utils/types';
+
 export interface ICalendarView {
   start: Date;
   end: Date;
@@ -21,15 +23,15 @@ export interface IModalAdditionalInformations {
 }
 
 export interface IRequestCalendarData {
+  buildingId: string;
+  yearToRequest: number;
+  calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
   setMaintenancesWeekView: (setMaintenancesWeekView: ICalendarView[]) => void;
   setMaintenancesMonthView: (setMaintenancesMonthView: ICalendarView[]) => void;
   setMaintenancesDisplay: (setMaintenancesDisplay: ICalendarView[]) => void;
   setLoading: (setLoading: boolean) => void;
   setYearChangeLoading: (setYearChangeLoading: boolean) => void;
-  yearToRequest: number;
   setBuildingOptions: React.Dispatch<React.SetStateAction<IBuildingOptions[]>>;
-  buildingId: string;
-  calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 }
 
 export interface IRequestCalendarDataResData {

@@ -1,27 +1,36 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-// LIBS
+// REACT
 import { useState } from 'react';
 
-// COMPONENTS
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { Image } from '@components/Image';
+import { ListTag } from '@components/ListTag';
+
+// GLOBAL UTILS
+import { capitalizeFirstLetter } from '@utils/functions';
 import { handlePriorityName } from '@utils/handlePriorityName';
-import { icon } from '../../../../../../assets/icons';
-import { Image } from '../../../../../../components/Image';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// STYLES
 import * as Style from './styles';
 
 // TYPES
-import { IMaintenanceCard } from './utils/types';
-import { capitalizeFirstLetter } from '../../../../../../utils/functions';
-import { ListTag } from '../../../../../../components/ListTag';
+import type { IMaintenanceCard } from './utils/types';
 
-export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
+export const MaintenanceCard = ({
+  maintenance,
+  handleSelectedMaintenance,
+  handleModalAdditionalInformation,
+}: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
 
   return (
     <Style.MaintenancesCard
-      onClick={() => {
-        setCardIsOpen((prevState) => !prevState);
-      }}
+      hasAdditionalInformation={
+        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.information
+      }
     >
       <Style.MaintenancesCardContent>
         <Style.MaintenancesCardTopContent>
@@ -39,7 +48,7 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
             <p className="p2">{maintenance.Maintenance.responsible}</p>
             <p className="p2">{maintenance.Maintenance.source}</p>
 
-            <Style.ArrowContainer>
+            <Style.ArrowContainer onClick={() => setCardIsOpen(!cardIsOpen)}>
               <Style.Arrow cardIsOpen={cardIsOpen}>
                 <Image img={icon.downArrow} size="16px" />
               </Style.Arrow>
@@ -49,6 +58,7 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
 
         <Style.MaintenancesCardBottomContainer cardIsOpen={cardIsOpen}>
           <Style.Hr />
+
           <Style.MaintenancesMoreGrid>
             <p className="p2">
               <span>Observação: </span>
@@ -109,6 +119,22 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
               </Style.AdditionalInformationsWrapper>
             )}
 
+            <div />
+
+            <Style.AdditionalInformationsWrapper style={{ justifyContent: 'flex-end' }}>
+              <Button
+                label="Informações Adicionais"
+                onClick={() => {
+                  handleSelectedMaintenance({
+                    maintenanceId: maintenance.Maintenance.id,
+                    additionalInformation:
+                      maintenance.Maintenance.MaintenanceAdditionalInformation?.information || '',
+                  });
+                  handleModalAdditionalInformation(true);
+                }}
+              />
+            </Style.AdditionalInformationsWrapper>
+
             {maintenance.Maintenance.lastNotificationDate && (
               <Style.LastNotificationDate
                 title={capitalizeFirstLetter(maintenance.Maintenance.lastNotificationStatus || '')}
@@ -129,6 +155,10 @@ export const MaintenanceCard = ({ maintenance }: IMaintenanceCard) => {
                 </p>
               </Style.DaysToAncitipateWrapper>
             )}
+
+            <div />
+            <div />
+            <div />
           </Style.MaintenancesMoreGrid>
         </Style.MaintenancesCardBottomContainer>
       </Style.MaintenancesCardContent>

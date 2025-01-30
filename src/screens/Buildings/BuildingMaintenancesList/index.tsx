@@ -100,6 +100,7 @@ export const BuildingMaintenancesList = () => {
               <h2>{buildingName} / Plano de manutenção</h2>
             </Style.HeaderTitle>
           </Style.LeftSide>
+
           <Style.RightSide>
             <CSVLink
               data={csvData}
@@ -138,6 +139,7 @@ export const BuildingMaintenancesList = () => {
             />
           </Style.RightSide>
         </Style.HeaderWrapper>
+
         <Style.SearchField>
           <IconButton
             icon={icon.search}
@@ -163,6 +165,7 @@ export const BuildingMaintenancesList = () => {
             }}
           />
         </Style.SearchField>
+
         <ReturnButton path={`/buildings/details/${buildingId}${search}`} />
       </Style.Header>
 
