@@ -114,6 +114,7 @@ function ModalTicketDetails({
       }
       bodyWidth="475px"
       setModal={handleTicketDetailsModal}
+      closeOutside={false}
     >
       {loading ? (
         <DotSpinLoading />
