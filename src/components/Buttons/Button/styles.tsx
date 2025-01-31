@@ -55,7 +55,9 @@ export const ContainerButton = styled.div<{
     }
 
     ${({ bgColor }) => {
-      const themeColor = theme.color[bgColor as keyof typeof theme.color];
+      const themeColor =
+        theme.color[bgColor as keyof typeof theme.color] ||
+        theme.background[bgColor as keyof typeof theme.background];
 
       if (themeColor) return `background-color: ${themeColor};`;
 
