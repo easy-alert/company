@@ -5,17 +5,21 @@ import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
+import SignaturePad from '@components/SignaturePad';
+import Typography from '@components/Typography';
 
 // GLOBAL THEMES
 import { theme } from '@styles/theme';
 
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
+import { uploadManyFiles } from '@utils/functions';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
+
 import * as Style from '../styles';
 
 interface ITicketDetails {
@@ -179,6 +183,24 @@ function TicketDetails({
         userId={userId}
         disableComment={disableComment}
       />
+
+      <div>
+        <Typography variant="h3">Assinatura</Typography>
+
+        <SignaturePad
+          onSave={async (signature: string) => {
+            const file = {
+              fieldname: 'files',
+              originalname: `assinatura-${userId}-${new Date().toISOString()}.png`,
+              encoding: '7bit',
+              mimetype: 'image/png',
+              file: signature,
+            };
+
+            await uploadManyFiles(file);
+          }}
+        />
+      </div>
 
       {ticket?.statusName === 'dismissed' && (
         <Style.TicketDetailsColumnContent>
