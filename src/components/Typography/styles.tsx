@@ -5,6 +5,11 @@ import { theme } from '@styles/theme';
 export interface IStyledTypography {
   color?: keyof typeof theme.color;
   fontSize?: keyof typeof theme.size;
+
+  marginTop?: keyof typeof theme.size;
+  marginBottom?: keyof typeof theme.size;
+  marginLeft?: keyof typeof theme.size;
+  marginRight?: keyof typeof theme.size;
   // Add more props as needed
 }
 
@@ -14,6 +19,14 @@ const baseStyles = css<IStyledTypography>`
 
   color: ${({ color }) => theme.color[color as keyof typeof theme.color] || color};
   font-size: ${({ fontSize }) => theme.size[fontSize as keyof typeof theme.size] || fontSize};
+
+  margin-top: ${({ marginTop }) => theme.size[marginTop as keyof typeof theme.size] || marginTop};
+  margin-bottom: ${({ marginBottom }) =>
+    theme.size[marginBottom as keyof typeof theme.size] || marginBottom};
+  margin-left: ${({ marginLeft }) =>
+    theme.size[marginLeft as keyof typeof theme.size] || marginLeft};
+  margin-right: ${({ marginRight }) =>
+    theme.size[marginRight as keyof typeof theme.size] || marginRight};
   // Add more default styles if needed
 `;
 
