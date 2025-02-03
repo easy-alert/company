@@ -7,21 +7,20 @@ export const SignaturePad = styled.div`
   flex-direction: column;
   align-items: center;
 
-  gap: ${theme.size.md};
-  padding: ${theme.size.md};
+  gap: ${theme.size.sm};
 
   > canvas {
     min-width: 100%;
     max-width: 100%;
-    min-height: 200px;
-    max-height: 200px;
+    min-height: 300px;
+    max-height: 300px;
 
     border: 1px solid ${theme.color.gray3};
     border-radius: ${theme.size.xsm};
 
     @media (max-width: 900px) {
-      min-height: 300px;
-      max-height: 300px;
+      min-height: 500px;
+      max-height: 500px;
     }
   }
 `;
