@@ -1,3 +1,6 @@
+// REACT
+import { useState } from 'react';
+
 // COMPONENTS
 import { ListTag } from '@components/ListTag';
 import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
@@ -5,6 +8,8 @@ import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
+import { Input } from '@components/Inputs/Input';
+import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
 
@@ -13,30 +18,38 @@ import { theme } from '@styles/theme';
 
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
-import { uploadManyFiles } from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
-
 import * as Style from '../styles';
 
 interface ITicketDetails {
   ticket: ITicket;
   userId?: string;
   showButtons?: boolean;
-  handleUpdateOneTicket: (updatedTicket: ITicket) => void;
+  signatureLoading: boolean;
   handleSetView: (viewState: 'details' | 'dismiss') => void;
+  handleUpdateOneTicket: (updatedTicket: ITicket, refresh?: boolean, closeModal?: boolean) => void;
+  handleUploadSignature: (signature: string) => void;
 }
 
 function TicketDetails({
   ticket,
   userId,
   showButtons,
-  handleUpdateOneTicket,
+  signatureLoading,
   handleSetView,
+  handleUpdateOneTicket,
+  handleUploadSignature,
 }: ITicketDetails) {
+  const [collaborator, setCollaborator] = useState<string>('');
+  const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
+
   const disableComment = ticket?.statusName !== 'awaitingToFinish';
 
   const ticketDetailsRows = {
@@ -184,23 +197,76 @@ function TicketDetails({
         disableComment={disableComment}
       />
 
-      <div>
-        <Typography variant="h3">Assinatura</Typography>
+      {ticket.statusName !== 'open' && (
+        <Style.TicketFinalSolutionContainer>
+          <Typography variant="h3" marginBottom="sm">
+            Colaborador
+          </Typography>
 
-        <SignaturePad
-          onSave={async (signature: string) => {
-            const file = {
-              fieldname: 'files',
-              originalname: `assinatura-${userId}-${new Date().toISOString()}.png`,
-              encoding: '7bit',
-              mimetype: 'image/png',
-              file: signature,
-            };
+          <Style.TicketFinalSolutionContent>
+            {!ticket?.collaborator ? (
+              <>
+                <Input
+                  label=""
+                  typeDatePlaceholderValue="Finalizar solução"
+                  value={collaborator}
+                  onChange={(e) => setCollaborator(e.target.value)}
+                />
 
-            await uploadManyFiles(file);
-          }}
-        />
-      </div>
+                <Button
+                  label="Salvar"
+                  bgColor="transparent"
+                  textColor="finished"
+                  onClick={() =>
+                    handleUpdateOneTicket({ id: ticket.id, collaborator }, false, false)
+                  }
+                />
+              </>
+            ) : (
+              <Style.TicketDetailsRowValue>{ticket.collaborator}</Style.TicketDetailsRowValue>
+            )}
+          </Style.TicketFinalSolutionContent>
+        </Style.TicketFinalSolutionContainer>
+      )}
+
+      {ticket.statusName !== 'open' && (
+        <Style.TicketSignatureContainer>
+          <Style.TicketSignatureHeader>
+            <Typography variant="h3">
+              Assinatura:{' '}
+              <Typography variant="span" fontSize="sm" style={{ textDecoration: 'underline' }}>
+                {ticket.residentName}
+              </Typography>
+            </Typography>
+
+            {!ticket?.signature && (
+              <IconButton
+                icon={icon.signing}
+                onClick={() => setOpenSignaturePad(!openSignaturePad)}
+              />
+            )}
+          </Style.TicketSignatureHeader>
+
+          {!ticket?.signature ? (
+            openSignaturePad && (
+              <SignaturePad
+                loading={signatureLoading}
+                onSave={(signature: string) => {
+                  handleUploadSignature(signature);
+                }}
+              />
+            )
+          ) : (
+            <ImagePreview
+              src={ticket.signature}
+              downloadUrl={ticket.signature}
+              imageCustomName="assinatura"
+              width="128px"
+              height="128px"
+            />
+          )}
+        </Style.TicketSignatureContainer>
+      )}
 
       {ticket?.statusName === 'dismissed' && (
         <Style.TicketDetailsColumnContent>
