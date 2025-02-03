@@ -61,6 +61,9 @@ export interface ITicket {
   dismissedAt?: string;
   dismissedById?: string;
 
+  collaborator?: string;
+  signature?: string;
+
   createdAt?: string;
   updatedAt?: string;
 
