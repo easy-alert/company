@@ -7,6 +7,9 @@ import Chart from 'react-apexcharts';
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
+// LIBS
+import { Formik, useFormikContext } from 'formik';
+
 // SERVICES
 import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
@@ -21,6 +24,7 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
+import { FormikInput } from '@components/Form/FormikInput';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
@@ -141,6 +145,15 @@ interface IDashboardLoadings {
 }
 // #endregion
 
+export interface ITicketFilter {
+  startDate?: string;
+  endDate?: string;
+  edification: string[];
+  category: string[];
+  responsible: string[];
+  seen: string;
+}
+
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
@@ -159,6 +172,7 @@ export const Dashboard = () => {
       cost: '',
     },
   });
+
 
   const [maintenancesTimeline, setMaintenancesTimeline] = useState<ITimeline>({
     categories: [],
@@ -254,12 +268,22 @@ export const Dashboard = () => {
 
   const [periodFilter, setPeriodFilter] = useState<string>('30');
 
+
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
     categories: [],
     responsible: [],
     periods: [],
   });
+
+    const [filter, setFilter] = useState<ITicketFilter>({
+      startDate: '',
+      endDate: '',
+      edification: [],
+      category: [],
+      responsible: [],
+      seen: '',
+    });
 
   const [scrollLeft, setScrollLeft] = useState(0);
   const [divWidth, setDivWidth] = useState(0);
@@ -499,6 +523,7 @@ export const Dashboard = () => {
     // get most completed and expired maintenances
     handleGetMaintenancesMostCompletedExpired(resetFilters);
   };
+  
 
   const handleFilterButton = async () => {
     try {
@@ -821,9 +846,24 @@ export const Dashboard = () => {
     [windowWidth],
   );
 
+  
+
+  const handleClearFilters = () => {
+    setFilter({
+      startDate: '',
+      endDate: '',
+      edification: [],
+      category: [],
+      responsible: [],
+      seen: '',
+    });
+  };
+
+
   const handleWindowResize = () => {
     setWindowWidth(window.innerWidth);
   };
+  
   // #endregion
 
   useEffect(() => {
@@ -865,28 +905,50 @@ export const Dashboard = () => {
           rating={selectedRating}
         />
       )}
-
+      
       <Style.Container>
         <h2>Dashboard</h2>
 
         <Style.FilterSection>
           <h5>Filtros</h5>
+          
+          <Formik
+            initialValues={{
+            startDate: '',
+            endDate: '',
+            edification: [],
+            category: [],
+            responsible: [],
+            seen: '',
+            }}
+              onSubmit={async () => handleClearFilters()}
+              >
+            {({ values, setFieldValue, touched, errors }) => (
 
           <Style.FilterWrapper>
-            <Select
-              label="Período"
-              value={periodFilter}
-              selectPlaceholderValue={periodFilter}
-              onChange={(e) => {
-                setPeriodFilter(e.target.value);
-              }}
-            >
-              {filterOptions.periods.map((period) => (
-                <option value={period.period} key={period.period}>
-                  {period.label}
-                </option>
-              ))}
-            </Select>
+          <FormikInput
+                    label="Data inicial"
+                    typeDatePlaceholderValue={values.startDate}
+                    name="startDate"
+                    type="date"
+                    value={values.startDate}
+                    onChange={(e) => {
+                      setFieldValue('startDate', e.target.value);
+                    }}
+                    error={touched.startDate && errors.startDate ? errors.startDate : null}
+                  />
+
+                  <FormikInput
+                    label="Data final"
+                    typeDatePlaceholderValue={values.endDate}
+                    name="endDate"
+                    type="date"
+                    value={values.endDate}
+                    onChange={(e) => {
+                      setFieldValue('endDate', e.target.value);
+                    }}
+                    error={touched.endDate && errors.endDate ? errors.endDate : null}
+                  />
 
             <Select
               selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
@@ -930,6 +992,7 @@ export const Dashboard = () => {
                   setDataFilter((prevState) => ({ ...prevState, categories: [] }));
                 }
               }}
+              
             >
               <option value="" disabled hidden>
                 Selecione
@@ -961,6 +1024,7 @@ export const Dashboard = () => {
                   setDataFilter((prevState) => ({ ...prevState, responsible: [] }));
                 }
               }}
+             
             >
               <option value="" disabled hidden>
                 Selecione
@@ -996,10 +1060,13 @@ export const Dashboard = () => {
                 onClick={handleFilterButton}
               />
             </Style.ButtonWrapper>
+            
+            
 
             <Style.Tags>
               {dataFilter.buildings.length === 0 && (
-                <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" 
+                 />
               )}
 
               {dataFilter.buildings.map((e, i) => (
@@ -1047,6 +1114,9 @@ export const Dashboard = () => {
               ))}
             </Style.Tags>
           </Style.FilterWrapper>
+          
+            )}
+            </Formik>
         </Style.FilterSection>
 
         <Style.Wrappers>
