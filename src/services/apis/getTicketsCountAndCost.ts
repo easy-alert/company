@@ -6,7 +6,6 @@ import type { IDashboardFilter } from '@screens/Dashboard';
 import type { ITicketStatusNames } from '@customTypes/ITicket';
 
 export const getTicketsCountAndCost = async (
-  periodFilter: string,
   dashboardFilter: IDashboardFilter,
   ticketStatus: ITicketStatusNames | '',
   resetFilters?: boolean,
@@ -14,7 +13,8 @@ export const getTicketsCountAndCost = async (
   const uri = '/dashboard/tickets/count-and-cost';
 
   const params = {
-    period: periodFilter,
+    startDate: dashboardFilter.startDate ? dashboardFilter.startDate : '',
+    endDate: dashboardFilter.endDate ? dashboardFilter.endDate : '',
     buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.buildings),
     categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.categories),
     responsible: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.responsible),
