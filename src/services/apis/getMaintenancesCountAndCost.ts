@@ -5,7 +5,6 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IDashboardFilter } from '@screens/Dashboard';
 
 export const getMaintenancesCountAndCost = async (
-  periodFilter: string,
   dashboardFilter: IDashboardFilter,
   maintenanceType: 'common' | 'occasional' | '',
   resetFilters?: boolean,
@@ -13,7 +12,8 @@ export const getMaintenancesCountAndCost = async (
   const uri = '/dashboard/maintenances/count-and-cost';
 
   const params = {
-    period: periodFilter,
+    startDate: dashboardFilter.startDate ? dashboardFilter.startDate : '',
+    endDate: dashboardFilter.endDate ? dashboardFilter.endDate : '',
     buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.buildings),
     categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.categories),
     responsible: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.responsible),

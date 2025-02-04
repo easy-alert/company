@@ -5,14 +5,14 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IDashboardFilter } from '@screens/Dashboard';
 
 export const getTicketsByServiceTypes = async (
-  periodFilter: string,
   dashboardFilter: IDashboardFilter,
   resetFilters?: boolean,
 ) => {
   const uri = '/dashboard/tickets/service-types';
 
   const params = {
-    period: periodFilter,
+    startDate: dashboardFilter.startDate ? dashboardFilter.startDate : '',
+    endDate: dashboardFilter.endDate ? dashboardFilter.endDate : '',
     buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.buildings),
     categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.categories),
     responsible: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.responsible),

@@ -7,6 +7,9 @@ import Chart from 'react-apexcharts';
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
+// LIBS
+import { Form, Formik } from 'formik';
+
 // SERVICES
 import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
@@ -21,6 +24,7 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
+import { FormikInput } from '@components/Form/FormikInput';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
@@ -64,6 +68,8 @@ interface IMaintenance {
 }
 
 export interface IDashboardFilter {
+  startDate: string;
+  endDate: string;
   buildings: string[];
   categories: string[];
   responsible: string[];
@@ -81,7 +87,7 @@ interface IFilterOptions {
   periods: IPeriods[];
 }
 
-type IFilterTypes = 'buildings' | 'categories' | 'responsible';
+type IFilterTypes = 'startDate' | 'endDate' | 'buildings' | 'categories' | 'responsible';
 
 interface ITimeline {
   categories: string[];
@@ -140,6 +146,15 @@ interface IDashboardLoadings {
   mostCompletedExpired: boolean;
 }
 // #endregion
+
+export interface ITicketFilter {
+  startDate?: string;
+  endDate?: string;
+  edification: string[];
+  category: string[];
+  responsible: string[];
+  seen: string;
+}
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
@@ -245,14 +260,14 @@ export const Dashboard = () => {
   const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
   const dataFilterInitialValues: IDashboardFilter = {
+    startDate: '',
+    endDate: '',
     buildings: [],
     categories: [],
     responsible: [],
   };
 
   const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
-
-  const [periodFilter, setPeriodFilter] = useState<string>('30');
 
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
@@ -305,7 +320,6 @@ export const Dashboard = () => {
   ) => {
     try {
       const responseData = await getMaintenancesCountAndCost(
-        periodFilter,
         dataFilter,
         maintenanceType,
         resetFilters,
@@ -346,12 +360,7 @@ export const Dashboard = () => {
     resetFilters?: boolean,
   ) => {
     try {
-      const responseData = await getTicketsCountAndCost(
-        periodFilter,
-        dataFilter,
-        ticketStatus,
-        resetFilters,
-      );
+      const responseData = await getTicketsCountAndCost(dataFilter, ticketStatus, resetFilters);
 
       const formattedData = {
         count: responseData.ticketsCount,
@@ -395,7 +404,7 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, ticketTypes: true }));
 
     try {
-      const responseData = await getTicketsByServiceTypes(periodFilter, dataFilter, resetFilters);
+      const responseData = await getTicketsByServiceTypes(dataFilter, resetFilters);
 
       setTicketsServicesTypeChart(responseData);
       setDashboardLoadings((prevState) => ({ ...prevState, ticketTypes: false }));
@@ -409,7 +418,7 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, score: true }));
 
     try {
-      const responseData = await getMaintenancesByStatus(periodFilter, dataFilter, resetFilters);
+      const responseData = await getMaintenancesByStatus(dataFilter, resetFilters);
 
       setMaintenanceChart(responseData);
     } catch (error: any) {
@@ -423,7 +432,7 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, timeline: true }));
 
     try {
-      const responseData = await getMaintenancesTimeline(periodFilter, dataFilter, resetFilters);
+      const responseData = await getMaintenancesTimeline(dataFilter, resetFilters);
 
       setMaintenancesTimeline(responseData);
     } catch (error: any) {
@@ -437,11 +446,7 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, mostCompletedExpired: true }));
 
     try {
-      const responseData = await getMaintenancesMostCompletedExpired(
-        periodFilter,
-        dataFilter,
-        resetFilters,
-      );
+      const responseData = await getMaintenancesMostCompletedExpired(dataFilter, resetFilters);
 
       setMaintenancesMostCompletedExpired(responseData);
     } catch (error: any) {
@@ -450,7 +455,6 @@ export const Dashboard = () => {
       setDashboardLoadings((prevState) => ({ ...prevState, mostCompletedExpired: false }));
     }
   };
-
   // #endregion
 
   // #region dashboard functions
@@ -500,14 +504,6 @@ export const Dashboard = () => {
     handleGetMaintenancesMostCompletedExpired(resetFilters);
   };
 
-  const handleFilterButton = async () => {
-    try {
-      handleGetDashboardData();
-    } catch (error: any) {
-      handleToastify(error.response.data.ServerMessage);
-    }
-  };
-
   const handleResetFilterButton = async () => {
     setDataFilter(dataFilterInitialValues);
 
@@ -536,19 +532,33 @@ export const Dashboard = () => {
     return { value: largestValue, index: largestValueIndex };
   };
 
-  const handleSelectClick = (filterType: IFilterTypes, value: string) => {
+  const handleFilterChange = (key: keyof IDashboardFilter, value: string) => {
     setDataFilter((prevState) => {
-      const newState = { ...prevState };
-      newState[filterType] = [...newState[filterType], value];
-      return newState;
+      const checkArray = Array.isArray(prevState[key]);
+      const newFilter = { ...prevState, [key]: value };
+
+      if (checkArray) {
+        return {
+          ...newFilter,
+          [key]: [...(prevState[key] as string[]), value],
+        };
+      }
+
+      return newFilter;
     });
   };
 
   const handleRemoveFilter = (filterType: IFilterTypes, index: number) => {
     setDataFilter((prevState) => {
-      const newState = { ...prevState };
-      newState[filterType].splice(index, 1);
-      return newState;
+      const newFilter = { ...prevState };
+
+      if (Array.isArray(prevState[filterType])) {
+        (newFilter[filterType] as string[]) = (prevState[filterType] as string[]).filter(
+          (_, i) => i !== index,
+        );
+      }
+
+      return newFilter;
     });
   };
 
@@ -872,181 +882,204 @@ export const Dashboard = () => {
         <Style.FilterSection>
           <h5>Filtros</h5>
 
-          <Style.FilterWrapper>
-            <Select
-              label="Período"
-              value={periodFilter}
-              selectPlaceholderValue={periodFilter}
-              onChange={(e) => {
-                setPeriodFilter(e.target.value);
-              }}
-            >
-              {filterOptions.periods.map((period) => (
-                <option value={period.period} key={period.period}>
-                  {period.label}
-                </option>
-              ))}
-            </Select>
+          <Formik
+            initialValues={{
+              startDate: '',
+              endDate: '',
+              edification: [],
+              category: [],
+              responsible: [],
+              seen: '',
+            }}
+            onSubmit={async () => handleGetDashboardData()}
+          >
+            {({ values, setFieldValue, touched, errors }) => (
+              <Form>
+                <Style.FilterWrapper>
+                  <FormikInput
+                    label="Data inicial"
+                    typeDatePlaceholderValue={values.startDate}
+                    name="startDate"
+                    type="date"
+                    value={values.startDate}
+                    onChange={(e) => {
+                      setFieldValue('startDate', e.target.value);
+                      handleFilterChange('startDate', e.target.value);
+                    }}
+                    error={touched.startDate && errors.startDate ? errors.startDate : null}
+                  />
 
-            <Select
-              selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
-              label="Edificação"
-              value=""
-              onChange={(e) => {
-                handleSelectClick('buildings', e.target.value);
+                  <FormikInput
+                    label="Data final"
+                    typeDatePlaceholderValue={values.endDate}
+                    name="endDate"
+                    type="date"
+                    value={values.endDate}
+                    onChange={(e) => {
+                      setFieldValue('endDate', e.target.value);
+                      handleFilterChange('endDate', e.target.value);
+                    }}
+                    error={touched.endDate && errors.endDate ? errors.endDate : null}
+                  />
 
-                if (e.target.value === 'all') {
-                  setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
-                }
-              }}
-            >
-              <option value="" disabled hidden>
-                Selecione
-              </option>
+                  <Select
+                    selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
+                    label="Edificação"
+                    value=""
+                    onChange={(e) => {
+                      handleFilterChange('buildings', e.target.value);
 
-              <option value="all" disabled={dataFilter.buildings.length === 0}>
-                Todas
-              </option>
+                      if (e.target.value === 'all') {
+                        setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
 
-              {buildingsForSelect.map((building) => (
-                <option
-                  key={building.id}
-                  value={building.name}
-                  disabled={dataFilter.buildings.some((e) => e === building.name)}
-                >
-                  {building.name}
-                </option>
-              ))}
-            </Select>
+                    <option value="all" disabled={dataFilter.buildings.length === 0}>
+                      Todas
+                    </option>
 
-            <Select
-              selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
-              label="Categoria"
-              value=""
-              onChange={(e) => {
-                handleSelectClick('categories', e.target.value);
+                    {buildingsForSelect.map((building) => (
+                      <option
+                        key={building.id}
+                        value={building.name}
+                        disabled={dataFilter.buildings.some((e) => e === building.name)}
+                      >
+                        {building.name}
+                      </option>
+                    ))}
+                  </Select>
 
-                if (e.target.value === 'all') {
-                  setDataFilter((prevState) => ({ ...prevState, categories: [] }));
-                }
-              }}
-            >
-              <option value="" disabled hidden>
-                Selecione
-              </option>
+                  <Select
+                    selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
+                    label="Categoria"
+                    value=""
+                    onChange={(e) => {
+                      handleFilterChange('categories', e.target.value);
 
-              <option value="all" disabled={dataFilter.categories.length === 0}>
-                Todas
-              </option>
+                      if (e.target.value === 'all') {
+                        setDataFilter((prevState) => ({ ...prevState, categories: [] }));
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
 
-              {filterOptions.categories.map((category) => (
-                <option
-                  label={category}
-                  key={category}
-                  disabled={dataFilter.categories.some((e) => e === category)}
-                >
-                  {category}
-                </option>
-              ))}
-            </Select>
+                    <option value="all" disabled={dataFilter.categories.length === 0}>
+                      Todas
+                    </option>
 
-            <Select
-              selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
-              label="Responsável"
-              value=""
-              onChange={(e) => {
-                handleSelectClick('responsible', e.target.value);
+                    {filterOptions.categories.map((category) => (
+                      <option
+                        label={category}
+                        key={category}
+                        disabled={dataFilter.categories.some((e) => e === category)}
+                      >
+                        {category}
+                      </option>
+                    ))}
+                  </Select>
 
-                if (e.target.value === 'all') {
-                  setDataFilter((prevState) => ({ ...prevState, responsible: [] }));
-                }
-              }}
-            >
-              <option value="" disabled hidden>
-                Selecione
-              </option>
+                  <Select
+                    selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
+                    label="Responsável"
+                    value=""
+                    onChange={(e) => {
+                      handleFilterChange('responsible', e.target.value);
 
-              <option value="all" disabled={dataFilter.responsible.length === 0}>
-                Todos
-              </option>
+                      if (e.target.value === 'all') {
+                        setDataFilter((prevState) => ({ ...prevState, responsible: [] }));
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
 
-              {filterOptions.responsible.map((responsible) => (
-                <option
-                  value={responsible}
-                  key={responsible}
-                  disabled={dataFilter.responsible.some((e) => e === responsible)}
-                >
-                  {responsible}
-                </option>
-              ))}
-            </Select>
+                    <option value="all" disabled={dataFilter.responsible.length === 0}>
+                      Todos
+                    </option>
 
-            <Style.ButtonWrapper>
-              <Button
-                type="button"
-                borderless
-                label="Limpar filtros"
-                disable={onQuery}
-                onClick={handleResetFilterButton}
-              />
-              <Button
-                type="button"
-                label="Filtrar"
-                loading={onQuery}
-                onClick={handleFilterButton}
-              />
-            </Style.ButtonWrapper>
+                    {filterOptions.responsible.map((responsible) => (
+                      <option
+                        value={responsible}
+                        key={responsible}
+                        disabled={dataFilter.responsible.some((e) => e === responsible)}
+                      >
+                        {responsible}
+                      </option>
+                    ))}
+                  </Select>
 
-            <Style.Tags>
-              {dataFilter.buildings.length === 0 && (
-                <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
-              )}
+                  <Style.ButtonWrapper>
+                    <Button
+                      label="Limpar filtros"
+                      type="button"
+                      disable={onQuery}
+                      borderless
+                      onClick={handleResetFilterButton}
+                    />
 
-              {dataFilter.buildings.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('buildings', i);
-                  }}
-                />
-              ))}
+                    <Button label="Filtrar" type="submit" loading={onQuery} />
+                  </Style.ButtonWrapper>
 
-              {dataFilter.categories.length === 0 && (
-                <ListTag padding="4px 12px" fontWeight={500} label="Todas as categorias" />
-              )}
+                  <Style.Tags>
+                    {dataFilter.buildings.length === 0 && (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                    )}
 
-              {dataFilter.categories.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('categories', i);
-                  }}
-                />
-              ))}
+                    {dataFilter.buildings.map((e, i) => (
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('buildings', i);
+                        }}
+                      />
+                    ))}
 
-              {dataFilter.responsible.length === 0 && (
-                <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
-              )}
+                    {dataFilter.categories.length === 0 && (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as categorias" />
+                    )}
 
-              {dataFilter.responsible.map((e, i) => (
-                <ListTag
-                  padding="4px 12px"
-                  fontWeight={500}
-                  label={e}
-                  key={e}
-                  onClick={() => {
-                    handleRemoveFilter('responsible', i);
-                  }}
-                />
-              ))}
-            </Style.Tags>
-          </Style.FilterWrapper>
+                    {dataFilter.categories.map((e, i) => (
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('categories', i);
+                        }}
+                      />
+                    ))}
+
+                    {dataFilter.responsible.length === 0 && (
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
+                    )}
+
+                    {dataFilter.responsible.map((e, i) => (
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('responsible', i);
+                        }}
+                      />
+                    ))}
+                  </Style.Tags>
+                </Style.FilterWrapper>
+              </Form>
+            )}
+          </Formik>
         </Style.FilterSection>
 
         <Style.Wrappers>

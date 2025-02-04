@@ -6,18 +6,27 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.md};
+
+  .spacing-select {
+  margin-top: 16px; 
+}
 `;
 
 export const FilterWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr); 
   gap: ${theme.size.xsm};
   margin-top: ${theme.size.sm};
 
   @media (max-width: 1100px) {
+    grid-template-columns: 1fr 1fr; 
+  }
+
+  @media (max-width: 700px) {
     grid-template-columns: 1fr;
   }
 `;
+
 
 export const Tags = styled.div`
   display: flex;
@@ -43,13 +52,18 @@ export const ButtonWrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: ${theme.size.sm};
-  grid-area: 2 / 4;
-  align-self: flex-start;
+  grid-column: span 5;
+  margin-top: ${theme.size.xsm};
 
   @media (max-width: 1100px) {
-    grid-area: unset;
+    grid-column: span 2; 
+  }
+
+  @media (max-width: 700px) {
+    grid-column: span 1; 
   }
 `;
+
 
 export const Wrappers = styled.div`
   display: flex;
@@ -66,6 +80,7 @@ export const ChartsWrapper = styled.div`
     grid-template-columns: 1fr;
   }
 `;
+
 
 export const PieWrapper = styled.div`
   display: grid;
@@ -116,24 +131,21 @@ export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
   }
 
   ::-webkit-scrollbar {
-    width: 5px; /* Largura da scrollbar */
-    height: 5px; /* Altura da scrollbar */
+    width: 5px; 
+    height: 5px; 
   }
 
-  /* Estilizando o trilho da scrollbar */
   ::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* Cor de fundo do trilho */
+    background-color: #f1f1f1; 
   }
 
-  /* Estilizando o thumb (a parte móvel) da scrollbar */
   ::-webkit-scrollbar-thumb {
-    background-color: #888; /* Cor do thumb */
-    border-radius: 5px; /* Borda arredondada do thumb */
+    background-color: #888; 
+    border-radius: 5px; 
   }
 
-  /* Estilizando o thumb quando estiver passando o mouse */
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #555; /* Cor do thumb ao passar o mouse */
+    background-color: #555; 
   }
 `;
 
