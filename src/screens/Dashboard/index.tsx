@@ -260,8 +260,8 @@ export const Dashboard = () => {
   const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
   const dataFilterInitialValues: IDashboardFilter = {
-    startDate: '',
-    endDate: '',
+    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
     responsible: [],
@@ -505,7 +505,11 @@ export const Dashboard = () => {
   };
 
   const handleResetFilterButton = async () => {
-    setDataFilter(dataFilterInitialValues);
+    setDataFilter({
+      ...dataFilterInitialValues,
+      startDate: '',
+      endDate: '',
+    });
 
     try {
       handleGetDashboardData(true);
@@ -884,8 +888,10 @@ export const Dashboard = () => {
 
           <Formik
             initialValues={{
-              startDate: '',
-              endDate: '',
+              startDate: new Date(new Date().setDate(new Date().getDate() - 7))
+                .toISOString()
+                .split('T')[0],
+              endDate: new Date().toISOString().split('T')[0],
               edification: [],
               category: [],
               responsible: [],
@@ -1021,7 +1027,12 @@ export const Dashboard = () => {
                       type="button"
                       disable={onQuery}
                       borderless
-                      onClick={handleResetFilterButton}
+                      onClick={() => {
+                        setFieldValue('startDate', '');
+                        setFieldValue('endDate', '');
+
+                        handleResetFilterButton();
+                      }}
                     />
 
                     <Button label="Filtrar" type="submit" loading={onQuery} />
