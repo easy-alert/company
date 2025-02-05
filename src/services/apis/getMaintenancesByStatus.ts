@@ -11,8 +11,8 @@ export const getMaintenancesByStatus = async (
   const uri = '/dashboard/maintenances/status';
 
   const params = {
-    startDate: dashboardFilter.startDate ? dashboardFilter.startDate : '',
-    endDate: dashboardFilter.endDate ? dashboardFilter.endDate : '',
+    startDate: resetFilters ? '' : dashboardFilter.startDate,
+    endDate: resetFilters ? '' : dashboardFilter.endDate,
     buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.buildings),
     categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.categories),
     responsible: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.responsible),
