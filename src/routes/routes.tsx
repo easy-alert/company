@@ -20,6 +20,9 @@ import { EmailConfirm } from '@screens/NotificationsConfirmation/Email';
 // TERMS OF USE
 import { TermsOfUse } from '@screens/TermsOfUse';
 
+// HOME PAGE
+import HomePage from '@screens/Home';
+
 // DASHBOARD PAGES
 import { Dashboard } from '@screens/Dashboard';
 
@@ -91,6 +94,8 @@ const AppRoutes = () => (
             </RequireAuth>
           }
         >
+          <Route path="/home" element={<HomePage />} />
+
           {/* dashboard route */}
           <Route
             path="/dashboard"
