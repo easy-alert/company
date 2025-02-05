@@ -15,35 +15,22 @@ export const TicketDetailsTitle = styled.h3`
 `;
 
 export const TicketDetailsColumnContainer = styled.div`
-  display: flex;
-  gap: ${theme.size.xxsm};
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
+  gap: ${theme.size.xsm};
+
+  @media (max-width: 380px) {
+    grid-template-columns: 1fr;
   }
 `;
 
-export const TicketDetailsLeftColumn = styled.div`
+export const TicketDetailsDescriptionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
 
-  width: 50%;
-  float: left;
-
-  gap: ${theme.size.xsm};
-`;
-
-export const TicketDetailsRightColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  width: 50%;
-  float: right;
-
-  gap: ${theme.size.xsm};
+  margin-top: -${theme.size.xsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const TicketDetailsColumnContent = styled.div`
@@ -108,6 +95,8 @@ export const TicketDetailsRowValue = styled.span`
   font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+
+  word-break: break-all;
 `;
 
 export const TicketDetailsDismissedContainer = styled.div`
