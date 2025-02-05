@@ -40,7 +40,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
         id={name}
         name={name}
         ref={ref}
-        disabled={!hasPermission || rest.disabled}
+        disabled={(permToCheck && !hasPermission) || rest.disabled}
         {...rest}
       />
     </InputContainer>

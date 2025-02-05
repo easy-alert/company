@@ -72,6 +72,32 @@ export const TicketDetailsImagesContent = styled.div`
   gap: ${theme.size.xsm};
 `;
 
+export const TicketFinalSolutionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TicketFinalSolutionContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  gap: ${theme.size.xsm};
+`;
+
+export const TicketSignatureContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+`;
+
+export const TicketSignatureHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: ${theme.size.xsm};
+`;
+
 export const TicketDetailsRowLabel = styled.span`
   font-weight: 400;
   font-size: 12px;

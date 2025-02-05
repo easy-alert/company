@@ -99,7 +99,7 @@ export const ShareButton = ({
           <Style.PopoverBackground>
             <Style.PopoverBody contentColor={theme.color.gray4}>
               <h3>
-                Compartilhar manutenção
+                Compartilhar
                 <IconButton onClick={() => handleTogglePopover(false)} icon={icon.x} />
               </h3>
 
