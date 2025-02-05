@@ -23,7 +23,7 @@ import { ReactSelectComponent } from "@components/ReactSelectComponent";
 import { ListTag } from "@components/ListTag";
 
 // GLOBAL UTILS
-import { catchHandler, isImage, uploadManyFiles } from "@utils/functions";
+import { applyMask, catchHandler, isImage, uploadManyFiles } from "@utils/functions";
 import { handleToastify } from "@utils/toastifyResponses";
 
 // GLOBAL TYPES
@@ -51,6 +51,7 @@ const schema = yup
         residentName: yup.string().required("Campo obrigatório."),
         residentApartment: yup.string().required("Campo obrigatório."),
         residentEmail: yup.string().email("E-mail inválido.").required("Campo obrigatório."),
+        residentCPF: yup.string().required("Campo obrigatório."),
         description: yup.string().required("Campo obrigatório."),
         placeId: yup.string().required("Campo obrigatório."),
         types: yup
@@ -139,6 +140,7 @@ export const ModalCreateTicket = ({
                         residentName: "",
                         residentApartment: "",
                         residentEmail: "",
+                        residentCPF: "",
                         description: "",
                         placeId: "",
                         types: [],
@@ -176,6 +178,22 @@ export const ModalCreateTicket = ({
                                 placeholder="Ex: Informe o nome"
                                 disabled={!values.buildingNanoId}
                                 error={touched.residentName && (errors.residentName || null)}
+                            />
+
+                            <FormikInput
+                                label="CPF"
+                                name="residentCPF"
+                                placeholder="Ex: 000.000.000-00"
+                                value={applyMask({ mask: "CPF", value: values.residentCPF }).value}
+                                error={touched.residentCPF && (errors.residentCPF || null)}
+                                disabled={!values.buildingNanoId}
+                                maxLength={
+                                    applyMask({
+                                        mask: "CPF",
+                                        value: values.residentCPF,
+                                    }).length || 1
+                                }
+                                onChange={(e) => setFieldValue("residentCPF", e.target.value)}
                             />
 
                             {buildingsApartments.length > 0 ? (
