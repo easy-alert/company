@@ -51,13 +51,21 @@ export const ContainerButton = styled.div<{
 
     :hover {
       opacity: 0.7;
-      ${({ outlined, bgColor }) => outlined && `background-color: ${`${bgColor}26`};`}
+      ${({ outlined, bgColor }) => {
+        const themeColor =
+          theme.background[bgColor as keyof typeof theme.background] ||
+          theme.color[bgColor as keyof typeof theme.color];
+
+        if (outlined && themeColor) return `background-color: ${`${themeColor}26`};`;
+
+        return outlined && `background-color: ${`${bgColor}26`};`;
+      }}
     }
 
     ${({ bgColor }) => {
       const themeColor =
-        theme.color[bgColor as keyof typeof theme.color] ||
-        theme.background[bgColor as keyof typeof theme.background];
+        theme.background[bgColor as keyof typeof theme.background] ||
+        theme.color[bgColor as keyof typeof theme.color];
 
       if (themeColor) return `background-color: ${themeColor};`;
 
@@ -65,16 +73,25 @@ export const ContainerButton = styled.div<{
     }}
 
     ${({ textColor }) => {
-      const themeColor = theme.color[textColor as keyof typeof theme.color];
+      const themeColor =
+        theme.color[textColor as keyof typeof theme.color] ||
+        theme.background[textColor as keyof typeof theme.background];
 
       if (themeColor) return `color: ${themeColor} !important;`;
 
       return textColor && `color: ${textColor} !important;`;
     }}
 
-    ${({ outlined, bgColor }) =>
-      outlined &&
-      `outline: 2px solid ${bgColor}; outline-offset: -2px;  background-color: transparent; color:${bgColor};`}
+    ${({ outlined, bgColor }) => {
+      const themeColor =
+        theme.color[bgColor as keyof typeof theme.color] ||
+        theme.background[bgColor as keyof typeof theme.background];
+
+      if (outlined && themeColor)
+        return `outline: 2px solid ${themeColor}; outline-offset: -2px;  background-color: transparent; color:${themeColor};`;
+
+      return `color: ${theme.color.white};`;
+    }}
 
     ${({ disable }) => disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
 

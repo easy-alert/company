@@ -8,13 +8,14 @@ import { useEffect, useState } from 'react';
 import { getTicketById } from '@services/apis/getTicketById';
 import { putTicketById } from '@services/apis/putTicketById';
 import { getAllTicketDismissReasons } from '@services/apis/getAllTicketDismissReasons';
+import { postTicketSignature } from '@services/apis/postTicketSignature';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL UTILS
-import { handleToastify } from '@utils/toastifyResponses';
+import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 
 // GLOBAL ASSETS
 // GLOBAL TYPES
@@ -51,6 +52,7 @@ function ModalTicketDetails({
   const [view, setView] = useState<IViewState>('details');
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [signatureLoading, setSignatureLoading] = useState<boolean>(false);
 
   const handleSetView = (viewState: IViewState) => {
     setView(viewState);
@@ -70,17 +72,26 @@ function ModalTicketDetails({
     }
   };
 
-  const handleUpdateOneTicket = async (updatedTicket: ITicket) => {
+  const handleUpdateOneTicket = async (
+    updatedTicket: ITicket,
+    refresh = true,
+    closeModal = true,
+  ) => {
     setLoading(true);
 
     try {
-      await putTicketById(updatedTicket);
+      const responseTicket = await putTicketById(updatedTicket);
 
-      if (handleRefresh) {
+      if (!responseTicket) return;
+      setTicket(responseTicket);
+
+      if (refresh && handleRefresh) {
         handleRefresh();
       }
 
-      handleTicketDetailsModal(false);
+      if (closeModal && handleTicketDetailsModal) {
+        handleTicketDetailsModal(false);
+      }
     } catch (error: any) {
       handleToastify(error);
     } finally {
@@ -95,6 +106,33 @@ function ModalTicketDetails({
       setDismissReasons(ticketDismissReasons);
     } catch (error: any) {
       handleToastify(error);
+    }
+  };
+
+  const handleUploadSignature = async (signature: string) => {
+    setSignatureLoading(true);
+
+    const file = {
+      fieldname: 'files',
+      originalname: `assinatura/${userId}8${new Date().toISOString()}.png`,
+      encoding: '7bit',
+      mimetype: 'image/png',
+      file: signature,
+    };
+
+    try {
+      const responseData = await postTicketSignature(file);
+
+      if (responseData.location) {
+        handleUpdateOneTicket({ id: ticketId, signature: responseData.location }, false, false);
+      }
+    } catch (error) {
+      handleToastifyMessage({
+        type: 'error',
+        message: 'Erro ao efetuar upload da assinatura.',
+      });
+    } finally {
+      setSignatureLoading(false);
     }
   };
 
@@ -114,6 +152,7 @@ function ModalTicketDetails({
       }
       bodyWidth="475px"
       setModal={handleTicketDetailsModal}
+      closeOutside={false}
     >
       {loading ? (
         <DotSpinLoading />
@@ -124,8 +163,10 @@ function ModalTicketDetails({
               ticket={ticket}
               userId={userId}
               showButtons={showButtons}
+              signatureLoading={signatureLoading}
               handleSetView={handleSetView}
               handleUpdateOneTicket={handleUpdateOneTicket}
+              handleUploadSignature={handleUploadSignature}
             />
           )}
 
