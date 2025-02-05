@@ -717,7 +717,7 @@ function TicketsPage() {
 
                                                 <Style.KanbanTicketGridBox>
                                                     <Style.KanbanTicketTitle>
-                                                        Tipo de manutenção
+                                                        Tipo de assistência
                                                     </Style.KanbanTicketTitle>
 
                                                     <Style.KanbanTicketListTags>
