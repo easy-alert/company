@@ -13,7 +13,10 @@ export const TagContainer = styled.div<{
   display: flex;
   align-items: center;
   gap: 6px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ backgroundColor }) => {
+    const colorValue = theme.color[backgroundColor as keyof typeof theme.color];
+    return colorValue || backgroundColor;
+  }};
   padding: ${({ padding }) => padding};
   width: fit-content;
   height: fit-content;
@@ -32,7 +35,10 @@ export const TagContainer = styled.div<{
   }
 
   > p {
-    color: ${({ color }) => color};
+    color: ${({ color }) => {
+      const colorValue = theme.color[color as keyof typeof theme.color];
+      return colorValue || color;
+    }};
     font-weight: ${({ fontWeight }) => fontWeight};
     font-size: ${({ fontSize }) => fontSize};
     line-height: ${({ lineHeight }) => lineHeight};

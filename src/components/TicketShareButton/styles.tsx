@@ -97,7 +97,7 @@ export const ButtonContainer = styled.div`
   top: 24px;
   right: 64px;
 
-  @media (max-width: 400px) {
+  @media (max-width: 480px) {
     top: 64px;
     right: 24px;
   }
