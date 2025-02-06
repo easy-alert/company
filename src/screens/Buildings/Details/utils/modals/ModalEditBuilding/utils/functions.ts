@@ -2,8 +2,8 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { Api } from '../../../../../../../services/api';
-import { unMask, catchHandler } from '../../../../../../../utils/functions';
+import { Api } from '@services/api';
+import { unMask, catchHandler, uploadFile } from '@utils/functions';
 
 // FUNCTIONS
 
@@ -17,10 +17,20 @@ export const requestEditBuilding = async ({
   requestBuildingDetailsCall,
 }: IRequestEditBuilding) => {
   setOnQuery(true);
+  let imageUrl: string | null = null;
+
+  if (!values.image.length) {
+    const { Location } = await uploadFile(values.image);
+
+    imageUrl = Location;
+  } else {
+    imageUrl = '';
+  }
 
   await Api.put('/buildings/edit', {
     buildingId: values.id,
     data: {
+      image: imageUrl,
       name: values.name,
       buildingTypeId: values.buildingTypeId,
       cep: values.cep !== '' ? unMask(values.cep) : null,
