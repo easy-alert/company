@@ -1,10 +1,9 @@
 // LIBS
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 import { Button } from '@components/Buttons/Button';
 import { FormikImageInput } from '@components/Form/FormikImageInput';
 import { FormikInput } from '@components/Form/FormikInput';
@@ -41,9 +40,6 @@ export const ModalEditBuilding = ({
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [apiError, setApiError] = useState<boolean | null>(null);
-  const [image, setImage] = useState<string | null>(building?.image ?? null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { account } = useAuthContext();
 
   return (
     <Modal title="Editar edificação" setModal={setModal}>
