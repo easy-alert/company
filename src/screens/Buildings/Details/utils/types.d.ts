@@ -74,6 +74,7 @@ export interface IBuildingDetail {
     number: string;
     floor: string;
   }[];
+  image?: string;
 }
 
 export interface IRequestBuildingDetails {
