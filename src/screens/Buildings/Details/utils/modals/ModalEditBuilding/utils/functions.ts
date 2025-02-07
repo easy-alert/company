@@ -19,12 +19,11 @@ export const requestEditBuilding = async ({
   setOnQuery(true);
   let imageUrl: string | null = null;
 
-  if (!values.image.length) {
+  if (typeof values.image === 'object') {
     const { Location } = await uploadFile(values.image);
-
     imageUrl = Location;
   } else {
-    imageUrl = '';
+    imageUrl = values.image || '';
   }
 
   await Api.put('/buildings/edit', {
