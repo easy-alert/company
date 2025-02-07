@@ -61,7 +61,7 @@ export const ModalEditBuilding = ({
           nextMaintenanceCreationBasis: building.nextMaintenanceCreationBasis,
           isActivityLogPublic: building.isActivityLogPublic,
           guestCanCompleteMaintenance: building.guestCanCompleteMaintenance,
-          image: building.image ?? '',
+          image: building.image,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
