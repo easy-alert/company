@@ -2,10 +2,14 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { Api } from '../../../../services/api';
-import { uploadFile, unMask, catchHandler } from '../../../../utils/functions';
-import { IAccount } from '../../../../utils/types';
-import { IRequestEditAccount } from './types';
+import { Api } from '@services/api';
+import { uploadFile, unMask, catchHandler } from '@utils/functions';
+
+// GLOBAL TYPES
+import type { IAccount } from '@utils/types';
+
+// TYPES
+import type { IRequestEditAccount } from './types';
 
 export const requestEditAccount = async ({
   values,
