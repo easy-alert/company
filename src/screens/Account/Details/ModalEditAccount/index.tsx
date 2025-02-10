@@ -5,11 +5,20 @@ import { useNavigate } from 'react-router-dom';
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import { FormikCheckbox } from '@components/Form/FormikCheckbox';
-
-import * as Style from './styles';
+import { icon } from '@assets/icons';
+import { TTranslateTicketType } from '@utils/types';
+import { applyMask, translateTicketType } from '@utils/functions';
+import { Modal } from '@components/Modal';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { IconButton } from '@components/Buttons/IconButton';
+import { Button } from '@components/Buttons/Button';
 
 // TYPES
 import { IModalEditAccount } from './types';
+
+import * as Style from './styles';
 
 // FUNCTIONS
 import {
@@ -17,15 +26,6 @@ import {
   schemaModalEditAccountWithCNPJ,
   schemaModalEditAccountWithCPF,
 } from './functions';
-import { icon } from '../../../../assets/icons';
-import { Button } from '../../../../components/Buttons/Button';
-import { IconButton } from '../../../../components/Buttons/IconButton';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { FormikInput } from '../../../../components/Form/FormikInput';
-import { Modal } from '../../../../components/Modal';
-import { applyMask, translateTicketType } from '../../../../utils/functions';
-import { FormikSelect } from '../../../../components/Form/FormikSelect';
-import { TTranslateTicketType } from '../../../../utils/types';
 
 export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
   const navigate = useNavigate();
