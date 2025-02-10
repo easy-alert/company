@@ -4,14 +4,16 @@ import { useState } from 'react';
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@components/Buttons/Button';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { theme } from '@styles/theme';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
 import * as Style from './styles';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../components/Modal';
-import { FormikSelect } from '../../../../../../components/Form/FormikSelect';
-import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
-import { theme } from '../../../../../../styles/theme';
-import { PopoverButton } from '../../../../../../components/Buttons/PopoverButton';
+
 // TYPES
 import { IModalEditBuilding } from './utils/types';
 
@@ -59,10 +61,11 @@ export const ModalEditBuilding = ({
           nextMaintenanceCreationBasis: building.nextMaintenanceCreationBasis,
           isActivityLogPublic: building.isActivityLogPublic,
           guestCanCompleteMaintenance: building.guestCanCompleteMaintenance,
+          image: building.image,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
-          requestEditBuilding({
+          await requestEditBuilding({
             setModal,
             setOnQuery,
             values,
@@ -73,6 +76,18 @@ export const ModalEditBuilding = ({
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
             <Form>
+              <FormikImageInput
+                name="image"
+                label="Logo"
+                error={touched.image && errors.image ? errors.image : null}
+                defaultImage={values.image}
+                onChange={(event: any) => {
+                  if (event.target.files?.length) {
+                    setFieldValue('image', event.target.files[0]);
+                  }
+                }}
+              />
+
               <FormikInput
                 label="Nome *"
                 name="name"
