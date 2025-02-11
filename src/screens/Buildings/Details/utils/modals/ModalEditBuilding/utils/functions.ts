@@ -2,8 +2,8 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { Api } from '../../../../../../../services/api';
-import { unMask, catchHandler } from '../../../../../../../utils/functions';
+import { Api } from '@services/api';
+import { unMask, catchHandler } from '@utils/functions';
 
 // FUNCTIONS
 
@@ -78,7 +78,7 @@ export const schemaModalEditBuilding = yup
   .object({
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
-    cep: yup.string().min(9, 'Digite um CEP válido.').required('Campo obrigatório.'),
+    cep: yup.string().min(9, 'Digite um CEP válido.').required('o CEP deve ser preenchido.'),
     city: yup.string().required('Campo obrigatório.'),
     state: yup.string().required('Campo obrigatório.'),
     nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),
