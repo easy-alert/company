@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../components/Modal';
-import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
-import { theme } from '../../../../../../styles/theme';
-import { Image } from '../../../../../../components/Image';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { theme } from '@styles/theme';
+import { Image } from '@ImagePreviewcomponents/Image';
 
 // STYLES
 import * as Style from './styles';
@@ -112,7 +112,7 @@ export const ModalCreateNotificationConfiguration = ({
 
               <DataListInput
                 error={touched.name && errors.name ? errors.name : null}
-                label="Nome"
+                label="Nome *"
                 name="name"
                 getValue={({ value }) => {
                   const customId = value;
@@ -183,7 +183,7 @@ export const ModalCreateNotificationConfiguration = ({
                 }}
               />
               <FormikInput
-                label="Função"
+                label="Função *"
                 name="role"
                 value={values.role}
                 error={touched.role && errors.role ? errors.role : null}

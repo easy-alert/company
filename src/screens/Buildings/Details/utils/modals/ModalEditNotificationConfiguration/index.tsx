@@ -68,7 +68,7 @@ export const ModalEditNotificationConfiguration = ({
           <Style.FormContainer>
             <Form>
               <FormikInput
-                label="Nome"
+                label="Nome *"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}

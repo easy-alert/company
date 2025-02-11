@@ -99,7 +99,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 }}
               />
               <FormikInput
-                label="Nome do responsável"
+                label="Nome do responsável *"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
@@ -107,7 +107,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="E-mail"
+                label="E-mail *"
                 name="email"
                 value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
@@ -115,7 +115,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="Nome da empresa"
+                label="Nome da empresa *"
                 name="companyName"
                 value={values.companyName}
                 error={touched.companyName && errors.companyName ? errors.companyName : null}
@@ -123,7 +123,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="Telefone"
+                label="Telefone *"
                 name="contactNumber"
                 maxLength={
                   applyMask({
@@ -145,7 +145,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               {account.Company.CPF && (
                 <FormikInput
                   name="CPF"
-                  label="CPF"
+                  label="CPF *"
                   maxLength={applyMask({ value: values.CPF, mask: 'CPF' }).length}
                   value={values.CPF}
                   error={touched.CPF && errors.CPF ? errors.CPF : null}
