@@ -20,6 +20,7 @@ const ModalSecondView = ({
   occasionalMaintenanceData,
   externalBuildingId,
   checklistActivity,
+  errors,
   handleSetView,
   handleOccasionalMaintenanceDataChange,
   handleCreateOccasionalMaintenance,
@@ -56,6 +57,7 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
+      {errors.buildingId && <Style.ErrorMessage>{errors.buildingId}</Style.ErrorMessage>}
 
       <CRUDInput
         label="Categoria *"
@@ -99,6 +101,7 @@ const ModalSecondView = ({
             }),
         }}
       />
+      {errors.category && <Style.ErrorMessage>{errors.category}</Style.ErrorMessage>}
 
       <Input
         label="Elemento *"
@@ -111,6 +114,7 @@ const ModalSecondView = ({
           })
         }
       />
+      {errors.element && <Style.ErrorMessage>{errors.element}</Style.ErrorMessage>}
 
       <Input
         label="Atividade *"
@@ -124,6 +128,7 @@ const ModalSecondView = ({
           })
         }
       />
+      {errors.activity && <Style.ErrorMessage>{errors.activity}</Style.ErrorMessage>}
 
       <Select
         label="Responsável *"
@@ -146,6 +151,7 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
+      {errors.responsible && <Style.ErrorMessage>{errors.responsible}</Style.ErrorMessage>}
 
       <Select
         label="Prioridade *"
@@ -168,6 +174,7 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
+      {errors.priority && <Style.ErrorMessage>{errors.priority}</Style.ErrorMessage>}
 
       <Input
         label="Data de execução *"
@@ -181,6 +188,7 @@ const ModalSecondView = ({
           })
         }
       />
+      {errors.executionDate && <Style.ErrorMessage>{errors.executionDate}</Style.ErrorMessage>}
 
       <Style.ButtonContainer>
         <Button
@@ -213,5 +221,4 @@ const ModalSecondView = ({
     </Style.FormContainer>
   );
 };
-
 export default ModalSecondView;
