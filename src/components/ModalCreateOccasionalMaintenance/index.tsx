@@ -47,6 +47,38 @@ export const ModalCreateOccasionalMaintenance = ({
 }: IModalCreateOccasionalMaintenance) => {
   const { account } = useAuthContext();
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateFields = (occasionalMaintenanceData: IOccasionalMaintenanceData) => {
+    const newErrors: Record<string, string> = {};
+
+    if (!occasionalMaintenanceData.buildingId) {
+      newErrors.buildingId = 'A edificação deve ser preenchida.';
+    }
+    if (!occasionalMaintenanceData.categoryData.name) {
+      newErrors.category = 'A categoria deve ser preenchida.';
+    }
+    if (!occasionalMaintenanceData.element) {
+      newErrors.element = 'O elemento deve ser preenchido.';
+    }
+    if (!occasionalMaintenanceData.activity) {
+      newErrors.activity = 'A atividade deve ser preenchida.';
+    }
+    if (!occasionalMaintenanceData.responsible) {
+      newErrors.responsible = 'O responsável deve ser preenchido.';
+    }
+    if (!occasionalMaintenanceData.priorityName) {
+      newErrors.priority = 'A prioridade deve ser preenchida.';
+    }
+    if (!occasionalMaintenanceData.executionDate) {
+      newErrors.executionDate = 'A data de execução deve ser preenchida.';
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const [occasionalMaintenanceData, setOccasionalMaintenanceData] =
     useState<IOccasionalMaintenanceData>({
       buildingId: externalBuildingId || '',
@@ -126,6 +158,10 @@ export const ModalCreateOccasionalMaintenance = ({
     occasionalMaintenanceType,
     inProgress = false,
   }: IHandleCreateOccasionalMaintenance) => {
+    if (!validateFields(occasionalMaintenanceData)) {
+      return;
+    }
+
     setLoading(true);
 
     const reportDataBody =
@@ -211,6 +247,7 @@ export const ModalCreateOccasionalMaintenance = ({
               checklistActivity={checklistActivity}
               externalBuildingId={externalBuildingId}
               occasionalMaintenanceData={occasionalMaintenanceData}
+              errors={errors}
               handleSetView={handleSetView}
               handleOccasionalMaintenanceDataChange={handleOccasionalMaintenanceDataChange}
               handleCreateOccasionalMaintenance={handleCreateOccasionalMaintenance}
