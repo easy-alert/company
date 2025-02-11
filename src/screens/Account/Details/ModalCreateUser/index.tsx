@@ -3,42 +3,50 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
-import { catchHandler } from '../../../../utils/functions';
-import { Api } from '../../../../services/api';
-import { FormInput } from '../../../../components/HookFormInputs/Input';
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { catchHandler } from '@utils/functions';
+import { Api } from '@services/api';
+import { FormInput } from '@components/HookFormInputs/Input';
 
 interface IModalCreateUser {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
   onThenRequest: () => Promise<void>;
 }
 
+const fieldLabels: Record<string, string> = {
+  name: 'Nome',
+  email: 'E-mail',
+  password: 'Senha',
+  confirmPassword: 'Confirmar senha',
+};
+
+const schema = yup
+  .object({
+    name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
+    email: yup
+      .string()
+      .required(() => `O ${fieldLabels.email.toLowerCase()} deve ser preenchido.`)
+      .email('informe um email válido.'),
+    password: yup
+      .string()
+      .required(() => `O ${fieldLabels.password.toLowerCase()} deve ser preenchido.`)
+      .matches(/^(|.{8,})$/, 'a senha deve ter pelo menos 8 caracteres.'),
+    confirmPassword: yup
+      .string()
+      .required(() => `O ${fieldLabels.confirmPassword.toLowerCase()} deve ser preenchido.`)
+      .oneOf([yup.ref('password'), null], 'as senhas não coincidem.')
+      .when('password', {
+        is: (password: string) => password && password.length > 0,
+        then: yup.string().required(() => `confirme a nova senha.`),
+      }),
+  })
+  .required();
+
+type TFormData = yup.InferType<typeof schema>;
+
 export const ModalCreateUser = ({ setModal, onThenRequest }: IModalCreateUser) => {
   const [onQuery, setOnQuery] = useState(false);
-
-  const schema = yup
-    .object({
-      name: yup.string().required('Campo obrigatório.'),
-      email: yup.string().required('Campo obrigatório.').email('Informe um email válido.'),
-
-      password: yup
-        .string()
-        .required('Campo obrigatório.')
-        .matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
-
-      confirmPassword: yup
-        .string()
-        .required('Campo obrigatório.')
-        .oneOf([yup.ref('password'), null], 'As senhas não coincidem.')
-        .when('password', {
-          is: (password: string) => password && password.length > 0,
-          then: yup.string().required('Confirme a nova senha.'),
-        }),
-    })
-    .required();
-
-  type TFormData = yup.InferType<typeof schema>;
 
   const {
     handleSubmit,
@@ -71,22 +79,21 @@ export const ModalCreateUser = ({ setModal, onThenRequest }: IModalCreateUser) =
         <FormInput
           placeholder="Informe o nome"
           {...register('name')}
-          label="Nome"
+          label="Nome *"
           error={errors.name?.message}
         />
         <FormInput
           placeholder="Informe o email"
           {...register('email')}
-          label="Email"
+          label="E-mail *"
           error={errors.email?.message}
         />
-
         <FormInput
           autoComplete="new-password"
           placeholder="Informe a nova senha"
           type="password"
           {...register('password')}
-          label="Senha"
+          label="Senha *"
           error={errors.password?.message}
         />
         <FormInput
@@ -94,7 +101,7 @@ export const ModalCreateUser = ({ setModal, onThenRequest }: IModalCreateUser) =
           placeholder="Confirme a nova senha"
           type="password"
           {...register('confirmPassword')}
-          label="Confirmar senha"
+          label="Confirmar senha *"
           error={errors.confirmPassword?.message}
         />
         <Button
