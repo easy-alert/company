@@ -73,6 +73,7 @@ export interface IHandleSetOccasionalMaintenanceData {
 }
 
 export interface IModalSecondView {
+  errors: Record<string, string>;
   buildingsData: IBuilding[];
   categoriesData: ICategory[];
   priorityData: IPriority[];
