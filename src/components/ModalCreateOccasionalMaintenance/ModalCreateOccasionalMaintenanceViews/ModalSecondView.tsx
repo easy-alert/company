@@ -6,6 +6,7 @@ import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { Input } from '@components/Inputs/Input';
 import { CRUDInput } from '@components/Inputs/CRUDInput';
+import { ErrorMessage } from 'formik';
 
 // STYLES
 import * as Style from '../styles';
@@ -57,7 +58,7 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
-      {errors.buildingId && <Style.ErrorMessage>{errors.buildingId}</Style.ErrorMessage>}
+      <ErrorMessage name="buildingId" component={Style.ErrorMessage} />
 
       <CRUDInput
         label="Categoria *"
@@ -101,7 +102,7 @@ const ModalSecondView = ({
             }),
         }}
       />
-      {errors.category && <Style.ErrorMessage>{errors.category}</Style.ErrorMessage>}
+      <ErrorMessage name="category" component={Style.ErrorMessage} />
 
       <Input
         label="Elemento *"
