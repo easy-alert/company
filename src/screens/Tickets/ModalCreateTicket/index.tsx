@@ -47,23 +47,26 @@ interface IAuxiliaryData {
 
 const schema = yup
   .object({
-    buildingNanoId: yup.string().required('Campo obrigatório.'),
-    residentName: yup.string().required('Campo obrigatório.'),
-    residentPhone: yup.string().required('Campo obrigatório.'),
-    residentApartment: yup.string().required('Campo obrigatório.'),
-    residentEmail: yup.string().email('E-mail inválido.').required('Campo obrigatório.'),
-    residentCPF: yup.string().required('Campo obrigatório.'),
-    description: yup.string().required('Campo obrigatório.'),
-    placeId: yup.string().required('Campo obrigatório.'),
+    buildingNanoId: yup.string().required('O prédio deve ser preenchido.'),
+    residentName: yup.string().required('O nome do morador deve ser preenchido.'),
+    residentPhone: yup.string().required('O telefone do morador deve ser preenchido.'),
+    residentApartment: yup.string().required('O apartamento do morador deve ser preenchido.'),
+    residentEmail: yup
+      .string()
+      .email('E-mail inválido.')
+      .required('O e-mail do morador deve ser preenchido.'),
+    residentCPF: yup.string().required('O CPF do morador deve ser preenchido.'),
+    description: yup.string().required('A descrição deve ser preenchido.'),
+    placeId: yup.string().required('O local da ocorrência deve ser preenchido.'),
     types: yup
       .array()
       .of(
         yup.object({
-          serviceTypeId: yup.string().required('Campo obrigatório.'),
+          serviceTypeId: yup.string().required('O tipo da assistência deve ser preenchido.'),
         }),
       )
-      .min(1, 'Campo obrigatório.')
-      .required('Campo obrigatório.'),
+      .min(1, 'O tipo da assistência deve ser preenchido.')
+      .required('O tipo da assistência deve ser preenchido.'),
   })
   .required();
 

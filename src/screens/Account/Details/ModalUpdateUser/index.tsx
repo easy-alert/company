@@ -3,12 +3,12 @@ import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
-import { catchHandler } from '../../../../utils/functions';
-import { Api } from '../../../../services/api';
-import { FormInput } from '../../../../components/HookFormInputs/Input';
-import { FormSelect } from '../../../../components/HookFormInputs/Select';
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { catchHandler } from '@utils/functions';
+import { Api } from '@services/api';
+import { FormInput } from '@components/HookFormInputs/Input';
+import { FormSelect } from '@components/HookFormInputs/Select';
 import { ISelectedUser } from '..';
 
 interface IModalUpdateUser {
@@ -20,12 +20,22 @@ interface IModalUpdateUser {
 export const ModalUpdateUser = ({ setModal, selectedUser, onThenRequest }: IModalUpdateUser) => {
   const [onQuery, setOnQuery] = useState(false);
 
+  const fieldLabels: Record<string, string> = {
+    name: 'Nome',
+    email: 'E-mail',
+    status: 'Status',
+  };
+
   const schema = yup
     .object({
-      name: yup.string().required('Campo obrigatório.'),
-      status: yup.string().required('Campo obrigatório.'),
-      email: yup.string().required('Campo obrigatório.').email('Informe um email válido.'),
+      name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
+      email: yup
+        .string()
+        .required(() => `O ${fieldLabels.email.toLowerCase()} deve ser preenchido.`),
 
+      status: yup
+        .string()
+        .required(() => `O ${fieldLabels.status.toLowerCase()} deve ser preenchido.`),
       password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
 
       confirmPassword: yup
@@ -75,17 +85,17 @@ export const ModalUpdateUser = ({ setModal, selectedUser, onThenRequest }: IModa
         <FormInput
           placeholder="Informe o nome"
           {...register('name')}
-          label="Nome"
+          label="Nome *"
           error={errors.name?.message}
         />
         <FormInput
           placeholder="Informe o email"
           {...register('email')}
-          label="Email"
+          label="E-mail *"
           error={errors.email?.message}
         />
 
-        <FormSelect {...register('status')} label="Status">
+        <FormSelect {...register('status')} label="Status *">
           <option value="active">Ativo</option>
           <option value="blocked">Bloqueado</option>
         </FormSelect>
