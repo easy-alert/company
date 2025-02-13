@@ -1,22 +1,26 @@
 /* eslint-disable react/no-array-index-key */
-// LIBS
+// REACT
 import { useEffect, useState } from 'react';
 
-// COMPONENTS
+// LIBS
 import { Form, Formik } from 'formik';
+
+// COMPONENTS
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
 import { Modal } from '@components/Modal';
 import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { Image } from '@components/Image';
+import { DataListInput } from '@components/Inputs/DataListInput';
+
+// GLOBAL UTILS
+import { applyMask } from '@utils/functions';
+
+// GLOBAL STYLES
 import { theme } from '@styles/theme';
-import { Image } from '@ImagePreviewcomponents/Image';
 
-// STYLES
-import * as Style from './styles';
-import { icon } from '../../../../../../assets/icons';
-
-// TYPES
-import { IAutoCompleteData, IModalCreateNotificationConfiguration } from './utils/types';
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
 
 // FUNCTIONS
 import {
@@ -24,8 +28,12 @@ import {
   requestCreateNotificationConfiguration,
   schemaCreateNotificationConfiguration,
 } from './utils/functions';
-import { applyMask } from '../../../../../../utils/functions';
-import { DataListInput } from '../../../../../../components/Inputs/DataListInput';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IAutoCompleteData, IModalCreateNotificationConfiguration } from './utils/types';
 
 export const ModalCreateNotificationConfiguration = ({
   setModal,
