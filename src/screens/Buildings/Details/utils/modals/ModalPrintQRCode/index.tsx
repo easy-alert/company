@@ -1,5 +1,7 @@
-// COMPONENTS
+// REACT
 import { useEffect, useState, useCallback } from 'react';
+
+// LIBS
 import ReactPDF, {
   Page,
   Text,
@@ -11,17 +13,23 @@ import ReactPDF, {
   PDFDownloadLink,
 } from '@react-pdf/renderer';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Modal } from '../../../../../../components/Modal';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { useAuthContext } from '../../../../../../contexts/Auth/UseAuthContext';
 
-// TYPES
-import { IModalPrintQRCode } from './types';
+// HOOKS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { Select } from '@components/Inputs/Select';
+
+// GLOBAL ASSETS
+import { image } from '@assets/images';
 
 // STYLES
 import * as Style from './styles';
-import { image } from '../../../../../../assets/images';
-import { Select } from '../../../../../../components/Inputs/Select';
+
+// TYPES
+import { IModalPrintQRCode } from './types';
 
 // Definindo tipos
 interface MyDocumentProps {
