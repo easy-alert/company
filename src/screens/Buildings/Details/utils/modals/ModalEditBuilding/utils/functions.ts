@@ -3,7 +3,7 @@
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import { Api } from '@services/api';
-import { unMask, catchHandler } from '@utils/functions';
+import { unMask, catchHandler, uploadFile } from '@utils/functions';
 
 // FUNCTIONS
 
