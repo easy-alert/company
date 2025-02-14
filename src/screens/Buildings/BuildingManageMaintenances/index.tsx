@@ -1,18 +1,31 @@
-// LIBS
+// REACT
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+// CONTEXT
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// HOOKS
+import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
 
 // COMPONENTS
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
-import * as Style from './styles';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { Image } from '../../../components/Image';
-import { icon } from '../../../assets/icons/index';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { ReturnButton } from '@components/Buttons/ReturnButton';
+import { Select } from '@components/Inputs/Select';
+import { DotLoading } from '@components/Loadings/DotLoading';
 
-// TYPES
-import { IBuildingListForSelect, ICategories, ICategoriesOptions } from './utils/types';
+// UTILS
+import { ITimeInterval } from '@utils/types';
+import { query, requestListIntervals } from '@utils/functions';
+
+// ASSETS
+import { icon } from '@assets/icons/index';
+
+// COMPONENTS
+import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
+import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
 // FUNCTIONS
 import {
@@ -22,25 +35,20 @@ import {
   requestCategoriesForSelect,
 } from './utils/functions';
 
-import { ReturnButton } from '../../../components/Buttons/ReturnButton';
-import { Select } from '../../../components/Inputs/Select';
-import { DotLoading } from '../../../components/Loadings/DotLoading';
-import { ITimeInterval } from '../../../utils/types';
-import { query, requestListIntervals } from '../../../utils/functions';
-import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
-import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IBuildingListForSelect, ICategories, ICategoriesOptions } from './utils/types';
 
 export const BuildingManageMaintenances = () => {
+  const { buildingId } = useParams();
   const { account } = useAuthContext();
   const { maintenancePriorities } = useMaintenancePriorities();
 
+  const { search } = window.location;
+
   const navigate = useNavigate();
-
-  const { buildingId } = useParams();
-
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-
-  const [loading, setLoading] = useState<boolean>(true);
 
   const [tableloading, setTableLoading] = useState<boolean>(false);
 
@@ -66,9 +74,10 @@ export const BuildingManageMaintenances = () => {
 
   const [filter, setFilter] = useState<string>('');
 
-  const inputRef = useRef('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
-  const { search } = window.location;
+  const inputRef = useRef('');
 
   useEffect(() => {
     requestCategoriesForSelect({ setCategoriesOptions });
