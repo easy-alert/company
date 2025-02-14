@@ -44,10 +44,10 @@ export const ModalEditNotificationConfiguration = ({
           name: selectedNotificationRow.name,
           email: selectedNotificationRow.email ?? '',
           role: selectedNotificationRow.role,
-          contactNumber: selectedNotificationRow.contactNumber
-            ? applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber }).value
+          contactNumber: selectedNotificationRow.phoneNumber
+            ? applyMask({ mask: 'TEL', value: selectedNotificationRow.phoneNumber }).value
             : '',
-          isMain: selectedNotificationRow.isMain,
+          isMain: selectedNotificationRow.isMainContact,
           showContact: selectedNotificationRow.showContact,
         }}
         validationSchema={schemaEditNotificationConfiguration}
