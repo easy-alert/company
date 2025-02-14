@@ -1,34 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-console */
+// REACT
+import { useEffect, useState } from 'react';
 
-// LIBS
-import { useState } from 'react';
+// SERVICES
 import { updateMaintenanceAdditionalInformation } from '@services/apis/updateMaintenanceAdditionalInformation';
+
+// GLOBAL COMPONENTS
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+
+// GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
-import { icon } from '../../../../../../assets/icons';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
+import { Api } from '@services/api';
+import { catchHandler } from '@utils/functions';
+import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
+import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
+
+// STYLES
 import * as Style from './styles';
-import { Image } from '../../../../../../components/Image';
 import { MaintenanceCard } from '../MaintenanceCard';
 
-// FUNCTIONS
+// UTILS
 import { alphabeticalOrder, numericalOrder } from './utils/functions';
 
 // TYPES
-import { IMaintenanceCategory, ISortType } from './utils/types';
-import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
-import { IconButton } from '../../../../../../components/Buttons/IconButton';
-import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
+import type { IMaintenanceCategory, ISortType } from './utils/types';
+import type { IHandleModals } from '../../types';
 
 export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
   const [selectedMaintenance, setSelectedMaintenance] = useState<{
+    buildingId: string;
     maintenanceId: string;
+    userResponsible?: IUser;
     additionalInfo: string;
   }>({
+    buildingId: data.buildingId,
     maintenanceId: '',
+    userResponsible: undefined,
     additionalInfo: '',
   });
 
@@ -38,19 +53,32 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
   const [modalPrintCategoryQrCodeOpen, setModalPrintCategoryQrCodeOpen] = useState<boolean>(false);
   const [modalAdditionalInformation, setModalAdditionalInformation] = useState<boolean>(false);
 
-  const handleModalAdditionalInformation = (modalState: boolean) => {
-    setModalAdditionalInformation(modalState);
+  const handleModals = ({ modal, modalState }: IHandleModals) => {
+    switch (modal) {
+      case 'printCategoryQrCode':
+        setModalPrintCategoryQrCodeOpen(modalState);
+        break;
+      case 'additionalInformation':
+        setModalAdditionalInformation(modalState);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSelectedMaintenance = ({
     maintenanceId,
+    userResponsible,
     additionalInformation,
   }: {
     maintenanceId: string;
+    userResponsible?: IUser;
     additionalInformation: string;
   }) => {
     setSelectedMaintenance({
+      buildingId: data.buildingId,
       maintenanceId,
+      userResponsible: userResponsible || undefined,
       additionalInfo: additionalInformation,
     });
   };
@@ -88,9 +116,9 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
 
       {modalAdditionalInformation && (
         <ModalAdditionalInformation
-          maintenanceAdditionalInfo={selectedMaintenance.additionalInfo}
+          selectedMaintenance={selectedMaintenance}
           handleUpdateAdditionalInformation={handleUpdateAdditionalInformation}
-          handleModalAdditionalInformation={handleModalAdditionalInformation}
+          handleModals={handleModals}
         />
       )}
 
@@ -242,7 +270,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
               key={maintenance.Maintenance.id}
               maintenance={maintenance}
               handleSelectedMaintenance={handleSelectedMaintenance}
-              handleModalAdditionalInformation={handleModalAdditionalInformation}
+              handleModals={handleModals}
             />
           ))}
         </Style.MaintenancesContainer>
