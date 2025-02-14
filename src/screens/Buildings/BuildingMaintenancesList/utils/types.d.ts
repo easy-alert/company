@@ -1,5 +1,6 @@
-import { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import { AnnexesAndImages } from '../../../Calendar/types';
+import type { IUser } from '@customTypes/IUser';
+import type { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
+import type { AnnexesAndImages } from '../../../Calendar/types';
 
 // MAINTENANCES
 export interface IMaintenance {
@@ -52,6 +53,7 @@ export interface IMaintenance {
     lastNotificationStatus?: string;
     MaintenanceAdditionalInformation?: {
       information: string;
+      user?: IUser;
     };
   };
 }
@@ -71,6 +73,11 @@ export interface AddedMaintenances {
     name: string;
   };
   Maintenances: IMaintenance[];
+}
+
+export interface IHandleModals {
+  modal: 'printCategoryQrCode' | 'additionalInformation';
+  modalState: boolean;
 }
 
 // REQUESTS
