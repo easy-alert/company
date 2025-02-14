@@ -1,17 +1,11 @@
 // REACT
-import { useEffect, useState } from 'react';
-
-// SERVICES
-import { Api } from '@services/api';
+import { useState } from 'react';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
 import { TextArea } from '@components/Inputs/TextArea';
 import { Select } from '@components/Inputs/Select';
-
-// GLOBAL UTILS
-import { catchHandler } from '@utils/functions';
 
 // GLOBAL TYPES
 import type { IUser } from '@customTypes/IUser';
@@ -29,20 +23,23 @@ interface IModalAdditionalInformation {
     userResponsible?: IUser;
     additionalInfo: string;
   };
-  handleUpdateAdditionalInformation: (additionalInformation: string) => void;
+  usersResponsible: { User: IUser }[];
+  handleUpdateAdditionalInformation: (
+    additionalInformation: string,
+    userResponsible: IUser,
+  ) => void;
   handleModals: ({ modal, modalState }: IHandleModals) => void;
 }
 
 export const ModalAdditionalInformation = ({
   selectedMaintenance,
+  usersResponsible,
   handleUpdateAdditionalInformation,
   handleModals,
 }: IModalAdditionalInformation) => {
   const [userResponsible, setUserResponsible] = useState<IUser>(
     selectedMaintenance.userResponsible || ({} as IUser),
   );
-  console.log('🚀 ~ userResponsible:', userResponsible);
-  const [userResponsibleOptions, setUserResponsibleOptions] = useState<{ User: IUser }[]>([]);
   const [additionalInformation, setAdditionalInformation] = useState<string>(
     selectedMaintenance.additionalInfo,
   );
@@ -51,21 +48,11 @@ export const ModalAdditionalInformation = ({
     setAdditionalInformation(event.target.value);
   };
 
-  useEffect(() => {
-    const handleGetUsersResponsible = async () => {
-      try {
-        const response = await Api.get(
-          `permissions/user-buildings-permissions/users/${selectedMaintenance.buildingId}`,
-        );
+  const handleChangeUserResponsible = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const user = usersResponsible.find(({ User }) => User.id === event.target.value);
 
-        setUserResponsibleOptions(response.data.userBuildings);
-      } catch (error: any) {
-        catchHandler(error);
-      }
-    };
-
-    handleGetUsersResponsible();
-  }, []);
+    setUserResponsible(user?.User || ({} as IUser));
+  };
 
   return (
     <Modal
@@ -79,19 +66,10 @@ export const ModalAdditionalInformation = ({
             Use o campo abaixo para selecionar um responsável para esta manutenção:
           </Style.ModalText>
 
-          <Select
-            value={userResponsible.id}
-            onChange={(event) => {
-              const user = userResponsibleOptions.find(
-                ({ User }) => User.id === event.target.value,
-              );
-
-              setUserResponsible(user?.User || ({} as IUser));
-            }}
-          >
+          <Select value={userResponsible.id} onChange={handleChangeUserResponsible}>
             <option value="">Selecione um responsável</option>
 
-            {userResponsibleOptions.map(({ User }) => (
+            {usersResponsible.map(({ User }) => (
               <option key={User.id} value={User.id}>
                 {User.name}
               </option>
@@ -116,7 +94,9 @@ export const ModalAdditionalInformation = ({
         <Style.ButtonContainer>
           <Button
             label="Salvar"
-            onClick={() => handleUpdateAdditionalInformation(additionalInformation)}
+            onClick={() =>
+              handleUpdateAdditionalInformation(additionalInformation, userResponsible)
+            }
           />
         </Style.ButtonContainer>
       </Style.ModalContainer>
