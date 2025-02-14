@@ -1,8 +1,9 @@
-import { IAnnexesAndImages } from './IAnnexesAndImages';
-import { IBuilding } from './IBuilding';
-import { ICategory } from './ICategory';
-import { IMaintenanceReport } from './IMaintenanceReport';
-import { ISupplier } from './ISupplier';
+import type { IAnnexesAndImages } from './IAnnexesAndImages';
+import type { IBuilding } from './IBuilding';
+import type { ICategory } from './ICategory';
+import type { IMaintenanceReport } from './IMaintenanceReport';
+import type { ISupplier } from './ISupplier';
+import type { IUser } from './IUser';
 
 export interface IMaintenancesStatus {
   name: 'expired' | 'pending' | 'completed' | 'overdue';
@@ -96,4 +97,5 @@ export interface IMaintenance {
   daysToAnticipate?: number;
   priorityName: string;
   additionalInfo?: string;
+  userResponsible?: IUser;
 }
