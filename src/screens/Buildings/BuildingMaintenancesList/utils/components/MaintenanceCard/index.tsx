@@ -29,7 +29,8 @@ export const MaintenanceCard = ({
   return (
     <Style.MaintenancesCard
       hasAdditionalInformation={
-        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.information
+        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.information ||
+        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.user
       }
     >
       <Style.MaintenancesCardContent>
