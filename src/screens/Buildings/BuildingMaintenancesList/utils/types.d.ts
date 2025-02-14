@@ -94,3 +94,7 @@ export interface IFilterFunction {
   addedMaintenancesForFilter: AddedMaintenances[];
   filter: string;
 }
+
+export interface IHandleGetUsersResponsible {
+  buildingId: string;
+}
