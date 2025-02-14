@@ -1,5 +1,5 @@
 // REACT
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // SERVICES
 import { updateMaintenanceAdditionalInformation } from '@services/apis/updateMaintenanceAdditionalInformation';
@@ -8,9 +8,6 @@ import { updateMaintenanceAdditionalInformation } from '@services/apis/updateMai
 import { Image } from '@components/Image';
 import { IconButton } from '@components/Buttons/IconButton';
 
-// GLOBAL UTILS
-import { handleToastify } from '@utils/toastifyResponses';
-
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
@@ -18,14 +15,12 @@ import { icon } from '@assets/icons';
 import { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import { Api } from '@services/api';
-import { catchHandler } from '@utils/functions';
 import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
 import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
+import { MaintenanceCard } from '../MaintenanceCard';
 
 // STYLES
 import * as Style from './styles';
-import { MaintenanceCard } from '../MaintenanceCard';
 
 // UTILS
 import { alphabeticalOrder, numericalOrder } from './utils/functions';
@@ -34,7 +29,11 @@ import { alphabeticalOrder, numericalOrder } from './utils/functions';
 import type { IMaintenanceCategory, ISortType } from './utils/types';
 import type { IHandleModals } from '../../types';
 
-export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
+export const MaintenanceCategory = ({
+  data,
+  usersResponsible,
+  handleRefresh,
+}: IMaintenanceCategory) => {
   const [selectedMaintenance, setSelectedMaintenance] = useState<{
     buildingId: string;
     maintenanceId: string;
@@ -83,23 +82,19 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
     });
   };
 
-  const handleUpdateAdditionalInformation = async (additionalInfo: string) => {
-    if (!additionalInfo) {
-      handleToastify({
-        status: 400,
-        data: { ServerMessage: { message: 'A informação adicional é obrigatória.' } },
-      });
-
-      return;
-    }
-
+  const handleUpdateAdditionalInformation = async (
+    additionalInfo: string,
+    userResponsible: IUser,
+  ) => {
     await updateMaintenanceAdditionalInformation({
       buildingId: data.buildingId,
       maintenanceId: selectedMaintenance.maintenanceId,
       additionalInfo,
+      userResponsibleId: userResponsible.id,
     });
 
     setModalAdditionalInformation(false);
+    handleRefresh();
   };
 
   return (
@@ -117,6 +112,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
       {modalAdditionalInformation && (
         <ModalAdditionalInformation
           selectedMaintenance={selectedMaintenance}
+          usersResponsible={usersResponsible}
           handleUpdateAdditionalInformation={handleUpdateAdditionalInformation}
           handleModals={handleModals}
         />
