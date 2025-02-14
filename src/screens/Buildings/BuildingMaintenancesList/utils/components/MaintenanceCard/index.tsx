@@ -22,7 +22,7 @@ import type { IMaintenanceCard } from './utils/types';
 export const MaintenanceCard = ({
   maintenance,
   handleSelectedMaintenance,
-  handleModalAdditionalInformation,
+  handleModals,
 }: IMaintenanceCard) => {
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
 
@@ -121,16 +121,17 @@ export const MaintenanceCard = ({
 
             <div />
 
-            <Style.AdditionalInformationsWrapper style={{ justifyContent: 'flex-end' }}>
+            <Style.AdditionalInformationsWrapper>
               <Button
-                label="Informações Adicionais"
+                label="Informações adicionais"
                 onClick={() => {
                   handleSelectedMaintenance({
                     maintenanceId: maintenance.Maintenance.id,
+                    userResponsible: maintenance.Maintenance.MaintenanceAdditionalInformation?.user,
                     additionalInformation:
                       maintenance.Maintenance.MaintenanceAdditionalInformation?.information || '',
                   });
-                  handleModalAdditionalInformation(true);
+                  handleModals({ modal: 'additionalInformation', modalState: true });
                 }}
               />
             </Style.AdditionalInformationsWrapper>
