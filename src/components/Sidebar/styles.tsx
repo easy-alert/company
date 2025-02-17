@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Background = styled.div`
   display: flex;
@@ -72,6 +72,7 @@ export const ImageMobile = styled.div`
 export const ImageContainer = styled.div`
   display: flex;
   width: fit-content;
+  cursor: pointer;
   @media (max-width: 900px) {
     display: none;
   }

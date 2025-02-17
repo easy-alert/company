@@ -106,7 +106,7 @@ export const schemaModalEditBuilding = yup
       ),
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
-    cep: yup.string().min(9, 'Digite um CEP válido.').required('Campo obrigatório.'),
+    cep: yup.string().min(9, 'Digite um CEP válido.').required('o CEP deve ser preenchido.'),
     city: yup.string().required('Campo obrigatório.'),
     state: yup.string().required('Campo obrigatório.'),
     nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),

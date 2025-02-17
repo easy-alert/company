@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { Api } from '../../../../../../services/api';
-import { catchHandler } from '../../../../../../utils/functions';
+import { Api } from '@services/api';
+import { catchHandler } from '@utils/functions';
 import { IRequestCreateCategory } from './types';
 
 export const requestCreateCategory = async ({
@@ -44,7 +44,7 @@ export const schemaCreateCategory = yup
   .object({
     categoryName: yup
       .string()
-      .required('O nome da categoria é obrigatório.')
+      .required('O nome da categoria deve ser preenchido.')
       .min(3, 'O nome da categoria deve conter 3 ou mais caracteres.'),
   })
   .required();

@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // COMPONENTS
-import { Button } from '../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
 import * as Style from './styles';
 
 // TYPES
@@ -43,7 +43,7 @@ export const ModalCreateCategory = ({
             <Form>
               <FormikInput
                 autoFocus
-                label="Nome da categoria"
+                label="Nome da categoria *"
                 name="categoryName"
                 value={values.categoryName}
                 error={touched.categoryName && errors.categoryName ? errors.categoryName : null}

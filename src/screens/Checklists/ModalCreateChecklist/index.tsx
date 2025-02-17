@@ -2,26 +2,24 @@ import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import * as Style from './styles';
-import { Modal } from '../../../components/Modal';
-import { ITimeInterval } from '../../../utils/types';
-import { Button } from '../../../components/Buttons/Button';
-import { FormikInput } from '../../../components/Form/FormikInput';
-import { Api } from '../../../services/api';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  catchHandler,
-  uploadManyFiles,
-} from '../../../utils/functions';
-import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { Input } from '../../../components/Inputs/Input';
-import { FormikCheckbox } from '../../../components/Form/FormikCheckbox';
-import { FormikTextArea } from '../../../components/Form/FormikTextArea';
-import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
-import { ImagePreview } from '../../../components/ImagePreview';
-import { DotLoading } from '../../../components/Loadings/DotLoading';
+
+import { Modal } from '@components/Modal';
+import { ITimeInterval } from '@utils/types';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { Api } from '@services/api';
+import { applyMask, capitalizeFirstLetter, catchHandler, uploadManyFiles } from '@utils/functions';
+
+import { Input } from '@components/Inputs/Input';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
+import { DragAndDropFiles } from '@components/DragAndDropFiles';
+import { ImagePreview } from '@components/ImagePreview';
+import { DotLoading } from '@components/Loadings/DotLoading';
+
 import { Row, FileAndImageRow, ImageLoadingTag } from '../ModalChecklistDetails/styles';
+import * as Style from './styles';
 
 interface IModalCreateChecklist {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,13 +29,21 @@ interface IModalCreateChecklist {
   onThenRequest: () => Promise<void>;
 }
 
+const fieldLabels: Record<string, string> = {
+  name: 'Nome',
+  syndicId: 'Responsável',
+  date: 'Data',
+};
+
 const schema = yup
   .object({
     buildingNanoId: yup.string().required('Campo obrigatório.'),
-    name: yup.string().required('Campo obrigatório.'),
-    syndicId: yup.string().required('Campo obrigatório.'),
+    name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
+    syndicId: yup
+      .string()
+      .required(() => `O ${fieldLabels.syndicId.toLowerCase()} deve ser preenchido.`),
     description: yup.string(),
-    date: yup.string().required('Campo obrigatório.'),
+    date: yup.string().required(() => `A ${fieldLabels.date.toLowerCase()} deve ser preenchida.`),
 
     hasFrequency: yup.boolean(),
 
