@@ -1,22 +1,26 @@
 /* eslint-disable react/no-array-index-key */
-// LIBS
+// REACT
 import { useEffect, useState } from 'react';
 
-// COMPONENTS
+// LIBS
 import { Form, Formik } from 'formik';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../components/Modal';
-import { FormikCheckbox } from '../../../../../../components/Form/FormikCheckbox';
-import { theme } from '../../../../../../styles/theme';
-import { Image } from '../../../../../../components/Image';
 
-// STYLES
-import * as Style from './styles';
-import { icon } from '../../../../../../assets/icons';
+// COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { Image } from '@components/Image';
+import { DataListInput } from '@components/Inputs/DataListInput';
 
-// TYPES
-import { IAutoCompleteData, IModalCreateNotificationConfiguration } from './utils/types';
+// GLOBAL UTILS
+import { applyMask } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
 
 // FUNCTIONS
 import {
@@ -24,8 +28,12 @@ import {
   requestCreateNotificationConfiguration,
   schemaCreateNotificationConfiguration,
 } from './utils/functions';
-import { applyMask } from '../../../../../../utils/functions';
-import { DataListInput } from '../../../../../../components/Inputs/DataListInput';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IAutoCompleteData, IModalCreateNotificationConfiguration } from './utils/types';
 
 export const ModalCreateNotificationConfiguration = ({
   setModal,
@@ -112,7 +120,7 @@ export const ModalCreateNotificationConfiguration = ({
 
               <DataListInput
                 error={touched.name && errors.name ? errors.name : null}
-                label="Nome"
+                label="Nome *"
                 name="name"
                 getValue={({ value }) => {
                   const customId = value;
@@ -183,7 +191,7 @@ export const ModalCreateNotificationConfiguration = ({
                 }}
               />
               <FormikInput
-                label="Função"
+                label="Função *"
                 name="role"
                 value={values.role}
                 error={touched.role && errors.role ? errors.role : null}

@@ -17,6 +17,6 @@ function convertYouTubeLink(url: string) {
 
 export const IFrameModal = ({ link, name, handleIFrameModal }: IIFrameModal) => (
   <Modal setModal={handleIFrameModal} title={name} bodyWidth="900px">
-    <Style.IFrame src={convertYouTubeLink(link)} />
+    <Style.IFrame src={convertYouTubeLink(link)} allow="fullscreen" />
   </Modal>
 );

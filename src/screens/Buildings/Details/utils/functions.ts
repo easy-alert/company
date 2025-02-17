@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { catchHandler } from '../../../../utils/functions';
+import { Api } from '@services/api';
+import { catchHandler } from '@utils/functions';
 import {
   IBuildingDetail,
   IChangeShowContactStatus,
