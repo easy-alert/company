@@ -31,7 +31,6 @@ import { icon } from '@assets/icons';
 // GLOBAL STYLES
 // GLOBAL TYPES
 // COMPONENTS
-import { ModalCreateOccasionalMaintenanceInstructions } from './ModalCreateOccasionalMaintenance';
 
 // UTILS
 import {
@@ -191,8 +190,6 @@ export const ModalCreateOccasionalMaintenance = ({
       uploadAcceptedImages();
     }
   }, [acceptedImages]);
-
-  if (view === 0) return ModalCreateOccasionalMaintenanceInstructions({ setView, setModal });
 
   return (
     <Modal title="Manutenção avulsa" setModal={setModal}>
