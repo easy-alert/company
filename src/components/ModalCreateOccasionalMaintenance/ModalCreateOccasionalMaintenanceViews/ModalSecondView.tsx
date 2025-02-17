@@ -6,7 +6,6 @@ import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { Input } from '@components/Inputs/Input';
 import { CRUDInput } from '@components/Inputs/CRUDInput';
-import { ErrorMessage } from 'formik';
 
 // STYLES
 import * as Style from '../styles';
@@ -58,7 +57,8 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
-      <ErrorMessage name="buildingId" component={Style.ErrorMessage} />
+
+      {/* <ErrorMessage name="buildingId" component={Style.ErrorMessage} /> */}
 
       <CRUDInput
         label="Categoria *"
@@ -102,7 +102,8 @@ const ModalSecondView = ({
             }),
         }}
       />
-      <ErrorMessage name="category" component={Style.ErrorMessage} />
+
+      {/* <ErrorMessage name="category" component={Style.ErrorMessage} /> */}
 
       <Input
         label="Elemento *"
@@ -115,7 +116,8 @@ const ModalSecondView = ({
           })
         }
       />
-      {errors.element && <Style.ErrorMessage>{errors.element}</Style.ErrorMessage>}
+
+      {/* {errors.element && <Style.ErrorMessage>{errors.element}</Style.ErrorMessage>} */}
 
       <Input
         label="Atividade *"
@@ -129,7 +131,8 @@ const ModalSecondView = ({
           })
         }
       />
-      {errors.activity && <Style.ErrorMessage>{errors.activity}</Style.ErrorMessage>}
+
+      {/* {errors.activity && <Style.ErrorMessage>{errors.activity}</Style.ErrorMessage>} */}
 
       <Select
         label="Responsável *"
@@ -152,7 +155,8 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
-      {errors.responsible && <Style.ErrorMessage>{errors.responsible}</Style.ErrorMessage>}
+
+      {/* {errors.responsible && <Style.ErrorMessage>{errors.responsible}</Style.ErrorMessage>} */}
 
       <Select
         label="Prioridade *"
@@ -175,7 +179,8 @@ const ModalSecondView = ({
           </option>
         ))}
       </Select>
-      {errors.priority && <Style.ErrorMessage>{errors.priority}</Style.ErrorMessage>}
+
+      {/* {errors.priority && <Style.ErrorMessage>{errors.priority}</Style.ErrorMessage>} */}
 
       <Input
         label="Data de execução *"
@@ -189,7 +194,8 @@ const ModalSecondView = ({
           })
         }
       />
-      {errors.executionDate && <Style.ErrorMessage>{errors.executionDate}</Style.ErrorMessage>}
+
+      {/* {errors.executionDate && <Style.ErrorMessage>{errors.executionDate}</Style.ErrorMessage>} */}
 
       <Style.ButtonContainer>
         <Button
