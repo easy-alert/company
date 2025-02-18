@@ -19,7 +19,7 @@ export const requestEditBuilding = async ({
   setOnQuery(true);
   let imageUrl: string | null = null;
 
-  if (typeof values.image === 'object') {
+  if (values.image && typeof values.image === 'object') {
     const { Location } = await uploadFile(values.image);
     imageUrl = Location;
   } else {
@@ -88,17 +88,16 @@ export const schemaModalEditBuilding = yup
     image: yup
       .mixed()
       .nullable()
-      .notRequired()
       .test(
         'FileSize',
         'O tamanho da imagem excedeu o limite.',
-        (value) => value.length || (value && value.size <= 5000000),
+        (value) => !value || (value && value.size <= 5000000),
       )
       .test(
         'FileType',
         'Formato inválido.',
         (value) =>
-          value.length ||
+          !value ||
           (value &&
             (value.type === 'image/png' ||
               value.type === 'image/jpeg' ||
