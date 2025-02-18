@@ -18,11 +18,12 @@ const InputCheckboxBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
     disable = false,
     size = '16px',
     id,
+    justifyContent = 'flex-start',
     ...rest
   },
   ref,
 ) => (
-  <InputContainer error={!!error}>
+  <InputContainer error={!!error} justifyContent={justifyContent}>
     <CheckboxWrapper disable={disable} labelColor={labelColor} size={size}>
       <input type="checkbox" id={id} name={name} ref={ref} {...rest} disabled={disable} />
       {label && <label htmlFor={id}>{label}</label>}

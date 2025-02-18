@@ -1,34 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable no-console */
-
-// LIBS
+// REACT
 import { useState } from 'react';
+
+// SERVICES
 import { updateMaintenanceAdditionalInformation } from '@services/apis/updateMaintenanceAdditionalInformation';
-import { handleToastify } from '@utils/toastifyResponses';
-import { icon } from '../../../../../../assets/icons';
+
+// GLOBAL COMPONENTS
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL TYPES
+import { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import * as Style from './styles';
-import { Image } from '../../../../../../components/Image';
+import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
+import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
 import { MaintenanceCard } from '../MaintenanceCard';
 
-// FUNCTIONS
+// STYLES
+import * as Style from './styles';
+
+// UTILS
 import { alphabeticalOrder, numericalOrder } from './utils/functions';
 
 // TYPES
-import { IMaintenanceCategory, ISortType } from './utils/types';
-import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
-import { IconButton } from '../../../../../../components/Buttons/IconButton';
-import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
+import type { IMaintenanceCategory, ISortType } from './utils/types';
+import type { IHandleModals } from '../../types';
 
-export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
+export const MaintenanceCategory = ({
+  data,
+  usersResponsible,
+  handleRefresh,
+}: IMaintenanceCategory) => {
   const [selectedMaintenance, setSelectedMaintenance] = useState<{
+    buildingId: string;
     maintenanceId: string;
+    userResponsible?: IUser;
     additionalInfo: string;
   }>({
+    buildingId: data.buildingId,
     maintenanceId: '',
+    userResponsible: undefined,
     additionalInfo: '',
   });
 
@@ -38,40 +52,49 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
   const [modalPrintCategoryQrCodeOpen, setModalPrintCategoryQrCodeOpen] = useState<boolean>(false);
   const [modalAdditionalInformation, setModalAdditionalInformation] = useState<boolean>(false);
 
-  const handleModalAdditionalInformation = (modalState: boolean) => {
-    setModalAdditionalInformation(modalState);
+  const handleModals = ({ modal, modalState }: IHandleModals) => {
+    switch (modal) {
+      case 'printCategoryQrCode':
+        setModalPrintCategoryQrCodeOpen(modalState);
+        break;
+      case 'additionalInformation':
+        setModalAdditionalInformation(modalState);
+        break;
+      default:
+        break;
+    }
   };
 
   const handleSelectedMaintenance = ({
     maintenanceId,
+    userResponsible,
     additionalInformation,
   }: {
     maintenanceId: string;
+    userResponsible?: IUser;
     additionalInformation: string;
   }) => {
     setSelectedMaintenance({
+      buildingId: data.buildingId,
       maintenanceId,
+      userResponsible: userResponsible || undefined,
       additionalInfo: additionalInformation,
     });
   };
 
-  const handleUpdateAdditionalInformation = async (additionalInfo: string) => {
-    if (!additionalInfo) {
-      handleToastify({
-        status: 400,
-        data: { ServerMessage: { message: 'A informação adicional é obrigatória.' } },
-      });
-
-      return;
-    }
-
+  const handleUpdateAdditionalInformation = async (
+    additionalInfo: string,
+    userResponsible: IUser,
+  ) => {
     await updateMaintenanceAdditionalInformation({
       buildingId: data.buildingId,
       maintenanceId: selectedMaintenance.maintenanceId,
       additionalInfo,
+      userResponsibleId: userResponsible.id,
     });
 
     setModalAdditionalInformation(false);
+    handleRefresh();
   };
 
   return (
@@ -88,9 +111,10 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
 
       {modalAdditionalInformation && (
         <ModalAdditionalInformation
-          maintenanceAdditionalInfo={selectedMaintenance.additionalInfo}
+          selectedMaintenance={selectedMaintenance}
+          usersResponsible={usersResponsible}
           handleUpdateAdditionalInformation={handleUpdateAdditionalInformation}
-          handleModalAdditionalInformation={handleModalAdditionalInformation}
+          handleModals={handleModals}
         />
       )}
 
@@ -242,7 +266,7 @@ export const MaintenanceCategory = ({ data }: IMaintenanceCategory) => {
               key={maintenance.Maintenance.id}
               maintenance={maintenance}
               handleSelectedMaintenance={handleSelectedMaintenance}
-              handleModalAdditionalInformation={handleModalAdditionalInformation}
+              handleModals={handleModals}
             />
           ))}
         </Style.MaintenancesContainer>

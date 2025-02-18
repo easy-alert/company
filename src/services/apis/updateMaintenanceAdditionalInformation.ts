@@ -6,10 +6,12 @@ export async function updateMaintenanceAdditionalInformation({
   buildingId,
   maintenanceId,
   additionalInfo,
+  userResponsibleId,
 }: {
   buildingId: string;
   maintenanceId: string;
   additionalInfo: string;
+  userResponsibleId: string;
 }) {
   const uri = 'buildings/maintenance/additional-information';
 
@@ -17,6 +19,7 @@ export async function updateMaintenanceAdditionalInformation({
     buildingId,
     maintenanceId,
     additionalInfo,
+    userResponsibleId,
   };
 
   try {

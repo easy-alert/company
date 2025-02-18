@@ -46,6 +46,8 @@ export const theme = {
   size: {
     xxsm: '0.25rem', // 4px
     xsm: '0.5rem', // 8px
+    csm: '0.75rem', // 12px
+    csm2: '0.875rem', // 14px
     sm: '1rem', // 16px
     md: '1.5rem', // 24px
     lg: '2rem', // 32px

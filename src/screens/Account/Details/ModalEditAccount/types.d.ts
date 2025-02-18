@@ -17,7 +17,7 @@ interface IFormEditAccount {
 export interface IModalEditAccount {
   account: IAccount;
   setAccount: (setCompany: IAccount) => void;
-  setModal: (setModal: boolean) => void;
+  handleModals: (modal: string, setModal: boolean) => void;
 }
 
 // REQUESTS
@@ -27,5 +27,5 @@ export interface IRequestEditAccount {
   setAccount: (setCompany: IAccount) => void;
   setOnQuery: (setOnQuery: boolean) => void;
   navigate: any;
-  setModal: (setModal: boolean) => void;
+  handleModals: (modal: string, setModal: boolean) => void;
 }

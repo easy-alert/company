@@ -1,4 +1,4 @@
-import { INotificationConfiguration } from '../../../types';
+import type { UserBuildingsPermissions } from '../../../types';
 
 interface IEditNotificationConfiguration {
   name: string;
@@ -12,7 +12,7 @@ interface IEditNotificationConfiguration {
 export interface IModalEditNotificationConfiguration {
   setModal: (setModal: boolean) => void;
   buildingId: string;
-  selectedNotificationRow: INotificationConfiguration;
+  selectedNotificationRow: UserBuildingsPermissions['User'];
   phoneConfirmUrl: string;
   emailConfirmUrl: string;
   requestBuildingDetailsCall: () => Promise<void>;
