@@ -37,9 +37,13 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
 `;
 
 export const InputContainer = styled.div<{
+  justifyContent?: string;
   error: boolean;
   passwordPlaceholder?: boolean;
 }>`
+  display: flex;
+  justify-content: ${({ justifyContent }) => justifyContent || 'flex-start'};
+
   ${({ error }) =>
     error &&
     `

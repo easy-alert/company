@@ -1,5 +1,6 @@
-import { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import { AnnexesAndImages } from '../../../Calendar/types';
+import type { IUser } from '@customTypes/IUser';
+import type { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
+import type { AnnexesAndImages } from '../../../Calendar/types';
 
 // MAINTENANCES
 export interface IMaintenance {
@@ -52,6 +53,7 @@ export interface IMaintenance {
     lastNotificationStatus?: string;
     MaintenanceAdditionalInformation?: {
       information: string;
+      user?: IUser;
     };
   };
 }
@@ -73,6 +75,11 @@ export interface AddedMaintenances {
   Maintenances: IMaintenance[];
 }
 
+export interface IHandleModals {
+  modal: 'printCategoryQrCode' | 'additionalInformation';
+  modalState: boolean;
+}
+
 // REQUESTS
 export interface IRequestAddedMaintenances {
   setLoading?: (setLoading: boolean) => void;
@@ -86,4 +93,8 @@ export interface IFilterFunction {
   setAddedMaintenances: React.Dispatch<React.SetStateAction<AddedMaintenances[]>>;
   addedMaintenancesForFilter: AddedMaintenances[];
   filter: string;
+}
+
+export interface IHandleGetUsersResponsible {
+  buildingId: string;
 }

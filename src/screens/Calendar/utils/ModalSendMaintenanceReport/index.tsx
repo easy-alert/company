@@ -258,27 +258,33 @@ export const ModalSendMaintenanceReport = ({
               maintenance?.MaintenancesStatus.name === 'pending') &&
               maintenance.inProgress && <InProgressTag />}
           </Style.StatusTagWrapper>
+
           <Style.Content>
             <Style.Row>
               <h6>Categoria</h6>
               <p className="p2">{maintenance.Maintenance.Category?.name}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Elemento</h6>
               <p className="p2">{maintenance.Maintenance.element}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Atividade</h6>
               <p className="p2">{maintenance.Maintenance.activity}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Responsável</h6>
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Fonte</h6>
               <p className="p2">{maintenance.Maintenance.source}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Observação da manutenção</h6>
               <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
@@ -331,6 +337,39 @@ export const ModalSendMaintenanceReport = ({
                 <h6>Info. Adicional</h6>
                 <p className="p2">{maintenance.additionalInfo}</p>
               </Style.Row>
+            )}
+
+            <Style.Row>
+              <h6>Última execução</h6>
+              <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+            </Style.Row>
+
+            {maintenance.userResponsible && (
+              <Style.Content style={{ marginTop: '0.5rem' }}>
+                <h3>Usuário responsável</h3>
+
+                <Style.Row>
+                  <h6>Nome</h6>
+                  <p className="p2">{maintenance.userResponsible?.name}</p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Telefone</h6>
+                  <p className="p2">
+                    {
+                      applyMask({
+                        value: maintenance.userResponsible.phoneNumber || '',
+                        mask: 'TEL',
+                      }).value
+                    }
+                  </p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Email</h6>
+                  <p className="p2">{maintenance.userResponsible?.email}</p>
+                </Style.Row>
+              </Style.Content>
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />

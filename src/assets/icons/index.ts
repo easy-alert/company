@@ -89,6 +89,7 @@ import activityNotification from './activityNotification.svg';
 import qrCodeUnchecked from './qrCodeUnchecked.svg';
 import qrCodeChecked from './qrCodeChecked.svg';
 import signing from './signing.svg';
+import personPlaceholder from './personPlaceholder.svg';
 
 export const icon = {
   activityNotification,
@@ -182,4 +183,5 @@ export const icon = {
   qrCodeUnchecked,
   qrCodeChecked,
   signing,
+  personPlaceholder,
 };

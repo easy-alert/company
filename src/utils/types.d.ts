@@ -1,7 +1,12 @@
 interface IUserCompany {
   id: string;
   name: string;
-  email: string;
+  email?: string;
+  emailIsConfirmed: boolean;
+  phoneNumber?: string;
+  phoneNumberIsConfirmed: boolean;
+  role?: string;
+  image?: string;
   lastAccess: string | null;
   createdAt: string;
   isBlocked: boolean;

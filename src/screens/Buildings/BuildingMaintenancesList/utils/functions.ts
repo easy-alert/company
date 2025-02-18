@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Api } from '../../../../services/api';
-import { catchHandler } from '../../../../utils/functions';
-import { IFilterFunction, IRequestAddedMaintenances } from './types';
+import { Api } from '@services/api';
+
+import { catchHandler } from '@utils/functions';
+
+import type {
+  IFilterFunction,
+  IHandleGetUsersResponsible,
+  IRequestAddedMaintenances,
+} from './types';
 
 export const requestAddedMaintenances = async ({
   setLoading,
@@ -54,5 +60,17 @@ export const filterFunction = ({
     });
   } else {
     setAddedMaintenances(addedMaintenancesForFilter);
+  }
+};
+
+export const handleGetUsersResponsible = async ({ buildingId }: IHandleGetUsersResponsible) => {
+  try {
+    const response = await Api.get(`permissions/user-buildings-permissions/users/${buildingId}`);
+
+    return response.data.userBuildings;
+  } catch (error: any) {
+    catchHandler(error);
+
+    return [];
   }
 };

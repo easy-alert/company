@@ -17,15 +17,14 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { ColorfulTable, ColorfulTableContent } from '@components/ColorfulTable';
 import { Tag } from '@components/Tag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
+import TableCell from '@components/TableCell';
 
 // GLOBAL UTILS
+import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@utils/functions';
 import {
-  applyMask,
-  catchHandler,
-  dateFormatter,
-  dateTimeFormatter,
-  translateTicketType,
-} from '@utils/functions';
+  requestResendEmailConfirmation,
+  requestResendPhoneConfirmation,
+} from '@screens/Buildings/Details/utils/functions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -42,10 +41,13 @@ import { ModalCreateUser } from './ModalCreateUser';
 import * as Style from './styles';
 
 export interface ISelectedUser {
-  name: string;
-  email: string;
-  status: string;
   id: string;
+  image?: string;
+  name: string;
+  role?: string;
+  email: string;
+  phoneNumber: string;
+  isBlocked: boolean;
 }
 
 export const AccountDetails = () => {
@@ -56,8 +58,28 @@ export const AccountDetails = () => {
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
   const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
   const [modalCreateUserOpen, setModalCreateUserOpen] = useState<boolean>(false);
+
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
   const [onQuery, setOnQuery] = useState(false);
+
+  const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
+  const emailConfirmUrl = `${window.location.origin}/confirm/email`;
+
+  const handleModals = (modal: string, modalState: boolean) => {
+    switch (modal) {
+      case 'editAccount':
+        setModalEditAccountOpen(modalState);
+        break;
+      case 'updateUser':
+        setModalUpdateUserOpen(modalState);
+        break;
+      case 'createUser':
+        setModalCreateUserOpen(modalState);
+        break;
+      default:
+        break;
+    }
+  };
 
   const validateToken = async () => {
     await Api.get('/auth/validate/token')
@@ -86,23 +108,19 @@ export const AccountDetails = () => {
   return (
     <>
       {modalEditAccountOpen && account && (
-        <ModalEditAccount
-          setModal={setModalEditAccountOpen}
-          account={account}
-          setAccount={setAccount}
-        />
+        <ModalEditAccount account={account} setAccount={setAccount} handleModals={handleModals} />
+      )}
+
+      {modalCreateUserOpen && (
+        <ModalCreateUser onThenRequest={validateToken} handleModals={handleModals} />
       )}
 
       {modalUpdateUserOpen && selectedUser && (
         <ModalUpdateUser
-          setModal={setModalUpdateUserOpen}
           selectedUser={selectedUser}
           onThenRequest={validateToken}
+          handleModals={handleModals}
         />
-      )}
-
-      {modalCreateUserOpen && (
-        <ModalCreateUser onThenRequest={validateToken} setModal={setModalCreateUserOpen} />
       )}
 
       <Style.Header>
@@ -193,6 +211,7 @@ export const AccountDetails = () => {
         <Style.UsersCard>
           <Style.UsersCardHeader>
             <h5>Usuários</h5>
+
             <IconButton
               hideLabelOnMedia
               icon={icon.plusWithBg}
@@ -206,11 +225,14 @@ export const AccountDetails = () => {
           {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
             <ColorfulTable
               colsHeader={[
+                { label: '', cssProps: { width: '1%' } },
                 { label: 'Nome' },
                 { label: 'Email' },
-                { label: 'Status' },
-                { label: 'Último acesso' },
-                { label: 'Data de cadastro' },
+                { label: 'Telefone' },
+                { label: 'Cargo' },
+                { label: 'Último acesso', cssProps: { width: '130px', textAlign: 'center' } },
+                { label: 'Data de cadastro', cssProps: { width: '150px', textAlign: 'center' } },
+                { label: 'Status', cssProps: { width: '1px', textAlign: 'center' } },
                 { label: '' },
               ]}
             >
@@ -218,11 +240,81 @@ export const AccountDetails = () => {
                 <ColorfulTableContent
                   key={User.id}
                   colsBody={[
-                    { cell: User.name },
-                    { cell: User.email },
+                    {
+                      cell: <Image img={User.image || icon.personPlaceholder} size="36px" />,
+                      cssProps: { padding: '5px' },
+                    },
+                    { cell: <TableCell value={User.name} /> },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          <TableCell value={User.email} />
+
+                          {User.email && User.emailIsConfirmed && (
+                            <Image img={icon.checkedNoBg} size="16px" />
+                          )}
+
+                          {User.email && !User.emailIsConfirmed && (
+                            <PopoverButton
+                              label="Reenviar"
+                              hiddenIconButtonLabel
+                              buttonIcon={icon.yellowAlert}
+                              buttonIconSize="16px"
+                              actionButtonBgColor={theme.color.primary}
+                              type="IconButton"
+                              message={{
+                                title: 'Deseja reenviar o e-mail de confirmação?',
+                                content: '',
+                                contentColor: theme.color.danger,
+                              }}
+                              actionButtonClick={() => {
+                                requestResendEmailConfirmation({
+                                  buildingNotificationConfigurationId: User.id,
+                                  link: emailConfirmUrl,
+                                });
+                              }}
+                            />
+                          )}
+                        </Style.TableDataWrapper>
+                      ),
+                    },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          <TableCell value={User.phoneNumber} type="phone" />
+
+                          {User.phoneNumber && User.phoneNumberIsConfirmed && (
+                            <Image img={icon.checkedNoBg} size="16px" />
+                          )}
+
+                          {User.phoneNumber && !User.phoneNumberIsConfirmed && (
+                            <PopoverButton
+                              label="Reenviar"
+                              hiddenIconButtonLabel
+                              buttonIcon={icon.yellowAlert}
+                              buttonIconSize="16px"
+                              actionButtonBgColor={theme.color.primary}
+                              type="IconButton"
+                              message={{
+                                title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
+                                content: '',
+                                contentColor: theme.color.danger,
+                              }}
+                              actionButtonClick={() => {
+                                requestResendPhoneConfirmation({
+                                  buildingNotificationConfigurationId: User.id,
+                                  link: phoneConfirmUrl,
+                                });
+                              }}
+                            />
+                          )}
+                        </Style.TableDataWrapper>
+                      ),
+                    },
+                    { cell: <TableCell value={User.role} /> },
+                    { cell: <TableCell value={User.lastAccess} type="date" alignItems="center" /> },
+                    { cell: <TableCell value={User.createdAt} type="date" alignItems="center" /> },
                     { cell: <Tag isInvalid={User.isBlocked} /> },
-                    { cell: User.lastAccess ? dateTimeFormatter(User.lastAccess) : '-' },
-                    { cell: dateTimeFormatter(User.createdAt) },
                     {
                       cell: (
                         <Style.TableButtons>
@@ -253,10 +345,13 @@ export const AccountDetails = () => {
                             label="Editar"
                             onClick={() => {
                               setSelectedUser({
-                                email: User.email,
-                                name: User.name,
-                                status: User.isBlocked ? 'blocked' : 'active',
                                 id: User.id,
+                                image: User.image,
+                                name: User.name,
+                                role: User.role,
+                                email: User.email || '',
+                                phoneNumber: User.phoneNumber || '',
+                                isBlocked: User.isBlocked,
                               });
                               setModalUpdateUserOpen(true);
                             }}

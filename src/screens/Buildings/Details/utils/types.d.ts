@@ -11,6 +11,23 @@ export interface INotificationConfiguration {
   nanoId: string;
 }
 
+export interface UserBuildingsPermissions {
+  User: {
+    id: string;
+    name: string;
+    email: string;
+    emailIsConfirmed: boolean;
+    phoneNumber: string;
+    phoneNumberIsConfirmed: boolean;
+    role: string;
+    isMainContact: boolean;
+    showContact: boolean;
+  };
+
+  isMainContact: boolean;
+  showContact: boolean;
+}
+
 interface File {
   name: string;
   id: string;
@@ -61,6 +78,7 @@ export interface IBuildingDetail {
   };
   Folders: Folders;
   NotificationsConfigurations: INotificationConfiguration[];
+  UserBuildingsPermissions: UserBuildingsPermissions[];
   MaintenancesCount: MaintenanceCount[];
   Banners: IBanner[];
   mandatoryReportProof: boolean;
@@ -92,9 +110,10 @@ export interface IRequestResendConfirmation {
 }
 
 export interface IChangeShowContactStatus {
-  setShowContactLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  buildingNotificationConfigurationId: string;
-  showContact: boolean;
+  userId: string;
+  buildingId: string;
+  isMainContact?: boolean;
+  showContact?: boolean;
 }
 
 export interface IRequestFolderDetails {
