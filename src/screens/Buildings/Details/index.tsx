@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// SERVICES
+import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
+
 // GLOBAL COMPONENTS
+import TableCell from '@components/TableCell';
 import { IconButton } from '@components/Buttons/IconButton';
 import { ReturnButton } from '@components/Buttons/ReturnButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
@@ -11,6 +15,7 @@ import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { ImagePreview } from '@components/ImagePreview';
 import { Image } from '@components/Image';
 import { Button } from '@components/Buttons/Button';
+import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import { FileComponent, FolderComponent } from '@components/FileSystem';
 
 // GLOBAL UTILS
@@ -21,6 +26,7 @@ import {
   query,
   requestBuildingTypes,
 } from '@utils/functions';
+import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -32,8 +38,6 @@ import { theme } from '@styles/theme';
 import type { IBuildingTypes } from '@utils/types';
 
 // COMPONENTS
-import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
-import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
@@ -67,9 +71,9 @@ import * as Style from './styles';
 import type {
   Folder,
   IBuildingDetail,
-  INotificationConfiguration,
   File,
   IBanner,
+  UserBuildingsPermissions,
 } from './utils/types';
 
 // #endregion
@@ -82,9 +86,11 @@ export const BuildingDetails = () => {
   const { search } = window.location;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
+  console.log('🚀 ~ BuildingDetails ~ building:', building);
   const [apartmentNumber, setApartmentNumber] = useState<string>('');
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
+  const [showIsMainContactLoading, setShowIsMainContactLoading] = useState<boolean>(false);
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
@@ -118,7 +124,7 @@ export const BuildingDetails = () => {
   const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
   const [selectedNotificationRow, setSelectedNotificationRow] =
-    useState<INotificationConfiguration>();
+    useState<UserBuildingsPermissions['User']>();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -310,9 +316,9 @@ export const BuildingDetails = () => {
 
         {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
           <ModalEditNotificationConfiguration
-            setModal={setModalEditNotificationConfigurationOpen}
             buildingId={building.id}
             selectedNotificationRow={selectedNotificationRow}
+            setModal={setModalEditNotificationConfigurationOpen}
             emailConfirmUrl={emailConfirmUrl}
             phoneConfirmUrl={phoneConfirmUrl}
             requestBuildingDetailsCall={async () => {
@@ -631,58 +637,68 @@ export const BuildingDetails = () => {
 
         <Style.Card>
           <Style.CardHeader>
-            <h5>Responsáveis de manutenção</h5>
+            <h5>Usuário responsáveis</h5>
 
-            <IconButton
+            {/* <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
                 setModalCreateNotificationConfigurationOpen(true);
               }}
-            />
+            /> */}
           </Style.CardHeader>
-          {building && building.NotificationsConfigurations.length > 0 ? (
+
+          {building && building.UserBuildingsPermissions.length > 0 ? (
             <NotificationTable
               colsHeader={[
                 { label: 'Nome do responsável' },
                 { label: 'E-mail' },
-                { label: 'WhatsApp' },
+                { label: 'Telefone' },
                 { label: 'Função' },
                 {
                   label: 'Exibir',
                   cssProps: {
+                    width: '1%',
                     textAlign: 'center',
                   },
                 },
-                { label: '' },
+                {
+                  label: 'Principal',
+                  cssProps: {
+                    width: '1%',
+                    textAlign: 'center',
+                  },
+                },
               ]}
             >
-              {building?.NotificationsConfigurations.map((notificationRow, i: number) => (
-                <NotificationTableContent
-                  key={notificationRow.id}
-                  onClick={() => {
-                    //
-                  }}
-                  colsBody={[
-                    {
-                      cell: notificationRow.name,
-                      cssProps: {
-                        width: '20%',
-                        borderBottomLeftRadius:
-                          i + 1 === building?.NotificationsConfigurations.length
-                            ? theme.size.xsm
-                            : 0,
+              {building?.UserBuildingsPermissions.map(
+                ({ User, isMainContact, showContact }, i: number) => (
+                  <NotificationTableContent
+                    key={User.id}
+                    onClick={() => {
+                      //
+                    }}
+                    colsBody={[
+                      {
+                        cell: <TableCell value={User.name} textSize="csm" />,
+                        cssProps: {
+                          borderBottomLeftRadius:
+                            i + 1 === building?.UserBuildingsPermissions.length
+                              ? theme.size.xsm
+                              : 0,
+                        },
                       },
-                    },
-                    {
-                      cell: (
-                        <Style.TableDataWrapper>
-                          {notificationRow.email ?? '-'}
-                          {notificationRow.email &&
-                            (notificationRow.emailIsConfirmed ? (
+                      {
+                        cell: (
+                          <Style.TableDataWrapper>
+                            <TableCell value={User.email} />
+
+                            {User.email && User.emailIsConfirmed && (
                               <Image img={icon.checkedNoBg} size="16px" />
-                            ) : (
+                            )}
+
+                            {User.email && !User.emailIsConfirmed && (
                               <PopoverButton
                                 label="Reenviar"
                                 hiddenIconButtonLabel
@@ -697,27 +713,25 @@ export const BuildingDetails = () => {
                                 }}
                                 actionButtonClick={() => {
                                   requestResendEmailConfirmation({
-                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    buildingNotificationConfigurationId: User.id,
                                     link: emailConfirmUrl,
                                   });
                                 }}
                               />
-                            ))}
-                        </Style.TableDataWrapper>
-                      ),
-                      cssProps: { width: '20%' },
-                    },
-                    {
-                      cell: (
-                        <Style.TableDataWrapper>
-                          {notificationRow.contactNumber
-                            ? applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value
-                            : '-'}
+                            )}
+                          </Style.TableDataWrapper>
+                        ),
+                      },
+                      {
+                        cell: (
+                          <Style.TableDataWrapper>
+                            <TableCell value={User.phoneNumber} type="phone" />
 
-                          {notificationRow.contactNumber &&
-                            (notificationRow.contactNumberIsConfirmed ? (
+                            {User.phoneNumber && User.phoneNumberIsConfirmed && (
                               <Image img={icon.checkedNoBg} size="16px" />
-                            ) : (
+                            )}
+
+                            {User.phoneNumber && !User.phoneNumberIsConfirmed && (
                               <PopoverButton
                                 label="Reenviar"
                                 hiddenIconButtonLabel
@@ -732,76 +746,115 @@ export const BuildingDetails = () => {
                                 }}
                                 actionButtonClick={() => {
                                   requestResendPhoneConfirmation({
-                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    buildingNotificationConfigurationId: User.id,
                                     link: phoneConfirmUrl,
                                   });
                                 }}
                               />
-                            ))}
-                        </Style.TableDataWrapper>
-                      ),
-                      cssProps: { width: '15%' },
-                    },
-                    { cell: notificationRow.role, cssProps: { width: '15%' } },
-
-                    {
-                      cell: (
-                        <input
-                          disabled={showContactLoading}
-                          type="checkbox"
-                          checked={notificationRow.showContact}
-                          onChange={() => {
-                            changeShowContactStatus({
-                              showContact: !notificationRow.showContact,
-                              buildingNotificationConfigurationId: notificationRow.id,
-                              setShowContactLoading,
-                            });
-
-                            const prevBuilding = structuredClone(building);
-
-                            prevBuilding.NotificationsConfigurations[i].showContact =
-                              !building.NotificationsConfigurations[i].showContact;
-
-                            setBuilding(prevBuilding);
-                          }}
-                        />
-                      ),
-                      cssProps: {
-                        width: '10%',
-                        textAlign: 'center',
+                            )}
+                          </Style.TableDataWrapper>
+                        ),
                       },
-                    },
-                    {
-                      cell: (
-                        <Style.ButtonWrapper>
-                          {notificationRow.isMain && (
-                            <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
-                              <p className="p5">Contato principal</p>
-                            </Style.MainContactTag>
-                          )}
-                          <IconButton
-                            size="16px"
-                            className="p4"
-                            icon={icon.edit}
-                            label="Editar"
-                            onClick={() => {
-                              setSelectedNotificationRow(notificationRow);
-                              setModalEditNotificationConfigurationOpen(true);
+                      { cell: <TableCell value={User.role} /> },
+
+                      {
+                        cell: (
+                          <InputCheckbox
+                            type="checkbox"
+                            checked={showContact}
+                            disabled={showContactLoading}
+                            justifyContent="center"
+                            onChange={async () => {
+                              setShowContactLoading(true);
+
+                              try {
+                                await changeShowContactStatus({
+                                  userId: User.id,
+                                  buildingId: building.id,
+                                  showContact: !showContact,
+                                });
+
+                                const prevBuilding = structuredClone(building);
+
+                                prevBuilding.UserBuildingsPermissions[i].showContact = !showContact;
+
+                                setBuilding(prevBuilding);
+                              } finally {
+                                setShowContactLoading(false);
+                              }
                             }}
                           />
-                        </Style.ButtonWrapper>
-                      ),
-                      cssProps: {
-                        width: '10%',
-                        borderBottomRightRadius:
-                          i + 1 === building?.NotificationsConfigurations.length
-                            ? theme.size.xxsm
-                            : 0,
+                        ),
+                        cssProps: {
+                          textAlign: 'center',
+                        },
                       },
-                    },
-                  ]}
-                />
-              ))}
+                      {
+                        cell: (
+                          <InputCheckbox
+                            type="checkbox"
+                            checked={isMainContact}
+                            disabled={showIsMainContactLoading}
+                            justifyContent="center"
+                            onChange={async () => {
+                              setShowIsMainContactLoading(true);
+
+                              try {
+                                await changeShowContactStatus({
+                                  userId: User.id,
+                                  buildingId: building.id,
+                                  isMainContact: !isMainContact,
+                                });
+
+                                const prevBuilding = structuredClone(building);
+
+                                prevBuilding.UserBuildingsPermissions[i].isMainContact =
+                                  !isMainContact;
+
+                                setBuilding(prevBuilding);
+                              } finally {
+                                setShowIsMainContactLoading(false);
+                              }
+                            }}
+                          />
+                        ),
+                        cssProps: {
+                          textAlign: 'center',
+                        },
+                      },
+                      // {
+                      //   cell: (
+                      //     <Style.ButtonWrapper>
+                      //       {isMainContact && (
+                      //         <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
+                      //           <p className="p5">Contato principal</p>
+                      //         </Style.MainContactTag>
+                      //       )}
+
+                      //       <IconButton
+                      //         size="16px"
+                      //         className="p4"
+                      //         icon={icon.edit}
+                      //         label="Editar"
+                      //         onClick={() => {
+                      //           setSelectedNotificationRow(User);
+                      //           setModalEditNotificationConfigurationOpen(true);
+                      //         }}
+                      //       />
+                      //     </Style.ButtonWrapper>
+                      //   ),
+                      //   cssProps: {
+                      //     width: '10%',
+                      //     borderBottomRightRadius:
+                      //       i + 1 === building?.NotificationsConfigurations.length
+                      //         ? theme.size.xxsm
+                      //         : 0,
+                      //   },
+                      // },
+                    ]}
+                  />
+                ),
+              )}
             </NotificationTable>
           ) : (
             <Style.NoDataContainer>
@@ -809,38 +862,6 @@ export const BuildingDetails = () => {
             </Style.NoDataContainer>
           )}
         </Style.Card>
-
-        {/* Alterado o layout no SA-6419 */}
-        {/* <Style.Card>
-          <Style.MaintenanceCardHeader>
-            <h5>
-              Plano de manutenção ({usedMaintenancesCount}/{totalMaintenancesCount})
-            </h5>
-            <Style.ButtonWrapper>
-              <IconButton
-                icon={icon.listWithBg}
-                label="Visualizar"
-                hideLabelOnMedia
-                onClick={() => {
-                  if (building?.id) {
-                    navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
-                  }
-                }}
-              />
-
-              <IconButton
-                icon={icon.editWithBg}
-                label="Editar"
-                hideLabelOnMedia
-                onClick={() => {
-                  if (building?.id) {
-                    navigate(`/buildings/details/${building?.id}/maintenances/manage${search}`);
-                  }
-                }}
-              />
-            </Style.ButtonWrapper>
-          </Style.MaintenanceCardHeader>
-        </Style.Card> */}
 
         <Style.CardGrid>
           <Style.AnnexCard>

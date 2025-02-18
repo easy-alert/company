@@ -11,23 +11,23 @@ export default createGlobalStyle`
   }
 
   ::-webkit-scrollbar {
-    width: 8px; 
-    height: 8px; 
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: ${theme.color.gray1}; 
-    border-radius: 4px; 
+    background: ${theme.color.gray1};
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${theme.color.gray4}; 
-    border-radius: 4px; 
-    transition: background 0.3s ease; 
+    background: ${theme.color.gray4};
+    border-radius: 4px;
+    transition: background 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${theme.color.primary}; 
+    background: ${theme.color.primary};
   }
 
   a {
@@ -202,7 +202,7 @@ export default createGlobalStyle`
     outline: none;
     width: 100%;
     background-color: ${theme.color.white};
-    border: 1px solid ${theme.color.gray4};
+    border: 1px solid ${theme.color.gray3};
     height: 32px;
     border-radius: ${theme.size.xxsm};
     padding: 0 ${theme.size.sm};

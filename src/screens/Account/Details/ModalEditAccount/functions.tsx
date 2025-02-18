@@ -13,7 +13,7 @@ import type { IRequestEditAccount } from './types';
 
 export const requestEditAccount = async ({
   values,
-  setModal,
+  handleModals,
   account,
   setAccount,
   navigate,
@@ -101,7 +101,7 @@ export const requestEditAccount = async ({
 
       setAccount(updatedAccount);
       navigate(window.location.pathname, { state: updatedAccount });
-      setModal(false);
+      handleModals('editAccount', false);
       toast.success(res.data.ServerMessage.message);
     })
     .catch((err) => {

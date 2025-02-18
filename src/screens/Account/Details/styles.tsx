@@ -93,6 +93,12 @@ export const UsersCard = styled.div`
   }
 `;
 
+export const TableDataWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xxsm};
+`;
+
 export const TableButtons = styled.div`
   display: flex;
   align-items: center;

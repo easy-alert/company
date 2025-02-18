@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { AddedMaintenances, IMaintenance } from '../../../types';
+import type { IUser } from '@customTypes/IUser';
+import type { AddedMaintenances, IMaintenance } from '../../../types';
 
 export interface IMaintenanceCategory {
   data: AddedMaintenances;
+  usersResponsible: { User: IUser }[];
+  handleRefresh: () => void;
 }
 
 export interface ISortType {

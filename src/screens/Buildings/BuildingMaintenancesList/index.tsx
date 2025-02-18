@@ -1,42 +1,56 @@
-/* eslint-disable no-alert */
-// LIBS
+// REACT
 import { useEffect, useState } from 'react';
-
-// COMPONENTS
 import { useNavigate, useParams } from 'react-router-dom';
 import { CSVLink } from 'react-csv';
-import * as Style from './styles';
-import { Image } from '../../../components/Image';
-import { icon } from '../../../assets/icons/index';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
-// TYPES
-import { AddedMaintenances } from './utils/types';
+// GLOBAL COMPONENTS
+import { Image } from '@components/Image';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { ReturnButton } from '@components/Buttons/ReturnButton';
+import { IconButton } from '@components/Buttons/IconButton';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons/index';
+
+// GLOBAL TYPES
+import type { IUser } from '@customTypes/IUser';
+
+// COMPONENTS
+import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
+import { ModalPrintPlan } from './utils/ModalPrintPlan';
 
 // FUNCTIONS
-import { filterFunction, requestAddedMaintenances } from './utils/functions';
-import { ReturnButton } from '../../../components/Buttons/ReturnButton';
-import { IconButton } from '../../../components/Buttons/IconButton';
-import { ModalPrintPlan } from './utils/ModalPrintPlan';
+import {
+  filterFunction,
+  handleGetUsersResponsible,
+  requestAddedMaintenances,
+} from './utils/functions';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { AddedMaintenances } from './utils/types';
 
 export const BuildingMaintenancesList = () => {
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
-  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
+  const { search } = window.location;
 
+  const [addedMaintenances, setAddedMaintenances] = useState<AddedMaintenances[]>([]);
+  const [usersResponsible, setUsersResponsible] = useState<{ User: IUser }[]>([]);
+  const [buildingName, setBuildingName] = useState<string>('');
+
+  const [filter, setFilter] = useState<string>('');
   const [addedMaintenancesForFilter, setAddedMaintenancesForFilter] = useState<AddedMaintenances[]>(
     [],
   );
 
-  const [buildingName, setBuildingName] = useState<string>('');
+  const [modalPrintPlanOpen, setModalPrintPlanOpen] = useState<boolean>(false);
 
-  const [filter, setFilter] = useState<string>('');
-
-  const { search } = window.location;
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const csvHeaders = [
     { label: 'Edificação', key: 'Edificação' },
@@ -76,15 +90,29 @@ export const BuildingMaintenancesList = () => {
     })),
   );
 
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  };
+
   useEffect(() => {
-    requestAddedMaintenances({
-      setLoading,
-      setAddedMaintenances,
-      buildingId: buildingId!,
-      setBuildingName,
-      setAddedMaintenancesForFilter,
-    });
-  }, []);
+    async function fetchData() {
+      if (!buildingId) return;
+
+      const responseData = await handleGetUsersResponsible({ buildingId });
+
+      setUsersResponsible(responseData);
+    }
+
+    fetchData().then(() =>
+      requestAddedMaintenances({
+        setLoading,
+        setAddedMaintenances,
+        buildingId: buildingId!,
+        setBuildingName,
+        setAddedMaintenancesForFilter,
+      }),
+    );
+  }, [buildingId, refresh]);
 
   return loading ? (
     <DotSpinLoading />
@@ -172,7 +200,12 @@ export const BuildingMaintenancesList = () => {
       {addedMaintenances?.length ? (
         <Style.CategoriesContainer>
           {addedMaintenances.map((element) => (
-            <MaintenanceCategory key={element.Category.id} data={element} />
+            <MaintenanceCategory
+              key={element.Category.id}
+              data={element}
+              usersResponsible={usersResponsible}
+              handleRefresh={handleRefresh}
+            />
           ))}
         </Style.CategoriesContainer>
       ) : (

@@ -27,7 +27,7 @@ import {
   schemaModalEditAccountWithCPF,
 } from './functions';
 
-export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
+export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEditAccount) => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
   const displayExtraTicketField = ['whatsapp', 'email', 'link'].sort() as TTranslateTicketType[];
 
   return (
-    <Modal title="Editar usuário" setModal={setModal}>
+    <Modal title="Editar usuário" setModal={(state) => handleModals('editAccount', state)}>
       <Formik
         initialValues={{
           image: account.Company.image,
@@ -80,7 +80,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
             setAccount,
             navigate,
             setOnQuery,
-            setModal,
+            handleModals,
           });
         }}
       >
