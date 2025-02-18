@@ -35,17 +35,16 @@ const schema = yup
     image: yup
       .mixed()
       .nullable()
-      .notRequired()
       .test(
         'FileSize',
         'O tamanho da imagem excedeu o limite.',
-        (value) => value.length || (value && value.size <= 5000000),
+        (value) => !value || (value && value.size <= 5000000),
       )
       .test(
         'FileType',
         'Formato inválido.',
         (value) =>
-          value.length ||
+          !value ||
           (value &&
             (value.type === 'image/png' ||
               value.type === 'image/jpeg' ||
@@ -120,11 +119,11 @@ export const ModalUpdateUser = ({
     <Modal setModal={() => handleModals('updateUser', false)} title="Editar usuário">
       <Formik
         initialValues={{
-          image: selectedUser.image,
+          image: selectedUser.image || '',
           name: selectedUser.name,
           email: selectedUser.email,
           phoneNumber: applyMask({ value: selectedUser.phoneNumber, mask: 'TEL' }).value,
-          role: selectedUser.role,
+          role: selectedUser.role || '',
           password: '',
           confirmPassword: '',
           isBlocked: selectedUser.isBlocked,
