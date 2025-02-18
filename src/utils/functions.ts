@@ -121,7 +121,7 @@ export const applyMask = ({
   mask: 'CPF' | 'CNPJ' | 'TEL' | 'CEP' | 'BRL' | 'NUM' | 'DEC';
   value: string;
 }) => {
-  let Mask: IMask = { value: '', length: 0 };
+  let Mask: IMask = { value: '', length: 1 };
 
   switch (mask) {
     case 'CPF':
