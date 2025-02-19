@@ -11,7 +11,7 @@ interface IServerResponse {
 
 interface IToastifyMessage {
   message: string;
-  type: 'success' | 'warning' | 'error';
+  type: 'success' | 'warning' | 'error' | 'loading';
 }
 
 export const handleToastify = (serverResponse: IServerResponse) => {
@@ -36,6 +36,9 @@ export const handleToastifyMessage = ({ message, type }: IToastifyMessage) => {
       break;
     case 'error':
       toast.error(message);
+      break;
+    case 'loading':
+      toast.loading(message);
       break;
     default:
       break;
