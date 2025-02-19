@@ -4,5 +4,7 @@ export interface IModal {
   title: string;
   bodyWidth?: string;
   closeOutside?: boolean;
+  deleteButton?: boolean;
   setModal: (setModal: boolean) => void;
+  handleDelete?: (modalState: boolean) => void;
 }

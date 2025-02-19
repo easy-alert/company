@@ -10,12 +10,14 @@ import { IconButton } from '../Buttons/IconButton';
 import { query } from '../../utils/functions';
 
 export const Modal = ({
-  children,
   id = 'background',
+  children,
   title,
   bodyWidth,
   closeOutside = true,
+  deleteButton = false,
   setModal,
+  handleDelete,
 }: IModal) => (
   <Style.Background
     id={id}
@@ -26,13 +28,18 @@ export const Modal = ({
     <Style.Body bodyWidth={bodyWidth}>
       <Style.Header>
         <h2>{title}</h2>
-        <IconButton
-          icon={icon.x}
-          color={theme.color.primary}
-          onClick={() => {
-            setModal(false);
-          }}
-        />
+
+        <Style.IconsContainer>
+          {deleteButton && (
+            <IconButton
+              icon={icon.grayTrash}
+              color={theme.color.primary}
+              onClick={() => handleDelete && handleDelete(true)}
+            />
+          )}
+
+          <IconButton icon={icon.x} color={theme.color.primary} onClick={() => setModal(false)} />
+        </Style.IconsContainer>
       </Style.Header>
       {children}
     </Style.Body>

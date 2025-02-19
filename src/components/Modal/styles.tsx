@@ -73,3 +73,10 @@ export const Header = styled.header`
   align-items: center;
   margin-bottom: ${theme.size.sm};
 `;
+
+export const IconsContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  gap: ${theme.size.sm};
+`;
