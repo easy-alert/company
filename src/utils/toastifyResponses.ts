@@ -11,7 +11,7 @@ interface IServerResponse {
 
 interface IToastifyMessage {
   message: string;
-  type: 'success' | 'error';
+  type: 'success' | 'warning' | 'error';
 }
 
 export const handleToastify = (serverResponse: IServerResponse) => {
@@ -27,9 +27,17 @@ export const handleToastify = (serverResponse: IServerResponse) => {
 export const handleToastifyMessage = ({ message, type }: IToastifyMessage) => {
   toast.dismiss();
 
-  if (type === 'success') {
-    toast.success(message);
-  } else {
-    toast.error(message);
+  switch (type) {
+    case 'success':
+      toast.success(message);
+      break;
+    case 'warning':
+      toast.warn(message);
+      break;
+    case 'error':
+      toast.error(message);
+      break;
+    default:
+      break;
   }
 };
