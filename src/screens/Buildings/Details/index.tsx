@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
 // SERVICES
 import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
 
@@ -38,6 +41,8 @@ import { theme } from '@styles/theme';
 import type { IBuildingTypes } from '@utils/types';
 
 // COMPONENTS
+import { sendPhoneConfirmation } from '@services/apis/sendPhoneConfirmation';
+import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
@@ -80,13 +85,14 @@ import type {
 
 export const BuildingDetails = () => {
   // #region states
+  const { account } = useAuthContext();
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
   const { search } = window.location;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
-  console.log('🚀 ~ BuildingDetails ~ building:', building);
+
   const [apartmentNumber, setApartmentNumber] = useState<string>('');
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
@@ -228,6 +234,14 @@ export const BuildingDetails = () => {
       setOnQuery(false);
       handleCreateApartmentModal(false);
     }
+  };
+
+  const handleSendPhoneConfirmation = async (userId: string) => {
+    await sendPhoneConfirmation({ userId, link: phoneConfirmUrl });
+  };
+
+  const handleSendEmailConfirmation = async (userId: string) => {
+    await sendEmailConfirmation({ userId, link: emailConfirmUrl });
   };
 
   // #endregion
@@ -492,7 +506,7 @@ export const BuildingDetails = () => {
                     window.open(
                       `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/syndicarea/${
                         building.nanoId
-                      }?syndicNanoId=${building.NotificationsConfigurations[0].nanoId}&password=${
+                      }?userId=${account?.User.id.slice(0, 4)}&password=${
                         building.syndicPassword || ''
                       }`,
                       '_blank',
@@ -711,12 +725,7 @@ export const BuildingDetails = () => {
                                   content: '',
                                   contentColor: theme.color.danger,
                                 }}
-                                actionButtonClick={() => {
-                                  requestResendEmailConfirmation({
-                                    buildingNotificationConfigurationId: User.id,
-                                    link: emailConfirmUrl,
-                                  });
-                                }}
+                                actionButtonClick={() => handleSendEmailConfirmation(User.id)}
                               />
                             )}
                           </Style.TableDataWrapper>
@@ -744,12 +753,7 @@ export const BuildingDetails = () => {
                                   content: '',
                                   contentColor: theme.color.danger,
                                 }}
-                                actionButtonClick={() => {
-                                  requestResendPhoneConfirmation({
-                                    buildingNotificationConfigurationId: User.id,
-                                    link: phoneConfirmUrl,
-                                  });
-                                }}
+                                actionButtonClick={() => handleSendPhoneConfirmation(User.id)}
                               />
                             )}
                           </Style.TableDataWrapper>
