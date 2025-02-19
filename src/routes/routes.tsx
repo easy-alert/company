@@ -130,12 +130,12 @@ const AppRoutes = () => (
           </Route>
 
           {/* checklists route */}
-          <Route
+          {/* <Route
             path="/checklists"
             element={<PermissionRoute requiredPermission="access:checklist" />}
           >
             <Route index element={<Checklists />} />
-          </Route>
+          </Route> */}
 
           {/* tickets route */}
           <Route path="/tickets" element={<PermissionRoute requiredPermission="access:tickets" />}>

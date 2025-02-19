@@ -28,14 +28,18 @@ import type { IChecklist } from '.';
 
 interface IChecklistRow {
   checklist: IChecklist;
-  onThenRequest: () => Promise<void>;
   timeIntervals: ITimeInterval[];
+  handleModals: (modal: string, modalState: boolean) => void;
+  handleSelectedChecklistId: (checklistId: string) => void;
+  onThenRequest: () => Promise<void>;
 }
 
 export const ChecklistRowComponent = ({
   checklist: { id, name, status, syndic, buildingId },
-  onThenRequest,
   timeIntervals,
+  handleModals,
+  handleSelectedChecklistId,
+  onThenRequest,
 }: IChecklistRow) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -110,7 +114,8 @@ export const ChecklistRowComponent = ({
             key={id}
             status={status}
             onClick={() => {
-              setModalChecklistDetailsOpen(true);
+              handleModals('modalChecklistDetails', true);
+              handleSelectedChecklistId(id);
             }}
           >
             <Style.ChecklistRowLeftSide>

@@ -1,19 +1,16 @@
-// REACT
 import { useEffect, useState } from 'react';
-
-// LIBS
-import { toast } from 'react-toastify';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // SERVICES
 import { Api } from '@services/api';
 
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
-import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
+import { Select } from '@components/Inputs/Select';
 import { NoDataFound } from '@components/NoDataFound';
 
 // GLOBAL UTILS
@@ -26,12 +23,13 @@ import { icon } from '@assets/icons';
 import type { ITimeInterval } from '@utils/types';
 
 // COMPONENTS
+import { ModalChecklistCreate } from './ModalChecklistCreate';
 import { MiniCalendarComponent } from './MiniCalendarComponent';
-import { ModalCreateChecklist } from './ModalCreateChecklist';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
 
 // STYLES
 import * as Style from './styles';
+import { ModalChecklistDetails2 } from './ModalChecklistDetails2';
 
 export interface IChecklist {
   id: string;
@@ -49,31 +47,52 @@ export interface ICalendarDates {
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
+  const [buildingNanoId, setBuildingNanoId] = useState<string>('');
+  const { usersForSelect } = useUsersForSelect({
+    buildingId: buildingNanoId,
+    checkPerms: true,
+  });
+
   const [date, setDate] = useState(new Date());
-  const [modalCreateChecklistOpen, setModalCreateChecklistOpen] = useState(false);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [buildingNanoId, setBuildingNanoId] = useState<string>('');
-  const [buildingName, setBuildingName] = useState<string>('');
   const [checklists, setChecklists] = useState<IChecklist[]>([]);
   const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
     completed: [],
     pending: [],
   });
 
+  const [checklistId, setChecklistId] = useState<string>('');
+
+  const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
+  const [modalChecklistDetails, setModalChecklist] = useState(false);
+
+  const handleModals = (modal: string, modalState: boolean) => {
+    switch (modal) {
+      case 'modalChecklistCreate':
+        setModalChecklistCreate(modalState);
+        break;
+      case 'modalChecklistDetails':
+        setModalChecklist(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleSelectedChecklistId = (id: string) => {
+    setChecklistId(id);
+  };
+
   const findManyChecklists = async () => {
     setLoading(true);
-
     await Api.get(`/checklists/${buildingNanoId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
       })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(catchHandler)
+      .finally(() => setLoading(false));
   };
 
   const findManyChecklistDates = async () => {
@@ -107,16 +126,19 @@ export const Checklists = () => {
 
   return (
     <>
-      {modalCreateChecklistOpen && (
-        <ModalCreateChecklist
-          setModal={setModalCreateChecklistOpen}
-          timeIntervals={timeIntervals}
-          onThenRequest={async () => {
-            findManyChecklists();
-            findManyChecklistDates();
-          }}
-          buildingNanoId={buildingNanoId}
-          buildingName={buildingName}
+      {modalChecklistCreate && (
+        <ModalChecklistCreate
+          buildingId={buildingNanoId}
+          usersForSelect={usersForSelect}
+          handleModals={handleModals}
+        />
+      )}
+
+      {modalChecklistDetails && checklistId && (
+        <ModalChecklistDetails2
+          buildingId={buildingNanoId}
+          checklistId={checklistId}
+          handleModals={handleModals}
         />
       )}
 
@@ -130,14 +152,7 @@ export const Checklists = () => {
               disabled={buildingsForSelect.length === 0}
               selectPlaceholderValue=" "
               value={buildingNanoId}
-              onChange={(evt) => {
-                const building = buildingsForSelect.find(
-                  ({ nanoId }) => nanoId === evt.target.value,
-                );
-
-                setBuildingName(building?.name ?? '');
-                setBuildingNanoId(evt.target.value);
-              }}
+              onChange={(evt) => setBuildingNanoId(evt.target.value)}
             >
               <option value="" disabled hidden>
                 Selecione
@@ -153,15 +168,10 @@ export const Checklists = () => {
 
           <IconButton
             disabled={loading}
+            label="Checklist"
             icon={icon.plusWithBg}
-            label="Cadastrar"
             onClick={() => {
-              if (!buildingNanoId) {
-                toast.error('Selecione uma edificação.');
-                return;
-              }
-
-              setModalCreateChecklistOpen(true);
+              handleModals('modalChecklistCreate', true);
             }}
           />
         </Style.Header>
@@ -169,31 +179,20 @@ export const Checklists = () => {
         <Style.Content>
           <Style.DateHeader>
             <Style.NavigateButtons>
-              <Button
-                disable={loading}
-                label="Hoje"
-                onClick={() => {
-                  setDate(new Date());
-                }}
-              />
+              <Button disable={loading} label="Hoje" onClick={() => setDate(new Date())} />
 
               <Button
                 disable={loading}
                 label="Anterior"
-                onClick={() => {
-                  setDate((prev) => new Date(prev.setDate(prev.getDate() - 1)));
-                }}
+                onClick={() => setDate((prev) => new Date(prev.setDate(prev.getDate() - 1)))}
               />
 
               <Button
                 disable={loading}
                 label="Próximo"
-                onClick={() => {
-                  setDate((prev) => new Date(prev.setDate(prev.getDate() + 1)));
-                }}
+                onClick={() => setDate((prev) => new Date(prev.setDate(prev.getDate() + 1)))}
               />
             </Style.NavigateButtons>
-
             <p className="p1">
               {date.toLocaleDateString('pt-BR', {
                 weekday: 'long',
@@ -216,18 +215,23 @@ export const Checklists = () => {
                     key={checklist.id}
                     checklist={checklist}
                     timeIntervals={timeIntervals}
+                    handleModals={handleModals}
+                    handleSelectedChecklistId={handleSelectedChecklistId}
                     onThenRequest={async () => {
                       findManyChecklists();
                       findManyChecklistDates();
                     }}
                   />
                 ))}
-
-              {!loading && checklists.length === 0 && !buildingNanoId && (
-                <NoDataFound label="Selecione uma edificação para visualizar" height="100%" />
-              )}
-              {!loading && checklists.length === 0 && buildingNanoId && (
-                <NoDataFound label="Nenhum checklist encontrado" height="100%" />
+              {!loading && checklists.length === 0 && (
+                <NoDataFound
+                  label={
+                    buildingNanoId
+                      ? 'Nenhum checklist encontrado'
+                      : 'Selecione uma edificação para visualizar'
+                  }
+                  height="100%"
+                />
               )}
             </Style.Checklists>
           </Style.ContentRow>
