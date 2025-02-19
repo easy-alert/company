@@ -1,26 +1,35 @@
+import { useEffect, useState } from 'react';
+
+// LIBS
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
+import { Input } from '@components/Inputs/Input';
+import { DragAndDropFiles } from '@components/DragAndDropFiles';
+import { ImagePreview } from '@components/ImagePreview';
+import { DotLoading } from '@components/Loadings/DotLoading';
+
+// GLOBAL UTILS
+import { applyMask, capitalizeFirstLetter, catchHandler, uploadManyFiles } from '@utils/functions';
+
+// GLOBAL STYLES
 import * as Style from './styles';
-import { Modal } from '../../../components/Modal';
+
+// GLOBAL TYPES
 import { ITimeInterval } from '../../../utils/types';
-import { Button } from '../../../components/Buttons/Button';
-import { FormikInput } from '../../../components/Form/FormikInput';
-import { Api } from '../../../services/api';
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  catchHandler,
-  uploadManyFiles,
-} from '../../../utils/functions';
-import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { Input } from '../../../components/Inputs/Input';
-import { FormikCheckbox } from '../../../components/Form/FormikCheckbox';
-import { FormikTextArea } from '../../../components/Form/FormikTextArea';
-import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
-import { ImagePreview } from '../../../components/ImagePreview';
-import { DotLoading } from '../../../components/Loadings/DotLoading';
+
+// STYLES
 import { Row, FileAndImageRow, ImageLoadingTag } from '../ModalChecklistDetails/styles';
 
 interface IModalCreateChecklist {
