@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
 // SERVICES
 import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
 
@@ -38,6 +41,8 @@ import { theme } from '@styles/theme';
 import type { IBuildingTypes } from '@utils/types';
 
 // COMPONENTS
+import { sendPhoneConfirmation } from '@services/apis/sendPhoneConfirmation';
+import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
@@ -74,24 +79,32 @@ import type {
   File,
   IBanner,
   UserBuildingsPermissions,
+  INotificationConfiguration,
 } from './utils/types';
 
 // #endregion
 
 export const BuildingDetails = () => {
   // #region states
+  const { account } = useAuthContext();
+  const checkAdmin = account?.User.Permissions?.some((perm) =>
+    perm.Permission.name.includes('admin'),
+  );
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
   const { search } = window.location;
 
   const [building, setBuilding] = useState<IBuildingDetail>();
-  console.log('🚀 ~ BuildingDetails ~ building:', building);
+
   const [apartmentNumber, setApartmentNumber] = useState<string>('');
   const [buildingTypes, setBuildingTypes] = useState<IBuildingTypes[]>([]);
 
   const [showIsMainContactLoading, setShowIsMainContactLoading] = useState<boolean>(false);
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
+
+  const [selectedNotificationRow, setSelectedNotificationRow] =
+    useState<INotificationConfiguration>();
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
@@ -123,8 +136,8 @@ export const BuildingDetails = () => {
 
   const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
 
-  const [selectedNotificationRow, setSelectedNotificationRow] =
-    useState<UserBuildingsPermissions['User']>();
+  // const [selectedNotificationRow, setSelectedNotificationRow] =
+  //   useState<UserBuildingsPermissions['User']>();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -230,6 +243,14 @@ export const BuildingDetails = () => {
     }
   };
 
+  const handleSendPhoneConfirmation = async (userId: string) => {
+    await sendPhoneConfirmation({ userId, link: phoneConfirmUrl });
+  };
+
+  const handleSendEmailConfirmation = async (userId: string) => {
+    await sendEmailConfirmation({ userId, link: emailConfirmUrl });
+  };
+
   // #endregion
 
   // #region useEffects
@@ -314,7 +335,7 @@ export const BuildingDetails = () => {
           />
         )}
 
-        {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
+        {/* {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
           <ModalEditNotificationConfiguration
             buildingId={building.id}
             selectedNotificationRow={selectedNotificationRow}
@@ -332,7 +353,7 @@ export const BuildingDetails = () => {
               });
             }}
           />
-        )}
+        )} */}
 
         {modalAddFilesOpen && building && rootFolder && (
           <ModalAddFiles
@@ -492,9 +513,9 @@ export const BuildingDetails = () => {
                     window.open(
                       `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/syndicarea/${
                         building.nanoId
-                      }?syndicNanoId=${building.NotificationsConfigurations[0].nanoId}&password=${
-                        building.syndicPassword || ''
-                      }`,
+                      }?userId=${account?.User.id.slice(0, 4)}&syndicNanoId=${
+                        building.NotificationsConfigurations[0].nanoId
+                      }&password=${building.syndicPassword || ''}`,
                       '_blank',
                     );
                   } else {
@@ -637,16 +658,197 @@ export const BuildingDetails = () => {
 
         <Style.Card>
           <Style.CardHeader>
-            <h5>Usuário responsáveis</h5>
+            <h5>Responsáveis de manutenção</h5>
 
-            {/* <IconButton
+            <IconButton
               icon={icon.plusWithBg}
               label="Cadastrar"
               hideLabelOnMedia
               onClick={() => {
                 setModalCreateNotificationConfigurationOpen(true);
               }}
-            /> */}
+            />
+          </Style.CardHeader>
+          {building && building.NotificationsConfigurations.length > 0 ? (
+            <NotificationTable
+              colsHeader={[
+                { label: 'Nome do responsável' },
+                { label: 'E-mail' },
+                { label: 'WhatsApp' },
+                { label: 'Função' },
+                {
+                  label: 'Exibir',
+                  cssProps: {
+                    textAlign: 'center',
+                  },
+                },
+                { label: '' },
+              ]}
+            >
+              {building?.NotificationsConfigurations.map((notificationRow, i: number) => (
+                <NotificationTableContent
+                  key={notificationRow.id}
+                  onClick={() => {
+                    //
+                  }}
+                  colsBody={[
+                    {
+                      cell: notificationRow.name,
+                      cssProps: {
+                        width: '20%',
+                        borderBottomLeftRadius:
+                          i + 1 === building?.NotificationsConfigurations.length
+                            ? theme.size.xsm
+                            : 0,
+                      },
+                    },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          {notificationRow.email ?? '-'}
+                          {notificationRow.email &&
+                            (notificationRow.emailIsConfirmed ? (
+                              <Image img={icon.checkedNoBg} size="16px" />
+                            ) : (
+                              <PopoverButton
+                                label="Reenviar"
+                                hiddenIconButtonLabel
+                                buttonIcon={icon.yellowAlert}
+                                buttonIconSize="16px"
+                                actionButtonBgColor={theme.color.primary}
+                                type="IconButton"
+                                message={{
+                                  title: 'Deseja reenviar o e-mail de confirmação?',
+                                  content: '',
+                                  contentColor: theme.color.danger,
+                                }}
+                                actionButtonClick={() => {
+                                  requestResendEmailConfirmation({
+                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    link: emailConfirmUrl,
+                                  });
+                                }}
+                              />
+                            ))}
+                        </Style.TableDataWrapper>
+                      ),
+                      cssProps: { width: '20%' },
+                    },
+                    {
+                      cell: (
+                        <Style.TableDataWrapper>
+                          {notificationRow.contactNumber
+                            ? applyMask({ mask: 'TEL', value: notificationRow.contactNumber }).value
+                            : '-'}
+
+                          {notificationRow.contactNumber &&
+                            (notificationRow.contactNumberIsConfirmed ? (
+                              <Image img={icon.checkedNoBg} size="16px" />
+                            ) : (
+                              <PopoverButton
+                                label="Reenviar"
+                                hiddenIconButtonLabel
+                                buttonIcon={icon.yellowAlert}
+                                buttonIconSize="16px"
+                                actionButtonBgColor={theme.color.primary}
+                                type="IconButton"
+                                message={{
+                                  title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
+                                  content: '',
+                                  contentColor: theme.color.danger,
+                                }}
+                                actionButtonClick={() => {
+                                  requestResendPhoneConfirmation({
+                                    buildingNotificationConfigurationId: notificationRow.id,
+                                    link: phoneConfirmUrl,
+                                  });
+                                }}
+                              />
+                            ))}
+                        </Style.TableDataWrapper>
+                      ),
+                      cssProps: { width: '15%' },
+                    },
+                    { cell: notificationRow.role, cssProps: { width: '15%' } },
+
+                    {
+                      cell: (
+                        <input
+                          disabled={showContactLoading}
+                          type="checkbox"
+                          checked={notificationRow.showContact}
+                          onChange={() => {
+                            // changeShowContactStatus({
+                            //   showContact: !notificationRow.showContact,
+                            //   buildingNotificationConfigurationId: notificationRow.id,
+                            //   setShowContactLoading,
+                            // });
+
+                            const prevBuilding = structuredClone(building);
+
+                            prevBuilding.NotificationsConfigurations[i].showContact =
+                              !building.NotificationsConfigurations[i].showContact;
+
+                            setBuilding(prevBuilding);
+                          }}
+                        />
+                      ),
+                      cssProps: {
+                        width: '10%',
+                        textAlign: 'center',
+                      },
+                    },
+                    {
+                      cell: (
+                        <Style.ButtonWrapper>
+                          {notificationRow.isMain && (
+                            <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
+                              <p className="p5">Contato principal</p>
+                            </Style.MainContactTag>
+                          )}
+                          <IconButton
+                            size="16px"
+                            className="p4"
+                            icon={icon.edit}
+                            label="Editar"
+                            onClick={() => {
+                              setSelectedNotificationRow(notificationRow);
+                              setModalEditNotificationConfigurationOpen(true);
+                            }}
+                          />
+                        </Style.ButtonWrapper>
+                      ),
+                      cssProps: {
+                        width: '10%',
+                        borderBottomRightRadius:
+                          i + 1 === building?.NotificationsConfigurations.length
+                            ? theme.size.xxsm
+                            : 0,
+                      },
+                    },
+                  ]}
+                />
+              ))}
+            </NotificationTable>
+          ) : (
+            <Style.NoDataContainer>
+              <h5>Nenhum dado cadastrado.</h5>
+            </Style.NoDataContainer>
+          )}
+        </Style.Card>
+
+        {/* <Style.Card>
+          <Style.CardHeader>
+            <h5>Usuário responsáveis</h5>
+
+            <IconButton
+              icon={icon.plusWithBg}
+              label="Cadastrar"
+              hideLabelOnMedia
+              onClick={() => {
+                setModalCreateNotificationConfigurationOpen(true);
+              }}
+            />
           </Style.CardHeader>
 
           {building && building.UserBuildingsPermissions.length > 0 ? (
@@ -711,12 +913,7 @@ export const BuildingDetails = () => {
                                   content: '',
                                   contentColor: theme.color.danger,
                                 }}
-                                actionButtonClick={() => {
-                                  requestResendEmailConfirmation({
-                                    buildingNotificationConfigurationId: User.id,
-                                    link: emailConfirmUrl,
-                                  });
-                                }}
+                                actionButtonClick={() => handleSendEmailConfirmation(User.id)}
                               />
                             )}
                           </Style.TableDataWrapper>
@@ -744,12 +941,7 @@ export const BuildingDetails = () => {
                                   content: '',
                                   contentColor: theme.color.danger,
                                 }}
-                                actionButtonClick={() => {
-                                  requestResendPhoneConfirmation({
-                                    buildingNotificationConfigurationId: User.id,
-                                    link: phoneConfirmUrl,
-                                  });
-                                }}
+                                actionButtonClick={() => handleSendPhoneConfirmation(User.id)}
                               />
                             )}
                           </Style.TableDataWrapper>
@@ -822,35 +1014,35 @@ export const BuildingDetails = () => {
                           textAlign: 'center',
                         },
                       },
-                      // {
-                      //   cell: (
-                      //     <Style.ButtonWrapper>
-                      //       {isMainContact && (
-                      //         <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
-                      //           <p className="p5">Contato principal</p>
-                      //         </Style.MainContactTag>
-                      //       )}
+                      {
+                        cell: (
+                          <Style.ButtonWrapper>
+                            {isMainContact && (
+                              <Style.MainContactTag title="Apenas o contato principal receberá notificações por WhatsApp.">
+                                <p className="p5">Contato principal</p>
+                              </Style.MainContactTag>
+                            )}
 
-                      //       <IconButton
-                      //         size="16px"
-                      //         className="p4"
-                      //         icon={icon.edit}
-                      //         label="Editar"
-                      //         onClick={() => {
-                      //           setSelectedNotificationRow(User);
-                      //           setModalEditNotificationConfigurationOpen(true);
-                      //         }}
-                      //       />
-                      //     </Style.ButtonWrapper>
-                      //   ),
-                      //   cssProps: {
-                      //     width: '10%',
-                      //     borderBottomRightRadius:
-                      //       i + 1 === building?.NotificationsConfigurations.length
-                      //         ? theme.size.xxsm
-                      //         : 0,
-                      //   },
-                      // },
+                            <IconButton
+                              size="16px"
+                              className="p4"
+                              icon={icon.edit}
+                              label="Editar"
+                              onClick={() => {
+                                setSelectedNotificationRow(User);
+                                setModalEditNotificationConfigurationOpen(true);
+                              }}
+                            />
+                          </Style.ButtonWrapper>
+                        ),
+                        cssProps: {
+                          width: '10%',
+                          borderBottomRightRadius:
+                            i + 1 === building?.NotificationsConfigurations.length
+                              ? theme.size.xxsm
+                              : 0,
+                        },
+                      },
                     ]}
                   />
                 ),
@@ -861,7 +1053,7 @@ export const BuildingDetails = () => {
               <h5>Nenhum dado cadastrado.</h5>
             </Style.NoDataContainer>
           )}
-        </Style.Card>
+        </Style.Card> */}
 
         <Style.CardGrid>
           <Style.AnnexCard>
