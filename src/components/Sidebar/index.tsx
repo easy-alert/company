@@ -216,7 +216,11 @@ export const Sidebar = () => {
           />
         </Style.CloseButtonMobile>
 
-        <Style.ImageContainer>
+        <Style.ImageContainer
+          onClick={() => {
+            navigate('/home');
+          }}
+        >
           <Image width="44px" height="48px" radius="0px" img={icon.logoWhite} />
         </Style.ImageContainer>
 

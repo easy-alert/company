@@ -3,13 +3,13 @@ import * as yup from 'yup';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { FormikInput } from '../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../components/Modal';
-import { Api } from '../../../../../../services/api';
-import { catchHandler, uploadFile } from '../../../../../../utils/functions';
-import { DragAndDropFiles } from '../../../../../../components/DragAndDropFiles';
-import { ImageComponent } from '../../../../../../components/ImageComponent';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
+import { Api } from '@services/api';
+import { catchHandler, uploadFile } from '@utils/functions';
+import { DragAndDropFiles } from '@components/DragAndDropFiles';
+import { ImageComponent } from '@components/ImageComponent';
 
 interface IModalAddBanner {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +21,7 @@ const schema = yup
     originalName: yup.string().required('Campo obrigatório.'),
     redirectUrl: yup.string().nullable(),
     buildingId: yup.string().required(),
-    url: yup.string().required('Campo obrigatório.'),
+    url: yup.string().required('O banner deve ser preenchido.'),
   })
   .required();
 

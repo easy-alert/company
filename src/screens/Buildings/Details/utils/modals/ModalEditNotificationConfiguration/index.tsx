@@ -44,10 +44,10 @@ export const ModalEditNotificationConfiguration = ({
           name: selectedNotificationRow.name,
           email: selectedNotificationRow.email ?? '',
           role: selectedNotificationRow.role,
-          contactNumber: selectedNotificationRow.contactNumber
-            ? applyMask({ mask: 'TEL', value: selectedNotificationRow.contactNumber }).value
+          contactNumber: selectedNotificationRow.phoneNumber
+            ? applyMask({ mask: 'TEL', value: selectedNotificationRow.phoneNumber }).value
             : '',
-          isMain: selectedNotificationRow.isMain,
+          isMain: selectedNotificationRow.isMainContact,
           showContact: selectedNotificationRow.showContact,
         }}
         validationSchema={schemaEditNotificationConfiguration}
@@ -68,7 +68,7 @@ export const ModalEditNotificationConfiguration = ({
           <Style.FormContainer>
             <Form>
               <FormikInput
-                label="Nome"
+                label="Nome *"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}

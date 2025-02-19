@@ -77,7 +77,7 @@ export const ModalSendMaintenanceReport = ({
 }: IModalSendMaintenanceReport) => {
   const { account } = useAuthContext();
   const { hasPermission: hasUpdatePermission } = useHasPermission({
-    permToCheck: ['maintenance:update'],
+    permToCheck: ['maintenances:update'],
   });
 
   const { maintenancePriorities } = useMaintenancePriorities();
@@ -258,27 +258,33 @@ export const ModalSendMaintenanceReport = ({
               maintenance?.MaintenancesStatus.name === 'pending') &&
               maintenance.inProgress && <InProgressTag />}
           </Style.StatusTagWrapper>
+
           <Style.Content>
             <Style.Row>
               <h6>Categoria</h6>
               <p className="p2">{maintenance.Maintenance.Category?.name}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Elemento</h6>
               <p className="p2">{maintenance.Maintenance.element}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Atividade</h6>
               <p className="p2">{maintenance.Maintenance.activity}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Responsável</h6>
               <p className="p2">{maintenance.Maintenance.responsible}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Fonte</h6>
               <p className="p2">{maintenance.Maintenance.source}</p>
             </Style.Row>
+
             <Style.Row>
               <h6>Observação da manutenção</h6>
               <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
@@ -333,6 +339,39 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
+            <Style.Row>
+              <h6>Última execução</h6>
+              <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+            </Style.Row>
+
+            {maintenance.userResponsible && (
+              <Style.Content style={{ marginTop: '0.5rem' }}>
+                <h3>Usuário responsável</h3>
+
+                <Style.Row>
+                  <h6>Nome</h6>
+                  <p className="p2">{maintenance.userResponsible?.name}</p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Telefone</h6>
+                  <p className="p2">
+                    {
+                      applyMask({
+                        value: maintenance.userResponsible.phoneNumber || '',
+                        mask: 'TEL',
+                      }).value
+                    }
+                  </p>
+                </Style.Row>
+
+                <Style.Row>
+                  <h6>Email</h6>
+                  <p className="p2">{maintenance.userResponsible?.email}</p>
+                </Style.Row>
+              </Style.Content>
+            )}
+
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
             <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
 
@@ -344,7 +383,7 @@ export const ModalSendMaintenanceReport = ({
                     placeholder="Ex: R$ 100,00"
                     maxLength={14}
                     value={maintenanceReport.cost}
-                    permToCheck="maintenance:update"
+                    permToCheck="maintenances:update"
                     onChange={(e) => {
                       setMaintenanceReport((prevState) => {
                         const newState = { ...prevState };
@@ -359,7 +398,7 @@ export const ModalSendMaintenanceReport = ({
                     placeholder="Selecione uma prioridade"
                     selectPlaceholderValue="Selecione uma prioridade"
                     value={maintenance.priorityName}
-                    permToCheck="maintenance:update"
+                    permToCheck="maintenances:update"
                     onChange={(e) => {
                       setMaintenance((prevState) => {
                         const newState = { ...prevState };
@@ -472,7 +511,7 @@ export const ModalSendMaintenanceReport = ({
                 disabled={onQuery}
                 type="Button"
                 label="Excluir"
-                permToCheck="maintenance:delete"
+                permToCheck="maintenances:delete"
                 message={{
                   title: 'Deseja excluir este histórico de manutenção?',
                   content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
@@ -506,7 +545,7 @@ export const ModalSendMaintenanceReport = ({
                     textColor={theme.color.actionBlue}
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
-                    permToCheck="maintenance:update"
+                    permToCheck="maintenances:update"
                     message={{
                       title: maintenance.inProgress
                         ? 'Tem certeza que deseja alterar a execução?'
@@ -543,7 +582,7 @@ export const ModalSendMaintenanceReport = ({
                     textColor={theme.color.actionBlue}
                     borderless
                     label="Salvar"
-                    permToCheck="maintenance:update"
+                    permToCheck="maintenances:update"
                     message={{
                       title: 'Tem certeza que deseja salvar o progresso?',
                       content: '',
@@ -576,7 +615,7 @@ export const ModalSendMaintenanceReport = ({
                     });
                   }}
                   label="Finalizar manutenção"
-                  permToCheck="maintenance:finish"
+                  permToCheck="maintenances:finish"
                   message={{
                     title: 'Tem certeza que deseja enviar o relato?',
                     content: 'Esta ação é irreversível.',

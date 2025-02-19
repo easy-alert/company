@@ -5,11 +5,20 @@ import { useNavigate } from 'react-router-dom';
 // COMPONENTS
 import { Form, Formik } from 'formik';
 import { FormikCheckbox } from '@components/Form/FormikCheckbox';
-
-import * as Style from './styles';
+import { icon } from '@assets/icons';
+import { TTranslateTicketType } from '@utils/types';
+import { applyMask, translateTicketType } from '@utils/functions';
+import { Modal } from '@components/Modal';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { IconButton } from '@components/Buttons/IconButton';
+import { Button } from '@components/Buttons/Button';
 
 // TYPES
 import { IModalEditAccount } from './types';
+
+import * as Style from './styles';
 
 // FUNCTIONS
 import {
@@ -17,17 +26,8 @@ import {
   schemaModalEditAccountWithCNPJ,
   schemaModalEditAccountWithCPF,
 } from './functions';
-import { icon } from '../../../../assets/icons';
-import { Button } from '../../../../components/Buttons/Button';
-import { IconButton } from '../../../../components/Buttons/IconButton';
-import { FormikImageInput } from '../../../../components/Form/FormikImageInput';
-import { FormikInput } from '../../../../components/Form/FormikInput';
-import { Modal } from '../../../../components/Modal';
-import { applyMask, translateTicketType } from '../../../../utils/functions';
-import { FormikSelect } from '../../../../components/Form/FormikSelect';
-import { TTranslateTicketType } from '../../../../utils/types';
 
-export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAccount) => {
+export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEditAccount) => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -44,7 +44,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
   const displayExtraTicketField = ['whatsapp', 'email', 'link'].sort() as TTranslateTicketType[];
 
   return (
-    <Modal title="Editar usuário" setModal={setModal}>
+    <Modal title="Editar usuário" setModal={(state) => handleModals('editAccount', state)}>
       <Formik
         initialValues={{
           image: account.Company.image,
@@ -80,7 +80,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
             setAccount,
             navigate,
             setOnQuery,
-            setModal,
+            handleModals,
           });
         }}
       >
@@ -99,7 +99,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
                 }}
               />
               <FormikInput
-                label="Nome do responsável"
+                label="Nome do responsável *"
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
@@ -107,7 +107,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="E-mail"
+                label="E-mail *"
                 name="email"
                 value={values.email}
                 error={touched.email && errors.email ? errors.email : null}
@@ -115,7 +115,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="Nome da empresa"
+                label="Nome da empresa *"
                 name="companyName"
                 value={values.companyName}
                 error={touched.companyName && errors.companyName ? errors.companyName : null}
@@ -123,7 +123,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               />
 
               <FormikInput
-                label="Telefone"
+                label="Telefone *"
                 name="contactNumber"
                 maxLength={
                   applyMask({
@@ -145,7 +145,7 @@ export const ModalEditAccount = ({ account, setAccount, setModal }: IModalEditAc
               {account.Company.CPF && (
                 <FormikInput
                   name="CPF"
-                  label="CPF"
+                  label="CPF *"
                   maxLength={applyMask({ value: values.CPF, mask: 'CPF' }).length}
                   value={values.CPF}
                   error={touched.CPF && errors.CPF ? errors.CPF : null}

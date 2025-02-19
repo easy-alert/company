@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { catchHandler } from '../../../../utils/functions';
+import { Api } from '@services/api';
+import { catchHandler } from '@utils/functions';
 import {
   IBuildingDetail,
   IChangeShowContactStatus,
@@ -71,21 +71,21 @@ export const requestResendEmailConfirmation = async ({
 };
 
 export const changeShowContactStatus = async ({
-  buildingNotificationConfigurationId,
+  userId,
+  buildingId,
+  isMainContact,
   showContact,
-  setShowContactLoading,
 }: IChangeShowContactStatus) => {
-  setShowContactLoading(true);
-
-  await Api.put('/buildings/notifications/change/showcontact', {
-    buildingNotificationConfigurationId,
+  await Api.put(`/permissions/user-buildings-permissions/${userId}/buildings/${buildingId}`, {
+    isMainContact,
     showContact,
   })
+    .then((res) => {
+      toast.success(res.data.ServerMessage.message);
+    })
     .catch((err) => {
       catchHandler(err);
-    })
-    .finally(() => {
-      setShowContactLoading(false);
+      throw err;
     });
 };
 

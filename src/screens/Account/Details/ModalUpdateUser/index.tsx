@@ -1,65 +1,111 @@
+// REACT
 import { useState } from 'react';
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { Button } from '../../../../components/Buttons/Button';
-import { Modal } from '../../../../components/Modal';
-import { catchHandler } from '../../../../utils/functions';
-import { Api } from '../../../../services/api';
-import { FormInput } from '../../../../components/HookFormInputs/Input';
-import { FormSelect } from '../../../../components/HookFormInputs/Select';
-import { ISelectedUser } from '..';
 
-interface IModalUpdateUser {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedUser: ISelectedUser;
-  onThenRequest: () => Promise<void>;
+// LIBS
+import * as yup from 'yup';
+import { Form, Formik } from 'formik';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTSimport { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+
+// GLOBAL UTILS
+import { applyMask, catchHandler, unMask, uploadFile } from '@utils/functions';
+
+// TYPES
+import type { ISelectedUser } from '..';
+
+const fieldLabels: Record<string, string> = {
+  name: 'Nome',
+  email: 'E-mail',
+  phoneNumber: 'Telefone',
+  password: 'Senha',
+  confirmPassword: 'Confirmar senha',
+};
+
+const schema = yup
+  .object({
+    image: yup
+      .mixed()
+      .nullable()
+      .test(
+        'FileSize',
+        'O tamanho da imagem excedeu o limite.',
+        (value) => !value || (value && value.size <= 5000000),
+      )
+      .test(
+        'FileType',
+        'Formato inválido.',
+        (value) =>
+          !value ||
+          (value &&
+            (value.type === 'image/png' ||
+              value.type === 'image/jpeg' ||
+              value.type === 'image/jpg')),
+      ),
+    name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
+    role: yup.string(),
+    email: yup
+      .string()
+      .required(() => `O ${fieldLabels.email.toLowerCase()} deve ser preenchido.`)
+      .email('informe um email válido.'),
+    phoneNumber: yup
+      .string()
+      .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.')
+      .required(`O ${fieldLabels.phoneNumber.toLowerCase()} deve ser preenchido.`),
+    password: yup.string().matches(/^(|.{8,})$/, 'a senha deve ter pelo menos 8 caracteres.'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'as senhas não coincidem.')
+      .when('password', {
+        is: (password: string) => password && password.length > 0,
+        then: yup
+          .string()
+          .required(() => `O ${fieldLabels.confirmPassword.toLowerCase()} deve ser preenchido.`),
+      }),
+  })
+  .required();
+
+interface FormValues {
+  id?: string;
+  image?: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  role?: string;
+  password: string;
+  confirmPassword: string;
+  isBlocked: boolean;
 }
 
-export const ModalUpdateUser = ({ setModal, selectedUser, onThenRequest }: IModalUpdateUser) => {
+interface IModalUpdateUser {
+  selectedUser: ISelectedUser;
+  onThenRequest: () => Promise<void>;
+  handleModals: (modal: string, modalState: boolean) => void;
+}
+
+export const ModalUpdateUser = ({
+  selectedUser,
+  onThenRequest,
+  handleModals,
+}: IModalUpdateUser) => {
   const [onQuery, setOnQuery] = useState(false);
 
-  const schema = yup
-    .object({
-      name: yup.string().required('Campo obrigatório.'),
-      status: yup.string().required('Campo obrigatório.'),
-      email: yup.string().required('Campo obrigatório.').email('Informe um email válido.'),
-
-      password: yup.string().matches(/^(|.{8,})$/, 'A senha deve ter pelo menos 8 caracteres.'),
-
-      confirmPassword: yup
-        .string()
-        .oneOf([yup.ref('password'), null], 'As senhas não coincidem.')
-        .when('password', {
-          is: (password: string) => password && password.length > 0,
-          then: yup.string().required('Confirme a nova senha.'),
-        }),
-    })
-    .required();
-
-  type TFormData = yup.InferType<typeof schema>;
-
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<TFormData>({
-    resolver: yupResolver(schema),
-    defaultValues: selectedUser,
-  });
-
-  async function updateUser(data: TFormData) {
+  async function updateUser(data: FormValues) {
     setOnQuery(true);
 
-    await Api.put('/usercompany/update', {
-      ...data,
-      isBlocked: data.status === 'blocked',
-    })
+    await Api.put('/usercompany/update', data)
       .then((res) => {
         onThenRequest();
         toast.success(res.data.ServerMessage.message);
-        setModal(false);
+        handleModals('updateUser', false);
       })
       .catch((err) => {
         catchHandler(err);
@@ -70,50 +116,138 @@ export const ModalUpdateUser = ({ setModal, selectedUser, onThenRequest }: IModa
   }
 
   return (
-    <Modal setModal={setModal} title="Editar usuário">
-      <form onSubmit={handleSubmit(updateUser)}>
-        <FormInput
-          placeholder="Informe o nome"
-          {...register('name')}
-          label="Nome"
-          error={errors.name?.message}
-        />
-        <FormInput
-          placeholder="Informe o email"
-          {...register('email')}
-          label="Email"
-          error={errors.email?.message}
-        />
+    <Modal setModal={() => handleModals('updateUser', false)} title="Editar usuário">
+      <Formik
+        initialValues={{
+          image: selectedUser.image || '',
+          name: selectedUser.name,
+          email: selectedUser.email,
+          phoneNumber: applyMask({ value: selectedUser.phoneNumber, mask: 'TEL' }).value,
+          role: selectedUser.role || '',
+          password: '',
+          confirmPassword: '',
+          isBlocked: selectedUser.isBlocked,
+        }}
+        validationSchema={schema}
+        onSubmit={async (values) => {
+          setOnQuery(true);
 
-        <FormSelect {...register('status')} label="Status">
-          <option value="active">Ativo</option>
-          <option value="blocked">Bloqueado</option>
-        </FormSelect>
+          let imageUrl: string | null = null;
 
-        <FormInput
-          autoComplete="new-password"
-          placeholder="Informe a nova senha"
-          type="password"
-          {...register('password')}
-          label="Senha"
-          error={errors.password?.message}
-        />
-        <FormInput
-          autoComplete="new-password"
-          placeholder="Confirme a nova senha"
-          type="password"
-          {...register('confirmPassword')}
-          label="Confirmar senha"
-          error={errors.confirmPassword?.message}
-        />
-        <Button
-          type="submit"
-          loading={onQuery}
-          label="Salvar"
-          center
-          style={{ marginTop: '8px' }}
-        />
-      </form>
+          if (values.image && typeof values.image === 'object') {
+            const { Location } = await uploadFile(values.image);
+            imageUrl = Location;
+          } else {
+            imageUrl = values.image || '';
+          }
+
+          const data = {
+            ...values,
+            id: selectedUser.id,
+            image: imageUrl,
+            phoneNumber: unMask(values.phoneNumber),
+          };
+
+          await updateUser(data);
+        }}
+      >
+        {({ errors, values, touched, setFieldValue }) => (
+          <Form>
+            <FormikImageInput
+              name="image"
+              label="Foto"
+              error={touched.image && errors.image ? errors.image : null}
+              defaultImage={values.image}
+              onChange={(event: any) => {
+                if (event.target.files?.length) {
+                  setFieldValue('image', event.target.files[0]);
+                }
+              }}
+            />
+
+            <FormikInput
+              name="name"
+              label="Nome *"
+              placeholder="Informe o nome"
+              value={values.name}
+              error={touched.name && errors.name ? errors.name : null}
+            />
+
+            <FormikInput
+              name="role"
+              label="Cargo"
+              placeholder="Informe o cargo"
+              value={values.role}
+              error={touched.role && errors.role ? errors.role : null}
+            />
+
+            <FormikInput
+              name="email"
+              label="E-mail *"
+              placeholder="Informe o email"
+              value={values.email}
+              error={touched.email && errors.email ? errors.email : null}
+            />
+
+            <FormikInput
+              name="phoneNumber"
+              label="Telefone"
+              placeholder="Informe o telefone"
+              value={values.phoneNumber}
+              error={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : null}
+              maxLength={applyMask({ value: values.phoneNumber, mask: 'TEL' }).length}
+              onChange={(e) => {
+                setFieldValue(
+                  'phoneNumber',
+                  applyMask({ value: e.target.value, mask: 'TEL' }).value,
+                );
+              }}
+            />
+
+            <FormikSelect
+              name="isBlocked"
+              label="Status *"
+              placeholder="Selecione o status"
+              selectPlaceholderValue="Selecione o status"
+              error={touched.isBlocked && errors.isBlocked ? errors.isBlocked : null}
+              onChange={(e) => {
+                setFieldValue('isBlocked', e.target.value === 'blocked');
+              }}
+            >
+              <option value="active">Ativo</option>
+              <option value="blocked">Bloqueado</option>
+            </FormikSelect>
+
+            <FormikInput
+              name="password"
+              label="Senha"
+              placeholder="Informe a nova senha"
+              type="password"
+              value={values.password}
+              error={touched.password && errors.password ? errors.password : null}
+            />
+
+            <FormikInput
+              name="confirmPassword"
+              label="Confirmar senha"
+              placeholder="Confirme a nova senha"
+              type="password"
+              value={values.confirmPassword}
+              error={
+                touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null
+              }
+            />
+
+            <Button
+              type="submit"
+              label="Atualizar"
+              loading={onQuery}
+              center
+              style={{ marginTop: '8px' }}
+            />
+          </Form>
+        )}
+      </Formik>
     </Modal>
   );
 };

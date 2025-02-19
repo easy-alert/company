@@ -3,12 +3,31 @@ import { theme } from './theme';
 import { icon } from '../assets/icons/index';
 
 export default createGlobalStyle`
-
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: DM Sans;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${theme.color.gray1};
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${theme.color.gray4};
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${theme.color.primary};
   }
 
   a {
@@ -18,7 +37,7 @@ export default createGlobalStyle`
     line-height: 20px;
     color: #4339F2;
     text-decoration: none;
-    word-break:break-all;
+    word-break: break-all;
   }
 
   body {
@@ -68,49 +87,48 @@ export default createGlobalStyle`
     line-height: 16px;
   }
 
-  .p1{
+  .p1 {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 18px;
   }
-  .p2{
+  .p2 {
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 16px;
   }
-  .p3{
+  .p3 {
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
     line-height: 14px;
   }
-  .p4{
+  .p4 {
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
     line-height: 14px;
   }
-  .p5{
+  .p5 {
     font-style: normal;
     font-weight: 400;
     font-size: 10px;
     line-height: 12px;
   }
-  .p6{
+  .p6 {
     font-style: normal;
     font-weight: 700;
     font-size: 10px;
     line-height: 12px;
   }
-  .p7{
+  .p7 {
     font-style: normal;
     font-weight: 700;
     font-size: 10px;
     line-height: 12px;
   }
-
 
   input {
     font-weight: 400;
@@ -124,12 +142,11 @@ export default createGlobalStyle`
     height: 32px;
     border-radius: ${theme.size.xxsm};
     padding: ${theme.size.xsm} ${theme.size.sm};
-    :placeholder-shown{
+    :placeholder-shown {
       border: 1px solid ${theme.color.gray3};
     }
-
-
   }
+
   input[type=file],
   input[type=file]::-webkit-file-upload-button {
     cursor: pointer;
@@ -142,12 +159,10 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
-
-
-  input[disabled],textarea[disabled],select[disabled] {
+  input[disabled], textarea[disabled], select[disabled] {
     cursor: not-allowed;
     background-color: ${theme.color.gray1};
-    color: ${theme.color.gray4}
+    color: ${theme.color.gray4};
   }
 
   textarea {
@@ -161,13 +176,12 @@ export default createGlobalStyle`
     border: 1px solid ${theme.color.gray4};
     height: 100px;
     border-radius: ${theme.size.xxsm};
-    padding: ${theme.size.xsm} ${theme.size.sm} ;
+    padding: ${theme.size.xsm} ${theme.size.sm};
     resize: none;
-    :placeholder-shown{
+    :placeholder-shown {
       border: 1px solid ${theme.color.gray3};
     }
   }
-
 
   pre {
     white-space: pre-wrap;
@@ -176,7 +190,7 @@ export default createGlobalStyle`
     word-wrap: break-word;
   }
 
-  select{
+  select {
     cursor: pointer;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -188,7 +202,7 @@ export default createGlobalStyle`
     outline: none;
     width: 100%;
     background-color: ${theme.color.white};
-    border: 1px solid ${theme.color.gray4};
+    border: 1px solid ${theme.color.gray3};
     height: 32px;
     border-radius: ${theme.size.xxsm};
     padding: 0 ${theme.size.sm};
@@ -199,7 +213,6 @@ export default createGlobalStyle`
     background-size: 16px;
   }
 
-
   option {
     color: ${theme.color.gray5};
   }
@@ -208,7 +221,7 @@ export default createGlobalStyle`
     color: ${theme.color.gray4};
   }
 
-   button {
+  button {
     border-radius: ${theme.size.xxsm};
     padding: ${theme.size.xsm} ${theme.size.sm};
     outline: none;
@@ -218,20 +231,20 @@ export default createGlobalStyle`
     background-color: ${theme.color.primary};
   }
 
-  table{
-    th{
+  table {
+    th {
       font-style: normal;
       font-weight: 500;
       font-size: 14px;
       line-height: 16px;
     }
 
-   td{
+    td {
       font-style: normal;
       font-weight: 400;
       font-size: 14px;
       line-height: 16px;
-   }
+    }
   }
 
   form {
@@ -239,26 +252,5 @@ export default createGlobalStyle`
     flex-direction: column;
     gap: ${theme.size.xsm};
     width: 100%;
-    /* > :last-child {
-      margin-top: ${theme.size.xsm}
-    } */
   }
-
-
-::-webkit-scrollbar {
-  @media (max-width: 900px) {
-    display: none;
-  }
-}
-
-/* ::-webkit-scrollbar-track {
-  background: ${theme.color.gray5};
-}
-::-webkit-scrollbar-thumb {
-  background: ${theme.color.primaryM};
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: ${theme.color.primary};
-} */
 `;

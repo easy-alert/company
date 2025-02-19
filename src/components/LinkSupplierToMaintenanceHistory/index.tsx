@@ -135,7 +135,7 @@ export const LinkSupplierToMaintenanceHistory = ({
               hideLabelOnMedia
               icon={icon.link}
               label="Vincular"
-              permToCheck="maintenance:update"
+              permToCheck="maintenances:update"
               onClick={() => {
                 ref.current?.scrollIntoView();
                 setModalLinkSupplierOpen(true);

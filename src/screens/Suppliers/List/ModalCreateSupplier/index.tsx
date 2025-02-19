@@ -40,6 +40,13 @@ import * as Style from './styles';
 // TYPES
 import type { IModalCreateSupplier } from './types';
 
+const fieldLabels: Record<string, string> = {
+  name: 'Nome',
+  categoriesIds: 'Categorias',
+  state: 'Estado',
+  city: 'Cidade',
+};
+
 const schemaCreateSupplier = yup
   .object({
     image: yup
@@ -59,18 +66,22 @@ const schemaCreateSupplier = yup
               value.type === 'image/jpeg' ||
               value.type === 'image/jpg')),
       ),
-    name: yup.string().required('Campo obrigatório.'),
+    name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
     cnpj: yup.string().min(18, 'O CNPJ deve ser válido.'),
     link: yup.string(),
-    city: yup.string().required('Campo obrigatório.'),
-    state: yup.string().required('Campo obrigatório.'),
+    city: yup.string().required(() => `A ${fieldLabels.city.toLowerCase()} deve ser preenchido.`),
+    state: yup.string().required(() => `O ${fieldLabels.state.toLowerCase()} deve ser preenchido.`),
     phone: yup.string().min(14, 'O número de telefone deve conter no mínimo 14 caracteres.'),
     email: yup.string().email('Informe um e-mail válido'),
     categoriesIds: yup
       .array()
-      .of(yup.string().required('Campo obrigatório.'))
-      .min(1, 'Campo obrigatório.')
-      .required('Campo obrigatório.'),
+      .of(
+        yup
+          .string()
+          .required(() => `A ${fieldLabels.categoriesIds.toLowerCase()} deve ser preenchido.`),
+      )
+      .min(1, ' A Categoria(s) deve ser preenchido.')
+      .required('Categoria(s) deve ser preenchido.'),
   })
   .required();
 

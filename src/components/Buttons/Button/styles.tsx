@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Background = styled.div<{ center: boolean }>`
   width: fit-content;
@@ -44,7 +44,6 @@ export const ContainerButton = styled.div<{
   width: fit-content;
 
   > button {
-    transition: 0.5s;
     display: flex;
     align-items: center;
     gap: ${theme.size.xsm};

@@ -2,8 +2,8 @@
 // LIBS
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import { Api } from '../../../../../../../services/api';
-import { unMask, catchHandler } from '../../../../../../../utils/functions';
+import { Api } from '@services/api';
+import { unMask, catchHandler, uploadFile } from '@utils/functions';
 
 // FUNCTIONS
 
@@ -17,10 +17,19 @@ export const requestEditBuilding = async ({
   requestBuildingDetailsCall,
 }: IRequestEditBuilding) => {
   setOnQuery(true);
+  let imageUrl: string | null = null;
+
+  if (values.image && typeof values.image === 'object') {
+    const { Location } = await uploadFile(values.image);
+    imageUrl = Location;
+  } else {
+    imageUrl = values.image || '';
+  }
 
   await Api.put('/buildings/edit', {
     buildingId: values.id,
     data: {
+      image: imageUrl,
       name: values.name,
       buildingTypeId: values.buildingTypeId,
       cep: values.cep !== '' ? unMask(values.cep) : null,
@@ -76,9 +85,27 @@ export const requestDeleteBuilding = async ({
 // YUP
 export const schemaModalEditBuilding = yup
   .object({
+    image: yup
+      .mixed()
+      .nullable()
+      .test(
+        'FileSize',
+        'O tamanho da imagem excedeu o limite.',
+        (value) => !value || (value && value.size <= 5000000),
+      )
+      .test(
+        'FileType',
+        'Formato inválido.',
+        (value) =>
+          !value ||
+          (value &&
+            (value.type === 'image/png' ||
+              value.type === 'image/jpeg' ||
+              value.type === 'image/jpg')),
+      ),
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
-    cep: yup.string().min(9, 'Digite um CEP válido.').required('Campo obrigatório.'),
+    cep: yup.string().min(9, 'Digite um CEP válido.').required('o CEP deve ser preenchido.'),
     city: yup.string().required('Campo obrigatório.'),
     state: yup.string().required('Campo obrigatório.'),
     nextMaintenanceCreationBasis: yup.string().required('Campo obrigatório.'),
