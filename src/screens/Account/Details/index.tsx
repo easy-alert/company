@@ -1,7 +1,5 @@
 // REACT
 import { useState } from 'react';
-
-// LIBS
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -10,21 +8,19 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // SERVICES
 import { Api } from '@services/api';
+import { sendPhoneConfirmation } from '@services/apis/sendPhoneConfirmation';
+import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 
 // GLOBAL COMPONENTS
 import { Image } from '@components/Image';
+import { Tag } from '@components/Tag';
 import { IconButton } from '@components/Buttons/IconButton';
 import { ColorfulTable, ColorfulTableContent } from '@components/ColorfulTable';
-import { Tag } from '@components/Tag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import TableCell from '@components/TableCell';
 
 // GLOBAL UTILS
 import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@utils/functions';
-import {
-  requestResendEmailConfirmation,
-  requestResendPhoneConfirmation,
-} from '@screens/Buildings/Details/utils/functions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -103,6 +99,14 @@ export const AccountDetails = () => {
         setOnQuery(false);
         catchHandler(err);
       });
+  };
+
+  const handleSendPhoneConfirmation = async (userId: string) => {
+    await sendPhoneConfirmation({ userId, link: phoneConfirmUrl });
+  };
+
+  const handleSendEmailConfirmation = async (userId: string) => {
+    await sendEmailConfirmation({ userId, link: emailConfirmUrl });
   };
 
   return (
@@ -267,12 +271,7 @@ export const AccountDetails = () => {
                                 content: '',
                                 contentColor: theme.color.danger,
                               }}
-                              actionButtonClick={() => {
-                                requestResendEmailConfirmation({
-                                  buildingNotificationConfigurationId: User.id,
-                                  link: emailConfirmUrl,
-                                });
-                              }}
+                              actionButtonClick={() => handleSendEmailConfirmation(User.id)}
                             />
                           )}
                         </Style.TableDataWrapper>
@@ -300,12 +299,7 @@ export const AccountDetails = () => {
                                 content: '',
                                 contentColor: theme.color.danger,
                               }}
-                              actionButtonClick={() => {
-                                requestResendPhoneConfirmation({
-                                  buildingNotificationConfigurationId: User.id,
-                                  link: phoneConfirmUrl,
-                                });
-                              }}
+                              actionButtonClick={() => handleSendPhoneConfirmation(User.id)}
                             />
                           )}
                         </Style.TableDataWrapper>
