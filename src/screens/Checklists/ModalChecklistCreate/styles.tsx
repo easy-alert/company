@@ -7,17 +7,10 @@ export const Content = styled.div`
   gap: ${theme.size.sm};
 `;
 
-export const InputText = styled.div`
+export const ChecklistButtons = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: ${theme.size.xxsm};
-
-  input,
-  select {
-    padding: ${theme.size.sm};
-    border-radius: 4px;
-    font-size: 14px;
-  }
+  gap: ${theme.size.sm};
+  align-items: center;
 `;
 
 export const ButtonContainer = styled.div`
@@ -25,13 +18,6 @@ export const ButtonContainer = styled.div`
   gap: ${theme.size.sm};
   justify-content: flex-end;
   margin-top: ${theme.size.md};
-`;
-
-export const Checklist = styled.div`
-  display: flex;
-  gap: ${theme.size.sm};
-  align-items: center;
-  margin-bottom: ${theme.size.md};
 `;
 
 export const ChecklistItem = styled.label`

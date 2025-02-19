@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 
-// LIBS
-import { toast } from 'react-toastify';
-
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // SERVICES
 import { Api } from '@services/api';
@@ -25,13 +23,13 @@ import { icon } from '@assets/icons';
 import type { ITimeInterval } from '@utils/types';
 
 // COMPONENTS
+import { ModalChecklistCreate } from './ModalChecklistCreate';
 import { MiniCalendarComponent } from './MiniCalendarComponent';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
-import { ModalCreateChecklist } from './ModalCreateChecklist';
-import { ModalChecklist } from './ModalChecklist';
 
 // STYLES
 import * as Style from './styles';
+import { ModalChecklistDetails2 } from './ModalChecklistDetails2';
 
 export interface IChecklist {
   id: string;
@@ -49,18 +47,43 @@ export interface ICalendarDates {
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
+  const [buildingNanoId, setBuildingNanoId] = useState<string>('');
+  const { usersForSelect } = useUsersForSelect({
+    buildingId: buildingNanoId,
+    checkPerms: true,
+  });
+
   const [date, setDate] = useState(new Date());
-  const [modalCreateChecklistOpen, setModalCreateChecklistOpen] = useState(false);
-  const [modalChecklist, setModalChecklist] = useState(false);
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [buildingNanoId, setBuildingNanoId] = useState<string>('');
-  const [buildingName, setBuildingName] = useState<string>('');
   const [checklists, setChecklists] = useState<IChecklist[]>([]);
   const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
     completed: [],
     pending: [],
   });
+
+  const [checklistId, setChecklistId] = useState<string>('');
+
+  const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
+  const [modalChecklistDetails, setModalChecklist] = useState(false);
+
+  const handleModals = (modal: string, modalState: boolean) => {
+    switch (modal) {
+      case 'modalChecklistCreate':
+        setModalChecklistCreate(modalState);
+        break;
+      case 'modalChecklistDetails':
+        setModalChecklist(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleSelectedChecklistId = (id: string) => {
+    setChecklistId(id);
+  };
 
   const findManyChecklists = async () => {
     setLoading(true);
@@ -103,39 +126,38 @@ export const Checklists = () => {
 
   return (
     <>
-      {modalCreateChecklistOpen && (
-        <ModalCreateChecklist
-          setModal={setModalCreateChecklistOpen}
-          timeIntervals={timeIntervals}
-          onThenRequest={async () => {
-            findManyChecklists();
-            findManyChecklistDates();
-          }}
-          buildingNanoId={buildingNanoId}
-          buildingName={buildingName}
+      {modalChecklistCreate && (
+        <ModalChecklistCreate
+          buildingId={buildingNanoId}
+          usersForSelect={usersForSelect}
+          handleModals={handleModals}
         />
       )}
-      {modalChecklist && <ModalChecklist setModal={setModalChecklist} />}{' '}
+
+      {modalChecklistDetails && checklistId && (
+        <ModalChecklistDetails2
+          buildingId={buildingNanoId}
+          checklistId={checklistId}
+          handleModals={handleModals}
+        />
+      )}
+
       <Style.Container>
         <Style.Header>
           <Style.HeaderLeftSide>
             <h2>Checklists</h2>
+
             <Select
               id="customFilterForChecklist"
               disabled={buildingsForSelect.length === 0}
               selectPlaceholderValue=" "
               value={buildingNanoId}
-              onChange={(evt) => {
-                const building = buildingsForSelect.find(
-                  ({ nanoId }) => nanoId === evt.target.value,
-                );
-                setBuildingName(building?.name ?? '');
-                setBuildingNanoId(evt.target.value);
-              }}
+              onChange={(evt) => setBuildingNanoId(evt.target.value)}
             >
               <option value="" disabled hidden>
                 Selecione
               </option>
+
               {buildingsForSelect.map(({ nanoId, name }) => (
                 <option value={nanoId} key={nanoId}>
                   {name}
@@ -146,22 +168,10 @@ export const Checklists = () => {
 
           <IconButton
             disabled={loading}
+            label="Checklist"
             icon={icon.plusWithBg}
-            label="Cadastrar"
             onClick={() => {
-              if (!buildingNanoId) {
-                toast.error('Selecione uma edificação.');
-                return;
-              }
-              setModalCreateChecklistOpen(true);
-            }}
-          />
-
-          <IconButton
-            label="Abrir Checklist"
-            icon=""
-            onClick={() => {
-              setModalChecklist(true);
+              handleModals('modalChecklistCreate', true);
             }}
           />
         </Style.Header>
@@ -170,11 +180,13 @@ export const Checklists = () => {
           <Style.DateHeader>
             <Style.NavigateButtons>
               <Button disable={loading} label="Hoje" onClick={() => setDate(new Date())} />
+
               <Button
                 disable={loading}
                 label="Anterior"
                 onClick={() => setDate((prev) => new Date(prev.setDate(prev.getDate() - 1)))}
               />
+
               <Button
                 disable={loading}
                 label="Próximo"
@@ -203,6 +215,8 @@ export const Checklists = () => {
                     key={checklist.id}
                     checklist={checklist}
                     timeIntervals={timeIntervals}
+                    handleModals={handleModals}
+                    handleSelectedChecklistId={handleSelectedChecklistId}
                     onThenRequest={async () => {
                       findManyChecklists();
                       findManyChecklistDates();
