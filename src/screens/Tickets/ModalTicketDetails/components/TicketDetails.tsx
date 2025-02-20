@@ -8,7 +8,6 @@ import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
-import { Input } from '@components/Inputs/Input';
 import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
@@ -48,7 +47,6 @@ function TicketDetails({
   handleUpdateOneTicket,
   handleUploadSignature,
 }: ITicketDetails) {
-  const [collaborator, setCollaborator] = useState<string>('');
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
 
   const disableComment = ticket?.statusName !== 'awaitingToFinish';
@@ -186,38 +184,6 @@ function TicketDetails({
         userId={userId}
         disableComment={disableComment}
       />
-
-      {ticket.statusName !== 'open' && (
-        <Style.TicketFinalSolutionContainer>
-          <Typography variant="h3" marginBottom="sm">
-            Colaborador
-          </Typography>
-
-          <Style.TicketFinalSolutionContent>
-            {!ticket?.collaborator ? (
-              <>
-                <Input
-                  label=""
-                  typeDatePlaceholderValue="Finalizar solução"
-                  value={collaborator}
-                  onChange={(e) => setCollaborator(e.target.value)}
-                />
-
-                <Button
-                  label="Salvar"
-                  bgColor="transparent"
-                  textColor="finished"
-                  onClick={() =>
-                    handleUpdateOneTicket({ id: ticket.id, collaborator }, false, false)
-                  }
-                />
-              </>
-            ) : (
-              <Style.TicketDetailsRowValue>{ticket.collaborator}</Style.TicketDetailsRowValue>
-            )}
-          </Style.TicketFinalSolutionContent>
-        </Style.TicketFinalSolutionContainer>
-      )}
 
       {ticket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
