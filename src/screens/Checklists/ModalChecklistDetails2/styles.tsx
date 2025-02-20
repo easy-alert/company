@@ -27,33 +27,30 @@ export const ProgressBarContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
-
   margin-bottom: ${theme.size.sm};
 `;
 
 export const ProgressBar = styled.div`
   display: flex;
-
   background-color: #f0f0f0;
-  border-radius: ${theme.size.xsm};
-  height: ${theme.size.xsm};
+  border-radius: ${theme.size.sm};
+  height: ${theme.size.sm};
 `;
 
 export const Progress = styled.div`
-  background-color: ${theme.color.actionBlue};
+  background-color: ${theme.color.primary};
   border-radius: ${theme.size.xsm};
   height: 100%;
 `;
 
 export const ProgressText = styled.p`
-  font-size: ${theme.size.xsm};
+  font-size: ${theme.size.sm};
   font-weight: 500;
 `;
 
 export const ChecklistItemContainer = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: ${theme.size.sm};
   margin-left: ${theme.size.xsm};
 `;
@@ -152,6 +149,5 @@ export const DeleteCheckboxContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
-
   margin-top: ${theme.size.sm};
 `;
