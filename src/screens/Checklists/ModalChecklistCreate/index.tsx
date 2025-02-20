@@ -29,12 +29,14 @@ interface IModalChecklistCreate {
   buildingId: string;
   usersForSelect: IUser[];
   handleModals: (modal: string, modalState: boolean) => void;
+  handleRefresh: () => void;
 }
 
 export const ModalChecklistCreate = ({
   buildingId,
   usersForSelect,
   handleModals,
+  handleRefresh,
 }: IModalChecklistCreate) => {
   const [checklistTemplates, setChecklistTemplates] = useState<IChecklistTemplate[]>([]);
 
@@ -138,6 +140,8 @@ export const ModalChecklistCreate = ({
         interval: selectedInterval,
         status,
       });
+      handleRefresh();
+      handleModals('modalChecklistCreate', false);
     } finally {
       setLoading(false);
     }
