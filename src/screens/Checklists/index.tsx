@@ -47,6 +47,12 @@ export interface ICalendarDates {
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
+  const [refresh, setRefresh] = useState(false);
+
+  const handleRefresh = () => {
+    setRefresh((prev) => !prev);
+  };
+
   const [buildingNanoId, setBuildingNanoId] = useState<string>('');
   const { usersForSelect } = useUsersForSelect({
     buildingId: buildingNanoId,
@@ -124,6 +130,18 @@ export const Checklists = () => {
     }
   }, [buildingNanoId]);
 
+  useEffect(() => {
+    if (buildingNanoId) {
+      findManyChecklists();
+    }
+  }, [buildingNanoId, date, refresh]);
+
+  useEffect(() => {
+    if (buildingNanoId) {
+      findManyChecklistDates();
+    }
+  }, [buildingNanoId, refresh]);
+
   return (
     <>
       {modalChecklistCreate && (
@@ -131,6 +149,7 @@ export const Checklists = () => {
           buildingId={buildingNanoId}
           usersForSelect={usersForSelect}
           handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
@@ -139,6 +158,7 @@ export const Checklists = () => {
           buildingId={buildingNanoId}
           checklistId={checklistId}
           handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
