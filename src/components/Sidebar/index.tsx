@@ -73,6 +73,16 @@ export const Sidebar = () => {
         navigate('/buildings');
       },
     },
+    {
+      title: 'Manutenções',
+      type: 'navigate',
+      icon: icon.maintenances,
+      permission: 'access:maintenances',
+      url: '/maintenances',
+      redirectFunction: () => {
+        navigate('/maintenances');
+      },
+    },
 
     // {
     //   title: 'Checklists',
