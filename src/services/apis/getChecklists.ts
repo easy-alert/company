@@ -6,8 +6,8 @@ import type { IChecklist } from '@customTypes/IChecklist';
 import type { IResponse } from '@customTypes/IResponse';
 
 interface IGetChecklists {
-  buildingId: string;
   checklistId: string;
+  buildingId?: string;
 }
 
 interface IChecklistTemplatesResponse extends IResponse {
@@ -15,10 +15,14 @@ interface IChecklistTemplatesResponse extends IResponse {
 }
 
 export const getChecklists = async ({ buildingId, checklistId }: IGetChecklists) => {
-  const uri = `/checklists/v2/${buildingId}/${checklistId}`;
+  const uri = `/checklists/v2/${checklistId}`;
+
+  const params = {
+    buildingId,
+  };
 
   try {
-    const response: IChecklistTemplatesResponse = await Api.get(uri);
+    const response: IChecklistTemplatesResponse = await Api.get(uri, { params });
 
     return response.data;
   } catch (error: any) {
