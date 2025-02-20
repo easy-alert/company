@@ -4,9 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
 // COMPONENTS
-import { Api } from '../../../services/api';
-import { Button } from '../../../components/Buttons/Button';
-import { FormikInput } from '../../../components/Form/FormikInput';
+import { Api } from '@services/api';
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
 
 // STYLES
 import * as Style from './styles';
@@ -57,7 +57,7 @@ export const Login = () => {
           })
             .then((res) => {
               signin(res.data);
-              navigate('/account');
+              navigate('/home');
 
               // if (!viewedTutorial) {
               //   navigate('/tutorials', { state: { from: 'login' } });
