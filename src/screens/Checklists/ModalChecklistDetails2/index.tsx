@@ -32,6 +32,7 @@ interface ModalSendReportProps {
   buildingId: string;
   checklistId: string;
   handleModals: (modal: string, modalState: boolean) => void;
+  handleRefresh: () => void;
 }
 
 type TDeleteMode = 'this' | 'all' | 'thisAndFollowing' | '';
@@ -40,6 +41,7 @@ export const ModalChecklistDetails2 = ({
   buildingId,
   checklistId,
   handleModals,
+  handleRefresh,
 }: ModalSendReportProps) => {
   const [checklist, setChecklist] = useState<IChecklist>({});
 
@@ -124,6 +126,8 @@ export const ModalChecklistDetails2 = ({
 
       try {
         await deleteChecklist({ checklistId, deleteMode });
+        handleRefresh();
+        handleModals('modalChecklistDetails', false);
       } finally {
         setLoading(false);
         handleModals('modalChecklistDetails', false);
