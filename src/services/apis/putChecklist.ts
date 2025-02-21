@@ -11,7 +11,7 @@ interface IPutChecklist {
 }
 
 export async function putChecklist({ checklistId, checklistItems, status, images }: IPutChecklist) {
-  const uri = `/checklists/${checklistId}`;
+  const uri = `/checklists/v2/${checklistId}`;
 
   const body = {
     checklistItems,
