@@ -17,7 +17,7 @@ export const ChecklistContainer = styled.div`
 `;
 
 export const ChecklistTitle = styled.h3`
-  font-size: ${theme.size.md};
+  font-size: ${theme.size.sm};
   font-weight: 500;
 
   margin-bottom: ${theme.size.sm};
@@ -32,6 +32,7 @@ export const ProgressBarContainer = styled.div`
 
 export const ProgressBar = styled.div`
   display: flex;
+  align-items: center;
   background-color: #f0f0f0;
   border-radius: ${theme.size.sm};
   height: ${theme.size.sm};
@@ -43,8 +44,16 @@ export const Progress = styled.div`
   height: 100%;
 `;
 
+export const ProgressPercentageText = styled.p`
+  margin-left: ${theme.size.xsm};
+  margin-right: ${theme.size.xsm};
+  font-size: 0.75rem;
+  font-weight: 500;
+`;
+
 export const ProgressText = styled.p`
-  font-size: ${theme.size.sm};
+  font-size: 0.75rem;
+  color: ${theme.color.gray4};
   font-weight: 500;
 `;
 
