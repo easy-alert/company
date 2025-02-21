@@ -124,8 +124,6 @@ export const ModalSendMaintenanceReport = ({
       maintenanceHistoryId,
     });
 
-    console.log('🚀 ~ handleGetMaintenanceDetails ~ responseData:', responseData);
-
     setMaintenance(responseData);
   };
 
@@ -150,6 +148,7 @@ export const ModalSendMaintenanceReport = ({
     try {
       await requestToggleInProgress({
         syndicNanoId: '',
+        userId: userId ?? '',
         maintenanceHistoryId,
         inProgressChange: !maintenance.inProgress,
       });
@@ -167,6 +166,7 @@ export const ModalSendMaintenanceReport = ({
     try {
       await requestSaveReportProgress({
         syndicNanoId: '',
+        userId: userId ?? '',
         maintenanceHistoryId,
         maintenanceReport,
         files,
@@ -186,6 +186,7 @@ export const ModalSendMaintenanceReport = ({
     try {
       await requestSendReport({
         syndicNanoId: '',
+        userId: userId ?? '',
         maintenanceHistoryId,
         maintenanceReport,
         files,

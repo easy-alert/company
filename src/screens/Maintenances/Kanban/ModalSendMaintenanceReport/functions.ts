@@ -1,9 +1,10 @@
 import { toast } from 'react-toastify';
 import { handleToastify } from '@utils/toastifyResponses';
-import { Api } from '../../../../services/api';
-import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
-import { requestSyndicKanban } from '../functions';
-import {
+import { Api } from '@services/api';
+
+import { unMaskBRL } from '@utils/functions';
+
+import type {
   IRequestReportProgress,
   IRequestSaveReportProgress,
   IRequestSendReport,
@@ -11,45 +12,59 @@ import {
 } from './types';
 
 export const requestSendReport = async ({
-  maintenanceReport,
+  syndicNanoId,
+  userId,
   maintenanceHistoryId,
+  maintenanceReport,
   files,
   images,
-  syndicNanoId,
 }: IRequestSendReport) => {
-  await Api.post('/maintenances/create/report', {
-    origin: 'Client',
+  const uri = `/maintenances/create/report`;
+
+  const body = {
+    userId,
+    responsibleSyndicId: syndicNanoId,
     maintenanceHistoryId,
     cost: Number(unMaskBRL(maintenanceReport.cost)),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,
     ReportImages: images,
-    responsibleSyndicId: syndicNanoId,
-  })
-    .then((res) => {
-      toast.success(res.data.ServerMessage.message);
-    })
-    .catch((err) => {
-      catchHandler(err);
-    });
+  };
+
+  try {
+    const response = await Api.post(uri, body);
+
+    handleToastify(response);
+  } catch (error: any) {
+    handleToastify(error.response);
+  }
 };
 
 export const requestToggleInProgress = async ({
-  maintenanceHistoryId,
   syndicNanoId,
+  userId,
+  maintenanceHistoryId,
   inProgressChange,
 }: IRequestToggleInProgress) => {
-  await Api.post(`/maintenances/set/in-progress?syndicNanoId=${syndicNanoId}`, {
+  const uri = `/maintenances/set/in-progress`;
+
+  const params = {
+    syndicNanoId,
+  };
+
+  const body = {
+    userId,
     maintenanceHistoryId,
     inProgressChange,
-  })
-    .then((res) => {
-      toast.success(res.data.ServerMessage.message);
-    })
-    .catch((err) => {
-      catchHandler(err);
-      throw new Error(err);
-    });
+  };
+
+  try {
+    const response = await Api.post(uri, body, { params });
+
+    handleToastify(response);
+  } catch (error: any) {
+    handleToastify(error.response);
+  }
 };
 
 export const requestReportProgress = async ({ maintenanceHistoryId }: IRequestReportProgress) => {
@@ -67,22 +82,32 @@ export const requestReportProgress = async ({ maintenanceHistoryId }: IRequestRe
 
 export const requestSaveReportProgress = async ({
   syndicNanoId,
+  userId,
   maintenanceReport,
   maintenanceHistoryId,
   files,
   images,
 }: IRequestSaveReportProgress) => {
-  await Api.post(`/maintenances/create/report/progress?syndicNanoId=${syndicNanoId}`, {
+  const uri = `/maintenances/create/report/progress`;
+
+  const params = {
+    syndicNanoId,
+  };
+
+  const body = {
+    userId,
     maintenanceHistoryId,
     cost: Number(unMaskBRL(maintenanceReport.cost)),
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,
     ReportImages: images,
-  })
-    .then((res) => {
-      toast.success(res.data.ServerMessage.message);
-    })
-    .catch((err) => {
-      catchHandler(err);
-    });
+  };
+
+  try {
+    const response = await Api.post(uri, body, { params });
+
+    handleToastify(response);
+  } catch (error: any) {
+    handleToastify(error.response);
+  }
 };

@@ -218,14 +218,14 @@ export const ModalChecklistDetails = ({
 
             <Style.ProgressBarContainer>
               <Style.ProgressBar>
-                <Style.ProgressText>
+                <Style.ProgressPercentageText>
                   {`${Math.floor(
                     ((checklistDetails?.checklistItem?.filter((item) => item.status === 'completed')
                       .length || 0) /
                       (checklistDetails?.checklistItem?.length || 1)) *
                       100,
                   )}%`}
-                </Style.ProgressText>
+                </Style.ProgressPercentageText>
 
                 <Style.Progress
                   style={{

@@ -113,14 +113,14 @@ export const MaintenancesKanban = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
-  const [showPriority, setShowPriority] = useState<boolean>(false);
-
   // # region Checklists states
   const [checklistId, setChecklistId] = useState<string>('');
 
   const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
   const [modalChecklistDetails, setModalChecklist] = useState(false);
   // # endregion
+
+  const showPriority = account?.Company.showMaintenancePriority;
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
@@ -215,6 +215,16 @@ export const MaintenancesKanban = () => {
 
   return (
     <>
+      {modalCreateOccasionalMaintenance && (
+        <ModalCreateOccasionalMaintenance
+          handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
+          handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
+          handleModalMaintenanceDetails={setModalMaintenanceDetails}
+          handleModalSendMaintenanceReport={setModalMaintenanceSendReport}
+          handleGetBackgroundData={handleGetMaintenances}
+        />
+      )}
+
       {modalMaintenanceSendReport && (
         <ModalSendMaintenanceReport
           maintenanceHistoryId={maintenanceHistoryId}
@@ -232,16 +242,6 @@ export const MaintenancesKanban = () => {
           }}
           handleModals={handleModals}
           handleQuery={handleQuery}
-        />
-      )}
-
-      {modalCreateOccasionalMaintenance && (
-        <ModalCreateOccasionalMaintenance
-          handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
-          handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
-          handleModalMaintenanceDetails={setModalMaintenanceDetails}
-          handleModalSendMaintenanceReport={setModalMaintenanceSendReport}
-          handleGetBackgroundData={handleGetMaintenances}
         />
       )}
 
@@ -268,6 +268,7 @@ export const MaintenancesKanban = () => {
               disabled={loading}
               label="Checklist"
               icon={icon.plus}
+              permToCheck="checklist:create"
               onClick={() => {
                 handleModals('modalChecklistCreate', true);
               }}
@@ -276,6 +277,7 @@ export const MaintenancesKanban = () => {
             <IconButton
               disabled={loading}
               icon={icon.plus}
+              permToCheck="maintenances:createOccasional"
               label="Manutenção avulsa"
               onClick={() => handleModals('modalCreateOccasionalMaintenance', true)}
             />
@@ -687,6 +689,8 @@ export const MaintenancesKanban = () => {
                             }
                           }}
                         >
+                          <h5>{maintenance?.buildingName}</h5>
+
                           <h6>
                             <span>
                               <Style.EventsWrapper>
@@ -711,6 +715,7 @@ export const MaintenancesKanban = () => {
 
                             {maintenance.element || maintenance.name}
                           </h6>
+
                           <p className="p2">
                             {maintenance.activity || maintenance.checklistProgress}
                           </p>

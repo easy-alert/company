@@ -15,16 +15,19 @@ export interface IMaintenanceReport {
 }
 
 export interface IRequestSendReport {
-  maintenanceReport: IMaintenanceReport;
+  syndicNanoId: string;
+  userId: string;
   maintenanceHistoryId: string;
+  maintenanceReport: IMaintenanceReport;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
-  syndicNanoId: string;
 }
 
 export interface IRequestToggleInProgress {
-  maintenanceHistoryId: string;
   syndicNanoId: string;
+  userId: string;
+  userId: string;
+  maintenanceHistoryId: string;
   inProgressChange: boolean;
 }
 
@@ -33,9 +36,10 @@ export interface IRequestReportProgress {
 }
 
 export interface IRequestSaveReportProgress {
-  maintenanceReport: IMaintenanceReport;
+  syndicNanoId: string;
+  userId: string;
   maintenanceHistoryId: string;
+  maintenanceReport: IMaintenanceReport;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
-  syndicNanoId: string;
 }
