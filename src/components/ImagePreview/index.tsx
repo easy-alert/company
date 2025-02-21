@@ -17,10 +17,10 @@ export const ImagePreview = ({
   height,
   width,
   downloadUrl,
-  onTrashClick,
   maxHeight = '500px',
   maxWidth = '500px',
   onUpdateClick,
+  onTrashClick,
 }: IImagePreview) => (
   <Style.Container height={height} width={width} maxHeight={maxHeight} maxWidth={maxWidth}>
     <ImageComponent src={src} alt="" />

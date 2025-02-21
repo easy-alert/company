@@ -10,20 +10,24 @@ import { DragAndDropFiles } from '@components/DragAndDropFiles';
 import { Button } from '@components/Buttons/Button';
 import { ImagePreview } from '@components/ImagePreview';
 import { Modal } from '@components/Modal';
+import { Image } from '@components/Image';
 import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { DotLoading } from '@components/Loadings/DotLoading';
 import { InputRadio } from '@components/Inputs/InputRadio';
-import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
 import { uploadManyFiles } from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import { IChecklist, TChecklistStatus } from '@customTypes/IChecklist';
 
 // STYLES
+import UserResponsible from '@components/UserResponsible';
 import * as Style from './styles';
 
 import type { TModalNames } from '..';
@@ -32,7 +36,6 @@ interface ModalSendReportProps {
   checklistId: string;
   buildingId?: string;
   handleModals: (modal: TModalNames, modalState: boolean) => void;
-  handleRefresh: () => void;
 }
 
 type TDeleteMode = 'this' | 'all' | 'thisAndFollowing' | '';
@@ -41,7 +44,6 @@ export const ModalChecklistDetails = ({
   checklistId,
   buildingId,
   handleModals,
-  handleRefresh,
 }: ModalSendReportProps) => {
   const [checklistDetails, setChecklistDetails] = useState<IChecklist>({});
 
@@ -102,11 +104,8 @@ export const ModalChecklistDetails = ({
         status,
         images: uploadedFiles,
       });
-
-      handleRefresh();
     } finally {
       setLoading(false);
-      handleModals('modalChecklistDetails', false);
     }
   };
 
@@ -143,10 +142,6 @@ export const ModalChecklistDetails = ({
       { id: '3', name: 'mode', value: 'all', label: 'Todos os checklists' },
     ];
 
-    if (checklistDetails.frequency === 0) {
-      inputs.splice(1, 2);
-    }
-
     const handleRadioChange = (value: TDeleteMode) => {
       setDeleteMode(value);
     };
@@ -156,8 +151,6 @@ export const ModalChecklistDetails = ({
 
       try {
         await deleteChecklist({ checklistId, deleteMode });
-
-        handleRefresh();
       } finally {
         setLoading(false);
         handleModals('modalChecklistDetails', false);
@@ -260,14 +253,11 @@ export const ModalChecklistDetails = ({
                 <Style.ChecklistItem key={item.id}>
                   <InputCheckbox
                     checked={item.status === 'completed'}
-                    disable={checklistDetails?.status === 'completed'}
                     onChange={() => handleChangeChecklistItem(item.id!)}
                   />
                   <p>{item.name}</p>
                 </Style.ChecklistItem>
               ))}
-
-              <h6>{checklistDetails?.description}</h6>
             </Style.ChecklistItemContainer>
           </Style.ChecklistContainer>
 

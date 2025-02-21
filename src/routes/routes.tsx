@@ -63,6 +63,7 @@ import { SendPasswordRecoverEmail } from '@screens/Authentication/SendPasswordRe
 import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
 
 // PERMISSION PROTECTED ROUTE
+import { MaintenancesKanban } from '@screens/Maintenances/Kanban';
 import PermissionRoute from './PermissionRoute';
 
 const AppRoutes = () => (
@@ -112,6 +113,14 @@ const AppRoutes = () => (
             <Route index element={<MaintenancesCalendar />} />
           </Route>
 
+          {/* maintenances route */}
+          <Route
+            path="/maintenances"
+            element={<PermissionRoute requiredPermission="access:maintenances" />}
+          >
+            <Route index element={<MaintenancesKanban />} />
+          </Route>
+
           {/* buildings route */}
           <Route
             path="/buildings"
@@ -130,12 +139,12 @@ const AppRoutes = () => (
           </Route>
 
           {/* checklists route */}
-          {/* <Route
+          <Route
             path="/checklists"
             element={<PermissionRoute requiredPermission="access:checklist" />}
           >
             <Route index element={<Checklists />} />
-          </Route> */}
+          </Route>
 
           {/* tickets route */}
           <Route path="/tickets" element={<PermissionRoute requiredPermission="access:tickets" />}>
@@ -172,7 +181,7 @@ const AppRoutes = () => (
             <Route path=":userId/permissions" element={<UserPermissions />} />
           </Route>
 
-          <Route path="/maintenances" element={<MaintenancesList />} />
+          {/* <Route path="/maintenances" element={<MaintenancesList />} /> */}
 
           <Route path="/forbidden" element={<Forbidden />} />
         </Route>

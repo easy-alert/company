@@ -25,12 +25,16 @@ export interface IChecklist {
 
   createdAt?: string;
   updatedAt?: string;
-
   building?: IBuilding;
   user?: IUser;
   template?: IChecklistTemplate;
 
   checklistItem?: IChecklistItem[];
-  // images        ChecklistImage[]
+  images?: {
+    id?: string;
+    checklistId?: string;
+    name?: string;
+    url?: string;
+  }[];
   // detailImages  ChecklistDetailImage[]
 }

@@ -73,17 +73,27 @@ export const Sidebar = () => {
         navigate('/buildings');
       },
     },
+    {
+      title: 'Manutenções',
+      type: 'navigate',
+      icon: icon.maintenances,
+      permission: 'access:maintenances',
+      url: '/maintenances',
+      redirectFunction: () => {
+        navigate('/maintenances');
+      },
+    },
 
-    // {
-    //   title: 'Checklists',
-    //   type: 'navigate',
-    //   icon: icon.checklists,
-    //   permission: 'access:checklist',
-    //   url: '/checklists',
-    //   redirectFunction: () => {
-    //     navigate('/checklists');
-    //   },
-    // },
+    {
+      title: 'Checklists',
+      type: 'navigate',
+      icon: icon.checklists,
+      permission: 'access:checklist',
+      url: '/checklists',
+      redirectFunction: () => {
+        navigate('/checklists');
+      },
+    },
 
     {
       title: 'Chamados',
