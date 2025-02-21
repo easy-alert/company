@@ -84,16 +84,16 @@ export const Sidebar = () => {
       },
     },
 
-    // {
-    //   title: 'Checklists',
-    //   type: 'navigate',
-    //   icon: icon.checklists,
-    //   permission: 'access:checklist',
-    //   url: '/checklists',
-    //   redirectFunction: () => {
-    //     navigate('/checklists');
-    //   },
-    // },
+    {
+      title: 'Checklists',
+      type: 'navigate',
+      icon: icon.checklists,
+      permission: 'access:checklist',
+      url: '/checklists',
+      redirectFunction: () => {
+        navigate('/checklists');
+      },
+    },
 
     {
       title: 'Chamados',
