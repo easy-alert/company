@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
-import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // SERVICES
 import { Api } from '@services/api';
@@ -29,7 +28,7 @@ import { ChecklistRowComponent } from './ChecklistRowComponent';
 
 // STYLES
 import * as Style from './styles';
-import { ModalChecklistDetails2 } from './ModalChecklistDetails2';
+import { ModalChecklistDetails } from './ModalChecklistDetails2';
 
 export interface IChecklist {
   id: string;
@@ -44,14 +43,17 @@ export interface ICalendarDates {
   completed: { date: string }[];
 }
 
+export type TModalNames =
+  | 'modalSendMaintenanceReport'
+  | 'modalMaintenanceDetails'
+  | 'modalCreateOccasionalMaintenance'
+  | 'modalChecklistCreate'
+  | 'modalChecklistDetails';
+
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   const [buildingNanoId, setBuildingNanoId] = useState<string>('');
-  const { usersForSelect } = useUsersForSelect({
-    buildingId: buildingNanoId,
-    checkPerms: true,
-  });
 
   const [date, setDate] = useState(new Date());
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
@@ -66,6 +68,12 @@ export const Checklists = () => {
 
   const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
   const [modalChecklistDetails, setModalChecklist] = useState(false);
+
+  const [refresh, setRefresh] = useState(false);
+
+  const handleRefresh = () => {
+    setRefresh((prevState) => !prevState);
+  };
 
   const handleModals = (modal: string, modalState: boolean) => {
     switch (modal) {
@@ -87,6 +95,7 @@ export const Checklists = () => {
 
   const findManyChecklists = async () => {
     setLoading(true);
+
     await Api.get(`/checklists/${buildingNanoId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
@@ -116,29 +125,30 @@ export const Checklists = () => {
     if (buildingNanoId) {
       findManyChecklists();
     }
-  }, [buildingNanoId, date]);
+  }, [buildingNanoId, date, refresh]);
 
   useEffect(() => {
     if (buildingNanoId) {
       findManyChecklistDates();
     }
-  }, [buildingNanoId]);
+  }, [buildingNanoId, date, refresh]);
 
   return (
     <>
       {modalChecklistCreate && (
         <ModalChecklistCreate
           buildingId={buildingNanoId}
-          usersForSelect={usersForSelect}
           handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
       {modalChecklistDetails && checklistId && (
-        <ModalChecklistDetails2
+        <ModalChecklistDetails
           buildingId={buildingNanoId}
           checklistId={checklistId}
           handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 

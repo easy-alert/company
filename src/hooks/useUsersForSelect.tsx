@@ -7,7 +7,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IUser } from '@customTypes/IUser';
 
 interface IUsersForSelect {
-  buildingId: string;
+  buildingId?: string;
   checkPerms?: boolean;
 }
 
@@ -17,11 +17,6 @@ export const useUsersForSelect = ({ buildingId, checkPerms = false }: IUsersForS
 
   const getUsersForSelect = useCallback(async () => {
     setLoadingUsersForSelect(true);
-
-    if (!buildingId) {
-      setLoadingUsersForSelect(false);
-      return;
-    }
 
     const uri = `/list/users`;
 

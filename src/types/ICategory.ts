@@ -1,5 +1,6 @@
 export interface ICategory {
   id?: string;
+
   ownerCompanyId?: string;
   categoryTypeId?: string;
 
