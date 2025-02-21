@@ -1,9 +1,9 @@
 /* eslint-disable react/no-array-index-key */
-// LIBS
+// REACT
+import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 // COMPONENTS
-import { useEffect, useState } from 'react';
 import { EventTag } from '@components/EventTag';
 import { Input } from '@components/Inputs/Input';
 import { Button } from '@components/Buttons/Button';
@@ -13,33 +13,38 @@ import { DotLoading } from '@components/Loadings/DotLoading';
 import { ImagePreview } from '@components/ImagePreview';
 import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
-
-// STYLES
-import { icon } from '@assets/icons';
-
-// TYPES
-
-// FUNCTIONS
-import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
-import { InProgressTag } from '@components/InProgressTag';
-import { PopoverButton } from '@components/Buttons/PopoverButton';
-import { theme } from '@styles/theme';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
 import { ShareMaintenanceHistoryButton } from '@components/ShareMaintenanceHistoryButton';
 import { ListTag } from '@components/ListTag';
+import { InProgressTag } from '@components/InProgressTag';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
 import UserResponsible from '@components/UserResponsible';
+
+// GLOBAL TYLES
+import { icon } from '@assets/icons';
+
+// GLOBAL FUNCTIONS
+import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
+
+// GLOBAL THEMES
+import { theme } from '@styles/theme';
+
+// UTILS
 import {
   requestReportProgress,
   requestSaveReportProgress,
   requestSendReport,
   requestToggleInProgress,
 } from './functions';
-
 import { requestMaintenanceDetails } from '../functions';
-import { AnnexesAndImages, IMaintenance } from '../types';
-import { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
+
+// STYLES
 import * as Style from './styles';
+
+// TYPES
+import type { AnnexesAndImages, IMaintenance } from '../types';
+import type { IMaintenanceReport, IModalSendMaintenanceReport } from './types';
 
 export const ModalSendMaintenanceReport = ({
   userId,
