@@ -94,7 +94,6 @@ export const Kanban = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: ${theme.size.sm};
   overflow: auto;
-  height: 100%;
   scrollbar-width: none;
   scrollbar-color: transparent;
   scroll-snap-type: x mandatory;
