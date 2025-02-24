@@ -623,8 +623,7 @@ export const MaintenancesKanban = () => {
                   )}
                 </Style.KanbanHeader>
 
-                {!loading &&
-                  card.maintenances.length > 0 &&
+                {card.maintenances.length > 0 &&
                   card.maintenances.map((maintenance) => {
                     const isPending = maintenance.status === 'pending';
                     const isFuture =
@@ -728,23 +727,22 @@ export const MaintenancesKanban = () => {
                     );
                   })}
 
-                {!loading &&
-                  (card.maintenances.length === 0 ||
-                    (!showFutureMaintenances &&
-                      card.maintenances.every(
-                        (maintenance) =>
-                          maintenance.status === 'pending' &&
-                          !maintenance.inProgress &&
-                          new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
-                      )) ||
-                    (!showOldExpireds &&
-                      card.maintenances.every(
-                        (maintenance) => maintenance.cantReportExpired === true,
-                      ))) && (
-                    <Style.NoDataContainer>
-                      <h4>Nenhuma manutenção encontrada.</h4>
-                    </Style.NoDataContainer>
-                  )}
+                {(card.maintenances.length === 0 ||
+                  (!showFutureMaintenances &&
+                    card.maintenances.every(
+                      (maintenance) =>
+                        maintenance.status === 'pending' &&
+                        !maintenance.inProgress &&
+                        new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
+                    )) ||
+                  (!showOldExpireds &&
+                    card.maintenances.every(
+                      (maintenance) => maintenance.cantReportExpired === true,
+                    ))) && (
+                  <Style.NoDataContainer>
+                    <h4>Nenhuma manutenção encontrada.</h4>
+                  </Style.NoDataContainer>
+                )}
               </Style.KanbanCard>
             ))}
         </Style.Kanban>
