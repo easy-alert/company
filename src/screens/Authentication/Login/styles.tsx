@@ -100,13 +100,30 @@ export const ButtonContainer = styled.div<{
   }
 `;
 
-export const PasswordDiv = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
+export const AccordionContainer = styled.div`
+  margin: 1em 0;
+`;
 
-  > :last-child {
-    top: 26px;
-    right: 16px;
-  }
+export const AccordionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+`;
+
+export const AccordionHeaderTitle = styled.div`
+  color: ${theme.color.white};
+
+  text-decoration: underline;
+`;
+
+export const AccordionContent = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+
+  padding: ${theme.size.sm};
+`;
+
+export const AccordionContentText = styled.p`
+  color: ${theme.color.white};
+  font-style: italic;
 `;
