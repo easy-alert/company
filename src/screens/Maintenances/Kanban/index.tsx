@@ -106,7 +106,7 @@ export const MaintenancesKanban = () => {
     users: [],
     priorityName: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0],
+    endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -184,7 +184,7 @@ export const MaintenancesKanban = () => {
       startDate: new Date(new Date().setDate(new Date().getDate() - 30))
         .toISOString()
         .split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
     });
   };
   // endregion
@@ -587,9 +587,9 @@ export const MaintenancesKanban = () => {
           </Style.Kanban>
         )}
 
-        <Style.Kanban>
-          {!loading &&
-            kanban?.map((card) => (
+        {!loading && (
+          <Style.Kanban>
+            {kanban?.map((card) => (
               <Style.KanbanCard key={card.status}>
                 <Style.KanbanHeader>
                   <h5>{card.status}</h5>
@@ -745,7 +745,8 @@ export const MaintenancesKanban = () => {
                 )}
               </Style.KanbanCard>
             ))}
-        </Style.Kanban>
+          </Style.Kanban>
+        )}
       </Style.Container>
     </>
   );
