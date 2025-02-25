@@ -130,7 +130,7 @@ export const PermissionsCardItem = styled.div`
   border-bottom: 1px solid ${theme.color.gray3};
 `;
 
-export const PermissionsCardItemTitle = styled.p`
+export const PermissionsCardItemLabel = styled.label`
   font-size: ${theme.size.sm};
   font-weight: 400;
 `;
@@ -158,12 +158,12 @@ export const BuildingsCard = styled.div`
 
 export const BuildingsPermissionsContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(440px, max-content));
-  justify-content: space-between;
-  gap: ${theme.size.xsm};
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: ${theme.size.sm};
 
   @media (max-width: 1100px) {
-    grid-template-columns: repeat(auto-fill, minmax(300px, max-content));
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (max-width: 680px) {
