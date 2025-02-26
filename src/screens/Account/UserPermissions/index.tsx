@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 // HOOKS
-import { useBuildings } from '@hooks/useBuildings';
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
 import { getAllPermissions } from '@services/apis/getAllPermissions';
@@ -26,9 +26,6 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IPermission } from '@customTypes/IPermission';
 
 // STYLES
-
-import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
-import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import * as Style from './styles';
 
 interface IModule {
