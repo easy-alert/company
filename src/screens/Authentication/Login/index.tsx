@@ -117,7 +117,7 @@ export const Login = () => {
                       <Style.AccordionHeaderTitle>Primeiro Acesso</Style.AccordionHeaderTitle>
 
                       <IconButton
-                        icon={showInfo ? icon.arrowUpWhite : icon.arrowDownWhite}
+                        icon={showInfo ? icon.arrowUpPrimary : icon.arrowDownPrimary}
                         size="16px"
                         onClick={() => setShowInfo(!showInfo)}
                       />
@@ -128,6 +128,10 @@ export const Login = () => {
                         Caso seja seu primeiro acesso, utilize seu email/telefone e a senha padrão
                         <strong>&#39;123456789&#39;</strong> para acessar o sistema.
                       </Style.AccordionContentText>
+
+                      <Style.AccordionContentObservation>
+                        OBS: lembre-se de trocar a senha na tela de configurações
+                      </Style.AccordionContentObservation>
                     </Style.AccordionContent>
                   </Style.AccordionContainer>
                 </Style.InputWrapper>
