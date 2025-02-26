@@ -1,9 +1,6 @@
 // LIBS
 import { useState } from 'react';
 
-// FUNCTIONS
-import { setToken } from './utils/functions';
-
 // TYPES
 import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
@@ -15,12 +12,13 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const signin = async ({ Account, token }: ILoginRequestResponse) => {
     setAccount(Account);
-    setToken({ token });
+    localStorage.setItem('authToken', token);
   };
 
   const signout = () => {
     query.delete('backofficeToken');
     query.delete('userId');
+
     setAccount(null);
     localStorage.removeItem('authToken');
   };
