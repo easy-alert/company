@@ -92,6 +92,8 @@ import signing from './signing.svg';
 import personPlaceholder from './personPlaceholder.svg';
 import arrowUpWhite from './arrowUpWhite.svg';
 import arrowDownWhite from './arrowDownWhite.svg';
+import arrowUpPrimary from './arrowUpPrimary.svg';
+import arrowDownPrimary from './arrowDownPrimary.svg';
 
 export const icon = {
   activityNotification,
@@ -188,4 +190,6 @@ export const icon = {
   personPlaceholder,
   arrowUpWhite,
   arrowDownWhite,
+  arrowUpPrimary,
+  arrowDownPrimary,
 };
