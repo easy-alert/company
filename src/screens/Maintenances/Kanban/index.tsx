@@ -264,7 +264,7 @@ export const MaintenancesKanban = () => {
           </Style.HeaderWrapper>
 
           <Style.IconsContainer>
-            <IconButton
+            {/* <IconButton
               disabled={loading}
               label="Checklist"
               icon={icon.plus}
@@ -272,7 +272,7 @@ export const MaintenancesKanban = () => {
               onClick={() => {
                 handleModals('modalChecklistCreate', true);
               }}
-            />
+            /> */}
 
             <IconButton
               disabled={loading}
