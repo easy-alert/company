@@ -26,7 +26,6 @@ import {
   applyMask,
   capitalizeFirstLetter,
   dateFormatter,
-  query,
   requestBuildingTypes,
 } from '@utils/functions';
 import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
@@ -46,7 +45,6 @@ import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
-import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
@@ -65,8 +63,6 @@ import {
   requestDeleteFile,
   requestDeleteFolder,
   requestFolderDetails,
-  requestResendEmailConfirmation,
-  requestResendPhoneConfirmation,
 } from './utils/functions';
 
 // STYLES
@@ -79,7 +75,6 @@ import type {
   File,
   IBanner,
   UserBuildingsPermissions,
-  INotificationConfiguration,
 } from './utils/types';
 
 // #endregion
@@ -87,9 +82,7 @@ import type {
 export const BuildingDetails = () => {
   // #region states
   const { account } = useAuthContext();
-  const checkAdmin = account?.User.Permissions?.some((perm) =>
-    perm.Permission.name.includes('admin'),
-  );
+
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
@@ -264,22 +257,8 @@ export const BuildingDetails = () => {
         setTotalMaintenancesCount,
         setRootFolder,
       });
-
-      if (query.get('flow') === '1') {
-        setModalCreateNotificationConfigurationOpen(true);
-        // não precisaria desse set, se fosse consumir com o useserachparams
-        query.set('flow', '2');
-        navigate(`/buildings/details/${buildingId}?flow=2`);
-      }
     });
   }, []);
-
-  useEffect(() => {
-    if (!modalCreateNotificationConfigurationOpen && query.get('flow') === '2') {
-      query.delete('flow');
-      navigate(`/buildings/details/${buildingId}/maintenances/manage`);
-    }
-  }, [modalCreateNotificationConfigurationOpen]);
 
   useEffect(() => {
     if (folderId) {
