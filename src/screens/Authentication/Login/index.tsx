@@ -3,67 +3,69 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 
-// COMPONENTS
+// CONTEXT
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// SERVICES
 import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
 
+// GLOBAL UTILS
+import { applyMask, catchHandler, unMask } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
 // STYLES
+import { IconButton } from '@components/Buttons/IconButton';
 import * as Style from './styles';
-import { theme } from '../../../styles/theme';
 
-// ICONS
-import { icon } from '../../../assets/icons';
-
-// FUNCTIONS
+// UTILS
 import { schema } from './functions';
 
-// CONTEXTS
-import { useAuthContext } from '../../../contexts/Auth/UseAuthContext';
-
 // TYPES
-import { IFormData } from './types';
-import { catchHandler } from '../../../utils/functions';
-import { IconButton } from '../../../components/Buttons/IconButton';
+import type { IFormData } from './types';
 
 export const Login = () => {
-  const navigate = useNavigate();
   const { signin } = useAuthContext();
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  // const [viewedTutorial, setViewedTutorial] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   if (
-  //     !localStorage.getItem('viewedTutorial') ||
-  //     localStorage.getItem('viewedTutorial') === 'false'
-  //   ) {
-  //     localStorage.setItem('viewedTutorial', 'false');
-  //     setViewedTutorial(false);
-  //   }
-  // }, []);
+  const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
+
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
     <Style.Background>
+      <img src={icon.logoTextWhite} alt="" />
+
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: '', login: '', password: '' }}
         validationSchema={schema}
         onSubmit={async (data: IFormData) => {
           setOnQuery(true);
           setShowPassword(false);
+
+          let formattedLogin = data.login;
+
+          if (data.login.match(/^\(\d{2}\) \d{5}-\d{4}$/)) {
+            formattedLogin = unMask(data.login);
+          }
+
           await Api.post('/auth/login', {
-            email: data.email,
+            login: formattedLogin,
             password: data.password,
           })
             .then((res) => {
               signin(res.data);
               navigate('/home');
-
-              // if (!viewedTutorial) {
-              //   navigate('/tutorials', { state: { from: 'login' } });
-              // } else {
-              //   navigate('/dashboard');
-              // }
             })
             .catch((err) => {
               setOnQuery(false);
@@ -71,46 +73,67 @@ export const Login = () => {
             });
         }}
       >
-        {({ errors, values, touched }) => (
+        {({ values, setFieldValue, errors, touched }) => (
           <>
-            <img src={icon.logoTextWhite} alt="" />
-
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
                   <h2>Login/Company</h2>
 
                   <FormikInput
+                    name="login"
+                    label="E-mail/Telefone"
+                    placeholder="Insira seu e-mail ou telefone"
+                    maxLength={values.login.match(/^\(\d{2}\) \d{5}-\d{4}$/) ? 11 : 100}
+                    value={values.login}
+                    onChange={(e) => {
+                      const { value } = e.target;
+
+                      if (/^\d/.test(value) || (value.length > 1 && /^\(\d{1}/.test(value))) {
+                        setFieldValue('login', applyMask({ value, mask: 'TEL' }).value);
+                      } else {
+                        setFieldValue('login', value);
+                      }
+                    }}
+                    error={touched.login && errors.login ? errors.login : null}
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    name="email"
-                    label="E-mail"
-                    placeholder="Insira seu e-mail"
-                    value={values.email}
-                    error={touched.email && errors.email ? errors.email : null}
                   />
 
-                  <Style.PasswordDiv>
-                    <FormikInput
-                      labelColor={theme.color.white}
-                      errorColor={theme.color.white}
-                      name="password"
-                      label="Senha"
-                      type={showPassword ? 'text' : 'password'}
-                      value={values.password}
-                      placeholder="Insira sua senha"
-                      error={touched.password && errors.password ? errors.password : null}
-                    />
+                  <FormikInput
+                    name="password"
+                    label="Senha"
+                    placeholder="Insira sua senha"
+                    type={showPassword ? 'text' : 'password'}
+                    passwordShowToggle
+                    value={values.password}
+                    error={touched.password && errors.password ? errors.password : null}
+                    labelColor={theme.color.white}
+                    errorColor={theme.color.white}
+                  />
 
-                    <IconButton
-                      icon={showPassword ? icon.eye : icon.eyeGray}
-                      size="20px"
-                      onClick={() => {
-                        setShowPassword((prevState) => !prevState);
-                      }}
-                      opacity="1"
-                    />
-                  </Style.PasswordDiv>
+                  <Style.AccordionContainer>
+                    <Style.AccordionHeader onClick={() => setShowInfo(!showInfo)}>
+                      <Style.AccordionHeaderTitle>Primeiro Acesso</Style.AccordionHeaderTitle>
+
+                      <IconButton
+                        icon={showInfo ? icon.arrowUpPrimary : icon.arrowDownPrimary}
+                        size="16px"
+                        onClick={() => setShowInfo(!showInfo)}
+                      />
+                    </Style.AccordionHeader>
+
+                    <Style.AccordionContent isOpen={showInfo}>
+                      <Style.AccordionContentText>
+                        Caso seja seu primeiro acesso, utilize seu email/telefone e a senha padrão
+                        <strong>&#39;123456789&#39;</strong> para acessar o sistema.
+                      </Style.AccordionContentText>
+
+                      <Style.AccordionContentObservation>
+                        OBS: lembre-se de trocar a senha na tela de configurações
+                      </Style.AccordionContentObservation>
+                    </Style.AccordionContent>
+                  </Style.AccordionContainer>
                 </Style.InputWrapper>
 
                 <Style.ButtonContainer loading={+onQuery}>
@@ -118,7 +141,7 @@ export const Login = () => {
                     Cadastrar
                   </Link>
 
-                  <Button label="Login" loading={onQuery} type="submit" />
+                  <Button label="Login" type="submit" loading={onQuery} />
                 </Style.ButtonContainer>
               </Form>
             </Style.LoginContainer>

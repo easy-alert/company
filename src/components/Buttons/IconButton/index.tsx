@@ -29,7 +29,7 @@ export const IconButton = ({
 }: IIconButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
-  if (!hasPermission) {
+  if (permToCheck && !hasPermission) {
     return null;
   }
 
