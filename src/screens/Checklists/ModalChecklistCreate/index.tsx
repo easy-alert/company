@@ -148,7 +148,7 @@ export const ModalChecklistCreate = ({
       return;
     }
 
-    if (!newChecklist.items?.length) {
+    if (showNewChecklist && !newChecklist.items?.length) {
       handleToastifyMessage({ type: 'error', message: 'Adicione ao menos um item ao checklist.' });
       setLoading(false);
       return;
