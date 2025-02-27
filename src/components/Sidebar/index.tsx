@@ -76,7 +76,7 @@ export const Sidebar = () => {
     {
       title: 'Manutenções',
       type: 'navigate',
-      icon: icon.maintenances,
+      icon: icon.maintenanceWhite,
       permission: 'access:maintenances',
       url: '/maintenances',
       redirectFunction: () => {
