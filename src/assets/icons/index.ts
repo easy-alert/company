@@ -94,6 +94,8 @@ import arrowUpWhite from './arrowUpWhite.svg';
 import arrowDownWhite from './arrowDownWhite.svg';
 import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
+import maintenance from './maintenance.svg';
+import maintenanceWhite from './maintenanceWhite.svg';
 
 export const icon = {
   activityNotification,
@@ -192,4 +194,6 @@ export const icon = {
   arrowDownWhite,
   arrowUpPrimary,
   arrowDownPrimary,
+  maintenance,
+  maintenanceWhite,
 };
