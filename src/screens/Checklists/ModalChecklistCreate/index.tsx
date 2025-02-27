@@ -123,10 +123,13 @@ export const ModalChecklistCreate = ({
     setSelectedInterval(e.target.value);
   };
 
+  // #region api calls
   const handleCreateChecklistTemplate = async (checklistTemplate: IChecklistTemplate) => {
     setLoading(true);
 
     try {
+      newChecklist.items = newChecklist.items?.filter((item) => item.name);
+
       await createChecklistTemplate({
         buildingId: selectedBuildingId,
         name: checklistTemplate.name!,
@@ -155,6 +158,8 @@ export const ModalChecklistCreate = ({
     }
 
     try {
+      newChecklist.items = newChecklist.items?.filter((item) => item.name);
+
       await createChecklist({
         buildingId: selectedBuildingId,
         checklistTemplateId: selectedChecklistTemplate.id,
@@ -170,6 +175,7 @@ export const ModalChecklistCreate = ({
       handleModals('modalChecklistCreate', false);
     }
   };
+  // #endregion
 
   useEffect(() => {
     const handleGetChecklistsTemplate = async () => {
