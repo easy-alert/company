@@ -10,10 +10,8 @@ Api.interceptors.request.use(
     const token = localStorage.getItem('authToken');
     if (token) {
       config.headers.authorization = `Bearer ${token}`;
-    } else {
-      console.warn('No auth token found in localStorage');
     }
-    console.log('Request config:', config);
+
     return config;
   },
   (error) => {
@@ -23,12 +21,6 @@ Api.interceptors.request.use(
 );
 
 Api.interceptors.response.use(
-  (response) => {
-    console.log('Response:', response);
-    return response;
-  },
-  (error) => {
-    console.error('Response error:', error);
-    return Promise.reject(error);
-  },
+  (response) => response,
+  (error) => Promise.reject(error),
 );
