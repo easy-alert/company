@@ -203,12 +203,21 @@ export const AccountDetails = () => {
       <Style.Footer>
         <IconButton
           hideLabelOnMedia
-          icon={icon.editWithBg}
+          icon={icon.edit}
           label="Editar"
           onClick={() => {
             setModalEditAccountOpen(true);
           }}
         />
+
+        {account?.User.isCompanyOwner && (
+          <IconButton
+            hideLabelOnMedia
+            icon={icon.eye}
+            label="Permissões"
+            onClick={() => navigate(`/account/${account.User.id}/permissions`)}
+          />
+        )}
       </Style.Footer>
 
       {account?.User.isCompanyOwner && (
