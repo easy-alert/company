@@ -482,7 +482,7 @@ export const BuildingDetails = () => {
                 onClick={() =>
                   window.open(
                     `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${
-                      building.nanoId
+                      building.id
                     }?userId=${account?.User.id}`,
                     '_blank',
                   )
