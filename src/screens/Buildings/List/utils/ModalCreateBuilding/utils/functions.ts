@@ -5,7 +5,7 @@ import * as yup from 'yup';
 
 // FUNCTIONS
 import { Api } from '@services/api';
-import { catchHandler, query, unMask } from '@utils/functions';
+import { catchHandler, unMask } from '@utils/functions';
 
 // TYPES
 import { IRequestCreateBuilding } from './types';
@@ -39,8 +39,7 @@ export const requestCreateBuilding = async ({
       setModal(false);
       toast.success(res.data.ServerMessage.message);
       // não precisaria desse set, se fosse consumir com o useserachparams
-      query.set('flow', '1');
-      navigate(`/buildings/details/${res.data.building.id}?flow=1`);
+      navigate(`/buildings/details/${res.data.building.id}`);
     })
     .catch((err) => {
       setOnQuery(false);

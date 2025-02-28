@@ -137,7 +137,7 @@ export const Checklists = () => {
     <>
       {modalChecklistCreate && (
         <ModalChecklistCreate
-          buildingId={buildingNanoId}
+          buildingId={buildingsForSelect.find((building) => building.nanoId === buildingNanoId)?.id}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
         />

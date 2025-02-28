@@ -90,6 +90,12 @@ import qrCodeUnchecked from './qrCodeUnchecked.svg';
 import qrCodeChecked from './qrCodeChecked.svg';
 import signing from './signing.svg';
 import personPlaceholder from './personPlaceholder.svg';
+import arrowUpWhite from './arrowUpWhite.svg';
+import arrowDownWhite from './arrowDownWhite.svg';
+import arrowUpPrimary from './arrowUpPrimary.svg';
+import arrowDownPrimary from './arrowDownPrimary.svg';
+import maintenance from './maintenance.svg';
+import maintenanceWhite from './maintenanceWhite.svg';
 
 export const icon = {
   activityNotification,
@@ -184,4 +190,10 @@ export const icon = {
   qrCodeChecked,
   signing,
   personPlaceholder,
+  arrowUpWhite,
+  arrowDownWhite,
+  arrowUpPrimary,
+  arrowDownPrimary,
+  maintenance,
+  maintenanceWhite,
 };
