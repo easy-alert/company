@@ -20,7 +20,7 @@ export async function getMaintenancesKanban({ userId, filter }: IGetMaintenances
     userId,
   };
 
-  const uri = '/buildings/maintenances';
+  const uri = '/maintenances/kanban';
 
   try {
     const response = await Api.get(uri, { params });
