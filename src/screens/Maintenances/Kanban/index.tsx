@@ -579,7 +579,7 @@ export const MaintenancesKanban = () => {
 
         {!loading && (
           <Style.Kanban>
-            {kanban.length > 0 &&
+            {kanban?.length > 0 &&
               kanban?.map((card) => (
                 <Style.KanbanCard key={card.status}>
                   <Style.KanbanHeader>
