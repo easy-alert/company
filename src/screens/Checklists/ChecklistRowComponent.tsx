@@ -15,6 +15,9 @@ import { theme } from '@styles/theme';
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
+// GLOBAL TYPES
+import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
+
 // COMPONENTS
 import { ModalChecklistDetails } from './ModalChecklistDetails';
 import { ModalDeleteChecklist } from './ModalDeleteChecklist';
@@ -29,6 +32,7 @@ import type { IChecklist } from '.';
 interface IChecklistRow {
   checklist: IChecklist;
   timeIntervals: ITimeInterval[];
+  buildingsForSelect: IBuildingForSelect[];
   handleModals: (modal: string, modalState: boolean) => void;
   handleSelectedChecklistId: (checklistId: string) => void;
   onThenRequest: () => Promise<void>;
@@ -37,6 +41,7 @@ interface IChecklistRow {
 export const ChecklistRowComponent = ({
   checklist: { id, name, status, syndic, buildingId },
   timeIntervals,
+  buildingsForSelect,
   handleModals,
   handleSelectedChecklistId,
   onThenRequest,
@@ -105,6 +110,7 @@ export const ChecklistRowComponent = ({
           checklistActivity={name}
           externalBuildingId={buildingId}
           handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}
+          buildingsForSelect={buildingsForSelect}
         />
       )}
 
