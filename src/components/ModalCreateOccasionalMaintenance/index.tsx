@@ -34,6 +34,7 @@ import type {
 } from './types';
 
 export const ModalCreateOccasionalMaintenance = ({
+  buildingsForSelect,
   externalBuildingId,
   checklistActivity,
   ticketsIds,
@@ -241,7 +242,7 @@ export const ModalCreateOccasionalMaintenance = ({
         <>
           {view === 2 && (
             <ModalSecondView
-              buildingsData={buildingsData}
+              buildingsForSelect={buildingsForSelect}
               categoriesData={categoriesData}
               priorityData={priorityData}
               checklistActivity={checklistActivity}

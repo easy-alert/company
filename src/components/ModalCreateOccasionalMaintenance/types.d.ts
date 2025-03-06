@@ -1,7 +1,7 @@
-import type { IBuilding } from '@customTypes/IBuilding';
 import type { ICategory } from '@customTypes/ICategory';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import type { IPriority } from '@customTypes/IPriority';
+import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
 
 export type IOccasionalMaintenanceType = 'pending' | 'finished' | '';
 
@@ -39,6 +39,8 @@ export interface IRequestCreateOccasionalMaintenance {
 }
 
 export interface IModalCreateOccasionalMaintenance {
+  buildingsForSelect: IBuildingForSelect[];
+
   handleModalCreateOccasionalMaintenance: (modalState: boolean) => void;
 
   handleMaintenanceHistoryIdChange?: (id: string) => void;
@@ -74,7 +76,7 @@ export interface IHandleSetOccasionalMaintenanceData {
 
 export interface IModalSecondView {
   errors: Record<string, string>;
-  buildingsData: IBuilding[];
+  buildingsForSelect: IBuildingForSelect[];
   categoriesData: ICategory[];
   priorityData: IPriority[];
   occasionalMaintenanceData: IOccasionalMaintenanceData;
