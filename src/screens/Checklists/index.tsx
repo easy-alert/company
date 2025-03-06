@@ -225,6 +225,7 @@ export const Checklists = () => {
                     key={checklist.id}
                     checklist={checklist}
                     timeIntervals={timeIntervals}
+                    buildingsForSelect={buildingsForSelect}
                     handleModals={handleModals}
                     handleSelectedChecklistId={handleSelectedChecklistId}
                     onThenRequest={async () => {

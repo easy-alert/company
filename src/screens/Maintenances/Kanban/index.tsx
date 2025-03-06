@@ -217,6 +217,7 @@ export const MaintenancesKanban = () => {
     <>
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
+          buildingsForSelect={buildingsForSelect}
           handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalMaintenanceDetails={setModalMaintenanceDetails}
