@@ -33,7 +33,7 @@ import type { ISupplier } from '@customTypes/ISupplier';
 import type { IMaintenanceReportData } from '@screens/Reports/Maintenances/types';
 
 // STYLES
-import IconEdit from '@assets/icons/edit';
+import IconEdit from '@assets/icons/IconEdit';
 import * as Style from './styles';
 import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
 

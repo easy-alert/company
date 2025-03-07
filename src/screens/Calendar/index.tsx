@@ -22,7 +22,7 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL ASSETS
-import IconPlus from '@assets/icons/plus';
+import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
 import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';

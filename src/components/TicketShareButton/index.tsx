@@ -7,7 +7,7 @@ import { Popover } from 'react-tiny-popover';
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
 
-import IconUploadLine from '@assets/icons/uploadLine';
+import IconUploadLine from '@assets/icons/IconUploadLine';
 import { ShareButton } from './components/ShareButton';
 
 // STYLES

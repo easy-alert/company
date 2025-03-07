@@ -16,7 +16,7 @@ import { icon } from '@assets/icons/index';
 import type { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import IconSearch from '@assets/icons/search';
+import IconSearch from '@assets/icons/IconSearch';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { ModalPrintPlan } from './utils/ModalPrintPlan';
 

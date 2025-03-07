@@ -24,7 +24,7 @@ import { query, requestListIntervals } from '@utils/functions';
 import { icon } from '@assets/icons/index';
 
 // COMPONENTS
-import IconSearch from '@assets/icons/search';
+import IconSearch from '@assets/icons/IconSearch';
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 

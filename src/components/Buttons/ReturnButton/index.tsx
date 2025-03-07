@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 
 // GLOBAL ASSETS
-import IconLeftArrow from '@assets/icons/leftArrow';
+import IconLeftArrow from '@assets/icons/IconLeftArrow';
 
 // COMPONENTS
 import { Image } from '../../Image';

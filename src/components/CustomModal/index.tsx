@@ -1,5 +1,5 @@
 // GLOBAL ASSETS
-import IconX from '@assets/icons/x';
+import IconX from '@assets/icons/IconX';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';

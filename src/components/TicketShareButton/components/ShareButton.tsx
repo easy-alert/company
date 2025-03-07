@@ -12,7 +12,7 @@ import { TextArea } from '@components/Inputs/TextArea';
 import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
-import IconX from '@assets/icons/x';
+import IconX from '@assets/icons/IconX';
 
 // STYLES
 import * as Style from '../styles';

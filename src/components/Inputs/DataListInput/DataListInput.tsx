@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, KeyboardEvent as KeyboardType } from 'react';
-import IconDowArrow from '@assets/icons/downArrow';
+import IconDowArrow from '@assets/icons/IconDownArrow';
 
 import * as s from './styles';
 

@@ -19,8 +19,8 @@ import { capitalizeFirstLetter, requestBuildingTypes } from '@utils/functions';
 import type { IBuildingTypes } from '@utils/types';
 
 // STYLES
-import IconRightArrow from '@assets/icons/rightArrow';
-import IconSearch from '@assets/icons/search';
+import IconRightArrow from '@assets/icons/IconRightArrow';
+import IconSearch from '@assets/icons/IconSearch';
 import * as Style from './styles';
 
 // MODALS

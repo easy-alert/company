@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // GLOBAL ASSETS
-import IconEdit from '@assets/icons/edit';
+import IconEdit from '@assets/icons/IconEdit';
 import { icon } from '@assets/icons';
 
 // GLOBAL COMPONENTS

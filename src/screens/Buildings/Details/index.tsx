@@ -32,7 +32,7 @@ import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses'
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
-import IconEdit from '@assets/icons/edit';
+import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';

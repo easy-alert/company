@@ -1,8 +1,8 @@
 // LIBS
 import { useState } from 'react';
 import { Popover, ArrowContainer } from 'react-tiny-popover';
-import IconUploadLine from '@assets/icons/uploadLine';
-import IconX from '@assets/icons/x';
+import IconUploadLine from '@assets/icons/IconUploadLine';
+import IconX from '@assets/icons/IconX';
 import { toast } from 'react-toastify';
 import * as Style from './styles';
 import { theme } from '../../styles/theme';

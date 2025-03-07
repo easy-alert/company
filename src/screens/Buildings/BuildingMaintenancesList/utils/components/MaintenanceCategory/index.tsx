@@ -15,7 +15,7 @@ import { icon } from '@assets/icons';
 import { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import IconQrcode from '@assets/icons/qrcode';
+import IconQrcode from '@assets/icons/IconQrcode';
 import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
 import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
 import { MaintenanceCard } from '../MaintenanceCard';

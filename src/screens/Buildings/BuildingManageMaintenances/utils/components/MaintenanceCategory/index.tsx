@@ -6,8 +6,8 @@
 import { useState } from 'react';
 
 // GLOBAL ASSETS
-import IconPlus from '@assets/icons/plus';
-import IconEdit from '@assets/icons/edit';
+import IconPlus from '@assets/icons/IconPlus';
+import IconEdit from '@assets/icons/IconEdit';
 import { icon } from '@assets/icons';
 
 // GLOBAL COMPONENTS

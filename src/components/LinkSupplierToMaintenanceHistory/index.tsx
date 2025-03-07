@@ -22,8 +22,8 @@ import { icon } from '@assets/icons';
 import type { ISupplier } from '@customTypes/ISupplier';
 
 // COMPONENTS
-import IconUnlink from '@assets/icons/unlink';
-import IconLink from '@assets/icons/link';
+import IconUnlink from '@assets/icons/IconUnlink';
+import IconLink from '@assets/icons/IconLink';
 import { ModalLinkSupplier } from './ModalLinkSupplier';
 import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
 

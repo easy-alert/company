@@ -10,7 +10,7 @@ import { Button } from '@components/Buttons/Button';
 import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
-import IconX from '@assets/icons/x';
+import IconX from '@assets/icons/IconX';
 
 // STYLES
 import * as Style from '../styles';

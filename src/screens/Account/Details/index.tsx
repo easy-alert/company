@@ -24,14 +24,14 @@ import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@ut
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconEdit from '@assets/icons/IconEdit';
+import IconEye from '@assets/icons/IconEye';
+import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
 
 // COMPONENTS
-import IconEdit from '@assets/icons/edit';
-import IconEye from '@assets/icons/eye';
-import IconPlusWithBackground from '@assets/icons/plusWithBackground';
 import { ModalEditAccount } from './ModalEditAccount';
 import { ModalUpdateUser } from './ModalUpdateUser';
 import { ModalCreateUser } from './ModalCreateUser';
@@ -231,7 +231,7 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={<IconPlusWithBackground strokeColor="primary" />}
+              icon={<IconPlus strokeColor="primary" backgroundColor="white" padding="4px" />}
               fill="primary"
               label="Cadastrar"
               onClick={() => {
@@ -349,7 +349,13 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={<IconEdit strokeColor="primary" />}
+                            icon={
+                              <IconEdit
+                                strokeColor="white"
+                                backgroundColor="primary"
+                                padding="4px"
+                              />
+                            }
                             fill="primary"
                             label="Editar"
                             onClick={() => {

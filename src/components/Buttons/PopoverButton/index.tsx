@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useHasPermission } from '@hooks/useHasPermission';
 
 // COMPONENTS
-import IconX from '@assets/icons/x';
+import IconX from '@assets/icons/IconX';
 import { ArrowContainer, Popover } from 'react-tiny-popover';
 import { IconButton } from '../IconButton';
 import * as Style from './styles';

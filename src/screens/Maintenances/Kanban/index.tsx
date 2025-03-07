@@ -31,7 +31,7 @@ import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
-import IconPlus from '@assets/icons/plus';
+import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
 import { useUsersForSelect } from '@hooks/useUsersForSelect';

@@ -1,5 +1,5 @@
 // GLOBAL ASSETS
-import IconX from '@assets/icons/x';
+import IconX from '@assets/icons/IconX';
 import { icon } from '@assets/icons';
 
 // GLOBAL COMPONENTS
