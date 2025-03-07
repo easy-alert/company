@@ -13,6 +13,7 @@ import { icon } from '@assets/icons';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // STYLES
+import IconPdfLogo from '@assets/icons/pdfLogo';
 import * as Style from './styles';
 
 interface IPdfList {
@@ -70,7 +71,8 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
                       <IconButton
                         disabled={status !== 'finished'}
                         label="Visualizar"
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo />}
+                        fill="primary"
                         onClick={() => {
                           window.open(url, '_blank');
                         }}

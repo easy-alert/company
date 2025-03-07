@@ -395,6 +395,7 @@ export const ModalSendMaintenanceReport = ({
 
                   <Select
                     label="Prioridade"
+                    arrowColor="primary"
                     placeholder="Selecione uma prioridade"
                     selectPlaceholderValue="Selecione uma prioridade"
                     value={maintenance.priorityName}
@@ -427,7 +428,7 @@ export const ModalSendMaintenanceReport = ({
                     {hasUpdatePermission && (
                       <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                         <input {...getInputProps()} />
-                        <Image img={icon.addFile} width="40px" height="32px" radius="0" />
+                        <Image img={icon.addFile} width="40px" height="32px" radius="0" hasCircle />
                       </Style.DragAndDropZoneFile>
                     )}
 

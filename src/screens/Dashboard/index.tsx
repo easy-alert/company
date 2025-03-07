@@ -931,6 +931,7 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('buildings', e.target.value);
@@ -962,6 +963,7 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
                     label="Categoria"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('categories', e.target.value);
@@ -993,6 +995,7 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
                     label="Responsável"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('responsible', e.target.value);
@@ -1025,6 +1028,7 @@ export const Dashboard = () => {
                     <Button
                       label="Limpar filtros"
                       type="button"
+                      textColor="primary"
                       disable={onQuery}
                       borderless
                       onClick={() => {
@@ -1040,12 +1044,18 @@ export const Dashboard = () => {
 
                   <Style.Tags>
                     {dataFilter.buildings.length === 0 && (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todas as edificações"
+                        backgroundColor="primary"
+                      />
                     )}
 
                     {dataFilter.buildings.map((e, i) => (
                       <ListTag
                         padding="4px 12px"
+                        backgroundColor="primary"
                         fontWeight={500}
                         label={e}
                         key={e}
@@ -1056,11 +1066,17 @@ export const Dashboard = () => {
                     ))}
 
                     {dataFilter.categories.length === 0 && (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as categorias" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todas as categorias"
+                        backgroundColor="primary"
+                      />
                     )}
 
                     {dataFilter.categories.map((e, i) => (
                       <ListTag
+                        backgroundColor="primary"
                         padding="4px 12px"
                         fontWeight={500}
                         label={e}
@@ -1072,12 +1088,18 @@ export const Dashboard = () => {
                     ))}
 
                     {dataFilter.responsible.length === 0 && (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os responsáveis"
+                        backgroundColor="primary"
+                      />
                     )}
 
                     {dataFilter.responsible.map((e, i) => (
                       <ListTag
                         padding="4px 12px"
+                        backgroundColor="primary"
                         fontWeight={500}
                         label={e}
                         key={e}

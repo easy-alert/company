@@ -22,6 +22,8 @@ import { icon } from '@assets/icons';
 import type { ISupplier } from '@customTypes/ISupplier';
 
 // COMPONENTS
+import IconUnlink from '@assets/icons/unlink';
+import IconLink from '@assets/icons/link';
 import { ModalLinkSupplier } from './ModalLinkSupplier';
 import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
 
@@ -132,8 +134,10 @@ export const LinkSupplierToMaintenanceHistory = ({
             <h3>Fornecedor</h3>
 
             <IconButton
+              hasCircle
               hideLabelOnMedia
-              icon={icon.link}
+              icon={<IconLink strokeColor="primary" />}
+              fill="primary"
               label="Vincular"
               permToCheck="maintenances:update"
               onClick={() => {
@@ -150,9 +154,11 @@ export const LinkSupplierToMaintenanceHistory = ({
               <Style.Header>
                 <h3>Fornecedor</h3>
                 <IconButton
+                  hasCircle
                   disabled={onQuery}
                   hideLabelOnMedia
-                  icon={icon.unlink}
+                  icon={<IconUnlink strokeColor="primary" />}
+                  fill="primary"
                   label="Desvincular"
                   onClick={() => {
                     unlinkToMaintenanceHistory(id);

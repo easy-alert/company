@@ -22,7 +22,7 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
+import IconPlus from '@assets/icons/plus';
 
 // COMPONENTS
 import { ModalSendMaintenanceReport } from './utils/ModalSendMaintenanceReport';
@@ -360,7 +360,7 @@ export const MaintenancesCalendar = () => {
       )}
 
       <Style.Container>
-        <Style.Header>
+        <Style.Header arrowColor="primary">
           <h2>Calendário</h2>
 
           <select
@@ -382,7 +382,8 @@ export const MaintenancesCalendar = () => {
           </select>
 
           <IconButton
-            icon={icon.plus}
+            fill="primary"
+            icon={<IconPlus strokeColor="primary" />}
             label="Manutenção avulsa"
             permToCheck="maintenances:createOccasional"
             onClick={() => setModalCreateOccasionalMaintenance(true)}

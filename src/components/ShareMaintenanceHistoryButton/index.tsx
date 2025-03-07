@@ -1,11 +1,12 @@
 // LIBS
 import { useState } from 'react';
 import { Popover, ArrowContainer } from 'react-tiny-popover';
+import IconUploadLine from '@assets/icons/uploadLine';
+import IconX from '@assets/icons/x';
 import { toast } from 'react-toastify';
 import * as Style from './styles';
 import { theme } from '../../styles/theme';
 import { IconButton } from '../Buttons/IconButton';
-import { icon } from '../../assets/icons';
 import { Button } from '../Buttons/Button';
 import { TextArea } from '../Inputs/TextArea';
 
@@ -96,7 +97,8 @@ export const ShareMaintenanceHistoryButton = ({
                         onClick={() => {
                           setIsPopoverOpen(false);
                         }}
-                        icon={icon.x}
+                        icon={<IconX strokeColor="primary" />}
+                        fill="primary"
                       />
                     </h3>
                     <Style.Hr />
@@ -126,7 +128,11 @@ export const ShareMaintenanceHistoryButton = ({
       }}
     >
       <Style.ButtonContainer>
-        <IconButton icon={icon.uploadLine} onClick={togglePopOver} />
+        <IconButton
+          icon={<IconUploadLine strokeColor="primary" />}
+          fill="primary"
+          onClick={togglePopOver}
+        />
       </Style.ButtonContainer>
     </Popover>
   );

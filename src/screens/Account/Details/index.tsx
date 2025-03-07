@@ -29,6 +29,9 @@ import { icon } from '@assets/icons';
 import { theme } from '@styles/theme';
 
 // COMPONENTS
+import IconEdit from '@assets/icons/edit';
+import IconEye from '@assets/icons/eye';
+import IconPlusWithBackground from '@assets/icons/plusWithBackground';
 import { ModalEditAccount } from './ModalEditAccount';
 import { ModalUpdateUser } from './ModalUpdateUser';
 import { ModalCreateUser } from './ModalCreateUser';
@@ -202,8 +205,9 @@ export const AccountDetails = () => {
 
       <Style.Footer>
         <IconButton
+          fill="primary"
           hideLabelOnMedia
-          icon={icon.editWithBg}
+          icon={<IconEdit strokeColor="primary" />}
           label="Editar"
           onClick={() => {
             setModalEditAccountOpen(true);
@@ -218,7 +222,8 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={icon.plusWithBg}
+              icon={<IconPlusWithBackground strokeColor="primary" />}
+              fill="primary"
               label="Cadastrar"
               onClick={() => {
                 setModalCreateUserOpen(true);
@@ -335,7 +340,8 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={icon.edit}
+                            icon={<IconEdit strokeColor="primary" />}
+                            fill="primary"
                             label="Editar"
                             onClick={() => {
                               setSelectedUser({
@@ -355,7 +361,8 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={icon.eye}
+                            icon={<IconEye strokeColor="primary" />}
+                            fill="primary"
                             label="Permissões"
                             onClick={() => navigate(`/account/${User.id}/permissions`)}
                           />

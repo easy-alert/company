@@ -158,6 +158,7 @@ export const Checklists = () => {
             <h2>Checklists</h2>
 
             <Select
+              arrowColor="primary"
               id="customFilterForChecklist"
               disabled={buildingsForSelect.length === 0}
               selectPlaceholderValue=" "
@@ -177,6 +178,7 @@ export const Checklists = () => {
           </Style.HeaderLeftSide>
 
           <IconButton
+            hasCircle
             disabled={loading}
             label="Checklist"
             icon={icon.plusWithBg}

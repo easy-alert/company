@@ -97,6 +97,7 @@ export const ModalEditBuilding = ({
               />
               <FormikSelect
                 label="Tipo *"
+                arrowColor="primary"
                 name="buildingTypeId"
                 value={values.buildingTypeId}
                 selectPlaceholderValue={values.buildingTypeId}
@@ -184,6 +185,7 @@ export const ModalEditBuilding = ({
               <FormikSelect
                 selectPlaceholderValue={values.nextMaintenanceCreationBasis}
                 label="Próxima manutenção baseada em *"
+                arrowColor="primary"
                 name="nextMaintenanceCreationBasis"
                 error={
                   touched.nextMaintenanceCreationBasis && errors.nextMaintenanceCreationBasis
@@ -224,6 +226,7 @@ export const ModalEditBuilding = ({
                   <PopoverButton
                     actionButtonBgColor={theme.color.actionDanger}
                     borderless
+                    textColor="primary"
                     type="Button"
                     label="Excluir"
                     message={{

@@ -26,9 +26,6 @@ import { PdfList } from '@components/PdfList';
 // GLOBAL UTILS
 import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL THEME
-import { theme } from '@styles/theme';
-
 // GLOBAL ICONS
 import { icon } from '@assets/icons';
 
@@ -309,6 +306,7 @@ export const MaintenanceReports = () => {
                     name="buildingId"
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedBuilding = buildingsForSelect.find(
@@ -349,6 +347,7 @@ export const MaintenanceReports = () => {
                   <Select
                     selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
                     label="Categoria"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedCategory = filtersOptions?.categories.find(
@@ -387,6 +386,7 @@ export const MaintenanceReports = () => {
                   <Select
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedStatus = filtersOptions?.status.find(
@@ -427,6 +427,7 @@ export const MaintenanceReports = () => {
                   <FormikSelect
                     label="Filtrar por"
                     name="filterBy"
+                    arrowColor="primary"
                     selectPlaceholderValue={values.filterBy}
                     error={touched.filterBy && errors.filterBy ? errors.filterBy : null}
                   >
@@ -530,7 +531,7 @@ export const MaintenanceReports = () => {
                         <IconButton
                           icon={icon.csvLogo}
                           label="Exportar"
-                          color={theme.color.primary}
+                          hasCircle
                           size="20px"
                           onClick={() => {
                             //
@@ -541,7 +542,7 @@ export const MaintenanceReports = () => {
                       <IconButton
                         icon={icon.pdfLogo}
                         label="Exportar"
-                        color={theme.color.primary}
+                        hasCircle
                         size="20px"
                         onClick={() => {
                           requestPdf();

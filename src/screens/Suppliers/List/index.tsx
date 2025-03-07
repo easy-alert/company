@@ -106,6 +106,7 @@ export const SuppliersList = () => {
             <h2>Fornecedores</h2>
 
             <IconButton
+              hasCircle
               labelPos="right"
               label={listView === 'table' ? 'Visualizar em blocos' : 'Visualizar em lista'}
               icon={listView === 'table' ? icon.blocks : icon.listWithBg}
@@ -142,6 +143,7 @@ export const SuppliersList = () => {
           </Style.SearchField> */}
           </Style.LeftSide>
           <IconButton
+            hasCircle
             hideLabelOnMedia
             fontWeight="500"
             label="Cadastrar"
@@ -173,6 +175,7 @@ export const SuppliersList = () => {
 
             <Select
               label="Categorias"
+              arrowColor="primary"
               value={filter.serviceTypeLabel}
               selectPlaceholderValue={filter.serviceTypeLabel}
               onChange={(evt) => {
@@ -192,6 +195,7 @@ export const SuppliersList = () => {
               value={filter.state}
               selectPlaceholderValue={filter.state}
               label="Estado"
+              arrowColor="primary"
               onChange={(evt) => {
                 setFilter((prev) => ({ ...prev, state: evt.target.value, city: '' }));
 
@@ -208,6 +212,7 @@ export const SuppliersList = () => {
 
             <Select
               label="Cidade"
+              arrowColor="primary"
               value={filter.city}
               selectPlaceholderValue={filter.city}
               onChange={(evt) => {

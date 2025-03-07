@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// COMPONENTS
-import { Image } from '../../Image';
+// GLOBAL ASSETS
+import IconEdit from '@assets/icons/edit';
+import { icon } from '@assets/icons';
 
-// TYPES
-import { IUploader } from './utils/types';
+// GLOBAL COMPONENTS
+import { Image } from '../../Image';
 
 // COMPONENTS
 import * as Style from './styles';
-import { icon } from '../../../assets/icons';
+
+// TYPES
+import { IUploader } from './utils/types';
 
 export const FormikImageInput = ({
   label,
@@ -35,7 +38,9 @@ export const FormikImageInput = ({
         <Style.ImageWrapper>
           <img
             src={
-              defaultImage ? customEditLogo ?? icon.editWithBg : customAddLogo ?? icon.plusWithBg
+              defaultImage
+                ? customEditLogo ?? <IconEdit strokeColor="primary" fillColor="primary" />
+                : customAddLogo ?? icon.plusWithBg
             }
             alt=""
           />

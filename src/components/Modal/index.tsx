@@ -1,13 +1,21 @@
-// UI
+// GLOBAL ASSETS
+import IconX from '@assets/icons/x';
+import { icon } from '@assets/icons';
+
+// GLOBAL COMPONENTS
+import { IconButton } from '../Buttons/IconButton';
+
+// GLOBAL STYLES
+import { theme } from '../../styles/theme';
+
+// GLOBAL UTILS / FUNCTIONS
+import { query } from '../../utils/functions';
+
+// COMPONENTS
 import * as Style from './styles';
-// ICONS
-import { icon } from '../../assets/icons';
 
 // TYPES
 import { IModal } from './utils/types';
-import { theme } from '../../styles/theme';
-import { IconButton } from '../Buttons/IconButton';
-import { query } from '../../utils/functions';
 
 export const Modal = ({
   id = 'background',
@@ -38,7 +46,12 @@ export const Modal = ({
             />
           )}
 
-          <IconButton icon={icon.x} color={theme.color.primary} onClick={() => setModal(false)} />
+          <IconButton
+            fill="primary"
+            icon={<IconX strokeColor="primary" />}
+            color={theme.color.primary}
+            onClick={() => setModal(false)}
+          />
         </Style.IconsContainer>
       </Style.Header>
       {children}

@@ -24,9 +24,6 @@ import { Select } from '@components/Inputs/Select';
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
@@ -195,6 +192,7 @@ export const ChecklistReports = () => {
                   <Select
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
@@ -227,6 +225,7 @@ export const ChecklistReports = () => {
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
                     value=""
+                    arrowColor="primary"
                     onChange={(e) => {
                       setStatusForFilter((prevState) => [...prevState, e.target.value]);
 
@@ -272,7 +271,7 @@ export const ChecklistReports = () => {
                   <s.TagWrapper>
                     {buildingsForFilter.length === 0 && (
                       <s.Tag>
-                        <p className="p3">Todas as edificações</p>
+                        <p className="p3">Todas as edificações </p>
                       </s.Tag>
                     )}
 
@@ -328,9 +327,9 @@ export const ChecklistReports = () => {
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
+                          hasCircle
                           icon={icon.csvLogo}
                           label="Exportar"
-                          color={theme.color.primary}
                           size="20px"
                           onClick={() => {
                             //
@@ -341,7 +340,7 @@ export const ChecklistReports = () => {
                       <IconButton
                         icon={icon.pdfLogo}
                         label="Exportar"
-                        color={theme.color.primary}
+                        hasCircle
                         size="20px"
                         onClick={() => {
                           setModalPrintReportOpen(true);

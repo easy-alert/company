@@ -33,6 +33,7 @@ import type { ISupplier } from '@customTypes/ISupplier';
 import type { IMaintenanceReportData } from '@screens/Reports/Maintenances/types';
 
 // STYLES
+import IconEdit from '@assets/icons/edit';
 import * as Style from './styles';
 import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
 
@@ -272,7 +273,8 @@ export const SupplierDetails = () => {
             <IconButton
               disabled={onQuery}
               hideLabelOnMedia
-              icon={icon.editWithBg}
+              icon={<IconEdit strokeColor="primary" />}
+              fill="primary"
               label="Editar"
               onClick={() => {
                 setModalEditSupplierOpen(true);

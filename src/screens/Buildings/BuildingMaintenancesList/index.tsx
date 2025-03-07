@@ -16,6 +16,7 @@ import { icon } from '@assets/icons/index';
 import type { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
+import IconSearch from '@assets/icons/search';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { ModalPrintPlan } from './utils/ModalPrintPlan';
 
@@ -137,6 +138,7 @@ export const BuildingMaintenancesList = () => {
               onClick={() => addedMaintenances.length !== 0}
             >
               <IconButton
+                hasCircle
                 disabled={addedMaintenances.length < 1}
                 icon={icon.csvLogo2}
                 label="Exportar"
@@ -148,6 +150,7 @@ export const BuildingMaintenancesList = () => {
             </CSVLink>
 
             <IconButton
+              hasCircle
               disabled={addedMaintenances.length < 1}
               icon={icon.pdfLogo2}
               label="Exportar"
@@ -158,7 +161,8 @@ export const BuildingMaintenancesList = () => {
             />
 
             <IconButton
-              icon={icon.editWithBg}
+              hasCircle
+              icon={icon.edit}
               label="Editar"
               hideLabelOnMedia
               onClick={() => {
@@ -170,7 +174,8 @@ export const BuildingMaintenancesList = () => {
 
         <Style.SearchField>
           <IconButton
-            icon={icon.search}
+            icon={<IconSearch strokeColor="primary" />}
+            fill="primary"
             size="16px"
             onClick={() => {
               filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter });

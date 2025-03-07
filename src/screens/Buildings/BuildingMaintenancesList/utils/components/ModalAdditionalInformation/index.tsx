@@ -66,7 +66,11 @@ export const ModalAdditionalInformation = ({
             Use o campo abaixo para selecionar um responsável para esta manutenção:
           </Style.ModalText>
 
-          <Select value={userResponsible.id} onChange={handleChangeUserResponsible}>
+          <Select
+            value={userResponsible.id}
+            onChange={handleChangeUserResponsible}
+            arrowColor="primary"
+          >
             <option value="">Selecione um responsável</option>
 
             {usersResponsible.map(({ User }) => (

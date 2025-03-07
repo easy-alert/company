@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // COMPONENTS
-import { Button } from '../../../../../../../../components/Buttons/Button';
-import { FormikTextArea } from '../../../../../../../../components/Form/FormikTextArea';
-import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../../../components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
 
 // STYLES
 import * as Style from './styles';
@@ -71,6 +71,7 @@ export const ModalCreateMaintenance = ({
             <Form>
               <FormikSelect
                 label="Categoria *"
+                arrowColor="primary"
                 name="customCategoryId"
                 selectPlaceholderValue={values.customCategoryId}
                 value={values.customCategoryId}
@@ -116,6 +117,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.frequencyTimeInterval}
                   name="frequencyTimeInterval"
+                  arrowColor="primary"
                   label="Unidade *"
                   error={
                     touched.frequencyTimeInterval && errors.frequencyTimeInterval
@@ -176,6 +178,7 @@ export const ModalCreateMaintenance = ({
                 <FormikSelect
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
+                  arrowColor="primary"
                   label="Unidade *"
                   error={
                     touched.periodTimeInterval && errors.periodTimeInterval

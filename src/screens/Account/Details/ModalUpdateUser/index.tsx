@@ -207,6 +207,7 @@ export const ModalUpdateUser = ({
             <FormikSelect
               name="isBlocked"
               label="Status *"
+              arrowColor="primary"
               placeholder="Selecione o status"
               selectPlaceholderValue="Selecione o status"
               error={touched.isBlocked && errors.isBlocked ? errors.isBlocked : null}

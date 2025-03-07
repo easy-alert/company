@@ -29,11 +29,9 @@ import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasio
 // GLOBAL UTILS
 import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
 
-// GLOBAL ASSETS
-import { icon } from '@assets/icons';
-
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
+import IconPlus from '@assets/icons/plus';
 
 // COMPONENTS
 import { useUsersForSelect } from '@hooks/useUsersForSelect';
@@ -267,7 +265,8 @@ export const MaintenancesKanban = () => {
             <IconButton
               disabled={loading}
               label="Checklist"
-              icon={icon.plus}
+              icon={<IconPlus strokeColor="primary" />}
+              fill="primary"
               permToCheck="checklist:create"
               onClick={() => {
                 handleModals('modalChecklistCreate', true);
@@ -276,7 +275,8 @@ export const MaintenancesKanban = () => {
 
             <IconButton
               disabled={loading}
-              icon={icon.plus}
+              icon={<IconPlus strokeColor="primary" />}
+              fill="primary"
               permToCheck="maintenances:createOccasional"
               label="Manutenção avulsa"
               onClick={() => handleModals('modalCreateOccasionalMaintenance', true)}
@@ -473,6 +473,7 @@ export const MaintenancesKanban = () => {
                       type="button"
                       label="Limpar filtros"
                       borderless
+                      textColor="primary"
                       disable={loading}
                       onClick={() => handleClearFilter()}
                     />

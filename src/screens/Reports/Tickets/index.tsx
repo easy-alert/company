@@ -27,7 +27,6 @@ import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
 
 // GLOBAL UTILS
-import { catchHandler } from '@utils/functions';
 import { handleToastify } from '@utils/toastifyResponses';
 import { formatDateString } from '@utils/dateFunctions';
 
@@ -322,6 +321,7 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('buildings', e.target.value);
@@ -356,6 +356,7 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.places.length > 0 ? ' ' : ''}
                     label="Local"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('places', e.target.value);
@@ -390,6 +391,7 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.serviceTypes.length > 0 ? ' ' : ''}
                     label="Tipo de serviço"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('serviceTypes', e.target.value);
@@ -426,6 +428,7 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.status.length > 0 ? ' ' : ''}
                     label="Status"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('status', e.target.value);
@@ -493,9 +496,9 @@ export const TicketReports = () => {
                       onClick={() => tickets.length !== 0}
                     >
                       <IconButton
+                        hasCircle
                         icon={icon.csvLogo}
                         label="Exportar"
-                        color={theme.color.primary}
                         size="20px"
                         onClick={() => {
                           //
@@ -507,7 +510,7 @@ export const TicketReports = () => {
                     <IconButton
                       icon={icon.pdfLogo}
                       label="Exportar"
-                      color={theme.color.primary}
+                      hasCircle
                       size="20px"
                       onClick={() => handleGenerateTicketReportPDF()}
                       disabled={loading || tickets.length === 0}
@@ -517,7 +520,7 @@ export const TicketReports = () => {
                       type="button"
                       borderless
                       label="Limpar filtros"
-                      textColor={theme.color.primary}
+                      textColor="primary"
                       onClick={() => {
                         setFieldValue('startDate', '');
                         setFieldValue('endDate', '');
@@ -530,10 +533,16 @@ export const TicketReports = () => {
 
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todas as edificações"
+                        backgroundColor="primary"
+                      />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
+                          backgroundColor="primary"
                           key={building}
                           label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
                           padding="4px 12px"
@@ -549,10 +558,16 @@ export const TicketReports = () => {
                     )}
 
                     {filter.status?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os status" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os status"
+                        backgroundColor="primary"
+                      />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
+                          backgroundColor="primary"
                           key={status}
                           label={ticketStatus.find((ts) => ts.name === status)?.label || ''}
                           padding="4px 12px"
@@ -568,10 +583,16 @@ export const TicketReports = () => {
                     )}
 
                     {filter.places?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os locais" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os locais"
+                        backgroundColor="primary"
+                      />
                     ) : (
                       filter.places?.map((place) => (
                         <ListTag
+                          backgroundColor="primary"
                           key={place}
                           label={ticketPlaces.find((p) => p.id === place)?.label || ''}
                           padding="4px 12px"
@@ -590,11 +611,13 @@ export const TicketReports = () => {
                       <ListTag
                         padding="4px 12px"
                         fontWeight={500}
+                        backgroundColor="primary"
                         label="Todos os tipos de serviço"
                       />
                     ) : (
                       filter.serviceTypes?.map((serviceType) => (
                         <ListTag
+                          backgroundColor="primary"
                           key={serviceType}
                           label={serviceTypes.find((st) => st.id === serviceType)?.label || ''}
                           padding="4px 12px"
