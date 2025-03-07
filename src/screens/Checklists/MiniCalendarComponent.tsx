@@ -33,11 +33,24 @@ export const MiniCalendarComponent = ({ date, setDate, calendarDates }: IMiniCal
       value={value}
       calendarType="gregory"
       locale="pt-BR"
-      onClickDay={(dateChange) => {
-        setDate(dateChange);
-      }}
+      onClickDay={(dateChange) => setDate(dateChange)}
       // eslint-disable-next-line no-shadow
       tileClassName={({ date, view }) => {
+        if (
+          !calendarDates.completed.length &&
+          !calendarDates.inProgress.length &&
+          !calendarDates.pending.length
+        ) {
+          return '';
+        }
+
+        if (
+          view === 'month' &&
+          calendarDates.inProgress.find((dDate) => isSameDay(new Date(dDate.date), date))
+        ) {
+          return 'someInProgress';
+        }
+
         if (
           view === 'month' &&
           calendarDates.pending.find((dDate) => isSameDay(new Date(dDate.date), date))
@@ -45,13 +58,7 @@ export const MiniCalendarComponent = ({ date, setDate, calendarDates }: IMiniCal
           return 'somePending';
         }
 
-        if (
-          view === 'month' &&
-          calendarDates.completed.find((dDate) => isSameDay(new Date(dDate.date), date))
-        ) {
-          return 'allCompleted';
-        }
-        return null;
+        return 'allCompleted';
       }}
     />
   );
