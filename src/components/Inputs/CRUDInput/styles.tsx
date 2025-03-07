@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 import { icon } from '../../../assets/icons';
 
 export const InputContainer = styled.div<{
@@ -10,13 +10,13 @@ export const InputContainer = styled.div<{
   display: flex;
   flex-direction: column;
   > h6 {
-    margin-bottom: ${theme.size.xxsm};
+    margin-bottom: ${({ theme }) => theme.size.xxsm};
   }
   width: 100%;
 
   position: relative;
 
-  ${({ typeDatePlaceholderValue, type }) =>
+  ${({ typeDatePlaceholderValue, type, theme }) =>
     type === 'date' &&
     typeDatePlaceholderValue === '' &&
     `
@@ -26,7 +26,7 @@ export const InputContainer = styled.div<{
       }
       `}
 
-  ${({ selectPlaceholderValue }) =>
+  ${({ selectPlaceholderValue, theme }) =>
     selectPlaceholderValue === 'Selecione' || !selectPlaceholderValue
       ? `
       > select {
@@ -42,7 +42,7 @@ export const InputContainer = styled.div<{
 
 export const ErrorMessage = styled.div`
   display: flex;
-  color: ${theme.color.danger};
+  color: ${({ theme }) => theme.color.danger};
 
   > p {
     animation: scale-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

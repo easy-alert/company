@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '@styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const Background = styled.div`
   display: flex;
@@ -27,14 +27,14 @@ export const MobileBackground = styled.div<{ animate: boolean }>`
 export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.lg};
+  gap: ${defaultTheme.size.lg};
   align-items: center;
-  padding: ${theme.size.sm} ${theme.size.xsm};
+  padding: ${defaultTheme.size.sm} ${defaultTheme.size.xsm};
   min-width: 80px;
   max-width: 80px;
   height: 100vh;
   border-radius: 0 12px 12px 0;
-  background-color: ${theme.color.primary};
+  background-color: ${({ theme }) => theme.color.primary};
   text-align: center;
   overflow-y: auto;
   overflow-x: hidden;
@@ -53,11 +53,11 @@ export const Icons = styled.div`
 export const SidebarBodyMobile = styled.div`
   display: flex;
   align-items: center;
-  padding: ${theme.size.xsm} 28px;
+  padding: ${defaultTheme.size.xsm} 28px;
   width: 100%;
   min-height: 80px;
   border-radius: 0rem 0rem 12px 12px;
-  background-color: ${theme.color.primary};
+  background-color: ${defaultTheme.color.primary};
   overflow: hidden;
   @media (min-width: 900px) {
     display: none;
@@ -94,8 +94,8 @@ export const Spacer = styled.div`
 export const Hr = styled.div`
   height: 2px;
   width: 100%;
-  background-color: ${theme.color.white};
-  margin-top: -${theme.size.sm};
+  background-color: ${defaultTheme.color.white};
+  margin-top: -${defaultTheme.size.sm};
 `;
 
 export const AppContent = styled.div`
@@ -104,15 +104,15 @@ export const AppContent = styled.div`
   margin: 0 auto;
   overflow: auto;
   max-width: 1920px;
-  padding: 0 ${theme.size.md} ${theme.size.sm} ${theme.size.md};
+  padding: 0 ${defaultTheme.size.md} ${defaultTheme.size.sm} ${defaultTheme.size.md};
 
   @media (max-width: 900px) {
-    padding: 0 ${theme.size.sm} ${theme.size.sm} ${theme.size.sm};
+    padding: 0 ${defaultTheme.size.sm} ${defaultTheme.size.sm} ${defaultTheme.size.sm};
   }
 `;
 
 export const ReportIcons = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${defaultTheme.size.xsm};
 `;
