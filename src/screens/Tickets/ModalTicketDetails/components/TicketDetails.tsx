@@ -264,7 +264,6 @@ function TicketDetails({
                 label="Voltar para Aberto"
                 permToCheck="tickets:update"
                 bgColor="white"
-                textColor={theme.color.actionBlue}
                 onClick={() =>
                   handleUpdateOneTicket({
                     id: ticket.id,

@@ -329,7 +329,6 @@ export const ModalChecklistDetails = ({
                       : 'Iniciar checklist'
                   }
                   bgColor="transparent"
-                  textColor="actionBlue"
                   onClick={() =>
                     handleUpdateChecklist(
                       checklistDetails?.status === 'inProgress' ? 'pending' : 'inProgress',
@@ -339,7 +338,6 @@ export const ModalChecklistDetails = ({
                 <Button
                   label="Salvar"
                   bgColor="transparent"
-                  textColor="actionBlue"
                   onClick={() => handleUpdateChecklist(checklistDetails.status!)}
                 />
                 <Button
