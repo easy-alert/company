@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useHasPermission } from '@hooks/useHasPermission';
 
 // COMPONENTS
+import IconX from '@assets/icons/x';
 import { ArrowContainer, Popover } from 'react-tiny-popover';
 import { IconButton } from '../IconButton';
 import * as Style from './styles';
@@ -17,7 +18,6 @@ import { IPopoverButton } from './utils/types';
 import { theme } from '../../../styles/theme';
 
 // ICONS
-import { icon } from '../../../assets/icons';
 
 export const PopoverButton = ({
   type = 'Button',
@@ -132,7 +132,8 @@ export const PopoverButton = ({
                         onClick={() => {
                           setIsPopoverOpen(false);
                         }}
-                        icon={icon.x}
+                        icon={<IconX strokeColor="primary" />}
+                        fill="primary"
                       />
                     </h2>
                     <Style.Hr />

@@ -23,4 +23,8 @@ export interface IPopoverButton {
   fontWeight?: string;
   textColor?: string;
   permToCheck?: string;
+  hasCircle?: boolean;
+  fill?: string;
+  strokeColor?: string;
+  buttonIcon?: React.ReactElement;
 }
