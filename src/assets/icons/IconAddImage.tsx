@@ -1,19 +1,9 @@
-import * as Style from './StyledSvg';
+import CustomIcon from '@components/CustomIcon/CustomIcon';
 
-const IconAddImage = ({
-  height = '16px',
-  width = '16px',
-  fillColor = 'black',
-  strokeColor = 'black',
-  strokeWidth = '1.5',
-}: Style.IStyledSVG) => (
-  <Style.StyledSVG
-    height={height}
-    width={width}
-    fillColor={fillColor}
-    strokeColor={strokeColor}
-    strokeWidth={strokeWidth}
-  >
+import type { ICustomIcon } from '@components/CustomIcon/types';
+
+const IconAddImage = ({ ...rest }: ICustomIcon) => (
+  <CustomIcon {...rest}>
     <svg width="44" height="42" viewBox="0 0 44 42" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M25.1751 36.75L17.7717 25.7578C17.7135 25.6663 17.6328 25.5909 17.5372 25.5387C17.4417 25.4864 17.3343 25.459 17.2251 25.459C17.1159 25.459 17.0085 25.4864 16.9129 25.5387C16.8174 25.5909 16.7367 25.6663 16.6785 25.7578L13.217 30.9094C13.1554 30.9999 13.072 31.0738 12.9743 31.1244C12.8767 31.1749 12.7678 31.2005 12.6576 31.1989C12.5475 31.1973 12.4394 31.1684 12.3433 31.115C12.2472 31.0616 12.1661 30.9853 12.1073 30.893L10.5007 28.4156C10.4386 28.3243 10.3547 28.2494 10.2565 28.1977C10.1583 28.146 10.0488 28.1189 9.9376 28.1189C9.82638 28.1189 9.71686 28.146 9.61867 28.1977C9.52048 28.2494 9.43663 28.3243 9.37447 28.4156L3.9751 36.75H25.1751Z"
@@ -52,7 +42,7 @@ const IconAddImage = ({
         stroke-Linejoin="round"
       />
     </svg>
-  </Style.StyledSVG>
+  </CustomIcon>
 );
 
 export default IconAddImage;

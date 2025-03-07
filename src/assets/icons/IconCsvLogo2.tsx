@@ -1,19 +1,9 @@
-import * as Style from './StyledSvg';
+import CustomIcon from '@components/CustomIcon/CustomIcon';
 
-const IconCsvLogo2 = ({
-  height = '16px',
-  width = '16px',
-  fillColor = 'black',
-  strokeColor = 'black',
-  strokeWidth = '1.5',
-}: Style.IStyledSVG) => (
-  <Style.StyledSVG
-    height={height}
-    width={width}
-    fillColor={fillColor}
-    strokeColor={strokeColor}
-    strokeWidth={strokeWidth}
-  >
+import type { ICustomIcon } from '@components/CustomIcon/types';
+
+const IconCsvLogo2 = ({ ...rest }: ICustomIcon) => (
+  <CustomIcon {...rest}>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" />
       <path
@@ -21,7 +11,7 @@ const IconCsvLogo2 = ({
         fill="white"
       />
     </svg>
-  </Style.StyledSVG>
+  </CustomIcon>
 );
 
 export default IconCsvLogo2;

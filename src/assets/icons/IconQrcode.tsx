@@ -1,19 +1,9 @@
-import * as Style from './StyledSvg';
+import CustomIcon from '@components/CustomIcon/CustomIcon';
 
-const IconQrcode = ({
-  height = '16px',
-  width = '16px',
-  fillColor = 'black',
-  strokeColor = 'black',
-  strokeWidth = '1.5',
-}: Style.IStyledSVG) => (
-  <Style.StyledSVG
-    height={height}
-    width={width}
-    fillColor={fillColor}
-    strokeColor={strokeColor}
-    strokeWidth={strokeWidth}
-  >
+import type { ICustomIcon } from '@components/CustomIcon/types';
+
+const IconQrcode = ({ ...rest }: ICustomIcon) => (
+  <CustomIcon {...rest}>
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M6.5 3H3.5C3.22386 3 3 3.22386 3 3.5V6.5C3 6.77614 3.22386 7 3.5 7H6.5C6.77614 7 7 6.77614 7 6.5V3.5C7 3.22386 6.77614 3 6.5 3Z"
@@ -65,7 +55,7 @@ const IconQrcode = ({
         stroke-Linejoin="round"
       />
     </svg>
-  </Style.StyledSVG>
+  </CustomIcon>
 );
 
 export default IconQrcode;

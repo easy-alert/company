@@ -1,19 +1,9 @@
-import * as Style from './StyledSvg';
+import CustomIcon from '@components/CustomIcon/CustomIcon';
 
-const IconUnlink = ({
-  height = '16px',
-  width = '16px',
-  fillColor = 'black',
-  strokeColor = 'black',
-  strokeWidth = '1.5',
-}: Style.IStyledSVG) => (
-  <Style.StyledSVG
-    height={height}
-    width={width}
-    fillColor={fillColor}
-    strokeColor={strokeColor}
-    strokeWidth={strokeWidth}
-  >
+import type { ICustomIcon } from '@components/CustomIcon/types';
+
+const IconUnlink = ({ ...rest }: ICustomIcon) => (
+  <CustomIcon {...rest}>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="12" />
       <path
@@ -21,7 +11,7 @@ const IconUnlink = ({
         fill="white"
       />
     </svg>
-  </Style.StyledSVG>
+  </CustomIcon>
 );
 
 export default IconUnlink;

@@ -1,19 +1,9 @@
-import * as Style from './StyledSvg';
+import CustomIcon from '@components/CustomIcon/CustomIcon';
 
-const IconUploadLine = ({
-  height = '16px',
-  width = '16px',
-  fillColor = 'black',
-  strokeColor = 'black',
-  strokeWidth = '1.5',
-}: Style.IStyledSVG) => (
-  <Style.StyledSVG
-    height={height}
-    width={width}
-    fillColor={fillColor}
-    strokeColor={strokeColor}
-    strokeWidth={strokeWidth}
-  >
+import type { ICustomIcon } from '@components/CustomIcon/types';
+
+const IconUploadLine = ({ ...rest }: ICustomIcon) => (
+  <CustomIcon {...rest}>
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8.0625 7.6875L12 3.75L15.9375 7.6875"
@@ -37,7 +27,7 @@ const IconUploadLine = ({
         stroke-Linejoin="round"
       />
     </svg>
-  </Style.StyledSVG>
+  </CustomIcon>
 );
 
 export default IconUploadLine;
