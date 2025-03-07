@@ -1,6 +1,7 @@
-// LIBS
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChromePicker } from 'react-color';
+import { useTheme } from '@contexts/Auth/ThemeContext';
 
 // COMPONENTS
 import { Form, Formik } from 'formik';
@@ -14,6 +15,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { IconButton } from '@components/Buttons/IconButton';
 import { Button } from '@components/Buttons/Button';
+import { InputRadio } from '@components/Inputs/InputRadio';
 
 // TYPES
 import { IModalEditAccount } from './types';
@@ -32,6 +34,9 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showPassword2, setShowPassword2] = useState<boolean>(false);
+  const [selectedColor, setSelectedColor] = useState('#ffffff');
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+  const { updateThemeColor } = useTheme();
 
   const ticketTypes = [
     'none',
@@ -66,6 +71,7 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
           ticketType: account.Company.ticketType,
           ticketInfo: account.Company.ticketInfo || '',
           showMaintenancePriority: account.Company.showMaintenancePriority || false,
+          themeColor: selectedColor,
         }}
         validationSchema={
           account.Company.CPF ? schemaModalEditAccountWithCPF : schemaModalEditAccountWithCNPJ
@@ -74,14 +80,18 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
           setShowPassword(false);
           setShowPassword2(false);
 
-          await requestEditAccount({
-            values,
-            account,
-            setAccount,
-            navigate,
-            setOnQuery,
-            handleModals,
-          });
+          updateThemeColor(values.themeColor);
+
+          setTimeout(async () => {
+            await requestEditAccount({
+              values,
+              account,
+              setAccount,
+              navigate,
+              setOnQuery,
+              handleModals,
+            });
+          }, 100);
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -172,6 +182,7 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
 
               <FormikSelect
                 label="Abertura de chamados"
+                arrowColor="primary"
                 name="ticketType"
                 error={touched.ticketType && errors.ticketType ? errors.ticketType : null}
                 selectPlaceholderValue={values.ticketType}
@@ -266,6 +277,25 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
                   setFieldValue('showMaintenancePriority', !values.showMaintenancePriority)
                 }
               />
+
+              <InputRadio
+                label="Deseja alterar a cor da sua edificação?"
+                onClick={() => setShowColorPicker(!showColorPicker)}
+              />
+              {showColorPicker && (
+                <Style.ColorPickerContainer>
+                  <ChromePicker
+                    color={selectedColor}
+                    onChangeComplete={(color) => {
+                      setSelectedColor(color.hex);
+                      setFieldValue('themeColor', color.hex);
+                    }}
+                  />
+                  <Style.SelectedColorBox selectedColor={selectedColor}>
+                    Cor selecionada
+                  </Style.SelectedColorBox>
+                </Style.ColorPickerContainer>
+              )}
 
               <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>
