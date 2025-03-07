@@ -218,7 +218,7 @@ export const ModalChecklistDetails = ({
         </LoadingWrapper>
       ) : (
         <Style.Content>
-          <h3>Plaza Milano</h3>
+          <h3>{checklistDetails.building?.name}</h3>
 
           <Style.ChecklistContainer>
             <Style.ChecklistTitle>{checklistDetails?.name}</Style.ChecklistTitle>

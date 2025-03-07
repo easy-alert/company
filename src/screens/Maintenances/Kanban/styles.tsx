@@ -93,8 +93,10 @@ export const Kanban = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: ${theme.size.sm};
+
   overflow: auto;
   height: 100%;
+
   scrollbar-width: none;
   scrollbar-color: transparent;
   scroll-snap-type: x mandatory;
@@ -106,18 +108,22 @@ export const Kanban = styled.div`
 `;
 
 export const KanbanCard = styled.div`
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
+  min-width: 300px;
+  height: 100%;
+
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
-  scroll-snap-align: start;
-  min-width: 300px;
+
   overflow: auto;
+
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
   padding-bottom: ${theme.size.sm};
 
   scrollbar-width: none;
   scrollbar-color: transparent;
+  scroll-snap-align: start;
 
   ::-webkit-scrollbar {
     width: 0;

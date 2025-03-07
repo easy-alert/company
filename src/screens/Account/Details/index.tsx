@@ -213,6 +213,15 @@ export const AccountDetails = () => {
             setModalEditAccountOpen(true);
           }}
         />
+
+        {account?.User.isCompanyOwner && (
+          <IconButton
+            hideLabelOnMedia
+            icon={icon.eye}
+            label="Permissões"
+            onClick={() => navigate(`/account/${account.User.id}/permissions`)}
+          />
+        )}
       </Style.Footer>
 
       {account?.User.isCompanyOwner && (

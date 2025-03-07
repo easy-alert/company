@@ -14,7 +14,7 @@ import * as Style from '../styles';
 import type { IModalSecondView } from '../types';
 
 const ModalSecondView = ({
-  buildingsData,
+  buildingsForSelect,
   categoriesData,
   priorityData,
   occasionalMaintenanceData,
@@ -52,7 +52,7 @@ const ModalSecondView = ({
           Selecione
         </option>
 
-        {buildingsData.map((building) => (
+        {buildingsForSelect.map((building) => (
           <option key={building.id} value={building.id}>
             {building.name}
           </option>

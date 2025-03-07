@@ -26,7 +26,6 @@ import {
   applyMask,
   capitalizeFirstLetter,
   dateFormatter,
-  query,
   requestBuildingTypes,
 } from '@utils/functions';
 import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
@@ -47,7 +46,6 @@ import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
-import { ModalEditNotificationConfiguration } from './utils/modals/ModalEditNotificationConfiguration';
 import { ModalAddFiles } from './utils/modals/ModalAddFiles';
 import { ModalPrintQRCode } from './utils/modals/ModalPrintQRCode';
 import { ModalCreateFolder } from './utils/modals/ModalCreateFolder';
@@ -66,8 +64,6 @@ import {
   requestDeleteFile,
   requestDeleteFolder,
   requestFolderDetails,
-  requestResendEmailConfirmation,
-  requestResendPhoneConfirmation,
 } from './utils/functions';
 
 // STYLES
@@ -80,7 +76,6 @@ import type {
   File,
   IBanner,
   UserBuildingsPermissions,
-  INotificationConfiguration,
 } from './utils/types';
 
 // #endregion
@@ -88,9 +83,7 @@ import type {
 export const BuildingDetails = () => {
   // #region states
   const { account } = useAuthContext();
-  const checkAdmin = account?.User.Permissions?.some((perm) =>
-    perm.Permission.name.includes('admin'),
-  );
+
   const navigate = useNavigate();
   const { buildingId } = useParams();
 
@@ -103,9 +96,6 @@ export const BuildingDetails = () => {
 
   const [showIsMainContactLoading, setShowIsMainContactLoading] = useState<boolean>(false);
   const [showContactLoading, setShowContactLoading] = useState<boolean>(false);
-
-  // const [selectedNotificationRow, setSelectedNotificationRow] =
-  //   useState<INotificationConfiguration>();
 
   const [usedMaintenancesCount, setUsedMaintenancesCount] = useState<number>(0);
 
@@ -125,8 +115,6 @@ export const BuildingDetails = () => {
   const [modalEditBuildingOpen, setModalEditBuildingOpen] = useState<boolean>(false);
   const [modalCreateNotificationConfigurationOpen, setModalCreateNotificationConfigurationOpen] =
     useState<boolean>(false);
-  const [modalEditNotificationConfigurationOpen, setModalEditNotificationConfigurationOpen] =
-    useState<boolean>(false);
   const [modalChangeClientPasswordOpen, setModalChangeClientPasswordOpen] =
     useState<boolean>(false);
 
@@ -136,9 +124,6 @@ export const BuildingDetails = () => {
   const [fileToEdit, setFileToEdit] = useState<File>();
 
   const [breadcrumb, setBreadcrumb] = useState<Folder[]>([{ id: '', name: 'Início' }]);
-
-  const [selectedNotificationRow, setSelectedNotificationRow] =
-    useState<UserBuildingsPermissions['User']>();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -265,22 +250,8 @@ export const BuildingDetails = () => {
         setTotalMaintenancesCount,
         setRootFolder,
       });
-
-      if (query.get('flow') === '1') {
-        setModalCreateNotificationConfigurationOpen(true);
-        // não precisaria desse set, se fosse consumir com o useserachparams
-        query.set('flow', '2');
-        navigate(`/buildings/details/${buildingId}?flow=2`);
-      }
     });
   }, []);
-
-  useEffect(() => {
-    if (!modalCreateNotificationConfigurationOpen && query.get('flow') === '2') {
-      query.delete('flow');
-      navigate(`/buildings/details/${buildingId}/maintenances/manage`);
-    }
-  }, [modalCreateNotificationConfigurationOpen]);
 
   useEffect(() => {
     if (folderId) {
@@ -508,34 +479,18 @@ export const BuildingDetails = () => {
             </Style.CardHeaderLeftSide>
             <Style.ButtonWrapper>
               <Button
-                label="Manutenções"
-                onClick={() => {
-                  if (building.NotificationsConfigurations.length > 0) {
-                    window.open(
-                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/syndicarea/${
-                        building.nanoId
-                      }?userId=${account?.User.id}&syndicNanoId=${
-                        building.NotificationsConfigurations[0].nanoId
-                      }&buildingId=${buildingId}&password=${building.syndicPassword || ''}`,
-                      '_blank',
-                    );
-                  } else {
-                    window.open(
-                      `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${
-                        building.nanoId
-                      }?password=${building.residentPassword || ''}`,
-                      '_blank',
-                    );
-                  }
-                }}
+                label="Tela do Morador"
+                onClick={() =>
+                  window.open(
+                    `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${
+                      building.id
+                    }?userId=${account?.User.id}`,
+                    '_blank',
+                  )
+                }
               />
 
-              <Button
-                label="QR Code"
-                onClick={() => {
-                  setModalPrintQRCodeOpen(true);
-                }}
-              />
+              <Button label="QR Code" onClick={() => setModalPrintQRCodeOpen(true)} />
             </Style.ButtonWrapper>
           </Style.FirstCard>
         )}
@@ -551,9 +506,7 @@ export const BuildingDetails = () => {
                 label="Editar"
                 permToCheck="buildings:update"
                 hideLabelOnMedia
-                onClick={() => {
-                  setModalEditBuildingOpen(true);
-                }}
+                onClick={() => setModalEditBuildingOpen(true)}
               />
 
               <IconButton
@@ -562,9 +515,7 @@ export const BuildingDetails = () => {
                 label="Apartamentos"
                 permToCheck="buildings:update"
                 hideLabelOnMedia
-                onClick={() => {
-                  handleCreateApartmentModal(true);
-                }}
+                onClick={() => handleCreateApartmentModal(true)}
               />
             </Style.CardHeaderButtonsContainer>
           </Style.CardHeader>
@@ -976,9 +927,8 @@ export const BuildingDetails = () => {
                   label="Visualizar"
                   hideLabelOnMedia
                   onClick={() => {
-                    if (building?.id) {
+                    if (building?.id)
                       navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
-                    }
                   }}
                 />
 
@@ -989,9 +939,8 @@ export const BuildingDetails = () => {
                   permToCheck="maintenances:plan"
                   hideLabelOnMedia
                   onClick={() => {
-                    if (building?.id) {
+                    if (building?.id)
                       navigate(`/buildings/details/${building?.id}/maintenances/manage${search}`);
-                    }
                   }}
                 />
               </Style.AnnexCardButtons>
@@ -1012,12 +961,7 @@ export const BuildingDetails = () => {
                 <Style.BreadcrumbWrapper>
                   {breadcrumb.map((element, i) => (
                     <React.Fragment key={element.id}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFolderId(element.id);
-                        }}
-                      >
+                      <button type="button" onClick={() => setFolderId(element.id)}>
                         {element.name}
                       </button>
 
@@ -1038,9 +982,7 @@ export const BuildingDetails = () => {
                   label="Pasta"
                   size="24px"
                   hideLabelOnMedia
-                  onClick={() => {
-                    setModalCreateFolderOpen(true);
-                  }}
+                  onClick={() => setModalCreateFolderOpen(true)}
                 />
 
                 <IconButton
@@ -1049,9 +991,7 @@ export const BuildingDetails = () => {
                   label="Arquivos"
                   size="24px"
                   hideLabelOnMedia
-                  onClick={() => {
-                    setModalAddFilesOpen(true);
-                  }}
+                  onClick={() => setModalAddFilesOpen(true)}
                 />
               </Style.AnnexCardButtons>
             </Style.AnnexCardTitle>
@@ -1062,16 +1002,12 @@ export const BuildingDetails = () => {
                   <FolderComponent
                     key={element.id}
                     name={element.name}
-                    onFolderClick={() => {
-                      setFolderId(element.id);
-                    }}
+                    onFolderClick={() => setFolderId(element.id)}
                     onEditClick={() => {
                       setFolderToEdit(element);
                       setModalEditFolderOpen(true);
                     }}
-                    onDeleteClick={() => {
-                      requestDeleteFolder({ folderId: element.id, setBuilding });
-                    }}
+                    onDeleteClick={() => requestDeleteFolder({ folderId: element.id, setBuilding })}
                   />
                 ))}
                 {building?.Folders?.Files?.map((element) => (
@@ -1083,12 +1019,12 @@ export const BuildingDetails = () => {
                       setFileToEdit(element);
                       setModalEditFileOpen(true);
                     }}
-                    onDeleteClick={() => {
+                    onDeleteClick={() =>
                       requestDeleteFile({
                         folderId: element.id,
                         setBuilding,
-                      });
-                    }}
+                      })
+                    }
                   />
                 ))}
               </Style.TagWrapper>
@@ -1108,9 +1044,7 @@ export const BuildingDetails = () => {
                 label="Cadastrar"
                 size="24px"
                 hideLabelOnMedia
-                onClick={() => {
-                  setModalAddBannerOpen(true);
-                }}
+                onClick={() => setModalAddBannerOpen(true)}
               />
             </Style.CardHeader>
             {building && building?.Banners.length > 0 ? (

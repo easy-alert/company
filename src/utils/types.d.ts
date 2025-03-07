@@ -20,27 +20,7 @@ export type TTranslateTicketType = 'none' | 'whatsapp' | 'email' | 'link' | 'pla
 
 export interface IAccount {
   origin: 'Backoffice' | 'Company' | 'Client';
-  User: {
-    id: string;
-    lastAccess: string;
-    name: string;
-    email: string;
-    isCompanyOwner: boolean;
-    createdAt: string;
-    Permissions?: [
-      {
-        Permission: {
-          name: string;
-        };
-      },
-    ];
-    BuildingsPermissions?: {
-      Building: {
-        id: string;
-        name: string;
-      };
-    }[];
-  };
+
   Company: {
     id: string;
     name: string;
@@ -53,6 +33,31 @@ export interface IAccount {
     ticketInfo: string | null;
     UserCompanies: IUserCompanyRelation[];
     showMaintenancePriority: boolean;
+  };
+
+  User: {
+    id: string;
+    name: string;
+    email: string;
+    phoneNumber?: string;
+    lastAccess: string;
+    createdAt: string;
+    isCompanyOwner: boolean;
+
+    Permissions?: [
+      {
+        Permission: {
+          name: string;
+        };
+      },
+    ];
+
+    BuildingsPermissions?: {
+      Building: {
+        id: string;
+        name: string;
+      };
+    }[];
   };
 }
 

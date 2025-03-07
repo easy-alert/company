@@ -32,6 +32,7 @@ export const getTicketsByBuildingNanoId = async ({
   count = '',
 }: IGetTickets) => {
   const params = {
+    buildingsId: filter?.buildings?.length === 0 ? '' : filter?.buildings?.join(','),
     placesId: filter?.places?.length === 0 ? '' : filter?.places?.join(','),
     serviceTypesId: filter?.serviceTypes?.length === 0 ? '' : filter?.serviceTypes?.join(','),
     apartmentsNames: filter?.apartments?.length === 0 ? '' : filter?.apartments?.join(','),
@@ -44,9 +45,7 @@ export const getTicketsByBuildingNanoId = async ({
     count,
   };
 
-  const uri = `/tickets/buildings/${
-    filter?.buildings?.length === 0 ? 'all' : filter?.buildings?.join(',')
-  }`;
+  const uri = '/tickets/buildings';
 
   try {
     const response: IResponseGetTicketsByBuildingNanoId = await Api.get(uri, { params });

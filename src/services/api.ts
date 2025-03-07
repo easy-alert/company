@@ -7,9 +7,20 @@ export const Api = axios.create({
 
 Api.interceptors.request.use(
   (config: any) => {
-    config.headers.authorization! = `Bearer ${localStorage.getItem('authToken')}`;
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.authorization = `Bearer ${token}`;
+    }
 
     return config;
   },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  },
+);
+
+Api.interceptors.response.use(
+  (response) => response,
   (error) => Promise.reject(error),
 );

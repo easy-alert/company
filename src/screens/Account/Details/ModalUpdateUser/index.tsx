@@ -116,7 +116,7 @@ export const ModalUpdateUser = ({
   }
 
   return (
-    <Modal setModal={() => handleModals('updateUser', false)} title="Editar usuário">
+    <Modal title="Editar usuário" setModal={() => handleModals('updateUser', false)}>
       <Formik
         initialValues={{
           image: selectedUser.image || '',

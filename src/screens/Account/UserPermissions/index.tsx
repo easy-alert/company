@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 // HOOKS
-import { useBuildings } from '@hooks/useBuildings';
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
 import { getAllPermissions } from '@services/apis/getAllPermissions';
@@ -26,7 +26,6 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IPermission } from '@customTypes/IPermission';
 
 // STYLES
-
 import * as Style from './styles';
 
 interface IModule {
@@ -46,7 +45,7 @@ interface IUserBuildingsPermissions {
 
 function UserPermissions() {
   const { userId } = useParams() as { userId: string };
-  const { buildings } = useBuildings({ filter: '', page: 1 });
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: false });
 
   const [userPermissions, setUserPermissions] = useState<IUserPermissions[]>([]);
   const [userBuildingsPermissions, setUserBuildingsPermissions] = useState<
@@ -160,7 +159,9 @@ function UserPermissions() {
     const { checked } = e.target;
 
     if (checked) {
-      const perms = buildings.map((b) => ({ buildingId: b.id } as IUserBuildingsPermissions));
+      const perms = buildingsForSelect.map(
+        (b) => ({ buildingId: b.id } as IUserBuildingsPermissions),
+      );
 
       setUserBuildingsPermissions(perms);
     } else {
@@ -187,7 +188,7 @@ function UserPermissions() {
     const { name, checked } = e.target;
 
     if (checked) {
-      const perms = buildings.find((b) => b.id === name);
+      const perms = buildingsForSelect.find((b) => b.id === name);
       const formattedPerms = { buildingId: perms?.id } as IUserBuildingsPermissions;
 
       setUserBuildingsPermissions([...userBuildingsPermissions, formattedPerms]);
@@ -246,9 +247,12 @@ function UserPermissions() {
                 .filter((perm) => perm.moduleName === module.moduleName)
                 .map((perm) => (
                   <Style.PermissionsCardItem key={perm.name}>
-                    <Style.PermissionsCardItemTitle>{perm.label}</Style.PermissionsCardItemTitle>
+                    <Style.PermissionsCardItemLabel htmlFor={perm.name}>
+                      {perm.label}
+                    </Style.PermissionsCardItemLabel>
 
                     <Style.Checkbox
+                      id={perm.name}
                       name={perm.name}
                       type="checkbox"
                       checked={userPermissions.some((up) => up.name === perm.name)}
@@ -273,14 +277,17 @@ function UserPermissions() {
             </Style.PermissionsCardHeader>
 
             <Style.BuildingsPermissionsContainer>
-              {buildings.map((building) => (
+              {buildingsForSelect.map((building) => (
                 <Style.PermissionsCardItem
                   key={building.id}
                   style={{ gap: '0.5rem', alignItems: 'center' }}
                 >
-                  <Style.PermissionsCardItemTitle>{building.name}</Style.PermissionsCardItemTitle>
+                  <Style.PermissionsCardItemLabel htmlFor={building.id}>
+                    {building.name}
+                  </Style.PermissionsCardItemLabel>
 
                   <Style.Checkbox
+                    id={building.id}
                     name={building.id}
                     type="checkbox"
                     checked={userBuildingsPermissions.some((up) => up.buildingId === building.id)}

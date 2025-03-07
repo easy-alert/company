@@ -331,6 +331,7 @@ export const MaintenancesCalendar = () => {
 
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
+          buildingsForSelect={buildingsForSelect}
           handleGetBackgroundData={handleGetCalendarData}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}

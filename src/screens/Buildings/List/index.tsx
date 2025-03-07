@@ -47,7 +47,7 @@ export const BuildingsList = () => {
   // PAGINATION
   const [count, setCount] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const offset = 20;
+  const offset = 100;
 
   const [search] = useSearchParams();
   const queryPage = Number(search.get('page'));

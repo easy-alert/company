@@ -104,7 +104,7 @@ export const MaintenancesKanban = () => {
     users: [],
     priorityName: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0],
+    endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
   });
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -182,7 +182,7 @@ export const MaintenancesKanban = () => {
       startDate: new Date(new Date().setDate(new Date().getDate() - 30))
         .toISOString()
         .split('T')[0],
-      endDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
     });
   };
   // endregion
@@ -215,6 +215,7 @@ export const MaintenancesKanban = () => {
     <>
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
+          buildingsForSelect={buildingsForSelect}
           handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalMaintenanceDetails={setModalMaintenanceDetails}
@@ -313,7 +314,7 @@ export const MaintenancesKanban = () => {
                       Todas
                     </option>
 
-                    {buildingsForSelect.map((building) => (
+                    {buildingsForSelect?.map((building) => (
                       <option
                         value={building.id}
                         key={building.id}
@@ -348,7 +349,7 @@ export const MaintenancesKanban = () => {
                       Todos
                     </option>
 
-                    {usersForSelect.map((user) => (
+                    {usersForSelect?.map((user) => (
                       <option
                         value={user.id}
                         key={user.id}
@@ -383,7 +384,7 @@ export const MaintenancesKanban = () => {
                       Todas
                     </option>
 
-                    {maintenanceStatusForSelect.map((maintenanceStatus) => (
+                    {maintenanceStatusForSelect?.map((maintenanceStatus) => (
                       <option
                         key={maintenanceStatus.id}
                         value={maintenanceStatus.name}
@@ -418,7 +419,7 @@ export const MaintenancesKanban = () => {
                       Todas
                     </option>
 
-                    {maintenanceCategoriesForSelect.map((maintenanceCategory) => (
+                    {maintenanceCategoriesForSelect?.map((maintenanceCategory) => (
                       <option
                         key={maintenanceCategory.id}
                         value={maintenanceCategory.id}
@@ -570,190 +571,185 @@ export const MaintenancesKanban = () => {
           </Formik>
         </Style.FiltersContainer>
 
-        <Style.Kanban>
-          {kanban.map((card, i: number) => (
-            <Style.KanbanCard key={card.status}>
-              <Style.KanbanHeader>
-                <h5>{card.status}</h5>
+        {loading && (
+          <Style.Kanban>
+            {[...Array(4)]?.map((_a, i: number) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Style.KanbanCard key={i}>
+                <Style.KanbanHeader />
 
-                {card.status === 'Pendentes' && (
-                  <label htmlFor="showFuture">
-                    <input
-                      type="checkbox"
-                      id="showFuture"
-                      checked={showFutureMaintenances}
-                      onChange={() => {
-                        setShowFutureMaintenances((prevState) => !prevState);
-                      }}
-                    />
-                    Mostrar futuras
-                  </label>
-                )}
+                {[...Array(4)]?.map((_b, j: number) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Style.KanbanMaintenanceWrapper key={j}>
+                    <Skeleton />
+                  </Style.KanbanMaintenanceWrapper>
+                ))}
+              </Style.KanbanCard>
+            ))}
+          </Style.Kanban>
+        )}
 
-                {card.status === 'Vencidas' && (
-                  <label htmlFor="showExpireds">
-                    <input
-                      type="checkbox"
-                      id="showExpireds"
-                      checked={showOldExpireds}
-                      onChange={() => {
-                        setShowOldExpireds((prevState) => !prevState);
-                      }}
-                    />
-                    Mostrar expiradas
-                  </label>
-                )}
-              </Style.KanbanHeader>
+        {!loading && (
+          <Style.Kanban>
+            {kanban?.length > 0 &&
+              kanban?.map((card) => (
+                <Style.KanbanCard key={card.status}>
+                  <Style.KanbanHeader>
+                    <h5>{card.status}</h5>
 
-              {loading && (
-                <>
-                  {(i === 1 || i === 2 || i === 3) && (
-                    <Style.KanbanMaintenanceWrapper>
-                      <Skeleton />
-                    </Style.KanbanMaintenanceWrapper>
-                  )}
-
-                  {(i === 0 || i === 1 || i === 2 || i === 3) && (
-                    <Style.KanbanMaintenanceWrapper>
-                      <Skeleton />
-                    </Style.KanbanMaintenanceWrapper>
-                  )}
-
-                  {(i === 0 || i === 2 || i === 3) && (
-                    <Style.KanbanMaintenanceWrapper>
-                      <Skeleton />
-                    </Style.KanbanMaintenanceWrapper>
-                  )}
-
-                  {i === 3 && (
-                    <Style.KanbanMaintenanceWrapper>
-                      <Skeleton />
-                    </Style.KanbanMaintenanceWrapper>
-                  )}
-                </>
-              )}
-
-              {!loading &&
-                card.maintenances.length > 0 &&
-                card.maintenances.map((maintenance) => {
-                  const isPending = maintenance.status === 'pending';
-                  const isFuture =
-                    new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0));
-
-                  // se for avulsa, pode reportar qlqer vencida
-                  const showExpiredOccasional =
-                    maintenance.type === 'occasional' && maintenance.status === 'expired';
-
-                  const isExpired = maintenance.status === 'expired';
-                  const isOldExpired =
-                    maintenance.status === 'expired' && maintenance.cantReportExpired;
-
-                  const { inProgress } = maintenance;
-
-                  return (
-                    ((((showFutureMaintenances && isPending && isFuture) ||
-                      (isPending && !isFuture) ||
-                      !isPending) &&
-                      ((showOldExpireds && isExpired && isOldExpired) ||
-                        (isExpired && !isOldExpired) ||
-                        !isExpired)) ||
-                      showExpiredOccasional ||
-                      inProgress) && (
-                      <Style.KanbanMaintenanceWrapper key={maintenance.id}>
-                        <Style.MaintenanceInfo
-                          status={maintenance.status}
-                          onClick={() => {
-                            if (maintenance.type === 'checklist') {
-                              setChecklistId(maintenance.id);
-                              handleModals('modalChecklistDetails', true);
-                            } else if (
-                              maintenance.status === 'pending' ||
-                              maintenance.status === 'expired'
-                            ) {
-                              setModalAdditionalInformations({
-                                id: maintenance.id,
-                                expectedNotificationDate: '',
-                                expectedDueDate: '',
-                                isFuture: false,
-                              });
-                              handleMaintenanceHistoryIdChange(maintenance.id);
-                              handleModals('modalSendMaintenanceReport', true);
-                            } else {
-                              setModalAdditionalInformations({
-                                id: maintenance.id,
-                                expectedNotificationDate: '',
-                                expectedDueDate: '',
-                                isFuture: false,
-                              });
-                              handleMaintenanceHistoryIdChange(maintenance.id);
-                              handleModals('modalMaintenanceDetails', true);
-                            }
+                    {card.status === 'Pendentes' && (
+                      <label htmlFor="showFuture">
+                        <input
+                          type="checkbox"
+                          id="showFuture"
+                          checked={showFutureMaintenances}
+                          onChange={() => {
+                            setShowFutureMaintenances((prevState) => !prevState);
                           }}
-                        >
-                          <h5>{maintenance?.buildingName}</h5>
+                        />
+                        Mostrar futuras
+                      </label>
+                    )}
 
-                          <h6>
-                            <span>
-                              <Style.EventsWrapper>
-                                <EventTag status={maintenance.type} />
+                    {card.status === 'Vencidas' && (
+                      <label htmlFor="showExpireds">
+                        <input
+                          type="checkbox"
+                          id="showExpireds"
+                          checked={showOldExpireds}
+                          onChange={() => {
+                            setShowOldExpireds((prevState) => !prevState);
+                          }}
+                        />
+                        Mostrar expiradas
+                      </label>
+                    )}
+                  </Style.KanbanHeader>
 
-                                {maintenance.status === 'pending' &&
-                                  new Date(maintenance.date) >
-                                    new Date(new Date().setHours(0, 0, 0, 0)) && (
-                                    <FutureMaintenanceTag />
-                                  )}
+                  {card?.maintenances?.length > 0 &&
+                    card?.maintenances?.map((maintenance) => {
+                      const isPending = maintenance.status === 'pending';
+                      const isFuture =
+                        new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0));
 
-                                {maintenance.status === 'overdue' && <EventTag status="overdue" />}
-                              </Style.EventsWrapper>
+                      // se for avulsa, pode reportar qlqer vencida
+                      const showExpiredOccasional =
+                        maintenance.type === 'occasional' && maintenance.status === 'expired';
 
-                              <EventTag
-                                label={maintenance.priorityLabel}
-                                color={theme.color.gray4}
-                                bgColor="transparent"
-                                fontWeight="bold"
-                              />
-                            </span>
+                      const isExpired = maintenance.status === 'expired';
+                      const isOldExpired =
+                        maintenance.status === 'expired' && maintenance.cantReportExpired;
 
-                            {maintenance.element || maintenance.name}
-                          </h6>
+                      const { inProgress } = maintenance;
 
-                          <p className="p2">
-                            {maintenance.activity || maintenance.checklistProgress}
-                          </p>
+                      return (
+                        ((((showFutureMaintenances && isPending && isFuture) ||
+                          (isPending && !isFuture) ||
+                          !isPending) &&
+                          ((showOldExpireds && isExpired && isOldExpired) ||
+                            (isExpired && !isOldExpired) ||
+                            !isExpired)) ||
+                          showExpiredOccasional ||
+                          inProgress) && (
+                          <Style.KanbanMaintenanceWrapper key={maintenance.id}>
+                            <Style.MaintenanceInfo
+                              status={maintenance.status}
+                              onClick={() => {
+                                if (maintenance.type === 'checklist') {
+                                  setChecklistId(maintenance.id);
+                                  handleModals('modalChecklistDetails', true);
+                                } else if (
+                                  maintenance.status === 'pending' ||
+                                  maintenance.status === 'expired'
+                                ) {
+                                  setModalAdditionalInformations({
+                                    id: maintenance.id,
+                                    expectedNotificationDate: '',
+                                    expectedDueDate: '',
+                                    isFuture: false,
+                                  });
+                                  handleMaintenanceHistoryIdChange(maintenance.id);
+                                  handleModals('modalSendMaintenanceReport', true);
+                                } else {
+                                  setModalAdditionalInformations({
+                                    id: maintenance.id,
+                                    expectedNotificationDate: '',
+                                    expectedDueDate: '',
+                                    isFuture: false,
+                                  });
+                                  handleMaintenanceHistoryIdChange(maintenance.id);
+                                  handleModals('modalMaintenanceDetails', true);
+                                }
+                              }}
+                            >
+                              <h5>{maintenance?.buildingName}</h5>
 
-                          <p className="p3">
-                            {maintenance.status === 'pending' && maintenance.label}
-                            {maintenance.status === 'expired' && !isOldExpired && maintenance.label}
-                            {(maintenance.status === 'completed' ||
-                              maintenance.status === 'overdue') &&
-                              `Concluída em ${dateFormatter(maintenance.date)}`}
-                          </p>
-                        </Style.MaintenanceInfo>
-                      </Style.KanbanMaintenanceWrapper>
-                    )
-                  );
-                })}
+                              <h6>
+                                <span>
+                                  <Style.EventsWrapper>
+                                    <EventTag status={maintenance.type} />
 
-              {!loading &&
-                (card.maintenances.length === 0 ||
-                  (!showFutureMaintenances &&
-                    card.maintenances.every(
-                      (maintenance) =>
-                        maintenance.status === 'pending' &&
-                        !maintenance.inProgress &&
-                        new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
-                    )) ||
-                  (!showOldExpireds &&
-                    card.maintenances.every(
-                      (maintenance) => maintenance.cantReportExpired === true,
-                    ))) && (
-                  <Style.NoDataContainer>
-                    <h4>Nenhuma manutenção encontrada.</h4>
-                  </Style.NoDataContainer>
-                )}
-            </Style.KanbanCard>
-          ))}
-        </Style.Kanban>
+                                    {maintenance.status === 'pending' &&
+                                      new Date(maintenance.date) >
+                                        new Date(new Date().setHours(0, 0, 0, 0)) && (
+                                        <FutureMaintenanceTag />
+                                      )}
+
+                                    {maintenance.status === 'overdue' && (
+                                      <EventTag status="overdue" />
+                                    )}
+                                  </Style.EventsWrapper>
+
+                                  <EventTag
+                                    label={maintenance.priorityLabel}
+                                    color={theme.color.gray4}
+                                    bgColor="transparent"
+                                    fontWeight="bold"
+                                  />
+                                </span>
+
+                                {maintenance.element || maintenance.name}
+                              </h6>
+
+                              <p className="p2">
+                                {maintenance.activity || maintenance.checklistProgress}
+                              </p>
+
+                              <p className="p3">
+                                {maintenance.status === 'pending' && maintenance.label}
+                                {maintenance.status === 'expired' &&
+                                  !isOldExpired &&
+                                  maintenance.label}
+                                {(maintenance.status === 'completed' ||
+                                  maintenance.status === 'overdue') &&
+                                  `Concluída em ${dateFormatter(maintenance.date)}`}
+                              </p>
+                            </Style.MaintenanceInfo>
+                          </Style.KanbanMaintenanceWrapper>
+                        )
+                      );
+                    })}
+
+                  {(card.maintenances.length === 0 ||
+                    (!showFutureMaintenances &&
+                      card.maintenances.every(
+                        (maintenance) =>
+                          maintenance.status === 'pending' &&
+                          !maintenance.inProgress &&
+                          new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
+                      )) ||
+                    (!showOldExpireds &&
+                      card.maintenances.every(
+                        (maintenance) => maintenance.cantReportExpired === true,
+                      ))) && (
+                    <Style.NoDataContainer>
+                      <h4>Nenhuma manutenção encontrada.</h4>
+                    </Style.NoDataContainer>
+                  )}
+                </Style.KanbanCard>
+              ))}
+          </Style.Kanban>
+        )}
       </Style.Container>
     </>
   );
