@@ -18,7 +18,7 @@ export const Img = styled.img<IImg>`
     `
       background-color: ${theme.color.primary}; 
       border-radius: 50%;
-      padding: 5px; /* Ajuste para evitar cortes na imagem */
+      padding: 5px;
     `}
 
   object-fit: cover;

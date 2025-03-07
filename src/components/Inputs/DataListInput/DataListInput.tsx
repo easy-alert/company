@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, KeyboardEvent as KeyboardType } from 'react';
+import IconDowArrow from '@assets/icons/downArrow';
 
 import * as s from './styles';
 
@@ -210,8 +211,9 @@ export function DataListInput({
         ) : (
           <s.RootDownArrowContainer>
             <IconButton
+              fill="primary"
               disabled={disabled}
-              icon={icon.downArrow}
+              icon={<IconDowArrow />}
               size="16px"
               onClick={(evt) => {
                 evt.stopPropagation();
