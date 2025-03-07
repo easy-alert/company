@@ -17,6 +17,7 @@ import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
+import type { IChecklist } from '@customTypes/IChecklist';
 
 // COMPONENTS
 import { ModalChecklistDetails } from './ModalChecklistDetails';
@@ -27,10 +28,9 @@ import { ModalUpdateChecklist } from './ModalUpdateChecklist';
 import * as Style from './styles';
 
 // TYPES
-import type { IChecklist } from '.';
 
 interface IChecklistRow {
-  checklist: IChecklist;
+  checklist: IChecklist & { totalItems?: number; completedItems?: number };
   timeIntervals: ITimeInterval[];
   buildingsForSelect: IBuildingForSelect[];
   handleModals: (modal: string, modalState: boolean) => void;
@@ -39,7 +39,7 @@ interface IChecklistRow {
 }
 
 export const ChecklistRowComponent = ({
-  checklist: { id, name, status, syndic, buildingId },
+  checklist,
   timeIntervals,
   buildingsForSelect,
   handleModals,
@@ -82,7 +82,7 @@ export const ChecklistRowComponent = ({
     <>
       {modalChecklistDetailsOpen && (
         <ModalChecklistDetails
-          checklistId={id}
+          checklistId={checklist.id!}
           setModal={setModalChecklistDetailsOpen}
           onThenRequest={onThenRequest}
         />
@@ -92,7 +92,7 @@ export const ChecklistRowComponent = ({
         <ModalDeleteChecklist
           onThenRequest={onThenRequest}
           setModal={setModalDeleteChecklistOpen}
-          checklistId={id}
+          checklistId={checklist.id!}
         />
       )}
 
@@ -101,14 +101,14 @@ export const ChecklistRowComponent = ({
           setModal={setModalUpdateChecklistOpen}
           timeIntervals={timeIntervals}
           onThenRequest={onThenRequest}
-          checklistId={id}
+          checklistId={checklist.id!}
         />
       )}
 
       {modalCreateOccasionalMaintenance && (
         <ModalCreateOccasionalMaintenance
-          checklistActivity={name}
-          externalBuildingId={buildingId}
+          checklistActivity={checklist.name!}
+          externalBuildingId={checklist.buildingId!}
           handleModalCreateOccasionalMaintenance={handleModalCreateOccasionalMaintenance}
           buildingsForSelect={buildingsForSelect}
         />
@@ -117,26 +117,31 @@ export const ChecklistRowComponent = ({
       <Style.ChecklistBackground ref={dropdownRef}>
         <Style.ChecklistWrapper>
           <Style.ChecklistRow
-            key={id}
-            status={status}
+            key={checklist.id}
+            status={checklist.status!}
             onClick={() => {
               handleModals('modalChecklistDetails', true);
-              handleSelectedChecklistId(id);
+              handleSelectedChecklistId(checklist.id!);
             }}
           >
             <Style.ChecklistRowLeftSide>
               <ImageComponent
                 size="18px"
-                src={status === 'pending' ? icon.checklistUnchecked : icon.checklistChecked}
+                src={
+                  checklist.status === 'pending' ? icon.checklistUnchecked : icon.checklistChecked
+                }
               />
               <Style.ChecklistContent>
-                <p className="p4">{name}</p>
-                <p className="p5">{syndic?.name || 'Nenhum responsável vinculado'}</p>
+                <p className="p4">{checklist.name}</p>
+                <p className="p5">
+                  {checklist.user?.name || 'Nenhum usuário vinculado'} {checklist.completedItems}/
+                  {checklist.totalItems}
+                </p>
               </Style.ChecklistContent>
             </Style.ChecklistRowLeftSide>
           </Style.ChecklistRow>
 
-          <Style.DotsButton status={status}>
+          <Style.DotsButton status={checklist.status!}>
             <IconButton
               icon={icon.dots}
               size="24px"
