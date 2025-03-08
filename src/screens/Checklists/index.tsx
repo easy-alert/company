@@ -40,6 +40,7 @@ export interface IChecklist {
 
 export interface ICalendarDates {
   pending: { date: string }[];
+  inProgress: { date: string }[];
   completed: { date: string }[];
 }
 
@@ -53,16 +54,16 @@ export type TModalNames =
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
+  const [checklists, setChecklists] = useState<IChecklist[]>([]);
   const [buildingNanoId, setBuildingNanoId] = useState<string>('');
 
+  const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
+    pending: [],
+    inProgress: [],
+    completed: [],
+  });
   const [date, setDate] = useState(new Date());
   const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [checklists, setChecklists] = useState<IChecklist[]>([]);
-  const [calendarDates, setCalendarDates] = useState<ICalendarDates>({
-    completed: [],
-    pending: [],
-  });
 
   const [checklistId, setChecklistId] = useState<string>('');
 
@@ -70,6 +71,7 @@ export const Checklists = () => {
   const [modalChecklistDetails, setModalChecklist] = useState(false);
 
   const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleRefresh = () => {
     setRefresh((prevState) => !prevState);
@@ -180,9 +182,7 @@ export const Checklists = () => {
             disabled={loading}
             label="Checklist"
             icon={icon.plusWithBg}
-            onClick={() => {
-              handleModals('modalChecklistCreate', true);
-            }}
+            onClick={() => handleModals('modalChecklistCreate', true)}
           />
         </Style.Header>
 
@@ -220,7 +220,7 @@ export const Checklists = () => {
 
             <Style.Checklists>
               {!loading &&
-                checklists.map((checklist) => (
+                checklists?.map((checklist) => (
                   <ChecklistRowComponent
                     key={checklist.id}
                     checklist={checklist}
@@ -234,6 +234,7 @@ export const Checklists = () => {
                     }}
                   />
                 ))}
+
               {!loading && checklists.length === 0 && (
                 <NoDataFound
                   label={

@@ -38,9 +38,14 @@ export const theme = {
 
   background: {
     open: '#FFFFFF',
+    pending: '#D5D5D5',
     awaitingToFinish: '#FFB200',
-    dismissed: '#B21D1D',
+    inProgress: '#FFB200',
+
     finished: '#34B53A',
+    completed: '#34B53A',
+
+    dismissed: '#B21D1D',
   } as const,
 
   size: {
