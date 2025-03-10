@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import type { TChecklistStatus } from '@customTypes/IChecklist';
+
 export const Container = styled.div`
   padding-top: ${({ theme }) => theme.size.sm};
   display: flex;
@@ -212,8 +214,19 @@ export const ContentRow = styled.div`
 
   .somePending {
     padding: 0 !important;
+
     > abbr {
-      border: 2px solid #ffb200cc !important;
+      border: 2px solid ${({ theme }) => theme.background.pending} !important;
+      border-radius: 100%;
+      padding: 4px 6px;
+    }
+  }
+
+  .someInProgress {
+    padding: 0 !important;
+
+    > abbr {
+      border: 2px solid ${({ theme }) => theme.background.inProgress} !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -221,8 +234,9 @@ export const ContentRow = styled.div`
 
   .allCompleted {
     padding: 0 !important;
+
     > abbr {
-      border: 2px solid #34b53acc !important;
+      border: 2px solid ${({ theme }) => theme.background.completed} !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -310,7 +324,7 @@ export const CalendarDiv = styled.div`
   align-items: center;
 `;
 
-export const ChecklistRow = styled.button<{ status: 'pending' | 'completed' }>`
+export const ChecklistRow = styled.button<{ status: TChecklistStatus }>`
   all: unset;
   width: 100%;
   padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
@@ -323,7 +337,25 @@ export const ChecklistRow = styled.button<{ status: 'pending' | 'completed' }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: ${({ theme }) => theme.size.sm};
+
+  border-radius: ${({ theme }) => theme.size.xxsm} 0 0 ${({ theme }) => theme.size.xxsm};
+  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
+    ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+
+  background-color: ${({ status, theme }) => {
+    switch (status) {
+      case 'pending':
+        return theme.background.pending;
+      case 'inProgress':
+        return theme.background.inProgress;
+      case 'completed':
+        return theme.background.completed;
+      default:
+        return theme.color.white;
+    }
+  }};
 `;
 
 export const ChecklistRowLeftSide = styled.div`
@@ -369,9 +401,21 @@ export const ChecklistWrapper = styled.div`
   }
 `;
 
-export const DotsButton = styled.div<{ status: 'pending' | 'completed' }>`
+export const DotsButton = styled.div<{ status: TChecklistStatus }>`
   padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
     ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
   border-radius: 0 ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0;
-  background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
+
+  background-color: ${({ status, theme }) => {
+    switch (status) {
+      case 'pending':
+        return theme.background.pending;
+      case 'inProgress':
+        return theme.background.inProgress;
+      case 'completed':
+        return theme.background.completed;
+      default:
+        return theme.color.white;
+    }
+  }};
 `;
