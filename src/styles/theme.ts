@@ -34,7 +34,7 @@ export const theme = {
 
     black: '#000000',
     white: '#FFFFFF',
-  } as const,
+  },
 
   background: {
     open: '#FFFFFF',
@@ -46,7 +46,7 @@ export const theme = {
     completed: '#34B53A',
 
     dismissed: '#B21D1D',
-  } as const,
+  },
 
   size: {
     xxsm: '0.25rem', // 4px
@@ -60,5 +60,5 @@ export const theme = {
     xxlg: '3rem', // 48px
     xxxlg: '3.5rem', // 56px
     xxxxlg: '4rem', // 64px
-  } as const,
+  },
 };

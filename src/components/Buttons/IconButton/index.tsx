@@ -26,12 +26,26 @@ export const IconButton = ({
   permToCheck,
   onClick,
   onAuxClick,
+  hasCircle,
+  fill,
 }: IIconButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
   if (permToCheck && !hasPermission) {
     return null;
   }
+
+  const content = () => {
+    if (loading) {
+      return <SpinnerContent $size={size} />;
+    }
+
+    if (fill) {
+      return icon;
+    }
+
+    return <Image img={icon} size={size} radius="0px" />;
+  };
 
   return (
     <ContainerButton
@@ -50,12 +64,14 @@ export const IconButton = ({
           onClick(evt);
         }
       }}
+      hasCircle={hasCircle}
       onAuxClick={(evt) => {
         if (onAuxClick) onAuxClick(evt);
       }}
+      fill={fill}
+      size={size}
     >
-      {loading ? <SpinnerContent $size={size} /> : <Image img={icon} size={size} radius="0px" />}
-
+      {content()}
       {label && <p className={className}>{label}</p>}
     </ContainerButton>
   );

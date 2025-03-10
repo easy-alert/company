@@ -160,6 +160,7 @@ export const ModalUpdateUser = ({
             <FormikSelect
               name="isBlocked"
               label="Status *"
+              arrowColor="primary"
               placeholder="Selecione o status"
               selectPlaceholderValue="Selecione o status"
               value={values.isBlocked ? 'blocked' : 'active'}
@@ -193,6 +194,7 @@ export const ModalUpdateUser = ({
             />
 
             <Button
+              bgColor="primary"
               type="submit"
               label="Atualizar"
               loading={onQuery}

@@ -1,31 +1,47 @@
+import { useEffect, useState } from 'react';
+
+// LIBS
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
-import * as Style from './styles';
-import { Modal } from '../../../components/Modal';
-import { ITimeInterval } from '../../../utils/types';
-import { FormikInput } from '../../../components/Form/FormikInput';
-import { Api } from '../../../services/api';
+
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { Modal } from '@components/Modal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { Input } from '@components/Inputs/Input';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { InputRadio } from '@components/Inputs/InputRadio';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { DragAndDropFiles } from '@components/DragAndDropFiles';
+import { ImagePreview } from '@components/ImagePreview';
+import { DotLoading } from '@components/Loadings/DotLoading';
+
+// GLOBAL UTILS
 import {
   applyMask,
   capitalizeFirstLetter,
   catchHandler,
   convertToFormikDate,
   uploadManyFiles,
-} from '../../../utils/functions';
-import { FormikSelect } from '../../../components/Form/FormikSelect';
-import { Input } from '../../../components/Inputs/Input';
-import { FormikCheckbox } from '../../../components/Form/FormikCheckbox';
-import { FormikTextArea } from '../../../components/Form/FormikTextArea';
-import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
-import { InputRadio } from '../../../components/Inputs/InputRadio';
-import { PopoverButton } from '../../../components/Buttons/PopoverButton';
-import { theme } from '../../../styles/theme';
-import { DragAndDropFiles } from '../../../components/DragAndDropFiles';
-import { ImagePreview } from '../../../components/ImagePreview';
-import { DotLoading } from '../../../components/Loadings/DotLoading';
+} from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL TYPES
+import { ITimeInterval } from '@utils/types';
+
+// COMPONENTS
 import { Row, FileAndImageRow, ImageLoadingTag } from '../ModalChecklistDetails/styles';
+
+// STYLES
+import * as Style from './styles';
 
 interface IModalUpdateChecklist {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -217,6 +233,7 @@ export const ModalUpdateChecklist = ({
                 />
 
                 <FormikSelect
+                  arrowColor="primary"
                   name="syndicId"
                   selectPlaceholderValue={values.syndicId}
                   label="Responsável *"
@@ -329,6 +346,7 @@ export const ModalUpdateChecklist = ({
                       }}
                     />
                     <FormikSelect
+                      arrowColor="primary"
                       disabled={updateMode === 'this'}
                       name="frequencyTimeIntervalId"
                       selectPlaceholderValue={values.frequencyTimeIntervalId}
@@ -350,6 +368,7 @@ export const ModalUpdateChecklist = ({
                     disabled={onQuery || onImageQuery}
                     actionButtonBgColor={theme.color.actionDanger}
                     type="Button"
+                    bgColor="primary"
                     label="Salvar"
                     message={{
                       title:

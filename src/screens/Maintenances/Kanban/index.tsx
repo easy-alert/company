@@ -29,11 +29,9 @@ import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasio
 // GLOBAL UTILS
 import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
 
-// GLOBAL ASSETS
-import { icon } from '@assets/icons';
-
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
+import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
 import { useUsersForSelect } from '@hooks/useUsersForSelect';
@@ -267,7 +265,19 @@ export const MaintenancesKanban = () => {
           <Style.IconsContainer>
             <IconButton
               disabled={loading}
-              icon={icon.plus}
+              label="Checklist"
+              icon={<IconPlus strokeColor="primary" />}
+              fill="primary"
+              permToCheck="checklist:create"
+              onClick={() => {
+                handleModals('modalChecklistCreate', true);
+              }}
+            />
+
+            <IconButton
+              disabled={loading}
+              icon={<IconPlus strokeColor="primary" />}
+              fill="primary"
               permToCheck="maintenances:createOccasional"
               label="Manutenção avulsa"
               onClick={() => handleModals('modalCreateOccasionalMaintenance', true)}
@@ -421,6 +431,7 @@ export const MaintenancesKanban = () => {
                   </FormikSelect>
 
                   <Select
+                    arrowColor="primary"
                     disabled={loading || !showPriority}
                     selectPlaceholderValue={' '}
                     label="Prioridade"
@@ -464,16 +475,22 @@ export const MaintenancesKanban = () => {
                       type="button"
                       label="Limpar filtros"
                       borderless
+                      textColor="primary"
                       disable={loading}
                       onClick={() => handleClearFilter()}
                     />
 
-                    <Button type="submit" label="Filtrar" disable={loading} />
+                    <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
                   </Style.FilterButtonWrapper>
 
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todas as edificações"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
@@ -492,7 +509,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.users?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os usuários" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os usuários"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.users?.map((user) => (
                         <ListTag
@@ -511,7 +533,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.status?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os status" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os status"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
@@ -533,7 +560,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.categories?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos as categorias" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos as categorias"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.categories?.map((category) => (
                         <ListTag

@@ -49,7 +49,7 @@ export const ModalCreateCategory = ({
                 error={touched.categoryName && errors.categoryName ? errors.categoryName : null}
                 placeholder="Digite o nome da categoria"
               />
-              <Button center label="Criar" type="submit" loading={onQuery} />
+              <Button center label="Criar" type="submit" loading={onQuery} bgColor="primary" />
             </Form>
           </Style.FormContainer>
         )}

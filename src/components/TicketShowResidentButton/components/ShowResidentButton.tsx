@@ -10,7 +10,7 @@ import { Button } from '@components/Buttons/Button';
 import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
+import IconX from '@assets/icons/IconX';
 
 // STYLES
 import * as Style from '../styles';
@@ -90,7 +90,11 @@ export const ShowResidentButton = ({
             <Style.PopoverBody contentColor={theme.color.gray4}>
               <h3>
                 Mostra no QR Code
-                <IconButton onClick={() => handleTogglePopover(false)} icon={icon.x} />
+                <IconButton
+                  onClick={() => handleTogglePopover(false)}
+                  icon={<IconX strokeColor="primary" />}
+                  fill="primary"
+                />
               </h3>
 
               <Style.Hr />
@@ -107,8 +111,8 @@ export const ShowResidentButton = ({
 
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
                 <Button
+                  bgColor="primary"
                   label={showToResident ? 'Remover' : 'Mostrar'}
-                  bgColor={theme.color.primary}
                   onClick={handleToggleShowToResident}
                 />
               </div>

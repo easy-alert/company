@@ -312,7 +312,7 @@ export const TicketHistoryActivities = ({
                 return (
                   <Style.ActivityContent key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityComment} />
+                      <ImageComponent src={icon.activityComment} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>
@@ -356,7 +356,7 @@ export const TicketHistoryActivities = ({
                 return (
                   <Style.ActivityContent key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityNotification} />
+                      <ImageComponent src={icon.activityNotification} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>

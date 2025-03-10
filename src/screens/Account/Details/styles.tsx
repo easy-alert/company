@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
 
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${theme.size.xsm};
-  padding-top: ${theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.xsm};
+  padding-top: ${({ theme }) => theme.size.sm};
 `;
 
 export const CardSection = styled.section`
@@ -13,9 +12,8 @@ export const CardSection = styled.section`
 
   display: flex;
   flex-direction: column;
-
-  gap: ${theme.size.xxsm};
-  margin: ${theme.size.sm} 0;
+  gap: ${({ theme }) => theme.size.xxsm};
+  margin: ${({ theme }) => theme.size.sm} 0;
 `;
 
 export const CardContainer = styled.div`
@@ -24,8 +22,8 @@ export const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
 
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xsm};
+  background-color: ${({ theme }) => theme.color.white};
+  border-radius: ${({ theme }) => theme.size.xsm};
 
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -42,15 +40,15 @@ export const CardImageContainer = styled.div`
   align-items: center;
   justify-content: center;
 
-  padding: ${theme.size.sm};
+  padding: ${({ theme }) => theme.size.sm};
 
-  border-right: 1px solid ${theme.color.gray2};
+  border-right: 1px solid ${({ theme }) => theme.color.gray2};
 
   @media (max-width: 900px) {
     width: 100%;
     height: 200px;
     border-right: none;
-    border-bottom: 1px solid ${theme.color.gray2};
+    border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
   }
 `;
 
@@ -59,7 +57,7 @@ export const CardTextContainer = styled.div`
 
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 
   > :last-child {
     border-bottom: none;
@@ -75,12 +73,12 @@ export const CardText = styled.div`
 
   display: flex;
   align-items: center;
-  padding: ${theme.size.csm} ${theme.size.csm};
+  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
 
-  border-bottom: 1px solid ${theme.color.gray2};
+  border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
 
   .terms {
-    color: ${theme.color.primary};
+    color: ${({ theme }) => theme.color.primary};
     font-weight: 500;
     text-decoration: underline;
   }
@@ -90,22 +88,22 @@ export const CardText = styled.div`
   }
 
   > h6 {
-    width: 35%;
-    margin-right: ${theme.size.xsm};
+    width: 40%;
+    margin-right: ${({ theme }) => theme.size.xsm};
   }
 
   > p {
     width: 60%;
 
     > a {
-      color: ${theme.color.black};
+      color: ${({ theme }) => theme.color.black};
     }
   }
 
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: ${theme.size.xsm};
+    gap: ${({ theme }) => theme.size.xsm};
 
     > h6 {
       width: 100%;
@@ -120,25 +118,25 @@ export const CardText = styled.div`
 export const Footer = styled.footer`
   display: flex;
   justify-content: flex-end;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const UsersCardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${theme.size.sm};
-  margin-bottom: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
 export const UsersCard = styled.div`
-  background-color: ${theme.color.white};
-  padding: ${theme.size.sm};
-  border-radius: ${theme.size.xxsm};
-  margin-top: ${theme.size.md};
+  background-color: ${({ theme }) => theme.color.white};
+  padding: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  margin-top: ${({ theme }) => theme.size.md};
 
   > h5 {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     font-weight: 500;
     text-align: center;
     margin-bottom: 40px;
@@ -148,12 +146,12 @@ export const UsersCard = styled.div`
 export const TableDataWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 `;
 
 export const TableButtons = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;

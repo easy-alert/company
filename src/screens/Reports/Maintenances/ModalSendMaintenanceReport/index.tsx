@@ -498,6 +498,7 @@ export const ModalSendMaintenanceReport = ({
                     });
                   }}
                   label="Finalizar manutenção"
+                  bgColor="primary"
                   message={{
                     title: 'Tem certeza que deseja enviar o relato?',
                     content: 'Esta ação é irreversível.',

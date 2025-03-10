@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const LoadingContainer = styled.div<{ bgColor: string }>`
   width: 100%;
@@ -93,6 +93,6 @@ export const LoadingWrapper = styled.div`
   opacity: 0.7;
 
   > h4 {
-    margin-bottom: ${theme.size.xsm};
+    margin-bottom: ${({ theme }) => theme.size.xsm};
   }
 `;

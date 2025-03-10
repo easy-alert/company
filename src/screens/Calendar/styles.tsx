@@ -1,16 +1,16 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const Container = styled.header`
   width: 100%;
-  padding-top: ${theme.size.sm};
+  padding-top: ${({ theme }) => theme.size.sm};
 `;
 
-export const Header = styled.header`
+export const Header = styled.header<{ arrowColor?: string }>`
   display: flex;
   align-items: center;
-  margin-bottom: ${theme.size.sm};
-  gap: ${theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 
   > :nth-child(3) {
     margin-left: auto;
@@ -18,12 +18,35 @@ export const Header = styled.header`
 
   > select {
     max-width: 300px;
+    cursor: pointer;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    background-color: ${({ theme }) => theme.color.white};
+    border-radius: ${({ theme }) => theme.size.xxsm};
+    padding: 0 ${({ theme }) => theme.size.sm};
+    padding-right: 40px;
+
+    background-image: ${({ arrowColor = 'black', theme }) => {
+      const color = theme.color[arrowColor as keyof typeof theme.color] || arrowColor;
+      return `url("data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+        `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+          <polyline points='6 9 12 15 18 9'/>
+        </svg>`,
+      )}")`;
+    }};
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
   }
 
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: ${theme.size.xxsm};
+    gap: ${({ theme }) => theme.size.xxsm};
     > :last-child {
       margin-left: 0;
     }
@@ -42,9 +65,9 @@ export const CalendarWrapper = styled.div<{
   yearChangeloading: boolean;
 }>`
   width: 100%;
-  background-color: ${theme.color.white};
-  padding: ${theme.size.sm};
-  border-radius: ${theme.size.xxsm};
+  background-color: ${({ theme }) => theme.color.white};
+  padding: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
   min-width: 850px;
   position: relative;
 
@@ -92,14 +115,14 @@ export const CalendarWrapper = styled.div<{
   .rbc-today {
     background-color: transparent;
     > button {
-      color: ${theme.color.primary};
+      color: ${({ theme }) => theme.color.primary};
       font-weight: 900;
     }
   }
 
   .rbc-now {
     > button {
-      color: ${theme.color.primary};
+      color: ${({ theme }) => theme.color.primary};
       font-weight: 900;
     }
   }
@@ -116,9 +139,8 @@ export const CalendarWrapper = styled.div<{
   }
 
   .rbc-month-view {
-    border-radius: ${theme.size.xxsm};
+    border-radius: ${({ theme }) => theme.size.xxsm};
   }
-
   /* .rbc-header::first-letter {
     text-transform: uppercase;
   } */
@@ -142,7 +164,7 @@ export const CalendarWrapper = styled.div<{
 
   .rbc-time-header-cell {
     border-top: 1px solid #ddd;
-    border-radius: ${theme.size.xxsm};
+    border-radius: ${({ theme }) => theme.size.xxsm};
   }
 
   .rbc-header {
@@ -153,15 +175,16 @@ export const CalendarWrapper = styled.div<{
   .rbc-time-header-content {
     border-bottom: 1px solid #ddd;
     border-right: 1px solid #ddd;
-    border-radius: ${theme.size.xxsm};
+    border-radius: ${({ theme }) => theme.size.xxsm};
   }
 
   .rbc-event {
-    margin-top: ${theme.size.xsm};
-    padding: ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.xxsm} ${theme.size.sm};
+    margin-top: ${({ theme }) => theme.size.xsm};
+    padding: ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm}
+      ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.sm};
     font-size: 12px;
     line-height: 14px;
-    border-radius: ${theme.size.xxsm};
+    border-radius: ${({ theme }) => theme.size.xxsm};
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
 
     :hover {
@@ -174,7 +197,7 @@ export const CalendarWrapper = styled.div<{
   }
 
   .rbc-row-segment {
-    padding: 0 ${theme.size.xxsm};
+    padding: 0 ${({ theme }) => theme.size.xxsm};
   }
 
   ${({ view }) =>
@@ -220,7 +243,7 @@ export const CalendarWrapper = styled.div<{
 
   .rbc-time-header-cell > :last-child,
   .rbc-month-header > :last-child {
-    border-top-right-radius: ${theme.size.xsm};
+    border-top-right-radius: ${({ theme }) => theme.size.xsm};
   }
 
   .rbc-row-bg > :nth-child(6),
@@ -259,8 +282,8 @@ export const YearLoading = styled.div`
   left: 260px;
   top: 19px;
 
-  border: 4px solid ${theme.color.primaryL};
-  border-top: 4px solid ${theme.color.primary};
+  border: 4px solid ${({ theme }) => theme.color.primaryL};
+  border-top: 4px solid ${({ theme }) => theme.color.primary};
   border-radius: 50%;
   width: 25px;
   height: 25px;
