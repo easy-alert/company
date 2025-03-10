@@ -157,7 +157,7 @@ export const LinkSupplierToMaintenanceHistory = ({
                   hasCircle
                   disabled={onQuery}
                   hideLabelOnMedia
-                  icon={<IconUnlink strokeColor="primary" />}
+                  icon={<IconUnlink strokeColor="white" />}
                   fill="primary"
                   label="Desvincular"
                   onClick={() => {

@@ -110,7 +110,7 @@ export const Tag = styled.div`
   display: flex;
   align-items: center;
   padding: 4px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
+  background-color: ${({ theme }) => theme.color.primaryM};
   width: fit-content;
   height: fit-content;
   border-radius: ${({ theme }) => theme.size.xxsm};

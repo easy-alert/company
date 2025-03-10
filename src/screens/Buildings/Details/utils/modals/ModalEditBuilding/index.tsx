@@ -226,7 +226,7 @@ export const ModalEditBuilding = ({
                   <PopoverButton
                     actionButtonBgColor={theme.color.actionDanger}
                     borderless
-                    textColor="primary"
+                    textColor="actionDanger"
                     type="Button"
                     label="Excluir"
                     message={{
@@ -246,7 +246,7 @@ export const ModalEditBuilding = ({
                   />
                 )}
 
-                <Button label="Salvar" type="submit" loading={onQuery} />
+                <Button label="Salvar" type="submit" loading={onQuery} bgColor="primary" />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

@@ -228,6 +228,7 @@ export const SuppliersList = () => {
               ))}
             </Select>
             <Button
+              bgColor="primary"
               loading={onQuery}
               label="Filtrar"
               onClick={() => {

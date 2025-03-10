@@ -309,6 +309,7 @@ export const ModalChecklistCreate = ({
 
               <Style.ButtonContainer>
                 <Button
+                  bgColor="primary"
                   label="Criar"
                   disable={disableCreateButton}
                   onClick={() => handleCreateChecklist('pending')}

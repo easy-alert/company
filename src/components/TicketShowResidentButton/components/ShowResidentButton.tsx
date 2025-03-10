@@ -111,8 +111,8 @@ export const ShowResidentButton = ({
 
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
                 <Button
+                  bgColor="primary"
                   label={showToResident ? 'Remover' : 'Mostrar'}
-                  bgColor={theme.color.primary}
                   onClick={handleToggleShowToResident}
                 />
               </div>

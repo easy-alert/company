@@ -221,7 +221,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 label="Convidado pode concluir manutenção?"
               />
 
-              <Button center label="Cadastrar" type="submit" loading={onQuery} />
+              <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />
             </Form>
           </Style.FormContainer>
         )}

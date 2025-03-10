@@ -240,6 +240,7 @@ export const ModalUpdateUser = ({
             />
 
             <Button
+              bgColor="primary"
               type="submit"
               label="Atualizar"
               loading={onQuery}

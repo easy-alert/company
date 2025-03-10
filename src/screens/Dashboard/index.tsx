@@ -1028,7 +1028,7 @@ export const Dashboard = () => {
                     <Button
                       label="Limpar filtros"
                       type="button"
-                      textColor="primary"
+                      textColor="actionDanger"
                       disable={onQuery}
                       borderless
                       onClick={() => {
@@ -1039,7 +1039,7 @@ export const Dashboard = () => {
                       }}
                     />
 
-                    <Button label="Filtrar" type="submit" loading={onQuery} />
+                    <Button label="Filtrar" type="submit" loading={onQuery} bgColor="primary" />
                   </Style.ButtonWrapper>
 
                   <Style.Tags>
@@ -1048,14 +1048,14 @@ export const Dashboard = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todas as edificações"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     )}
 
                     {dataFilter.buildings.map((e, i) => (
                       <ListTag
                         padding="4px 12px"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                         fontWeight={500}
                         label={e}
                         key={e}
@@ -1070,13 +1070,13 @@ export const Dashboard = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todas as categorias"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     )}
 
                     {dataFilter.categories.map((e, i) => (
                       <ListTag
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                         padding="4px 12px"
                         fontWeight={500}
                         label={e}
@@ -1092,14 +1092,14 @@ export const Dashboard = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os responsáveis"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     )}
 
                     {dataFilter.responsible.map((e, i) => (
                       <ListTag
                         padding="4px 12px"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                         fontWeight={500}
                         label={e}
                         key={e}

@@ -247,7 +247,7 @@ function TicketDetails({
             <Button
               label="Executar"
               permToCheck="tickets:update"
-              bgColor={theme.background.awaitingToFinish}
+              bgColor="awaitingToFinish"
               onClick={() =>
                 handleUpdateOneTicket({
                   id: ticket.id,
@@ -261,9 +261,9 @@ function TicketDetails({
           {ticket.statusName === 'awaitingToFinish' && (
             <>
               <Button
+                bgColor="actionBlue"
                 label="Voltar para Aberto"
                 permToCheck="tickets:update"
-                bgColor="white"
                 onClick={() =>
                   handleUpdateOneTicket({
                     id: ticket.id,
@@ -276,7 +276,7 @@ function TicketDetails({
               <Button
                 label="Finalizar"
                 permToCheck="tickets:update"
-                bgColor={theme.background.finished}
+                bgColor="finished"
                 onClick={() =>
                   handleUpdateOneTicket({
                     id: ticket.id,
@@ -292,7 +292,7 @@ function TicketDetails({
             <Button
               label="Reprovar"
               permToCheck="tickets:update"
-              bgColor={theme.background.dismissed}
+              bgColor="dismissed"
               onClick={() => handleSetView('dismiss')}
             />
           )}

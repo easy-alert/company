@@ -17,8 +17,8 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       color: {
         ...currentTheme.color,
         primary: color,
-        primaryM: `color-mix(in srgb, ${color}  50%, white)`,
-        primaryL: `color-mix(in srgb, ${color}  80%, white)`,
+        primaryM: `color-mix(in srgb, ${color}  70%, white)`,
+        primaryL: `color-mix(in srgb, ${color}  100%, white)`,
       },
     };
     setCurrentTheme(newTheme);

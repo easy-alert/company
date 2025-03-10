@@ -118,6 +118,7 @@ export const ShareButton = ({
               />
 
               <Button
+                bgColor="primary"
                 style={{ marginTop: '16px' }}
                 center
                 label="Copiar link"

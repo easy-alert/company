@@ -40,6 +40,8 @@ import { theme } from '@styles/theme';
 import type { ITicket } from '@customTypes/ITicket';
 
 // COMPONENTS
+import IconPdfLogo from '@assets/icons/pdfLogo';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
 import { IReportPdf } from '@customTypes/IReportPdf';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
@@ -496,8 +498,7 @@ export const TicketReports = () => {
                       onClick={() => tickets.length !== 0}
                     >
                       <IconButton
-                        hasCircle
-                        icon={icon.csvLogo}
+                        icon={<IconCsvLogo strokeColor="primary" />}
                         label="Exportar"
                         size="20px"
                         onClick={() => {
@@ -508,9 +509,8 @@ export const TicketReports = () => {
                     </CSVLink>
 
                     <IconButton
-                      icon={icon.pdfLogo}
+                      icon={<IconPdfLogo strokeColor="primary" />}
                       label="Exportar"
-                      hasCircle
                       size="20px"
                       onClick={() => handleGenerateTicketReportPDF()}
                       disabled={loading || tickets.length === 0}
@@ -528,7 +528,7 @@ export const TicketReports = () => {
                       }}
                     />
 
-                    <Button type="submit" label="Filtrar" disabled={loading} />
+                    <Button type="submit" label="Filtrar" disabled={loading} bgColor="primary" />
                   </Style.FilterButtonWrapper>
 
                   <Style.FilterTags>
@@ -537,7 +537,7 @@ export const TicketReports = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todas as edificações"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.buildings?.map((building) => (
@@ -562,7 +562,7 @@ export const TicketReports = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os status"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.status?.map((status) => (
@@ -587,7 +587,7 @@ export const TicketReports = () => {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os locais"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.places?.map((place) => (
@@ -611,7 +611,7 @@ export const TicketReports = () => {
                       <ListTag
                         padding="4px 12px"
                         fontWeight={500}
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                         label="Todos os tipos de serviço"
                       />
                     ) : (

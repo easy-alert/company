@@ -297,7 +297,7 @@ export const ModalEditAccount = ({ account, setAccount, handleModals }: IModalEd
                 </Style.ColorPickerContainer>
               )}
 
-              <Button center label="Salvar" type="submit" loading={onQuery} />
+              <Button center label="Salvar" type="submit" loading={onQuery} bgColor="primary" />
             </Form>
           </Style.FormContainer>
         )}

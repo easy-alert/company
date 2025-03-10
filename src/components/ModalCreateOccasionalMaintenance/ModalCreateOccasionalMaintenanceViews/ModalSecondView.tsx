@@ -207,7 +207,7 @@ const ModalSecondView = ({
             borderless
             label="Criar"
             bgColor="transparent"
-            textColor="primary"
+            textColor="actionBlue"
             onClick={() =>
               handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
             }
@@ -217,7 +217,7 @@ const ModalSecondView = ({
             borderless
             label="Iniciar execução"
             bgColor="transparent"
-            textColor="primary"
+            textColor="actionBlue"
             onClick={() => {
               handleCreateOccasionalMaintenance({
                 occasionalMaintenanceType: 'pending',
@@ -228,6 +228,7 @@ const ModalSecondView = ({
         </div>
 
         <Button
+          bgColor="primary"
           label="Criar finalizada"
           onClick={() => handleSetView(3)}
           disable={disableFinishedButton}

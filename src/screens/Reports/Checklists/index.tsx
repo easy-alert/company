@@ -26,6 +26,8 @@ import { catchHandler, dateFormatter } from '@utils/functions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/pdfLogo';
 
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
@@ -327,8 +329,7 @@ export const ChecklistReports = () => {
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
-                          hasCircle
-                          icon={icon.csvLogo}
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           label="Exportar"
                           size="20px"
                           onClick={() => {
@@ -338,16 +339,15 @@ export const ChecklistReports = () => {
                         />
                       </CSVLink>
                       <IconButton
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        hasCircle
                         size="20px"
                         onClick={() => {
                           setModalPrintReportOpen(true);
                         }}
                         disabled={checklists.length === 0}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
+                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>

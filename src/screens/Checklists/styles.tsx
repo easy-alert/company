@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const Container = styled.div`
   padding-top: ${({ theme }) => theme.size.sm};
@@ -371,8 +370,8 @@ export const ChecklistWrapper = styled.div`
 `;
 
 export const DotsButton = styled.div<{ status: 'pending' | 'completed' }>`
-  padding: $ ${({ theme }) => theme.size.xsm} $ ${({ theme }) => theme.size.xsm} $
-    ${({ theme }) => theme.size.xsm} $ ${({ theme }) => theme.size.sm};
-  border-radius: 0 $ ${({ theme }) => theme.size.xxsm} $ ${({ theme }) => theme.size.xxsm} 0;
+  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
+    ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+  border-radius: 0 ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0;
   background-color: ${({ status }) => (status === 'pending' ? '#FFB200CC' : '#34B53ACC')};
 `;

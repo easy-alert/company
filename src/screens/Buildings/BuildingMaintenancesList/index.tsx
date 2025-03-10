@@ -162,7 +162,7 @@ export const BuildingMaintenancesList = () => {
 
             <IconButton
               hasCircle
-              icon={icon.edit}
+              icon={icon.editWithBg}
               label="Editar"
               hideLabelOnMedia
               onClick={() => {

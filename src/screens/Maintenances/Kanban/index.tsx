@@ -431,6 +431,7 @@ export const MaintenancesKanban = () => {
                   </FormikSelect>
 
                   <Select
+                    arrowColor="primary"
                     disabled={loading || !showPriority}
                     selectPlaceholderValue={' '}
                     label="Prioridade"
@@ -479,12 +480,17 @@ export const MaintenancesKanban = () => {
                       onClick={() => handleClearFilter()}
                     />
 
-                    <Button type="submit" label="Filtrar" disable={loading} />
+                    <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
                   </Style.FilterButtonWrapper>
 
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todas as edificações"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
@@ -503,7 +509,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.users?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os usuários" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os usuários"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.users?.map((user) => (
                         <ListTag
@@ -522,7 +533,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.status?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os status" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os status"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
@@ -544,7 +560,12 @@ export const MaintenancesKanban = () => {
                     )}
 
                     {filter.categories?.length === 0 ? (
-                      <ListTag padding="4px 12px" fontWeight={500} label="Todos as categorias" />
+                      <ListTag
+                        padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos as categorias"
+                        backgroundColor="primaryM"
+                      />
                     ) : (
                       filter.categories?.map((category) => (
                         <ListTag

@@ -368,6 +368,7 @@ export const ModalUpdateChecklist = ({
                     disabled={onQuery || onImageQuery}
                     actionButtonBgColor={theme.color.actionDanger}
                     type="Button"
+                    bgColor="primary"
                     label="Salvar"
                     message={{
                       title:

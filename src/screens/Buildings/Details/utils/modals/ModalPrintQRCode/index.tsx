@@ -200,6 +200,7 @@ export const ModalPrintQRCode = ({
         <Style.Container>
           <Style.Selects>
             <Select
+              arrowColor="primary"
               disabled={loading}
               label="Formato"
               selectPlaceholderValue=" "
@@ -214,6 +215,7 @@ export const ModalPrintQRCode = ({
             </Select>
 
             <Select
+              arrowColor="primary"
               disabled={loading}
               label="Tipo"
               selectPlaceholderValue=" "

@@ -492,7 +492,7 @@ function TicketsPage() {
                   <Style.FilterButtonWrapper>
                     <Button
                       type="button"
-                      textColor="primary"
+                      textColor="actionDanger"
                       borderless
                       label="Limpar filtros"
                       onClick={() => {
@@ -502,7 +502,7 @@ function TicketsPage() {
                       }}
                     />
 
-                    <Button type="submit" label="Filtrar" disabled={loading} />
+                    <Button type="submit" label="Filtrar" disabled={loading} bgColor="primary" />
                   </Style.FilterButtonWrapper>
 
                   <Style.FilterTags>
@@ -511,12 +511,12 @@ function TicketsPage() {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todas as edificações"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
-                          backgroundColor="primary"
+                          backgroundColor="primaryM"
                           key={building}
                           label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
                           padding="4px 12px"
@@ -536,12 +536,12 @@ function TicketsPage() {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os status"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
-                          backgroundColor="primary"
+                          backgroundColor="primaryM"
                           key={status}
                           label={ticketStatus.find((s) => s.name === status)?.label || ''}
                           padding="4px 12px"
@@ -561,13 +561,13 @@ function TicketsPage() {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os locais"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.places?.map((place) => (
                         <ListTag
                           key={place}
-                          backgroundColor="primary"
+                          backgroundColor="primaryM"
                           label={ticketPlaces.find((p) => p.id === place)?.label || ''}
                           padding="4px 12px"
                           fontWeight={500}
@@ -586,12 +586,12 @@ function TicketsPage() {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os tipos de serviço"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.serviceTypes?.map((serviceType) => (
                         <ListTag
-                          backgroundColor="primary"
+                          backgroundColor="primaryM"
                           key={serviceType}
                           label={serviceTypes.find((s) => s.id === serviceType)?.label || ''}
                           padding="4px 12px"
@@ -613,12 +613,12 @@ function TicketsPage() {
                         padding="4px 12px"
                         fontWeight={500}
                         label="Todos os apartamentos"
-                        backgroundColor="primary"
+                        backgroundColor="primaryM"
                       />
                     ) : (
                       filter.apartments?.map((apartment) => (
                         <ListTag
-                          backgroundColor="primary"
+                          backgroundColor="primaryM"
                           key={apartment}
                           label={apartment}
                           padding="4px 12px"

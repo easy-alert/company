@@ -69,6 +69,7 @@ export const ModalDeleteChecklist = ({
 
         <Style.ButtonContainer>
           <Button
+            textColor="actionDanger"
             borderless
             label="Cancelar"
             type="button"
@@ -81,6 +82,7 @@ export const ModalDeleteChecklist = ({
           <PopoverButton
             disabled={onQuery || !deleteMode}
             actionButtonBgColor={theme.color.actionDanger}
+            bgColor="primary"
             type="Button"
             label="Excluir"
             message={{

@@ -276,7 +276,7 @@ export const ModalEditMaintenance = ({
                   <PopoverButton
                     actionButtonBgColor={theme.color.actionDanger}
                     borderless
-                    textColor="primary"
+                    textColor="actionDanger"
                     type="Button"
                     label="Excluir"
                     message={{
@@ -296,7 +296,13 @@ export const ModalEditMaintenance = ({
                     }}
                   />
                 )}
-                <Button label="Salvar" type="submit" loading={onQuery} disable={onFileQuery} />
+                <Button
+                  label="Salvar"
+                  type="submit"
+                  loading={onQuery}
+                  disable={onFileQuery}
+                  bgColor="primary"
+                />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

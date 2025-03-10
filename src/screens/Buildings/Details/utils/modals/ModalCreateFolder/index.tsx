@@ -51,7 +51,7 @@ export const ModalCreateFolder = ({
                 name="name"
                 error={touched.name && (errors.name || null)}
               />
-              <Button label="Criar" type="submit" center loading={onQuery} />
+              <Button label="Criar" type="submit" center loading={onQuery} bgColor="primary" />
             </Form>
           )}
         </Formik>

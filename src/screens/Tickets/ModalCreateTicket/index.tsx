@@ -380,6 +380,7 @@ export const ModalCreateTicket = ({
               </Style.Row>
 
               <Button
+                bgColor="primary"
                 center
                 label="Cadastrar"
                 type="submit"

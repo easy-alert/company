@@ -428,7 +428,7 @@ export const ModalSendMaintenanceReport = ({
                     {hasUpdatePermission && (
                       <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
                         <input {...getInputProps()} />
-                        <Image img={icon.addFile} width="40px" height="32px" radius="0" hasCircle />
+                        <Image img={icon.addFile} width="40px" height="32px" radius="0" />
                       </Style.DragAndDropZoneFile>
                     )}
 
@@ -543,7 +543,7 @@ export const ModalSendMaintenanceReport = ({
                         inProgressChange: !maintenance.inProgress,
                       });
                     }}
-                    textColor={theme.color.actionBlue}
+                    textColor="actionBlue"
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
                     permToCheck="maintenances:update"
@@ -580,8 +580,9 @@ export const ModalSendMaintenanceReport = ({
                         yearToRequest,
                       });
                     }}
-                    textColor={theme.color.actionBlue}
+                    textColor="actionBlue"
                     borderless
+                    bgColor="primary"
                     label="Salvar"
                     permToCheck="maintenances:update"
                     message={{
@@ -615,6 +616,7 @@ export const ModalSendMaintenanceReport = ({
                       origin: account?.origin ?? 'Company',
                     });
                   }}
+                  bgColor="primary"
                   label="Finalizar manutenção"
                   permToCheck="maintenances:finish"
                   message={{

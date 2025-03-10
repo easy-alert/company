@@ -28,6 +28,8 @@ import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@
 
 // GLOBAL ICONS
 import { icon } from '@assets/icons';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/pdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
@@ -529,9 +531,8 @@ export const MaintenanceReports = () => {
                         onClick={() => maintenances.length !== 0}
                       >
                         <IconButton
-                          icon={icon.csvLogo}
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           label="Exportar"
-                          hasCircle
                           size="20px"
                           onClick={() => {
                             //
@@ -540,16 +541,15 @@ export const MaintenanceReports = () => {
                         />
                       </CSVLink>
                       <IconButton
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        hasCircle
                         size="20px"
                         onClick={() => {
                           requestPdf();
                         }}
                         disabled={maintenances.length === 0 || onPdfQuery}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
+                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersSecondGrid>

@@ -479,6 +479,7 @@ export const BuildingDetails = () => {
             </Style.CardHeaderLeftSide>
             <Style.ButtonWrapper>
               <Button
+                bgColor="primary"
                 label="Tela do Morador"
                 onClick={() =>
                   window.open(
@@ -490,7 +491,11 @@ export const BuildingDetails = () => {
                 }
               />
 
-              <Button label="QR Code" onClick={() => setModalPrintQRCodeOpen(true)} />
+              <Button
+                label="QR Code"
+                onClick={() => setModalPrintQRCodeOpen(true)}
+                bgColor="primary"
+              />
             </Style.ButtonWrapper>
           </Style.FirstCard>
         )}
@@ -934,7 +939,7 @@ export const BuildingDetails = () => {
 
                 <IconButton
                   hasCircle
-                  icon={icon.edit}
+                  icon={icon.editWithBg}
                   label="Editar"
                   permToCheck="maintenances:plan"
                   hideLabelOnMedia

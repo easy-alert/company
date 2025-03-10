@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 interface TabProps {
   active: boolean;
@@ -126,7 +125,7 @@ export const Tab = styled.div<TabProps>`
 
   font-size: 12px;
 
-  background-color: ${({ active, theme }) => (active ? theme.color.primaryL : 'transparent')};
+  background-color: ${({ active, theme }) => (active ? theme.color.primaryM : 'transparent')};
   transition: background-color 0.4s ease;
 
   cursor: pointer;

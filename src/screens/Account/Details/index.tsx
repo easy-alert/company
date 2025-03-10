@@ -26,7 +26,6 @@ import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@ut
 import { icon } from '@assets/icons';
 import IconEdit from '@assets/icons/IconEdit';
 import IconEye from '@assets/icons/IconEye';
-import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
@@ -217,7 +216,8 @@ export const AccountDetails = () => {
         {account?.User.isCompanyOwner && (
           <IconButton
             hideLabelOnMedia
-            icon={icon.eye}
+            icon={<IconEye strokeColor="primary" />}
+            fill="primary"
             label="Permissões"
             onClick={() => navigate(`/account/${account.User.id}/permissions`)}
           />
@@ -230,9 +230,9 @@ export const AccountDetails = () => {
             <h5>Usuários</h5>
 
             <IconButton
+              hasCircle
               hideLabelOnMedia
-              icon={<IconPlus strokeColor="primary" backgroundColor="white" padding="4px" />}
-              fill="primary"
+              icon={icon.plusWithBg}
               label="Cadastrar"
               onClick={() => {
                 setModalCreateUserOpen(true);
@@ -331,7 +331,7 @@ export const AccountDetails = () => {
                             disabled={onQuery}
                             buttonIconSize="16px"
                             iconButtonClassName="p4"
-                            actionButtonBgColor={theme.color.primary}
+                            actionButtonBgColor="primary"
                             type="IconButton"
                             label="Excluir"
                             buttonIcon={icon.trash}
@@ -349,13 +349,7 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={
-                              <IconEdit
-                                strokeColor="white"
-                                backgroundColor="primary"
-                                padding="4px"
-                              />
-                            }
+                            icon={<IconEdit strokeColor="primary" padding="4px" />}
                             fill="primary"
                             label="Editar"
                             onClick={() => {

@@ -248,7 +248,7 @@ export const ModalCreateMaintenance = ({
               </Style.SelectWrapper> */}
 
               <FormikCheckbox name="createAgain" label="Salvar e criar outra" />
-              <Button center label="Criar" type="submit" loading={onQuery} />
+              <Button center label="Criar" type="submit" loading={onQuery} bgColor="primary" />
             </Form>
           </Style.FormContainer>
         )}

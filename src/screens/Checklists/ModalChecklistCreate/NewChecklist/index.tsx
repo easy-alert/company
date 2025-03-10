@@ -88,6 +88,7 @@ export const NewChecklist = ({
 
         <Style.ChecklistButtons>
           <Button
+            bgColor="primary"
             label="Adicionar"
             onClick={() => {
               const newItems = newChecklist.items || [];

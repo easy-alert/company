@@ -55,7 +55,9 @@ export const ContainerButton = styled.div<{
     :hover {
       opacity: 0.7;
       ${({ outlined, bgColor, theme }) => {
-        const themeColor = theme.color.primaryM;
+        const themeColor =
+          theme.background[bgColor as keyof typeof theme.background] ||
+          theme.color[bgColor as keyof typeof theme.color];
 
         if (outlined && themeColor) return `background-color: ${`${themeColor}26`};`;
 
@@ -64,7 +66,9 @@ export const ContainerButton = styled.div<{
     }
 
     ${({ bgColor, theme }) => {
-      const themeColor = theme.color.primary;
+      const themeColor =
+        theme.background[bgColor as keyof typeof theme.background] ||
+        theme.color[bgColor as keyof typeof theme.color];
 
       if (themeColor) return `background-color: ${themeColor};`;
 
