@@ -888,7 +888,7 @@ export const Dashboard = () => {
 
           <Formik
             initialValues={{
-              startDate: new Date(new Date().setDate(new Date().getDate() - 7))
+              startDate: new Date(new Date().setMonth(new Date().getMonth() - 3))
                 .toISOString()
                 .split('T')[0],
               endDate: new Date().toISOString().split('T')[0],
