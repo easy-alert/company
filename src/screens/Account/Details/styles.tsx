@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const Header = styled.header`
   display: flex;
@@ -9,18 +8,74 @@ export const Header = styled.header`
 `;
 
 export const CardSection = styled.section`
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.size.xxsm};
   margin: ${({ theme }) => theme.size.sm} 0;
 `;
 
-export const Card = styled.div`
+export const CardContainer = styled.div`
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+
+  background-color: ${({ theme }) => theme.color.white};
+  border-radius: ${({ theme }) => theme.size.xsm};
+
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+  }
+`;
+
+export const CardImageContainer = styled.div`
+  width: 15%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: ${({ theme }) => theme.size.sm};
+
+  border-right: 1px solid ${({ theme }) => theme.color.gray2};
+
+  @media (max-width: 900px) {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
+  }
+`;
+
+export const CardTextContainer = styled.div`
+  width: 85%;
+
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.xsm};
+
+  > :last-child {
+    border-bottom: none;
+  }
+
+  @media (max-width: 900px) {
+    width: 100%;
+  }
+`;
+
+export const CardText = styled.div`
+  width: 100%;
+
   display: flex;
   align-items: center;
   padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  background-color: ${({ theme }) => theme.color.white};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+
+  border-bottom: 1px solid ${({ theme }) => theme.color.gray2};
 
   .terms {
     color: ${({ theme }) => theme.color.primary};
@@ -30,11 +85,6 @@ export const Card = styled.div`
 
   .link {
     word-break: break-all;
-  }
-
-  > img {
-    width: 80px;
-    height: 80px;
   }
 
   > h6 {

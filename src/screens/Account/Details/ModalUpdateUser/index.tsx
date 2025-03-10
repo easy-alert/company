@@ -1,15 +1,16 @@
 // REACT
 import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 // LIBS
-import * as yup from 'yup';
 import { Form, Formik } from 'formik';
 
-// SERVICES
-import { Api } from '@services/api';
+// CONTEXT
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
-// GLOBAL COMPONENTSimport { Button } from '@components/Buttons/Button';
+// SERVICES
+import { updateUser } from '@services/apis/updateUser';
+
+// GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
@@ -17,63 +18,18 @@ import { FormikImageInput } from '@components/Form/FormikImageInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
 
 // GLOBAL UTILS
-import { applyMask, catchHandler, unMask, uploadFile } from '@utils/functions';
+import { applyMask, uploadFile } from '@utils/functions';
+
+// GLOBAL TYPES
+import type { IAccount } from '@utils/types';
+
+// UTILS
+import { userUpdateSchema } from './schema';
 
 // TYPES
 import type { ISelectedUser } from '..';
 
-const fieldLabels: Record<string, string> = {
-  name: 'Nome',
-  email: 'E-mail',
-  phoneNumber: 'Telefone',
-  password: 'Senha',
-  confirmPassword: 'Confirmar senha',
-};
-
-const schema = yup
-  .object({
-    image: yup
-      .mixed()
-      .nullable()
-      .test(
-        'FileSize',
-        'O tamanho da imagem excedeu o limite.',
-        (value) => !value || (value && value.size <= 5000000),
-      )
-      .test(
-        'FileType',
-        'Formato inválido.',
-        (value) =>
-          !value ||
-          (value &&
-            (value.type === 'image/png' ||
-              value.type === 'image/jpeg' ||
-              value.type === 'image/jpg')),
-      ),
-    name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
-    role: yup.string(),
-    email: yup
-      .string()
-      .required(() => `O ${fieldLabels.email.toLowerCase()} deve ser preenchido.`)
-      .email('informe um email válido.'),
-    phoneNumber: yup
-      .string()
-      .min(14, 'O número de telefone deve conter no mínimo 14 caracteres.')
-      .required(`O ${fieldLabels.phoneNumber.toLowerCase()} deve ser preenchido.`),
-    password: yup.string().matches(/^(|.{8,})$/, 'a senha deve ter pelo menos 8 caracteres.'),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'as senhas não coincidem.')
-      .when('password', {
-        is: (password: string) => password && password.length > 0,
-        then: yup
-          .string()
-          .required(() => `O ${fieldLabels.confirmPassword.toLowerCase()} deve ser preenchido.`),
-      }),
-  })
-  .required();
-
-interface FormValues {
+export interface UpdateUserValues {
   id?: string;
   image?: string;
   name: string;
@@ -96,24 +52,41 @@ export const ModalUpdateUser = ({
   onThenRequest,
   handleModals,
 }: IModalUpdateUser) => {
+  const { handleChangeUser } = useAuthContext();
+
   const [onQuery, setOnQuery] = useState(false);
 
-  async function updateUser(data: FormValues) {
+  const handleEditUser = async (values: UpdateUserValues) => {
     setOnQuery(true);
 
-    await Api.put('/usercompany/update', data)
-      .then((res) => {
-        onThenRequest();
-        toast.success(res.data.ServerMessage.message);
-        handleModals('updateUser', false);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setOnQuery(false);
+    try {
+      let imageUrl: string | null = null;
+
+      if (values.image && typeof values.image === 'object') {
+        const { Location } = await uploadFile(values.image);
+        imageUrl = Location;
+      } else {
+        imageUrl = values.image || '';
+      }
+
+      const data = {
+        ...values,
+        id: selectedUser.id,
+        image: imageUrl,
+      };
+
+      const updatedUser = await updateUser({
+        data,
       });
-  }
+
+      if (!updatedUser) return;
+
+      handleChangeUser(updatedUser as IAccount['User']);
+      handleModals('updateUser', false);
+    } finally {
+      setOnQuery(false);
+    }
+  };
 
   return (
     <Modal title="Editar usuário" setModal={() => handleModals('updateUser', false)}>
@@ -128,28 +101,8 @@ export const ModalUpdateUser = ({
           confirmPassword: '',
           isBlocked: selectedUser.isBlocked,
         }}
-        validationSchema={schema}
-        onSubmit={async (values) => {
-          setOnQuery(true);
-
-          let imageUrl: string | null = null;
-
-          if (values.image && typeof values.image === 'object') {
-            const { Location } = await uploadFile(values.image);
-            imageUrl = Location;
-          } else {
-            imageUrl = values.image || '';
-          }
-
-          const data = {
-            ...values,
-            id: selectedUser.id,
-            image: imageUrl,
-            phoneNumber: unMask(values.phoneNumber),
-          };
-
-          await updateUser(data);
-        }}
+        validationSchema={userUpdateSchema}
+        onSubmit={async (values) => handleEditUser(values)}
       >
         {({ errors, values, touched, setFieldValue }) => (
           <Form>
@@ -210,6 +163,7 @@ export const ModalUpdateUser = ({
               arrowColor="primary"
               placeholder="Selecione o status"
               selectPlaceholderValue="Selecione o status"
+              value={values.isBlocked ? 'blocked' : 'active'}
               error={touched.isBlocked && errors.isBlocked ? errors.isBlocked : null}
               onChange={(e) => {
                 setFieldValue('isBlocked', e.target.value === 'blocked');

@@ -10,6 +10,9 @@ export interface IUser {
   image?: string;
   role?: string;
 
+  isBlocked: boolean;
+  lastAccess: string;
+
   Permissions: {
     Permission: IPermission;
     id: string;
@@ -19,9 +22,6 @@ export interface IUser {
     updatedAt: string;
   }[];
 
-  isBlocked: boolean;
-
-  lastAccess: string;
   createdAt: string;
   updatedAt: string;
 }
