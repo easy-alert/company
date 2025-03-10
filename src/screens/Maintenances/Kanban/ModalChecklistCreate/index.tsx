@@ -198,6 +198,7 @@ export const ModalChecklistCreate = ({
         <Style.Content>
           {!buildingId && buildingsForSelect && (
             <Select
+              arrowColor="primary"
               label="Prédio *"
               placeholder="Selecione o prédio"
               selectPlaceholderValue={' '}

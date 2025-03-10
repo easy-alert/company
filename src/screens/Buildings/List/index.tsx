@@ -19,6 +19,8 @@ import { capitalizeFirstLetter, requestBuildingTypes } from '@utils/functions';
 import type { IBuildingTypes } from '@utils/types';
 
 // STYLES
+import IconRightArrow from '@assets/icons/IconRightArrow';
+import IconSearch from '@assets/icons/IconSearch';
 import * as Style from './styles';
 
 // MODALS
@@ -79,7 +81,8 @@ export const BuildingsList = () => {
 
           <Style.SearchField>
             <IconButton
-              icon={icon.search}
+              icon={<IconSearch strokeColor="primary" />}
+              fill="primary"
               size="16px"
               onClick={() => {
                 requestBuildingList({
@@ -126,6 +129,7 @@ export const BuildingsList = () => {
         </Style.LeftSide>
 
         <IconButton
+          hasCircle
           hideLabelOnMedia
           fontWeight="500"
           label="Cadastrar"
@@ -167,7 +171,7 @@ export const BuildingsList = () => {
                     </p>
                   </Style.BuildingCardHeaderInfo>
 
-                  <Image img={icon.rightArrow} size="16px" />
+                  <Image img={<IconRightArrow strokeColor="primary" />} size="16px" />
                 </Style.BuildingCardHeader>
 
                 <Style.BuildingCardFooter>

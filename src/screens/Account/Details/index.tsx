@@ -24,6 +24,8 @@ import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@ut
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconEdit from '@assets/icons/IconEdit';
+import IconEye from '@assets/icons/IconEye';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
@@ -286,6 +288,7 @@ export const AccountDetails = () => {
             <h5>Usuários</h5>
 
             <IconButton
+              hasCircle
               hideLabelOnMedia
               icon={icon.plusWithBg}
               label="Cadastrar"
@@ -384,7 +387,7 @@ export const AccountDetails = () => {
                             disabled={onQuery}
                             buttonIconSize="16px"
                             iconButtonClassName="p4"
-                            actionButtonBgColor={theme.color.primary}
+                            actionButtonBgColor="primary"
                             type="IconButton"
                             label="Excluir"
                             buttonIcon={icon.trash}
@@ -402,7 +405,8 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={icon.edit}
+                            icon={<IconEdit strokeColor="primary" padding="4px" />}
+                            fill="primary"
                             label="Editar"
                             onClick={() => {
                               setSelectedUser({
@@ -422,7 +426,8 @@ export const AccountDetails = () => {
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={icon.eye}
+                            icon={<IconEye strokeColor="primary" />}
+                            fill="primary"
                             label="Permissões"
                             onClick={() => navigate(`/account/${User.id}/permissions`)}
                           />

@@ -24,11 +24,10 @@ import { Select } from '@components/Inputs/Select';
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/pdfLogo';
 
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
@@ -195,6 +194,7 @@ export const ChecklistReports = () => {
                   <Select
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
@@ -227,6 +227,7 @@ export const ChecklistReports = () => {
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
                     value=""
+                    arrowColor="primary"
                     onChange={(e) => {
                       setStatusForFilter((prevState) => [...prevState, e.target.value]);
 
@@ -272,7 +273,7 @@ export const ChecklistReports = () => {
                   <s.TagWrapper>
                     {buildingsForFilter.length === 0 && (
                       <s.Tag>
-                        <p className="p3">Todas as edificações</p>
+                        <p className="p3">Todas as edificações </p>
                       </s.Tag>
                     )}
 
@@ -328,9 +329,8 @@ export const ChecklistReports = () => {
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
-                          icon={icon.csvLogo}
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           label="Exportar"
-                          color={theme.color.primary}
                           size="20px"
                           onClick={() => {
                             //
@@ -339,16 +339,15 @@ export const ChecklistReports = () => {
                         />
                       </CSVLink>
                       <IconButton
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        color={theme.color.primary}
                         size="20px"
                         onClick={() => {
                           setModalPrintReportOpen(true);
                         }}
                         disabled={checklists.length === 0}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
+                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>

@@ -395,6 +395,7 @@ export const ModalSendMaintenanceReport = ({
 
                   <Select
                     label="Prioridade"
+                    arrowColor="primary"
                     placeholder="Selecione uma prioridade"
                     selectPlaceholderValue="Selecione uma prioridade"
                     value={maintenance.priorityName}
@@ -542,7 +543,7 @@ export const ModalSendMaintenanceReport = ({
                         inProgressChange: !maintenance.inProgress,
                       });
                     }}
-                    textColor={theme.color.actionBlue}
+                    textColor="actionBlue"
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
                     permToCheck="maintenances:update"
@@ -579,8 +580,9 @@ export const ModalSendMaintenanceReport = ({
                         yearToRequest,
                       });
                     }}
-                    textColor={theme.color.actionBlue}
+                    textColor="actionBlue"
                     borderless
+                    bgColor="primary"
                     label="Salvar"
                     permToCheck="maintenances:update"
                     message={{
@@ -614,6 +616,7 @@ export const ModalSendMaintenanceReport = ({
                       origin: account?.origin ?? 'Company',
                     });
                   }}
+                  bgColor="primary"
                   label="Finalizar manutenção"
                   permToCheck="maintenances:finish"
                   message={{

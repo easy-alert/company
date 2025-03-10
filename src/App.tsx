@@ -7,14 +7,15 @@ import { ErrorFallback } from '@components/ErrorFallback';
 
 import { handleError } from '@utils/functions';
 
-import { theme } from '@styles/theme';
 import GlobalCSS from '@styles/globalCSS';
 
-import AppRoutes from './routes/routes';
+import { useTheme } from '@contexts/Auth/ThemeContext';
 
 import 'react-toastify/dist/ReactToastify.css';
+import AppRoutes from './routes/routes';
 
 export default function App() {
+  const { currentTheme } = useTheme();
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
@@ -22,7 +23,7 @@ export default function App() {
         handleError({ error });
       }}
     >
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={currentTheme}>
         <GlobalCSS />
         <ToastContainer
           position="top-right"

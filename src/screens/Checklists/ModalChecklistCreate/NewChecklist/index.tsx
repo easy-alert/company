@@ -88,6 +88,7 @@ export const NewChecklist = ({
 
         <Style.ChecklistButtons>
           <Button
+            bgColor="primary"
             label="Adicionar"
             onClick={() => {
               const newItems = newChecklist.items || [];
@@ -96,7 +97,7 @@ export const NewChecklist = ({
             }}
           />
 
-          <Button label="Salvar" bgColor="transparent" textColor="black" onClick={saveChecklist} />
+          <Button label="Salvar" bgColor="transparent" onClick={saveChecklist} />
         </Style.ChecklistButtons>
       </Style.ChecklistContainer>
     </Style.Content>

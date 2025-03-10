@@ -32,6 +32,7 @@ import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses'
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -478,6 +479,7 @@ export const BuildingDetails = () => {
             </Style.CardHeaderLeftSide>
             <Style.ButtonWrapper>
               <Button
+                bgColor="primary"
                 label="Tela do Morador"
                 onClick={() =>
                   window.open(
@@ -489,7 +491,11 @@ export const BuildingDetails = () => {
                 }
               />
 
-              <Button label="QR Code" onClick={() => setModalPrintQRCodeOpen(true)} />
+              <Button
+                label="QR Code"
+                onClick={() => setModalPrintQRCodeOpen(true)}
+                bgColor="primary"
+              />
             </Style.ButtonWrapper>
           </Style.FirstCard>
         )}
@@ -500,6 +506,7 @@ export const BuildingDetails = () => {
 
             <Style.CardHeaderButtonsContainer>
               <IconButton
+                hasCircle
                 icon={icon.editWithBg}
                 label="Editar"
                 permToCheck="buildings:update"
@@ -508,6 +515,7 @@ export const BuildingDetails = () => {
               />
 
               <IconButton
+                hasCircle
                 icon={icon.plusWithBg}
                 label="Apartamentos"
                 permToCheck="buildings:update"
@@ -853,7 +861,8 @@ export const BuildingDetails = () => {
                         <Style.PasswordDiv>
                           <IconButton
                             size="16px"
-                            icon={icon.edit}
+                            icon={<IconEdit strokeColor="primary" />}
+                            fill="primary"
                             label="Editar"
                             className="p4"
                             onClick={() => {
@@ -885,7 +894,8 @@ export const BuildingDetails = () => {
                         <Style.PasswordDiv>
                           <IconButton
                             size="16px"
-                            icon={icon.edit}
+                            icon={<IconEdit strokeColor="primary" />}
+                            fill="primary"
                             label="Editar"
                             className="p4"
                             onClick={() => {
@@ -917,6 +927,7 @@ export const BuildingDetails = () => {
 
               <Style.AnnexCardButtons>
                 <IconButton
+                  hasCircle
                   icon={icon.listWithBg}
                   label="Visualizar"
                   hideLabelOnMedia
@@ -927,6 +938,7 @@ export const BuildingDetails = () => {
                 />
 
                 <IconButton
+                  hasCircle
                   icon={icon.editWithBg}
                   label="Editar"
                   permToCheck="maintenances:plan"
@@ -970,6 +982,7 @@ export const BuildingDetails = () => {
 
               <Style.AnnexCardButtons>
                 <IconButton
+                  hasCircle
                   icon={icon.plusWithBg}
                   label="Pasta"
                   size="24px"
@@ -978,6 +991,7 @@ export const BuildingDetails = () => {
                 />
 
                 <IconButton
+                  hasCircle
                   icon={icon.addFileV2}
                   label="Arquivos"
                   size="24px"
@@ -1030,6 +1044,7 @@ export const BuildingDetails = () => {
             <Style.CardHeader>
               <h5>Banners</h5>
               <IconButton
+                hasCircle
                 icon={icon.plusWithBg}
                 label="Cadastrar"
                 size="24px"
