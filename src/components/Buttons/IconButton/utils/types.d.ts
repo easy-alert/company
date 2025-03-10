@@ -1,5 +1,5 @@
 export interface IIconButton {
-  icon: string | JSX.Element;
+  icon: ReactNode;
   gap?: string;
   color?: string;
   label?: string;
