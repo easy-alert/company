@@ -260,7 +260,7 @@ export const Dashboard = () => {
   const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
   const dataFilterInitialValues: IDashboardFilter = {
-    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0],
+    startDate: new Date(new Date().setDate(new Date().getMonth() - 3)).toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
