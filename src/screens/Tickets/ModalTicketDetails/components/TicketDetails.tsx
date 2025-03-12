@@ -12,6 +12,9 @@ import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
 
+// GLOBAL THEMES
+import { theme } from '@styles/theme';
+
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
@@ -186,7 +189,7 @@ function TicketDetails({
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
             <Typography variant="h3">
-              Assinatura:
+              Assinatura:{' '}
               <Typography variant="span" fontSize="sm" style={{ textDecoration: 'underline' }}>
                 {ticket.residentName}
               </Typography>
@@ -244,7 +247,7 @@ function TicketDetails({
             <Button
               label="Executar"
               permToCheck="tickets:update"
-              bgColor="awaitingToFinish"
+              bgColor={theme.background.awaitingToFinish}
               onClick={() =>
                 handleUpdateOneTicket({
                   id: ticket.id,
@@ -259,9 +262,9 @@ function TicketDetails({
             <>
               <Button
                 label="Voltar para Aberto"
-                textColor="actionBlue"
-                bgColor="transparent"
                 permToCheck="tickets:update"
+                bgColor="white"
+                textColor={theme.color.actionBlue}
                 onClick={() =>
                   handleUpdateOneTicket({
                     id: ticket.id,
@@ -274,7 +277,7 @@ function TicketDetails({
               <Button
                 label="Finalizar"
                 permToCheck="tickets:update"
-                bgColor="finished"
+                bgColor={theme.background.finished}
                 onClick={() =>
                   handleUpdateOneTicket({
                     id: ticket.id,
@@ -290,7 +293,7 @@ function TicketDetails({
             <Button
               label="Reprovar"
               permToCheck="tickets:update"
-              bgColor="dismissed"
+              bgColor={theme.background.dismissed}
               onClick={() => handleSetView('dismiss')}
             />
           )}

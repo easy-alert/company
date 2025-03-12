@@ -60,12 +60,7 @@ export const ModalCreateApartments = ({
       </Style.ApartmentList>
 
       <Style.ButtonContainer>
-        <Button
-          label="Salvar"
-          onClick={handleCreateApartment}
-          loading={onQuery}
-          bgColor="primary"
-        />
+        <Button label="Salvar" onClick={handleCreateApartment} loading={onQuery} />
       </Style.ButtonContainer>
     </Style.ModalContainer>
   </Modal>

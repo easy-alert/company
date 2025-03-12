@@ -275,7 +275,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
                 placeholder="Ex: www.easyalert.com.br"
               />
 
-              <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />
+              <Button center label="Cadastrar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}

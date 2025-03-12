@@ -3,7 +3,6 @@ import { InputHTMLAttributes } from 'react';
 export interface IDataList extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   disabled?: boolean;
-  arrowColor?: string;
   select: {
     createLabel: string;
     getEvtValue: (value: string) => void;

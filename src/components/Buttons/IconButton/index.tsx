@@ -45,7 +45,6 @@ export const IconButton = ({
       color={color}
       fontWeight={fontWeight}
       disable={disabled}
-      size={size}
       onClick={(evt) => {
         if (!disabled && !loading) {
           onClick(evt);

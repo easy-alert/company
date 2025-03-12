@@ -1,15 +1,16 @@
 import styled from 'styled-components';
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   position: relative;
-  background-color: ${({ theme }) => theme.color.white};
+  background-color: ${theme.color.white};
   z-index: 1;
 
   > :last-child {
-    margin-top: ${({ theme }) => theme.size.xsm};
+    margin-top: ${theme.size.xsm};
     margin-left: auto;
   }
 `;
@@ -25,8 +26,8 @@ export const SmallLoading = styled.div`
   left: 125px;
   top: 24px;
 
-  border: 4px solid ${({ theme }) => theme.color.primaryL};
-  border-top: 4px solid ${({ theme }) => theme.color.primary};
+  border: 4px solid ${theme.color.primaryL};
+  border-top: 4px solid ${theme.color.primary};
   border-radius: 50%;
   width: 24px;
   height: 24px;
@@ -45,7 +46,7 @@ export const SmallLoading = styled.div`
 export const Selects = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   > :first-child {
     max-width: 150px;

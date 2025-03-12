@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../../styles/theme';
 
 export const Header = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: ${({ theme }) => theme.size.sm};
-  margin-bottom: ${({ theme }) => theme.size.sm};
+  padding-top: ${theme.size.sm};
+  margin-bottom: ${theme.size.sm};
 
   @media (max-width: 900px) {
     align-items: flex-start;
@@ -18,7 +18,7 @@ export const LeftSide = styled.div`
   align-items: center;
   width: 50%;
   > h2 {
-    margin-right: ${({ theme }) => theme.size.sm};
+    margin-right: ${theme.size.sm};
   }
 
   @media (max-width: 900px) {
@@ -31,7 +31,7 @@ export const LeftSide = styled.div`
 export const SearchField = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
   width: 100%;
   > input {
     height: 24px;
@@ -46,7 +46,7 @@ export const SearchField = styled.div`
 export const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: ${({ theme }) => theme.size.xsm};
+  grid-gap: ${theme.size.xsm};
 
   @media (max-width: 950px) {
     grid-template-columns: repeat(3, 1fr);
@@ -62,9 +62,9 @@ export const GridContainer = styled.div`
 `;
 
 export const BuildingCard = styled.div<{ disabled: boolean }>`
-  background-color: ${({ theme }) => theme.color.white};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm};
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm};
 
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   transition: all 0.2s ease;
@@ -72,7 +72,7 @@ export const BuildingCard = styled.div<{ disabled: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 
-  ${({ disabled, theme }) =>
+  ${({ disabled }) =>
     !disabled &&
     `
     :hover {
@@ -99,8 +99,8 @@ export const BuildingCardHeaderInfo = styled.div`
 
   > p {
     font-weight: 500;
-    color: ${({ theme }) => theme.color.gray4};
-    margin-top: ${({ theme }) => theme.size.xxsm};
+    color: ${theme.color.gray4};
+    margin-top: ${theme.size.xxsm};
     display: -webkit-box;
     max-width: 500px;
     -webkit-line-clamp: 1;
@@ -110,27 +110,27 @@ export const BuildingCardHeaderInfo = styled.div`
 `;
 
 export const BuildingCardFooter = styled.div`
-  margin-top: ${({ theme }) => theme.size.sm};
+  margin-top: ${theme.size.sm};
   display: flex;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 `;
 
 export const BuildingCardFooterInfo = styled.div`
   .pending {
-    color: ${({ theme }) => theme.color.warning};
+    color: ${theme.color.warning};
   }
 
   .expired {
-    color: ${({ theme }) => theme.color.actionDanger};
+    color: ${theme.color.actionDanger};
   }
 
   .completed {
-    color: ${({ theme }) => theme.color.success};
+    color: ${theme.color.success};
   }
 
   > p {
-    color: ${({ theme }) => theme.color.gray4};
+    color: ${theme.color.gray4};
     font-weight: 500;
   }
 `;
@@ -149,9 +149,9 @@ export const NoDataContainer = styled.footer`
   justify-content: center;
   flex-direction: column;
   height: 80%;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
   > h3 {
-    color: ${({ theme }) => theme.color.gray4};
+    color: ${theme.color.gray4};
     text-align: center;
   }
 `;

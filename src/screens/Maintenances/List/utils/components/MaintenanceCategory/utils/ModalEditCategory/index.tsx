@@ -79,7 +79,7 @@ export const ModalEditCategory = ({
                     }}
                   />
                 )}
-                <Button label="Salvar" type="submit" loading={onQuery} bgColor="primary" />
+                <Button label="Salvar" type="submit" loading={onQuery} />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

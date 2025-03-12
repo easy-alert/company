@@ -45,6 +45,7 @@ import downloadRedBg from './downloadRedBg.svg';
 import trashWithPrimaryBg from './trashWithPrimaryBg.svg';
 import report from './report.svg';
 import downloadRed from './downloadRed.svg';
+import pdfLogo from './pdfLogo.svg';
 import pdfLogo2 from './pdfLogo2.svg';
 import plusWhite from './plusWhite.svg';
 import editWhite from './editWhite.svg';
@@ -59,6 +60,7 @@ import placeholder from './placeholder.svg';
 import grayDownload from './grayDownload.svg';
 import addFileV2 from './addFileV2.svg';
 import qrcode from './qrcode.svg';
+import csvLogo from './csvLogo.svg';
 import checklists from './checklists.svg';
 import checklistChecked from './checklistChecked.svg';
 import checklistUnchecked from './checklistUnchecked.svg';
@@ -81,6 +83,7 @@ import send from './send.svg';
 import activityComment from './activityComment.svg';
 import upload from './upload.svg';
 import update from './update.svg';
+import uploadLine from './uploadLine.svg';
 import smallPaper from './smallPaper.svg';
 import activityNotification from './activityNotification.svg';
 import qrCodeUnchecked from './qrCodeUnchecked.svg';
@@ -97,6 +100,7 @@ import maintenanceWhite from './maintenanceWhite.svg';
 export const icon = {
   activityNotification,
   smallPaper,
+  uploadLine,
   update,
   upload,
   activityComment,
@@ -155,6 +159,7 @@ export const icon = {
   trashWithPrimaryBg,
   report,
   downloadRed,
+  pdfLogo,
   pdfLogo2,
   plusWhite,
   editWhite,
@@ -169,6 +174,7 @@ export const icon = {
   grayDownload,
   addFileV2,
   qrcode,
+  csvLogo,
   checklists,
   checklistChecked,
   checklistUnchecked,

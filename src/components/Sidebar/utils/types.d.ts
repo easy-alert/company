@@ -1,12 +1,10 @@
 interface IBase {
-  icon: any;
+  icon: string;
   url: string;
   redirectFunction: () => void;
   label?: string;
   title?: string;
   permission?: string;
-  fill?: string;
-  strokeColor?: string;
 }
 
 export interface SidebarContentProps extends IBase {

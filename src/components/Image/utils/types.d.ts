@@ -6,7 +6,4 @@ export interface ImageProps {
   width?: string;
   height?: string;
   alt?: string;
-  hasCircle?: boolean;
-  fill?: string;
-  strokeColor?: string;
 }

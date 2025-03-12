@@ -1,12 +1,10 @@
 // LIBS
 import { useNavigate } from 'react-router-dom';
 
-// GLOBAL ASSETS
-import IconLeftArrow from '@assets/icons/IconLeftArrow';
-
 // COMPONENTS
-import { Image } from '../../Image';
 import { Background } from './styles';
+import { icon } from '../../../assets/icons/index';
+import { Image } from '../../Image';
 
 export const ReturnButton = ({ path }: { path?: string }) => {
   const navigate = useNavigate();
@@ -21,7 +19,7 @@ export const ReturnButton = ({ path }: { path?: string }) => {
         }
       }}
     >
-      <Image img={<IconLeftArrow strokeColor="primary" />} size="16px" fill="primary" />
+      <Image img={icon.leftArrow} size="16px" />
       <h6>Voltar</h6>
     </Background>
   );

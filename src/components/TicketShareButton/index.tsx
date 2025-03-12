@@ -7,7 +7,9 @@ import { Popover } from 'react-tiny-popover';
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
 
-import IconUploadLine from '@assets/icons/IconUploadLine';
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
 import { ShareButton } from './components/ShareButton';
 
 // STYLES
@@ -46,11 +48,7 @@ export const TicketShareButton = ({ ticketId }: { ticketId: string }) => {
       )}
     >
       <Style.ButtonContainer>
-        <IconButton
-          icon={<IconUploadLine strokeColor="primary" />}
-          fill="primary"
-          onClick={handleTogglePopover}
-        />
+        <IconButton icon={icon.uploadLine} onClick={handleTogglePopover} />
       </Style.ButtonContainer>
     </Popover>
   );

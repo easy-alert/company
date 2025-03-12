@@ -372,7 +372,6 @@ export const ModalAdditionalInformations = ({
             </Style.Wrapper>
 
             <Button
-              bgColor="primary"
               disable={onImageQuery || onFileQuery}
               style={{ marginTop: '8px' }}
               center

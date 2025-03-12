@@ -1,17 +1,14 @@
-// GLOBAL ASSETS
-import IconEdit from '@assets/icons/IconEdit';
-import { icon } from '../../assets/icons';
-
-// GLOBAL COMPONENTS
+// COMPONENTS
 import { IconButton } from '../Buttons/IconButton';
 import { Image } from '../Image';
-import { ImageComponent } from '../ImageComponent';
 
 // STYLES
 import * as Style from './styles';
+import { icon } from '../../assets/icons';
 
 // TYPES
 import { IImagePreview } from './types';
+import { ImageComponent } from '../ImageComponent';
 
 export const ImagePreview = ({
   src,
@@ -51,8 +48,7 @@ export const ImagePreview = ({
         )}
         {onUpdateClick && (
           <IconButton
-            fill="primary"
-            icon={<IconEdit strokeColor="primary" />}
+            icon={icon.editWithBg}
             size="24px"
             onClick={() => {
               onUpdateClick();
@@ -61,7 +57,7 @@ export const ImagePreview = ({
         )}
         {downloadUrl && (
           <a href={downloadUrl} download target="_blank" rel="noreferrer">
-            <Image img={icon.downloadRedBg} hasCircle radius="0px" size="24px" />
+            <Image img={icon.downloadRedBg} radius="0px" size="24px" />
           </a>
         )}
       </Style.ActionsHover>

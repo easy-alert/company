@@ -306,7 +306,6 @@ export const ModalMaintenanceDetails = ({
             )}
 
             <Button
-              textColor="white"
               label="Fechar"
               borderless={maintenance.MaintenanceReport.length > 0}
               onClick={() => {

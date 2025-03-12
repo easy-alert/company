@@ -27,21 +27,21 @@ import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
 
 // GLOBAL UTILS
+import { catchHandler } from '@utils/functions';
 import { handleToastify } from '@utils/toastifyResponses';
 import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
-import IconPdfLogo from '@assets/icons/IconPdfLogo';
-import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import { icon } from '@assets/icons';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
-import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // COMPONENTS
+import { IReportPdf } from '@customTypes/IReportPdf';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
 import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
@@ -322,7 +322,6 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('buildings', e.target.value);
@@ -357,7 +356,6 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.places.length > 0 ? ' ' : ''}
                     label="Local"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('places', e.target.value);
@@ -392,7 +390,6 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.serviceTypes.length > 0 ? ' ' : ''}
                     label="Tipo de serviço"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('serviceTypes', e.target.value);
@@ -429,7 +426,6 @@ export const TicketReports = () => {
                   <Select
                     selectPlaceholderValue={filter.status.length > 0 ? ' ' : ''}
                     label="Status"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('status', e.target.value);
@@ -497,8 +493,10 @@ export const TicketReports = () => {
                       onClick={() => tickets.length !== 0}
                     >
                       <IconButton
+                        icon={icon.csvLogo}
                         label="Exportar"
-                        icon={<IconCsvLogo strokeColor="primary" />}
+                        color={theme.color.primary}
+                        size="20px"
                         onClick={() => {
                           //
                         }}
@@ -507,8 +505,9 @@ export const TicketReports = () => {
                     </CSVLink>
 
                     <IconButton
-                      icon={<IconPdfLogo strokeColor="primary" />}
+                      icon={icon.pdfLogo}
                       label="Exportar"
+                      color={theme.color.primary}
                       size="20px"
                       onClick={() => handleGenerateTicketReportPDF()}
                       disabled={loading || tickets.length === 0}
@@ -518,7 +517,7 @@ export const TicketReports = () => {
                       type="button"
                       borderless
                       label="Limpar filtros"
-                      textColor="primary"
+                      textColor={theme.color.primary}
                       onClick={() => {
                         setFieldValue('startDate', '');
                         setFieldValue('endDate', '');
@@ -526,27 +525,19 @@ export const TicketReports = () => {
                       }}
                     />
 
-                    <Button type="submit" label="Filtrar" disabled={loading} bgColor="primary" />
+                    <Button type="submit" label="Filtrar" disabled={loading} />
                   </Style.FilterButtonWrapper>
 
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
-                      <ListTag
-                        label="Todas as edificações"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
                           label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
                           padding="4px 12px"
+                          fontWeight={500}
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -558,22 +549,14 @@ export const TicketReports = () => {
                     )}
 
                     {filter.status?.length === 0 ? (
-                      <ListTag
-                        label="Todos os status"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os status" />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
                           key={status}
                           label={ticketStatus.find((ts) => ts.name === status)?.label || ''}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
                           padding="4px 12px"
+                          fontWeight={500}
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -585,22 +568,14 @@ export const TicketReports = () => {
                     )}
 
                     {filter.places?.length === 0 ? (
-                      <ListTag
-                        label="Todos os locais"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os locais" />
                     ) : (
                       filter.places?.map((place) => (
                         <ListTag
                           key={place}
                           label={ticketPlaces.find((p) => p.id === place)?.label || ''}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
                           padding="4px 12px"
+                          fontWeight={500}
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -613,21 +588,17 @@ export const TicketReports = () => {
 
                     {filter.serviceTypes?.length === 0 ? (
                       <ListTag
-                        label="Todos os tipos de serviço"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
                         padding="4px 12px"
+                        fontWeight={500}
+                        label="Todos os tipos de serviço"
                       />
                     ) : (
                       filter.serviceTypes?.map((serviceType) => (
                         <ListTag
                           key={serviceType}
                           label={serviceTypes.find((st) => st.id === serviceType)?.label || ''}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
                           padding="4px 12px"
+                          fontWeight={500}
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,

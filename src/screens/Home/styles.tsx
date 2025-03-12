@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   height: 100%;
@@ -9,10 +10,10 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: ${({ theme }) => theme.size.lg};
+  gap: ${theme.size.lg};
 
   > div {
-    margin-top: ${({ theme }) => theme.size.xxlg};
+    margin-top: -${theme.size.xxlg};
 
     @media (max-width: 900px) {
       min-width: 240px;
@@ -47,15 +48,15 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: ${({ theme }) => theme.size.xlg};
-  color: ${({ theme }) => theme.color.primary};
+  font-size: ${theme.size.xlg};
+  color: ${theme.color.primary};
   font-weight: 700;
   text-align: center;
 
-  padding: ${({ theme }) => theme.size.md};
-  margin-bottom: ${({ theme }) => theme.size.md};
+  padding: ${theme.size.md};
+  margin-bottom: ${theme.size.md};
 
   @media (max-width: 900px) {
-    font-size: ${({ theme }) => theme.size.lg};
+    font-size: ${theme.size.lg};
   }
 `;

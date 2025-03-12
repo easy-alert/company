@@ -1,16 +1,17 @@
 import styled from 'styled-components';
+import { theme } from '../../../styles/theme';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.md};
+  gap: ${theme.size.md};
 
   > p {
-    color: ${({ theme }) => theme.color.gray5};
+    color: ${theme.color.gray5};
 
     > span {
       text-decoration: underline;
-      color: ${({ theme }) => theme.color.primary};
+      color: ${theme.color.primary};
       cursor: pointer;
     }
   }
@@ -19,14 +20,14 @@ export const Container = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 `;
 
 export const Card = styled.button<{ selected: boolean }>`
   all: unset;
-  background-color: ${({ theme, selected }) => (selected ? theme.color.gray3 : theme.color.gray1)};
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${({ selected }) => (selected ? theme.color.gray3 : theme.color.gray1)};
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
 
   display: flex;
   flex-direction: column;
@@ -42,7 +43,7 @@ export const Card = styled.button<{ selected: boolean }>`
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   > .opacity {
     opacity: 0.7;

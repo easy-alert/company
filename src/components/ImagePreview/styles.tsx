@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../styles/theme';
 
 export const Container = styled.div<{
   height: string;
@@ -18,7 +18,7 @@ export const Container = styled.div<{
   position: relative;
 
   > img {
-    border-radius: ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0 0;
+    border-radius: ${theme.size.xxsm} ${theme.size.xxsm} 0 0;
     height: calc(100% - 44px);
     width: 100%;
     object-fit: cover;
@@ -28,9 +28,9 @@ export const Container = styled.div<{
 export const Label = styled.div`
   width: 100%;
   height: 44px;
-  padding: ${({ theme }) => theme.size.xsm};
-  background-color: ${({ theme }) => theme.color.gray1};
-  border-radius: 0 0 ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm};
+  padding: ${theme.size.xsm};
+  background-color: ${theme.color.gray1};
+  border-radius: 0 0 ${theme.size.xxsm} ${theme.size.xxsm};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -42,25 +42,25 @@ export const Label = styled.div`
   }
 
   .p2 {
-    color: ${({ theme }) => theme.color.black};
+    color: ${theme.color.black};
   }
 
   .p5 {
-    color: ${({ theme }) => theme.color.gray5};
+    color: ${theme.color.gray5};
   }
 `;
 
 export const ActionsHover = styled.div`
   position: absolute;
   width: 100%;
-  border-radius: ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0 0;
+  border-radius: ${theme.size.xxsm} ${theme.size.xxsm} 0 0;
   height: calc(100% - 44px);
   transition: 0.25s;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   background-color: #00000066;
   opacity: 0;
 

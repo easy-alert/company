@@ -2,29 +2,23 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-console */
-
+// LIBS
 import { useState } from 'react';
-
-// GLOBAL ASSETS
-import IconPlus from '@assets/icons/IconPlus';
-import IconEdit from '@assets/icons/IconEdit';
-import { icon } from '@assets/icons';
-
-// GLOBAL COMPONENTS
-import { Image } from '@components/Image';
-import { IconButton } from '@components/Buttons/IconButton';
+import { icon } from '../../../../../../assets/icons';
 
 // COMPONENTS
 import * as Style from './styles';
+import { Image } from '../../../../../../components/Image';
 import { MaintenanceCard } from '../MaintenanceCard';
-import { ModalCreateMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCategory/utils/ModalCreateMaintenance';
-import { ModalEditCategory } from '../../../../../Maintenances/List/utils/components/MaintenanceCategory/utils/ModalEditCategory';
 
-// UTILS
+// FUNCTIONS
 import { alphabeticalOrder, numericalOrder } from './utils/functions';
 
 // TYPES
 import { IMaintenanceCategory, ISortType } from './utils/types';
+import { IconButton } from '../../../../../../components/Buttons/IconButton';
+import { ModalCreateMaintenance } from '../../../../../Maintenances/List/utils/components/MaintenanceCategory/utils/ModalCreateMaintenance';
+import { ModalEditCategory } from '../../../../../Maintenances/List/utils/components/MaintenanceCategory/utils/ModalEditCategory';
 
 export const MaintenanceCategory = ({
   category,
@@ -105,8 +99,7 @@ export const MaintenanceCategory = ({
               <h5>{category.name}</h5>
               <IconButton
                 size="16px"
-                icon={<IconEdit strokeColor="primary" />}
-                fill="primary"
+                icon={icon.edit}
                 onClick={() => {
                   setModalEditCategoryOpen(true);
                 }}
@@ -115,8 +108,7 @@ export const MaintenanceCategory = ({
             </Style.Container>
             <IconButton
               hideLabelOnMedia
-              fill="primary"
-              icon={<IconPlus strokeColor="primary" />}
+              icon={icon.plus}
               size="16px"
               label="Criar manutenção"
               onClick={() => {

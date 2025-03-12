@@ -115,7 +115,6 @@ export const ModalChangeClientPassword = ({
             />
 
             <Button
-              bgColor="primary"
               type="submit"
               label="Salvar"
               center

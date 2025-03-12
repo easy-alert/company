@@ -1,35 +1,28 @@
+// LIBS
 import { useState } from 'react';
 
-// LIBS
+// COMPONENTS
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import * as Style from './styles';
+import { Button } from '../../../../../components/Buttons/Button';
+import { FormikInput } from '../../../../../components/Form/FormikInput';
+import { Modal } from '../../../../../components/Modal';
+import { FormikSelect } from '../../../../../components/Form/FormikSelect';
+import { FormikCheckbox } from '../../../../../components/Form/FormikCheckbox';
+import { theme } from '../../../../../styles/theme';
 
-// GLOBAL COMPONENTS
-import { Button } from '@components/Buttons/Button';
-import { FormikInput } from '@components/Form/FormikInput';
-import { Modal } from '@components/Modal';
-import { FormikSelect } from '@components/Form/FormikSelect';
-import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+// TYPES
+import { IModalCreateBuilding } from './utils/types';
 
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
-// GLOBAL UTILS
+// FUNCTIONS
+import { requestCreateBuilding, schemaModalCreateBuilding } from './utils/functions';
 import {
   applyMask,
   capitalizeFirstLetter,
   convertToFormikDate,
   requestAddressData,
-} from '@utils/functions';
-
-// COMPONENTS
-import * as Style from './styles';
-
-// TYPES
-import { IModalCreateBuilding } from './utils/types';
-
-// UTILS
-import { requestCreateBuilding, schemaModalCreateBuilding } from './utils/functions';
+} from '../../../../../utils/functions';
 
 export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBuilding) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -73,7 +66,6 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
               />
 
               <FormikSelect
-                arrowColor="primary"
                 label="Tipo *"
                 name="buildingTypeId"
                 value={values.buildingTypeId}
@@ -183,7 +175,6 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
               />
 
               <FormikSelect
-                arrowColor="primary"
                 selectPlaceholderValue={values.nextMaintenanceCreationBasis}
                 label="Próxima manutenção baseada em *"
                 name="nextMaintenanceCreationBasis"
@@ -221,7 +212,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 label="Convidado pode concluir manutenção?"
               />
 
-              <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />
+              <Button center label="Cadastrar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}

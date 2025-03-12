@@ -4,11 +4,11 @@ import { useState } from 'react';
 // TYPES
 import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
-import type { ILoginRequestResponse } from './utils/types';
+import { ILoginRequestResponse } from './utils/types';
 import { query } from '../../utils/functions';
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [account, setAccount] = useState<IAccount>({} as IAccount);
+  const [account, setAccount] = useState<IAccount | null>(null);
 
   const signin = async ({ Account, token }: ILoginRequestResponse) => {
     setAccount(Account);
@@ -19,34 +19,12 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     query.delete('backofficeToken');
     query.delete('userId');
 
-    setAccount({} as IAccount);
+    setAccount(null);
     localStorage.removeItem('authToken');
   };
 
-  const handleChangeUser = (user: IAccount['User']) => {
-    setAccount((prev) => ({
-      ...prev,
-      User: {
-        ...prev.User,
-        ...user,
-      },
-    }));
-  };
-
-  const handleChangeCompany = (company: IAccount['Company']) => {
-    setAccount((prev) => ({
-      ...prev,
-      Company: {
-        ...prev.Company,
-        ...company,
-      },
-    }));
-  };
-
   return (
-    <AuthContext.Provider
-      value={{ account, setAccount, signin, signout, handleChangeUser, handleChangeCompany }}
-    >
+    <AuthContext.Provider value={{ account, setAccount, signin, signout }}>
       {children}
     </AuthContext.Provider>
   );

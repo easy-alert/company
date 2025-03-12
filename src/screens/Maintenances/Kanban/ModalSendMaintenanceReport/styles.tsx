@@ -1,36 +1,36 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../../../styles/theme';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   > :last-child {
-    margin-top: ${({ theme }) => theme.size.xsm};
+    margin-top: ${theme.size.xsm};
   }
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const StatusTagWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const Row = styled.div<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border: 1px solid ${({ theme }) => theme.color.gray4};
-  background-color: ${({ theme }) => theme.color.gray1};
-  border-radius: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xxsm};
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border: 1px solid ${theme.color.gray4};
+  background-color: ${theme.color.gray1};
+  border-radius: ${theme.size.xsm};
 
   ${({ disabled }) =>
     disabled &&
@@ -52,7 +52,7 @@ export const Row = styled.div<{ disabled?: boolean }>`
 export const FileStyleRow = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   ${({ disabled }) =>
     disabled &&
@@ -73,9 +73,9 @@ export const DragAndDropZoneFile = styled.div`
   height: 97px;
   min-width: 97px;
 
-  border: 1px dashed ${({ theme }) => theme.color.gray4};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
 
   cursor: pointer;
   transition: 0.25s;
@@ -86,7 +86,7 @@ export const DragAndDropZoneFile = styled.div`
 
 export const FileRow = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   justify-content: flex-start;
   align-items: flex-start;
 `;
@@ -95,18 +95,18 @@ export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const Tag = styled.div`
   display: flex;
   align-items: center;
   padding: 4px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
+  background-color: ${theme.color.primaryL};
   width: fit-content;
   height: fit-content;
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  gap: ${({ theme }) => theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
 
   > p {
     white-space: nowrap;
@@ -122,8 +122,8 @@ export const FileLoadingTag = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   width: 130px;
   height: 24px;
 `;
@@ -133,8 +133,8 @@ export const ImageLoadingTag = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   height: 97px;
   min-width: 97px;
 `;
@@ -143,9 +143,9 @@ export const DragAndDropZoneImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed ${({ theme }) => theme.color.gray4};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
   height: 97px;
   min-width: 97px;
   cursor: pointer;
@@ -166,5 +166,5 @@ export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 `;

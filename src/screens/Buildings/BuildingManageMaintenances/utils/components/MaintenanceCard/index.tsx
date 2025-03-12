@@ -4,7 +4,6 @@
 import { useState } from 'react';
 
 // COMPONENTS
-import IconDownArrow from '@assets/icons/IconDownArrow';
 import { handlePriorityName } from '@utils/handlePriorityName';
 import { icon } from '../../../../../../assets/icons';
 import { Button } from '../../../../../../components/Buttons/Button';
@@ -155,7 +154,7 @@ export const MaintenanceCard = ({
               </div>
               <Style.ArrowContainer>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
-                  <Image img={<IconDownArrow strokeColor="primary" />} size="16px" fill="primary" />
+                  <Image img={icon.downArrow} size="16px" />
                 </Style.Arrow>
               </Style.ArrowContainer>
             </Style.MaintenancesGrid>
@@ -222,7 +221,6 @@ export const MaintenanceCard = ({
               <Style.MaintenancesCardGridMoreEditButton>
                 <div>
                   <Button
-                    bgColor="primary"
                     style={{ whiteSpace: 'nowrap' }}
                     label="+ Opções"
                     onClick={(e) => {
@@ -231,7 +229,6 @@ export const MaintenanceCard = ({
                     }}
                   />
                   <Button
-                    bgColor="primary"
                     disable={!maintenance.ownerCompanyId}
                     label="Editar"
                     onClick={(e) => {

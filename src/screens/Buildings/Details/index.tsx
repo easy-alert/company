@@ -8,8 +8,6 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // SERVICES
 import { putBuildingsApartments } from '@services/apis/putBuildingsApartments';
-import { sendPhoneConfirmation } from '@services/apis/sendPhoneConfirmation';
-import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 
 // GLOBAL COMPONENTS
 import TableCell from '@components/TableCell';
@@ -34,10 +32,6 @@ import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses'
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
-import IconEdit from '@assets/icons/IconEdit';
-import IconPlus from '@assets/icons/IconPlus';
-import IconList from '@assets/icons/IconList';
-import IconAddFile from '@assets/icons/IconAddFile';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -46,7 +40,8 @@ import { theme } from '@styles/theme';
 import type { IBuildingTypes } from '@utils/types';
 
 // COMPONENTS
-
+import { sendPhoneConfirmation } from '@services/apis/sendPhoneConfirmation';
+import { sendEmailConfirmation } from '@services/apis/sendEmailConfirmation';
 import { NotificationTable, NotificationTableContent } from './utils/components/NotificationTable';
 import { ModalEditBuilding } from './utils/modals/ModalEditBuilding';
 import { ModalCreateNotificationConfiguration } from './utils/modals/ModalCreateNotificationConfiguration';
@@ -483,7 +478,6 @@ export const BuildingDetails = () => {
             </Style.CardHeaderLeftSide>
             <Style.ButtonWrapper>
               <Button
-                bgColor="primary"
                 label="Tela do Morador"
                 onClick={() =>
                   window.open(
@@ -495,11 +489,7 @@ export const BuildingDetails = () => {
                 }
               />
 
-              <Button
-                label="QR Code"
-                onClick={() => setModalPrintQRCodeOpen(true)}
-                bgColor="primary"
-              />
+              <Button label="QR Code" onClick={() => setModalPrintQRCodeOpen(true)} />
             </Style.ButtonWrapper>
           </Style.FirstCard>
         )}
@@ -510,16 +500,16 @@ export const BuildingDetails = () => {
 
             <Style.CardHeaderButtonsContainer>
               <IconButton
+                icon={icon.editWithBg}
                 label="Editar"
-                icon={<IconEdit strokeColor="primary" />}
                 permToCheck="buildings:update"
                 hideLabelOnMedia
                 onClick={() => setModalEditBuildingOpen(true)}
               />
 
               <IconButton
+                icon={icon.plusWithBg}
                 label="Apartamentos"
-                icon={<IconPlus strokeColor="primary" />}
                 permToCheck="buildings:update"
                 hideLabelOnMedia
                 onClick={() => handleCreateApartmentModal(true)}
@@ -862,9 +852,9 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.PasswordDiv>
                           <IconButton
-                            label="Editar"
-                            icon={<IconEdit strokeColor="primary" />}
                             size="16px"
+                            icon={icon.edit}
+                            label="Editar"
                             className="p4"
                             onClick={() => {
                               setPasswordType('resident');
@@ -894,9 +884,9 @@ export const BuildingDetails = () => {
                       cell: (
                         <Style.PasswordDiv>
                           <IconButton
-                            label="Editar"
-                            icon={<IconEdit strokeColor="primary" />}
                             size="16px"
+                            icon={icon.edit}
+                            label="Editar"
                             className="p4"
                             onClick={() => {
                               setPasswordType('responsible');
@@ -927,8 +917,18 @@ export const BuildingDetails = () => {
 
               <Style.AnnexCardButtons>
                 <IconButton
+                  icon={icon.listWithBg}
+                  label="Visualizar"
+                  hideLabelOnMedia
+                  onClick={() => {
+                    if (building?.id)
+                      navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
+                  }}
+                />
+
+                <IconButton
+                  icon={icon.editWithBg}
                   label="Editar"
-                  icon={<IconEdit strokeColor="primary" />}
                   permToCheck="maintenances:plan"
                   hideLabelOnMedia
                   onClick={() => {
@@ -936,19 +936,8 @@ export const BuildingDetails = () => {
                       navigate(`/buildings/details/${building?.id}/maintenances/manage${search}`);
                   }}
                 />
-
-                <IconButton
-                  label="Visualizar"
-                  icon={<IconList strokeColor="white" backgroundColor="primary" />}
-                  hideLabelOnMedia
-                  onClick={() => {
-                    if (building?.id)
-                      navigate(`/buildings/details/${building?.id}/maintenances/list${search}`);
-                  }}
-                />
               </Style.AnnexCardButtons>
             </Style.AnnexCardTitle>
-
             <Style.CountDiv>
               <h3>{usedMaintenancesCount}</h3>
               <h4>/</h4>
@@ -981,21 +970,22 @@ export const BuildingDetails = () => {
 
               <Style.AnnexCardButtons>
                 <IconButton
+                  icon={icon.plusWithBg}
                   label="Pasta"
-                  icon={<IconPlus strokeColor="primary" />}
+                  size="24px"
                   hideLabelOnMedia
                   onClick={() => setModalCreateFolderOpen(true)}
                 />
 
                 <IconButton
+                  icon={icon.addFileV2}
                   label="Arquivos"
-                  icon={<IconAddFile strokeColor="primary" strokeWidth="2" size="20px" />}
+                  size="24px"
                   hideLabelOnMedia
                   onClick={() => setModalAddFilesOpen(true)}
                 />
               </Style.AnnexCardButtons>
             </Style.AnnexCardTitle>
-
             {building &&
             (building?.Folders?.Files?.length > 0 || building?.Folders?.Folders?.length > 0) ? (
               <Style.TagWrapper>
@@ -1039,15 +1029,14 @@ export const BuildingDetails = () => {
           <Style.AnnexCard>
             <Style.CardHeader>
               <h5>Banners</h5>
-
               <IconButton
+                icon={icon.plusWithBg}
                 label="Cadastrar"
-                icon={<IconPlus strokeColor="primary" />}
+                size="24px"
                 hideLabelOnMedia
                 onClick={() => setModalAddBannerOpen(true)}
               />
             </Style.CardHeader>
-
             {building && building?.Banners.length > 0 ? (
               <Style.BannerWrapper>
                 {building.Banners.map((element) => (

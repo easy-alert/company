@@ -10,7 +10,6 @@ export const ImageComponent = ({
   alt = '',
   radius = '0%',
   rotate = '0deg',
-  hasCircle,
 }: IImg) => (
   <Style.Img
     src={src}
@@ -20,6 +19,5 @@ export const ImageComponent = ({
     width={width}
     height={height}
     rotate={rotate}
-    hasCircle={hasCircle}
   />
 );

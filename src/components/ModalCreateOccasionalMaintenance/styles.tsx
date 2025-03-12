@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
-import { StylesConfig } from 'react-select';
+
+import { theme } from '@styles/theme';
 
 export const FormContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const OnQueryContainer = styled.div`
@@ -15,22 +15,57 @@ export const OnQueryContainer = styled.div`
 export const Row = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   ${({ disabled }) =>
     disabled &&
     css`
       cursor: default;
       pointer-events: none;
+
       :hover {
         opacity: 1;
       }
     `}
 `;
 
+export const DragAndDropZoneFile = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 97px;
+  min-width: 97px;
+
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
+
+  cursor: pointer;
+  transition: 0.25s;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
+export const DragAndDropZoneImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
+  height: 97px;
+  min-width: 97px;
+  cursor: pointer;
+  transition: 0.25s;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
 export const FileRow = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   justify-content: flex-start;
   align-items: flex-start;
 `;
@@ -39,38 +74,18 @@ export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
-
-export const DragAndDropZone = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 97px;
-  min-width: 97px;
-  border: 1px dashed ${({ theme }) => theme.color.gray4};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
-  cursor: pointer;
-  transition: 0.25s;
-
-  :hover {
-    opacity: 0.7;
-  }
-`;
-
-export const DragAndDropZoneFile = styled(DragAndDropZone)``;
-export const DragAndDropZoneImage = styled(DragAndDropZone)``;
 
 export const Tag = styled.div`
   display: flex;
   align-items: center;
   padding: 4px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
+  background-color: ${theme.color.primaryL};
   width: fit-content;
   height: fit-content;
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  gap: ${({ theme }) => theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
 
   > p {
     white-space: nowrap;
@@ -81,65 +96,86 @@ export const Tag = styled.div`
   }
 `;
 
-export const FileLoadingTag = styled(Tag)`
+export const FileLoadingTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 12px;
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   width: 130px;
   height: 24px;
 `;
 
-export const ImageLoadingTag = styled(Tag)`
+export const ImageLoadingTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   height: 97px;
   min-width: 97px;
 `;
 
-export const customStyles: StylesConfig = {
-  control: (base, state) => ({
-    ...base,
+export const customStyles = {
+  control: (baseStyles: any, state: any) => ({
+    ...baseStyles,
     cursor: 'pointer',
-    border: `1px solid ${defaultTheme.color.gray4}`,
-    borderRadius: defaultTheme.size.xxsm,
-    boxShadow: state.isFocused ? `0 0 0 2px ${defaultTheme.color.primaryL}` : 'none',
+    border: `1px solid ${theme.color.gray4}`,
+    boxShadow: state.isFocused ? 0 : 0,
     '&:hover': {
-      border: `1px solid ${defaultTheme.color.gray3}`,
+      border: `1px solid ${theme.color.gray4}`,
     },
     minHeight: '32px',
     height: '32px',
-    padding: '0 8px',
-    transition: 'border 0.2s ease-in-out',
+    padding: 0,
+    margin: 0,
   }),
-  menu: (base) => ({
+  menu: (base: any) => ({
     ...base,
     marginTop: 2,
     fontSize: '14px',
   }),
-  option: (base) => ({
+
+  option: (base: any) => ({
     ...base,
     cursor: 'pointer',
     paddingLeft: '16px',
     fontSize: '14px',
   }),
-  indicatorsContainer: (base) => ({
+
+  indicatorsContainer: (base: any) => ({
     ...base,
     minHeight: '32px',
     height: '32px',
   }),
-  valueContainer: (base) => ({
+
+  valueContainer: (base: any) => ({
     ...base,
     minHeight: '32px',
     height: '32px',
-    padding: '0 8px',
+    padding: 0,
+    paddingLeft: '13px',
+    marginTop: -2,
     fontSize: '14px',
   }),
-  input: (base) => ({
+
+  input: (base: any) => ({
     ...base,
     minHeight: '32px',
     height: '32px',
+    padding: 0,
+    margin: 0,
     paddingLeft: '3px',
     fontSize: '14px',
   }),
-  placeholder: (base) => ({
+
+  placeholder: (base: any) => ({
     ...base,
     fontSize: '14px',
+    padding: 0,
+    margin: 0,
     paddingLeft: '3px',
   }),
 };
@@ -147,27 +183,21 @@ export const customStyles: StylesConfig = {
 export const ModalInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: ${({ theme }) => theme.size.sm};
-
-  div {
-    display: flex;
-    gap: ${({ theme }) => theme.size.xxxxlg};
-    align-items: center;
-  }
+  margin-top: ${theme.size.sm};
 `;
 
 export const Label = styled.label`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
   cursor: pointer;
-  color: ${({ theme }) => theme.color.gray4};
+  color: ${theme.color.gray4};
   font-size: 14px;
   line-height: 16px;
 `;
@@ -177,6 +207,6 @@ export const ErrorMessage = styled.div`
   font-weight: 400;
   font-size: 12px;
   line-height: 14px;
-  color: ${({ theme }) => theme.color.actionDanger};
+  color: ${theme.color.actionDanger};
   margin-top: -3px;
 `;

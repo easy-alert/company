@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { theme } from '../../styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -18,12 +19,12 @@ export const Container = styled.div`
   }
 
   > .isCurrent {
-    background-color: ${({ theme }) => theme.color.primary};
-    color: ${({ theme }) => theme.color.white};
+    background-color: ${theme.color.primary};
+    color: ${theme.color.white};
   }
   > .notCurrent {
-    color: ${({ theme }) => theme.color.primary};
-    background-color: ${({ theme }) => theme.color.primaryL};
+    color: ${theme.color.primary};
+    background-color: ${theme.color.primaryL};
   }
 `;
 
@@ -36,8 +37,8 @@ export const Ellipsis = styled.div`
   padding: 2px;
   margin: 0 2px;
 
-  color: ${({ theme }) => theme.color.primary};
-  background-color: ${({ theme }) => theme.color.primaryL};
+  color: ${theme.color.primary};
+  background-color: ${theme.color.primaryL};
   border: none;
   border-radius: 2px;
 `;

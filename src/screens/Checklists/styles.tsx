@@ -1,19 +1,21 @@
 import styled from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 import type { TChecklistStatus } from '@customTypes/IChecklist';
 
 export const Container = styled.div`
-  padding-top: ${({ theme }) => theme.size.sm};
+  padding-top: ${theme.size.sm};
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 `;
 
 export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   @media (max-width: 900px) {
     flex-direction: column;
@@ -24,7 +26,7 @@ export const Header = styled.div`
 export const HeaderLeftSide = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
   width: 100%;
 
   > :nth-child(2) {
@@ -35,14 +37,14 @@ export const HeaderLeftSide = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const DateHeader = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.color.white};
-  padding: ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
 
   text-align: center;
   display: flex;
@@ -58,7 +60,7 @@ export const DateHeader = styled.div`
 export const ContentRow = styled.div`
   display: grid;
   grid-template-columns: 226px 1fr;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   min-height: 220px;
 
   @media (max-width: 900px) {
@@ -66,7 +68,7 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar {
-    border-radius: ${({ theme }) => theme.size.xxsm};
+    border-radius: ${theme.size.xxsm};
     border: none;
     position: relative;
     width: 100%;
@@ -74,13 +76,13 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar__month-view__days__day--neighboringMonth {
-    color: ${({ theme }) => theme.color.gray4} !important;
+    color: ${theme.color.gray4} !important;
   }
 
   .react-calendar__century-view__decades__decade,
   .react-calendar__decade-view__years__year,
   .react-calendar__year-view__months__month {
-    color: ${({ theme }) => theme.color.black} !important;
+    color: ${theme.color.black} !important;
   }
 
   .react-calendar__month-view__days {
@@ -94,11 +96,11 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar__month-view__days__day {
-    color: ${({ theme }) => theme.color.black};
+    color: ${theme.color.black};
     height: 30px !important;
 
     :hover {
-      background-color: ${({ theme }) => theme.color.primaryL};
+      background-color: ${theme.color.primaryL};
     }
   }
 
@@ -109,12 +111,12 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar__navigation__label__labelText {
-    color: ${({ theme }) => theme.color.black} !important;
+    color: ${theme.color.black} !important;
     height: 48px !important;
   }
 
   .react-calendar__navigation__arrow {
-    color: ${({ theme }) => theme.color.black} !important;
+    color: ${theme.color.black} !important;
     font-size: 32px;
     position: relative;
   }
@@ -179,17 +181,17 @@ export const ContentRow = styled.div`
   }
 
   .react-calendar__tile--now {
-    color: ${({ theme }) => theme.color.primary} !important;
+    color: ${theme.color.primary} !important;
     font-weight: 700;
   }
 
   .react-calendar__tile--now:hover {
-    background-color: ${({ theme }) => theme.color.primaryL};
+    background-color: ${theme.color.primaryL};
   }
 
   .react-calendar__tile--active {
-    background: ${({ theme }) => theme.color.primary} !important;
-    color: ${({ theme }) => theme.color.white} !important;
+    background: ${theme.color.primary} !important;
+    color: ${theme.color.white} !important;
     border-radius: 100%;
     font-weight: 700;
   }
@@ -216,7 +218,7 @@ export const ContentRow = styled.div`
     padding: 0 !important;
 
     > abbr {
-      border: 2px solid ${({ theme }) => theme.background.pending} !important;
+      border: 2px solid ${theme.background.pending} !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -226,7 +228,7 @@ export const ContentRow = styled.div`
     padding: 0 !important;
 
     > abbr {
-      border: 2px solid ${({ theme }) => theme.background.inProgress} !important;
+      border: 2px solid ${theme.background.inProgress} !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -236,7 +238,7 @@ export const ContentRow = styled.div`
     padding: 0 !important;
 
     > abbr {
-      border: 2px solid ${({ theme }) => theme.background.completed} !important;
+      border: 2px solid ${theme.background.completed} !important;
       border-radius: 100%;
       padding: 4px 6px;
     }
@@ -244,13 +246,13 @@ export const ContentRow = styled.div`
 `;
 
 export const Checklists = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  padding: ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.white};
+  padding: ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
 
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   max-height: 600px;
   overflow-y: auto;
@@ -260,7 +262,7 @@ export const Checklists = styled.div`
 
 export const NavigateButtons = styled.div`
   position: absolute;
-  left: ${({ theme }) => theme.size.sm};
+  left: ${theme.size.sm};
   transform: translateY(-50%);
   top: 50%;
 
@@ -273,13 +275,13 @@ export const NavigateButtons = styled.div`
     transform: translateY(0);
     justify-content: center;
     width: 100%;
-    margin-bottom: ${({ theme }) => theme.size.xxsm};
+    margin-bottom: ${theme.size.xxsm};
   }
 
   button {
     padding: 0;
-    background-color: ${({ theme }) => theme.color.white};
-    color: ${({ theme }) => theme.color.black};
+    background-color: ${theme.color.white};
+    color: ${theme.color.black};
     padding: 6px 16px;
 
     > h6 {
@@ -291,7 +293,7 @@ export const NavigateButtons = styled.div`
   > :first-child {
     button {
       border: 1px solid #ccc;
-      border-radius: ${({ theme }) => theme.size.xxsm} 0 0 ${({ theme }) => theme.size.xxsm};
+      border-radius: ${theme.size.xxsm} 0 0 ${theme.size.xxsm};
     }
   }
 
@@ -307,16 +309,15 @@ export const NavigateButtons = styled.div`
   > :last-child {
     button {
       border: 1px solid #ccc;
-      border-radius: 0 ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0;
+      border-radius: 0 ${theme.size.xxsm} ${theme.size.xxsm} 0;
     }
   }
 `;
 
 export const CalendarDiv = styled.div`
-  padding: 2px ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
-    ${({ theme }) => theme.size.xsm};
-  background-color: ${({ theme }) => theme.color.white};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  padding: 2px ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm};
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
   height: fit-content;
 
   display: flex;
@@ -327,24 +328,17 @@ export const CalendarDiv = styled.div`
 export const ChecklistRow = styled.button<{ status: TChecklistStatus }>`
   all: unset;
   width: 100%;
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
-    ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm} 0 0 ${({ theme }) => theme.size.xxsm};
-  background-color: ${({ theme }) =>
-    ({ status }) =>
-      status === 'pending' ? '#FFB200CC' : '#34B53ACC'};
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 
-  border-radius: ${({ theme }) => theme.size.xxsm} 0 0 ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
-    ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+  border-radius: ${theme.size.xxsm} 0 0 ${theme.size.xxsm};
+  padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
 
-  background-color: ${({ status, theme }) => {
+  background-color: ${({ status }) => {
     switch (status) {
       case 'pending':
         return theme.background.pending;
@@ -361,7 +355,7 @@ export const ChecklistRow = styled.button<{ status: TChecklistStatus }>`
 export const ChecklistRowLeftSide = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const ChecklistContent = styled.div`
@@ -371,14 +365,14 @@ export const ChecklistContent = styled.div`
 `;
 
 export const Dropdown = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  padding: ${({ theme }) => theme.size.xsm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.white};
+  padding: ${theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.15);
 
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   position: absolute;
   right: 8px;
@@ -402,11 +396,10 @@ export const ChecklistWrapper = styled.div`
 `;
 
 export const DotsButton = styled.div<{ status: TChecklistStatus }>`
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
-    ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border-radius: 0 ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm} 0;
+  padding: ${theme.size.xsm} ${theme.size.xsm} ${theme.size.xsm} ${theme.size.sm};
+  border-radius: 0 ${theme.size.xxsm} ${theme.size.xxsm} 0;
 
-  background-color: ${({ status, theme }) => {
+  background-color: ${({ status }) => {
     switch (status) {
       case 'pending':
         return theme.background.pending;

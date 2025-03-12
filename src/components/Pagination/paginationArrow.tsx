@@ -1,6 +1,5 @@
-import IconRightArrow from '@assets/icons/IconRightArrow';
-import IconLeftArrow from '@assets/icons/IconLeftArrow';
 import { Next, Previous } from './style';
+import { icon } from '../../assets/icons/index';
 
 interface PaginationItemProps {
   pageNumber: number;
@@ -18,14 +17,14 @@ const PaginationArrow: React.FC<PaginationItemProps> = ({
   if (previous) {
     return (
       <Previous disabled={disabled} onClick={() => onPageChange(pageNumber)}>
-        <IconLeftArrow strokeColor="primary" />
+        <img src={icon.leftArrow} alt="" />
       </Previous>
     );
   }
 
   return (
     <Next disabled={disabled} onClick={() => onPageChange(pageNumber)}>
-      <IconRightArrow strokeColor="primary" />
+      <img src={icon.rightArrow} alt="" />
     </Next>
   );
 };

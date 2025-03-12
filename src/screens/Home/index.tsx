@@ -8,8 +8,7 @@ function HomePage() {
 
   return (
     <Style.Container>
-      <Image img={account?.Company.image} size="320px" radius="0" />
-
+      <Image img={account?.Company.image} size="320px" />
       <Style.Title>Bem vindo(a), {account?.User.name}!</Style.Title>
     </Style.Container>
   );

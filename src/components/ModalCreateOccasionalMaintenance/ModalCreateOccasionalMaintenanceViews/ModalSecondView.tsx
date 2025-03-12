@@ -40,7 +40,6 @@ const ModalSecondView = ({
     <Style.FormContainer>
       <Select
         label="Edificação *"
-        arrowColor="primary"
         value={occasionalMaintenanceData.buildingId}
         selectPlaceholderValue={occasionalMaintenanceData.buildingId}
         disabled={!!externalBuildingId}
@@ -62,7 +61,6 @@ const ModalSecondView = ({
       {/* <ErrorMessage name="buildingId" component={Style.ErrorMessage} /> */}
 
       <CRUDInput
-        arrowColor="primary"
         label="Categoria *"
         value={occasionalMaintenanceData.categoryData.name}
         select={{
@@ -138,7 +136,6 @@ const ModalSecondView = ({
 
       <Select
         label="Responsável *"
-        arrowColor="primary"
         value={occasionalMaintenanceData.responsible}
         selectPlaceholderValue={occasionalMaintenanceData.responsible}
         onChange={(e) =>
@@ -163,7 +160,6 @@ const ModalSecondView = ({
 
       <Select
         label="Prioridade *"
-        arrowColor="primary"
         value={occasionalMaintenanceData.priorityName}
         selectPlaceholderValue={occasionalMaintenanceData.priorityName}
         onChange={(e) =>
@@ -202,33 +198,28 @@ const ModalSecondView = ({
       {/* {errors.executionDate && <Style.ErrorMessage>{errors.executionDate}</Style.ErrorMessage>} */}
 
       <Style.ButtonContainer>
-        <div>
-          <Button
-            borderless
-            label="Criar"
-            bgColor="transparent"
-            textColor="actionBlue"
-            onClick={() =>
-              handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
-            }
-          />
-
-          <Button
-            borderless
-            label="Iniciar execução"
-            bgColor="transparent"
-            textColor="actionBlue"
-            onClick={() => {
-              handleCreateOccasionalMaintenance({
-                occasionalMaintenanceType: 'pending',
-                inProgress: true,
-              });
-            }}
-          />
-        </div>
+        <Button
+          label="Criar"
+          bgColor="transparent"
+          textColor="actionBlue"
+          onClick={() =>
+            handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
+          }
+        />
 
         <Button
-          bgColor="primary"
+          label="Iniciar execução"
+          bgColor="transparent"
+          textColor="actionBlue"
+          onClick={() => {
+            handleCreateOccasionalMaintenance({
+              occasionalMaintenanceType: 'pending',
+              inProgress: true,
+            });
+          }}
+        />
+
+        <Button
           label="Criar finalizada"
           onClick={() => handleSetView(3)}
           disable={disableFinishedButton}

@@ -260,7 +260,7 @@ export const Dashboard = () => {
   const [selectedRatingStatus, setSelectedRatingStatus] = useState<IRatingStatus>('');
 
   const dataFilterInitialValues: IDashboardFilter = {
-    startDate: new Date(new Date().setDate(new Date().getMonth() - 3)).toISOString().split('T')[0],
+    startDate: new Date(new Date().setDate(new Date().getDate() - 7)).toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
@@ -888,7 +888,7 @@ export const Dashboard = () => {
 
           <Formik
             initialValues={{
-              startDate: new Date(new Date().setMonth(new Date().getMonth() - 3))
+              startDate: new Date(new Date().setDate(new Date().getDate() - 7))
                 .toISOString()
                 .split('T')[0],
               endDate: new Date().toISOString().split('T')[0],
@@ -931,7 +931,6 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('buildings', e.target.value);
@@ -963,7 +962,6 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
                     label="Categoria"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('categories', e.target.value);
@@ -995,7 +993,6 @@ export const Dashboard = () => {
                   <Select
                     selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
                     label="Responsável"
-                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       handleFilterChange('responsible', e.target.value);
@@ -1028,7 +1025,6 @@ export const Dashboard = () => {
                     <Button
                       label="Limpar filtros"
                       type="button"
-                      textColor="primary"
                       disable={onQuery}
                       borderless
                       onClick={() => {
@@ -1039,73 +1035,55 @@ export const Dashboard = () => {
                       }}
                     />
 
-                    <Button label="Filtrar" type="submit" loading={onQuery} bgColor="primary" />
+                    <Button label="Filtrar" type="submit" loading={onQuery} />
                   </Style.ButtonWrapper>
 
                   <Style.Tags>
                     {dataFilter.buildings.length === 0 && (
-                      <ListTag
-                        label="Todas as edificações"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as edificações" />
                     )}
 
                     {dataFilter.buildings.map((e, i) => (
                       <ListTag
-                        key={e}
-                        label={e}
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
                         padding="4px 12px"
-                        onClick={() => handleRemoveFilter('buildings', i)}
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('buildings', i);
+                        }}
                       />
                     ))}
 
                     {dataFilter.categories.length === 0 && (
-                      <ListTag
-                        label="Todas as categorias"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todas as categorias" />
                     )}
 
                     {dataFilter.categories.map((e, i) => (
                       <ListTag
-                        key={e}
-                        label={e}
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
                         padding="4px 12px"
-                        onClick={() => handleRemoveFilter('categories', i)}
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('categories', i);
+                        }}
                       />
                     ))}
 
                     {dataFilter.responsible.length === 0 && (
-                      <ListTag
-                        label="Todos os responsáveis"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
+                      <ListTag padding="4px 12px" fontWeight={500} label="Todos os responsáveis" />
                     )}
 
                     {dataFilter.responsible.map((e, i) => (
                       <ListTag
-                        key={e}
-                        label={e}
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
                         padding="4px 12px"
-                        onClick={() => handleRemoveFilter('responsible', i)}
+                        fontWeight={500}
+                        label={e}
+                        key={e}
+                        onClick={() => {
+                          handleRemoveFilter('responsible', i);
+                        }}
                       />
                     ))}
                   </Style.Tags>

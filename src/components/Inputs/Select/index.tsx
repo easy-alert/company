@@ -11,13 +11,13 @@ import type { ISelect } from './utils/types';
 import { SelectContainer } from './styles';
 
 const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, ISelect> = (
-  { label, name, selectPlaceholderValue = '', permToCheck, arrowColor = 'red', ...rest },
+  { label, name, selectPlaceholderValue = '', permToCheck, ...rest },
   ref,
 ) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
   return (
-    <SelectContainer selectPlaceholderValue={selectPlaceholderValue} arrowColor={arrowColor}>
+    <SelectContainer selectPlaceholderValue={selectPlaceholderValue}>
       {label && <h6>{label}</h6>}
       <select
         id={name}

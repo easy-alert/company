@@ -1,25 +1,19 @@
-// GLOBAL ASSETS
-import IconX from '@assets/icons/IconX';
-
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
-// GLOBAL COMPONENTS
-import { IconButton } from '../Buttons/IconButton';
-
-// COMPONENTS
+// UI
 import * as Style from './styles';
+// ICONS
+import { icon } from '../../assets/icons';
 
 // TYPES
 import { IModal } from './utils/types';
+import { theme } from '../../styles/theme';
+import { IconButton } from '../Buttons/IconButton';
 
 export const CustomModal = ({ children, setModal, title, bodyWidth, zIndex }: IModal) => (
   <Style.Body bodyWidth={bodyWidth} zIndex={zIndex}>
     <Style.Header>
       <h2>{title}</h2>
       <IconButton
-        icon={<IconX strokeColor="primary" />}
-        fill="primary"
+        icon={icon.x}
         color={theme.color.primary}
         onClick={() => {
           setModal(false);

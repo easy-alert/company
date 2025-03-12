@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../../../../../styles/theme';
 
 export const ArrowContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const Arrow = styled.div<{ cardIsOpen: boolean }>`
@@ -17,21 +17,20 @@ export const Arrow = styled.div<{ cardIsOpen: boolean }>`
 export const Hr = styled.div`
   height: 1px;
   width: 100%;
-  background-color: ${({ theme }) => theme.color.gray2};
-  margin-top: ${({ theme }) => theme.size.xsm};
+  background-color: ${theme.color.gray2};
+  margin-top: ${theme.size.xsm};
 `;
 
 export const MaintenancesCard = styled.div`
   display: flex;
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  background-color: ${({ theme }) => theme.color.white};
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border-radius: ${theme.size.xxsm};
+  background-color: ${theme.color.white};
 
   transition: 0.25s;
-
   :hover {
     cursor: pointer;
-    background-color: ${({ theme }) => `${theme.color.white}B3`};
+    background-color: ${`${theme.color.white}B3`};
   }
 `;
 
@@ -49,7 +48,7 @@ export const MaintenancesCardTopContent = styled.div`
 export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   overflow: hidden;
   transition: max-height 0.25s;
 
@@ -70,7 +69,7 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   justify-content: flex-end;
   grid-area: 4/8;
   height: 100%;
@@ -86,7 +85,7 @@ export const MaintenancesCardGridMoreEditButton = styled.div`
 export const PeriodIconWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
   white-space: nowrap;
 `;
 
@@ -97,7 +96,7 @@ export const MaintenancesGrid = styled.div<{ cardIsOpen: boolean }>`
   width: 100%;
   grid-template-rows: 1fr;
   overflow: hidden;
-  grid-gap: ${({ theme }) => theme.size.sm};
+  grid-gap: ${theme.size.sm};
   grid-template-columns: 8px 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px 30px;
 
   > p {
@@ -129,11 +128,11 @@ export const MaintenancesMoreGrid = styled.div`
   width: 100%;
   grid-template-rows: auto;
   max-height: 100%;
-  grid-gap: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+  grid-gap: ${theme.size.xsm} ${theme.size.sm};
   grid-template-columns: 8px 230px minmax(280px, 0.8fr) 0.4fr 0.5fr 0.5fr 30px 30px;
 
   span {
-    color: ${({ theme }) => theme.color.primary};
+    color: ${theme.color.primary};
     font-weight: 500;
   }
   > p {
@@ -157,7 +156,7 @@ export const MaintenancesMoreGrid = styled.div`
 
 export const AdditionalInformationsWrapper = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const LastNotificationDate = styled(AdditionalInformationsWrapper)`
@@ -172,5 +171,5 @@ export const FileRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;

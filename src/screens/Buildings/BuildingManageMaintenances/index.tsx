@@ -24,7 +24,6 @@ import { query, requestListIntervals } from '@utils/functions';
 import { icon } from '@assets/icons/index';
 
 // COMPONENTS
-import IconSearch from '@assets/icons/IconSearch';
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
@@ -121,7 +120,6 @@ export const BuildingManageMaintenances = () => {
           <Style.RightSide>
             {!onQuery && (
               <IconButton
-                hasCircle
                 hideLabelOnMedia
                 fontWeight="500"
                 label="Criar categoria"
@@ -135,7 +133,6 @@ export const BuildingManageMaintenances = () => {
 
             {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
               <IconButton
-                hasCircle
                 icon={icon.checked}
                 label="Salvar"
                 hideLabelOnMedia
@@ -155,8 +152,7 @@ export const BuildingManageMaintenances = () => {
 
         <Style.SearchField>
           <IconButton
-            fill="primary"
-            icon={<IconSearch strokeColor="primary" />}
+            icon={icon.search}
             size="16px"
             onClick={() => {
               setFilter(inputRef.current);
@@ -189,7 +185,6 @@ export const BuildingManageMaintenances = () => {
             <Select
               disabled={tableloading}
               label="Copiar manutenções de:"
-              arrowColor="primary"
               value={toCopyBuilding}
               selectPlaceholderValue=" "
               onChange={(e) => {

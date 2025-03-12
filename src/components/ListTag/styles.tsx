@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../styles/theme';
 
 export const TagContainer = styled.div<{
   backgroundColor: string;
@@ -13,14 +13,14 @@ export const TagContainer = styled.div<{
   display: flex;
   align-items: center;
   gap: 6px;
-  background-color: ${({ backgroundColor, theme }) => {
+  background-color: ${({ backgroundColor }) => {
     const colorValue = theme.color[backgroundColor as keyof typeof theme.color];
     return colorValue || backgroundColor;
   }};
   padding: ${({ padding }) => padding};
   width: fit-content;
   height: fit-content;
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  border-radius: ${theme.size.xxsm};
 
   > button {
     padding: 0;
@@ -35,7 +35,7 @@ export const TagContainer = styled.div<{
   }
 
   > p {
-    color: ${({ color, theme }) => {
+    color: ${({ color }) => {
       const colorValue = theme.color[color as keyof typeof theme.color];
       return colorValue || color;
     }};

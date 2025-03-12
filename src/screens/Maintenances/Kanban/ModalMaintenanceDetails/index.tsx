@@ -338,7 +338,6 @@ export const ModalMaintenanceDetails = ({
           </Style.Content>
 
           <Button
-            bgColor="primary"
             label="Fechar"
             center
             onClick={() => handleModals('modalMaintenanceDetails', false)}

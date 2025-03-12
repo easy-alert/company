@@ -12,7 +12,7 @@ import { TextArea } from '@components/Inputs/TextArea';
 import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
-import IconX from '@assets/icons/IconX';
+import { icon } from '@assets/icons';
 
 // STYLES
 import * as Style from '../styles';
@@ -100,11 +100,7 @@ export const ShareButton = ({
             <Style.PopoverBody contentColor={theme.color.gray4}>
               <h3>
                 Compartilhar
-                <IconButton
-                  onClick={() => handleTogglePopover(false)}
-                  icon={<IconX strokeColor="primary" />}
-                  fill="primary"
-                />
+                <IconButton onClick={() => handleTogglePopover(false)} icon={icon.x} />
               </h3>
 
               <Style.Hr />
@@ -118,7 +114,6 @@ export const ShareButton = ({
               />
 
               <Button
-                bgColor="primary"
                 style={{ marginTop: '16px' }}
                 center
                 label="Copiar link"

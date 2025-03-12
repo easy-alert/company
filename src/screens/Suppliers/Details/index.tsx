@@ -33,7 +33,6 @@ import type { ISupplier } from '@customTypes/ISupplier';
 import type { IMaintenanceReportData } from '@screens/Reports/Maintenances/types';
 
 // STYLES
-import IconUnlink2 from '@assets/icons/IconUnlink2';
 import * as Style from './styles';
 import { SortHeader } from '../../Maintenances/List/utils/components/MaintenanceCategory/styles';
 
@@ -273,8 +272,7 @@ export const SupplierDetails = () => {
             <IconButton
               disabled={onQuery}
               hideLabelOnMedia
-              icon={icon.edit}
-              hasCircle
+              icon={icon.editWithBg}
               label="Editar"
               onClick={() => {
                 setModalEditSupplierOpen(true);
@@ -349,7 +347,6 @@ export const SupplierDetails = () => {
                           <PopoverButton
                             label="Desvincular"
                             hiddenIconButtonLabel
-                            actionButtonBgColor="primary"
                             type="IconButton"
                             actionButtonClick={() => {
                               unlinkToMaintenance(id);
@@ -359,7 +356,7 @@ export const SupplierDetails = () => {
                               content: 'Esta ação é reversível.',
                             }}
                             buttonIconSize="18px"
-                            buttonIcon={<IconUnlink2 strokeColor="primary" />}
+                            buttonIcon={icon.unlink2}
                           />
                         </Style.MaintenanceCard>
                       ),

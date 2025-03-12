@@ -16,7 +16,7 @@ import { NoDataFound } from '@components/NoDataFound';
 import { catchHandler, requestListIntervals } from '@utils/functions';
 
 // GLOBAL ASSETS
-import IconPlus from '@assets/icons/IconPlus';
+import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
 import type { ITimeInterval } from '@utils/types';
@@ -160,7 +160,6 @@ export const Checklists = () => {
             <h2>Checklists</h2>
 
             <Select
-              arrowColor="primary"
               id="customFilterForChecklist"
               disabled={buildingsForSelect.length === 0}
               selectPlaceholderValue=" "
@@ -180,9 +179,9 @@ export const Checklists = () => {
           </Style.HeaderLeftSide>
 
           <IconButton
-            label="Checklist"
-            icon={<IconPlus strokeColor="primary" />}
             disabled={loading}
+            label="Checklist"
+            icon={icon.plusWithBg}
             onClick={() => handleModals('modalChecklistCreate', true)}
           />
         </Style.Header>

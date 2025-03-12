@@ -158,7 +158,6 @@ export const ModalCreateTicket = ({
           {({ errors, touched, values, setFieldValue }) => (
             <Form>
               <FormikSelect
-                arrowColor="primary"
                 name="buildingNanoId"
                 selectPlaceholderValue={values.buildingNanoId}
                 label="Prédio *"
@@ -258,7 +257,6 @@ export const ModalCreateTicket = ({
               />
 
               <FormikSelect
-                arrowColor="primary"
                 name="placeId"
                 selectPlaceholderValue={values.placeId}
                 label="Local da ocorrência *"
@@ -380,7 +378,6 @@ export const ModalCreateTicket = ({
               </Style.Row>
 
               <Button
-                bgColor="primary"
                 center
                 label="Cadastrar"
                 type="submit"

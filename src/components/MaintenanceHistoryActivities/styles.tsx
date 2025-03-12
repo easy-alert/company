@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { theme } from '@styles/theme';
+
 interface TabProps {
   active: boolean;
 }
@@ -7,7 +9,7 @@ interface TabProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
   margin-top: 12px;
   margin-bottom: 5px;
 
@@ -26,7 +28,7 @@ export const ScrollDiv = styled(Container)`
 export const InputRow = styled.div`
   display: flex;
   align-items: flex-end;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   > :first-child {
     > h6 {
@@ -44,47 +46,47 @@ export const InputRow = styled.div`
 export const InputButtons = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const Comment = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   flex-direction: column;
   > .p2 {
-    color: ${({ theme }) => theme.color.gray6};
+    color: ${theme.color.gray6};
     margin-left: 32px;
   }
 `;
 
 export const CommentInfo = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
   flex-direction: column;
 
   .p3 {
-    color: ${({ theme }) => theme.color.gray4};
+    color: ${theme.color.gray4};
     font-weight: 500;
   }
 `;
 
 export const CommentHeader = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
   align-items: center;
 `;
 
 export const SendDataSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   > .p2 {
     opacity: 0.7;
@@ -96,8 +98,8 @@ export const ImageLoadingTag = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.color.primary};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   height: 97px;
   min-width: 97px;
 `;
@@ -105,15 +107,15 @@ export const ImageLoadingTag = styled.div`
 export const History = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const Tabs = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
-  margin-top: ${({ theme }) => theme.size.xsm};
-  margin-bottom: ${({ theme }) => theme.size.xsm};
+  margin-top: ${theme.size.xsm};
+  margin-bottom: ${theme.size.xsm};
 `;
 
 export const Tab = styled.div<TabProps>`
@@ -121,13 +123,11 @@ export const Tab = styled.div<TabProps>`
   justify-content: center;
 
   padding: 4px 12px;
-  border-radius: ${({ theme }) => theme.size.xsm};
+  border-radius: ${theme.size.xsm};
 
-  color: ${({ active, theme }) => (active ? theme.color.white : theme.color.gray6)};
   font-size: 12px;
-  font-weight: 500;
 
-  background-color: ${({ active, theme }) => (active ? theme.color.primaryM : 'transparent')};
+  background-color: ${({ active }) => (active ? theme.color.primaryL : 'transparent')};
   transition: background-color 0.4s ease;
 
   cursor: pointer;

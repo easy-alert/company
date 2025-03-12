@@ -17,7 +17,6 @@ import { PopoverComponent } from '@components/Popover';
 import { icon } from '@assets/icons/index';
 
 // TYPES
-import IconDot from '@assets/icons/IconDot';
 import type { SidebarContentProps } from './utils/types';
 
 // STYLES
@@ -119,7 +118,7 @@ export const Sidebar = () => {
       options: [
         {
           label: 'Chamados',
-          icon: <IconDot fillColor="primary" size="6px" />,
+          icon: icon.redDot,
           url: '/reports/tickets',
           permission: 'access:reports',
           redirectFunction: () => {
@@ -129,7 +128,7 @@ export const Sidebar = () => {
 
         {
           label: 'Checklists',
-          icon: <IconDot fillColor="primary" size="6px" />,
+          icon: icon.redDot,
           url: '/reports/checklists',
           permission: 'access:reports',
           redirectFunction: () => {
@@ -139,7 +138,7 @@ export const Sidebar = () => {
 
         {
           label: 'Manutenções',
-          icon: <IconDot fillColor="primary" size="6px" />,
+          icon: icon.redDot,
           url: '/reports/maintenances',
           permission: 'access:reports',
           redirectFunction: () => {

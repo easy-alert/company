@@ -1,33 +1,33 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from '../../../../styles/theme';
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   > :last-child {
-    margin-top: ${({ theme }) => theme.size.xsm};
+    margin-top: ${theme.size.xsm};
   }
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 `;
 
 export const StatusTagWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 `;
 
 export const DragAndDropZoneFile = styled.div`
   width: 100%;
-  border: 1px dashed ${({ theme }) => theme.color.gray4};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
 
   cursor: pointer;
   transition: 0.25s;
@@ -39,10 +39,10 @@ export const DragAndDropFileContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
 
   > p {
-    color: ${({ theme }) => theme.color.gray4};
+    color: ${theme.color.gray4};
   }
 `;
 
@@ -50,7 +50,7 @@ export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xsm};
 
   > .p2 {
     opacity: 0.7;
@@ -61,17 +61,17 @@ export const Tag = styled.div`
   display: flex;
   align-items: center;
   padding: 4px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
+  background-color: ${theme.color.primaryL};
   width: fit-content;
   height: fit-content;
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  gap: ${({ theme }) => theme.size.xsm};
+  border-radius: ${theme.size.xxsm};
+  gap: ${theme.size.xsm};
 
   > a {
     display: flex;
     align-items: center;
-    gap: ${({ theme }) => theme.size.xxsm};
-    color: ${({ theme }) => theme.color.black};
+    gap: ${theme.size.xxsm};
+    color: ${theme.color.black};
 
     > p {
       white-space: nowrap;
@@ -93,8 +93,8 @@ export const FileLoadingTag = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   width: 130px;
 `;
 
@@ -103,8 +103,8 @@ export const ImageLoadingTag = styled.div`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  background-color: ${({ theme }) => theme.color.primaryL};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  background-color: ${theme.color.primaryL};
+  border-radius: ${theme.size.xxsm};
   height: 97px;
   min-width: 97px;
 `;
@@ -113,9 +113,9 @@ export const DragAndDropZoneImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed ${({ theme }) => theme.color.gray4};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
+  border: 1px dashed ${theme.color.gray4};
+  border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.md};
   height: 97px;
   min-width: 97px;
   cursor: pointer;
@@ -134,18 +134,18 @@ export const LoadingContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  gap: ${({ theme }) => theme.size.sm};
+  gap: ${theme.size.sm};
   align-items: center;
   justify-content: center;
 `;
 
 export const Row = styled.div<{ disabled?: boolean }>`
   display: flex;
-  gap: ${({ theme }) => theme.size.xxsm};
-  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
-  border: 1px solid ${({ theme }) => theme.color.gray4};
-  background-color: ${({ theme }) => theme.color.gray1};
-  border-radius: ${({ theme }) => theme.size.xsm};
+  gap: ${theme.size.xxsm};
+  padding: ${theme.size.xsm} ${theme.size.sm};
+  border: 1px solid ${theme.color.gray4};
+  background-color: ${theme.color.gray1};
+  border-radius: ${theme.size.xsm};
   align-items: center;
 
   ${({ disabled }) =>
@@ -168,7 +168,7 @@ export const Row = styled.div<{ disabled?: boolean }>`
 export const FileStyleRow = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${theme.size.xxsm};
 
   ${({ disabled }) =>
     disabled &&

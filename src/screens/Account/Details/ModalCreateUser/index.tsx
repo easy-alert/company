@@ -213,7 +213,6 @@ export const ModalCreateUser = ({ handleModals, onThenRequest }: IModalCreateUse
             />
 
             <Button
-              bgColor="primary"
               type="submit"
               label="Cadastrar"
               loading={onQuery}

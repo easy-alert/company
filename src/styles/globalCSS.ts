@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+import { theme } from './theme';
 import { icon } from '../assets/icons/index';
 
 export default createGlobalStyle`
@@ -16,18 +16,18 @@ export default createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background:  ${({ theme }) => theme.color.gray1};
+    background: ${theme.color.gray1};
     border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.color.gray4};
+    background: ${theme.color.gray4};
     border-radius: 4px;
     transition: background 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${({ theme }) => theme.color.primary};
+    background: ${theme.color.primary};
   }
 
   a {
@@ -41,8 +41,8 @@ export default createGlobalStyle`
   }
 
   body {
-    background-color:  ${({ theme }) => theme.color.gray1};
-    color:  ${({ theme }) => theme.color.black};
+    background-color: ${theme.color.gray1};
+    color: ${theme.color.black};
   }
 
   h1 {
@@ -137,13 +137,13 @@ export default createGlobalStyle`
     font-style: normal;
     outline: none;
     width: 100%;
-    background-color:  ${({ theme }) => theme.color.white};
-    border: 1px solid  ${({ theme }) => theme.color.gray4};
+    background-color: ${theme.color.white};
+    border: 1px solid ${theme.color.gray4};
     height: 32px;
-    border-radius:  ${({ theme }) => theme.size.xxsm};
-    padding:  ${({ theme }) => theme.size.xsm}  ${({ theme }) => theme.size.sm};
+    border-radius: ${theme.size.xxsm};
+    padding: ${theme.size.xsm} ${theme.size.sm};
     :placeholder-shown {
-      border: 1px solid  ${({ theme }) => theme.color.gray3};
+      border: 1px solid ${theme.color.gray3};
     }
   }
 
@@ -155,14 +155,14 @@ export default createGlobalStyle`
   input[type=checkbox] {
     width: 16px;
     height: 16px;
-    accent-color: ${({ theme }) => theme.color.primary};
+    accent-color: ${theme.color.primary};
     cursor: pointer;
   }
 
   input[disabled], textarea[disabled], select[disabled] {
     cursor: not-allowed;
-    background-color: ${({ theme }) => theme.color.gray1};
-    color: ${({ theme }) => theme.color.gray4};
+    background-color: ${theme.color.gray1};
+    color: ${theme.color.gray4};
   }
 
   textarea {
@@ -172,14 +172,14 @@ export default createGlobalStyle`
     font-style: normal;
     outline: none;
     width: 100%;
-    background-color: ${({ theme }) => theme.color.white};
-    border: 1px solid ${({ theme }) => theme.color.gray4};
+    background-color: ${theme.color.white};
+    border: 1px solid ${theme.color.gray4};
     height: 100px;
-    border-radius: ${({ theme }) => theme.size.xxsm};
-    padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+    border-radius: ${theme.size.xxsm};
+    padding: ${theme.size.xsm} ${theme.size.sm};
     resize: none;
     :placeholder-shown {
-      border: 1px solid ${({ theme }) => theme.color.gray3};
+      border: 1px solid ${theme.color.gray3};
     }
   }
 
@@ -201,34 +201,34 @@ export default createGlobalStyle`
     font-style: normal;
     outline: none;
     width: 100%;
-    background-color:${({ theme }) => theme.color.white};
-    border: 1px solid ${({ theme }) => theme.color.gray3};
+    background-color: ${theme.color.white};
+    border: 1px solid ${theme.color.gray3};
     height: 32px;
-    border-radius: ${({ theme }) => theme.size.xxsm};
-    padding: 0${({ theme }) => theme.size.sm};
-// 
+    border-radius: ${theme.size.xxsm};
+    padding: 0 ${theme.size.sm};
+
     background-image: url(${icon.downArrow});
     background-repeat: no-repeat, repeat;
-    background-position: right ${({ theme }) => theme.size.sm} top 50%, 0 0;
+    background-position: right ${theme.size.sm} top 50%, 0 0;
     background-size: 16px;
   }
 
   option {
-    color: ${({ theme }) => theme.color.gray5};
+    color: ${theme.color.gray5};
   }
 
   option[disabled] {
-    color: ${({ theme }) => theme.color.gray4};
+    color: ${theme.color.gray4};
   }
 
   button {
-    border-radius: ${({ theme }) => theme.size.xxsm};
-    padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
+    border-radius: ${theme.size.xxsm};
+    padding: ${theme.size.xsm} ${theme.size.sm};
     outline: none;
     border: none;
     cursor: pointer;
-    color: ${({ theme }) => theme.color.white};
-    background-color: ${({ theme }) => theme.color.primary};
+    color: ${theme.color.white};
+    background-color: ${theme.color.primary};
   }
 
   table {
@@ -250,7 +250,7 @@ export default createGlobalStyle`
   form {
     display: flex;
     flex-direction: column;
-    gap: ${({ theme }) => theme.size.xsm};
+    gap: ${theme.size.xsm};
     width: 100%;
   }
 `;

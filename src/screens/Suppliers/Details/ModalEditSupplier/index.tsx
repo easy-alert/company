@@ -276,7 +276,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
                 placeholder="Ex: www.easyalert.com.br"
               />
 
-              <Button center label="Salvar" type="submit" loading={onQuery} bgColor="primary" />
+              <Button center label="Salvar" type="submit" loading={onQuery} />
             </Form>
           </Style.FormContainer>
         )}

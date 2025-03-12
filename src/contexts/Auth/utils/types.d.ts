@@ -1,12 +1,10 @@
 import { IAccount } from '../../../utils/types';
 
 export interface IAuthContext {
-  account: IAccount;
+  account: IAccount | null;
   setAccount: (setUser: IAccount) => void;
   signin: (ILoginRequestResponse) => void;
   signout: () => void;
-  handleChangeUser: (user: IAccount['User']) => void;
-  handleChangeCompany: (company: IAccount['Company']) => void;
 }
 
 export interface ILoginRequest {

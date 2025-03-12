@@ -37,12 +37,12 @@ const SignaturePad = ({ onSave, loading }: ISignaturePad) => {
         <>
           <SignatureCanvas ref={sigCanvas} penColor="black" onEnd={() => setIsEmpty(false)} />
           <Style.ButtonsContainer>
-            <Button label="Assinar" textColor="success" bgColor="transparent" onClick={save} />
+            <Button label="Assinar" bgColor="transparent" textColor="finished" onClick={save} />
 
             <Button
               label="Limpar"
-              textColor="danger"
               bgColor="transparent"
+              textColor="black"
               disabled={isEmpty}
               onClick={clearPad}
             />

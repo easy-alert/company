@@ -15,7 +15,6 @@ import { icon } from '@assets/icons';
 import { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import IconQrcode from '@assets/icons/IconQrcode';
 import { ModalPrintCategoryQRCode } from '../ModalPrintCategoryQRCode';
 import { ModalAdditionalInformation } from '../ModalAdditionalInformation';
 import { MaintenanceCard } from '../MaintenanceCard';
@@ -126,8 +125,7 @@ export const MaintenanceCategory = ({
               <h5>{data.Category.name}</h5>
 
               <IconButton
-                icon={<IconQrcode strokeColor="primary" />}
-                fill="primary"
+                icon={icon.qrcode}
                 size="18px"
                 onClick={() => {
                   setModalPrintCategoryQrCodeOpen(true);
