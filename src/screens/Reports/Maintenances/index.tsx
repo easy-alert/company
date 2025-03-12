@@ -29,7 +29,7 @@ import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@
 // GLOBAL ICONS
 import { icon } from '@assets/icons';
 import IconCsvLogo from '@assets/icons/IconCsvLogo';
-import IconPdfLogo from '@assets/icons/pdfLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
@@ -258,7 +258,6 @@ export const MaintenanceReports = () => {
       <s.Container>
         <h2>Relatórios de manutenções</h2>
         <s.FiltersContainer>
-          <h5>Filtros</h5>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
@@ -531,24 +530,23 @@ export const MaintenanceReports = () => {
                         onClick={() => maintenances.length !== 0}
                       >
                         <IconButton
-                          icon={<IconCsvLogo strokeColor="primary" />}
                           label="Exportar"
-                          size="20px"
+                          icon={<IconCsvLogo strokeColor="primary" />}
+                          disabled={maintenances.length === 0}
                           onClick={() => {
                             //
                           }}
-                          disabled={maintenances.length === 0}
                         />
                       </CSVLink>
                       <IconButton
-                        icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        size="20px"
+                        icon={<IconPdfLogo strokeColor="primary" />}
+                        disabled={maintenances.length === 0 || onPdfQuery}
                         onClick={() => {
                           requestPdf();
                         }}
-                        disabled={maintenances.length === 0 || onPdfQuery}
                       />
+
                       <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
