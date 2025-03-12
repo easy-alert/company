@@ -31,10 +31,12 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useTheme() {
+export function useCustomTheme() {
   const context = useContext(ThemeContext);
+
   if (!context) {
     throw new Error('useTheme deve ser usado dentro de um ThemeContextProvider');
   }
+
   return context;
 }

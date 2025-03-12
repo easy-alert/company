@@ -4,7 +4,7 @@ import { useState } from 'react';
 // TYPES
 import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
-import { ILoginRequestResponse } from './utils/types';
+import type { ILoginRequestResponse } from './utils/types';
 import { query } from '../../utils/functions';
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
