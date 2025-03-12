@@ -1,4 +1,4 @@
-import { IAccount } from '../../../utils/types';
+import { IAccount } from '@utils/types';
 
 export interface IAuthContext {
   account: IAccount | null;
