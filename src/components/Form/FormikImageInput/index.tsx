@@ -34,6 +34,7 @@ export const FormikImageInput = ({
   return (
     <Style.BackgroundSection>
       <h6>{label}</h6>
+
       <Style.Container>
         <Style.ImageWrapper>
           <img
