@@ -37,8 +37,6 @@ import IconPlus from '@assets/icons/IconPlus';
 import { useUsersForSelect } from '@hooks/useUsersForSelect';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
-import { ModalChecklistCreate } from './ModalChecklistCreate';
-import { ModalChecklistDetails } from './ModalChecklistDetails';
 
 // STYLES
 import * as Style from './styles';
@@ -64,9 +62,7 @@ interface IMaintenanceCategoryForSelect {
 export type TModalNames =
   | 'modalSendMaintenanceReport'
   | 'modalMaintenanceDetails'
-  | 'modalCreateOccasionalMaintenance'
-  | 'modalChecklistCreate'
-  | 'modalChecklistDetails';
+  | 'modalCreateOccasionalMaintenance';
 
 export const MaintenancesKanban = () => {
   const { account } = useAuthContext();
@@ -111,13 +107,6 @@ export const MaintenancesKanban = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
-  // # region Checklists states
-  const [checklistId, setChecklistId] = useState<string>('');
-
-  const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
-  const [modalChecklistDetails, setModalChecklist] = useState(false);
-  // # endregion
-
   const showPriority = account?.Company.showMaintenancePriority;
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
@@ -130,12 +119,6 @@ export const MaintenancesKanban = () => {
         break;
       case 'modalCreateOccasionalMaintenance':
         setModalCreateOccasionalMaintenance(modalState);
-        break;
-      case 'modalChecklistCreate':
-        setModalChecklistCreate(modalState);
-        break;
-      case 'modalChecklistDetails':
-        setModalChecklist(modalState);
         break;
 
       default:
@@ -244,18 +227,6 @@ export const MaintenancesKanban = () => {
         />
       )}
 
-      {modalChecklistCreate && (
-        <ModalChecklistCreate
-          buildingsForSelect={buildingsForSelect}
-          handleModals={handleModals}
-          handleRefresh={handleRefresh}
-        />
-      )}
-
-      {modalChecklistDetails && checklistId && (
-        <ModalChecklistDetails checklistId={checklistId} handleModals={handleModals} />
-      )}
-
       <Style.Container>
         <Style.Header>
           <Style.HeaderWrapper>
@@ -264,22 +235,10 @@ export const MaintenancesKanban = () => {
 
           <Style.IconsContainer>
             <IconButton
-              disabled={loading}
-              label="Checklist"
-              icon={<IconPlus strokeColor="primary" />}
-              fill="primary"
-              permToCheck="checklist:create"
-              onClick={() => {
-                handleModals('modalChecklistCreate', true);
-              }}
-            />
-
-            <IconButton
-              disabled={loading}
-              icon={<IconPlus strokeColor="primary" />}
-              fill="primary"
-              permToCheck="maintenances:createOccasional"
               label="Manutenção avulsa"
+              icon={<IconPlus strokeColor="primary" />}
+              permToCheck="maintenances:createOccasional"
+              disabled={loading}
               onClick={() => handleModals('modalCreateOccasionalMaintenance', true)}
             />
           </Style.IconsContainer>
@@ -486,18 +445,21 @@ export const MaintenancesKanban = () => {
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todas as edificações"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
                           label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -510,18 +472,21 @@ export const MaintenancesKanban = () => {
 
                     {filter.users?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os usuários"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.users?.map((user) => (
                         <ListTag
                           key={user}
                           label={usersForSelect.find((u) => u.id === user)?.name || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -534,10 +499,11 @@ export const MaintenancesKanban = () => {
 
                     {filter.status?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os status"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.status?.map((status) => (
@@ -547,8 +513,10 @@ export const MaintenancesKanban = () => {
                             maintenanceStatusForSelect.find((ms) => ms.name === status)
                               ?.singularLabel || '',
                           )}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -561,10 +529,11 @@ export const MaintenancesKanban = () => {
 
                     {filter.categories?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos as categorias"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.categories?.map((category) => (
@@ -574,6 +543,8 @@ export const MaintenancesKanban = () => {
                             maintenanceCategoriesForSelect.find((mc) => mc.id === category)?.name ||
                             ''
                           }
+                          color="white"
+                          backgroundColor="primaryM"
                           padding="4px 12px"
                           fontWeight={500}
                           onClick={() => {
@@ -676,10 +647,7 @@ export const MaintenancesKanban = () => {
                             <Style.MaintenanceInfo
                               status={maintenance.status}
                               onClick={() => {
-                                if (maintenance.type === 'checklist') {
-                                  setChecklistId(maintenance.id);
-                                  handleModals('modalChecklistDetails', true);
-                                } else if (
+                                if (
                                   maintenance.status === 'pending' ||
                                   maintenance.status === 'expired'
                                 ) {
