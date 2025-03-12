@@ -9,53 +9,13 @@ export const ContainerButton = styled.div<{
   hideLabelOnMedia?: boolean;
   fontWeight?: string;
   disable?: boolean;
-  hasCircle?: boolean;
-  fill?: string;
   size?: string;
-  stroke?: string;
 }>`
   display: flex;
   min-width: fit-content;
   align-items: center;
   cursor: pointer;
   transition: 0.25s cubic-bezier(0.39, 0.575, 0.565, 1);
-
-  img {
-    ${({ theme, hasCircle }) =>
-      hasCircle &&
-      `
-      background-color: ${theme.color.primary};
-      border-radius: 50%;
-      color: ${theme.color.primary};
-    `}
-  }
-
-  svg {
-    ${({ fill, theme }) => {
-      const themeColor =
-        theme.background[fill as keyof typeof theme.background] ||
-        theme.color[fill as keyof typeof theme.color];
-
-      if (themeColor) return `fill: ${themeColor};`;
-
-      return fill && `fill: ${fill};`;
-    }}
-    ${({ size }) => size && `width: ${size};`}
-    ${({ size }) => size && `height: ${size};`}
-
-    path {
-      fill: none;
-      ${({ stroke, theme }) => {
-        const themeColor =
-          theme.background[stroke as keyof typeof theme.background] ||
-          theme.color[stroke as keyof typeof theme.color];
-
-        if (themeColor) return `stroke: ${themeColor};`;
-
-        return stroke && `stroke: ${stroke};`;
-      }}
-    }
-  }
 
   > p {
     ${({ color }) => color && `color: ${color};`}
