@@ -129,11 +129,7 @@ export const ShareMaintenanceHistoryButton = ({
       }}
     >
       <Style.ButtonContainer>
-        <IconButton
-          icon={<IconUploadLine strokeColor="primary" />}
-          fill="primary"
-          onClick={togglePopOver}
-        />
+        <IconButton icon={<IconUploadLine strokeColor="primary" />} onClick={togglePopOver} />
       </Style.ButtonContainer>
     </Popover>
   );
