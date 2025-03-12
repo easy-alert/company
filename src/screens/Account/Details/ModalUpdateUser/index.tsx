@@ -1,11 +1,13 @@
 // REACT
 import { useState } from 'react';
+import { ChromePicker } from 'react-color';
 
 // LIBS
 import { Form, Formik } from 'formik';
 
 // CONTEXT
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+import { useCustomTheme } from '@contexts/ThemeContext';
 
 // SERVICES
 import { updateUser } from '@services/apis/updateUser';
@@ -13,6 +15,8 @@ import { updateUser } from '@services/apis/updateUser';
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
+import { InputRadio } from '@components/Inputs/InputRadio';
+import { IconButton } from '@components/Buttons/IconButton';
 import { FormikInput } from '@components/Form/FormikInput';
 import { FormikImageInput } from '@components/Form/FormikImageInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
@@ -20,11 +24,17 @@ import { FormikSelect } from '@components/Form/FormikSelect';
 // GLOBAL UTILS
 import { applyMask, uploadFile } from '@utils/functions';
 
+// GLOBAL ASSETS
+import IconEye from '@assets/icons/IconEye';
+
 // GLOBAL TYPES
 import type { IAccount } from '@utils/types';
 
 // UTILS
 import { userUpdateSchema } from './schema';
+
+// STYLES
+import * as Style from './styles';
 
 // TYPES
 import type { ISelectedUser } from '..';
@@ -39,20 +49,22 @@ export interface UpdateUserValues {
   password: string;
   confirmPassword: string;
   isBlocked: boolean;
+  colorScheme: string;
 }
 
 interface IModalUpdateUser {
   selectedUser: ISelectedUser;
-  onThenRequest: () => Promise<void>;
   handleModals: (modal: string, modalState: boolean) => void;
 }
 
-export const ModalUpdateUser = ({
-  selectedUser,
-  onThenRequest,
-  handleModals,
-}: IModalUpdateUser) => {
+export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser) => {
   const { handleChangeUser } = useAuthContext();
+  const { updateThemeColor } = useCustomTheme();
+
+  const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword2, setShowPassword2] = useState<boolean>(false);
 
   const [onQuery, setOnQuery] = useState(false);
 
@@ -82,6 +94,7 @@ export const ModalUpdateUser = ({
       if (!updatedUser) return;
 
       handleChangeUser(updatedUser as IAccount['User']);
+      updateThemeColor(updatedUser.colorScheme);
       handleModals('updateUser', false);
     } finally {
       setOnQuery(false);
@@ -94,12 +107,13 @@ export const ModalUpdateUser = ({
         initialValues={{
           image: selectedUser.image || '',
           name: selectedUser.name,
+          role: selectedUser.role || '',
           email: selectedUser.email,
           phoneNumber: applyMask({ value: selectedUser.phoneNumber, mask: 'TEL' }).value,
-          role: selectedUser.role || '',
+          isBlocked: selectedUser.isBlocked,
           password: '',
           confirmPassword: '',
-          isBlocked: selectedUser.isBlocked,
+          colorScheme: selectedUser.colorScheme || '#B21D1D',
         }}
         validationSchema={userUpdateSchema}
         onSubmit={async (values) => handleEditUser(values)}
@@ -173,25 +187,69 @@ export const ModalUpdateUser = ({
               <option value="blocked">Bloqueado</option>
             </FormikSelect>
 
-            <FormikInput
-              name="password"
-              label="Senha"
-              placeholder="Informe a nova senha"
-              type="password"
-              value={values.password}
-              error={touched.password && errors.password ? errors.password : null}
+            <Style.PasswordDiv>
+              <FormikInput
+                name="password"
+                label="Senha"
+                placeholder="Informe a nova senha"
+                type={showPassword ? 'text' : 'password'}
+                value={values.password}
+                error={touched.password && errors.password ? errors.password : null}
+              />
+
+              {values.password && (
+                <IconButton
+                  icon={<IconEye strokeColor={showPassword ? 'primary' : 'gray4'} />}
+                  size="20px"
+                  onClick={() => {
+                    setShowPassword((prevState) => !prevState);
+                  }}
+                  opacity="1"
+                />
+              )}
+            </Style.PasswordDiv>
+
+            <Style.PasswordDiv>
+              <FormikInput
+                name="confirmPassword"
+                label="Confirmar senha"
+                placeholder="Confirme a nova senha"
+                type={showPassword2 ? 'text' : 'password'}
+                value={values.confirmPassword}
+                error={
+                  touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null
+                }
+              />
+
+              {values.confirmPassword && (
+                <IconButton
+                  icon={<IconEye strokeColor={showPassword2 ? 'primary' : 'gray4'} />}
+                  size="20px"
+                  onClick={() => {
+                    setShowPassword2((prevState) => !prevState);
+                  }}
+                  opacity="1"
+                />
+              )}
+            </Style.PasswordDiv>
+
+            <InputRadio
+              id="color-picker"
+              name="color-picker"
+              label="Deseja alterar a cor da sua edificação?"
+              onClick={() => setShowColorPicker(!showColorPicker)}
             />
 
-            <FormikInput
-              name="confirmPassword"
-              label="Confirmar senha"
-              placeholder="Confirme a nova senha"
-              type="password"
-              value={values.confirmPassword}
-              error={
-                touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : null
-              }
-            />
+            {showColorPicker && (
+              <Style.ColorPickerContainer>
+                <ChromePicker
+                  color={values.colorScheme}
+                  onChangeComplete={(color) => setFieldValue('colorScheme', color.hex)}
+                />
+
+                <Style.SelectedColorBox selectedColor={values.colorScheme} />
+              </Style.ColorPickerContainer>
+            )}
 
             <Button
               bgColor="primary"
