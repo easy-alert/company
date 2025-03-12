@@ -179,7 +179,7 @@ export const AccountDetails = () => {
           {account?.User.isCompanyOwner && (
             <IconButton
               hideLabelOnMedia
-              icon={<IconEdit strokeColor="primary" size="24px" />}
+              icon={<IconEdit strokeColor="primary" />}
               label="Editar"
               onClick={() => setModalEditAccountOpen(true)}
             />
@@ -214,7 +214,7 @@ export const AccountDetails = () => {
             {account?.User.isCompanyOwner && (
               <IconButton
                 hideLabelOnMedia
-                icon={<IconEye strokeColor="primary" size="24px" />}
+                icon={<IconEye strokeColor="primary" />}
                 label="Permissões"
                 onClick={() => navigate(`/account/${account.User.id}/permissions`)}
               />
@@ -222,7 +222,7 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={<IconEdit strokeColor="primary" size="24px" />}
+              icon={<IconEdit strokeColor="primary" />}
               label="Editar"
               onClick={() => {
                 setSelectedUser({
@@ -311,7 +311,7 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={<IconPlus strokeColor="primary" size="24px" />}
+              icon={<IconPlus strokeColor="primary" />}
               label="Cadastrar"
               onClick={() => setModalCreateUserOpen(true)}
             />
