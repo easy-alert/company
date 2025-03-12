@@ -13,7 +13,7 @@ import { icon } from '@assets/icons';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // STYLES
-import IconPdfLogo from '@assets/icons/pdfLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 import * as Style from './styles';
 
 interface IPdfList {
