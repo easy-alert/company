@@ -12,17 +12,16 @@ interface IUpdateUser {
 export async function updateUser({ data }: IUpdateUser) {
   const uri = 'account/user';
 
-  let imageUrl: any;
-
   const body = {
     id: data.id,
-    image: imageUrl,
+    image: data.image,
     name: data.name,
     email: data.email,
     phoneNumber: unMask(data.phoneNumber),
     role: data.role,
     password: data.password,
     confirmPassword: data.confirmPassword,
+    colorScheme: data.colorScheme,
     isBlocked: data.isBlocked,
   };
 
@@ -35,6 +34,7 @@ export async function updateUser({ data }: IUpdateUser) {
       email: response.data.updatedUser.email,
       phoneNumber: response.data.updatedUser.phoneNumber,
       role: response.data.updatedUser.role,
+      colorScheme: response.data.updatedUser.colorScheme,
       createdAt: response.data.updatedUser.createdAt,
       lastAccess: response.data.updatedUser.lastAccess,
     };
