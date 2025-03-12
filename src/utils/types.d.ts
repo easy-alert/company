@@ -40,9 +40,11 @@ export interface IAccount {
 
     name: string;
     email: string;
-    phone: string;
+    emailIsConfirmed: boolean;
     phoneNumber: string;
+    phoneNumberIsConfirmed: boolean;
     image?: string;
+    colorScheme?: string;
     role?: string;
 
     isBlocked: boolean;
