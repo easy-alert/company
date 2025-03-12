@@ -31,18 +31,17 @@ import { handleToastify } from '@utils/toastifyResponses';
 import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
+import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // COMPONENTS
-import IconPdfLogo from '@assets/icons/pdfLogo';
-import IconCsvLogo from '@assets/icons/IconCsvLogo';
-import { IReportPdf } from '@customTypes/IReportPdf';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
 import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
@@ -498,9 +497,8 @@ export const TicketReports = () => {
                       onClick={() => tickets.length !== 0}
                     >
                       <IconButton
-                        icon={<IconCsvLogo strokeColor="primary" />}
                         label="Exportar"
-                        size="20px"
+                        icon={<IconCsvLogo strokeColor="primary" />}
                         onClick={() => {
                           //
                         }}
@@ -534,19 +532,21 @@ export const TicketReports = () => {
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todas as edificações"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
-                          backgroundColor="primary"
                           key={building}
                           label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -559,19 +559,21 @@ export const TicketReports = () => {
 
                     {filter.status?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os status"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
-                          backgroundColor="primary"
                           key={status}
                           label={ticketStatus.find((ts) => ts.name === status)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -584,19 +586,21 @@ export const TicketReports = () => {
 
                     {filter.places?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os locais"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.places?.map((place) => (
                         <ListTag
-                          backgroundColor="primary"
                           key={place}
                           label={ticketPlaces.find((p) => p.id === place)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -609,19 +613,21 @@ export const TicketReports = () => {
 
                     {filter.serviceTypes?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
-                        backgroundColor="primaryM"
                         label="Todos os tipos de serviço"
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.serviceTypes?.map((serviceType) => (
                         <ListTag
-                          backgroundColor="primary"
                           key={serviceType}
                           label={serviceTypes.find((st) => st.id === serviceType)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
