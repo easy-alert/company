@@ -1028,7 +1028,7 @@ export const Dashboard = () => {
                     <Button
                       label="Limpar filtros"
                       type="button"
-                      textColor="actionDanger"
+                      textColor="primary"
                       disable={onQuery}
                       borderless
                       onClick={() => {
@@ -1045,67 +1045,67 @@ export const Dashboard = () => {
                   <Style.Tags>
                     {dataFilter.buildings.length === 0 && (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todas as edificações"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     )}
 
                     {dataFilter.buildings.map((e, i) => (
                       <ListTag
-                        padding="4px 12px"
+                        key={e}
+                        label={e}
+                        color="white"
                         backgroundColor="primaryM"
                         fontWeight={500}
-                        label={e}
-                        key={e}
-                        onClick={() => {
-                          handleRemoveFilter('buildings', i);
-                        }}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('buildings', i)}
                       />
                     ))}
 
                     {dataFilter.categories.length === 0 && (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todas as categorias"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     )}
 
                     {dataFilter.categories.map((e, i) => (
                       <ListTag
-                        backgroundColor="primaryM"
-                        padding="4px 12px"
-                        fontWeight={500}
-                        label={e}
                         key={e}
-                        onClick={() => {
-                          handleRemoveFilter('categories', i);
-                        }}
+                        label={e}
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('categories', i)}
                       />
                     ))}
 
                     {dataFilter.responsible.length === 0 && (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os responsáveis"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     )}
 
                     {dataFilter.responsible.map((e, i) => (
                       <ListTag
-                        padding="4px 12px"
+                        key={e}
+                        label={e}
+                        color="white"
                         backgroundColor="primaryM"
                         fontWeight={500}
-                        label={e}
-                        key={e}
-                        onClick={() => {
-                          handleRemoveFilter('responsible', i);
-                        }}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('responsible', i)}
                       />
                     ))}
                   </Style.Tags>
