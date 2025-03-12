@@ -3,6 +3,7 @@ import IconX from '@assets/icons/IconX';
 import { icon } from '@assets/icons';
 
 // GLOBAL COMPONENTS
+import IconTrash from '@assets/icons/IconTrash';
 import { IconButton } from '../Buttons/IconButton';
 
 // GLOBAL STYLES
@@ -40,20 +41,18 @@ export const Modal = ({
         <Style.IconsContainer>
           {deleteButton && (
             <IconButton
-              icon={icon.grayTrash}
-              color={theme.color.primary}
+              icon={<IconTrash strokeColor="primary" strokeWidth="2" />}
               onClick={() => handleDelete && handleDelete(true)}
             />
           )}
 
           <IconButton
-            fill="primary"
-            icon={<IconX strokeColor="primary" />}
-            color={theme.color.primary}
+            icon={<IconX strokeColor="primary" strokeWidth="2" />}
             onClick={() => setModal(false)}
           />
         </Style.IconsContainer>
       </Style.Header>
+
       {children}
     </Style.Body>
   </Style.Background>
