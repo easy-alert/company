@@ -4,7 +4,6 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { icon } from '@assets/icons';
 import type { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
 import { deleteChecklist } from '@services/apis/deleteChecklist';
-
 import * as Style from './styles';
 
 interface ModelTemplateProps {
@@ -41,23 +40,19 @@ export const ModelTemplate = ({
       <Style.SelectTitle>Selecione um template</Style.SelectTitle>
       {checklistTemplates.length > 0 ? (
         checklistTemplates.map((template) => (
-          <Style.TemplateContainer
-            key={template.id}
-            onClick={() => {
-              setSelectedTemplate({
-                id: template.id,
-                name: template.name,
-                items: template.items,
-              });
+          <Style.TemplateContainer key={template.id}>
+            {selectedTemplate?.id === template.id && (
+              <Image img={icon.checked} size="16px" alt="Checked Icon" />
+            )}
 
-              handleSelectChecklistTemplate({
-                id: template.id,
-                name: template.name,
-                items: template.items,
-              });
-            }}
-          >
-            <Style.TemplateOption>{template.name}</Style.TemplateOption>
+            <Style.TemplateOption
+              onClick={() => {
+                setSelectedTemplate(template);
+                handleSelectChecklistTemplate(template);
+              }}
+            >
+              {template.name}
+            </Style.TemplateOption>
 
             <IconButton
               icon={icon.trashWithPrimaryBg}
