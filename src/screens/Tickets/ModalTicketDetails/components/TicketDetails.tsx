@@ -12,9 +12,6 @@ import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
 
-// GLOBAL THEMES
-import { theme } from '@styles/theme';
-
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
@@ -189,7 +186,7 @@ function TicketDetails({
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
             <Typography variant="h3">
-              Assinatura:{' '}
+              Assinatura:
               <Typography variant="span" fontSize="sm" style={{ textDecoration: 'underline' }}>
                 {ticket.residentName}
               </Typography>
@@ -261,8 +258,9 @@ function TicketDetails({
           {ticket.statusName === 'awaitingToFinish' && (
             <>
               <Button
-                bgColor="actionBlue"
                 label="Voltar para Aberto"
+                textColor="actionBlue"
+                bgColor="transparent"
                 permToCheck="tickets:update"
                 onClick={() =>
                   handleUpdateOneTicket({

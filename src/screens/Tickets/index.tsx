@@ -31,7 +31,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
+import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
@@ -258,9 +258,8 @@ function TicketsPage() {
 
           {ticketAccess && (
             <IconButton
-              hasCircle
-              icon={icon.siren}
               label="Abrir chamado"
+              icon={<IconPlus strokeColor="primary" />}
               permToCheck="tickets:create"
               onClick={() => handleCreateTicketModal(true)}
             />
@@ -491,10 +490,10 @@ function TicketsPage() {
                 <Style.FilterWrapperFooter>
                   <Style.FilterButtonWrapper>
                     <Button
-                      type="button"
-                      textColor="actionDanger"
-                      borderless
                       label="Limpar filtros"
+                      type="button"
+                      textColor="primary"
+                      borderless
                       onClick={() => {
                         setFieldValue('startDate', '');
                         setFieldValue('endDate', '');
@@ -508,19 +507,21 @@ function TicketsPage() {
                   <Style.FilterTags>
                     {filter.buildings?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todas as edificações"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.buildings?.map((building) => (
                         <ListTag
-                          backgroundColor="primaryM"
                           key={building}
                           label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -533,19 +534,21 @@ function TicketsPage() {
 
                     {filter.status?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os status"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.status?.map((status) => (
                         <ListTag
-                          backgroundColor="primaryM"
                           key={status}
                           label={ticketStatus.find((s) => s.name === status)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -558,19 +561,21 @@ function TicketsPage() {
 
                     {filter.places?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os locais"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.places?.map((place) => (
                         <ListTag
                           key={place}
-                          backgroundColor="primaryM"
                           label={ticketPlaces.find((p) => p.id === place)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -583,19 +588,21 @@ function TicketsPage() {
 
                     {filter.serviceTypes?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os tipos de serviço"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.serviceTypes?.map((serviceType) => (
                         <ListTag
-                          backgroundColor="primaryM"
                           key={serviceType}
                           label={serviceTypes.find((s) => s.id === serviceType)?.label || ''}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
@@ -610,19 +617,21 @@ function TicketsPage() {
 
                     {filter.apartments?.length === 0 ? (
                       <ListTag
-                        padding="4px 12px"
-                        fontWeight={500}
                         label="Todos os apartamentos"
+                        color="white"
                         backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
                       />
                     ) : (
                       filter.apartments?.map((apartment) => (
                         <ListTag
-                          backgroundColor="primaryM"
                           key={apartment}
                           label={apartment}
-                          padding="4px 12px"
+                          color="white"
+                          backgroundColor="primaryM"
                           fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
                             setFilter((prevState) => ({
                               ...prevState,
