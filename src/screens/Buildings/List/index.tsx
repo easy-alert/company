@@ -21,6 +21,7 @@ import type { IBuildingTypes } from '@utils/types';
 // STYLES
 import IconRightArrow from '@assets/icons/IconRightArrow';
 import IconSearch from '@assets/icons/IconSearch';
+import IconPlus from '@assets/icons/IconPlus';
 import * as Style from './styles';
 
 // MODALS
@@ -134,7 +135,7 @@ export const BuildingsList = () => {
           fontWeight="500"
           label="Cadastrar"
           className="p2"
-          icon={icon.plusWithBg}
+          icon={<IconPlus strokeColor="primary" />}
           permToCheck="buildings:create"
           onClick={() => {
             setModalCreateBuildingOpen(true);
