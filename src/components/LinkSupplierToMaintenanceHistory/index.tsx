@@ -89,6 +89,7 @@ export const LinkSupplierToMaintenanceHistory = ({
     <>
       {/* PRA SCROLLAR A TELA PRA CIMA QUANDO ABRIR A MODAL, PORQUE SE NAO APARECE FORA DA TELA */}
       <div ref={ref} style={{ position: 'absolute', top: '-10000px' }} />
+
       {modalLinkSupplierOpen && (
         <ModalLinkSupplier
           setModal={setModalLinkSupplierOpen}
@@ -134,12 +135,10 @@ export const LinkSupplierToMaintenanceHistory = ({
             <h3>Fornecedor</h3>
 
             <IconButton
-              hasCircle
-              hideLabelOnMedia
-              icon={<IconLink strokeColor="primary" />}
-              fill="primary"
               label="Vincular"
+              icon={<IconLink strokeColor="primary" strokeWidth="1.5" />}
               permToCheck="maintenances:update"
+              hideLabelOnMedia
               onClick={() => {
                 ref.current?.scrollIntoView();
                 setModalLinkSupplierOpen(true);
