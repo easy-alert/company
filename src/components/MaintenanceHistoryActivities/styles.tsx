@@ -123,7 +123,9 @@ export const Tab = styled.div<TabProps>`
   padding: 4px 12px;
   border-radius: ${({ theme }) => theme.size.xsm};
 
+  color: ${({ active, theme }) => (active ? theme.color.white : theme.color.gray6)};
   font-size: 12px;
+  font-weight: 500;
 
   background-color: ${({ active, theme }) => (active ? theme.color.primaryM : 'transparent')};
   transition: background-color 0.4s ease;

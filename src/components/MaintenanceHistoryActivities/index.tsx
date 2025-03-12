@@ -297,6 +297,7 @@ export const MaintenanceHistoryActivities = ({
           <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
             Comentários
           </Style.Tab>
+
           <Style.Tab
             onClick={() => setActiveTab('notifications')}
             active={activeTab === 'notifications'}
