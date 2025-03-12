@@ -236,7 +236,7 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
             <InputRadio
               id="color-picker"
               name="color-picker"
-              label="Deseja alterar a cor da sua edificação?"
+              label="Deseja alterar a cor da sua conta?"
               onClick={() => setShowColorPicker(!showColorPicker)}
             />
 
@@ -244,7 +244,8 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
               <Style.ColorPickerContainer>
                 <ChromePicker
                   color={values.colorScheme}
-                  onChangeComplete={(color) => setFieldValue('colorScheme', color.hex)}
+                  disableAlpha
+                  onChange={(color) => setFieldValue('colorScheme', color.hex)}
                 />
 
                 <Style.SelectedColorBox selectedColor={values.colorScheme} />
