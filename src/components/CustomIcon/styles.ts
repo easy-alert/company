@@ -38,18 +38,50 @@ export const StyledSVG = styled.svg<IStyledSVG>`
   }
 
   path {
-    ${({ theme, strokeColor }) => {
+    stroke: ${({ theme, strokeColor }) => {
       const themeColor =
         theme.background[strokeColor as keyof typeof theme.background] ||
         theme.color[strokeColor as keyof typeof theme.color];
 
-      if (themeColor) return `stroke: ${themeColor};`;
+      if (themeColor) return themeColor;
 
-      return strokeColor && `stroke: ${strokeColor};`;
-    }}
+      return strokeColor;
+    }};
 
     ${({ strokeWidth }) => strokeWidth && `stroke-width: ${strokeWidth};`}
 
-    fill: none;
+    fill: ${({ theme, fillColor }) => {
+      const themeColor =
+        theme.background[fillColor as keyof typeof theme.background] ||
+        theme.color[fillColor as keyof typeof theme.color];
+
+      if (themeColor) return themeColor;
+
+      return fillColor;
+    }};
+  }
+
+  circle {
+    stroke: ${({ theme, strokeColor }) => {
+      const themeColor =
+        theme.background[strokeColor as keyof typeof theme.background] ||
+        theme.color[strokeColor as keyof typeof theme.color];
+
+      if (themeColor) return themeColor;
+
+      return strokeColor;
+    }};
+
+    ${({ strokeWidth }) => strokeWidth && `stroke-width: ${strokeWidth};`}
+
+    fill: ${({ theme, fillColor }) => {
+      const themeColor =
+        theme.background[fillColor as keyof typeof theme.background] ||
+        theme.color[fillColor as keyof typeof theme.color];
+
+      if (themeColor) return themeColor;
+
+      return fillColor;
+    }};
   }
 `;
