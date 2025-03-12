@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { ThemeContextProvider } from '@contexts/Auth/ThemeContext';
+import { ThemeContextProvider } from '@contexts/ThemeContext';
 import App from './App';
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

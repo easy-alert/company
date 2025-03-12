@@ -9,13 +9,14 @@ import { handleError } from '@utils/functions';
 
 import GlobalCSS from '@styles/globalCSS';
 
-import { useTheme } from '@contexts/Auth/ThemeContext';
+import { useCustomTheme } from '@contexts/ThemeContext';
 
 import 'react-toastify/dist/ReactToastify.css';
 import AppRoutes from './routes/routes';
 
 export default function App() {
-  const { currentTheme } = useTheme();
+  const { currentTheme } = useCustomTheme();
+
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
