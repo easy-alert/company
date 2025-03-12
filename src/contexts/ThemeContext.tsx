@@ -14,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeContextProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
-  const updateThemeColor = (color: string) => {
+  const updateThemeColor = (color = '#B21D1D') => {
     const newTheme = {
       ...currentTheme,
 
