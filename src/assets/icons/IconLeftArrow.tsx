@@ -8,9 +8,9 @@ const IconLeftArrow = ({ ...rest }: ICustomIcon) => (
       <path
         d="M10 13L5 8L10 3"
         stroke="#B21D1D"
-        stroke-Width="1.5"
-        stroke-Linecap="round"
-        stroke-Linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   </CustomIcon>

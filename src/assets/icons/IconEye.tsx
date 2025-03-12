@@ -4,7 +4,7 @@ import type { ICustomIcon } from '@components/CustomIcon/types';
 
 const IconEye = ({ ...rest }: ICustomIcon) => (
   <CustomIcon {...rest}>
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8 3.5C3 3.5 1 8 1 8C1 8 3 12.5 8 12.5C13 12.5 15 8 15 8C15 8 13 3.5 8 3.5Z"
         stroke="#D5D5D5"
