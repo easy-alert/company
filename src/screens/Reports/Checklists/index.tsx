@@ -27,7 +27,7 @@ import { catchHandler, dateFormatter } from '@utils/functions';
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 import IconCsvLogo from '@assets/icons/IconCsvLogo';
-import IconPdfLogo from '@assets/icons/pdfLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
@@ -162,7 +162,6 @@ export const ChecklistReports = () => {
       <s.Container>
         <h2>Relatórios de checklists</h2>
         <s.FiltersContainer>
-          <h5>Filtros</h5>
           <Formik
             initialValues={{
               buildingNames: [],
@@ -270,6 +269,7 @@ export const ChecklistReports = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+
                   <s.TagWrapper>
                     {buildingsForFilter.length === 0 && (
                       <s.Tag>
@@ -329,19 +329,18 @@ export const ChecklistReports = () => {
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
-                          icon={<IconCsvLogo strokeColor="primary" />}
                           label="Exportar"
-                          size="20px"
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           onClick={() => {
                             //
                           }}
                           disabled={checklists.length === 0}
                         />
                       </CSVLink>
+
                       <IconButton
                         icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        size="20px"
                         onClick={() => {
                           setModalPrintReportOpen(true);
                         }}

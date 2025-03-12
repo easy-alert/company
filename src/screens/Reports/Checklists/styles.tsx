@@ -96,12 +96,16 @@ export const TagWrapper = styled.div`
 `;
 
 export const Tag = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 4px 12px;
-  background-color: ${({ theme }) => theme.color.primaryM};
   width: fit-content;
   height: fit-content;
-  border-radius: ${({ theme }) => theme.size.xxsm};
+
+  display: flex;
+  align-items: center;
   gap: ${({ theme }) => theme.size.xsm};
+
+  padding: 4px 12px;
+
+  color: ${({ theme }) => theme.color.white};
+  background-color: ${({ theme }) => theme.color.primaryM};
+  border-radius: ${({ theme }) => theme.size.xxsm};
 `;
