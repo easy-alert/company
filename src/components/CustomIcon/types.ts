@@ -1,6 +1,8 @@
 export interface IStyledSVG {
+  size?: string;
   width?: string;
   height?: string;
+  viewBox?: string;
   fillColor?: string;
   strokeColor?: string;
   strokeWidth?: string;

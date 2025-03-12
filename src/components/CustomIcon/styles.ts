@@ -29,18 +29,13 @@ export const StyledSVGContainer = styled.div<IStyledSVGContainer>`
 `;
 
 export const StyledSVG = styled.svg<IStyledSVG>`
-  width: ${({ width }) => width || '16px'};
-  height: ${({ height }) => height || '16px'};
+  width: ${({ size, width }) => size || width};
+  height: ${({ size, height }) => size || height};
 
-  ${({ theme, fillColor }) => {
-    const themeColor =
-      theme.background[fillColor as keyof typeof theme.background] ||
-      theme.color[fillColor as keyof typeof theme.color];
-
-    if (themeColor) return `fill: ${themeColor};`;
-
-    return fillColor && `fill: ${fillColor};`;
-  }}
+  svg {
+    width: ${({ size, width }) => size || width};
+    height: ${({ size, height }) => size || height};
+  }
 
   path {
     ${({ theme, strokeColor }) => {
@@ -54,6 +49,7 @@ export const StyledSVG = styled.svg<IStyledSVG>`
     }}
 
     ${({ strokeWidth }) => strokeWidth && `stroke-width: ${strokeWidth};`}
+
     fill: none;
   }
 `;
