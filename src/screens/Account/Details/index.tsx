@@ -1,6 +1,6 @@
 // REACT
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // CONTEXTS
@@ -26,6 +26,8 @@ import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@ut
 import { icon } from '@assets/icons';
 import IconEdit from '@assets/icons/IconEdit';
 import IconEye from '@assets/icons/IconEye';
+import IconPlus from '@assets/icons/IconPlus';
+import IconTrash from '@assets/icons/IconTrash';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
@@ -46,6 +48,7 @@ export interface ISelectedUser {
   email: string;
   phoneNumber: string;
   isBlocked: boolean;
+  colorScheme?: string;
 }
 
 export const AccountDetails = () => {
@@ -134,20 +137,20 @@ export const AccountDetails = () => {
       label: `${translateTicketType(account?.Company.ticketType || 'platform')} para chamado`,
       value: account?.Company.ticketInfo,
     },
-    {
-      label: 'Termos de uso',
-      value: 'Visualizar termos',
-      path: '/terms',
-      type: 'link',
-    },
   ];
 
   const userDetails = [
     { label: 'Nome', value: account?.User.name },
-    { label: 'Email', value: account?.User.email },
+    { label: 'Email', userId: account?.User.id, value: account?.User.email },
     {
       label: 'Telefone',
-      value: applyMask({ value: account?.User.phoneNumber, mask: 'TEL' }).value,
+      userId: account?.User.id,
+      value: account?.User?.phoneNumber
+        ? applyMask({
+            value: account?.User?.phoneNumber,
+            mask: 'TEL',
+          }).value
+        : '-',
     },
 
     { label: 'Cargo', value: account?.User.role },
@@ -166,23 +169,21 @@ export const AccountDetails = () => {
       )}
 
       {modalUpdateUserOpen && selectedUser && (
-        <ModalUpdateUser
-          selectedUser={selectedUser}
-          onThenRequest={validateToken}
-          handleModals={handleModals}
-        />
+        <ModalUpdateUser selectedUser={selectedUser} handleModals={handleModals} />
       )}
 
       <Style.CardSection>
         <Style.Header>
           <h2>Detalhes da Empresa</h2>
 
-          <IconButton
-            hideLabelOnMedia
-            icon={icon.edit}
-            label="Editar"
-            onClick={() => setModalEditAccountOpen(true)}
-          />
+          {account?.User.isCompanyOwner && (
+            <IconButton
+              hideLabelOnMedia
+              icon={<IconEdit strokeColor="primary" size="24px" />}
+              label="Editar"
+              onClick={() => setModalEditAccountOpen(true)}
+            />
+          )}
         </Style.Header>
 
         <Style.CardContainer>
@@ -193,31 +194,6 @@ export const AccountDetails = () => {
           <Style.CardTextContainer>
             {companyDetails.map((detail) => {
               if (!detail.value) return null;
-
-              if (detail.type === 'image') {
-                return (
-                  <Style.CardText key={detail.label}>
-                    <h6>{detail.label}</h6>
-                    <Image img={detail.value} size="64px" radius="" />
-                  </Style.CardText>
-                );
-              }
-
-              if (detail.type === 'link') {
-                return (
-                  <Style.CardText key={detail.label}>
-                    <h6>{detail.label}</h6>
-                    <Link
-                      className="terms"
-                      to={detail.path || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {detail.value}
-                    </Link>
-                  </Style.CardText>
-                );
-              }
 
               return (
                 <Style.CardText key={detail.label}>
@@ -238,7 +214,7 @@ export const AccountDetails = () => {
             {account?.User.isCompanyOwner && (
               <IconButton
                 hideLabelOnMedia
-                icon={icon.eye}
+                icon={<IconEye strokeColor="primary" size="24px" />}
                 label="Permissões"
                 onClick={() => navigate(`/account/${account.User.id}/permissions`)}
               />
@@ -246,7 +222,7 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={icon.edit}
+              icon={<IconEdit strokeColor="primary" size="24px" />}
               label="Editar"
               onClick={() => {
                 setSelectedUser({
@@ -256,6 +232,7 @@ export const AccountDetails = () => {
                   role: account?.User.role,
                   email: account?.User.email || '',
                   phoneNumber: account?.User.phoneNumber || '',
+                  colorScheme: account?.User.colorScheme,
                   isBlocked: account?.User.isBlocked,
                 });
                 setModalUpdateUserOpen(true);
@@ -271,9 +248,54 @@ export const AccountDetails = () => {
 
           <Style.CardTextContainer>
             {userDetails.map((detail) => (
-              <Style.CardText key={detail.label}>
-                <h6>{detail.label}</h6>
-                <p className="p2">{detail.value || '-'}</p>
+              <Style.CardText key={detail?.label}>
+                <h6>{detail?.label}</h6>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <p className="p2">{detail?.value || '-'}</p>
+
+                  {detail?.label === 'Email' && account?.User.emailIsConfirmed && (
+                    <Image img={icon.checkedNoBg} size="16px" />
+                  )}
+
+                  {detail?.label === 'Email' && !account?.User.emailIsConfirmed && (
+                    <PopoverButton
+                      label="Reenviar"
+                      hiddenIconButtonLabel
+                      buttonIcon={icon.yellowAlert}
+                      buttonIconSize="16px"
+                      actionButtonBgColor={theme.color.primary}
+                      type="IconButton"
+                      message={{
+                        title: 'Deseja reenviar o e-mail de confirmação?',
+                        content: '',
+                        contentColor: theme.color.danger,
+                      }}
+                      actionButtonClick={() => handleSendEmailConfirmation(detail?.userId!)}
+                    />
+                  )}
+
+                  {detail?.label === 'Telefone' && account?.User.phoneNumberIsConfirmed && (
+                    <Image img={icon.checkedNoBg} size="16px" />
+                  )}
+
+                  {detail?.label === 'Telefone' && !account?.User.phoneNumberIsConfirmed && (
+                    <PopoverButton
+                      label="Reenviar"
+                      hiddenIconButtonLabel
+                      buttonIcon={icon.yellowAlert}
+                      buttonIconSize="16px"
+                      actionButtonBgColor={theme.color.primary}
+                      type="IconButton"
+                      message={{
+                        title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
+                        content: '',
+                        contentColor: theme.color.danger,
+                      }}
+                      actionButtonClick={() => handleSendPhoneConfirmation(detail?.userId!)}
+                    />
+                  )}
+                </div>
               </Style.CardText>
             ))}
           </Style.CardTextContainer>
@@ -288,9 +310,8 @@ export const AccountDetails = () => {
             <h5>Usuários</h5>
 
             <IconButton
-              hasCircle
               hideLabelOnMedia
-              icon={icon.plusWithBg}
+              icon={<IconPlus strokeColor="primary" size="24px" />}
               label="Cadastrar"
               onClick={() => setModalCreateUserOpen(true)}
             />
@@ -382,23 +403,14 @@ export const AccountDetails = () => {
                     {
                       cell: (
                         <Style.TableButtons>
-                          <PopoverButton
+                          <IconButton
+                            className="p4"
+                            size="16px"
                             hideLabelOnMedia
-                            disabled={onQuery}
-                            buttonIconSize="16px"
-                            iconButtonClassName="p4"
-                            actionButtonBgColor="primary"
-                            type="IconButton"
-                            label="Excluir"
-                            buttonIcon={icon.trash}
-                            message={{
-                              title: 'Deseja excluir este usuário?',
-                              content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                              contentColor: theme.color.danger,
-                            }}
-                            actionButtonClick={() => {
-                              requestDeleteUser(User.id);
-                            }}
+                            icon={<IconEye strokeColor="primary" />}
+                            fill="primary"
+                            label="Permissões"
+                            onClick={() => navigate(`/account/${User.id}/permissions`)}
                           />
 
                           <IconButton
@@ -422,14 +434,25 @@ export const AccountDetails = () => {
                             }}
                           />
 
-                          <IconButton
-                            className="p4"
-                            size="16px"
+                          <PopoverButton
                             hideLabelOnMedia
-                            icon={<IconEye strokeColor="primary" />}
-                            fill="primary"
-                            label="Permissões"
-                            onClick={() => navigate(`/account/${User.id}/permissions`)}
+                            disabled={onQuery}
+                            buttonIconSize="16px"
+                            iconButtonClassName="p4"
+                            actionButtonBgColor="primary"
+                            type="IconButton"
+                            label="Excluir"
+                            buttonIcon={
+                              <IconTrash strokeColor="danger" size="18px" viewBox="0 0 24 24" />
+                            }
+                            message={{
+                              title: 'Deseja excluir este usuário?',
+                              content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                              contentColor: theme.color.danger,
+                            }}
+                            actionButtonClick={() => {
+                              requestDeleteUser(User.id);
+                            }}
                           />
                         </Style.TableButtons>
                       ),
