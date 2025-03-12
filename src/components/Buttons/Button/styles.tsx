@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '@styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const Background = styled.div<{ center: boolean }>`
   width: fit-content;
@@ -8,16 +8,15 @@ export const Background = styled.div<{ center: boolean }>`
 `;
 
 export const SpinnerContent = styled.div`
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
-  border: 3px solid ${theme.color.white};
-  border-top: 3px solid ${theme.color.primaryL};
+  border: 3px solid ${({ theme }) => theme.color.white};
+  border-top: 3px solid ${({ theme }) => theme.color.primaryL};
+  width: ${({ theme }) => theme.size.sm};
+  height: ${({ theme }) => theme.size.sm};
   border-radius: 50%;
-  width: ${theme.size.sm};
-  height: ${theme.size.sm};
   animation: spin 0.75s linear infinite;
-  display: flex;
 
   @keyframes spin {
     0% {
@@ -46,11 +45,16 @@ export const ContainerButton = styled.div<{
   > button {
     display: flex;
     align-items: center;
-    gap: ${theme.size.xsm};
+    justify-content: center;
+    gap: ${({ theme }) => theme.size.xsm};
+    border-radius: ${({ loading }) => (loading ? '50%' : '4px')};
+    width: ${({ loading, theme }) => (loading ? theme.size.lg : 'auto')};
+    height: ${({ loading, theme }) => (loading ? theme.size.lg : 'auto')};
+    padding: ${({ loading }) => (loading ? '0' : '8px 16px')};
 
     :hover {
       opacity: 0.7;
-      ${({ outlined, bgColor }) => {
+      ${({ outlined, bgColor, theme }) => {
         const themeColor =
           theme.background[bgColor as keyof typeof theme.background] ||
           theme.color[bgColor as keyof typeof theme.color];
@@ -61,7 +65,7 @@ export const ContainerButton = styled.div<{
       }}
     }
 
-    ${({ bgColor }) => {
+    ${({ bgColor, theme }) => {
       const themeColor =
         theme.background[bgColor as keyof typeof theme.background] ||
         theme.color[bgColor as keyof typeof theme.color];
@@ -71,7 +75,7 @@ export const ContainerButton = styled.div<{
       return bgColor && `background-color: ${bgColor};`;
     }}
 
-    ${({ textColor }) => {
+    ${({ textColor, theme }) => {
       const themeColor =
         theme.color[textColor as keyof typeof theme.color] ||
         theme.background[textColor as keyof typeof theme.background];
@@ -81,7 +85,7 @@ export const ContainerButton = styled.div<{
       return textColor && `color: ${textColor} !important;`;
     }}
 
-    ${({ outlined, bgColor }) => {
+    ${({ outlined, bgColor, theme }) => {
       const themeColor =
         theme.color[bgColor as keyof typeof theme.color] ||
         theme.background[bgColor as keyof typeof theme.background];
@@ -94,7 +98,7 @@ export const ContainerButton = styled.div<{
 
     ${({ disable }) => disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
 
-    ${({ borderless }) =>
+    ${({ borderless, theme }) =>
       borderless &&
       `
       background-color: transparent;
@@ -104,8 +108,18 @@ export const ContainerButton = styled.div<{
       padding: 0;
     `}
 
-    ${({ loading }) =>
+    ${({ loading, theme }) =>
       loading &&
-      `border-radius: 100%; padding: ${theme.size.xsm}; opacity: 1; pointer-events: none;`}
+      `
+      border-radius: 50%; 
+      padding: ${theme.size.xsm};
+      opacity: 1;
+      pointer-events: none;
+      width: ${theme.size.lg}; 
+      height: ${theme.size.lg};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `}
   }
 `;

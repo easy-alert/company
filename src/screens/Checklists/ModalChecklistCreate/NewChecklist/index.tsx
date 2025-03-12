@@ -10,6 +10,7 @@ import { handleToastifyMessage } from '@utils/toastifyResponses';
 
 import type { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
 
+import IconTrash from '@assets/icons/IconTrash';
 import * as Style from './styles';
 
 interface INewChecklist {
@@ -80,7 +81,7 @@ export const NewChecklist = ({
             />
 
             <IconButton
-              icon={icon.trashWithPrimaryBg}
+              icon={<IconTrash strokeColor="danger" />}
               onClick={() => handleNewChecklistItemDelete(index)}
             />
           </Style.ChecklistItem>
@@ -88,6 +89,7 @@ export const NewChecklist = ({
 
         <Style.ChecklistButtons>
           <Button
+            bgColor="primary"
             label="Adicionar"
             onClick={() => {
               const newItems = newChecklist.items || [];
@@ -96,7 +98,7 @@ export const NewChecklist = ({
             }}
           />
 
-          <Button label="Salvar" bgColor="transparent" textColor="black" onClick={saveChecklist} />
+          <Button label="Salvar" bgColor="transparent" onClick={saveChecklist} />
         </Style.ChecklistButtons>
       </Style.ChecklistContainer>
     </Style.Content>

@@ -218,6 +218,7 @@ export const MaintenanceHistoryActivities = ({
               <input {...getInputProps()} />
 
               <IconButton
+                hasCircle
                 icon={icon.upload}
                 permToCheck="maintenances:update"
                 onClick={() => {
@@ -227,6 +228,7 @@ export const MaintenanceHistoryActivities = ({
             </div>
 
             <IconButton
+              hasCircle
               disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
               loading={onQuery}
               icon={icon.send}
@@ -295,6 +297,7 @@ export const MaintenanceHistoryActivities = ({
           <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
             Comentários
           </Style.Tab>
+
           <Style.Tab
             onClick={() => setActiveTab('notifications')}
             active={activeTab === 'notifications'}
@@ -310,7 +313,7 @@ export const MaintenanceHistoryActivities = ({
                 return (
                   <Style.Comment key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityComment} />
+                      <ImageComponent src={icon.activityComment} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>
@@ -354,7 +357,7 @@ export const MaintenanceHistoryActivities = ({
                 return (
                   <Style.Comment key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityNotification} />
+                      <ImageComponent src={icon.activityNotification} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>

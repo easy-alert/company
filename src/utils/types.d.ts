@@ -37,12 +37,20 @@ export interface IAccount {
 
   User: {
     id: string;
+
     name: string;
     email: string;
-    phoneNumber?: string;
-    lastAccess: string;
-    createdAt: string;
+    emailIsConfirmed: boolean;
+    phoneNumber: string;
+    phoneNumberIsConfirmed: boolean;
+    image?: string;
+    colorScheme?: string;
+    role?: string;
+
+    isBlocked: boolean;
     isCompanyOwner: boolean;
+
+    lastAccess: string;
 
     Permissions?: [
       {
@@ -58,6 +66,9 @@ export interface IAccount {
         name: string;
       };
     }[];
+
+    createdAt: string;
+    updatedAt: string;
   };
 }
 

@@ -193,11 +193,15 @@ export const ModalChecklistDetails = ({
               <Button
                 label="Cancelar"
                 bgColor="transparent"
-                textColor="actionBlue"
                 loading={loading}
                 onClick={() => setModalDeleteButton(false)}
               />
-              <Button label="Excluir" loading={loading} onClick={handleDeleteChecklist} />
+              <Button
+                label="Excluir"
+                loading={loading}
+                onClick={handleDeleteChecklist}
+                bgColor="primary"
+              />
             </Style.ContainerBtn>
           </Style.Content>
         )}
@@ -322,33 +326,39 @@ export const ModalChecklistDetails = ({
           <Style.ContainerBtn>
             {checklistDetails?.status !== 'completed' ? (
               <>
+                <div>
+                  <Button
+                    textColor="actionBlue"
+                    borderless
+                    label={
+                      checklistDetails?.status === 'inProgress'
+                        ? 'Parar execução'
+                        : 'Iniciar checklist'
+                    }
+                    bgColor="transparent"
+                    onClick={() =>
+                      handleUpdateChecklist(
+                        checklistDetails?.status === 'inProgress' ? 'pending' : 'inProgress',
+                      )
+                    }
+                  />
+                  <Button
+                    borderless
+                    textColor="actionBlue"
+                    label="Salvar"
+                    bgColor="transparent"
+                    onClick={() => handleUpdateChecklist(checklistDetails.status!)}
+                  />
+                </div>
                 <Button
-                  label={
-                    checklistDetails?.status === 'inProgress'
-                      ? 'Parar execução'
-                      : 'Iniciar checklist'
-                  }
-                  bgColor="transparent"
-                  textColor="actionBlue"
-                  onClick={() =>
-                    handleUpdateChecklist(
-                      checklistDetails?.status === 'inProgress' ? 'pending' : 'inProgress',
-                    )
-                  }
-                />
-                <Button
-                  label="Salvar"
-                  bgColor="transparent"
-                  textColor="actionBlue"
-                  onClick={() => handleUpdateChecklist(checklistDetails.status!)}
-                />
-                <Button
+                  bgColor="primary"
                   label="Finalizar checklist"
                   onClick={() => handleUpdateChecklist('completed')}
                 />
               </>
             ) : (
               <Button
+                bgColor="primary"
                 label="Fechar"
                 center
                 onClick={() => handleModals('modalChecklistDetails', false)}

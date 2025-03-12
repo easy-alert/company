@@ -261,6 +261,7 @@ export const ModalChecklistCreate = ({
               )}
 
               <Select
+                arrowColor="primary"
                 label="Responsável *"
                 value={selectedResponsible}
                 onChange={handleResponsibleChange}
@@ -278,6 +279,7 @@ export const ModalChecklistCreate = ({
 
               {!showNewChecklist && (
                 <Select
+                  arrowColor="primary"
                   label="Periodicidade *"
                   value={selectedInterval}
                   onChange={handleIntervalChange}
@@ -308,6 +310,7 @@ export const ModalChecklistCreate = ({
 
               <Style.ButtonContainer>
                 <Button
+                  bgColor="primary"
                   label="Criar"
                   disable={disableCreateButton}
                   onClick={() => handleCreateChecklist('pending')}
@@ -315,7 +318,6 @@ export const ModalChecklistCreate = ({
                 <Button
                   label="Iniciar execução"
                   bgColor="transparent"
-                  textColor="actionBlue"
                   disable={disableCreateButton}
                   onClick={() => handleCreateChecklist('inProgress')}
                 />

@@ -24,11 +24,10 @@ import { Select } from '@components/Inputs/Select';
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
@@ -163,7 +162,6 @@ export const ChecklistReports = () => {
       <s.Container>
         <h2>Relatórios de checklists</h2>
         <s.FiltersContainer>
-          <h5>Filtros</h5>
           <Formik
             initialValues={{
               buildingNames: [],
@@ -195,6 +193,7 @@ export const ChecklistReports = () => {
                   <Select
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
@@ -227,6 +226,7 @@ export const ChecklistReports = () => {
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
                     value=""
+                    arrowColor="primary"
                     onChange={(e) => {
                       setStatusForFilter((prevState) => [...prevState, e.target.value]);
 
@@ -269,10 +269,11 @@ export const ChecklistReports = () => {
                     value={values.endDate}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+
                   <s.TagWrapper>
                     {buildingsForFilter.length === 0 && (
                       <s.Tag>
-                        <p className="p3">Todas as edificações</p>
+                        <p className="p3">Todas as edificações </p>
                       </s.Tag>
                     )}
 
@@ -328,27 +329,24 @@ export const ChecklistReports = () => {
                         onClick={() => checklists.length !== 0}
                       >
                         <IconButton
-                          icon={icon.csvLogo}
                           label="Exportar"
-                          color={theme.color.primary}
-                          size="20px"
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           onClick={() => {
                             //
                           }}
                           disabled={checklists.length === 0}
                         />
                       </CSVLink>
+
                       <IconButton
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo strokeColor="primary" />}
                         label="Exportar"
-                        color={theme.color.primary}
-                        size="20px"
                         onClick={() => {
                           setModalPrintReportOpen(true);
                         }}
                         disabled={checklists.length === 0}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
+                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersGrid>

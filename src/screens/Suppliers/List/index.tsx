@@ -32,11 +32,15 @@ import { applyMask, catchHandler, convertStateName } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons';
+import IconPlus from '@assets/icons/IconPlus';
+import IconList from '@assets/icons/IconList';
+import IconBlock from '@assets/icons/IconBlock';
 
 // GLOBAL TYPES
 import type { ISupplier } from '@customTypes/ISupplier';
 
 // COMPONENTS
+
 import { ModalCreateSupplier } from './ModalCreateSupplier';
 
 // STYLES
@@ -108,45 +112,29 @@ export const SuppliersList = () => {
             <IconButton
               labelPos="right"
               label={listView === 'table' ? 'Visualizar em blocos' : 'Visualizar em lista'}
-              icon={listView === 'table' ? icon.blocks : icon.listWithBg}
+              icon={
+                listView === 'table' ? (
+                  <IconBlock
+                    strokeColor="white "
+                    backgroundColor="primary"
+                    padding="0"
+                    size="14px"
+                  />
+                ) : (
+                  <IconList strokeColor="white" fillColor="primary" />
+                )
+              }
               onClick={() => {
                 handleListView(listView === 'table' ? 'blocks' : 'table');
               }}
             />
-
-            {/*
-          <Style.SearchField>
-            <IconButton
-              icon={icon.search}
-              size="16px"
-              onClick={() => {
-                findManySuppliers(search);
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Procurar"
-              value={search}
-              onChange={(evt) => {
-                setSearch(evt.target.value);
-                if (evt.target.value === '') {
-                  findManySuppliers('');
-                }
-              }}
-              onKeyUp={(evt) => {
-                if (evt.key === 'Enter') {
-                  findManySuppliers(search);
-                }
-              }}
-            />
-          </Style.SearchField> */}
           </Style.LeftSide>
+
           <IconButton
-            hideLabelOnMedia
-            fontWeight="500"
             label="Cadastrar"
+            icon={<IconPlus strokeColor="primary" />}
+            hideLabelOnMedia
             className="p2"
-            icon={icon.plusWithBg}
             onClick={() => {
               setModalCreateSupplierOpen(true);
             }}
@@ -173,6 +161,7 @@ export const SuppliersList = () => {
 
             <Select
               label="Categorias"
+              arrowColor="primary"
               value={filter.serviceTypeLabel}
               selectPlaceholderValue={filter.serviceTypeLabel}
               onChange={(evt) => {
@@ -192,6 +181,7 @@ export const SuppliersList = () => {
               value={filter.state}
               selectPlaceholderValue={filter.state}
               label="Estado"
+              arrowColor="primary"
               onChange={(evt) => {
                 setFilter((prev) => ({ ...prev, state: evt.target.value, city: '' }));
 
@@ -208,6 +198,7 @@ export const SuppliersList = () => {
 
             <Select
               label="Cidade"
+              arrowColor="primary"
               value={filter.city}
               selectPlaceholderValue={filter.city}
               onChange={(evt) => {
@@ -223,6 +214,7 @@ export const SuppliersList = () => {
               ))}
             </Select>
             <Button
+              bgColor="primary"
               loading={onQuery}
               label="Filtrar"
               onClick={() => {

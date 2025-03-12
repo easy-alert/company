@@ -7,6 +7,7 @@ import styled from 'styled-components';
 
 // GLOBAL CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
+import { useCustomTheme } from '@contexts/ThemeContext';
 
 // GLOBAL SERVICES
 import { Api } from '@services/api';
@@ -30,6 +31,8 @@ const Container = styled.div`
 
 export const RequireAuth = ({ children }: IRequireAuth) => {
   const { setAccount, signin, signout } = useContext(AuthContext);
+  const { updateThemeColor } = useCustomTheme();
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +47,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     })
       .then((res) => {
         signin(res.data);
+        updateThemeColor(res.data.Account.User.colorScheme);
         setLoading(false);
       })
       .catch((err) => {
@@ -55,6 +59,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     await Api.get('/auth/validate/token')
       .then((res) => {
         setAccount(res.data);
+        updateThemeColor(res.data.Account.User.colorScheme);
         setLoading(false);
         localStorage.setItem('user', res.data.User.name);
       })

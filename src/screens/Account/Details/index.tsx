@@ -1,6 +1,6 @@
 // REACT
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // CONTEXTS
@@ -24,12 +24,16 @@ import { applyMask, catchHandler, dateFormatter, translateTicketType } from '@ut
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconEdit from '@assets/icons/IconEdit';
+import IconEye from '@assets/icons/IconEye';
+import IconPlus from '@assets/icons/IconPlus';
+import IconTrash from '@assets/icons/IconTrash';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
 
 // COMPONENTS
-import { ModalEditAccount } from './ModalEditAccount';
+import { ModalEditCompany } from './ModalEditCompany';
 import { ModalUpdateUser } from './ModalUpdateUser';
 import { ModalCreateUser } from './ModalCreateUser';
 
@@ -44,6 +48,7 @@ export interface ISelectedUser {
   email: string;
   phoneNumber: string;
   isBlocked: boolean;
+  colorScheme?: string;
 }
 
 export const AccountDetails = () => {
@@ -51,11 +56,12 @@ export const AccountDetails = () => {
 
   const navigate = useNavigate();
 
+  const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
+
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
   const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
   const [modalCreateUserOpen, setModalCreateUserOpen] = useState<boolean>(false);
 
-  const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
   const [onQuery, setOnQuery] = useState(false);
 
   const phoneConfirmUrl = `${window.location.origin}/confirm/phone`;
@@ -109,10 +115,53 @@ export const AccountDetails = () => {
     await sendEmailConfirmation({ userId, link: emailConfirmUrl });
   };
 
+  const companyDetails = [
+    { label: 'Nome', value: account?.Company.name },
+    {
+      label: 'Telefone',
+      value: applyMask({ value: account?.Company.contactNumber!, mask: 'TEL' }).value,
+    },
+    {
+      label: account?.Company.CPF ? 'CPF' : 'CNPJ',
+      value: applyMask({
+        value: account?.Company.CPF! || account?.Company.CNPJ!,
+        mask: account?.Company.CPF ? 'CPF' : 'CNPJ',
+      }).value,
+    },
+    { label: 'Data de cadastro', value: dateFormatter(account?.User.createdAt!) },
+    {
+      label: 'Abertura de chamados',
+      value: translateTicketType(account?.Company.ticketType || 'platform'),
+    },
+    {
+      label: `${translateTicketType(account?.Company.ticketType || 'platform')} para chamado`,
+      value: account?.Company.ticketInfo,
+    },
+  ];
+
+  const userDetails = [
+    { label: 'Nome', value: account?.User.name },
+    { label: 'Email', userId: account?.User.id, value: account?.User.email },
+    {
+      label: 'Telefone',
+      userId: account?.User.id,
+      value: account?.User?.phoneNumber
+        ? applyMask({
+            value: account?.User?.phoneNumber,
+            mask: 'TEL',
+          }).value
+        : '-',
+    },
+
+    { label: 'Cargo', value: account?.User.role },
+    { label: 'Data de cadastro', value: dateFormatter(account?.User.createdAt!) },
+    { label: 'Último acesso', value: dateFormatter(account?.User.lastAccess!) },
+  ];
+
   return (
     <>
       {modalEditAccountOpen && account && (
-        <ModalEditAccount account={account} setAccount={setAccount} handleModals={handleModals} />
+        <ModalEditCompany company={account.Company} handleModals={handleModals} />
       )}
 
       {modalCreateUserOpen && (
@@ -120,105 +169,140 @@ export const AccountDetails = () => {
       )}
 
       {modalUpdateUserOpen && selectedUser && (
-        <ModalUpdateUser
-          selectedUser={selectedUser}
-          onThenRequest={validateToken}
-          handleModals={handleModals}
-        />
+        <ModalUpdateUser selectedUser={selectedUser} handleModals={handleModals} />
       )}
 
-      <Style.Header>
-        <h2>Configurações de conta</h2>
-      </Style.Header>
-
       <Style.CardSection>
-        <Style.Card>
-          <h6>Logo</h6>
-          <Image img={account?.Company.image} size="80px" />
-        </Style.Card>
+        <Style.Header>
+          <h2>Detalhes da Empresa</h2>
 
-        <Style.Card>
-          <h6>Nome do responsável</h6>
-          <p className="p2">{account?.User.name}</p>
-        </Style.Card>
+          {account?.User.isCompanyOwner && (
+            <IconButton
+              hideLabelOnMedia
+              icon={<IconEdit strokeColor="primary" />}
+              label="Editar"
+              onClick={() => setModalEditAccountOpen(true)}
+            />
+          )}
+        </Style.Header>
 
-        <Style.Card>
-          <h6>E-mail</h6>
-          <p className="p2">{account?.User.email}</p>
-        </Style.Card>
+        <Style.CardContainer>
+          <Style.CardImageContainer>
+            <Image img={account.Company.image} size="100%" radius="" />
+          </Style.CardImageContainer>
 
-        <Style.Card>
-          <h6>Nome da empresa</h6>
-          <p className="p2">{account?.Company.name}</p>
-        </Style.Card>
+          <Style.CardTextContainer>
+            {companyDetails.map((detail) => {
+              if (!detail.value) return null;
 
-        <Style.Card>
-          <h6>Telefone</h6>
-          <p className="p2">
-            {applyMask({ value: account?.Company.contactNumber!, mask: 'TEL' }).value}
-          </p>
-        </Style.Card>
-
-        {account?.Company.CPF && (
-          <Style.Card>
-            <h6>CPF</h6>
-            <p className="p2">{applyMask({ value: account?.Company.CPF, mask: 'CPF' }).value}</p>
-          </Style.Card>
-        )}
-
-        {account?.Company.CNPJ && (
-          <Style.Card>
-            <h6>CNPJ</h6>
-            <p className="p2">{applyMask({ value: account?.Company.CNPJ, mask: 'CNPJ' }).value}</p>
-          </Style.Card>
-        )}
-
-        <Style.Card>
-          <h6>Data de cadastro</h6>
-          <p className="p2">{dateFormatter(account?.User.createdAt!)}</p>
-        </Style.Card>
-
-        <Style.Card>
-          <h6>Abertura de chamados</h6>
-          <p className="p2">{translateTicketType(account?.Company.ticketType || 'platform')}</p>
-        </Style.Card>
-
-        {account?.Company.ticketInfo && (
-          <Style.Card>
-            <h6>{`${translateTicketType(
-              account?.Company.ticketType || 'platform',
-            )} para chamado`}</h6>
-            <p className="p2">{account?.Company.ticketInfo}</p>
-          </Style.Card>
-        )}
-
-        <Style.Card>
-          <h6>Termos de uso</h6>
-          <Link className="terms" to="/terms" target="_blank" rel="noopener noreferrer">
-            Visualizar termos
-          </Link>
-        </Style.Card>
+              return (
+                <Style.CardText key={detail.label}>
+                  <h6>{detail.label}</h6>
+                  <p className="p2">{detail.value}</p>
+                </Style.CardText>
+              );
+            })}
+          </Style.CardTextContainer>
+        </Style.CardContainer>
       </Style.CardSection>
 
-      <Style.Footer>
-        <IconButton
-          hideLabelOnMedia
-          icon={icon.edit}
-          label="Editar"
-          onClick={() => {
-            setModalEditAccountOpen(true);
-          }}
-        />
+      <Style.CardSection>
+        <Style.Header>
+          <h2>Detalhes do Usuário</h2>
 
-        {account?.User.isCompanyOwner && (
-          <IconButton
-            hideLabelOnMedia
-            icon={icon.eye}
-            label="Permissões"
-            onClick={() => navigate(`/account/${account.User.id}/permissions`)}
-          />
-        )}
-      </Style.Footer>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            {account?.User.isCompanyOwner && (
+              <IconButton
+                hideLabelOnMedia
+                icon={<IconEye strokeColor="primary" />}
+                label="Permissões"
+                onClick={() => navigate(`/account/${account.User.id}/permissions`)}
+              />
+            )}
+
+            <IconButton
+              hideLabelOnMedia
+              icon={<IconEdit strokeColor="primary" />}
+              label="Editar"
+              onClick={() => {
+                setSelectedUser({
+                  id: account?.User.id,
+                  image: account?.User.image,
+                  name: account?.User.name,
+                  role: account?.User.role,
+                  email: account?.User.email || '',
+                  phoneNumber: account?.User.phoneNumber || '',
+                  colorScheme: account?.User.colorScheme,
+                  isBlocked: account?.User.isBlocked,
+                });
+                setModalUpdateUserOpen(true);
+              }}
+            />
+          </div>
+        </Style.Header>
+
+        <Style.CardContainer>
+          <Style.CardImageContainer>
+            <Image img={account.User.image || icon.personPlaceholder} size="100%" radius="" />
+          </Style.CardImageContainer>
+
+          <Style.CardTextContainer>
+            {userDetails.map((detail) => (
+              <Style.CardText key={detail?.label}>
+                <h6>{detail?.label}</h6>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <p className="p2">{detail?.value || '-'}</p>
+
+                  {detail?.label === 'Email' && account?.User.emailIsConfirmed && (
+                    <Image img={icon.checkedNoBg} size="16px" />
+                  )}
+
+                  {detail?.label === 'Email' && !account?.User.emailIsConfirmed && (
+                    <PopoverButton
+                      label="Reenviar"
+                      hiddenIconButtonLabel
+                      buttonIcon={icon.yellowAlert}
+                      buttonIconSize="16px"
+                      actionButtonBgColor={theme.color.primary}
+                      type="IconButton"
+                      message={{
+                        title: 'Deseja reenviar o e-mail de confirmação?',
+                        content: '',
+                        contentColor: theme.color.danger,
+                      }}
+                      actionButtonClick={() => handleSendEmailConfirmation(detail?.userId!)}
+                    />
+                  )}
+
+                  {detail?.label === 'Telefone' && account?.User.phoneNumberIsConfirmed && (
+                    <Image img={icon.checkedNoBg} size="16px" />
+                  )}
+
+                  {detail?.label === 'Telefone' && !account?.User.phoneNumberIsConfirmed && (
+                    <PopoverButton
+                      label="Reenviar"
+                      hiddenIconButtonLabel
+                      buttonIcon={icon.yellowAlert}
+                      buttonIconSize="16px"
+                      actionButtonBgColor={theme.color.primary}
+                      type="IconButton"
+                      message={{
+                        title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
+                        content: '',
+                        contentColor: theme.color.danger,
+                      }}
+                      actionButtonClick={() => handleSendPhoneConfirmation(detail?.userId!)}
+                    />
+                  )}
+                </div>
+              </Style.CardText>
+            ))}
+          </Style.CardTextContainer>
+        </Style.CardContainer>
+
+        <Style.Footer />
+      </Style.CardSection>
 
       {account?.User.isCompanyOwner && (
         <Style.UsersCard>
@@ -227,11 +311,9 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={icon.plusWithBg}
+              icon={<IconPlus strokeColor="primary" />}
               label="Cadastrar"
-              onClick={() => {
-                setModalCreateUserOpen(true);
-              }}
+              onClick={() => setModalCreateUserOpen(true)}
             />
           </Style.UsersCardHeader>
 
@@ -321,30 +403,22 @@ export const AccountDetails = () => {
                     {
                       cell: (
                         <Style.TableButtons>
-                          <PopoverButton
+                          <IconButton
+                            className="p4"
+                            size="16px"
                             hideLabelOnMedia
-                            disabled={onQuery}
-                            buttonIconSize="16px"
-                            iconButtonClassName="p4"
-                            actionButtonBgColor={theme.color.primary}
-                            type="IconButton"
-                            label="Excluir"
-                            buttonIcon={icon.trash}
-                            message={{
-                              title: 'Deseja excluir este usuário?',
-                              content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                              contentColor: theme.color.danger,
-                            }}
-                            actionButtonClick={() => {
-                              requestDeleteUser(User.id);
-                            }}
+                            icon={<IconEye strokeColor="primary" />}
+                            fill="primary"
+                            label="Permissões"
+                            onClick={() => navigate(`/account/${User.id}/permissions`)}
                           />
 
                           <IconButton
                             className="p4"
                             size="16px"
                             hideLabelOnMedia
-                            icon={icon.edit}
+                            icon={<IconEdit strokeColor="primary" padding="4px" />}
+                            fill="primary"
                             label="Editar"
                             onClick={() => {
                               setSelectedUser({
@@ -360,13 +434,25 @@ export const AccountDetails = () => {
                             }}
                           />
 
-                          <IconButton
-                            className="p4"
-                            size="16px"
+                          <PopoverButton
                             hideLabelOnMedia
-                            icon={icon.eye}
-                            label="Permissões"
-                            onClick={() => navigate(`/account/${User.id}/permissions`)}
+                            disabled={onQuery}
+                            buttonIconSize="16px"
+                            iconButtonClassName="p4"
+                            actionButtonBgColor="primary"
+                            type="IconButton"
+                            label="Excluir"
+                            buttonIcon={
+                              <IconTrash strokeColor="danger" size="18px" viewBox="0 0 24 24" />
+                            }
+                            message={{
+                              title: 'Deseja excluir este usuário?',
+                              content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                              contentColor: theme.color.danger,
+                            }}
+                            actionButtonClick={() => {
+                              requestDeleteUser(User.id);
+                            }}
                           />
                         </Style.TableButtons>
                       ),
