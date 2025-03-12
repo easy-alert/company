@@ -1,4 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
+
+import { transformColor } from '@utils/colorTransform';
+
 import { theme as defaultTheme } from '@styles/theme';
 
 interface ThemeContextType {
@@ -14,11 +17,12 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
   const updateThemeColor = (color: string) => {
     const newTheme = {
       ...currentTheme,
+
       color: {
         ...currentTheme.color,
         primary: color,
-        primaryM: `color-mix(in srgb, ${color}  70%, white)`,
-        primaryL: `color-mix(in srgb, ${color}  100%, white)`,
+        primaryM: transformColor(color, 0, 20, 25),
+        primaryL: transformColor(color, 0, 0, 39),
       },
     };
     setCurrentTheme(newTheme);
