@@ -15,7 +15,6 @@ interface IToastifyMessage {
 }
 
 export const handleToastify = (serverResponse: IServerResponse, dismiss = true) => {
-  console.log('🚀 ~ handleToastify ~ serverResponse:', serverResponse);
   if (dismiss) toast.dismiss();
 
   if (serverResponse.status === 200) {
