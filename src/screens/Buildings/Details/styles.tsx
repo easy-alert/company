@@ -1,19 +1,19 @@
 import styled from 'styled-components';
-import { theme } from '@styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const Header = styled.div`
-  margin-bottom: ${theme.size.sm};
-  padding-top: ${theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.sm};
+  padding-top: ${({ theme }) => theme.size.sm};
 
   > h2 {
-    margin-bottom: ${theme.size.xsm};
+    margin-bottom: ${({ theme }) => theme.size.xsm};
   }
 `;
 
 export const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const CardHeader = styled.div`
@@ -21,13 +21,13 @@ export const CardHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: ${theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
 export const CardHeaderButtonsContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const AnnexCardTitle = styled.div`
@@ -35,29 +35,29 @@ export const AnnexCardTitle = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: ${theme.size.sm};
+  margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
 export const MaintenanceCardHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
   width: 100%;
 `;
 
 export const FirstCard = styled.div`
   width: 100%;
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm};
+  background-color: ${({ theme }) => theme.color.white};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  padding: ${({ theme }) => theme.size.sm};
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   @media (max-width: 600px) {
     align-items: flex-start;
-    gap: ${theme.size.sm};
+    gap: ${({ theme }) => theme.size.sm};
     flex-direction: column;
   }
 `;
@@ -65,22 +65,22 @@ export const FirstCard = styled.div`
 export const CardHeaderLeftSide = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const Card = styled.div`
   width: 100%;
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm};
+  background-color: ${({ theme }) => theme.color.white};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  padding: ${({ theme }) => theme.size.sm};
   height: fit-content;
 `;
 
 export const AnnexCard = styled.div`
   width: 100%;
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm};
+  background-color: ${({ theme }) => theme.color.white};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  padding: ${({ theme }) => theme.size.sm};
   height: fit-content;
   min-height: 169px;
 
@@ -97,14 +97,14 @@ export const AnnexCardHeader = styled.div`
 export const BreadcrumbWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 
   > button {
     padding: unset;
     background-color: unset;
     width: fit-content;
 
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     font-size: 12px;
     cursor: pointer;
 
@@ -120,20 +120,20 @@ export const BreadcrumbWrapper = styled.div`
   }
 
   > p {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
   }
 `;
 
 export const AnnexCardButtons = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const CardGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
@@ -143,25 +143,25 @@ export const CardGrid = styled.div`
 export const MaintenanceCardFooter = styled.div`
   display: grid;
   grid-template-columns: repeat(4, fit-content(100%));
-  grid-gap: ${theme.size.sm};
+  grid-gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const MaintenanceCardFooterInfo = styled.div`
   .pending {
-    color: ${theme.color.warning};
+    color: ${({ theme }) => theme.color.warning};
   }
   .expired {
-    color: ${theme.color.actionDanger};
+    color: ${({ theme }) => theme.color.actionDanger};
   }
   .delayed {
-    color: ${theme.color.orange1};
+    color: ${({ theme }) => theme.color.orange1};
   }
   .completed {
-    color: ${theme.color.success};
+    color: ${({ theme }) => theme.color.success};
   }
 
   > p {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     font-weight: 500;
   }
 `;
@@ -172,14 +172,14 @@ export const BuildingCardWrapper = styled.div`
 
   @media (max-width: 900px) {
     flex-direction: column;
-    gap: ${theme.size.xsm};
+    gap: ${({ theme }) => theme.size.xsm};
   }
 `;
 
 export const BuildingCardColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
   width: 50%;
 
   @media (max-width: 900px) {
@@ -190,7 +190,7 @@ export const BuildingCardColumn = styled.div`
 export const BuildingCardData = styled.div`
   display: flex;
   align-items: flex-start;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 
   > :first-child {
     font-weight: 500;
@@ -200,18 +200,18 @@ export const BuildingCardData = styled.div`
 export const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
   justify-content: flex-end;
 `;
 
 export const MainContactTag = styled.div`
   padding: 2px 4px;
   border-radius: 2px;
-  background-color: ${theme.color.primaryL};
+  background-color: ${({ theme }) => theme.color.primaryL};
   width: fit-content;
 
   > p {
-    color: ${theme.color.primary};
+    color: ${({ theme }) => theme.color.primary};
     font-weight: 500;
   }
 `;
@@ -219,7 +219,7 @@ export const MainContactTag = styled.div`
 export const TableDataWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 `;
 
 export const NoDataContainer = styled.div`
@@ -232,7 +232,7 @@ export const NoDataContainer = styled.div`
   justify-content: center;
 
   > h5 {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     text-align: center;
   }
 `;
@@ -246,7 +246,7 @@ export const NoBanners = styled.div`
   justify-content: center;
 
   > h5 {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     text-align: center;
   }
 `;
@@ -260,7 +260,7 @@ export const NoAnnexes = styled.div`
   justify-content: center;
 
   > h5 {
-    color: ${theme.color.gray4};
+    color: ${({ theme }) => theme.color.gray4};
     text-align: center;
     margin-top: -20px;
   }
@@ -269,13 +269,13 @@ export const NoAnnexes = styled.div`
 export const TagWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const BannerWrapper = styled.div`
-  margin-top: ${theme.size.xsm};
+  margin-top: ${({ theme }) => theme.size.xsm};
   display: grid;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
   grid-template-columns: repeat(auto-fill, minmax(97px, 1fr));
 `;
 
@@ -283,17 +283,17 @@ export const Tag = styled.div`
   display: flex;
   align-items: center;
   padding: 4px 12px;
-  background-color: ${theme.color.primaryL};
+  background-color: ${({ theme }) => theme.color.primaryL};
   width: fit-content;
   height: fit-content;
-  border-radius: ${theme.size.xxsm};
-  gap: ${theme.size.xsm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xsm};
 
   > a {
     display: flex;
     align-items: center;
-    gap: ${theme.size.xxsm};
-    color: ${theme.color.black};
+    gap: ${({ theme }) => theme.size.xxsm};
+    color: ${({ theme }) => theme.color.black};
 
     > p {
       white-space: nowrap;
@@ -317,11 +317,11 @@ export const PasswordDiv = styled.div`
 `;
 
 export const CountDiv = styled.div`
-  color: ${theme.color.gray6};
+  color: ${({ theme }) => theme.color.gray6};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
   height: 92px;
   font-weight: 500;
 

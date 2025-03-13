@@ -5,4 +5,5 @@ export interface SelectProps extends SelectHTMLAttributes<SelectHTMLAttributes> 
   label: string;
   error?: string | null | any;
   selectPlaceholderValue?: string;
+  arrowColor?: string;
 }

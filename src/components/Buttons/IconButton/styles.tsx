@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
 
 export const ContainerButton = styled.div<{
   labelPos?: string;
@@ -10,6 +9,7 @@ export const ContainerButton = styled.div<{
   hideLabelOnMedia?: boolean;
   fontWeight?: string;
   disable?: boolean;
+  size?: string;
 }>`
   display: flex;
   min-width: fit-content;
@@ -51,8 +51,8 @@ export const SpinnerContent = styled.div<{ $size: string }>`
   display: none;
   align-items: center;
   justify-content: center;
-  border: 4px solid ${theme.color.dangerL};
-  border-top: 4px solid ${theme.color.primary};
+  border: 4px solid ${({ theme }) => theme.color.dangerL};
+  border-top: 4px solid ${({ theme }) => theme.color.primary};
   border-radius: 50%;
 
   ${({ $size }) =>

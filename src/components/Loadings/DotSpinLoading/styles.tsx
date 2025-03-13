@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const LoadingContainer = styled.div`
   width: 100%;
@@ -9,8 +9,8 @@ export const LoadingContainer = styled.div`
   align-items: center;
 
   .dot-spin {
-    border: 6px solid ${theme.color.primaryL};
-    border-top: 6px solid ${theme.color.primary};
+    border: 6px solid ${({ theme }) => theme.color.primaryL};
+    border-top: 6px solid ${({ theme }) => theme.color.primary};
     border-radius: 50%;
     width: 50px;
     height: 50px;
