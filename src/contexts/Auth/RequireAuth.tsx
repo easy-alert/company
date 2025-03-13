@@ -45,9 +45,9 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
       userId,
       backofficeToken,
     })
-      .then((res) => {
+      .then(async (res) => {
         signin(res.data);
-        updateThemeColor(res.data.Account.User.colorScheme);
+        updateThemeColor(res?.data?.User?.colorScheme);
         setLoading(false);
       })
       .catch((err) => {
@@ -57,9 +57,9 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
 
   const validateToken = async () => {
     await Api.get('/auth/validate/token')
-      .then((res) => {
+      .then(async (res) => {
         setAccount(res.data);
-        updateThemeColor(res.data.Account.User.colorScheme);
+        updateThemeColor(res?.data?.User?.colorScheme);
         setLoading(false);
         localStorage.setItem('user', res.data.User.name);
       })
