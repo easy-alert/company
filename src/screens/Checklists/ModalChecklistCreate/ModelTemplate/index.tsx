@@ -4,6 +4,7 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { icon } from '@assets/icons';
 import type { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
 import { deleteChecklistTemplate } from '@services/apis/deleteChecklistTemplate';
+import IconTrash from '@assets/icons/IconTrash';
 import * as Style from './styles';
 
 interface ModelTemplateProps {
@@ -25,14 +26,16 @@ export const ModelTemplate = ({
 
   const handleDeleteChecklistTemplate = async (templateId: string) => {
     try {
-      await deleteChecklistTemplate({ checklistTemplateId: templateId });
+      const response = await deleteChecklistTemplate({ checklistTemplateId: templateId });
 
-      setChecklistTemplates((prevTemplates) =>
-        prevTemplates.filter((template) => template.id !== templateId),
-      );
+      if (response) {
+        setChecklistTemplates((prevTemplates) =>
+          prevTemplates.filter((template) => template.id !== templateId),
+        );
 
-      if (selectedTemplate?.id === templateId) {
-        setSelectedTemplate(null);
+        if (selectedTemplate?.id === templateId) {
+          setSelectedTemplate(null);
+        }
       }
     } catch (error) {
       console.error('Erro ao deletar o template:', error);
@@ -57,10 +60,10 @@ export const ModelTemplate = ({
             </Style.TemplateOption>
 
             <IconButton
-              icon={icon.trashWithPrimaryBg}
-              onClick={() => {
+              icon={<IconTrash strokeColor="danger" />}
+              onClick={async () => {
                 if (template.id) {
-                  handleDeleteChecklistTemplate(template.id);
+                  await handleDeleteChecklistTemplate(template.id);
                 }
               }}
             />
