@@ -21,8 +21,8 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
       color: {
         ...currentTheme.color,
         primary: color,
-        primaryM: transformColor(color, 0, 20, 25),
-        primaryL: transformColor(color, 0, 0, 39),
+        primaryM: transformColor(color, 0, 0, 10),
+        primaryL: transformColor(color, 0, 0, 20),
       },
     };
 
