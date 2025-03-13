@@ -1,11 +1,9 @@
 import { useState } from 'react';
-
-import { deleteChecklist } from '@services/apis/deleteChecklist';
-
-import IconCheck from '@assets/icons/IconCheck';
-
+import { Image } from '@components/Image';
+import { IconButton } from '@components/Buttons/IconButton';
+import { icon } from '@assets/icons';
 import type { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
-
+import { deleteChecklistTemplate } from '@services/apis/deleteChecklistTemplate';
 import * as Style from './styles';
 
 interface ModelTemplateProps {
@@ -26,14 +24,18 @@ export const ModelTemplate = ({
   const [selectedTemplate, setSelectedTemplate] = useState<IChecklistTemplate | null>(null);
 
   const handleDeleteChecklistTemplate = async (templateId: string) => {
-    await deleteChecklist({ checklistId: templateId, deleteMode: 'this' });
+    try {
+      await deleteChecklistTemplate({ checklistTemplateId: templateId });
 
-    setChecklistTemplates((prevTemplates) =>
-      prevTemplates.filter((template) => template.id !== templateId),
-    );
+      setChecklistTemplates((prevTemplates) =>
+        prevTemplates.filter((template) => template.id !== templateId),
+      );
 
-    if (selectedTemplate?.id === templateId) {
-      setSelectedTemplate(null);
+      if (selectedTemplate?.id === templateId) {
+        setSelectedTemplate(null);
+      }
+    } catch (error) {
+      console.error('Erro ao deletar o template:', error);
     }
   };
 
@@ -42,25 +44,26 @@ export const ModelTemplate = ({
       <Style.SelectTitle>Selecione um template</Style.SelectTitle>
       {checklistTemplates.length > 0 ? (
         checklistTemplates.map((template) => (
-          <Style.TemplateContainer
-            key={template.id}
-            onClick={() => {
-              setSelectedTemplate({
-                id: template.id,
-                name: template.name,
-                items: template.items,
-              });
+          <Style.TemplateContainer key={template.id}>
+            {selectedTemplate?.id === template.id && <Image img={icon.checked} size="16px" />}
 
-              handleSelectChecklistTemplate({
-                id: template.id,
-                name: template.name,
-                items: template.items,
-              });
-            }}
-          >
-            {selectedTemplate?.id === template.id && <IconCheck />}
+            <Style.TemplateOption
+              onClick={() => {
+                setSelectedTemplate(template);
+                handleSelectChecklistTemplate(template);
+              }}
+            >
+              {template.name}
+            </Style.TemplateOption>
 
-            <Style.TemplateOption>{template.name}</Style.TemplateOption>
+            <IconButton
+              icon={icon.trashWithPrimaryBg}
+              onClick={() => {
+                if (template.id) {
+                  handleDeleteChecklistTemplate(template.id);
+                }
+              }}
+            />
           </Style.TemplateContainer>
         ))
       ) : (
