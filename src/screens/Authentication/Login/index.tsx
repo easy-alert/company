@@ -60,7 +60,7 @@ export const Login = () => {
 
       if (responseData) {
         signin(responseData);
-        navigate('/dashboard');
+        navigate('/home');
       }
     } finally {
       setOnQuery(false);
