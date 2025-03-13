@@ -8,12 +8,12 @@ import { dateTimeFormatter } from '@utils/functions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // STYLES
-import IconPdfLogo from '@assets/icons/IconPdfLogo';
 import * as Style from './styles';
 
 interface IPdfList {
@@ -71,7 +71,7 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
                       <IconButton
                         disabled={status !== 'finished'}
                         label="Visualizar"
-                        icon={<IconPdfLogo strokeColor="primary" />}
+                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         onClick={() => {
                           window.open(url, '_blank');
                         }}

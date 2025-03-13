@@ -11,12 +11,15 @@ import { IconButton } from '@components/Buttons/IconButton';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons/index';
+import IconSearch from '@assets/icons/IconSearch';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
+import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL TYPES
 import type { IUser } from '@customTypes/IUser';
 
 // COMPONENTS
-import IconSearch from '@assets/icons/IconSearch';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import { ModalPrintPlan } from './utils/ModalPrintPlan';
 
@@ -138,10 +141,9 @@ export const BuildingMaintenancesList = () => {
               onClick={() => addedMaintenances.length !== 0}
             >
               <IconButton
-                hasCircle
-                disabled={addedMaintenances.length < 1}
-                icon={icon.csvLogo2}
                 label="Exportar"
+                icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
+                disabled={addedMaintenances.length < 1}
                 hideLabelOnMedia
                 onClick={() => {
                   //
@@ -150,10 +152,9 @@ export const BuildingMaintenancesList = () => {
             </CSVLink>
 
             <IconButton
-              hasCircle
-              disabled={addedMaintenances.length < 1}
-              icon={icon.pdfLogo2}
               label="Exportar"
+              icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+              disabled={addedMaintenances.length < 1}
               hideLabelOnMedia
               onClick={() => {
                 setModalPrintPlanOpen(true);
@@ -161,13 +162,12 @@ export const BuildingMaintenancesList = () => {
             />
 
             <IconButton
-              hasCircle
-              icon={icon.editWithBg}
               label="Editar"
+              icon={<IconEdit strokeColor="primary" />}
               hideLabelOnMedia
-              onClick={() => {
-                navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`);
-              }}
+              onClick={() =>
+                navigate(`/buildings/details/${buildingId}/maintenances/manage${search}`)
+              }
             />
           </Style.RightSide>
         </Style.HeaderWrapper>

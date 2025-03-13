@@ -17,13 +17,13 @@ import { applyMask, catchHandler } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons';
+import IconUnlink from '@assets/icons/IconUnlink';
+import IconLink from '@assets/icons/IconLink';
 
 // GLOBAL TYPES
 import type { ISupplier } from '@customTypes/ISupplier';
 
 // COMPONENTS
-import IconUnlink from '@assets/icons/IconUnlink';
-import IconLink from '@assets/icons/IconLink';
 import { ModalLinkSupplier } from './ModalLinkSupplier';
 import { ModalCreateAndLinkSupplier } from './ModalCreateAndLinkSupplier';
 
@@ -136,7 +136,7 @@ export const LinkSupplierToMaintenanceHistory = ({
 
             <IconButton
               label="Vincular"
-              icon={<IconLink strokeColor="primary" strokeWidth="1.5" />}
+              icon={<IconLink strokeColor="white" backgroundColor="primary" padding="2px" />}
               permToCheck="maintenances:update"
               hideLabelOnMedia
               onClick={() => {
@@ -152,16 +152,14 @@ export const LinkSupplierToMaintenanceHistory = ({
             <Style.Container key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
               <Style.Header>
                 <h3>Fornecedor</h3>
+
                 <IconButton
-                  hasCircle
-                  disabled={onQuery}
-                  hideLabelOnMedia
-                  icon={<IconUnlink strokeColor="white" />}
-                  fill="primary"
                   label="Desvincular"
-                  onClick={() => {
-                    unlinkToMaintenanceHistory(id);
-                  }}
+                  icon={<IconUnlink strokeColor="white" backgroundColor="primary" padding="2px" />}
+                  permToCheck="maintenances:update"
+                  hideLabelOnMedia
+                  disabled={onQuery}
+                  onClick={() => unlinkToMaintenanceHistory(id)}
                 />
               </Style.Header>
               <Style.SupplierInfo>
