@@ -22,6 +22,8 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconUploadLine from '@assets/icons/IconUploadLine';
+import IconSend from '@assets/icons/IconSend';
 
 // GLOBAL TYPES
 import { ITicketActivity } from '@customTypes/ITicketActivity';
@@ -221,7 +223,9 @@ export const TicketHistoryActivities = ({
               <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
                 <IconButton
-                  icon={icon.upload}
+                  icon={
+                    <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                  }
                   permToCheck="tickets:update"
                   onClick={() => {
                     //
@@ -230,9 +234,16 @@ export const TicketHistoryActivities = ({
               </div>
 
               <IconButton
+                icon={
+                  <IconSend
+                    backgroundColor="primary"
+                    strokeColor="white"
+                    padding="4px"
+                    strokeWidth="1.5"
+                  />
+                }
                 loading={loading}
                 disabled={(!activityContent && imagesToUpload.length === 0) || onImageQuery}
-                icon={icon.send}
                 permToCheck="tickets:update"
                 onClick={() => handleCreateOneTicketHistoryActivity()}
               />
