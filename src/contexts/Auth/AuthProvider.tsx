@@ -11,8 +11,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [account, setAccount] = useState<IAccount>({} as IAccount);
 
   const signin = async ({ Account, token }: ILoginRequestResponse) => {
-    setAccount(Account);
     localStorage.setItem('authToken', token);
+    setAccount(Account);
   };
 
   const signout = () => {
