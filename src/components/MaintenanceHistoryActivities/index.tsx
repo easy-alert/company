@@ -23,6 +23,8 @@ import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '@util
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconUploadLine from '@assets/icons/IconUploadLine';
+import IconSend from '@assets/icons/IconSend';
 
 // GLOBAL TYPES
 import type { IActivity } from '@customTypes/IActivity';
@@ -218,8 +220,9 @@ export const MaintenanceHistoryActivities = ({
               <input {...getInputProps()} />
 
               <IconButton
-                hasCircle
-                icon={icon.upload}
+                icon={
+                  <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                }
                 permToCheck="maintenances:update"
                 onClick={() => {
                   //
@@ -228,10 +231,16 @@ export const MaintenanceHistoryActivities = ({
             </div>
 
             <IconButton
-              hasCircle
-              disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
+              icon={
+                <IconSend
+                  backgroundColor="primary"
+                  strokeColor="white"
+                  padding="4px"
+                  strokeWidth="1.5"
+                />
+              }
               loading={onQuery}
-              icon={icon.send}
+              disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
               permToCheck="maintenances:update"
               onClick={() => {
                 createActivity();
