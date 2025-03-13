@@ -308,9 +308,9 @@ function TicketsPage() {
 
                     {buildingsForSelect.map((building) => (
                       <option
-                        value={building.nanoId}
-                        key={building.nanoId}
-                        disabled={filter.buildings.some((b) => b === building.nanoId)}
+                        value={building.id}
+                        key={building.id}
+                        disabled={filter.buildings.some((b) => b === building.id)}
                       >
                         {building.name}
                       </option>
@@ -517,7 +517,7 @@ function TicketsPage() {
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
-                          label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
+                          label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
                           color="white"
                           backgroundColor="primaryM"
                           fontWeight={500}
