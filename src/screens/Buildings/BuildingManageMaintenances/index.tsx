@@ -22,9 +22,11 @@ import { query, requestListIntervals } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons/index';
+import IconSearch from '@assets/icons/IconSearch';
+import IconCheck from '@assets/icons/IconCheck';
+import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
-import IconSearch from '@assets/icons/IconSearch';
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
@@ -121,23 +123,19 @@ export const BuildingManageMaintenances = () => {
           <Style.RightSide>
             {!onQuery && (
               <IconButton
-                hasCircle
-                hideLabelOnMedia
-                fontWeight="500"
                 label="Criar categoria"
+                icon={<IconPlus strokeColor="primary" />}
+                fontWeight="500"
                 className="p2"
-                icon={icon.plusWithBg}
-                onClick={() => {
-                  setModalCreateCategoryOpen(true);
-                }}
+                hideLabelOnMedia
+                onClick={() => setModalCreateCategoryOpen(true)}
               />
             )}
 
             {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
               <IconButton
-                hasCircle
-                icon={icon.checked}
                 label="Salvar"
+                icon={<IconCheck strokeColor="primary" size="24px" />}
                 hideLabelOnMedia
                 onClick={() => {
                   requestManageBuildingMaintenances({
