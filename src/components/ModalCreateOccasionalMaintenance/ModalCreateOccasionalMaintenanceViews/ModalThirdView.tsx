@@ -174,7 +174,7 @@ function ModalThirdView({
         <Style.FileAndImageRow>
           <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
             <input {...getInputPropsImages()} />
-            <Image img={icon.addImage} width="40px" height="38px" radius="0" />
+            <Image img={icon.addImage} width="40px" height="38px" radius="0" fill="primary" />
           </Style.DragAndDropZoneImage>
 
           {occasionalMaintenanceData.reportData.images.map((image, i: number) => (
@@ -206,14 +206,17 @@ function ModalThirdView({
       </Style.Row>
 
       <Style.ButtonContainer>
+        <div>
+          <Button
+            borderless
+            label="Voltar"
+            bgColor="transparent"
+            textColor="actionBlue"
+            onClick={() => handleSetView(2)}
+          />
+        </div>
         <Button
-          label="Voltar"
-          bgColor="transparent"
-          textColor="actionBlue"
-          onClick={() => handleSetView(2)}
-        />
-
-        <Button
+          bgColor="primary"
           label="Finalizar manutenção"
           disable={onFileQuery || onImageQuery}
           onClick={() =>

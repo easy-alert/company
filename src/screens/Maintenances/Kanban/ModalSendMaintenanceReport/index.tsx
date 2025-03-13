@@ -482,7 +482,8 @@ export const ModalSendMaintenanceReport = ({
                   disabled={onFileQuery || onImageQuery || onQuery}
                   actionButtonClick={() => handleChangeMaintenanceProgress()}
                   borderless
-                  textColor={theme.color.actionBlue}
+                  actionButtonBgColor="primary"
+                  textColor="actionBlue"
                   label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
                   message={{
                     title: maintenance.inProgress
@@ -498,8 +499,9 @@ export const ModalSendMaintenanceReport = ({
                 <PopoverButton
                   disabled={onFileQuery || onImageQuery || onQuery}
                   actionButtonClick={() => handleSaveMaintenance()}
-                  textColor={theme.color.actionBlue}
+                  textColor="actionBlue"
                   borderless
+                  actionButtonBgColor="primary"
                   label="Salvar"
                   message={{
                     title: 'Tem certeza que deseja salvar o progresso?',
@@ -513,6 +515,8 @@ export const ModalSendMaintenanceReport = ({
                 loading={onQuery}
                 actionButtonClick={() => handleSendReportMaintenance()}
                 label="Finalizar manutenção"
+                actionButtonBgColor="primary"
+                bgColor="primary"
                 message={{
                   title: 'Tem certeza que deseja enviar o relato?',
                   content: 'Esta ação é irreversível.',
