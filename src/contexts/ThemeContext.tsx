@@ -25,6 +25,7 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
         primaryL: transformColor(color, 0, 0, 39),
       },
     };
+
     setCurrentTheme(newTheme);
   };
 
