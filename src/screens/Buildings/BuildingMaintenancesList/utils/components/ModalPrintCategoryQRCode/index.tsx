@@ -11,9 +11,9 @@ import {
   PDFDownloadLink,
 } from '@react-pdf/renderer';
 import { QRCodeCanvas } from 'qrcode.react';
-import { Modal } from '../../../../../../components/Modal';
-import { Button } from '../../../../../../components/Buttons/Button';
-import { useAuthContext } from '../../../../../../contexts/Auth/UseAuthContext';
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // TYPES
 import { IModalPrintCategoryQRCode } from './types';
@@ -284,7 +284,7 @@ export const ModalPrintCategoryQRCode = ({
             }
             fileName={`QR Code ${categoryName}`}
           >
-            <Button label="Download" disable={loading} />
+            <Button label="Download" disable={loading} bgColor="primary" />
           </PDFDownloadLink>
         </Style.Container>
       </>

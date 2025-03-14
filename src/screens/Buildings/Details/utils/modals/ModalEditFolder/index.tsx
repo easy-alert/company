@@ -45,7 +45,7 @@ export const ModalEditFolder = ({ setBuilding, setModal, folder }: IModalEditFol
                 name="name"
                 error={touched.name && (errors.name || null)}
               />
-              <Button label="Salvar" type="submit" center loading={onQuery} />
+              <Button label="Salvar" type="submit" center loading={onQuery} bgColor="primary" />
             </Form>
           )}
         </Formik>

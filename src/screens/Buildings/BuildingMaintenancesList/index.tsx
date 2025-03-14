@@ -142,7 +142,7 @@ export const BuildingMaintenancesList = () => {
             >
               <IconButton
                 label="Exportar"
-                icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
+                icon={<IconCsvLogo strokeColor="primary" fillColor="primary" />}
                 disabled={addedMaintenances.length < 1}
                 hideLabelOnMedia
                 onClick={() => {
@@ -153,7 +153,7 @@ export const BuildingMaintenancesList = () => {
 
             <IconButton
               label="Exportar"
-              icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+              icon={<IconPdfLogo strokeColor="primary" fillColor="primary" />}
               disabled={addedMaintenances.length < 1}
               hideLabelOnMedia
               onClick={() => {
