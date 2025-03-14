@@ -260,7 +260,7 @@ export const ModalChecklistCreate = ({
               )}
 
               <Select
-                label="Responsável *"
+                label="Usuário responsável *"
                 value={selectedResponsible}
                 onChange={handleResponsibleChange}
               >
