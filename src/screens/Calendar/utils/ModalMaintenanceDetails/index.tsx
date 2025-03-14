@@ -306,6 +306,7 @@ export const ModalMaintenanceDetails = ({
             )}
 
             <Button
+              bgColor="primary"
               textColor="white"
               label="Fechar"
               borderless={maintenance.MaintenanceReport.length > 0}

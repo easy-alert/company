@@ -260,7 +260,7 @@ export const ModalPrintQRCode = ({
             }
             fileName={`QR Code ${buildingName}`}
           >
-            <Button label="Download" disable={loading} />
+            <Button label="Download" disable={loading} bgColor="primary" />
           </PDFDownloadLink>
         </Style.Container>
       </>
