@@ -682,11 +682,11 @@ export const BuildingDetails = () => {
 
                             {User.email && !User.emailIsConfirmed && (
                               <PopoverButton
+                                actionButtonBgColor="primary"
                                 label="Reenviar"
                                 hiddenIconButtonLabel
                                 buttonIcon={icon.yellowAlert}
                                 buttonIconSize="16px"
-                                actionButtonBgColor={theme.color.primary}
                                 type="IconButton"
                                 message={{
                                   title: 'Deseja reenviar o e-mail de confirmação?',
@@ -714,7 +714,7 @@ export const BuildingDetails = () => {
                                 hiddenIconButtonLabel
                                 buttonIcon={icon.yellowAlert}
                                 buttonIconSize="16px"
-                                actionButtonBgColor={theme.color.primary}
+                                actionButtonBgColor="primary"
                                 type="IconButton"
                                 message={{
                                   title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
