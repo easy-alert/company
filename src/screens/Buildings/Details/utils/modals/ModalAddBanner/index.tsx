@@ -112,6 +112,7 @@ export const ModalAddBanner = ({ setModal, onThenRequest }: IModalAddBanner) => 
             {values.url && <ImageComponent src={values.url} width="100%" height="200px" />}
 
             <Button
+              bgColor="primary"
               style={{ marginTop: '8px' }}
               center
               label="Cadastrar"

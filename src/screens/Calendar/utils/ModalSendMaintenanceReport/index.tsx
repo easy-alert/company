@@ -543,6 +543,7 @@ export const ModalSendMaintenanceReport = ({
                         inProgressChange: !maintenance.inProgress,
                       });
                     }}
+                    actionButtonBgColor="primary"
                     textColor="actionBlue"
                     borderless
                     label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
@@ -580,6 +581,7 @@ export const ModalSendMaintenanceReport = ({
                         yearToRequest,
                       });
                     }}
+                    actionButtonBgColor="primary"
                     textColor="actionBlue"
                     borderless
                     bgColor="primary"
@@ -616,6 +618,7 @@ export const ModalSendMaintenanceReport = ({
                       origin: account?.origin ?? 'Company',
                     });
                   }}
+                  actionButtonBgColor="primary"
                   bgColor="primary"
                   label="Finalizar manutenção"
                   permToCheck="maintenances:finish"

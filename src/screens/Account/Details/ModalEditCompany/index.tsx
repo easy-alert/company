@@ -217,6 +217,7 @@ export const ModalEditCompany = ({ company, handleModals }: IModalEditCompany) =
             />
 
             <Button
+              bgColor="primary"
               type="submit"
               label="Salvar"
               loading={onQuery}

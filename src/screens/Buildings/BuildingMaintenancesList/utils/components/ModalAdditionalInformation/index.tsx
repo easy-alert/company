@@ -97,6 +97,7 @@ export const ModalAdditionalInformation = ({
 
         <Style.ButtonContainer>
           <Button
+            bgColor="primary"
             label="Salvar"
             onClick={() =>
               handleUpdateAdditionalInformation(additionalInformation, userResponsible)

@@ -65,6 +65,7 @@ export const ModalAddFiles = ({ setModal, folderId, setBuilding }: IModalAddFile
         )}
 
         <Button
+          bgColor="primary"
           loading={onQuery}
           label="Cadastrar"
           center
