@@ -1,6 +1,7 @@
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 import { useEffect, useState } from 'react';
 import * as Style from './styles';
 import { Modal } from '../../../components/Modal';
@@ -44,7 +45,6 @@ interface IChecklist {
   building: { name: string; id: string };
   syndic: { name: string; id: string } | null;
   frequencyTimeInterval: { id: string } | null;
-
   resolutionDate: string | null;
 }
 
@@ -55,9 +55,7 @@ const schema = yup
     syndicId: yup.string().required('Campo obrigatório.'),
     description: yup.string(),
     date: yup.string().required('Campo obrigatório.'),
-
     hasFrequency: yup.boolean(),
-
     frequency: yup
       .string()
       .matches(/^\d/, 'O prazo para execução deve ser um número.')
@@ -103,6 +101,11 @@ export const ModalUpdateChecklist = ({
   const [checklistDetailImages, setChecklistDetailImages] = useState<
     { url: string; name: string }[]
   >([]);
+
+  const { usersForSelect } = useUsersForSelect({
+    buildingId: checklist.building.id,
+    checkPerms: true,
+  });
 
   const listSyndics = async (buildingNanoId: string) => {
     await Api.get(`/buildings/notifications/list-for-select/${buildingNanoId}`)
@@ -219,15 +222,15 @@ export const ModalUpdateChecklist = ({
                 <FormikSelect
                   name="syndicId"
                   selectPlaceholderValue={values.syndicId}
-                  label="Responsável *"
+                  label="Usuário responsável *"
                   error={touched.syndicId && (errors.syndicId || null)}
                 >
                   <option value="" disabled hidden>
                     Selecione
                   </option>
-                  {syndics.map(({ id, name }) => (
-                    <option value={id} key={id}>
-                      {name}
+                  {usersForSelect.map((user) => (
+                    <option value={user.id} key={user.id}>
+                      {user.name}
                     </option>
                   ))}
                 </FormikSelect>
@@ -238,8 +241,7 @@ export const ModalUpdateChecklist = ({
                   name="description"
                   error={touched.description && (errors.description || null)}
                 />
-
-                <Row>
+                {/* <Row>
                   <h6>Imagens da checklist</h6>
                   <FileAndImageRow>
                     <DragAndDropFiles
@@ -343,7 +345,7 @@ export const ModalUpdateChecklist = ({
                       ))}
                     </FormikSelect>
                   </Style.FrequencyWrapper>
-                )}
+                )} */}
                 <Style.ButtonDiv>
                   <PopoverButton
                     loading={onQuery}
