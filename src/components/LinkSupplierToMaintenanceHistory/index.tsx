@@ -17,6 +17,8 @@ import { applyMask, catchHandler } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons';
+import IconUnlink from '@assets/icons/IconUnlink';
+import IconLink from '@assets/icons/IconLink';
 
 // GLOBAL TYPES
 import type { ISupplier } from '@customTypes/ISupplier';
@@ -87,6 +89,7 @@ export const LinkSupplierToMaintenanceHistory = ({
     <>
       {/* PRA SCROLLAR A TELA PRA CIMA QUANDO ABRIR A MODAL, PORQUE SE NAO APARECE FORA DA TELA */}
       <div ref={ref} style={{ position: 'absolute', top: '-10000px' }} />
+
       {modalLinkSupplierOpen && (
         <ModalLinkSupplier
           setModal={setModalLinkSupplierOpen}
@@ -132,10 +135,10 @@ export const LinkSupplierToMaintenanceHistory = ({
             <h3>Fornecedor</h3>
 
             <IconButton
-              hideLabelOnMedia
-              icon={icon.link}
               label="Vincular"
+              icon={<IconLink strokeColor="white" backgroundColor="primary" padding="2px" />}
               permToCheck="maintenances:update"
+              hideLabelOnMedia
               onClick={() => {
                 ref.current?.scrollIntoView();
                 setModalLinkSupplierOpen(true);
@@ -149,14 +152,14 @@ export const LinkSupplierToMaintenanceHistory = ({
             <Style.Container key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
               <Style.Header>
                 <h3>Fornecedor</h3>
+
                 <IconButton
-                  disabled={onQuery}
-                  hideLabelOnMedia
-                  icon={icon.unlink}
                   label="Desvincular"
-                  onClick={() => {
-                    unlinkToMaintenanceHistory(id);
-                  }}
+                  icon={<IconUnlink strokeColor="white" backgroundColor="primary" padding="2px" />}
+                  permToCheck="maintenances:update"
+                  hideLabelOnMedia
+                  disabled={onQuery}
+                  onClick={() => unlinkToMaintenanceHistory(id)}
                 />
               </Style.Header>
               <Style.SupplierInfo>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
-import { theme } from '../../../../../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const Background = styled.div`
   max-width: 100%;
@@ -20,24 +20,24 @@ export const TableBody = styled.tbody``;
 export const TableRowHead = styled.tr<{ bgColor?: string }>``;
 
 export const TableRow = styled.tr<{ bgColor?: string }>`
-  ${({ bgColor }) => bgColor && `background-color: ${theme.color.white};`};
+  ${({ bgColor, theme }) => bgColor && `background-color: ${theme.color.white};`};
 `;
 
 export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
-  color: ${theme.color.black};
+  color: ${({ theme }) => theme.color.black};
   text-align: start;
-  background-color: ${theme.color.gray0};
-  border: 1px solid ${theme.color.gray3};
+  background-color: ${({ theme }) => theme.color.gray0};
+  border: 1px solid ${({ theme }) => theme.color.gray3};
   font-size: 12px;
   line-height: 14px;
   white-space: nowrap;
 
   :first-child {
-    border-top-left-radius: ${theme.size.xxsm};
+    border-top-left-radius: ${({ theme }) => theme.size.xxsm};
   }
 
   :last-child {
-    border-top-right-radius: ${theme.size.xxsm};
+    border-top-right-radius: ${({ theme }) => theme.size.xxsm};
   }
 
   :not(:first-child) {
@@ -50,10 +50,12 @@ export const TableColHeader = styled.th<{ cssProps: any; cssOnMedia: any }>`
 
   ${({ cssProps }) => cssProps}
 
-  padding: ${theme.size.xsm} ${theme.size.sm};
+  padding:  ${({ theme }) => theme.size.xsm}  ${({ theme }) => theme.size.sm};
 
   @media (max-width: 900px) {
-    ${({ cssOnMedia }) => cssOnMedia}
+    ${({ theme }) =>
+      ({ cssOnMedia }) =>
+        cssOnMedia}
   }
 `;
 
@@ -62,12 +64,12 @@ export const TableColBody = styled.td<{
   cssProps: any;
   cssOnMedia: any;
 }>`
-  height: ${theme.size.lg};
+  height: ${({ theme }) => theme.size.lg};
   text-align: start;
-  padding: ${theme.size.xsm} ${theme.size.sm};
+  padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
   white-space: nowrap;
   // COLOCAR ELLIPSIS
-  border: 1px solid ${theme.color.gray3};
+  border: 1px solid ${({ theme }) => theme.color.gray3};
   border-top: 0;
 
   line-height: 14px;
@@ -82,7 +84,7 @@ export const TableColBody = styled.td<{
   }
 
   :last-child {
-    padding-right: ${theme.size.sm};
+    padding-right: ${({ theme }) => theme.size.sm};
   }
 
   ${({ cssProps }) => cssProps}

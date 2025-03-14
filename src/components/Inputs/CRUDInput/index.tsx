@@ -1,4 +1,3 @@
-// LIBS
 // TYPES
 import { useState } from 'react';
 import { IDataList } from './utils/types';
@@ -14,6 +13,7 @@ export const CRUDInput = ({
   disabled,
   input: inputProps,
   select: selectProps,
+  arrowColor,
 }: IDataList) => {
   const [editing, setEditing] = useState(false);
 
@@ -35,6 +35,18 @@ export const CRUDInput = ({
             } else {
               selectProps.getEvtValue(evt.target.value);
             }
+          }}
+          style={{
+            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+              `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${
+                arrowColor || 'black'
+              }' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                <polyline points='6 9 12 15 18 9'/>
+              </svg>`,
+            )}")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'right 12px center',
+            backgroundSize: '16px',
           }}
         >
           <option value="" disabled hidden>

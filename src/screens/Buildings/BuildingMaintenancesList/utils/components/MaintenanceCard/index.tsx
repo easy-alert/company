@@ -14,6 +14,7 @@ import { handlePriorityName } from '@utils/handlePriorityName';
 import { icon } from '@assets/icons';
 
 // STYLES
+import IconDownArrow from '@assets/icons/IconDownArrow';
 import * as Style from './styles';
 
 // TYPES
@@ -51,7 +52,7 @@ export const MaintenanceCard = ({
 
             <Style.ArrowContainer onClick={() => setCardIsOpen(!cardIsOpen)}>
               <Style.Arrow cardIsOpen={cardIsOpen}>
-                <Image img={icon.downArrow} size="16px" />
+                <Image img={<IconDownArrow strokeColor="primary" />} size="16px" fill="primary" />
               </Style.Arrow>
             </Style.ArrowContainer>
           </Style.MaintenancesGrid>

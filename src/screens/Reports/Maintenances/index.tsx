@@ -26,11 +26,10 @@ import { PdfList } from '@components/PdfList';
 // GLOBAL UTILS
 import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL THEME
-import { theme } from '@styles/theme';
-
 // GLOBAL ICONS
 import { icon } from '@assets/icons';
+import IconCsvLogo from '@assets/icons/IconCsvLogo';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
@@ -259,7 +258,6 @@ export const MaintenanceReports = () => {
       <s.Container>
         <h2>Relatórios de manutenções</h2>
         <s.FiltersContainer>
-          <h5>Filtros</h5>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
@@ -309,6 +307,7 @@ export const MaintenanceReports = () => {
                     name="buildingId"
                     selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
                     label="Edificação"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedBuilding = buildingsForSelect.find(
@@ -349,6 +348,7 @@ export const MaintenanceReports = () => {
                   <Select
                     selectPlaceholderValue={categoriesForFilter.length > 0 ? ' ' : ''}
                     label="Categoria"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedCategory = filtersOptions?.categories.find(
@@ -387,6 +387,7 @@ export const MaintenanceReports = () => {
                   <Select
                     selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
                     label="Status"
+                    arrowColor="primary"
                     value=""
                     onChange={(e) => {
                       const selectedStatus = filtersOptions?.status.find(
@@ -427,6 +428,7 @@ export const MaintenanceReports = () => {
                   <FormikSelect
                     label="Filtrar por"
                     name="filterBy"
+                    arrowColor="primary"
                     selectPlaceholderValue={values.filterBy}
                     error={touched.filterBy && errors.filterBy ? errors.filterBy : null}
                   >
@@ -528,27 +530,25 @@ export const MaintenanceReports = () => {
                         onClick={() => maintenances.length !== 0}
                       >
                         <IconButton
-                          icon={icon.csvLogo}
                           label="Exportar"
-                          color={theme.color.primary}
-                          size="20px"
+                          icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
+                          disabled={maintenances.length === 0}
                           onClick={() => {
                             //
                           }}
-                          disabled={maintenances.length === 0}
                         />
                       </CSVLink>
+
                       <IconButton
-                        icon={icon.pdfLogo}
                         label="Exportar"
-                        color={theme.color.primary}
-                        size="20px"
+                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                        disabled={maintenances.length === 0 || onPdfQuery}
                         onClick={() => {
                           requestPdf();
                         }}
-                        disabled={maintenances.length === 0 || onPdfQuery}
                       />
-                      <Button label="Filtrar" type="submit" disable={onQuery} />
+
+                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
                   </s.ButtonContainer>
                 </s.FiltersSecondGrid>

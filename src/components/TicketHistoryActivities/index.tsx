@@ -22,6 +22,8 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconUploadLine from '@assets/icons/IconUploadLine';
+import IconSend from '@assets/icons/IconSend';
 
 // GLOBAL TYPES
 import { ITicketActivity } from '@customTypes/ITicketActivity';
@@ -221,7 +223,9 @@ export const TicketHistoryActivities = ({
               <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
                 <IconButton
-                  icon={icon.upload}
+                  icon={
+                    <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                  }
                   permToCheck="tickets:update"
                   onClick={() => {
                     //
@@ -230,9 +234,16 @@ export const TicketHistoryActivities = ({
               </div>
 
               <IconButton
+                icon={
+                  <IconSend
+                    backgroundColor="primary"
+                    strokeColor="white"
+                    padding="4px"
+                    strokeWidth="1.5"
+                  />
+                }
                 loading={loading}
                 disabled={(!activityContent && imagesToUpload.length === 0) || onImageQuery}
-                icon={icon.send}
                 permToCheck="tickets:update"
                 onClick={() => handleCreateOneTicketHistoryActivity()}
               />
@@ -297,6 +308,7 @@ export const TicketHistoryActivities = ({
           <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
             Comentários
           </Style.Tab>
+
           <Style.Tab
             onClick={() => setActiveTab('notifications')}
             active={activeTab === 'notifications'}
@@ -312,7 +324,7 @@ export const TicketHistoryActivities = ({
                 return (
                   <Style.ActivityContent key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityComment} />
+                      <ImageComponent src={icon.activityComment} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>
@@ -356,7 +368,7 @@ export const TicketHistoryActivities = ({
                 return (
                   <Style.ActivityContent key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityNotification} />
+                      <ImageComponent src={icon.activityNotification} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>

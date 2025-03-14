@@ -1,13 +1,22 @@
-// UI
+// GLOBAL ASSETS
+import IconX from '@assets/icons/IconX';
+import { icon } from '@assets/icons';
+
+// GLOBAL COMPONENTS
+import IconTrash from '@assets/icons/IconTrash';
+import { IconButton } from '../Buttons/IconButton';
+
+// GLOBAL STYLES
+import { theme } from '../../styles/theme';
+
+// GLOBAL UTILS / FUNCTIONS
+import { query } from '../../utils/functions';
+
+// COMPONENTS
 import * as Style from './styles';
-// ICONS
-import { icon } from '../../assets/icons';
 
 // TYPES
 import { IModal } from './utils/types';
-import { theme } from '../../styles/theme';
-import { IconButton } from '../Buttons/IconButton';
-import { query } from '../../utils/functions';
 
 export const Modal = ({
   id = 'background',
@@ -32,15 +41,18 @@ export const Modal = ({
         <Style.IconsContainer>
           {deleteButton && (
             <IconButton
-              icon={icon.grayTrash}
-              color={theme.color.primary}
+              icon={<IconTrash strokeColor="primary" strokeWidth="2" />}
               onClick={() => handleDelete && handleDelete(true)}
             />
           )}
 
-          <IconButton icon={icon.x} color={theme.color.primary} onClick={() => setModal(false)} />
+          <IconButton
+            icon={<IconX strokeColor="primary" strokeWidth="2" />}
+            onClick={() => setModal(false)}
+          />
         </Style.IconsContainer>
       </Style.Header>
+
       {children}
     </Style.Body>
   </Style.Background>

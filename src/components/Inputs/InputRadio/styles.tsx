@@ -1,16 +1,16 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme as defaultTheme } from '@styles/theme';
 
 export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string }>`
   display: flex;
   align-items: flex-start;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
   width: fit-content;
   transition: 0.25s;
   > input {
     width: 16px;
     height: 16px;
-    accent-color: ${theme.color.primary};
+    accent-color: ${({ theme }) => theme.color.primary};
   }
 
   ${({ disable }) =>
@@ -21,7 +21,7 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
       }
 
       > label {
-        color: ${theme.color.black};
+        color: ${({ theme }) => theme.color.black};
         cursor: pointer;
         :hover {
           opacity: 0.7;
@@ -40,7 +40,7 @@ export const InputContainer = styled.div<{
   error: boolean;
   passwordPlaceholder?: boolean;
 }>`
-  ${({ error }) =>
+  ${({ error, theme }) =>
     error &&
     `
    > input {

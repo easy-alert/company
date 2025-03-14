@@ -23,6 +23,8 @@ import { catchHandler, dateTimeFormatter, isImage, uploadManyFiles } from '@util
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconUploadLine from '@assets/icons/IconUploadLine';
+import IconSend from '@assets/icons/IconSend';
 
 // GLOBAL TYPES
 import type { IActivity } from '@customTypes/IActivity';
@@ -218,7 +220,9 @@ export const MaintenanceHistoryActivities = ({
               <input {...getInputProps()} />
 
               <IconButton
-                icon={icon.upload}
+                icon={
+                  <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                }
                 permToCheck="maintenances:update"
                 onClick={() => {
                   //
@@ -227,9 +231,16 @@ export const MaintenanceHistoryActivities = ({
             </div>
 
             <IconButton
-              disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
+              icon={
+                <IconSend
+                  backgroundColor="primary"
+                  strokeColor="white"
+                  padding="4px"
+                  strokeWidth="1.5"
+                />
+              }
               loading={onQuery}
-              icon={icon.send}
+              disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
               permToCheck="maintenances:update"
               onClick={() => {
                 createActivity();
@@ -295,6 +306,7 @@ export const MaintenanceHistoryActivities = ({
           <Style.Tab onClick={() => setActiveTab('comments')} active={activeTab === 'comments'}>
             Comentários
           </Style.Tab>
+
           <Style.Tab
             onClick={() => setActiveTab('notifications')}
             active={activeTab === 'notifications'}
@@ -310,7 +322,7 @@ export const MaintenanceHistoryActivities = ({
                 return (
                   <Style.Comment key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityComment} />
+                      <ImageComponent src={icon.activityComment} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>
@@ -354,7 +366,7 @@ export const MaintenanceHistoryActivities = ({
                 return (
                   <Style.Comment key={id}>
                     <Style.CommentHeader>
-                      <ImageComponent src={icon.activityNotification} />
+                      <ImageComponent src={icon.activityNotification} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
                         <p className="p3">{dateTimeFormatter(createdAt)}</p>

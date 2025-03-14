@@ -220,7 +220,7 @@ function UserPermissions() {
         </div>
 
         <div>
-          <Button label="Salvar" onClick={handleSavePermissions}>
+          <Button label="Salvar" onClick={handleSavePermissions} bgColor="primary">
             Salvar
           </Button>
         </div>

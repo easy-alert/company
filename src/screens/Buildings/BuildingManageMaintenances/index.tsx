@@ -22,6 +22,9 @@ import { query, requestListIntervals } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons/index';
+import IconSearch from '@assets/icons/IconSearch';
+import IconCheck from '@assets/icons/IconCheck';
+import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
@@ -120,21 +123,19 @@ export const BuildingManageMaintenances = () => {
           <Style.RightSide>
             {!onQuery && (
               <IconButton
-                hideLabelOnMedia
-                fontWeight="500"
                 label="Criar categoria"
+                icon={<IconPlus strokeColor="primary" />}
+                fontWeight="500"
                 className="p2"
-                icon={icon.plusWithBg}
-                onClick={() => {
-                  setModalCreateCategoryOpen(true);
-                }}
+                hideLabelOnMedia
+                onClick={() => setModalCreateCategoryOpen(true)}
               />
             )}
 
             {!onQuery && categories.length > 0 && hasSomeMaintenance && !tableloading && (
               <IconButton
-                icon={icon.checked}
                 label="Salvar"
+                icon={<IconCheck strokeColor="primary" size="24px" />}
                 hideLabelOnMedia
                 onClick={() => {
                   requestManageBuildingMaintenances({
@@ -152,7 +153,8 @@ export const BuildingManageMaintenances = () => {
 
         <Style.SearchField>
           <IconButton
-            icon={icon.search}
+            fill="primary"
+            icon={<IconSearch strokeColor="primary" />}
             size="16px"
             onClick={() => {
               setFilter(inputRef.current);
@@ -185,6 +187,7 @@ export const BuildingManageMaintenances = () => {
             <Select
               disabled={tableloading}
               label="Copiar manutenções de:"
+              arrowColor="primary"
               value={toCopyBuilding}
               selectPlaceholderValue=" "
               onChange={(e) => {

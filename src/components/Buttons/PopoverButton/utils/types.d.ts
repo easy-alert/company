@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IPopoverButton {
   label: string;
@@ -13,7 +15,7 @@ export interface IPopoverButton {
   iconButtonColor?: string;
   type: 'IconButton' | 'Button';
   loading?: boolean;
-  buttonIcon?: string;
+  buttonIcon?: ReactNode;
   buttonIconSize?: string;
   borderless?: boolean;
   iconButtonClassName?: string;
@@ -23,4 +25,8 @@ export interface IPopoverButton {
   fontWeight?: string;
   textColor?: string;
   permToCheck?: string;
+  hasCircle?: boolean;
+  fill?: string;
+  strokeColor?: string;
+  buttonIcon?: React.ReactElement;
 }

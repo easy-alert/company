@@ -1,5 +1,5 @@
 export interface IIconButton {
-  icon: string;
+  icon: ReactNode;
   gap?: string;
   color?: string;
   label?: string;
@@ -17,4 +17,6 @@ export interface IIconButton {
   loading?: boolean;
   tabIndex?: number;
   permToCheck?: string;
+  hasCircle?: boolean;
+  fill?: string;
 }

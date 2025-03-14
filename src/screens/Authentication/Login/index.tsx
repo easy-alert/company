@@ -7,14 +7,14 @@ import { Formik, Form } from 'formik';
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // SERVICES
-import { Api } from '@services/api';
+import { loginCompany } from '@services/apis/loginCompany';
 
 // GLOBAL COMPONENTS
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
 
 // GLOBAL UTILS
-import { applyMask, catchHandler, unMask } from '@utils/functions';
+import { applyMask, unMask } from '@utils/functions';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -42,6 +42,31 @@ export const Login = () => {
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
+  const handleLoginCompany = async (data: IFormData) => {
+    setOnQuery(true);
+    setShowPassword(false);
+
+    let formattedLogin = data.login;
+
+    if (data.login.match(/^\(\d{2}\) \d{5}-\d{4}$/)) {
+      formattedLogin = unMask(data.login);
+    }
+
+    try {
+      const responseData = await loginCompany({
+        login: formattedLogin,
+        password: data.password,
+      });
+
+      if (responseData) {
+        signin(responseData);
+        navigate('/home');
+      }
+    } finally {
+      setOnQuery(false);
+    }
+  };
+
   return (
     <Style.Background>
       <img src={icon.logoTextWhite} alt="" />
@@ -49,29 +74,7 @@ export const Login = () => {
       <Formik
         initialValues={{ email: '', login: '', password: '' }}
         validationSchema={schema}
-        onSubmit={async (data: IFormData) => {
-          setOnQuery(true);
-          setShowPassword(false);
-
-          let formattedLogin = data.login;
-
-          if (data.login.match(/^\(\d{2}\) \d{5}-\d{4}$/)) {
-            formattedLogin = unMask(data.login);
-          }
-
-          await Api.post('/auth/login', {
-            login: formattedLogin,
-            password: data.password,
-          })
-            .then((res) => {
-              signin(res.data);
-              navigate('/home');
-            })
-            .catch((err) => {
-              setOnQuery(false);
-              catchHandler(err);
-            });
-        }}
+        onSubmit={async (data: IFormData) => handleLoginCompany(data)}
       >
         {({ values, setFieldValue, errors, touched }) => (
           <>

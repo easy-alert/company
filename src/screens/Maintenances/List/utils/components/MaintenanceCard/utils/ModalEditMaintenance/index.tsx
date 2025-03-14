@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // COMPONENTS
-import { Button } from '../../../../../../../../components/Buttons/Button';
-import { FormikTextArea } from '../../../../../../../../components/Form/FormikTextArea';
-import { FormikInput } from '../../../../../../../../components/Form/FormikInput';
-import { Modal } from '../../../../../../../../components/Modal';
-import { FormikSelect } from '../../../../../../../../components/Form/FormikSelect';
+import { Button } from '@components/Buttons/Button';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Modal } from '@components/Modal';
+import { FormikSelect } from '@components/Form/FormikSelect';
 
 // STYLES
 import * as Style from './styles';
@@ -121,6 +121,7 @@ export const ModalEditMaintenance = ({
                   selectPlaceholderValue={values.frequencyTimeInterval}
                   name="frequencyTimeInterval"
                   label="Unidade"
+                  arrowColor="primary"
                   error={
                     touched.frequencyTimeInterval && errors.frequencyTimeInterval
                       ? errors.frequencyTimeInterval
@@ -183,6 +184,7 @@ export const ModalEditMaintenance = ({
                   selectPlaceholderValue={values.periodTimeInterval}
                   name="periodTimeInterval"
                   label="Unidade"
+                  arrowColor="primary"
                   error={
                     touched.periodTimeInterval && errors.periodTimeInterval
                       ? errors.periodTimeInterval
@@ -206,6 +208,7 @@ export const ModalEditMaintenance = ({
                 selectPlaceholderValue={values.priorityName}
                 name="priorityName"
                 label="Prioridade"
+                arrowColor="primary"
                 error={touched.priorityName && errors.priorityName ? errors.priorityName : null}
               >
                 <option value="" disabled>
@@ -273,6 +276,7 @@ export const ModalEditMaintenance = ({
                   <PopoverButton
                     actionButtonBgColor={theme.color.actionDanger}
                     borderless
+                    textColor="actionDanger"
                     type="Button"
                     label="Excluir"
                     message={{
@@ -292,7 +296,13 @@ export const ModalEditMaintenance = ({
                     }}
                   />
                 )}
-                <Button label="Salvar" type="submit" loading={onQuery} disable={onFileQuery} />
+                <Button
+                  label="Salvar"
+                  type="submit"
+                  loading={onQuery}
+                  disable={onFileQuery}
+                  bgColor="primary"
+                />
               </Style.ButtonContainer>
             </Form>
           </Style.FormContainer>

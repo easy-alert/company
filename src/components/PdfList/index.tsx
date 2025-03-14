@@ -8,6 +8,7 @@ import { dateTimeFormatter } from '@utils/functions';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
@@ -70,7 +71,7 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
                       <IconButton
                         disabled={status !== 'finished'}
                         label="Visualizar"
-                        icon={icon.pdfLogo}
+                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         onClick={() => {
                           window.open(url, '_blank');
                         }}

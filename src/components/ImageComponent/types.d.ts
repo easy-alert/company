@@ -6,4 +6,5 @@ export interface IImg {
   height?: string;
   alt?: string;
   rotate?: string;
+  hasCircle?: boolean;
 }

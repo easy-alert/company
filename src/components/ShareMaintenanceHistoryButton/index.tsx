@@ -2,12 +2,17 @@
 import { useState } from 'react';
 import { Popover, ArrowContainer } from 'react-tiny-popover';
 import { toast } from 'react-toastify';
+
+import { Button } from '@components/Buttons/Button';
+import { IconButton } from '@components/Buttons/IconButton';
+import { TextArea } from '@components/Inputs/TextArea';
+
+import { theme } from '@styles/theme';
+
+import IconX from '@assets/icons/IconX';
+import IconShare from '@assets/icons/IconShare';
+
 import * as Style from './styles';
-import { theme } from '../../styles/theme';
-import { IconButton } from '../Buttons/IconButton';
-import { icon } from '../../assets/icons';
-import { Button } from '../Buttons/Button';
-import { TextArea } from '../Inputs/TextArea';
 
 export const ShareMaintenanceHistoryButton = ({
   maintenanceHistoryId,
@@ -65,6 +70,7 @@ export const ShareMaintenanceHistoryButton = ({
       // eslint-disable-next-line react/no-unstable-nested-components
       content={({ position, childRect, popoverRect }) => {
         const arrowSize = 10;
+
         return (
           <Style.AnimationDiv>
             <ArrowContainer
@@ -93,13 +99,15 @@ export const ShareMaintenanceHistoryButton = ({
                     <h3>
                       Compartilhar manutenção
                       <IconButton
+                        icon={<IconX strokeColor="primary" />}
                         onClick={() => {
                           setIsPopoverOpen(false);
                         }}
-                        icon={icon.x}
                       />
                     </h3>
+
                     <Style.Hr />
+
                     <TextArea
                       style={{ wordBreak: 'break-all' }}
                       label="Link de compartilhamento"
@@ -107,7 +115,9 @@ export const ShareMaintenanceHistoryButton = ({
                       readOnly
                       height="70px"
                     />
+
                     <Button
+                      bgColor="primary"
                       style={{ marginTop: '16px' }}
                       center
                       label="Copiar link"
@@ -126,7 +136,10 @@ export const ShareMaintenanceHistoryButton = ({
       }}
     >
       <Style.ButtonContainer>
-        <IconButton icon={icon.uploadLine} onClick={togglePopOver} />
+        <IconButton
+          icon={<IconShare strokeColor="primary" strokeWidth="2" />}
+          onClick={togglePopOver}
+        />
       </Style.ButtonContainer>
     </Popover>
   );
