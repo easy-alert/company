@@ -125,6 +125,7 @@ export const MaintenanceCard = ({
 
             <Style.AdditionalInformationsWrapper>
               <Button
+                bgColor="primary"
                 label="Informações adicionais"
                 onClick={() => {
                   handleSelectedMaintenance({
