@@ -74,6 +74,7 @@ export interface ITicketFilterNames {
 
 export const TicketReports = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
@@ -242,7 +243,7 @@ export const TicketReports = () => {
           filter.buildings?.length === 0
             ? 'Todas'
             : filter.buildings
-                .map((building) => buildingsForSelect.find((b) => b.nanoId === building)?.name)
+                .map((building) => buildingsForSelect.find((b) => b.id === building)?.name)
                 .join(', '),
         placesNames:
           filter.places?.length === 0
@@ -345,9 +346,9 @@ export const TicketReports = () => {
 
                     {buildingsForSelect.map((building) => (
                       <option
-                        value={building.nanoId}
-                        key={building.nanoId}
-                        disabled={filter.buildings.some((b) => b === building.nanoId)}
+                        value={building.id}
+                        key={building.id}
+                        disabled={filter.buildings.some((b) => b === building.id)}
                       >
                         {building.name}
                       </option>
@@ -499,10 +500,10 @@ export const TicketReports = () => {
                       <IconButton
                         label="Exportar"
                         icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
+                        disabled={loading || tickets.length === 0}
                         onClick={() => {
                           //
                         }}
-                        disabled={loading || tickets.length === 0}
                       />
                     </CSVLink> */}
 
@@ -510,8 +511,8 @@ export const TicketReports = () => {
                       icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                       label="Exportar"
                       size="20px"
-                      onClick={() => handleGenerateTicketReportPDF()}
                       disabled={loading || tickets.length === 0}
+                      onClick={() => handleGenerateTicketReportPDF()}
                     />
 
                     <Button
@@ -542,7 +543,7 @@ export const TicketReports = () => {
                       filter.buildings?.map((building) => (
                         <ListTag
                           key={building}
-                          label={buildingsForSelect.find((b) => b.nanoId === building)?.name || ''}
+                          label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
                           color="white"
                           backgroundColor="primaryM"
                           fontWeight={500}
