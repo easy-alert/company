@@ -15,16 +15,31 @@ export function ThemeContextProvider({ children }: { children: ReactNode }) {
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   const updateThemeColor = (color = '#B21D1D') => {
-    const newTheme = {
-      ...currentTheme,
+    let newTheme = currentTheme;
 
-      color: {
-        ...currentTheme.color,
-        primary: color,
-        primaryM: transformColor(color, 0, 0, 10),
-        primaryL: transformColor(color, 0, 0, 20),
-      },
-    };
+    if (!color || color === '#B21D1D') {
+      newTheme = {
+        ...currentTheme,
+
+        color: {
+          ...currentTheme.color,
+          primary: '#B21D1D',
+          primaryM: '#E66666',
+          primaryL: '#F1A7A7',
+        },
+      };
+    } else {
+      newTheme = {
+        ...currentTheme,
+
+        color: {
+          ...currentTheme.color,
+          primary: color,
+          primaryM: transformColor(color, 0, 0, 10),
+          primaryL: transformColor(color, 0, 0, 20),
+        },
+      };
+    }
 
     setCurrentTheme(newTheme);
   };

@@ -37,6 +37,7 @@ import IconPlus from '@assets/icons/IconPlus';
 import type { ITicket } from '@customTypes/ITicket';
 
 // COMPONENTS
+import { useQuery } from '@hooks/useQuery';
 import ModalTicketDetails from './ModalTicketDetails';
 import { ModalCreateTicket } from './ModalCreateTicket';
 
@@ -60,9 +61,10 @@ export interface ITicketFilter {
 }
 
 function TicketsPage() {
+  const query = useQuery();
   const { account } = useAuthContext();
-  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
+  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
@@ -226,6 +228,13 @@ function TicketsPage() {
   const handleCreateTicketModal = (modalState: boolean) => {
     setCreateTicketModal(modalState);
   };
+
+  useEffect(() => {
+    if (query.get('ticketId')) {
+      setSelectedTicketId(query.get('ticketId') || '');
+      handleTicketDetailsModal(true);
+    }
+  }, []);
 
   useEffect(() => {
     handleGetTickets();

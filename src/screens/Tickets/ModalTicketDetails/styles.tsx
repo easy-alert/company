@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 
-import { theme } from '@styles/theme';
-
 export const TicketDetailsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const TicketDetailsTitle = styled.h3`
@@ -18,7 +16,7 @@ export const TicketDetailsColumnContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 
   @media (max-width: 380px) {
     grid-template-columns: 1fr;
@@ -29,8 +27,8 @@ export const TicketDetailsDescriptionContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  margin-top: -${theme.size.xsm};
-  gap: ${theme.size.xxsm};
+  margin-top: -${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 `;
 
 export const TicketDetailsColumnContent = styled.div`
@@ -39,7 +37,7 @@ export const TicketDetailsColumnContent = styled.div`
 
   width: 100%;
 
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xxsm};
 `;
 
 export const TicketDetailsImagesContainer = styled.div`
@@ -48,7 +46,7 @@ export const TicketDetailsImagesContainer = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
 
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketDetailsImagesContent = styled.div`
@@ -56,7 +54,7 @@ export const TicketDetailsImagesContent = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
 
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketFinalSolutionContainer = styled.div`
@@ -68,13 +66,13 @@ export const TicketFinalSolutionContent = styled.div`
   display: flex;
   flex-direction: row;
   align-items: end;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketSignatureContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketSignatureHeader = styled.div`
@@ -82,7 +80,7 @@ export const TicketSignatureHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  margin-bottom: ${theme.size.xsm};
+  margin-bottom: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketDetailsRowLabel = styled.span`
@@ -103,33 +101,33 @@ export const TicketDetailsDismissedContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  margin-top: ${theme.size.xsm};
-  gap: ${theme.size.xsm};
+  margin-top: ${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const TicketDetailsDismissedContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
 
-  margin-top: ${theme.size.sm};
+  margin-top: ${({ theme }) => theme.size.sm};
 `;
 
 // styles for DismissTicket.tsx
 export const DismissTicketContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const DismissTicketText = styled.span`
   font-weight: 400;
   font-size: 14px;
   line-height: 16px;
-  margin-bottom: ${theme.size.xsm};
+  margin-bottom: ${({ theme }) => theme.size.xsm};
 `;

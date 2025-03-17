@@ -271,7 +271,7 @@ export const ModalCreateAndLinkSupplier = ({
                 placeholder="Ex: www.easyalert.com.br"
               />
 
-              <Button center label="Cadastrar" type="submit" loading={onQuery} />
+              <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />
             </Form>
           </Style.FormContainer>
         )}
