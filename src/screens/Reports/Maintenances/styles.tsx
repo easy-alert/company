@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const Counts = styled.div`
   display: flex;

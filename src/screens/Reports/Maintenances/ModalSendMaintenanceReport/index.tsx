@@ -434,6 +434,7 @@ export const ModalSendMaintenanceReport = ({
               <>
                 {!onModalQuery && (
                   <PopoverButton
+                    actionButtonBgColor="primary"
                     disabled={onFileQuery || onImageQuery || onModalQuery}
                     actionButtonClick={() => {
                       requestToggleInProgress({
@@ -471,6 +472,7 @@ export const ModalSendMaintenanceReport = ({
                         onThenRequest: async () => onThenRequest(),
                       });
                     }}
+                    actionButtonBgColor="primary"
                     textColor={theme.color.actionBlue}
                     borderless
                     label="Salvar progresso"
@@ -497,6 +499,7 @@ export const ModalSendMaintenanceReport = ({
                       onThenRequest: async () => onThenRequest(),
                     });
                   }}
+                  actionButtonBgColor="primary"
                   label="Finalizar manutenção"
                   bgColor="primary"
                   message={{

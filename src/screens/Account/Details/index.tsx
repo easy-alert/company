@@ -264,7 +264,7 @@ export const AccountDetails = () => {
                       hiddenIconButtonLabel
                       buttonIcon={icon.yellowAlert}
                       buttonIconSize="16px"
-                      actionButtonBgColor={theme.color.primary}
+                      actionButtonBgColor="primary"
                       type="IconButton"
                       message={{
                         title: 'Deseja reenviar o e-mail de confirmação?',
@@ -285,7 +285,7 @@ export const AccountDetails = () => {
                       hiddenIconButtonLabel
                       buttonIcon={icon.yellowAlert}
                       buttonIconSize="16px"
-                      actionButtonBgColor={theme.color.primary}
+                      actionButtonBgColor="primary"
                       type="IconButton"
                       message={{
                         title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
@@ -355,7 +355,7 @@ export const AccountDetails = () => {
                               hiddenIconButtonLabel
                               buttonIcon={icon.yellowAlert}
                               buttonIconSize="16px"
-                              actionButtonBgColor={theme.color.primary}
+                              actionButtonBgColor="primary"
                               type="IconButton"
                               message={{
                                 title: 'Deseja reenviar o e-mail de confirmação?',
@@ -383,7 +383,7 @@ export const AccountDetails = () => {
                               hiddenIconButtonLabel
                               buttonIcon={icon.yellowAlert}
                               buttonIconSize="16px"
-                              actionButtonBgColor={theme.color.primary}
+                              actionButtonBgColor="primary"
                               type="IconButton"
                               message={{
                                 title: 'Deseja reenviar a mensagem de confirmação no WhatsApp?',
