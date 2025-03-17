@@ -71,7 +71,7 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
                       <IconButton
                         disabled={status !== 'finished'}
                         label="Visualizar"
-                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                        icon={<IconPdfLogo fillColor="primary" />}
                         onClick={() => {
                           window.open(url, '_blank');
                         }}

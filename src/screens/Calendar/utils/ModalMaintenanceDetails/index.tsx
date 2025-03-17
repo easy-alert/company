@@ -297,6 +297,7 @@ export const ModalMaintenanceDetails = ({
           <Style.ButtonContainer>
             {maintenance.MaintenanceReport.length > 0 && (
               <Button
+                bgColor="primary"
                 label="Editar relato"
                 onClick={() => {
                   handleModalEditReport(true);
