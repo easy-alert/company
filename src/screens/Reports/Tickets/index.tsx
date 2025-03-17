@@ -490,7 +490,7 @@ export const TicketReports = () => {
 
                 <Style.FilterWrapperFooter>
                   <Style.FilterButtonWrapper>
-                    <CSVLink
+                    {/* <CSVLink
                       data={csvData}
                       headers={csvHeaders}
                       filename={`Relatório de chamados ${new Date().toLocaleDateString('pt-BR')}`}
@@ -498,16 +498,16 @@ export const TicketReports = () => {
                     >
                       <IconButton
                         label="Exportar"
-                        icon={<IconCsvLogo strokeColor="primary" />}
+                        icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
                         onClick={() => {
                           //
                         }}
                         disabled={loading || tickets.length === 0}
                       />
-                    </CSVLink>
+                    </CSVLink> */}
 
                     <IconButton
-                      icon={<IconPdfLogo strokeColor="primary" />}
+                      icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                       label="Exportar"
                       size="20px"
                       onClick={() => handleGenerateTicketReportPDF()}

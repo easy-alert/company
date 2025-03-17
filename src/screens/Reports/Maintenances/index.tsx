@@ -521,7 +521,7 @@ export const MaintenanceReports = () => {
                   </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
-                      <CSVLink
+                      {/* <CSVLink
                         data={csvData}
                         headers={csvHeaders}
                         filename={`Relatório de manutenções ${new Date().toLocaleDateString(
@@ -531,17 +531,17 @@ export const MaintenanceReports = () => {
                       >
                         <IconButton
                           label="Exportar"
-                          icon={<IconCsvLogo fillColor="primary" />}
+                          icon={<IconCsvLogo fillColor="" />}
                           disabled={maintenances.length === 0}
                           onClick={() => {
                             //
                           }}
                         />
-                      </CSVLink>
+                      </CSVLink> */}
 
                       <IconButton
                         label="Exportar"
-                        icon={<IconPdfLogo fillColor="primary" />}
+                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         disabled={maintenances.length === 0 || onPdfQuery}
                         onClick={() => {
                           requestPdf();
