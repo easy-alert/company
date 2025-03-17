@@ -320,7 +320,7 @@ export const ChecklistReports = () => {
 
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
-                      <CSVLink
+                      {/* <CSVLink
                         data={csvData}
                         headers={csvHeaders}
                         filename={`Relatório de checklists ${new Date().toLocaleDateString(
@@ -330,16 +330,16 @@ export const ChecklistReports = () => {
                       >
                         <IconButton
                           label="Exportar"
-                          icon={<IconCsvLogo strokeColor="primary" />}
+                          icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
                           onClick={() => {
                             //
                           }}
                           disabled={checklists.length === 0}
                         />
-                      </CSVLink>
+                      </CSVLink> */}
 
                       <IconButton
-                        icon={<IconPdfLogo strokeColor="primary" />}
+                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         label="Exportar"
                         onClick={() => {
                           setModalPrintReportOpen(true);

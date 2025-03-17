@@ -293,6 +293,7 @@ export const ModalChecklistDetails = ({
           <Style.ButtonContainer>
             {checklist?.status === 'completed' && (
               <Button
+                bgColor="primary"
                 label="Editar relato"
                 loading={onQuery}
                 disable={onImageQuery}
@@ -322,6 +323,7 @@ export const ModalChecklistDetails = ({
                 disabled={onImageQuery}
                 type="Button"
                 label="Concluir"
+                bgColor="primary"
                 message={{
                   title: 'Deseja concluir este checklist?',
                   content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',

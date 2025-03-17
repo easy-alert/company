@@ -22,6 +22,7 @@ import { applyMask, catchHandler } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons';
+import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -273,7 +274,7 @@ export const SupplierDetails = () => {
             <IconButton
               disabled={onQuery}
               hideLabelOnMedia
-              icon={icon.edit}
+              icon={<IconEdit strokeColor="primary" />}
               hasCircle
               label="Editar"
               onClick={() => {
