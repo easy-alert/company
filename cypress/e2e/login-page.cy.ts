@@ -1,10 +1,11 @@
 
-describe.only('Tests in Login Page', () => {
+describe('Tests in Login Page', () => {
   beforeEach(() => {
     cy.visit('/login');
   })
   it('should visit and show the login page', () => {
     cy.contains('Login/Company').should('be.visible');
+    cy.findByText('Login/Company').should('be.visible')
   });
 
   it('should fill the login form', () => {
@@ -17,37 +18,40 @@ describe.only('Tests in Login Page', () => {
       cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
       cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
       cy.findByRole('button').should('be.visible').click()
-      cy.url().should('not.include', '/login');
+      // cy.url().should('not.include', '/login');
+      cy.location("pathname").should('eq', '/home')
     });
 
     it('should show an error message when the login is invalid', () => {
-      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
+      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('backofice@gmail.com')
+      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
       cy.get('button').contains('Login').click();
-      cy.contains('Login inválido').should('be.visible');
+      cy.findByText('E-mail ou senha incorretos.').should('be.visible')
     });
 
     it('should show an error message when the password is invalid', () => {
-      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
+      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
+      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('54321');
       cy.get('button').contains('Login').click();
-      cy.contains('Senha incorreta').should('be.visible');
+      cy.findByText('E-mail ou senha incorretos.').should('be.visible')
     });
 
     it('should show an error message when the login and password are invalid', () => {
-      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
-      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
+      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('backofice@gmail.com')
+      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('54321');
       cy.get('button').contains('Login').click();
-      cy.contains('Credenciais inválidas').should('be.visible');
+      cy.findByText('E-mail ou senha incorretos.').should('be.visible')
     });
   });
 
   describe('Redirect to other page', () => {
     it('should redirect to the register page', () => {
-      cy.get('button').contains('Cadastrar').click();
+      cy.findByRole('link', {name:/Cadastrar/i} ).should('be.visible').click();
       cy.url().should('include', '/register');
     });
 
     it('should redirect to the forgot password page', () => {
-      cy.contains('Recuperar senha').click();
+      cy.findByRole('link', {name:/Recuperar senha/i} ).should('be.visible').click();
       cy.url().should('include', '/passwordrecover/sendemail');
     });
   });
