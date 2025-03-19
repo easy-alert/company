@@ -69,7 +69,7 @@ export const Login = () => {
 
   return (
     <Style.Background>
-      <img src={icon.logoTextWhite} alt="" />
+      <img src={icon.logoTextWhite} alt="" data-testid="logo-img" />
 
       <Formik
         initialValues={{ email: '', login: '', password: '' }}
@@ -101,6 +101,7 @@ export const Login = () => {
                     error={touched.login && errors.login ? errors.login : null}
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
+                    data-testid="login-input"
                   />
 
                   <FormikInput
@@ -113,6 +114,7 @@ export const Login = () => {
                     error={touched.password && errors.password ? errors.password : null}
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
+                    data-testid="password-input"
                   />
 
                   <Style.AccordionContainer>
@@ -140,17 +142,29 @@ export const Login = () => {
                 </Style.InputWrapper>
 
                 <Style.ButtonContainer loading={+onQuery}>
-                  <Link style={{ pointerEvents: onQuery ? 'none' : 'auto' }} to="/register">
+                  <Link
+                    style={{ pointerEvents: onQuery ? 'none' : 'auto' }}
+                    to="/register"
+                    data-testid="register-link"
+                  >
                     Cadastrar
                   </Link>
 
-                  <Button label="Login" type="submit" loading={onQuery} />
+                  <Button
+                    label="Login"
+                    type="submit"
+                    loading={onQuery}
+                    data-testid="login-button"
+                  />
                 </Style.ButtonContainer>
               </Form>
             </Style.LoginContainer>
 
             <p className="p2">
-              Esqueceu sua senha? <Link to="/passwordrecover/sendemail">Recuperar senha</Link>
+              Esqueceu sua senha?{' '}
+              <Link to="/passwordrecover/sendemail" data-testid="recover-password">
+                Recuperar senha
+              </Link>
             </p>
           </>
         )}
