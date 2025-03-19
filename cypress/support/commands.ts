@@ -1,6 +1,14 @@
-/// <reference types="cypress" />
+/* eslint-disable @typescript-eslint/no-namespace */
 
-import '@testing-library/cypress/add-commands'
+// @ts-check
+// <reference path="../global.d.ts" />
+
+import '@testing-library/cypress/add-commands';
+
+Cypress.Commands.add('getByTestId', (selector, ...args) =>
+  cy.get(`[data-testid="${selector}"]`, ...args),
+);
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -37,3 +45,19 @@ import '@testing-library/cypress/add-commands'
 //     }
 //   }
 // }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to select DOM element by data-testid attribute
+       * @example cy.getByTestId('selector')
+       * @param {string} selector - data-testid attribute value
+       * @returns {typeof getByTestId}
+       * @memberof Cypress.Chainable
+       * @see https://testing-library.com/docs/queries/bytestid/
+       */
+      getByTestId(selector: string): Chainable<JQuery<HTMLElement>>;
+    }
+  }
+}
