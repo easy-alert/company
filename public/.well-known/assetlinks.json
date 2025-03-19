@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.easyalert.app",
+      "sha256_cert_fingerprints": [
+        "99:B6:EB:64:23:B3:4E:AD:A0:37:FF:49:C3:3E:92:0A:A8:05:2B:E2:89:EE:96:65:AD:6D:6E:D8:AF:AD:E1:CC"
+      ]
+    }
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "JAW8225PF4.com.easyalert.app",
+        "paths": [
+          "/*"
+        ]
+      }
+    ]
+  },
+  "activitycontinuation": {
+    "apps": [
+      "JAW8225PF4.com.easyalert.app"
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "JAW8225PF4.com.easyalert.app"
+    ]
+  }
+}
