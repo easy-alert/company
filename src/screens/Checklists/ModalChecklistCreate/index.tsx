@@ -262,7 +262,7 @@ export const ModalChecklistCreate = ({
 
               <Select
                 arrowColor="primary"
-                label="Responsável *"
+                label="Usuário responsável *"
                 value={selectedResponsible}
                 onChange={handleResponsibleChange}
               >

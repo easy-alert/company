@@ -10,7 +10,7 @@ interface IDeleteChecklist {
 }
 
 export async function deleteChecklist({ checklistId, deleteMode }: IDeleteChecklist) {
-  const uri = `/checklists/v2/${checklistId}/${deleteMode}`;
+  const uri = `/checklists/${checklistId}/${deleteMode}`;
 
   try {
     const response = await Api.delete(uri);

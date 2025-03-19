@@ -212,9 +212,9 @@ export const ModalChecklistDetails = ({
   return (
     <Modal
       title="Enviar relato"
-      deleteButton={checklistDetails?.status !== 'completed'}
       setModal={(modalState) => handleModals('modalChecklistDetails', modalState)}
-      handleDelete={(modalState) => setModalDeleteButton(modalState)}
+      // deleteButton={checklistDetails?.status !== 'completed'}
+      // handleDelete={(modalState) => setModalDeleteButton(modalState)}
     >
       {loading ? (
         <LoadingWrapper minHeight="300px">
@@ -350,9 +350,13 @@ export const ModalChecklistDetails = ({
                     onClick={() => handleUpdateChecklist(checklistDetails.status!)}
                   />
                 </div>
+
                 <Button
                   bgColor="primary"
                   label="Finalizar checklist"
+                  disable={checklistDetails?.checklistItem?.some(
+                    (item) => item.status === 'pending',
+                  )}
                   onClick={() => handleUpdateChecklist('completed')}
                 />
               </>
