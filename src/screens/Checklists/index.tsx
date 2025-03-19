@@ -225,7 +225,6 @@ export const Checklists = () => {
                   <ChecklistRowComponent
                     key={checklist.id}
                     checklist={checklist}
-                    timeIntervals={timeIntervals}
                     buildingsForSelect={buildingsForSelect}
                     handleModals={handleModals}
                     handleSelectedChecklistId={handleSelectedChecklistId}
