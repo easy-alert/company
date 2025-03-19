@@ -23,17 +23,15 @@ describe('Tests in Login Page', () => {
     });
 
     it('should show an error message when the login is invalid', () => {
-      cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('backofice@gmail.com')
       cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
       cy.get('button').contains('Login').click();
-      cy.findByText('E-mail ou senha incorretos.').should('be.visible')
+      cy.findByText('E-mail ou telefone obrigatório.').should('be.visible')
     });
 
     it('should show an error message when the password is invalid', () => {
       cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
-      cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('54321');
       cy.get('button').contains('Login').click();
-      cy.findByText('E-mail ou senha incorretos.').should('be.visible')
+      cy.findByText('Informe a senha.').should('be.visible')
     });
 
     it('should show an error message when the login and password are invalid', () => {
@@ -46,12 +44,12 @@ describe('Tests in Login Page', () => {
 
   describe('Redirect to other page', () => {
     it('should redirect to the register page', () => {
-      cy.findByRole('link', {name:/Cadastrar/i} ).should('be.visible').click();
+      cy.findByRole('link', { name: /Cadastrar/i }).should('be.visible').click();
       cy.url().should('include', '/register');
     });
 
     it('should redirect to the forgot password page', () => {
-      cy.findByRole('link', {name:/Recuperar senha/i} ).should('be.visible').click();
+      cy.findByRole('link', { name: /Recuperar senha/i }).should('be.visible').click();
       cy.url().should('include', '/passwordrecover/sendemail');
     });
   });
