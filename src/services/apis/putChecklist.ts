@@ -3,20 +3,33 @@ import { Api } from '@services/api';
 
 import { handleToastify } from '@utils/toastifyResponses';
 
+type TUpdateMode = 'this' | 'all' | 'thisAndFollowing' | '';
+
 interface IPutChecklist {
   checklistId: string;
-  checklistItems: IChecklistItem[];
-  status: string;
+  userId?: string;
+  checklistItems?: IChecklistItem[];
+  status?: string;
   images?: any[];
+  updateMode?: TUpdateMode;
 }
 
-export async function putChecklist({ checklistId, checklistItems, status, images }: IPutChecklist) {
-  const uri = `/checklists/v2/${checklistId}`;
+export async function putChecklist({
+  checklistId,
+  userId,
+  checklistItems,
+  status,
+  images,
+  updateMode,
+}: IPutChecklist) {
+  const uri = `/checklists/${checklistId}`;
 
   const body = {
+    userId,
     checklistItems,
     status,
     images,
+    updateMode,
   };
 
   try {
