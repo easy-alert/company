@@ -6,9 +6,6 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { ImageComponent } from '@components/ImageComponent';
 import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
 
-// GLOBAL UTILS
-import { ITimeInterval } from '@utils/types';
-
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
@@ -20,7 +17,6 @@ import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
 import type { IChecklist } from '@customTypes/IChecklist';
 
 // COMPONENTS
-import { ModalChecklistDetails } from './ModalChecklistDetails';
 import { ModalDeleteChecklist } from './ModalDeleteChecklist';
 import { ModalUpdateChecklist } from './ModalUpdateChecklist';
 
@@ -31,7 +27,6 @@ import * as Style from './styles';
 
 interface IChecklistRow {
   checklist: IChecklist & { totalItems?: number; completedItems?: number };
-  timeIntervals: ITimeInterval[];
   buildingsForSelect: IBuildingForSelect[];
   handleModals: (modal: string, modalState: boolean) => void;
   handleSelectedChecklistId: (checklistId: string) => void;
@@ -40,7 +35,6 @@ interface IChecklistRow {
 
 export const ChecklistRowComponent = ({
   checklist,
-  timeIntervals,
   buildingsForSelect,
   handleModals,
   handleSelectedChecklistId,
@@ -48,7 +42,6 @@ export const ChecklistRowComponent = ({
 }: IChecklistRow) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
-  const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [modalDeleteChecklistOpen, setModalDeleteChecklistOpen] = useState(false);
   const [modalUpdateChecklistOpen, setModalUpdateChecklistOpen] = useState(false);
   const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
@@ -80,14 +73,6 @@ export const ChecklistRowComponent = ({
 
   return (
     <>
-      {modalChecklistDetailsOpen && (
-        <ModalChecklistDetails
-          checklistId={checklist.id!}
-          setModal={setModalChecklistDetailsOpen}
-          onThenRequest={onThenRequest}
-        />
-      )}
-
       {modalDeleteChecklistOpen && (
         <ModalDeleteChecklist
           onThenRequest={onThenRequest}
@@ -98,10 +83,9 @@ export const ChecklistRowComponent = ({
 
       {modalUpdateChecklistOpen && (
         <ModalUpdateChecklist
-          setModal={setModalUpdateChecklistOpen}
-          timeIntervals={timeIntervals}
-          onThenRequest={onThenRequest}
           checklistId={checklist.id!}
+          onThenRequest={onThenRequest}
+          setModal={setModalUpdateChecklistOpen}
         />
       )}
 
