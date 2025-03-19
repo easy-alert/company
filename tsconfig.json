@@ -24,7 +24,8 @@
     "importsNotUsedAsValues": "remove",
 
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
+    "preserveValueImports": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
