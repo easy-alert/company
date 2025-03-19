@@ -8,9 +8,15 @@ describe('Tests in Login Page', () => {
     cy.findByText('Login/Company').should('be.visible')
   });
 
-  it('should fill the login form', () => {
-    cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type('company@gmail.com')
-    cy.findByPlaceholderText('Insira sua senha').should('be.visible').type('123123123');
+  it.only('should fill the login form', () => {
+    const email = 'company@gmail.com';
+    const senha = '123123123';
+
+    cy.findByPlaceholderText('Insira seu e-mail ou telefone').should('be.visible').type(email)
+      .should('have.value', email); 
+    cy.findByPlaceholderText('Insira sua senha').should('be.visible').type(senha)
+      .should('have.value', senha); 
+
   });
 
   describe('Submit the Login Form', () => {
@@ -20,6 +26,7 @@ describe('Tests in Login Page', () => {
       cy.findByRole('button').should('be.visible').click()
       // cy.url().should('not.include', '/login');
       cy.location("pathname").should('eq', '/home')
+      cy.findByText(/Bem vindo\(a\), .+!/).should('be.visible');
     });
 
     it('should show an error message when the login is invalid', () => {
@@ -46,11 +53,13 @@ describe('Tests in Login Page', () => {
     it('should redirect to the register page', () => {
       cy.findByRole('link', { name: /Cadastrar/i }).should('be.visible').click();
       cy.url().should('include', '/register');
+      cy.findByPlaceholderText('Ex: João Silva').should('be.visible');
     });
 
     it('should redirect to the forgot password page', () => {
       cy.findByRole('link', { name: /Recuperar senha/i }).should('be.visible').click();
       cy.url().should('include', '/passwordrecover/sendemail');
+      cy.findByRole('heading', { name: /Recuperar senha/i }).should('be.visible');
     });
   });
 });
