@@ -6,6 +6,9 @@ import { Formik, Form } from 'formik';
 // CONTEXT
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
+// HOOKS
+import { useQuery } from '@hooks/useQuery';
+
 // SERVICES
 import { loginCompany } from '@services/apis/loginCompany';
 
@@ -35,12 +38,16 @@ import type { IFormData } from './types';
 export const Login = () => {
   const { signin } = useAuthContext();
 
+  const query = useQuery();
+
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const previousLocation = query.get('location');
 
   const handleLoginCompany = async (data: IFormData) => {
     setOnQuery(true);
@@ -60,7 +67,7 @@ export const Login = () => {
 
       if (responseData) {
         signin(responseData);
-        navigate('/home');
+        navigate(previousLocation || '/home');
       }
     } finally {
       setOnQuery(false);
