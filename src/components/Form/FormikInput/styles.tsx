@@ -107,6 +107,6 @@ export const PasswordDiv = styled.div`
   > :nth-child(2) {
     position: absolute;
     top: 6px;
-    right: 16px;
+    right: 10px;
   }
 `;

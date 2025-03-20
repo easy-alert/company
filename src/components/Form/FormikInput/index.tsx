@@ -1,15 +1,23 @@
-// LIBS
+// REACT
 import { forwardRef, ForwardRefRenderFunction, useState } from 'react';
+
+// LIBS
 import { Field } from 'formik';
 
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import IconEye from '@assets/icons/IconEye';
+
+// COMPONENTS
+import { IconButton } from '../../Buttons/IconButton';
+
 // TYPES
-import { IInput } from './utils/types';
+import type { IInput } from './utils/types';
 
 // COMPONENTS
 import { ErrorMessage, InputContainer, PasswordDiv } from './styles';
-import { theme } from '../../../styles/theme';
-import { IconButton } from '../../Buttons/IconButton';
-import { icon } from '../../../assets/icons';
 
 const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
   {
@@ -31,15 +39,18 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
 
   return (
     <InputContainer
+      data-testid={`${name}-container`}
+      type={type}
       error={!!error}
       passwordPlaceholder={passwordPlaceholder}
-      labelColor={labelColor}
       typeDatePlaceholderValue={typeDatePlaceholderValue}
-      type={type}
+      labelColor={labelColor}
     >
       {label && <h6>{label}</h6>}
+
       <PasswordDiv>
         <Field
+          data-testid={`${name}-input`}
           max={type === 'date' && !max ? '9999-12-31' : max}
           type={showPassword ? 'text' : type}
           id={name}
@@ -49,16 +60,14 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
         />
         {passwordShowToggle && (
           <IconButton
-            icon={showPassword ? icon.eye : icon.eyeGray}
+            icon={<IconEye strokeColor={showPassword ? 'primary' : 'gray4'} />}
             size="20px"
-            onClick={() => {
-              setShowPassword((prevState) => !prevState);
-            }}
-            opacity="1"
+            onClick={() => setShowPassword((prevState) => !prevState)}
           />
         )}
       </PasswordDiv>
-      <ErrorMessage errorColor={errorColor}>
+
+      <ErrorMessage data-testid={`${name}-error`} errorColor={errorColor}>
         {!!error && <p className="p3">{error}</p>}
       </ErrorMessage>
     </InputContainer>
