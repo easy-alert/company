@@ -15,7 +15,6 @@ export const getMaintenancesByStatus = async (
     endDate: resetFilters ? '' : dashboardFilter.endDate,
     buildings: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.buildings),
     categories: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.categories),
-    responsible: resetFilters ? JSON.stringify([]) : JSON.stringify(dashboardFilter.responsible),
   };
 
   try {
