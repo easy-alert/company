@@ -20,7 +20,6 @@ describe('Tests in Login Page', () => {
       cy.getByTestId('login-input').should('be.visible').type('company@gmail.com');
       cy.getByTestId('password-input').should('be.visible').type('123123123');
       cy.getByTestId('login-button').should('be.visible').click();
-      // cy.url().should('not.include', '/login');
       cy.location('pathname').should('eq', '/home');
       cy.findByText(/Bem vindo\(a\), .+!/).should('be.visible');
     });
@@ -37,11 +36,11 @@ describe('Tests in Login Page', () => {
       cy.findByText('Informe a senha.').should('be.visible');
     });
 
-    it('should show an error message when the login and password are invalid', () => {
+    it.only('should show an error message when the login is invalid', () => {
       cy.getByTestId('login-input').should('be.visible').type('backofice@gmail.com');
       cy.getByTestId('password-input').should('be.visible').type('54321');
       cy.getByTestId('login-button').click();
-      cy.findByText('E-mail ou senha incorretos.').should('be.visible');
+      cy.checkToastMessage('error-toast', 'E-mail ou senha incorretos.');
     });
   });
 
@@ -52,7 +51,7 @@ describe('Tests in Login Page', () => {
       cy.findByPlaceholderText('Ex: João Silva').should('be.visible');
     });
 
-    it.only('should redirect to the forgot password page', () => {
+    it('should redirect to the forgot password page', () => {
       cy.getByTestId('recover-password').should('be.visible').click();
       cy.url().should('include', '/passwordrecover/sendemail');
       cy.findByRole('heading', { name: /Recuperar senha/i }).should('be.visible');
