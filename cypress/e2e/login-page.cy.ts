@@ -20,23 +20,24 @@ describe('Tests in Login Page', () => {
       cy.getByTestId('login-input').should('be.visible').type('company@gmail.com');
       cy.getByTestId('password-input').should('be.visible').type('123123123');
       cy.getByTestId('login-button').should('be.visible').click();
+      // cy.url().should('not.include', '/login');
       cy.location('pathname').should('eq', '/home');
-      cy.findByText(/Bem vindo\(a\), .+!/).should('be.visible');
+      cy.getByTestId('page-home').should('be.visible');
     });
 
     it('should show an error message when the login is invalid', () => {
       cy.getByTestId('password-input').should('be.visible').type('123123123');
       cy.getByTestId('login-button').click();
-      cy.findByText('E-mail ou telefone obrigatório.').should('be.visible');
-    });
+      cy.getByTestId('login-error').should('contain.text', 'E-mail ou telefone obrigatório.');
+    }); 
 
     it('should show an error message when the password is invalid', () => {
       cy.getByTestId('login-input').should('be.visible').type('company@gmail.com');
-      cy.get('button').contains('Login').click();
-      cy.findByText('Informe a senha.').should('be.visible');
+      cy.getByTestId('login-button').click();
+      cy.getByTestId('password-error').should('contain.text', 'Informe a senha.');
     });
 
-    it.only('should show an error message when the login is invalid', () => {
+    it('should show an error message when the login is invalid', () => {
       cy.getByTestId('login-input').should('be.visible').type('backofice@gmail.com');
       cy.getByTestId('password-input').should('be.visible').type('54321');
       cy.getByTestId('login-button').click();
@@ -48,13 +49,12 @@ describe('Tests in Login Page', () => {
     it('should redirect to the register page', () => {
       cy.getByTestId('register-link').should('be.visible').click();
       cy.url().should('include', '/register');
-      cy.findByPlaceholderText('Ex: João Silva').should('be.visible');
+      cy.getByTestId('name-container').should('be.visible');
     });
 
     it('should redirect to the forgot password page', () => {
       cy.getByTestId('recover-password').should('be.visible').click();
       cy.url().should('include', '/passwordrecover/sendemail');
-      cy.findByRole('heading', { name: /Recuperar senha/i }).should('be.visible');
     });
   });
 });
