@@ -1,6 +1,6 @@
 // REACT
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // LIBS
 import styled from 'styled-components';
@@ -34,6 +34,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
   const { updateThemeColor } = useCustomTheme();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -65,7 +66,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
       })
       .catch(() => {
         signout();
-        navigate('/login');
+        navigate(`/login?location=${location.key + location.search}`);
       });
   };
 
@@ -92,7 +93,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     } else if (localStorage.getItem('authToken')) {
       validateToken();
     } else {
-      navigate('/login');
+      navigate(`/login?location=${location.pathname + location.search}`);
     }
   }, []);
 
