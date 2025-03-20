@@ -9,6 +9,8 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
+import { useQuery } from '@hooks/useQuery';
 
 // SERVICES
 import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
@@ -34,7 +36,7 @@ import { theme } from '@styles/theme';
 import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
-import { useUsersForSelect } from '@hooks/useUsersForSelect';
+
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
@@ -71,6 +73,10 @@ export const MaintenancesKanban = () => {
   const { usersForSelect } = useUsersForSelect({ buildingId: '' });
   const { maintenanceStatusForSelect } = useMaintenanceStatusForSelect();
 
+  const query = useQuery();
+  const queryBuildingId = query.get('buildingId');
+  const queryCategoryId = query.get('categoryId');
+
   const [kanban, setKanban] = useState<IKanban[]>([]);
 
   const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
@@ -94,9 +100,9 @@ export const MaintenancesKanban = () => {
     IMaintenanceCategoryForSelect[]
   >([]);
   const [filter, setFilter] = useState<IMaintenanceFilter>({
-    buildings: [],
+    buildings: queryBuildingId ? [queryBuildingId] : [],
     status: [],
-    categories: [],
+    categories: queryCategoryId ? [queryCategoryId] : [],
     users: [],
     priorityName: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
