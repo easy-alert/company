@@ -156,9 +156,7 @@ export const BuildingMaintenancesList = () => {
               icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
               disabled={addedMaintenances.length < 1}
               hideLabelOnMedia
-              onClick={() => {
-                setModalPrintPlanOpen(true);
-              }}
+              onClick={() => setModalPrintPlanOpen(true)}
             />
 
             <IconButton
@@ -177,10 +175,11 @@ export const BuildingMaintenancesList = () => {
             icon={<IconSearch strokeColor="primary" />}
             fill="primary"
             size="16px"
-            onClick={() => {
-              filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter });
-            }}
+            onClick={() =>
+              filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter })
+            }
           />
+
           <input
             type="text"
             placeholder="Procurar"
