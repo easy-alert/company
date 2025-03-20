@@ -26,6 +26,7 @@ const InputCheckboxBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
   <InputContainer error={!!error} justifyContent={justifyContent}>
     <CheckboxWrapper disable={disable} labelColor={labelColor} size={size}>
       <input type="checkbox" id={id} name={name} ref={ref} {...rest} disabled={disable} />
+
       {label && <label htmlFor={id}>{label}</label>}
     </CheckboxWrapper>
     <ErrorMessage errorColor={errorColor}>{!!error && <p className="p3">{error}</p>}</ErrorMessage>

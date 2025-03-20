@@ -1,12 +1,12 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string; size: string }>`
   display: flex;
   align-items: flex-start;
-  gap: ${({ theme }) => theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xsm};
   width: fit-content;
   transition: 0.25s;
+
   > input {
     width: ${({ theme }) =>
       ({ size }) =>

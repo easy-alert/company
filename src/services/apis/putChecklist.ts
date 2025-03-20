@@ -9,6 +9,7 @@ interface IPutChecklist {
   checklistId: string;
   userId?: string;
   checklistItems?: IChecklistItem[];
+  observation?: string;
   status?: string;
   images?: any[];
   updateMode?: TUpdateMode;
@@ -18,6 +19,7 @@ export async function putChecklist({
   checklistId,
   userId,
   checklistItems,
+  observation,
   status,
   images,
   updateMode,
@@ -27,6 +29,7 @@ export async function putChecklist({
   const body = {
     userId,
     checklistItems,
+    observation,
     status,
     images,
     updateMode,
