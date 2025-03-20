@@ -217,12 +217,13 @@ export const ModalPrintCategoryQRCode = ({
     <Modal bodyWidth="60vw" title="QR Code" setModal={setModal}>
       <>
         {loading && <Style.SmallLoading />}
+
         <Style.HideQRCode>
           <QRCodeCanvas
             id="QRCode"
             value={`${
-              import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-            }/choose/${buildingNanoId}/${categoryId}`}
+              import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
+            }/maintenances?buildingId=${buildingNanoId}&categoryId=${categoryId}`}
             bgColor="#F2EAEA"
             size={300}
           />
