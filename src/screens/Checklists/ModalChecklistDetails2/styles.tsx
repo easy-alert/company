@@ -26,6 +26,7 @@ export const ProgressBarContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.size.xsm};
+
   margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
@@ -66,57 +67,28 @@ export const ChecklistItemContainer = styled.div`
 export const ChecklistItem = styled.div`
   display: flex;
   align-items: center;
+
   gap: ${({ theme }) => theme.size.sm};
 `;
 
-export const UserResponsibleContainer = styled.div`
+export const ChecklistObservationContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.sm};
+
+  margin-top: ${({ theme }) => theme.size.sm};
 `;
 
-export const UserResponsibleContent = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+export const ChecklistDescriptionTitle = styled.h3`
+  font-size: ${({ theme }) => theme.size.sm};
+  font-weight: 500;
+`;
 
-  padding: ${({ theme }) => theme.size.sm};
-  background-color: ${({ theme }) => theme.color.gray0};
+export const ChecklistDescriptionTextArea = styled.textarea`
+  width: 100%;
+  padding: ${({ theme }) => theme.size.xsm};
+  border: 1px solid ${({ theme }) => theme.color.gray2};
   border-radius: ${({ theme }) => theme.size.xsm};
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 100%; /* Ensure the content does not exceed the modal width */
-  word-wrap: break-word; /* Break long words */
-`;
-
-export const UserResponsibleData = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: ${({ theme }) => theme.size.xsm};
-`;
-
-export const UserResponsibleImageContent = styled.div`
-  display: flex;
-  align-items: center;
-
-  height: 50%;
-
-  border-right: 1px solid ${({ theme }) => theme.color.primary};
-  padding-right: ${({ theme }) => theme.size.xsm};
-`;
-
-export const UserResponsibleDataRow = styled.div`
-  height: fit-content;
-  overflow: auto;
-
-  > p {
-    font-size: 0.75rem;
-    color: ${({ theme }) => theme.color.gray5};
-  }
-
-  > span {
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
+  resize: none;
 `;
 
 export const InputText = styled.div`
