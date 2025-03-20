@@ -18,9 +18,14 @@ export const handleToastify = (serverResponse: IServerResponse, dismiss = true) 
   if (dismiss) toast.dismiss();
 
   if (serverResponse.status === 200) {
-    toast.success(serverResponse?.data?.ServerMessage?.message || 'Operação realizada com sucesso');
+    toast.success(
+      serverResponse?.data?.ServerMessage?.message || 'Operação realizada com sucesso',
+      { toastId: 'success-toast' },
+    );
   } else {
-    toast.error(serverResponse?.data?.ServerMessage?.message || 'Erro ao realizar operação');
+    toast.error(serverResponse?.data?.ServerMessage?.message || 'Erro ao realizar operação', {
+      toastId: 'error-toast',
+    });
   }
 };
 
@@ -29,16 +34,16 @@ export const handleToastifyMessage = ({ message, type }: IToastifyMessage) => {
 
   switch (type) {
     case 'success':
-      toast.success(message);
+      toast.success(message, { toastId: 'success-toast' });
       break;
     case 'warning':
-      toast.warn(message);
+      toast.warn(message, { toastId: 'warning-toast' });
       break;
     case 'error':
-      toast.error(message);
+      toast.error(message, { toastId: 'error-toast' });
       break;
     case 'loading':
-      toast.loading(message);
+      toast.loading(message, { toastId: 'loading-toast' });
       break;
     default:
       break;
