@@ -101,7 +101,6 @@ export const Login = () => {
                     error={touched.login && errors.login ? errors.login : null}
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    data-testid="login-input"
                   />
 
                   <FormikInput
@@ -114,7 +113,6 @@ export const Login = () => {
                     error={touched.password && errors.password ? errors.password : null}
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}
-                    data-testid="password-input"
                   />
 
                   <Style.AccordionContainer>
