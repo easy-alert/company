@@ -1,4 +1,18 @@
-/// <reference types="cypress" />
+/* eslint-disable @typescript-eslint/no-namespace */
+
+// @ts-check
+// <reference path="../global.d.ts" />
+
+import '@testing-library/cypress/add-commands';
+
+Cypress.Commands.add('getByTestId', (selector, ...args) =>
+  cy.get(`[data-testid="${selector}"]`, ...args),
+);
+
+Cypress.Commands.add('checkToastMessage', (toastId, message) => {
+  cy.get(`[id=${toastId}]`).should('contain', message);
+});
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -35,3 +49,29 @@
 //     }
 //   }
 // }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to select DOM element by data-testid attribute
+       * @example cy.getByTestId('selector')
+       * @param {string} selector - data-testid attribute value
+       * @returns {typeof getByTestId}
+       * @memberof Cypress.Chainable
+       * @see https://testing-library.com/docs/queries/bytestid/
+       */
+      getByTestId(selector: string): Chainable<JQuery<HTMLElement>>;
+
+      /**
+       * Custom command to check toast message
+       * @example cy.checkToastMessage('toastId', 'message')
+       * @param {string} toastId - toast id
+       * @param {string} message - message to check
+       * @returns {typeof checkToastMessage}
+       * @memberof Cypress.Chainable
+       */
+      checkToastMessage(toastId: string, message: string): Chainable<JQuery<HTMLElement>>;
+    }
+  }
+}
