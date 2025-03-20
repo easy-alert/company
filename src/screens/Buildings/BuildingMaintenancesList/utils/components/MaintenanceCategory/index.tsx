@@ -104,7 +104,7 @@ export const MaintenanceCategory = ({
         <ModalPrintCategoryQRCode
           categoryId={data.Category.id}
           buildingName={data.Building.name}
-          buildingNanoId={data.Building.nanoId}
+          buildingNanoId={data.Building.id}
           categoryName={data.Category.name}
           setModal={setModalPrintCategoryQrCodeOpen}
         />
