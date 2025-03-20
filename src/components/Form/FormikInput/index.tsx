@@ -13,6 +13,9 @@ import { icon } from '../../../assets/icons';
 
 const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
   {
+    containerDataTestId,
+    inputDataTestId,
+    errorDataTestId,
     label,
     labelColor = theme.color.gray5,
     errorColor = theme.color.danger,
@@ -31,15 +34,18 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
 
   return (
     <InputContainer
+      data-testid={containerDataTestId}
+      type={type}
       error={!!error}
       passwordPlaceholder={passwordPlaceholder}
-      labelColor={labelColor}
       typeDatePlaceholderValue={typeDatePlaceholderValue}
-      type={type}
+      labelColor={labelColor}
     >
       {label && <h6>{label}</h6>}
+
       <PasswordDiv>
         <Field
+          data-testid={inputDataTestId}
           max={type === 'date' && !max ? '9999-12-31' : max}
           type={showPassword ? 'text' : type}
           id={name}
@@ -58,7 +64,8 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
           />
         )}
       </PasswordDiv>
-      <ErrorMessage errorColor={errorColor}>
+
+      <ErrorMessage data-testid={errorDataTestId} errorColor={errorColor}>
         {!!error && <p className="p3">{error}</p>}
       </ErrorMessage>
     </InputContainer>
