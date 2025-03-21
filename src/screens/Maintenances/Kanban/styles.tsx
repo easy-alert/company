@@ -30,17 +30,9 @@ export const Header = styled.div`
 
 export const HeaderWrapper = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: ${theme.size.xsm};
-
-  .select {
-    max-width: 300px;
-  }
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 `;
 
 export const FiltersContainer = styled.div`
@@ -60,27 +52,28 @@ export const FilterWrapper = styled.div`
 `;
 
 export const FilterWrapperFooter = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: ${theme.size.sm};
+  display: flex;
+  flex-direction: column;
+
+  gap: ${theme.size.xsm};
 `;
 
 export const FilterButtonWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  align-self: flex-end;
+
   gap: ${theme.size.sm};
-  grid-area: 2 / 4;
-  align-self: flex-start;
+
+  margin-top: ${theme.size.xsm};
 `;
 
 export const FilterTags = styled.div`
   display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
   flex-wrap: wrap;
+  align-items: center;
 
-  grid-area: 2 / 1 / 2 / 4;
+  gap: ${theme.size.xsm};
 `;
 
 export const IconsContainer = styled.div`
