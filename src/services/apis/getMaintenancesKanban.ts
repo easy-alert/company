@@ -1,7 +1,8 @@
 import { Api } from '@services/api';
 
-import type { IMaintenanceFilter } from '@screens/Maintenances/Kanban';
 import { handleToastify } from '@utils/toastifyResponses';
+
+import type { IMaintenanceFilter } from '@screens/Maintenances/Kanban';
 
 interface IGetMaintenancesKanban {
   userId: string;
@@ -10,14 +11,15 @@ interface IGetMaintenancesKanban {
 
 export async function getMaintenancesKanban({ userId, filter }: IGetMaintenancesKanban) {
   const params = {
+    userId,
     buildingId: filter?.buildings?.length === 0 ? '' : filter?.buildings?.join(','),
     status: filter?.status?.length === 0 ? '' : filter?.status?.join(','),
     category: filter?.categories?.length === 0 ? '' : filter?.categories?.join(','),
     user: filter?.users?.length === 0 ? '' : filter?.users?.join(','),
     priorityName: filter?.priorityName ?? '',
+    search: filter?.search ?? '',
     startDate: filter?.startDate,
     endDate: filter?.endDate,
-    userId,
   };
 
   const uri = '/maintenances/kanban';
