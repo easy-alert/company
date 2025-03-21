@@ -239,7 +239,6 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
               label="Deseja alterar a cor da sua conta?"
               onClick={() => setShowColorPicker(!showColorPicker)}
             />
-
             {showColorPicker && (
               <Style.ColorPickerContainer>
                 <ChromePicker
@@ -248,7 +247,19 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
                   onChange={(color) => setFieldValue('colorScheme', color.hex)}
                 />
 
-                <Style.SelectedColorBox selectedColor={values.colorScheme} />
+                <div>
+                  <Style.SelectedColorBox selectedColor={values.colorScheme} />
+                  <Button
+                    bgColor="primary"
+                    type="button"
+                    onClick={() => {
+                      setFieldValue('colorScheme', '#B21D1D');
+                    }}
+                    label="Restaurar tema"
+                    center
+                    style={{ marginTop: '8px', display: 'block' }}
+                  />
+                </div>
               </Style.ColorPickerContainer>
             )}
 

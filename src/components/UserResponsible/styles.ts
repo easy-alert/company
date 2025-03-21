@@ -7,6 +7,12 @@ export const UserResponsibleContainer = styled.div`
   gap: ${theme.size.sm};
 `;
 
+export const UserResponsibleHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+`;
+
 export const UserResponsibleContent = styled.div`
   display: flex;
   align-items: center;
@@ -49,4 +55,10 @@ export const UserResponsibleDataRow = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
   }
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: ${theme.size.xsm};
+  margin-top: ${theme.size.sm};
 `;

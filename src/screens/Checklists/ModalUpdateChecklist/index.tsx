@@ -3,88 +3,41 @@ import { useEffect, useState } from 'react';
 // LIBS
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
+
+// HOOKS
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // SERVICES
-import { Api } from '@services/api';
+import { getChecklists } from '@services/apis/getChecklists';
+import { putChecklist } from '@services/apis/putChecklist';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
-import { FormikInput } from '@components/Form/FormikInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
-import { Input } from '@components/Inputs/Input';
-import { FormikCheckbox } from '@components/Form/FormikCheckbox';
-import { FormikTextArea } from '@components/Form/FormikTextArea';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { InputRadio } from '@components/Inputs/InputRadio';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
-import { DragAndDropFiles } from '@components/DragAndDropFiles';
-import { ImagePreview } from '@components/ImagePreview';
-import { DotLoading } from '@components/Loadings/DotLoading';
-
-// GLOBAL UTILS
-import {
-  applyMask,
-  capitalizeFirstLetter,
-  catchHandler,
-  convertToFormikDate,
-  uploadManyFiles,
-} from '@utils/functions';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
-// GLOBAL TYPES
-import { ITimeInterval } from '@utils/types';
-
 // COMPONENTS
-import { Row, FileAndImageRow, ImageLoadingTag } from '../ModalChecklistDetails/styles';
+import type { IChecklist } from '@customTypes/IChecklist';
 
 // STYLES
 import * as Style from './styles';
 
 interface IModalUpdateChecklist {
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
-  timeIntervals: ITimeInterval[];
   checklistId: string;
   onThenRequest: () => Promise<void>;
-}
-
-interface IChecklist {
-  id: string;
-  name: string;
-  description: string | null;
-  date: string;
-  frequency: string | null;
-  status: 'pending' | 'completed';
-  building: { name: string; id: string };
-  syndic: { name: string; id: string } | null;
-  frequencyTimeInterval: { id: string } | null;
-
-  resolutionDate: string | null;
+  setModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const schema = yup
   .object({
     id: yup.string(),
-    name: yup.string().required('Campo obrigatório.'),
-    syndicId: yup.string().required('Campo obrigatório.'),
-    description: yup.string(),
-    date: yup.string().required('Campo obrigatório.'),
-
-    hasFrequency: yup.boolean(),
-
-    frequency: yup
-      .string()
-      .matches(/^\d/, 'O prazo para execução deve ser um número.')
-      .when('hasFrequency', {
-        is: (hasFrequency: boolean) => hasFrequency,
-        then: yup
-          .string()
-          .matches(/^\d/, 'O prazo para execução deve ser um número.')
-          .required('Campo obrigatório.'),
-      }),
-    frequencyTimeIntervalId: yup.string().required('Campo obrigatório.'),
+    userId: yup.string().required('Campo obrigatório.'),
+    buildingId: yup.string().required('Campo obrigatório.'),
   })
   .required();
 
@@ -93,57 +46,21 @@ type TSchema = yup.InferType<typeof schema>;
 type TUpdateMode = 'this' | 'thisAndFollowing' | '';
 
 export const ModalUpdateChecklist = ({
-  setModal,
-  timeIntervals,
-  onThenRequest,
   checklistId,
+  onThenRequest,
+  setModal,
 }: IModalUpdateChecklist) => {
-  const [updateMode, setUpdateMode] = useState<TUpdateMode>('');
-  const [syndics, setSyndics] = useState<{ name: string; id: string }[]>([]);
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [checklist, setChecklist] = useState<IChecklist>({
-    building: { id: '', name: '' },
-    date: '',
-    description: '',
-    frequency: '',
-    id: '',
-    name: '',
-    resolutionDate: '',
-    status: 'pending',
-    syndic: { id: '', name: '' },
-    frequencyTimeInterval: { id: '' },
+  const [checklistDetails, setChecklistDetails] = useState<IChecklist>({});
+
+  const { usersForSelect } = useUsersForSelect({
+    buildingId: checklistDetails.buildingId,
+    checkPerms: true,
   });
+
+  const [updateMode, setUpdateMode] = useState<TUpdateMode>('');
+
   const [loading, setLoading] = useState<boolean>(true);
-  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-  const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
-  const [checklistDetailImages, setChecklistDetailImages] = useState<
-    { url: string; name: string }[]
-  >([]);
-
-  const listSyndics = async (buildingNanoId: string) => {
-    await Api.get(`/buildings/notifications/list-for-select/${buildingNanoId}`)
-      .then((res) => {
-        setSyndics(res.data.syndics);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
-  };
-
-  const findChecklistById = async () => {
-    await Api.get(`/checklists/${checklistId}`)
-      .then(async (res) => {
-        setChecklist(res.data.checklist);
-        setChecklistDetailImages(res.data.checklist.detailImages);
-        await listSyndics(res.data.checklist.building.nanoId);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const inputs = [
     { id: '1', name: 'mode', value: 'this', label: 'Este checklist' },
@@ -154,9 +71,44 @@ export const ModalUpdateChecklist = ({
     setUpdateMode(value);
   };
 
+  const handleUpdateChecklist = async (values: TSchema) => {
+    setOnQuery(true);
+
+    setLoading(true);
+
+    try {
+      await putChecklist({
+        updateMode,
+        checklistId,
+        userId: values.userId,
+      });
+
+      onThenRequest();
+    } finally {
+      setLoading(false);
+      setModal(false);
+    }
+  };
+
   useEffect(() => {
-    findChecklistById();
-  }, []);
+    setLoading(true);
+
+    const handleGetChecklist = async () => {
+      try {
+        const responseData = await getChecklists({ checklistId });
+
+        setChecklistDetails(responseData[0]);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
+      }
+    };
+
+    if (checklistId) {
+      handleGetChecklist();
+    }
+  }, [checklistId]);
 
   return (
     <Modal setModal={setModal} title="Editar checklist">
@@ -184,192 +136,47 @@ export const ModalUpdateChecklist = ({
         {!loading && updateMode && (
           <Formik
             initialValues={{
-              id: checklist.id,
-              name: checklist.name,
-              date: convertToFormikDate(new Date(checklist.date)),
-              frequency: checklist.frequency || '',
-              frequencyTimeIntervalId: checklist.frequencyTimeInterval?.id || timeIntervals[0].id,
-              description: checklist.description || '',
-              syndicId: checklist.syndic?.id || '',
-              hasFrequency: !!checklist.frequency,
+              id: checklistDetails.id,
+              userId: checklistDetails.userId || '',
+              buildingId: checklistDetails.buildingId || '',
             }}
             validationSchema={schema}
-            onSubmit={async (values: TSchema) => {
-              setOnQuery(true);
-
-              await Api.put(`/checklists`, {
-                ...values,
-                frequency: values.frequency ? Number(values.frequency) : null,
-                mode: updateMode,
-                detailImages: checklistDetailImages,
-              })
-                .then((res) => {
-                  onThenRequest();
-                  toast.success(res.data.ServerMessage.message);
-                  setModal(false);
-                })
-                .catch((err) => {
-                  catchHandler(err);
-                })
-                .finally(() => {
-                  setOnQuery(false);
-                });
-            }}
+            onSubmit={async (values: TSchema) => handleUpdateChecklist(values)}
           >
-            {({ errors, touched, values, setFieldValue, submitForm }) => (
+            {({ errors, touched, values, submitForm }) => (
               <Form>
-                <Input
-                  name="buildingName"
-                  label="Edificação *"
-                  defaultValue={checklist?.building.name}
-                  disabled
-                />
-
-                <FormikInput
-                  name="name"
-                  label="Nome *"
-                  placeholder="Ex: Retirar o lixo"
-                  error={touched.name && (errors.name || null)}
-                />
+                <FormikSelect name="buildingId" label="Edifício" disabled>
+                  <option value={checklistDetails.buildingId} disabled hidden>
+                    {checklistDetails?.building?.name}
+                  </option>
+                </FormikSelect>
 
                 <FormikSelect
+                  name="userId"
+                  label="Usuário responsável *"
+                  selectPlaceholderValue={values.userId}
                   arrowColor="primary"
-                  name="syndicId"
-                  selectPlaceholderValue={values.syndicId}
-                  label="Responsável *"
-                  error={touched.syndicId && (errors.syndicId || null)}
+                  error={touched.userId && (errors.userId || null)}
                 >
                   <option value="" disabled hidden>
                     Selecione
                   </option>
-                  {syndics.map(({ id, name }) => (
-                    <option value={id} key={id}>
-                      {name}
+
+                  {usersForSelect.map((user) => (
+                    <option value={user.id} key={user.id}>
+                      {user.name}
                     </option>
                   ))}
                 </FormikSelect>
 
-                <FormikTextArea
-                  label="Descrição"
-                  placeholder="Insira a descrição"
-                  name="description"
-                  error={touched.description && (errors.description || null)}
-                />
-
-                <Row>
-                  <h6>Imagens da checklist</h6>
-                  <FileAndImageRow>
-                    <DragAndDropFiles
-                      disabled={onImageQuery}
-                      width="132px"
-                      height="136px"
-                      onlyImages
-                      getAcceptedFiles={async ({ acceptedFiles }) => {
-                        setImagesToUploadCount(acceptedFiles.length);
-                        setOnImageQuery(true);
-                        const uploadedFiles = await uploadManyFiles(acceptedFiles);
-                        setOnImageQuery(false);
-                        setImagesToUploadCount(0);
-
-                        const formattedUploadedFiles = uploadedFiles.map(
-                          ({ Location, originalname }) => ({
-                            name: originalname,
-                            url: Location,
-                          }),
-                        );
-
-                        setChecklistDetailImages((prev) => [...prev, ...formattedUploadedFiles]);
-                      }}
-                    />
-                    {checklistDetailImages.length > 0 &&
-                      checklistDetailImages.map(
-                        (image: { name: string; url: string }, index: number) => (
-                          <ImagePreview
-                            key={image.url}
-                            src={image.url}
-                            downloadUrl={image.url}
-                            imageCustomName={image.name}
-                            width="132px"
-                            height="136px"
-                            onTrashClick={() => {
-                              setChecklistDetailImages((prev) => {
-                                const newState = [...prev];
-                                newState.splice(index, 1);
-                                return newState;
-                              });
-                            }}
-                          />
-                        ),
-                      )}
-
-                    {onImageQuery &&
-                      [...Array(imagesToUploadCount).keys()].map((e) => (
-                        <ImageLoadingTag key={e}>
-                          <DotLoading />
-                        </ImageLoadingTag>
-                      ))}
-                  </FileAndImageRow>
-                </Row>
-
-                <FormikInput
-                  name="date"
-                  label="Data *"
-                  type="date"
-                  error={touched.date && (errors.date || null)}
-                  typeDatePlaceholderValue={values.date}
-                />
-
-                <FormikCheckbox
-                  disable={updateMode === 'this'}
-                  label="Periodicidade"
-                  name="hasFrequency"
-                  onChange={() => {
-                    setFieldValue('hasFrequency', !values.hasFrequency);
-                    setFieldValue('frequency', '');
-                  }}
-                />
-
-                {values.hasFrequency && (
-                  <Style.FrequencyWrapper>
-                    <FormikInput
-                      disabled={updateMode === 'this'}
-                      name="frequency"
-                      label="Periodicidade *"
-                      placeholder="Ex: 2"
-                      maxLength={4}
-                      error={touched.frequency && (errors.frequency || null)}
-                      onChange={(e) => {
-                        setFieldValue(
-                          'frequency',
-                          applyMask({ mask: 'NUM', value: e.target.value }).value,
-                        );
-                      }}
-                    />
-                    <FormikSelect
-                      arrowColor="primary"
-                      disabled={updateMode === 'this'}
-                      name="frequencyTimeIntervalId"
-                      selectPlaceholderValue={values.frequencyTimeIntervalId}
-                      label="Unidade *"
-                    >
-                      {timeIntervals.map(({ id, pluralLabel, singularLabel }) => (
-                        <option value={id} key={id}>
-                          {Number(values.frequency) > 1
-                            ? capitalizeFirstLetter(pluralLabel)
-                            : capitalizeFirstLetter(singularLabel)}
-                        </option>
-                      ))}
-                    </FormikSelect>
-                  </Style.FrequencyWrapper>
-                )}
                 <Style.ButtonDiv>
                   <PopoverButton
-                    loading={onQuery}
-                    disabled={onQuery || onImageQuery}
-                    actionButtonBgColor={theme.color.actionDanger}
+                    label="Salvar"
                     type="Button"
                     bgColor="primary"
-                    label="Salvar"
+                    actionButtonBgColor={theme.color.actionDanger}
+                    loading={onQuery}
+                    disabled={onQuery}
                     message={{
                       title:
                         updateMode === 'this'

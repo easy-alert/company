@@ -1,6 +1,6 @@
 // REACT
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // LIBS
 import styled from 'styled-components';
@@ -34,11 +34,13 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
   const { updateThemeColor } = useCustomTheme();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState<boolean>(true);
 
   const backofficeToken = query.get('backofficeToken') ?? null;
   const userId = query.get('userId') ?? null;
+  const encodeRedirectUri = encodeURIComponent(location.pathname + location.search);
 
   const requestAccessToCompanyUser = async () => {
     await Api.post('/auth/backofficeaccess', {
@@ -65,7 +67,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
       })
       .catch(() => {
         signout();
-        navigate('/login');
+        navigate(`/login?redirect=${encodeRedirectUri}`);
       });
   };
 
@@ -92,7 +94,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     } else if (localStorage.getItem('authToken')) {
       validateToken();
     } else {
-      navigate('/login');
+      navigate(`/login?redirect=${encodeRedirectUri}`);
     }
   }, []);
 

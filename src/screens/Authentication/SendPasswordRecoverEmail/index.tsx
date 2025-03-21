@@ -55,7 +55,7 @@ export const SendPasswordRecoverEmail = () => {
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <h2>Recuperar senha</h2>
+                  <h2 data-testid="recover-password">Recuperar senha</h2>
                   <FormikInput
                     labelColor={theme.color.white}
                     errorColor={theme.color.white}

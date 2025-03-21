@@ -14,7 +14,7 @@ export const Container = styled.div`
 
 export const FilterWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: ${({ theme }) => theme.size.xsm};
   margin-top: ${({ theme }) => theme.size.sm};
 

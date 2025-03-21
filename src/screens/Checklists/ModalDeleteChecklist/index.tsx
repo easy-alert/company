@@ -15,7 +15,7 @@ interface IModalDeleteChecklist {
   checklistId: string;
 }
 
-type TDeleteMode = 'this' | 'all' | 'thisAndFollowing' | '';
+type TDeleteMode = 'this' | 'all' | 'thisAndFollowing';
 
 export const ModalDeleteChecklist = ({
   setModal,
@@ -23,7 +23,7 @@ export const ModalDeleteChecklist = ({
   checklistId,
 }: IModalDeleteChecklist) => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [deleteMode, setDeleteMode] = useState<TDeleteMode>('');
+  const [deleteMode, setDeleteMode] = useState<TDeleteMode>('this');
 
   const handleOnChange = (value: TDeleteMode) => {
     setDeleteMode(value);

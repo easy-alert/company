@@ -72,22 +72,14 @@ export interface IDashboardFilter {
   endDate: string;
   buildings: string[];
   categories: string[];
-  responsible: string[];
-}
-
-interface IPeriods {
-  label: string;
-  period: number;
 }
 
 interface IFilterOptions {
   buildings: string[];
   categories: string[];
-  responsible: string[];
-  periods: IPeriods[];
 }
 
-type IFilterTypes = 'startDate' | 'endDate' | 'buildings' | 'categories' | 'responsible';
+type IFilterTypes = 'startDate' | 'endDate' | 'buildings' | 'categories';
 
 interface ITimeline {
   categories: string[];
@@ -264,7 +256,6 @@ export const Dashboard = () => {
     endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
-    responsible: [],
   };
 
   const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
@@ -272,8 +263,6 @@ export const Dashboard = () => {
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
     categories: [],
-    responsible: [],
-    periods: [],
   });
 
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -902,32 +891,6 @@ export const Dashboard = () => {
             {({ values, setFieldValue, touched, errors }) => (
               <Form>
                 <Style.FilterWrapper>
-                  <FormikInput
-                    label="Data inicial"
-                    typeDatePlaceholderValue={values.startDate}
-                    name="startDate"
-                    type="date"
-                    value={values.startDate}
-                    onChange={(e) => {
-                      setFieldValue('startDate', e.target.value);
-                      handleFilterChange('startDate', e.target.value);
-                    }}
-                    error={touched.startDate && errors.startDate ? errors.startDate : null}
-                  />
-
-                  <FormikInput
-                    label="Data final"
-                    typeDatePlaceholderValue={values.endDate}
-                    name="endDate"
-                    type="date"
-                    value={values.endDate}
-                    onChange={(e) => {
-                      setFieldValue('endDate', e.target.value);
-                      handleFilterChange('endDate', e.target.value);
-                    }}
-                    error={touched.endDate && errors.endDate ? errors.endDate : null}
-                  />
-
                   <Select
                     selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
                     label="Edificação"
@@ -992,37 +955,31 @@ export const Dashboard = () => {
                     ))}
                   </Select>
 
-                  <Select
-                    selectPlaceholderValue={dataFilter.responsible.length > 0 ? ' ' : ''}
-                    label="Responsável"
-                    arrowColor="primary"
-                    value=""
+                  <FormikInput
+                    label="Data inicial"
+                    typeDatePlaceholderValue={values.startDate}
+                    name="startDate"
+                    type="date"
+                    value={values.startDate}
                     onChange={(e) => {
-                      handleFilterChange('responsible', e.target.value);
-
-                      if (e.target.value === 'all') {
-                        setDataFilter((prevState) => ({ ...prevState, responsible: [] }));
-                      }
+                      setFieldValue('startDate', e.target.value);
+                      handleFilterChange('startDate', e.target.value);
                     }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
+                    error={touched.startDate && errors.startDate ? errors.startDate : null}
+                  />
 
-                    <option value="all" disabled={dataFilter.responsible.length === 0}>
-                      Todos
-                    </option>
-
-                    {filterOptions.responsible.map((responsible) => (
-                      <option
-                        value={responsible}
-                        key={responsible}
-                        disabled={dataFilter.responsible.some((e) => e === responsible)}
-                      >
-                        {responsible}
-                      </option>
-                    ))}
-                  </Select>
+                  <FormikInput
+                    label="Data final"
+                    typeDatePlaceholderValue={values.endDate}
+                    name="endDate"
+                    type="date"
+                    value={values.endDate}
+                    onChange={(e) => {
+                      setFieldValue('endDate', e.target.value);
+                      handleFilterChange('endDate', e.target.value);
+                    }}
+                    error={touched.endDate && errors.endDate ? errors.endDate : null}
+                  />
 
                   <Style.ButtonWrapper>
                     <Button
@@ -1084,28 +1041,6 @@ export const Dashboard = () => {
                         fontWeight={500}
                         padding="4px 12px"
                         onClick={() => handleRemoveFilter('categories', i)}
-                      />
-                    ))}
-
-                    {dataFilter.responsible.length === 0 && (
-                      <ListTag
-                        label="Todos os responsáveis"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    )}
-
-                    {dataFilter.responsible.map((e, i) => (
-                      <ListTag
-                        key={e}
-                        label={e}
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                        onClick={() => handleRemoveFilter('responsible', i)}
                       />
                     ))}
                   </Style.Tags>

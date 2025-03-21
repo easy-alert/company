@@ -15,7 +15,7 @@ interface IChecklistTemplatesResponse extends IResponse {
 }
 
 export const getChecklists = async ({ buildingId, checklistId }: IGetChecklists) => {
-  const uri = `/checklists/v2/${checklistId}`;
+  const uri = `/checklists/${checklistId}`;
 
   const params = {
     buildingId,

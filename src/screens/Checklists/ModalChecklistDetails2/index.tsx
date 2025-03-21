@@ -24,6 +24,7 @@ import { uploadManyFiles } from '@utils/functions';
 import { IChecklist, TChecklistStatus } from '@customTypes/IChecklist';
 
 // STYLES
+import { TextArea } from '@components/Inputs/TextArea';
 import * as Style from './styles';
 
 import type { TModalNames } from '..';
@@ -49,11 +50,12 @@ export const ModalChecklistDetails = ({
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
 
-  const [modalDeleteButton, setModalDeleteButton] = useState(false);
-
-  const [deleteMode, setDeleteMode] = useState<TDeleteMode>('');
+  // const [modalDeleteButton, setModalDeleteButton] = useState(false);
+  // const [deleteMode, setDeleteMode] = useState<TDeleteMode>('');
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  const checklistCompleted = checklistDetails?.status === 'completed';
 
   const handleAcceptedFiles = async ({ acceptedFiles }: { acceptedFiles: File[] }) => {
     setImagesToUploadCount(acceptedFiles.length);
@@ -99,6 +101,7 @@ export const ModalChecklistDetails = ({
       await putChecklist({
         checklistId,
         checklistItems: checklistDetails.checklistItem!,
+        observation: checklistDetails.observation,
         status,
         images: uploadedFiles,
       });
@@ -136,85 +139,85 @@ export const ModalChecklistDetails = ({
     }
   }, [buildingId, checklistId]);
 
-  if (modalDeleteButton) {
-    const inputs = [
-      { id: '1', name: 'mode', value: 'this', label: 'Este checklist' },
-      { id: '2', name: 'mode', value: 'thisAndFollowing', label: 'Este e os checklists seguintes' },
-      { id: '3', name: 'mode', value: 'all', label: 'Todos os checklists' },
-    ];
+  // if (modalDeleteButton) {
+  //   const inputs = [
+  //     { id: '1', name: 'mode', value: 'this', label: 'Este checklist' },
+  //     { id: '2', name: 'mode', value: 'thisAndFollowing', label: 'Este e os checklists seguintes' },
+  //     { id: '3', name: 'mode', value: 'all', label: 'Todos os checklists' },
+  //   ];
 
-    if (checklistDetails.frequency === 0) {
-      inputs.splice(1, 2);
-    }
+  //   if (checklistDetails.frequency === 0) {
+  //     inputs.splice(1, 2);
+  //   }
 
-    const handleRadioChange = (value: TDeleteMode) => {
-      setDeleteMode(value);
-    };
+  //   const handleRadioChange = (value: TDeleteMode) => {
+  //     setDeleteMode(value);
+  //   };
 
-    const handleDeleteChecklist = async () => {
-      setLoading(true);
+  //   const handleDeleteChecklist = async () => {
+  //     setLoading(true);
 
-      try {
-        await deleteChecklist({ checklistId, deleteMode });
+  //     try {
+  //       await deleteChecklist({ checklistId, deleteMode });
 
-        handleRefresh();
-      } finally {
-        setLoading(false);
-        handleModals('modalChecklistDetails', false);
-      }
-    };
+  //       handleRefresh();
+  //     } finally {
+  //       setLoading(false);
+  //       handleModals('modalChecklistDetails', false);
+  //     }
+  //   };
 
-    return (
-      <Modal
-        title="Excluir checklist"
-        setModal={(modalState) => handleModals('modalChecklistDetails', modalState)}
-      >
-        {loading ? (
-          <LoadingWrapper minHeight="300px">
-            <DotSpinLoading />
-          </LoadingWrapper>
-        ) : (
-          <Style.Content>
-            <Style.DeleteCheckboxContainer>
-              {inputs.map((input) => (
-                <InputRadio
-                  id={input.id}
-                  key={input.value}
-                  value={input.value}
-                  name={input.name}
-                  label={input.label}
-                  checked={deleteMode === input.value}
-                  onChange={(evt) => handleRadioChange(evt.target.value as TDeleteMode)}
-                />
-              ))}
-            </Style.DeleteCheckboxContainer>
+  //   return (
+  //     <Modal
+  //       title="Excluir checklist"
+  //       setModal={(modalState) => handleModals('modalChecklistDetails', modalState)}
+  //     >
+  //       {loading ? (
+  //         <LoadingWrapper minHeight="300px">
+  //           <DotSpinLoading />
+  //         </LoadingWrapper>
+  //       ) : (
+  //         <Style.Content>
+  //           <Style.DeleteCheckboxContainer>
+  //             {inputs.map((input) => (
+  //               <InputRadio
+  //                 id={input.id}
+  //                 key={input.value}
+  //                 value={input.value}
+  //                 name={input.name}
+  //                 label={input.label}
+  //                 checked={deleteMode === input.value}
+  //                 onChange={(evt) => handleRadioChange(evt.target.value as TDeleteMode)}
+  //               />
+  //             ))}
+  //           </Style.DeleteCheckboxContainer>
 
-            <Style.ContainerBtn>
-              <Button
-                label="Cancelar"
-                bgColor="transparent"
-                loading={loading}
-                onClick={() => setModalDeleteButton(false)}
-              />
-              <Button
-                label="Excluir"
-                loading={loading}
-                onClick={handleDeleteChecklist}
-                bgColor="primary"
-              />
-            </Style.ContainerBtn>
-          </Style.Content>
-        )}
-      </Modal>
-    );
-  }
+  //           <Style.ContainerBtn>
+  //             <Button
+  //               label="Cancelar"
+  //               bgColor="transparent"
+  //               loading={loading}
+  //               onClick={() => setModalDeleteButton(false)}
+  //             />
+  //             <Button
+  //               label="Excluir"
+  //               loading={loading}
+  //               onClick={handleDeleteChecklist}
+  //               bgColor="primary"
+  //             />
+  //           </Style.ContainerBtn>
+  //         </Style.Content>
+  //       )}
+  //     </Modal>
+  //   );
+  // }
 
   return (
     <Modal
       title="Enviar relato"
-      deleteButton={checklistDetails?.status !== 'completed'}
       setModal={(modalState) => handleModals('modalChecklistDetails', modalState)}
-      handleDelete={(modalState) => setModalDeleteButton(modalState)}
+      // deleteButton={checklistDetails?.status !== 'completed'}
+      // handleDelete={(modalState) => setModalDeleteButton(modalState)}
     >
       {loading ? (
         <LoadingWrapper minHeight="300px">
@@ -263,16 +266,29 @@ export const ModalChecklistDetails = ({
               {checklistDetails?.checklistItem?.map((item) => (
                 <Style.ChecklistItem key={item.id}>
                   <InputCheckbox
+                    id={item.id!}
+                    label={item.name}
                     checked={item.status === 'completed'}
-                    disable={checklistDetails?.status === 'completed'}
+                    disable={checklistCompleted}
                     onChange={() => handleChangeChecklistItem(item.id!)}
                   />
-                  <p>{item.name}</p>
                 </Style.ChecklistItem>
               ))}
-
-              <h6>{checklistDetails?.description}</h6>
             </Style.ChecklistItemContainer>
+
+            <Style.ChecklistObservationContainer>
+              <TextArea
+                name="observation"
+                label="Observações"
+                placeholder="Escreva aqui suas observações"
+                value={checklistDetails.observation}
+                permToCheck="checklist:update"
+                disabled={checklistCompleted}
+                onChange={(evt) =>
+                  setChecklistDetails((prev) => ({ ...prev, observation: evt.target.value }))
+                }
+              />
+            </Style.ChecklistObservationContainer>
           </Style.ChecklistContainer>
 
           {checklistDetails?.user && <UserResponsible user={checklistDetails.user} />}
@@ -303,7 +319,7 @@ export const ModalChecklistDetails = ({
                     onTrashClick={() => {
                       if (onImageQuery) return;
 
-                      if (checklistDetails?.status === 'completed') return;
+                      if (checklistCompleted) return;
 
                       setUploadedFiles((prev) => {
                         const newState = [...prev];
@@ -328,14 +344,15 @@ export const ModalChecklistDetails = ({
               <>
                 <div>
                   <Button
-                    textColor="actionBlue"
-                    borderless
                     label={
                       checklistDetails?.status === 'inProgress'
                         ? 'Parar execução'
                         : 'Iniciar checklist'
                     }
+                    borderless
+                    textColor="actionBlue"
                     bgColor="transparent"
+                    permToCheck="checklist:update"
                     onClick={() =>
                       handleUpdateChecklist(
                         checklistDetails?.status === 'inProgress' ? 'pending' : 'inProgress',
@@ -343,23 +360,29 @@ export const ModalChecklistDetails = ({
                     }
                   />
                   <Button
+                    label="Salvar"
                     borderless
                     textColor="actionBlue"
-                    label="Salvar"
                     bgColor="transparent"
+                    permToCheck="checklist:update"
                     onClick={() => handleUpdateChecklist(checklistDetails.status!)}
                   />
                 </div>
+
                 <Button
-                  bgColor="primary"
                   label="Finalizar checklist"
+                  bgColor="primary"
+                  permToCheck="checklist:update"
+                  disable={checklistDetails?.checklistItem?.some(
+                    (item) => item.status === 'pending',
+                  )}
                   onClick={() => handleUpdateChecklist('completed')}
                 />
               </>
             ) : (
               <Button
-                bgColor="primary"
                 label="Fechar"
+                bgColor="primary"
                 center
                 onClick={() => handleModals('modalChecklistDetails', false)}
               />

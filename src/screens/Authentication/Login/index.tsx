@@ -6,6 +6,9 @@ import { Formik, Form } from 'formik';
 // CONTEXT
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
+// HOOKS
+import { useQuery } from '@hooks/useQuery';
+
 // SERVICES
 import { loginCompany } from '@services/apis/loginCompany';
 
@@ -35,12 +38,16 @@ import type { IFormData } from './types';
 export const Login = () => {
   const { signin } = useAuthContext();
 
+  const query = useQuery();
+
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const redirect = query.get('redirect');
 
   const handleLoginCompany = async (data: IFormData) => {
     setOnQuery(true);
@@ -60,7 +67,7 @@ export const Login = () => {
 
       if (responseData) {
         signin(responseData);
-        navigate('/home');
+        navigate(redirect || '/home');
       }
     } finally {
       setOnQuery(false);
@@ -69,7 +76,7 @@ export const Login = () => {
 
   return (
     <Style.Background>
-      <img src={icon.logoTextWhite} alt="" />
+      <img src={icon.logoTextWhite} alt="" data-testid="logo-img" />
 
       <Formik
         initialValues={{ email: '', login: '', password: '' }}
@@ -81,7 +88,7 @@ export const Login = () => {
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <h2>Login/Company</h2>
+                  <h2 data-testid="login-title">Login/Company</h2>
 
                   <FormikInput
                     name="login"
@@ -140,17 +147,29 @@ export const Login = () => {
                 </Style.InputWrapper>
 
                 <Style.ButtonContainer loading={+onQuery}>
-                  <Link style={{ pointerEvents: onQuery ? 'none' : 'auto' }} to="/register">
+                  <Link
+                    style={{ pointerEvents: onQuery ? 'none' : 'auto' }}
+                    to="/register"
+                    data-testid="register-link"
+                  >
                     Cadastrar
                   </Link>
 
-                  <Button label="Login" type="submit" loading={onQuery} />
+                  <Button
+                    label="Login"
+                    type="submit"
+                    loading={onQuery}
+                    data-testid="login-button"
+                  />
                 </Style.ButtonContainer>
               </Form>
             </Style.LoginContainer>
 
             <p className="p2">
-              Esqueceu sua senha? <Link to="/passwordrecover/sendemail">Recuperar senha</Link>
+              Esqueceu sua senha?{' '}
+              <Link to="/passwordrecover/sendemail" data-testid="recover-password">
+                Recuperar senha
+              </Link>
             </p>
           </>
         )}
