@@ -32,10 +32,10 @@ export const FormikImageInput = ({
   };
 
   return (
-    <Style.BackgroundSection>
+    <Style.BackgroundSection data-testid={`${name}-section`}>
       <h6>{label}</h6>
 
-      <Style.Container>
+      <Style.Container data-testid={`${name}-container`}>
         <Style.ImageWrapper>
           <img
             src={
@@ -47,6 +47,7 @@ export const FormikImageInput = ({
           />
           <Image img={checkImageType()} size="80px" />
           <input
+            data-testid={`${name}-input`}
             name={name}
             type="file"
             onChange={onChange}
@@ -60,7 +61,9 @@ export const FormikImageInput = ({
               opacity: 0,
             }}
           />
-          <Style.ErrorMessage>{!!error && <p className="p3">{error}</p>}</Style.ErrorMessage>
+          <Style.ErrorMessage data-testid={`${name}-error`}>
+            {!!error && <p className="p3">{error}</p>}
+          </Style.ErrorMessage>
         </Style.ImageWrapper>
         <p className="p5">JPG ou PNG. Tamanho máximo de 5 MB.</p>
       </Style.Container>
