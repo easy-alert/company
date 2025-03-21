@@ -61,13 +61,14 @@ export interface ITicketFilter {
 }
 
 function TicketsPage() {
-  const query = useQuery();
   const { account } = useAuthContext();
 
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
+
+  const query = useQuery();
 
   const [kanbanTickets, setKanbanTickets] = useState<IKanbanTicket[]>([]);
   const [selectedTicketId, setSelectedTicketId] = useState<string>('');

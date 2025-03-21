@@ -10,7 +10,7 @@ function HomePage() {
     <Style.Container>
       <Image img={account?.Company.image} size="320px" radius="0" />
 
-      <Style.Title>Bem vindo(a), {account?.User.name}!</Style.Title>
+      <Style.Title data-testid="page-home">Bem vindo(a), {account?.User.name}!</Style.Title>
     </Style.Container>
   );
 }

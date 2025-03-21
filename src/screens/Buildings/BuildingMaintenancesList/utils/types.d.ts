@@ -65,8 +65,9 @@ export interface AddedMaintenances {
   categoryId: string;
 
   Building: {
-    name: string;
+    id: string;
     nanoId: string;
+    name: string;
   };
   Category: {
     id: string;

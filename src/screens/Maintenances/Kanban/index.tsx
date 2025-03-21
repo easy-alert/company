@@ -9,6 +9,8 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
+import { useQuery } from '@hooks/useQuery';
 
 // SERVICES
 import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
@@ -34,7 +36,8 @@ import { theme } from '@styles/theme';
 import IconPlus from '@assets/icons/IconPlus';
 
 // COMPONENTS
-import { useUsersForSelect } from '@hooks/useUsersForSelect';
+
+import IconFilter from '@assets/icons/IconFilter';
 import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
 import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
@@ -50,6 +53,7 @@ export interface IMaintenanceFilter {
   categories: string[];
   users: string[];
   priorityName: string;
+  search?: string;
   startDate?: string;
   endDate?: string;
 }
@@ -70,6 +74,10 @@ export const MaintenancesKanban = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
   const { usersForSelect } = useUsersForSelect({ buildingId: '' });
   const { maintenanceStatusForSelect } = useMaintenanceStatusForSelect();
+
+  const query = useQuery();
+  const queryBuildingId = query.get('buildingId');
+  const queryCategoryId = query.get('categoryId');
 
   const [kanban, setKanban] = useState<IKanban[]>([]);
 
@@ -94,14 +102,16 @@ export const MaintenancesKanban = () => {
     IMaintenanceCategoryForSelect[]
   >([]);
   const [filter, setFilter] = useState<IMaintenanceFilter>({
-    buildings: [],
+    buildings: queryBuildingId ? [queryBuildingId] : [],
     status: [],
-    categories: [],
+    categories: queryCategoryId ? [queryCategoryId] : [],
     users: [],
     priorityName: '',
+    search: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
   });
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -162,6 +172,7 @@ export const MaintenancesKanban = () => {
       categories: [],
       users: [],
       priorityName: '',
+      search: '',
       startDate: new Date(new Date().setDate(new Date().getDate() - 30))
         .toISOString()
         .split('T')[0],
@@ -231,6 +242,14 @@ export const MaintenancesKanban = () => {
         <Style.Header>
           <Style.HeaderWrapper>
             <h2>Manutenções</h2>
+
+            <IconButton
+              label="Filtros"
+              icon={<IconFilter strokeColor="primary" fillColor="" />}
+              hideLabelOnMedia
+              disabled={loading}
+              onClick={() => setShowFilter((prevState) => !prevState)}
+            />
           </Style.HeaderWrapper>
 
           <Style.IconsContainer>
@@ -244,324 +263,334 @@ export const MaintenancesKanban = () => {
           </Style.IconsContainer>
         </Style.Header>
 
-        <Style.FiltersContainer>
-          <Formik initialValues={filter} onSubmit={async () => handleGetMaintenances()}>
-            {() => (
-              <Form>
-                <Style.FilterWrapper>
-                  <FormikSelect
-                    id="building-select"
-                    label="Edificação"
-                    selectPlaceholderValue={' '}
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('buildings', e.target.value);
+        {showFilter && (
+          <Style.FiltersContainer>
+            <Formik initialValues={filter} onSubmit={async () => handleGetMaintenances()}>
+              {() => (
+                <Form>
+                  <Style.FilterWrapper>
+                    <FormikSelect
+                      id="building-select"
+                      label="Edificação"
+                      selectPlaceholderValue={' '}
+                      value=""
+                      onChange={(e) => {
+                        handleFilterChange('buildings', e.target.value);
 
-                      if (e.target.value === 'all') {
-                        setFilter((prevState) => ({
-                          ...prevState,
-                          buildings: [],
-                        }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
-
-                    <option value="all" disabled={filter.buildings.length === 0}>
-                      Todas
-                    </option>
-
-                    {buildingsForSelect?.map((building) => (
-                      <option
-                        value={building.id}
-                        key={building.id}
-                        disabled={filter.buildings.some((b) => b === building.id)}
-                      >
-                        {building.name}
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            buildings: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
                       </option>
-                    ))}
-                  </FormikSelect>
 
-                  <FormikSelect
-                    id="users-select"
-                    label="Usuário"
-                    selectPlaceholderValue=" "
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('users', e.target.value);
-
-                      if (e.target.value === 'all') {
-                        setFilter((prevState) => ({
-                          ...prevState,
-                          users: [],
-                        }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
-
-                    <option value="all" disabled={filter.users.length === 0}>
-                      Todos
-                    </option>
-
-                    {usersForSelect?.map((user) => (
-                      <option
-                        value={user.id}
-                        key={user.id}
-                        disabled={filter.users.some((u) => u === user.id)}
-                      >
-                        {user.name}
+                      <option value="all" disabled={filter.buildings.length === 0}>
+                        Todas
                       </option>
-                    ))}
-                  </FormikSelect>
 
-                  <FormikSelect
-                    id="status-select"
-                    label="Status"
-                    selectPlaceholderValue={' '}
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('status', e.target.value);
+                      {buildingsForSelect?.map((building) => (
+                        <option
+                          value={building.id}
+                          key={building.id}
+                          disabled={filter.buildings.some((b) => b === building.id)}
+                        >
+                          {building.name}
+                        </option>
+                      ))}
+                    </FormikSelect>
 
-                      if (e.target.value === 'all') {
-                        setFilter((prevState) => ({
-                          ...prevState,
-                          status: [],
-                        }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
+                    <FormikSelect
+                      id="users-select"
+                      label="Usuário"
+                      selectPlaceholderValue=" "
+                      value=""
+                      onChange={(e) => {
+                        handleFilterChange('users', e.target.value);
 
-                    <option value="all" disabled={filter.status.length === 0}>
-                      Todas
-                    </option>
-
-                    {maintenanceStatusForSelect?.map((maintenanceStatus) => (
-                      <option
-                        key={maintenanceStatus.id}
-                        value={maintenanceStatus.name}
-                        disabled={filter.status.some((s) => s === maintenanceStatus.id)}
-                      >
-                        {capitalizeFirstLetter(maintenanceStatus.singularLabel ?? '')}
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            users: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
                       </option>
-                    ))}
-                  </FormikSelect>
 
-                  <FormikSelect
-                    id="category-select"
-                    label="Categoria"
-                    selectPlaceholderValue={' '}
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('categories', e.target.value);
-
-                      if (e.target.value === 'all') {
-                        setFilter((prevState) => ({
-                          ...prevState,
-                          status: [],
-                        }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
-
-                    <option value="all" disabled={filter.categories.length === 0}>
-                      Todas
-                    </option>
-
-                    {maintenanceCategoriesForSelect?.map((maintenanceCategory) => (
-                      <option
-                        key={maintenanceCategory.id}
-                        value={maintenanceCategory.id}
-                        disabled={filter.categories.some((c) => c === maintenanceCategory.id)}
-                      >
-                        {maintenanceCategory.name}
+                      <option value="all" disabled={filter.users.length === 0}>
+                        Todos
                       </option>
-                    ))}
-                  </FormikSelect>
 
-                  <Select
-                    arrowColor="primary"
-                    disabled={loading || !showPriority}
-                    selectPlaceholderValue={' '}
-                    label="Prioridade"
-                    value={filter.priorityName}
-                    onChange={(e) => {
-                      setFilter((prevState) => {
-                        const newState = { ...prevState };
-                        newState.priorityName = e.target.value;
-                        return newState;
-                      });
-                    }}
-                  >
-                    <option value="">Todas</option>
-                    <option value="low">Baixa</option>
-                    <option value="medium">Média</option>
-                    <option value="high">Alta</option>
-                  </Select>
+                      {usersForSelect?.map((user) => (
+                        <option
+                          value={user.id}
+                          key={user.id}
+                          disabled={filter.users.some((u) => u === user.id)}
+                        >
+                          {user.name}
+                        </option>
+                      ))}
+                    </FormikSelect>
 
-                  <FormikInput
-                    label="Data inicial"
-                    typeDatePlaceholderValue={filter.startDate}
-                    name="startDate"
-                    type="date"
-                    value={filter.startDate}
-                    onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                  />
+                    <FormikSelect
+                      id="status-select"
+                      label="Status"
+                      selectPlaceholderValue={' '}
+                      value=""
+                      onChange={(e) => {
+                        handleFilterChange('status', e.target.value);
 
-                  <FormikInput
-                    label="Data final"
-                    typeDatePlaceholderValue={filter.endDate}
-                    name="endDate"
-                    type="date"
-                    value={filter.endDate}
-                    onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                  />
-                </Style.FilterWrapper>
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            status: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
+                      </option>
 
-                <Style.FilterWrapperFooter>
-                  <Style.FilterButtonWrapper>
-                    <Button
-                      type="button"
-                      label="Limpar filtros"
-                      borderless
-                      textColor="primary"
-                      disable={loading}
-                      onClick={() => handleClearFilter()}
+                      <option value="all" disabled={filter.status.length === 0}>
+                        Todas
+                      </option>
+
+                      {maintenanceStatusForSelect?.map((maintenanceStatus) => (
+                        <option
+                          key={maintenanceStatus.id}
+                          value={maintenanceStatus.name}
+                          disabled={filter.status.some((s) => s === maintenanceStatus.id)}
+                        >
+                          {capitalizeFirstLetter(maintenanceStatus.singularLabel ?? '')}
+                        </option>
+                      ))}
+                    </FormikSelect>
+
+                    <FormikSelect
+                      id="category-select"
+                      label="Categoria"
+                      selectPlaceholderValue={' '}
+                      value=""
+                      onChange={(e) => {
+                        handleFilterChange('categories', e.target.value);
+
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            status: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
+                      </option>
+
+                      <option value="all" disabled={filter.categories.length === 0}>
+                        Todas
+                      </option>
+
+                      {maintenanceCategoriesForSelect?.map((maintenanceCategory) => (
+                        <option
+                          key={maintenanceCategory.id}
+                          value={maintenanceCategory.id}
+                          disabled={filter.categories.some((c) => c === maintenanceCategory.id)}
+                        >
+                          {maintenanceCategory.name}
+                        </option>
+                      ))}
+                    </FormikSelect>
+
+                    <Select
+                      arrowColor="primary"
+                      disabled={loading || !showPriority}
+                      selectPlaceholderValue={' '}
+                      label="Prioridade"
+                      value={filter.priorityName}
+                      onChange={(e) => {
+                        setFilter((prevState) => {
+                          const newState = { ...prevState };
+                          newState.priorityName = e.target.value;
+                          return newState;
+                        });
+                      }}
+                    >
+                      <option value="">Todas</option>
+                      <option value="low">Baixa</option>
+                      <option value="medium">Média</option>
+                      <option value="high">Alta</option>
+                    </Select>
+
+                    <FormikInput
+                      name="search"
+                      label="Buscar"
+                      placeholder="Procurar por algum termo"
+                      value={filter.search}
+                      onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
 
-                    <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
-                  </Style.FilterButtonWrapper>
+                    <FormikInput
+                      label="Data inicial"
+                      typeDatePlaceholderValue={filter.startDate}
+                      name="startDate"
+                      type="date"
+                      value={filter.startDate}
+                      onChange={(e) => handleFilterChange('startDate', e.target.value)}
+                    />
 
-                  <Style.FilterTags>
-                    {filter.buildings?.length === 0 ? (
-                      <ListTag
-                        label="Todas as edificações"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      filter.buildings?.map((building) => (
+                    <FormikInput
+                      label="Data final"
+                      typeDatePlaceholderValue={filter.endDate}
+                      name="endDate"
+                      type="date"
+                      value={filter.endDate}
+                      onChange={(e) => handleFilterChange('endDate', e.target.value)}
+                    />
+                  </Style.FilterWrapper>
+
+                  <Style.FilterWrapperFooter>
+                    <Style.FilterTags>
+                      {filter.buildings?.length === 0 ? (
                         <ListTag
-                          key={building}
-                          label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
+                          label="Todas as edificações"
                           color="white"
                           backgroundColor="primaryM"
                           fontWeight={500}
                           padding="4px 12px"
-                          onClick={() => {
-                            setFilter((prevState) => ({
-                              ...prevState,
-                              buildings: prevState.buildings?.filter((b) => b !== building),
-                            }));
-                          }}
                         />
-                      ))
-                    )}
+                      ) : (
+                        filter.buildings?.map((building) => (
+                          <ListTag
+                            key={building}
+                            label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                buildings: prevState.buildings?.filter((b) => b !== building),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
 
-                    {filter.users?.length === 0 ? (
-                      <ListTag
-                        label="Todos os usuários"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      filter.users?.map((user) => (
+                      {filter.users?.length === 0 ? (
                         <ListTag
-                          key={user}
-                          label={usersForSelect.find((u) => u.id === user)?.name || ''}
+                          label="Todos os usuários"
                           color="white"
                           backgroundColor="primaryM"
                           fontWeight={500}
                           padding="4px 12px"
-                          onClick={() => {
-                            setFilter((prevState) => ({
-                              ...prevState,
-                              users: prevState.users?.filter((u) => u !== user),
-                            }));
-                          }}
                         />
-                      ))
-                    )}
+                      ) : (
+                        filter.users?.map((user) => (
+                          <ListTag
+                            key={user}
+                            label={usersForSelect.find((u) => u.id === user)?.name || ''}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                users: prevState.users?.filter((u) => u !== user),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
 
-                    {filter.status?.length === 0 ? (
-                      <ListTag
-                        label="Todos os status"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      filter.status?.map((status) => (
+                      {filter.status?.length === 0 ? (
                         <ListTag
-                          key={status}
-                          label={capitalizeFirstLetter(
-                            maintenanceStatusForSelect.find((ms) => ms.name === status)
-                              ?.singularLabel || '',
-                          )}
+                          label="Todos os status"
                           color="white"
                           backgroundColor="primaryM"
                           fontWeight={500}
                           padding="4px 12px"
-                          onClick={() => {
-                            setFilter((prevState) => ({
-                              ...prevState,
-                              status: prevState.status?.filter((s) => s !== status),
-                            }));
-                          }}
                         />
-                      ))
-                    )}
+                      ) : (
+                        filter.status?.map((status) => (
+                          <ListTag
+                            key={status}
+                            label={capitalizeFirstLetter(
+                              maintenanceStatusForSelect.find((ms) => ms.name === status)
+                                ?.singularLabel || '',
+                            )}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                status: prevState.status?.filter((s) => s !== status),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
 
-                    {filter.categories?.length === 0 ? (
-                      <ListTag
-                        label="Todos as categorias"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      filter.categories?.map((category) => (
+                      {filter.categories?.length === 0 ? (
                         <ListTag
-                          key={category}
-                          label={
-                            maintenanceCategoriesForSelect.find((mc) => mc.id === category)?.name ||
-                            ''
-                          }
+                          label="Todos as categorias"
                           color="white"
                           backgroundColor="primaryM"
-                          padding="4px 12px"
                           fontWeight={500}
-                          onClick={() => {
-                            setFilter((prevState) => ({
-                              ...prevState,
-                              status: prevState.categories?.filter((c) => c !== category),
-                            }));
-                          }}
+                          padding="4px 12px"
                         />
-                      ))
-                    )}
-                  </Style.FilterTags>
-                </Style.FilterWrapperFooter>
-              </Form>
-            )}
-          </Formik>
-        </Style.FiltersContainer>
+                      ) : (
+                        filter.categories?.map((category) => (
+                          <ListTag
+                            key={category}
+                            label={
+                              maintenanceCategoriesForSelect.find((mc) => mc.id === category)
+                                ?.name || ''
+                            }
+                            color="white"
+                            backgroundColor="primaryM"
+                            padding="4px 12px"
+                            fontWeight={500}
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                status: prevState.categories?.filter((c) => c !== category),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
+                    </Style.FilterTags>
+
+                    <Style.FilterButtonWrapper>
+                      <Button
+                        type="button"
+                        label="Limpar filtros"
+                        borderless
+                        textColor="primary"
+                        disable={loading}
+                        onClick={() => handleClearFilter()}
+                      />
+
+                      <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
+                    </Style.FilterButtonWrapper>
+                  </Style.FilterWrapperFooter>
+                </Form>
+              )}
+            </Formik>
+          </Style.FiltersContainer>
+        )}
 
         {loading && (
           <Style.Kanban>

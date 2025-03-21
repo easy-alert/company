@@ -23,7 +23,7 @@ export const createChecklist = async ({
   interval,
   status,
 }: ICreateChecklist) => {
-  const uri = `/checklists/v2`;
+  const uri = `/checklists`;
 
   const body = {
     buildingId,

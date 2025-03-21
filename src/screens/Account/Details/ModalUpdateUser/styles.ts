@@ -35,4 +35,5 @@ export const SelectedColorBox = styled.div<{ selectedColor: string }>`
   color: ${({ selectedColor }) => selectedColor};
   font-size: 14px;
   font-weight: bold;
+  margin-left: 15px;
 `;
