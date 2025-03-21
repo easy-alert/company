@@ -47,7 +47,7 @@ export const Login = () => {
 
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
-  const previousLocation = query.get('location');
+  const redirect = query.get('redirect');
 
   const handleLoginCompany = async (data: IFormData) => {
     setOnQuery(true);
@@ -67,7 +67,7 @@ export const Login = () => {
 
       if (responseData) {
         signin(responseData);
-        navigate(previousLocation || '/home');
+        navigate(redirect || '/home');
       }
     } finally {
       setOnQuery(false);
