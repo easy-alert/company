@@ -40,6 +40,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
 
   const backofficeToken = query.get('backofficeToken') ?? null;
   const userId = query.get('userId') ?? null;
+  const encodeRedirectUri = encodeURIComponent(location.pathname + location.search);
 
   const requestAccessToCompanyUser = async () => {
     await Api.post('/auth/backofficeaccess', {
@@ -66,7 +67,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
       })
       .catch(() => {
         signout();
-        navigate(`/login?location=${location.key + location.search}`);
+        navigate(`/login?redirect=${encodeRedirectUri}`);
       });
   };
 
@@ -93,7 +94,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     } else if (localStorage.getItem('authToken')) {
       validateToken();
     } else {
-      navigate(`/login?location=${location.pathname + location.search}`);
+      navigate(`/login?redirect=${encodeRedirectUri}`);
     }
   }, []);
 
