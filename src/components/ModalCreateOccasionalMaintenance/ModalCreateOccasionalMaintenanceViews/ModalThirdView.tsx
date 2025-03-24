@@ -174,7 +174,7 @@ function ModalThirdView({
         <Style.FileAndImageRow>
           <Style.DragAndDropZoneImage {...getRootPropsImages({ className: 'dropzone' })}>
             <input {...getInputPropsImages()} />
-            <Image img={icon.addImage} width="40px" height="38px" radius="0" fill="primary" />
+            <Image img={icon.addImage} width="40px" height="38px" radius="" />
           </Style.DragAndDropZoneImage>
 
           {occasionalMaintenanceData.reportData.images.map((image, i: number) => (
