@@ -6,7 +6,7 @@ describe('Tests in Register Page', () => {
     cy.getByTestId('company-logo').should('be.visible');
   });
 
-  it('should upload a valid image successfully', () => {
+  it('must show the logo', () => {
     cy.getByTestId('image-input').selectFile('cypress/fixtures/image-test.png', { force: true });
   });
 
@@ -65,22 +65,13 @@ describe('Tests in Register Page', () => {
       );
     });
 
-    it('should show an error when the email is empty', () => {
-      cy.getByTestId('name-input').should('be.visible').type('Jo');
-      cy.getByTestId('register-button').should('be.visible').click();
-      cy.getByTestId('name-error').should(
-        'contain.text',
-        'O nome deve conter 3 ou mais caracteres.',
-      );
-    });
-
-    it('should show an error when company name is too short', () => {
+    it('should show an error when the email is invalid', () => {
       cy.getByTestId('email-input').should('be.visible').type('test@gmail');
       cy.getByTestId('register-button').should('be.visible').click();
       cy.getByTestId('email-error').should('contain.text', 'Informe um e-mail válido.');
     });
 
-    it('should show an error when contact number is too short', () => {
+    it('should show an error when company name is too short', () => {
       cy.getByTestId('companyName-input').should('be.visible').type('Mi');
       cy.getByTestId('register-button').should('be.visible').click();
       cy.getByTestId('companyName-error').should(
@@ -89,7 +80,7 @@ describe('Tests in Register Page', () => {
       );
     });
 
-    it('should show an error when CNPJ or CPF is empty', () => {
+    it('should show error when phone is incomplete', () => {
       cy.getByTestId('contactNumber-input').should('be.visible').type('(48) 99999-99');
       cy.getByTestId('register-button').should('be.visible').click();
       cy.getByTestId('contactNumber-error').should(
@@ -98,7 +89,7 @@ describe('Tests in Register Page', () => {
       );
     });
 
-    it('should toggle password visibility when clicking the view icon', () => {
+    it('should show error when CNPJ or CPF is incomplete', () => {
       cy.getByTestId('CNPJorCPF-input').should('be.visible').type('123456');
       cy.getByTestId('register-button').should('be.visible').click();
       cy.getByTestId('CNPJorCPF-error').should('contain.text', 'Informe um CNPJ ou um CPF válido.');
@@ -133,7 +124,7 @@ describe('Tests in Register Page', () => {
     });
   });
 
-  describe('Redirect to other page', () => {
+  describe('redirect to other page', () => {
     it('should redirect to the terms of use. page', () => {
       cy.getByTestId('terms-of-use').should('be.visible').click();
       cy.visit('/terms');
@@ -141,7 +132,7 @@ describe('Tests in Register Page', () => {
     });
   });
 
-  describe('Redirect to other page', () => {
+  describe('redirect to other page', () => {
     it('should redirect to the login page', () => {
       cy.getByTestId('login-link').should('be.visible').click();
       cy.url().should('include', '/login');
