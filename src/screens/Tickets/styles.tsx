@@ -215,9 +215,12 @@ export const KanbanTicketHeaderInfo = styled.div`
 `;
 
 export const KanbanTicketNumber = styled.h1`
+  min-width: 30px;
+
   font-size: 18px;
   font-weight: 700;
   line-height: 16px;
+
   color: ${theme.color.primary};
 `;
 

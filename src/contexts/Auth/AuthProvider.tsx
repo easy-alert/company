@@ -43,9 +43,27 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }));
   };
 
+  const handleChangeCompanyUsers = (users: IAccount['Company']['UserCompanies']) => {
+    setAccount((prev) => ({
+      ...prev,
+      Company: {
+        ...prev.Company,
+        UserCompanies: users,
+      },
+    }));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ account, setAccount, signin, signout, handleChangeUser, handleChangeCompany }}
+      value={{
+        account,
+        setAccount,
+        signin,
+        signout,
+        handleChangeUser,
+        handleChangeCompany,
+        handleChangeCompanyUsers,
+      }}
     >
       {children}
     </AuthContext.Provider>
