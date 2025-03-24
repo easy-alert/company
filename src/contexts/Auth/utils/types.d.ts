@@ -7,6 +7,7 @@ export interface IAuthContext {
   signout: () => void;
   handleChangeUser: (user: IAccount['User']) => void;
   handleChangeCompany: (company: IAccount['Company']) => void;
+  handleChangeCompanyUsers: (users: IAccount['Company']['UserCompanies']) => void;
 }
 
 export interface ILoginRequest {
