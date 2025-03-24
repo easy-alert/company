@@ -2,8 +2,8 @@
 import * as yup from 'yup';
 
 // FUNCTIONS
-import { Api } from '../../../services/api';
-import { catchHandler, unMask, uploadFile } from '../../../utils/functions';
+import { Api } from '@services/api';
+import { catchHandler, unMask, uploadFile } from '@utils/functions';
 
 // TYPES
 import { IRequestCreateCompanyAndOWner } from './types';
@@ -36,7 +36,7 @@ export const requestCreateCompanyAndOWner = async ({
   })
     .then((res) => {
       signin(res.data);
-      navigate('/dashboard');
+      navigate('/home');
     })
     .catch((err) => {
       setOnQuery(false);

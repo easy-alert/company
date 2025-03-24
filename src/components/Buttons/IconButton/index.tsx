@@ -26,6 +26,7 @@ export const IconButton = ({
   permToCheck,
   onClick,
   onAuxClick,
+  ...rest
 }: IIconButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
 
@@ -54,6 +55,7 @@ export const IconButton = ({
       onAuxClick={(evt) => {
         if (onAuxClick) onAuxClick(evt);
       }}
+      {...rest}
     >
       {loading ? <SpinnerContent $size={size} /> : <Image img={icon} size={size} radius="0px" />}
 
