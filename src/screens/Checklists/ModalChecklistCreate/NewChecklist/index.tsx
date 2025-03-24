@@ -98,7 +98,7 @@ export const NewChecklist = ({
             }}
           />
 
-          <Button label="Salvar" bgColor="transparent" onClick={saveChecklist} />
+          <Button label="Salvar" bgColor="primary" onClick={saveChecklist} />
         </Style.ChecklistButtons>
       </Style.ChecklistContainer>
     </Style.Content>
