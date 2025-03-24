@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // LIBS
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
@@ -45,6 +45,7 @@ interface IUserBuildingsPermissions {
 
 function UserPermissions() {
   const { userId } = useParams() as { userId: string };
+  const navigate = useNavigate();
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: false });
 
   const [userPermissions, setUserPermissions] = useState<IUserPermissions[]>([]);
@@ -114,6 +115,8 @@ function UserPermissions() {
         userId,
         userBuildingsPermissions,
       });
+
+      navigate('/account');
     } catch (error: any) {
       handleToastify(error);
     } finally {
