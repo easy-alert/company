@@ -107,7 +107,7 @@ export const SuppliersList = () => {
 
         <Style.Header>
           <Style.LeftSide>
-            <h2>Fornecedores</h2>
+            <h2>Prestador de serviço</h2>
 
             <IconButton
               labelPos="right"
@@ -327,7 +327,7 @@ export const SuppliersList = () => {
       {suppliers.length === 0 && (
         <NoDataContainer>
           <Image img={icon.paper} size="80px" radius="0" />
-          <h3>Nenhum fornecedor encontrado.</h3>
+          <h3>Nenhum prestador de serviço encontrado.</h3>
         </NoDataContainer>
       )}
     </>

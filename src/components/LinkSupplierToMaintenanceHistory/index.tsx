@@ -49,7 +49,7 @@ export const LinkSupplierToMaintenanceHistory = ({
   const findMaintenanceHistorySupplier = async () => {
     if (!maintenanceHistoryId) {
       setModalLinkSupplierOpen(false);
-      toast.error('Erro ao buscar fornecedores vinculados.');
+      toast.error('Erro ao buscar prestador de serviço vinculados.');
       return;
     }
 
@@ -132,7 +132,7 @@ export const LinkSupplierToMaintenanceHistory = ({
       <Style.Container>
         {suppliers.length === 0 && (
           <Style.Header>
-            <h3>Fornecedor</h3>
+            <h3>Prestador de serviço</h3>
 
             <IconButton
               label="Vincular"
@@ -151,7 +151,7 @@ export const LinkSupplierToMaintenanceHistory = ({
           suppliers.map(({ name, id, email, phone, image }, index) => (
             <Style.Container key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
               <Style.Header>
-                <h3>Fornecedor</h3>
+                <h3>Prestador de serviço</h3>
 
                 <IconButton
                   label="Desvincular"
@@ -187,7 +187,7 @@ export const LinkSupplierToMaintenanceHistory = ({
             </Style.Container>
           ))
         ) : (
-          <p className="p2 opacity">Nenhum fornecedor vinculado.</p>
+          <p className="p2 opacity">Nenhum prestador de serviço vinculado.</p>
         )}
       </Style.Container>
     </>

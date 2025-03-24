@@ -91,7 +91,7 @@ export const ModalCreateAndLinkSupplier = ({
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
 
   return (
-    <CustomModal title="Cadastrar e vincular fornecedor" setModal={setModal} zIndex={22}>
+    <CustomModal title="Cadastrar e vincular prestador de serviço" setModal={setModal} zIndex={22}>
       <Formik
         initialValues={{
           image: '',
@@ -118,7 +118,7 @@ export const ModalCreateAndLinkSupplier = ({
 
           if (!data.email && !data.phone) {
             setOnQuery(false);
-            toast.error('Informe um e-mail ou telefone para o fornecedor.');
+            toast.error('Informe um e-mail ou telefone para o prestador de serviço.');
             return;
           }
 
@@ -162,7 +162,7 @@ export const ModalCreateAndLinkSupplier = ({
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
-                placeholder="Informe o nome do fornecedor"
+                placeholder="Informe o nome do prestador de serviço"
               />
 
               <FormikInput
