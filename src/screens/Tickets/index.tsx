@@ -719,7 +719,7 @@ function TicketsPage() {
                           </Style.KanbanTicketNumber>
 
                           <Style.KanbanTicketBuildingName>
-                            - {ticket.building?.name}
+                            {ticket.building?.name}
                           </Style.KanbanTicketBuildingName>
                         </Style.KanbanTicketHeaderInfo>
 
