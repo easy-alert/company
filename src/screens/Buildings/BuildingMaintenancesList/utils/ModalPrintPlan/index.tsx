@@ -31,8 +31,8 @@ import { image } from '@assets/images';
 import * as Style from './styles';
 
 // TYPES
-import { IModalPrintPlan } from './types';
-import { AddedMaintenances } from '../types';
+import type { IModalPrintPlan } from './types';
+import type { AddedMaintenances } from '../types';
 
 const styles = StyleSheet.create({
   page: {
