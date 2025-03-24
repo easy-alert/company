@@ -1,10 +1,8 @@
 /* eslint-disable react/no-array-index-key */
-
-// HOOKS
-import { useAuthContext } from '@contexts/Auth/UseAuthContext';
-
-// COMPONENTS
+// REACT
 import React, { useState } from 'react';
+
+// LIBS
 import {
   Page,
   Text,
@@ -15,19 +13,26 @@ import {
   PDFViewer,
   Image,
 } from '@react-pdf/renderer';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
 import { Button } from '@components/Buttons/Button';
 import { Modal } from '@components/Modal';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { image } from '@assets/images';
+
+// STYLES
+import * as Style from './styles';
 
 // TYPES
 import { IModalPrintPlan } from './types';
 import { AddedMaintenances } from '../types';
-
-// STYLES
-import * as Style from './styles';
-import { theme } from '../../../../../styles/theme';
-
-// FUNCTIONS
-import { image } from '../../../../../assets/images';
 
 const styles = StyleSheet.create({
   page: {
