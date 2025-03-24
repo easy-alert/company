@@ -292,6 +292,7 @@ export const ModalChecklistCreate = ({
                   <option value="2">A cada 2 dias</option>
                   <option value="3">A cada 3 dias</option>
                   <option value="7">Semanal</option>
+                  <option value="15">Quinzenal</option>
                   <option value="30">Mensal</option>
                   <option value="60">Bimestral</option>
                   <option value="90">Trimestral</option>
