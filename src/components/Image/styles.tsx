@@ -16,14 +16,7 @@ export const ImgHolder = styled.div<ImageProps>`
   ${({ width }) => width && `min-width:${width}; width: ${width};`}
 
   ${({ height }) => height && `min-height: ${height}; height: ${height};`}
-  
-  ${({ hasCircle, theme }) =>
-    hasCircle &&
-    `
-      background-color: ${theme.color.primary}; 
-      border-radius: 50%;
-      padding: 5px;
-    `}
+
 
   > img {
     object-fit: contain;
@@ -32,16 +25,9 @@ export const ImgHolder = styled.div<ImageProps>`
 
     ${({ size }) =>
       size && `min-width:${size}; width: ${size}; min-height:${size}; height:${size};`}
-    
-    ${({ width }) => width && `min-width:${width}; width:${width};`}
-    
-    ${({ height }) => height && `min-height:${height}; height:${height};`}
-    
-    ${({ hasCircle }) => hasCircle && `border-radius: 50%;`}
-  }
 
-  svg {
-    ${({ fill }) => fill && `fill: ${fill};`}
-    ${({ strokeColor }) => strokeColor && `stroke: ${strokeColor};`}
+    ${({ width }) => width && `min-width:${width}; width:${width};`}
+
+    ${({ height }) => height && `min-height:${height}; height:${height};`}
   }
 `;
