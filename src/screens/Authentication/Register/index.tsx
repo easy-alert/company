@@ -49,7 +49,7 @@ export const Register = () => {
       >
         {({ errors, values, touched, setFieldValue }) => (
           <>
-            <img src={icon.logoTextWhite} alt="" />
+            <img src={icon.logoTextWhite} alt="" data-testid="company-logo" />
 
             <Style.LoginContainer>
               <Form>
@@ -83,7 +83,7 @@ export const Register = () => {
                     name="email"
                     value={values.email}
                     error={touched.email && errors.email ? errors.email : null}
-                    placeholder="Ex:  joao.silva@easyalert.com"
+                    placeholder="Ex: joao.silva@easyalert.com"
                   />
                   <FormikInput
                     labelColor={theme.color.white}
@@ -161,6 +161,7 @@ export const Register = () => {
                       onClick={() => {
                         setShowPassword((prevState) => !prevState);
                       }}
+                      data-testid="view-password"
                       opacity="1"
                     />
                   </Style.PasswordDiv>
@@ -182,6 +183,7 @@ export const Register = () => {
                       maxLength={120}
                     />
                     <IconButton
+                      data-testid="view-password"
                       icon={showPassword2 ? icon.eye : icon.eyeGray}
                       size="20px"
                       onClick={() => {
@@ -192,17 +194,31 @@ export const Register = () => {
                   </Style.PasswordDiv>
                   <p className="p3">
                     Ao clicar em cadastrar, você concorda com os{' '}
-                    <Link target="_blank" rel="noopener noreferrer" to="/terms">
+                    <Link
+                      data-testid="terms-of-use"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      to="/terms"
+                    >
                       Termos de Uso
                     </Link>
                     .
                   </p>
                 </Style.InputWrapper>
-                <Button center label="Cadastrar" type="submit" loading={onQuery} />
+                <Button
+                  center
+                  data-testid="register-button"
+                  label="Cadastrar"
+                  type="submit"
+                  loading={onQuery}
+                />
               </Form>
             </Style.LoginContainer>
             <p className="p2">
-              Já possui conta? <Link to="/login">Faça login</Link>
+              Já possui conta?{' '}
+              <Link data-testid="login-link" to="/login">
+                Faça login
+              </Link>
             </p>
           </>
         )}

@@ -60,6 +60,7 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
         />
         {passwordShowToggle && (
           <IconButton
+            data-testid="view-password"
             icon={<IconEye strokeColor={showPassword ? 'primary' : 'gray4'} />}
             size="20px"
             onClick={() => setShowPassword((prevState) => !prevState)}
