@@ -187,7 +187,7 @@ export const AccountDetails = () => {
         </Style.Header>
 
         <Style.CardContainer>
-          <Style.CardImageContainer>
+          <Style.CardImageContainer style={{ maxHeight: '195px' }}>
             <Image img={account.Company.image} size="100%" radius="" />
           </Style.CardImageContainer>
 
@@ -213,17 +213,17 @@ export const AccountDetails = () => {
           <div style={{ display: 'flex', gap: '10px' }}>
             {account?.User.isCompanyOwner && (
               <IconButton
-                hideLabelOnMedia
-                icon={<IconEye strokeColor="primary" />}
                 label="Permissões"
+                icon={<IconEye strokeColor="primary" />}
+                hideLabelOnMedia
                 onClick={() => navigate(`/account/${account.User.id}/permissions`)}
               />
             )}
 
             <IconButton
-              hideLabelOnMedia
-              icon={<IconEdit strokeColor="primary" />}
               label="Editar"
+              icon={<IconEdit strokeColor="primary" />}
+              hideLabelOnMedia
               onClick={() => {
                 setSelectedUser({
                   id: account?.User.id,
@@ -242,7 +242,7 @@ export const AccountDetails = () => {
         </Style.Header>
 
         <Style.CardContainer>
-          <Style.CardImageContainer>
+          <Style.CardImageContainer style={{ maxHeight: '236px' }}>
             <Image img={account.User.image || icon.personPlaceholder} size="100%" radius="" />
           </Style.CardImageContainer>
 
@@ -336,7 +336,9 @@ export const AccountDetails = () => {
                   key={User.id}
                   colsBody={[
                     {
-                      cell: <Image img={User.image || icon.personPlaceholder} size="36px" />,
+                      cell: (
+                        <Image img={User.image || icon.personPlaceholder} size="36px" radius="" />
+                      ),
                       cssProps: { padding: '5px' },
                     },
                     { cell: <TableCell value={User.name} /> },
