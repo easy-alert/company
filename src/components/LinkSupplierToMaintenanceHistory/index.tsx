@@ -49,7 +49,7 @@ export const LinkSupplierToMaintenanceHistory = ({
   const findMaintenanceHistorySupplier = async () => {
     if (!maintenanceHistoryId) {
       setModalLinkSupplierOpen(false);
-      toast.error('Erro ao buscar prestador de serviço vinculados.');
+      toast.error('Erro ao buscar prestadores de serviço vinculados.');
       return;
     }
 

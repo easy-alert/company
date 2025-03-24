@@ -43,7 +43,7 @@ export const ModalLinkSupplier = ({
   const findCompanySuppliers = async () => {
     if (!maintenanceHistoryId) {
       setModal(false);
-      toast.error('Erro ao buscar prestador de serviço. Tente novamente.');
+      toast.error('Erro ao buscar prestadores de serviço. Tente novamente.');
       return;
     }
 

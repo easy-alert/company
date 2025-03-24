@@ -107,7 +107,7 @@ export const SuppliersList = () => {
 
         <Style.Header>
           <Style.LeftSide>
-            <h2>Prestador de serviço</h2>
+            <h2>Prestadores de serviço</h2>
 
             <IconButton
               labelPos="right"

@@ -149,7 +149,7 @@ export const Sidebar = () => {
       ],
     },
     {
-      title: 'Prestador de serviço',
+      title: 'Prestadores de serviço',
       type: 'navigate',
       icon: icon.suppliers,
       permission: 'access:suppliers',
