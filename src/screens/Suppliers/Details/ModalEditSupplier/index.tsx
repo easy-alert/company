@@ -98,7 +98,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   return (
-    <Modal title="Editar fornecedor" setModal={setModal}>
+    <Modal title="Editar prestador de serviço" setModal={setModal}>
       <Formik
         initialValues={{
           id: supplier.id,
@@ -164,7 +164,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
                 label="Nome *"
                 name="name"
                 error={touched.name && errors.name ? errors.name : null}
-                placeholder="Informe o nome do fornecedor"
+                placeholder="Informe o nome do prestador de serviço"
               />
 
               <FormikInput

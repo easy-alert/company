@@ -192,7 +192,7 @@ export const SupplierDetails = () => {
           )}
 
           <Style.Header>
-            <h2>Detalhes de fornecedor</h2>
+            <h2>Detalhes de prestador de serviço</h2>
           </Style.Header>
 
           <ReturnButton path={`/suppliers${window.location.search}`} />
@@ -264,7 +264,7 @@ export const SupplierDetails = () => {
               label="Excluir"
               buttonIcon={icon.trashWithBg}
               message={{
-                title: 'Deseja excluir este fornecedor?',
+                title: 'Deseja excluir este prestador de serviço?',
                 content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
                 contentColor: theme.color.danger,
               }}
@@ -356,7 +356,8 @@ export const SupplierDetails = () => {
                               unlinkToMaintenance(id);
                             }}
                             message={{
-                              title: 'Deseja remover a sugestão deste fornecedor na manutenção?',
+                              title:
+                                'Deseja remover a sugestão deste prestador de serviço na manutenção?',
                               content: 'Esta ação é reversível.',
                             }}
                             buttonIconSize="18px"
