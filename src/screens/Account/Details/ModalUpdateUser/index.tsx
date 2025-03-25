@@ -58,7 +58,7 @@ interface IModalUpdateUser {
 }
 
 export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser) => {
-  const { handleChangeUser } = useAuthContext();
+  const { account, handleChangeUser, handleChangeCompanyUsers } = useAuthContext();
   const { updateThemeColor } = useCustomTheme();
 
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
@@ -93,7 +93,24 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
 
       if (!updatedUser) return;
 
-      handleChangeUser(updatedUser as IAccount['User']);
+      if (account.User.id === updatedUser.id) {
+        handleChangeUser(updatedUser as IAccount['User']);
+      } else {
+        const newUserCompany = account.Company.UserCompanies.map((userInfo) => {
+          if (userInfo.User.id === updatedUser.id) {
+            return {
+              ...userInfo,
+              User: updatedUser,
+            };
+          }
+
+          return userInfo;
+        });
+
+        handleChangeCompanyUsers(newUserCompany as IAccount['Company']['UserCompanies']);
+      }
+
+      // handleChangeCompanyUsers
       updateThemeColor(updatedUser.colorScheme);
       handleModals('updateUser', false);
     } finally {

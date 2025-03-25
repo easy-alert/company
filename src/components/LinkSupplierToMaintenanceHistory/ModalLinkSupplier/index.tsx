@@ -43,7 +43,7 @@ export const ModalLinkSupplier = ({
   const findCompanySuppliers = async () => {
     if (!maintenanceHistoryId) {
       setModal(false);
-      toast.error('Erro ao buscar fornecedores. Tente novamente.');
+      toast.error('Erro ao buscar prestadores de serviço. Tente novamente.');
       return;
     }
 
@@ -86,14 +86,21 @@ export const ModalLinkSupplier = ({
   }, []);
 
   return (
-    <CustomModal setModal={setModal} title="Vincular fornecedor" id="supplier" zIndex={20}>
+    <CustomModal
+      setModal={setModal}
+      title="Vincular prestador de serviço"
+      id="supplier"
+      zIndex={20}
+    >
       {loading ? (
         <LoadingWrapper minHeight="300px">
           <DotSpinLoading />
         </LoadingWrapper>
       ) : (
         <Style.Container>
-          <p className="p2">Clique em uma das opções abaixo para vincular o fornecedor desejado:</p>
+          <p className="p2">
+            Clique em uma das opções abaixo para vincular o prestador de serviço desejado:
+          </p>
 
           <Style.Content>
             <Style.Section>
@@ -117,7 +124,7 @@ export const ModalLinkSupplier = ({
                   ))}
                 </Style.ScrollDiv>
               ) : (
-                <p className="p4 opacity">Nenhum fornecedor encontrado.</p>
+                <p className="p4 opacity">Nenhum prestador de serviço encontrado.</p>
               )}
             </Style.Section>
 
@@ -142,13 +149,13 @@ export const ModalLinkSupplier = ({
                   ))}
                 </Style.ScrollDiv>
               ) : (
-                <p className="p4 opacity">Nenhum fornecedor encontrado.</p>
+                <p className="p4 opacity">Nenhum prestador de serviço encontrado.</p>
               )}
             </Style.Section>
           </Style.Content>
 
           <p className="p3">
-            Não encontrou o fornecedor que procura?{' '}
+            Não encontrou o prestador de serviço que procura?{' '}
             <span
               role="button"
               tabIndex={0}
