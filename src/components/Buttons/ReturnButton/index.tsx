@@ -21,7 +21,7 @@ export const ReturnButton = ({ path }: { path?: string }) => {
         }
       }}
     >
-      <Image img={<IconLeftArrow strokeColor="primary" />} size="16px" fill="primary" />
+      <Image img={<IconLeftArrow strokeColor="primary" />} size="16px" />
       <h6>Voltar</h6>
     </Background>
   );

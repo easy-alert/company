@@ -96,7 +96,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
   const { cities } = useBrasilCities({ UF: convertStateName(selectedState) });
 
   return (
-    <Modal title="Cadastrar fornecedor" setModal={setModal}>
+    <Modal title="Cadastrar prestador de serviço" setModal={setModal}>
       <Formik
         initialValues={{
           image: '',
@@ -122,7 +122,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
 
           if (!data.email && !data.phone) {
             setOnQuery(false);
-            toast.error('Informe um e-mail ou telefone para o fornecedor.');
+            toast.error('Informe um e-mail ou telefone para o prestador de serviço.');
             return;
           }
 
@@ -166,7 +166,7 @@ export const ModalCreateSupplier = ({ setModal, onThenRequest }: IModalCreateSup
                 name="name"
                 value={values.name}
                 error={touched.name && errors.name ? errors.name : null}
-                placeholder="Informe o nome do fornecedor"
+                placeholder="Informe o nome do prestador de serviço"
               />
 
               <FormikInput

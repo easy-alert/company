@@ -29,6 +29,7 @@ export async function updateUser({ data }: IUpdateUser) {
     const response = await Api.put(uri, body);
 
     const updatedUser = {
+      id: response.data.updatedUser.id,
       image: response.data.updatedUser.image,
       name: response.data.updatedUser.name,
       email: response.data.updatedUser.email,

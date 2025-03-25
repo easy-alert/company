@@ -61,7 +61,7 @@ export const ImagePreview = ({
         )}
         {downloadUrl && (
           <a href={downloadUrl} download target="_blank" rel="noreferrer">
-            <Image img={icon.downloadRedBg} hasCircle radius="0px" size="24px" />
+            <Image img={icon.downloadRedBg} size="24px" radius="" />
           </a>
         )}
       </Style.ActionsHover>

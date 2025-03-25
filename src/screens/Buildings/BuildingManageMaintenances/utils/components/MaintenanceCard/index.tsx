@@ -155,7 +155,7 @@ export const MaintenanceCard = ({
               </div>
               <Style.ArrowContainer>
                 <Style.Arrow cardIsOpen={cardIsOpen}>
-                  <Image img={<IconDownArrow strokeColor="primary" />} size="16px" fill="primary" />
+                  <Image img={<IconDownArrow strokeColor="primary" />} size="16px" />
                 </Style.Arrow>
               </Style.ArrowContainer>
             </Style.MaintenancesGrid>

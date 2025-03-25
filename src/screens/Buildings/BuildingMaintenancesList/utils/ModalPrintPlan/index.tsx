@@ -1,6 +1,8 @@
 /* eslint-disable react/no-array-index-key */
-// COMPONENTS
+// REACT
 import React, { useState } from 'react';
+
+// LIBS
 import {
   Page,
   Text,
@@ -12,18 +14,25 @@ import {
   Image,
 } from '@react-pdf/renderer';
 
-// TYPES
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { Modal } from '@components/Modal';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import { image } from '@assets/images';
 
 // STYLES
 import * as Style from './styles';
 
-// FUNCTIONS
-import { image } from '../../../../../assets/images';
-import { Button } from '../../../../../components/Buttons/Button';
-import { Modal } from '../../../../../components/Modal';
-import { theme } from '../../../../../styles/theme';
-import { IModalPrintPlan } from './types';
-import { AddedMaintenances } from '../types';
+// TYPES
+import type { IModalPrintPlan } from './types';
+import type { AddedMaintenances } from '../types';
 
 const styles = StyleSheet.create({
   page: {
@@ -160,8 +169,10 @@ const styles = StyleSheet.create({
 
 const MyDocument = ({
   setLoading,
+  companyImage,
   categories,
 }: {
+  companyImage?: string;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   categories: AddedMaintenances[];
 }) => (
@@ -175,7 +186,17 @@ const MyDocument = ({
     <Page size="A4" style={styles.page} orientation="landscape">
       <View>
         <View fixed style={styles.header}>
-          <Image src={image.logoForPDF2} style={styles.companyLogo} />
+          <Image
+            src={{
+              method: 'GET',
+              headers: {
+                'Cache-Control': 'no-cache',
+              },
+              body: '',
+              uri: companyImage ?? image.logoForPDF2,
+            }}
+            style={styles.companyLogo}
+          />
 
           <View style={styles.headerSide}>
             <View style={styles.headerDiv}>
@@ -318,6 +339,8 @@ const MyDocument = ({
 
 export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const { account } = useAuthContext();
+  const companyImage = account?.Company?.image;
 
   return (
     <Modal bodyWidth="90vw" title="Plano de manutenção" setModal={setModal}>
@@ -326,10 +349,20 @@ export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
 
         <Style.Container>
           <PDFViewer style={{ width: '100%', height: '60vh' }}>
-            <MyDocument setLoading={setLoading} categories={categories} />
+            <MyDocument
+              setLoading={setLoading}
+              categories={categories}
+              companyImage={companyImage}
+            />
           </PDFViewer>
           <PDFDownloadLink
-            document={<MyDocument setLoading={setLoading} categories={categories} />}
+            document={
+              <MyDocument
+                setLoading={setLoading}
+                categories={categories}
+                companyImage={companyImage}
+              />
+            }
             fileName={`Plano de manutenção - ${
               categories[0].Building.name
             } - ${new Date().toLocaleDateString('pt-BR')}`}
