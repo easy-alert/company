@@ -71,36 +71,35 @@ export const ChecklistReports = () => {
     statusNames: [],
   });
 
-  const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
   const [buildingsForFilter, setBuildingsForFilter] = useState<string[]>([]);
   const [statusForFilter, setStatusForFilter] = useState<string[]>([]);
 
   // #endregion
 
   // #region csv
-  const csvHeaders = [
-    { label: 'Edificação', key: 'Edificação' },
-    { label: 'Status', key: 'Status' },
-    { label: 'Nome do checklist', key: 'Nome do checklist' },
-    { label: 'Descrição', key: 'Descrição' },
-    { label: 'Responsável', key: 'Responsável' },
-    { label: 'Periodicidade', key: 'Periodicidade' },
-    { label: 'Data', key: 'Data' },
-    { label: 'Observações', key: 'Observações' },
-    { label: 'Imagens do relato', key: 'Imagens do relato' },
-  ];
+  // const csvHeaders = [
+  //   { label: 'Edificação', key: 'Edificação' },
+  //   { label: 'Status', key: 'Status' },
+  //   { label: 'Nome do checklist', key: 'Nome do checklist' },
+  //   { label: 'Descrição', key: 'Descrição' },
+  //   { label: 'Responsável', key: 'Responsável' },
+  //   { label: 'Periodicidade', key: 'Periodicidade' },
+  //   { label: 'Data', key: 'Data' },
+  //   { label: 'Observações', key: 'Observações' },
+  //   { label: 'Imagens do relato', key: 'Imagens do relato' },
+  // ];
 
-  const csvData = checklists.map((data) => ({
-    Edificação: data.building.name,
-    Status: getSingularStatusNameforPdf(data.status),
-    'Nome do checklist': data.name,
-    Descrição: data.description,
-    Responsável: data.syndic?.name || '-',
-    Periodicidade: data.frequency ? 'Sim' : 'Não',
-    Data: dateFormatter(data.date),
-    Observações: data.observation || '',
-    'Imagens do relato': data.images.map(({ url }) => url).join('; '),
-  }));
+  // const csvData = checklists?.map((data) => ({
+  //   Edificação: data.building.name,
+  //   Status: getSingularStatusNameforPdf(data.status),
+  //   'Nome do checklist': data.name,
+  //   Descrição: data.description,
+  //   Responsável: data.syndic?.name || '-',
+  //   Periodicidade: data.frequency ? 'Sim' : 'Não',
+  //   Data: dateFormatter(data.date),
+  //   Observações: data.observation || '',
+  //   'Imagens do relato': data.images.map(({ url }) => url).join('; '),
+  // }));
   // #endregion
 
   // #region functions
@@ -161,6 +160,7 @@ export const ChecklistReports = () => {
 
       <s.Container>
         <h2>Relatórios de checklists</h2>
+
         <s.FiltersContainer>
           <Formik
             initialValues={{
@@ -171,8 +171,6 @@ export const ChecklistReports = () => {
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
-              setShowNoDataMessage(true);
-
               setFilterforRequest({
                 endDate: values.endDate,
                 startDate: values.startDate,
@@ -341,10 +339,8 @@ export const ChecklistReports = () => {
                       <IconButton
                         icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         label="Exportar"
-                        onClick={() => {
-                          setModalPrintReportOpen(true);
-                        }}
-                        disabled={checklists.length === 0}
+                        onClick={() => setModalPrintReportOpen(true)}
+                        disabled={checklists?.length === 0}
                       />
                       <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
                     </s.ButtonWrapper>
@@ -357,13 +353,13 @@ export const ChecklistReports = () => {
 
         {onQuery && <DotSpinLoading />}
 
-        {!onQuery && checklists.length === 0 && showNoDataMessage && (
+        {!onQuery && checklists?.length === 0 && (
           <s.NoMaintenanceCard>
             <h4>Nenhuma checklist encontrada.</h4>
           </s.NoMaintenanceCard>
         )}
 
-        {!onQuery && checklists.length > 0 && (
+        {!onQuery && checklists?.length > 0 && (
           <>
             <s.CountContainer>
               <s.Counts>
