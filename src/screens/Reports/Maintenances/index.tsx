@@ -521,7 +521,7 @@ export const MaintenanceReports = () => {
                   </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
-                      {/* <CSVLink
+                      <CSVLink
                         data={csvData}
                         headers={csvHeaders}
                         filename={`Relatório de manutenções ${new Date().toLocaleDateString(
@@ -537,7 +537,7 @@ export const MaintenanceReports = () => {
                             //
                           }}
                         />
-                      </CSVLink> */}
+                      </CSVLink>
 
                       <IconButton
                         label="Exportar"
