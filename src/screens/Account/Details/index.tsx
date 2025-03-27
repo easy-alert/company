@@ -33,6 +33,8 @@ import IconTrash from '@assets/icons/IconTrash';
 import { theme } from '@styles/theme';
 
 // COMPONENTS
+import IconLink from '@assets/icons/IconLink';
+import IconUnlink from '@assets/icons/IconUnlink';
 import { ModalEditCompany } from './ModalEditCompany';
 import { ModalUpdateUser } from './ModalUpdateUser';
 import { ModalCreateUser } from './ModalCreateUser';
@@ -53,7 +55,6 @@ export interface ISelectedUser {
 
 export const AccountDetails = () => {
   const { account, setAccount } = useAuthContext();
-
   const navigate = useNavigate();
 
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
@@ -95,7 +96,7 @@ export const AccountDetails = () => {
 
   const requestDeleteUser = async (id: string) => {
     setOnQuery(true);
-    await Api.delete(`/usercompany/delete/${id}`)
+    await Api.delete(`/usercompany/unlink/${id}`)
       .then((res) => {
         validateToken();
         toast.success(res.data.ServerMessage.message);
@@ -311,8 +312,8 @@ export const AccountDetails = () => {
 
             <IconButton
               hideLabelOnMedia
-              icon={<IconPlus strokeColor="primary" />}
-              label="Cadastrar"
+              icon={<IconLink strokeColor="primary" />}
+              label="Vincular"
               onClick={() => setModalCreateUserOpen(true)}
             />
           </Style.UsersCardHeader>
@@ -320,7 +321,6 @@ export const AccountDetails = () => {
           {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
             <ColorfulTable
               colsHeader={[
-                { label: '', cssProps: { width: '1%' } },
                 { label: 'Nome' },
                 { label: 'Email' },
                 { label: 'Telefone' },
@@ -328,7 +328,7 @@ export const AccountDetails = () => {
                 { label: 'Último acesso', cssProps: { width: '130px', textAlign: 'center' } },
                 { label: 'Data de cadastro', cssProps: { width: '150px', textAlign: 'center' } },
                 { label: 'Status', cssProps: { width: '1px', textAlign: 'center' } },
-                { label: '' },
+                { label: 'Ações', cssProps: { width: '1%', textAlign: 'center' } },
               ]}
             >
               {account?.Company.UserCompanies.map(({ User }) => (
@@ -337,11 +337,13 @@ export const AccountDetails = () => {
                   colsBody={[
                     {
                       cell: (
-                        <Image img={User.image || icon.personPlaceholder} size="36px" radius="" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <Image img={User.image || icon.personPlaceholder} size="36px" radius="" />
+
+                          <TableCell value={User.name} />
+                        </div>
                       ),
-                      cssProps: { padding: '5px' },
                     },
-                    { cell: <TableCell value={User.name} /> },
                     {
                       cell: (
                         <Style.TableDataWrapper>
@@ -443,18 +445,14 @@ export const AccountDetails = () => {
                             iconButtonClassName="p4"
                             actionButtonBgColor="primary"
                             type="IconButton"
-                            label="Excluir"
-                            buttonIcon={
-                              <IconTrash strokeColor="danger" size="18px" viewBox="0 0 24 24" />
-                            }
+                            label="Desvincular"
+                            buttonIcon={<IconUnlink strokeColor="primary" fillColor="primary" />}
                             message={{
-                              title: 'Deseja excluir este usuário?',
+                              title: 'Deseja Desvincular este usuário?',
                               content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
                               contentColor: theme.color.danger,
                             }}
-                            actionButtonClick={() => {
-                              requestDeleteUser(User.id);
-                            }}
+                            actionButtonClick={() => requestDeleteUser(User.id)}
                           />
                         </Style.TableButtons>
                       ),
