@@ -376,9 +376,9 @@ export const ModalSendMaintenanceReport = ({
             )}
 
             <div style={{ marginTop: '12px' }}>
-              {maintenance?.userResponsible && (
-                <UserResponsible user={maintenance?.userResponsible} />
-              )}
+              {maintenance?.Users?.length &&
+                maintenance.Users.length > 0 &&
+                maintenance.Users.map(({ User }) => <UserResponsible key={User.id} user={User} />)}
             </div>
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceHistoryId} />
