@@ -1,20 +1,24 @@
 import Select from 'react-select';
-import { IReactSelectComponent } from './types';
+
+import { theme as defaultTheme } from '@styles/theme';
+
 import * as Style from './styles';
-import { theme } from '../../styles/theme';
+
+import type { IReactSelectComponent } from './types';
 
 const customStyles = {
   control: (baseStyles: any, state: any) => ({
     ...baseStyles,
     cursor: 'pointer',
-    border: `1px solid ${theme.color.gray4}`,
+    border: `1px solid ${defaultTheme.color.gray4}`,
     boxShadow: state.isFocused ? 0 : 0,
     '&:hover': {
-      border: `1px solid ${theme.color.gray4}`,
+      border: `1px solid ${defaultTheme.color.gray4}`,
     },
     padding: 0,
     margin: 0,
   }),
+
   menu: (base: any) => ({
     ...base,
     marginTop: 2,
@@ -45,6 +49,18 @@ const customStyles = {
     margin: 0,
     paddingLeft: '3px',
   }),
+
+  dropdownIndicator: (base: any) => ({
+    ...base,
+
+    width: 35,
+    marginRight: 1.5,
+
+    svg: {
+      ...base.svg,
+      color: defaultTheme.color.primary, // Only changes the arrow icon
+    },
+  }),
 };
 
 export const ReactSelectComponent = ({
@@ -69,6 +85,7 @@ export const ReactSelectComponent = ({
 }: IReactSelectComponent) => (
   <Style.ReactSelectDiv selectPlaceholderValue={selectPlaceholderValue}>
     {label && <h6>{label}</h6>}
+
     <Select
       inputValue={inputValue}
       isMulti={isMulti}
@@ -79,6 +96,16 @@ export const ReactSelectComponent = ({
       placeholder={placeholder}
       isClearable={isClearable}
       styles={newCustomStyle || customStyles}
+      theme={(theme) => ({
+        ...theme,
+        colors: {
+          ...theme.colors,
+          primary: defaultTheme.color.primary,
+          primary25: defaultTheme.color.primaryL,
+          primary50: defaultTheme.color.primaryM,
+          primary75: defaultTheme.color.primaryM,
+        },
+      })}
       noOptionsMessage={noOptionsMessage}
       maxMenuHeight={maxMenuHeight}
       options={options}
@@ -86,6 +113,7 @@ export const ReactSelectComponent = ({
       isOptionDisabled={isOptionDisabled}
       defaultValue={defaultValue}
     />
+
     {!!error && (
       <Style.ErrorMessage>
         <p className="p3">{error}</p>
