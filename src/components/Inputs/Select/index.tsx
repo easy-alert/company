@@ -19,6 +19,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, ISelect> = (
   return (
     <SelectContainer selectPlaceholderValue={selectPlaceholderValue} arrowColor={arrowColor}>
       {label && <h6>{label}</h6>}
+
       <select
         id={name}
         name={name}
