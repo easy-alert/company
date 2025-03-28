@@ -41,6 +41,7 @@ import { ModalCreateUser } from './ModalCreateUser';
 
 // STYLES
 import * as Style from './styles';
+import { ModalLinkUser } from './ModalLinkUser';
 
 export interface ISelectedUser {
   id: string;
@@ -60,8 +61,9 @@ export const AccountDetails = () => {
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
 
   const [modalEditAccountOpen, setModalEditAccountOpen] = useState<boolean>(false);
-  const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
   const [modalCreateUserOpen, setModalCreateUserOpen] = useState<boolean>(false);
+  const [modalLinkUserOpen, setModalLinkUserOpen] = useState<boolean>(false);
+  const [modalUpdateUserOpen, setModalUpdateUserOpen] = useState<boolean>(false);
 
   const [onQuery, setOnQuery] = useState(false);
 
@@ -79,6 +81,9 @@ export const AccountDetails = () => {
       case 'createUser':
         setModalCreateUserOpen(modalState);
         break;
+      case 'linkUser':
+        setModalLinkUserOpen(modalState);
+        break;
       default:
         break;
     }
@@ -94,8 +99,9 @@ export const AccountDetails = () => {
       });
   };
 
-  const requestDeleteUser = async (id: string) => {
+  const requestUnlinkUser = async (id: string) => {
     setOnQuery(true);
+
     await Api.delete(`/usercompany/unlink/${id}`)
       .then((res) => {
         validateToken();
@@ -107,6 +113,20 @@ export const AccountDetails = () => {
         catchHandler(err);
       });
   };
+
+  // const requestDeleteUser = async (id: string) => {
+  //   setOnQuery(true);
+  //   await Api.delete(`/usercompany/delete/${id}`)
+  //     .then((res) => {
+  //       validateToken();
+  //       toast.success(res.data.ServerMessage.message);
+  //       setOnQuery(false);
+  //     })
+  //     .catch((err) => {
+  //       setOnQuery(false);
+  //       catchHandler(err);
+  //     });
+  // };
 
   const handleSendPhoneConfirmation = async (userId: string) => {
     await sendPhoneConfirmation({ userId, link: phoneConfirmUrl });
@@ -167,6 +187,10 @@ export const AccountDetails = () => {
 
       {modalCreateUserOpen && (
         <ModalCreateUser onThenRequest={validateToken} handleModals={handleModals} />
+      )}
+
+      {modalLinkUserOpen && (
+        <ModalLinkUser onThenRequest={validateToken} handleModals={handleModals} />
       )}
 
       {modalUpdateUserOpen && selectedUser && (
@@ -310,12 +334,21 @@ export const AccountDetails = () => {
           <Style.UsersCardHeader>
             <h5>Usuários</h5>
 
-            <IconButton
-              hideLabelOnMedia
-              icon={<IconLink strokeColor="primary" />}
-              label="Vincular"
-              onClick={() => setModalCreateUserOpen(true)}
-            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <IconButton
+                hideLabelOnMedia
+                icon={<IconLink strokeColor="primary" />}
+                label="Vincular"
+                onClick={() => setModalLinkUserOpen(true)}
+              />
+
+              <IconButton
+                hideLabelOnMedia
+                icon={<IconPlus strokeColor="primary" />}
+                label="Cadastrar"
+                onClick={() => setModalCreateUserOpen(true)}
+              />
+            </div>
           </Style.UsersCardHeader>
 
           {(account?.Company?.UserCompanies?.length || 0) > 0 ? (
@@ -452,7 +485,7 @@ export const AccountDetails = () => {
                               content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
                               contentColor: theme.color.danger,
                             }}
-                            actionButtonClick={() => requestDeleteUser(User.id)}
+                            actionButtonClick={() => requestUnlinkUser(User.id)}
                           />
                         </Style.TableButtons>
                       ),
