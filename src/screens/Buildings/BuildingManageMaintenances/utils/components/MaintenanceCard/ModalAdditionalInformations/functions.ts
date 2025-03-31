@@ -1,16 +1,17 @@
 import { toast } from 'react-toastify';
-import { IHandleAdditionalInformations } from './types';
+
+import type { IHandleAdditionalInformations } from './types';
 
 export const handleAdditionalInformations = ({
-  setCategories,
-  values,
-  categoryIndex,
-  maintenanceIndex,
-  setModal,
-  files,
-  images,
   maintenanceReport,
   categories,
+  categoryIndex,
+  maintenanceIndex,
+  files,
+  images,
+  values,
+  setCategories,
+  setModal,
 }: IHandleAdditionalInformations) => {
   if (values.lastResolutionDate && !values.firstNotificationDate) {
     const today = new Date(new Date().setHours(0, 0, 0, 0));
@@ -68,7 +69,11 @@ export const handleAdditionalInformations = ({
 
     newState[categoryIndex].Maintenances[maintenanceIndex].daysToAnticipate =
       values.daysToAnticipate || 0;
+
+    newState[categoryIndex].Maintenances[maintenanceIndex].status = values.status;
+
     return newState;
   });
+
   setModal(false);
 };

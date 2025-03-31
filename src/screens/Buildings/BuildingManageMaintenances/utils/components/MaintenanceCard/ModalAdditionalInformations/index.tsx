@@ -1,34 +1,44 @@
-// COMPONENTS
-import { Form, Formik } from 'formik';
+// REACT
 import { useEffect, useState } from 'react';
+
+// LIBS
 import * as yup from 'yup';
+import { Form, Formik } from 'formik';
 import { useDropzone } from 'react-dropzone';
-import { Button } from '../../../../../../../components/Buttons/Button';
-import { FormikCheckbox } from '../../../../../../../components/Form/FormikCheckbox';
-import { Modal } from '../../../../../../../components/Modal';
-import { FormikInput } from '../../../../../../../components/Form/FormikInput';
-import { Image } from '../../../../../../../components/Image';
-import { DotLoading } from '../../../../../../../components/Loadings/DotLoading';
 
-// STYLES
-import * as Style from './styles';
-import { icon } from '../../../../../../../assets/icons';
+// GLOBAL COMPONENTS
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { Button } from '@components/Buttons/Button';
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
+import { Modal } from '@components/Modal';
+import { FormikInput } from '@components/Form/FormikInput';
+import { Image } from '@components/Image';
+import { DotLoading } from '@components/Loadings/DotLoading';
+import { Input } from '@components/Inputs/Input';
+import { IconButton } from '@components/Buttons/IconButton';
+import { ImagePreview } from '@components/ImagePreview';
 
-// FUNCTIONS
-import { handleAdditionalInformations } from './functions';
+// GLOBAL UTILS
 import {
   applyMask,
   convertToFormikDate,
   increaseDaysInDate,
   uploadManyFiles,
-} from '../../../../../../../utils/functions';
+} from '@utils/functions';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// UTILS
+import { handleAdditionalInformations } from './functions';
+
+// STYLES
+import * as Style from './styles';
+
 // TYPES
-import { IModalAdditionalInformations } from './types';
-import { IMaintenanceReport } from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import { AnnexesAndImages } from '../../../../../../Calendar/types';
-import { Input } from '../../../../../../../components/Inputs/Input';
-import { IconButton } from '../../../../../../../components/Buttons/IconButton';
-import { ImagePreview } from '../../../../../../../components/ImagePreview';
+import type { IModalAdditionalInformations } from './types';
+import type { IMaintenanceReport } from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
+import type { AnnexesAndImages } from '../../../../../../Calendar/types';
 
 export const ModalAdditionalInformations = ({
   setModal,
@@ -48,6 +58,8 @@ export const ModalAdditionalInformations = ({
         is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
         then: yup.date().required('Informe a data da última conclusão.'),
       }),
+
+      status: yup.string().required('Campo obrigatório'),
 
       hasFirstNotificationDate: yup.boolean(),
       firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
@@ -167,6 +179,7 @@ export const ModalAdditionalInformations = ({
             ? convertToFormikDate(selectedMaintenance.resolutionDate)
             : '',
           hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
+          status: 'expired',
           firstNotificationDate: selectedMaintenance.notificationDate
             ? convertToFormikDate(selectedMaintenance.notificationDate)
             : '',
@@ -265,6 +278,19 @@ export const ModalAdditionalInformations = ({
                         });
                       }}
                     />
+
+                    <FormikSelect
+                      label="Status"
+                      name="status"
+                      disabled={hasHistory}
+                      onChange={(e) => setFieldValue('status', e.target.value)}
+                      error={touched.status && errors.status ? errors.status : null}
+                    >
+                      <option value="expired">Vencida</option>
+                      <option value="pending">Em andamento</option>
+                      <option value="completed">Concluída</option>
+                      <option value="overdue">Feita em atraso</option>
+                    </FormikSelect>
 
                     {/* <TextArea
                       label="Observação do relato"
