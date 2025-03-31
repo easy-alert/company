@@ -35,6 +35,21 @@ export interface IAccount {
     showMaintenancePriority: boolean;
   };
 
+  Companies?: {
+    Company: {
+      id: string;
+      name: string;
+      contactNumber: string;
+      CNPJ?: string;
+      CPF?: string;
+      createdAt: string;
+      image: string;
+      isBlocked: boolean;
+      ticketType: TTranslateTicketType;
+      ticketInfo: string | null;
+    };
+  }[];
+
   User: {
     id: string;
 
