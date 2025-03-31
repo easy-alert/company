@@ -11,7 +11,7 @@ interface IUserResponsible {
 }
 
 const UserResponsible = ({ users }: IUserResponsible) => {
-  const title = users?.length === 0 ? 'Usuário Responsável' : 'Usuários Responsáveis';
+  const title = users?.length === 1 ? 'Usuário Responsável' : 'Usuários Responsáveis';
 
   if (!users) {
     return null;
