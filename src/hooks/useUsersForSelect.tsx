@@ -6,12 +6,12 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 import type { IUser } from '@customTypes/IUser';
 
-interface IUsersForSelect {
+interface IUseUsersForSelect {
   buildingId?: string;
   checkPerms?: boolean;
 }
 
-export const useUsersForSelect = ({ buildingId, checkPerms = false }: IUsersForSelect) => {
+export const useUsersForSelect = ({ buildingId, checkPerms = false }: IUseUsersForSelect) => {
   const [usersForSelect, setUsersForSelect] = useState<IUser[]>([]);
   const [loadingUsersForSelect, setLoadingUsersForSelect] = useState<boolean>(true);
 
