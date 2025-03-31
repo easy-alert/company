@@ -12,6 +12,7 @@ import { ImagePreview } from '@components/ImagePreview';
 import { InProgressTag } from '@components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
+import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter } from '@utils/functions';
@@ -268,6 +269,14 @@ export const ModalMaintenanceDetails = ({
                 <h6>Info. Adicional</h6>
                 <p className="p2">{maintenanceDetails.additionalInfo}</p>
               </Style.Row>
+            )}
+
+            {maintenanceDetails?.Users && maintenanceDetails?.Users?.length > 0 && (
+              <UserResponsible
+                users={maintenanceDetails.Users.map(({ User }) => ({
+                  ...User,
+                }))}
+              />
             )}
 
             {!modalAdditionalInformations.isFuture && (

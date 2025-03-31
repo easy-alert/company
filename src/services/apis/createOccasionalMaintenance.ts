@@ -42,36 +42,40 @@ export const createOccasionalMaintenance = async ({
     element,
     activity,
     responsible,
+    usersId,
     priorityName,
   },
 }: IRequestCreateOccasionalMaintenance) => {
   const uri = '/buildings/reports/occasional/create';
 
+  const body = {
+    origin,
+    occasionalMaintenanceType,
+    buildingId: buildingId || null,
+    executionDate: new Date(new Date(executionDate).setUTCHours(3, 0, 0, 0)) || null,
+    usersId,
+    categoryData: {
+      id: categoryData.id || null,
+      name: categoryData.name || null,
+    },
+    maintenanceData: {
+      element: element || null,
+      activity: activity || null,
+      responsible: responsible || null,
+    },
+    inProgress,
+    priorityName: priorityName || 'low',
+    reportData: {
+      cost: unMaskBRL(reportData.cost) || null,
+      observation: reportData.observation || null,
+      files: reportData.files || null,
+      images: reportData.images || null,
+    },
+    ticketsIds,
+  };
+
   try {
-    const response: IResponseCreateOccasionalMaintenance = await Api.post(uri, {
-      origin,
-      occasionalMaintenanceType,
-      buildingId: buildingId || null,
-      executionDate: new Date(new Date(executionDate).setUTCHours(3, 0, 0, 0)) || null,
-      categoryData: {
-        id: categoryData.id || null,
-        name: categoryData.name || null,
-      },
-      maintenanceData: {
-        element: element || null,
-        activity: activity || null,
-        responsible: responsible || null,
-      },
-      inProgress,
-      priorityName: priorityName || 'low',
-      reportData: {
-        cost: unMaskBRL(reportData.cost) || null,
-        observation: reportData.observation || null,
-        files: reportData.files || null,
-        images: reportData.images || null,
-      },
-      ticketsIds,
-    });
+    const response: IResponseCreateOccasionalMaintenance = await Api.post(uri, body);
 
     handleToastify({
       status: 200,

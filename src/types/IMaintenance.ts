@@ -98,4 +98,7 @@ export interface IMaintenance {
   priorityName: string;
   additionalInfo?: string;
   userResponsible?: IUser;
+  Users?: {
+    User: IUser;
+  }[];
 }

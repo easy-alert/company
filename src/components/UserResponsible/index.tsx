@@ -7,31 +7,63 @@ import type { IUser } from '@customTypes/IUser';
 import * as Style from './styles';
 
 interface IUserResponsible {
-  user: IUser;
+  users: IUser[];
 }
 
-const UserResponsible = ({ user }: IUserResponsible) => (
-  <Style.UserResponsibleContainer>
-    <h3>Usuário Responsável</h3>
+const UserResponsible = ({ users }: IUserResponsible) => {
+  const title = users?.length === 1 ? 'Usuário Responsável' : 'Usuários Responsáveis';
 
-    <Style.UserResponsibleContent>
-      <Style.UserResponsibleImageContent>
-        <Image img={user?.image || icon.personPlaceholder} size="64px" />
-      </Style.UserResponsibleImageContent>
+  if (!users) {
+    return null;
+  }
 
-      <Style.UserResponsibleData>
-        <Style.UserResponsibleDataRow>
-          <p>Usuário</p>
-          <span>{user?.name}</span>
-        </Style.UserResponsibleDataRow>
+  return (
+    <Style.UserResponsibleContainer>
+      <Style.UserResponsibleTitle>{title}</Style.UserResponsibleTitle>
 
-        <Style.UserResponsibleDataRow>
-          <p>Email</p>
-          <span>{user?.email}</span>
-        </Style.UserResponsibleDataRow>
-      </Style.UserResponsibleData>
-    </Style.UserResponsibleContent>
-  </Style.UserResponsibleContainer>
-);
+      <Style.UserResponsibleContentContainer>
+        {users?.length === 0 && (
+          <Style.UserResponsibleContent>
+            <Style.UserResponsibleImageContent>
+              <Image img={icon.personPlaceholder} size="64px" />
+            </Style.UserResponsibleImageContent>
+
+            <Style.UserResponsibleData>
+              <Style.UserResponsibleDataRow>
+                <p>Usuário</p>
+                <span>Nenhum usuário encontrado</span>
+              </Style.UserResponsibleDataRow>
+
+              <Style.UserResponsibleDataRow>
+                <p>Email</p>
+                <span>Nenhum usuário encontrado</span>
+              </Style.UserResponsibleDataRow>
+            </Style.UserResponsibleData>
+          </Style.UserResponsibleContent>
+        )}
+
+        {users?.map((user) => (
+          <Style.UserResponsibleContent key={user.id}>
+            <Style.UserResponsibleImageContent>
+              <Image img={user?.image || icon.personPlaceholder} size="64px" />
+            </Style.UserResponsibleImageContent>
+
+            <Style.UserResponsibleData>
+              <Style.UserResponsibleDataRow>
+                <p>Usuário</p>
+                <span>{user?.name}</span>
+              </Style.UserResponsibleDataRow>
+
+              <Style.UserResponsibleDataRow>
+                <p>Email</p>
+                <span>{user?.email}</span>
+              </Style.UserResponsibleDataRow>
+            </Style.UserResponsibleData>
+          </Style.UserResponsibleContent>
+        ))}
+      </Style.UserResponsibleContentContainer>
+    </Style.UserResponsibleContainer>
+  );
+};
 
 export default UserResponsible;

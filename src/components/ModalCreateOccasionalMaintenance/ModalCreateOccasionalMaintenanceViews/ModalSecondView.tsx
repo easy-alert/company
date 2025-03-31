@@ -8,6 +8,7 @@ import { Input } from '@components/Inputs/Input';
 import { CRUDInput } from '@components/Inputs/CRUDInput';
 
 // STYLES
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 import * as Style from '../styles';
 
 // TYPES
@@ -15,6 +16,7 @@ import type { IModalSecondView } from '../types';
 
 const ModalSecondView = ({
   buildingsForSelect,
+  usersForSelect,
   categoriesData,
   priorityData,
   occasionalMaintenanceData,
@@ -59,181 +61,189 @@ const ModalSecondView = ({
         ))}
       </Select>
 
-      {/* <ErrorMessage name="buildingId" component={Style.ErrorMessage} /> */}
+      {occasionalMaintenanceData.buildingId && (
+        <>
+          <CRUDInput
+            arrowColor="primary"
+            label="Categoria *"
+            value={occasionalMaintenanceData.categoryData.name}
+            select={{
+              createLabel: 'Criar categoria',
+              options: categoriesData.map((category) => ({
+                value: category.id || '',
+                label: category.name || '',
+              })),
+              getEvtValue: (value) => {
+                const selectedCategory = categoriesData.find((category) => category.id === value);
 
-      <CRUDInput
-        arrowColor="primary"
-        label="Categoria *"
-        value={occasionalMaintenanceData.categoryData.name}
-        select={{
-          createLabel: 'Criar categoria',
-          options: categoriesData.map((category) => ({
-            value: category.id || '',
-            label: category.name || '',
-          })),
-          getEvtValue: (value) => {
-            const selectedCategory = categoriesData.find((category) => category.id === value);
+                if (!selectedCategory) return;
 
-            if (!selectedCategory) return;
+                handleOccasionalMaintenanceDataChange({
+                  primaryKey: 'categoryData',
+                  value: selectedCategory.id || '',
+                  secondaryKey: 'id',
+                });
 
-            handleOccasionalMaintenanceDataChange({
-              primaryKey: 'categoryData',
-              value: selectedCategory.id || '',
-              secondaryKey: 'id',
-            });
+                handleOccasionalMaintenanceDataChange({
+                  primaryKey: 'categoryData',
+                  value: selectedCategory.name || '',
+                  secondaryKey: 'name',
+                });
+              },
+            }}
+            input={{
+              placeholder: 'Digite o nome da categoria',
+              getEvtValue: (value) =>
+                handleOccasionalMaintenanceDataChange({
+                  primaryKey: 'categoryData',
+                  value,
+                  secondaryKey: 'name',
+                }),
+              onXClick: () =>
+                handleOccasionalMaintenanceDataChange({
+                  primaryKey: 'categoryData',
+                  value: { id: '', name: '' },
+                }),
+            }}
+          />
 
-            handleOccasionalMaintenanceDataChange({
-              primaryKey: 'categoryData',
-              value: selectedCategory.name || '',
-              secondaryKey: 'name',
-            });
-          },
-        }}
-        input={{
-          placeholder: 'Digite o nome da categoria',
-          getEvtValue: (value) =>
-            handleOccasionalMaintenanceDataChange({
-              primaryKey: 'categoryData',
-              value,
-              secondaryKey: 'name',
-            }),
-          onXClick: () =>
-            handleOccasionalMaintenanceDataChange({
-              primaryKey: 'categoryData',
-              value: { id: '', name: '' },
-            }),
-        }}
-      />
-
-      {/* <ErrorMessage name="category" component={Style.ErrorMessage} /> */}
-
-      <Input
-        label="Elemento *"
-        placeholder="Informe o elemento"
-        value={occasionalMaintenanceData.element}
-        onChange={(e) =>
-          handleOccasionalMaintenanceDataChange({
-            primaryKey: 'element',
-            value: e.target.value,
-          })
-        }
-      />
-
-      {/* {errors.element && <Style.ErrorMessage>{errors.element}</Style.ErrorMessage>} */}
-
-      <Input
-        label="Atividade *"
-        placeholder="Ex: Troca de lâmpada"
-        value={occasionalMaintenanceData.activity}
-        disabled={!!checklistActivity}
-        onChange={(e) =>
-          handleOccasionalMaintenanceDataChange({
-            primaryKey: 'activity',
-            value: e.target.value,
-          })
-        }
-      />
-
-      {/* {errors.activity && <Style.ErrorMessage>{errors.activity}</Style.ErrorMessage>} */}
-
-      <Select
-        label="Responsável *"
-        arrowColor="primary"
-        value={occasionalMaintenanceData.responsible}
-        selectPlaceholderValue={occasionalMaintenanceData.responsible}
-        onChange={(e) =>
-          handleOccasionalMaintenanceDataChange({
-            primaryKey: 'responsible',
-            value: e.target.value,
-          })
-        }
-      >
-        <option value="" disabled>
-          Selecione
-        </option>
-
-        {responsibleArray.map((responsible) => (
-          <option key={responsible.id} value={responsible.name}>
-            {responsible.name}
-          </option>
-        ))}
-      </Select>
-
-      {/* {errors.responsible && <Style.ErrorMessage>{errors.responsible}</Style.ErrorMessage>} */}
-
-      <Select
-        label="Prioridade *"
-        arrowColor="primary"
-        value={occasionalMaintenanceData.priorityName}
-        selectPlaceholderValue={occasionalMaintenanceData.priorityName}
-        onChange={(e) =>
-          handleOccasionalMaintenanceDataChange({
-            primaryKey: 'priorityName',
-            value: e.target.value,
-          })
-        }
-      >
-        <option value="" disabled>
-          Selecione
-        </option>
-
-        {priorityData.map((priority) => (
-          <option key={priority.name} value={priority.name}>
-            {priority.label}
-          </option>
-        ))}
-      </Select>
-
-      {/* {errors.priority && <Style.ErrorMessage>{errors.priority}</Style.ErrorMessage>} */}
-
-      <Input
-        label="Data de execução *"
-        type="date"
-        value={occasionalMaintenanceData.executionDate}
-        typeDatePlaceholderValue={occasionalMaintenanceData.executionDate}
-        onChange={(evt) =>
-          handleOccasionalMaintenanceDataChange({
-            primaryKey: 'executionDate',
-            value: evt.target.value,
-          })
-        }
-      />
-
-      {/* {errors.executionDate && <Style.ErrorMessage>{errors.executionDate}</Style.ErrorMessage>} */}
-
-      <Style.ButtonContainer>
-        <div>
-          <Button
-            borderless
-            label="Criar"
-            bgColor="transparent"
-            textColor="actionBlue"
-            onClick={() =>
-              handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
+          <Input
+            label="Elemento *"
+            placeholder="Informe o elemento"
+            value={occasionalMaintenanceData.element}
+            onChange={(e) =>
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'element',
+                value: e.target.value,
+              })
             }
           />
 
-          <Button
-            borderless
-            label="Iniciar execução"
-            bgColor="transparent"
-            textColor="actionBlue"
-            onClick={() => {
-              handleCreateOccasionalMaintenance({
-                occasionalMaintenanceType: 'pending',
-                inProgress: true,
+          <Input
+            label="Atividade *"
+            placeholder="Ex: Troca de lâmpada"
+            value={occasionalMaintenanceData.activity}
+            disabled={!!checklistActivity}
+            onChange={(e) =>
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'activity',
+                value: e.target.value,
+              })
+            }
+          />
+
+          <Select
+            label="Responsável *"
+            arrowColor="primary"
+            value={occasionalMaintenanceData.responsible}
+            selectPlaceholderValue={occasionalMaintenanceData.responsible}
+            onChange={(e) =>
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'responsible',
+                value: e.target.value,
+              })
+            }
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+
+            {responsibleArray.map((responsible) => (
+              <option key={responsible.id} value={responsible.name}>
+                {responsible.name}
+              </option>
+            ))}
+          </Select>
+
+          <ReactSelectComponent
+            selectPlaceholderValue={occasionalMaintenanceData?.usersId?.length}
+            isMulti
+            id="usersId"
+            name="usersId"
+            placeholder="Selecione um ou mais usuários"
+            label="Usuário(s) *"
+            options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
+            onChange={(data) => {
+              const usersId = data.map(({ value }: { value: string }) => value);
+
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'usersId',
+                value: usersId,
               });
             }}
           />
-        </div>
 
-        <Button
-          bgColor="primary"
-          label="Criar finalizada"
-          onClick={() => handleSetView(3)}
-          disable={disableFinishedButton}
-        />
-      </Style.ButtonContainer>
+          <Select
+            label="Prioridade *"
+            arrowColor="primary"
+            value={occasionalMaintenanceData.priorityName}
+            selectPlaceholderValue={occasionalMaintenanceData.priorityName}
+            onChange={(e) =>
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'priorityName',
+                value: e.target.value,
+              })
+            }
+          >
+            <option value="" disabled>
+              Selecione
+            </option>
+
+            {priorityData.map((priority) => (
+              <option key={priority.name} value={priority.name}>
+                {priority.label}
+              </option>
+            ))}
+          </Select>
+
+          <Input
+            label="Data de execução *"
+            type="date"
+            value={occasionalMaintenanceData.executionDate}
+            typeDatePlaceholderValue={occasionalMaintenanceData.executionDate}
+            onChange={(evt) =>
+              handleOccasionalMaintenanceDataChange({
+                primaryKey: 'executionDate',
+                value: evt.target.value,
+              })
+            }
+          />
+
+          <Style.ButtonContainer>
+            <div>
+              <Button
+                borderless
+                label="Criar"
+                bgColor="transparent"
+                textColor="actionBlue"
+                onClick={() =>
+                  handleCreateOccasionalMaintenance({ occasionalMaintenanceType: 'pending' })
+                }
+              />
+
+              <Button
+                borderless
+                label="Iniciar execução"
+                bgColor="transparent"
+                textColor="actionBlue"
+                onClick={() =>
+                  handleCreateOccasionalMaintenance({
+                    occasionalMaintenanceType: 'pending',
+                    inProgress: true,
+                  })
+                }
+              />
+            </div>
+
+            <Button
+              bgColor="primary"
+              label="Criar finalizada"
+              onClick={() => handleSetView(3)}
+              disable={disableFinishedButton}
+            />
+          </Style.ButtonContainer>
+        </>
+      )}
     </Style.FormContainer>
   );
 };

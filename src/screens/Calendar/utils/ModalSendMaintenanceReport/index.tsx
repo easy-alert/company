@@ -27,6 +27,7 @@ import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActi
 import { ListTag } from '@components/ListTag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { Select } from '@components/Inputs/Select';
+import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
@@ -370,6 +371,14 @@ export const ModalSendMaintenanceReport = ({
                   <p className="p2">{maintenance.userResponsible?.email}</p>
                 </Style.Row>
               </Style.Content>
+            )}
+
+            {maintenance?.Users && maintenance?.Users?.length > 0 && (
+              <UserResponsible
+                users={maintenance.Users.map(({ User }) => ({
+                  ...User,
+                }))}
+              />
             )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
