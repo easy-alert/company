@@ -14,21 +14,24 @@ export const userUpdateSchema = yup
     image: yup
       .mixed()
       .nullable()
-      .test(
-        'FileSize',
-        'O tamanho da imagem excedeu o limite.',
-        (value) => !value || (value && value.size <= 5000000),
-      )
-      .test(
-        'FileType',
-        'Formato inválido.',
-        (value) =>
-          !value ||
-          (value &&
-            (value.type === 'image/png' ||
-              value.type === 'image/jpeg' ||
-              value.type === 'image/jpg')),
-      ),
+      .test('FileSize', 'O tamanho da imagem excedeu o limite.', (value) => {
+        if (!value) return true;
+
+        if (value instanceof File) {
+          return value.size <= 5 * 1024 * 1024; // 5MB
+        }
+
+        return true;
+      })
+      .test('FileType', 'Formato inválido.', (value) => {
+        if (!value) return true;
+
+        if (value instanceof File) {
+          return ['image/png', 'image/jpeg', 'image/jpg'].includes(value.type);
+        }
+
+        return true;
+      }),
     name: yup.string().required(() => `O ${fieldLabels.name.toLowerCase()} deve ser preenchido.`),
     role: yup.string(),
     email: yup

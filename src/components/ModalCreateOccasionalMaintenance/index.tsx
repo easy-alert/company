@@ -21,6 +21,7 @@ import type { ICategory } from '@customTypes/ICategory';
 import type { IPriority } from '@customTypes/IPriority';
 
 // COMPONENTS
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 import ModalLoading from './ModalCreateOccasionalMaintenanceViews/ModalLoading';
 import ModalSecondView from './ModalCreateOccasionalMaintenanceViews/ModalSecondView';
 import ModalThirdView from './ModalCreateOccasionalMaintenanceViews/ModalThirdView';
@@ -48,9 +49,45 @@ export const ModalCreateOccasionalMaintenance = ({
 }: IModalCreateOccasionalMaintenance) => {
   const { account } = useAuthContext();
 
+  const [occasionalMaintenanceData, setOccasionalMaintenanceData] =
+    useState<IOccasionalMaintenanceData>({
+      buildingId: externalBuildingId || '',
+
+      element: '',
+      activity: checklistActivity || '',
+      responsible: '',
+      executionDate: '',
+      inProgress: false,
+      priorityName: '',
+
+      usersId: [],
+
+      categoryData: {
+        id: '',
+        name: '',
+      },
+
+      reportData: {
+        cost: 'R$ 0,00',
+        observation: '',
+        files: [],
+        images: [],
+      },
+    });
+
+  const { usersForSelect } = useUsersForSelect({
+    buildingId: occasionalMaintenanceData.buildingId,
+  });
+
+  const [categoriesData, setCategoriesData] = useState<ICategory[]>([]);
+  const [priorityData, setPriorityData] = useState<IPriority[]>([]);
+
+  const [view, setView] = useState<number>(2);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validateFields = (occasionalMaintenanceData: IOccasionalMaintenanceData) => {
+  const validateFields = () => {
     const newErrors: Record<string, string> = {};
 
     if (!occasionalMaintenanceData.buildingId) {
@@ -79,37 +116,6 @@ export const ModalCreateOccasionalMaintenance = ({
 
     return Object.keys(newErrors).length === 0;
   };
-
-  const [occasionalMaintenanceData, setOccasionalMaintenanceData] =
-    useState<IOccasionalMaintenanceData>({
-      buildingId: externalBuildingId || '',
-
-      element: '',
-      activity: checklistActivity || '',
-      responsible: '',
-      executionDate: '',
-      inProgress: false,
-      priorityName: '',
-
-      categoryData: {
-        id: '',
-        name: '',
-      },
-
-      reportData: {
-        cost: 'R$ 0,00',
-        observation: '',
-        files: [],
-        images: [],
-      },
-    });
-
-  const [buildingsData, setBuildingsData] = useState<IBuilding[]>([]);
-  const [categoriesData, setCategoriesData] = useState<ICategory[]>([]);
-  const [priorityData, setPriorityData] = useState<IPriority[]>([]);
-
-  const [view, setView] = useState<number>(2);
-  const [loading, setLoading] = useState<boolean>(true);
 
   const handleSetView = (viewSate: number) => {
     setView(viewSate);
@@ -148,9 +154,8 @@ export const ModalCreateOccasionalMaintenance = ({
   const handleGetBuildingsAndCategories = async () => {
     setLoading(true);
 
-    const { buildings, categories } = await getBuildingsAndCategories();
+    const { categories } = await getBuildingsAndCategories();
 
-    setBuildingsData(buildings);
     setCategoriesData(categories);
     setLoading(false);
   };
@@ -159,9 +164,9 @@ export const ModalCreateOccasionalMaintenance = ({
     occasionalMaintenanceType,
     inProgress = false,
   }: IHandleCreateOccasionalMaintenance) => {
-    if (!validateFields(occasionalMaintenanceData)) {
-      return;
-    }
+    // if (!validateFields()) {
+    //   return;
+    // }
 
     setLoading(true);
 
@@ -243,6 +248,7 @@ export const ModalCreateOccasionalMaintenance = ({
           {view === 2 && (
             <ModalSecondView
               buildingsForSelect={buildingsForSelect}
+              usersForSelect={usersForSelect}
               categoriesData={categoriesData}
               priorityData={priorityData}
               checklistActivity={checklistActivity}

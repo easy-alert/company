@@ -4,13 +4,16 @@ import { theme } from '@styles/theme';
 export const UserResponsibleContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.sm};
 `;
 
-export const UserResponsibleHeader = styled.div`
+export const UserResponsibleTitle = styled.h3`
+  margin-bottom: ${theme.size.xsm};
+`;
+
+export const UserResponsibleContentContainer = styled.div`
   display: flex;
-  align-items: center;
-  gap: ${theme.size.xsm};
+  flex-direction: column;
+  gap: ${theme.size.sm};
 `;
 
 export const UserResponsibleContent = styled.div`
@@ -55,10 +58,4 @@ export const UserResponsibleDataRow = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
   }
-`;
-
-export const ButtonGroup = styled.div`
-  display: flex;
-  gap: ${theme.size.xsm};
-  margin-top: ${theme.size.sm};
 `;

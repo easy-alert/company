@@ -67,7 +67,14 @@ export const Login = () => {
 
       if (responseData) {
         signin(responseData);
-        navigate(redirect || '/home');
+
+        if (responseData?.Companies && responseData?.Companies?.length > 1) {
+          navigate('/select-company', {
+            state: { userId: responseData.userId, Companies: responseData.Companies },
+          });
+        } else {
+          navigate(redirect || '/home');
+        }
       }
     } finally {
       setOnQuery(false);

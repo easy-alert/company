@@ -11,6 +11,7 @@ import { Sidebar } from '@components/Sidebar';
 // AUTHENTICATION
 import { Login } from '@screens/Authentication/Login';
 import { Register } from '@screens/Authentication/Register';
+import { SelectCompany } from '@screens/Authentication/SelectCompany';
 import Forbidden from '@screens/Forbidden';
 
 // NOTIFICATIONS CONFIRMATION
@@ -78,6 +79,7 @@ const AppRoutes = () => (
         <Route path="/register" element={<Register />} />
         <Route path="/passwordrecover/sendemail" element={<SendPasswordRecoverEmail />} />
         <Route path="/passwordrecovery/change" element={<RecoverPassword />} />
+        <Route path="/select-company" element={<SelectCompany />} />
 
         {/* notifications confirmations routes */}
         <Route path="/confirm/phone" element={<PhoneConfirm />} />

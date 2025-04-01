@@ -129,6 +129,9 @@ export interface IMaintenance {
   daysInAdvance: number;
   additionalInfo?: string;
   userResponsible?: IUser;
+  Users?: {
+    User: IUser;
+  }[];
 }
 
 export interface IRequestMaintenanceDetails {
