@@ -25,6 +25,7 @@ export interface IHandleAdditionalInformations {
     hasFirstNotificationDate: boolean;
     firstNotificationDate: string;
     daysToAnticipate: number;
+    status: string;
   };
   maintenanceIndex: number;
   categoryIndex: number;

@@ -196,9 +196,7 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
               selectPlaceholderValue="Selecione o status"
               value={values.isBlocked ? 'blocked' : 'active'}
               error={touched.isBlocked && errors.isBlocked ? errors.isBlocked : null}
-              onChange={(e) => {
-                setFieldValue('isBlocked', e.target.value === 'blocked');
-              }}
+              onChange={(e) => setFieldValue('isBlocked', e.target.value === 'blocked')}
             >
               <option value="active">Ativo</option>
               <option value="blocked">Bloqueado</option>
@@ -218,9 +216,7 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
                 <IconButton
                   icon={<IconEye strokeColor={showPassword ? 'primary' : 'gray4'} />}
                   size="20px"
-                  onClick={() => {
-                    setShowPassword((prevState) => !prevState);
-                  }}
+                  onClick={() => setShowPassword((prevState) => !prevState)}
                   opacity="1"
                 />
               )}
@@ -242,10 +238,7 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
                 <IconButton
                   icon={<IconEye strokeColor={showPassword2 ? 'primary' : 'gray4'} />}
                   size="20px"
-                  onClick={() => {
-                    setShowPassword2((prevState) => !prevState);
-                  }}
-                  opacity="1"
+                  onClick={() => setShowPassword2((prevState) => !prevState)}
                 />
               )}
             </Style.PasswordDiv>
@@ -269,9 +262,7 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
                   <Button
                     bgColor="primary"
                     type="button"
-                    onClick={() => {
-                      setFieldValue('colorScheme', '#B21D1D');
-                    }}
+                    onClick={() => setFieldValue('colorScheme', '#B21D1D')}
                     label="Restaurar tema"
                     center
                     style={{ marginTop: '8px', display: 'block' }}

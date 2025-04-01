@@ -291,7 +291,7 @@ export const ModalChecklistDetails = ({
             </Style.ChecklistObservationContainer>
           </Style.ChecklistContainer>
 
-          {checklistDetails?.user && <UserResponsible user={checklistDetails.user} />}
+          {checklistDetails?.user && <UserResponsible users={[checklistDetails.user]} />}
 
           <h3>Imagens</h3>
 

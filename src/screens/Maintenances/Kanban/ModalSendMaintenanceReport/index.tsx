@@ -375,11 +375,13 @@ export const ModalSendMaintenanceReport = ({
               </Style.Row>
             )}
 
-            <div style={{ marginTop: '12px' }}>
-              {maintenance?.userResponsible && (
-                <UserResponsible user={maintenance?.userResponsible} />
-              )}
-            </div>
+            {maintenance?.Users && maintenance?.Users?.length > 0 && (
+              <UserResponsible
+                users={maintenance.Users.map(({ User }) => ({
+                  ...User,
+                }))}
+              />
+            )}
 
             <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceHistoryId} />
             <MaintenanceHistoryActivities maintenanceHistoryId={maintenanceHistoryId} />

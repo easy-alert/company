@@ -10,6 +10,7 @@ interface IMaintenance {
   activity: string;
   frequency: number;
   priorityName: string;
+  status?: string;
   FrequencyTimeInterval: {
     name: string;
     id: string;

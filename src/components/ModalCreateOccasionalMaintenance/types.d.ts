@@ -2,6 +2,7 @@ import type { ICategory } from '@customTypes/ICategory';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import type { IPriority } from '@customTypes/IPriority';
 import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
+import type { IUser } from '@customTypes/IUser';
 
 export type IOccasionalMaintenanceType = 'pending' | 'finished' | '';
 
@@ -16,6 +17,8 @@ export interface IOccasionalMaintenanceData {
   inProgress: boolean;
 
   priorityName: string;
+
+  usersId?: string[];
 
   categoryData: {
     id: string;
@@ -77,6 +80,7 @@ export interface IHandleSetOccasionalMaintenanceData {
 export interface IModalSecondView {
   errors: Record<string, string>;
   buildingsForSelect: IBuildingForSelect[];
+  usersForSelect: IUser[];
   categoriesData: ICategory[];
   priorityData: IPriority[];
   occasionalMaintenanceData: IOccasionalMaintenanceData;
