@@ -197,6 +197,7 @@ export const ModalAdditionalInformations = ({
             images,
             maintenanceReport,
             categories,
+            selectedMaintenance,
           });
         }}
       >
