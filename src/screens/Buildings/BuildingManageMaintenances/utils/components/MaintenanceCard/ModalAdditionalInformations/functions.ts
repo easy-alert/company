@@ -10,6 +10,7 @@ export const handleAdditionalInformations = ({
   files,
   images,
   values,
+  selectedMaintenance,
   setCategories,
   setModal,
 }: IHandleAdditionalInformations) => {
@@ -43,34 +44,42 @@ export const handleAdditionalInformations = ({
   setCategories((prevState) => {
     const newState = [...prevState];
 
+    const maintenance = newState[categoryIndex].Maintenances.find(
+      (m) => m.id === selectedMaintenance.id,
+    );
+
+    if (!maintenance) {
+      toast.error('Manutenção não encontrada.');
+      return prevState;
+    }
+
     if (
       !!values.lastResolutionDate ||
       !!values.firstNotificationDate ||
       !!values.daysToAnticipate
     ) {
-      newState[categoryIndex].Maintenances[maintenanceIndex].isSelected = true;
+      maintenance.isSelected = true;
     }
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].resolutionDate =
+    maintenance.resolutionDate =
       values.lastResolutionDate && values.lastResolutionDate !== ''
         ? new Date(new Date(values.lastResolutionDate).setUTCHours(3, 0, 0, 0))
         : null;
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].notificationDate =
+    maintenance.notificationDate =
       values.firstNotificationDate && values.firstNotificationDate !== ''
         ? new Date(new Date(values.firstNotificationDate).setUTCHours(3, 0, 0, 0))
         : null;
 
     if (values.hasLastResolutionDate) {
-      newState[categoryIndex].Maintenances[maintenanceIndex].files = files;
-      newState[categoryIndex].Maintenances[maintenanceIndex].images = images;
-      newState[categoryIndex].Maintenances[maintenanceIndex].maintenanceReport = maintenanceReport;
+      maintenance.files = files;
+      maintenance.images = images;
+      maintenance.maintenanceReport = maintenanceReport;
     }
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].daysToAnticipate =
-      values.daysToAnticipate || 0;
+    maintenance.daysToAnticipate = values.daysToAnticipate || 0;
 
-    newState[categoryIndex].Maintenances[maintenanceIndex].status = values.status;
+    maintenance.status = values.status;
 
     return newState;
   });
