@@ -5,6 +5,7 @@ import { IModalAdditionalInformations } from '../../MaintenancesPlan/types';
 export interface IModalSendMaintenanceReport {
   userId?: string;
   maintenanceHistoryId: string;
+  refresh: boolean;
   handleModals: (modal: TModalNames, modalState: boolean) => void;
   handleRefresh: () => void;
 }
