@@ -105,6 +105,7 @@ export interface Maintenance {
   FrequencyTimeInterval: {
     pluralLabel: string;
     singularLabel: string;
+    unitTime?: number;
   };
 
   MaintenanceType: {
