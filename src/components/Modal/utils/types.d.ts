@@ -4,7 +4,9 @@ export interface IModal {
   title: string;
   bodyWidth?: string;
   closeOutside?: boolean;
-  deleteButton?: boolean;
+  maintenanceHistoryId?: string;
+  zIndex?: number;
   setModal: (setModal: boolean) => void;
   handleDelete?: (modalState: boolean) => void;
+  handleEdit?: (modalState: boolean) => void;
 }

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
-export const Background = styled.div`
+export const Background = styled.div<{ zIndex: number }>`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 10;
+  z-index: ${({ zIndex }) => zIndex};
 
   width: 100vw;
   height: 100%;

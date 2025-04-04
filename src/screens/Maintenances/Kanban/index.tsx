@@ -66,7 +66,8 @@ interface IMaintenanceCategoryForSelect {
 export type TModalNames =
   | 'modalSendMaintenanceReport'
   | 'modalMaintenanceDetails'
-  | 'modalCreateOccasionalMaintenance';
+  | 'modalCreateOccasionalMaintenance'
+  | 'modalEditMaintenanceHistory';
 
 export const MaintenancesKanban = () => {
   const { account } = useAuthContext();
@@ -222,6 +223,7 @@ export const MaintenancesKanban = () => {
         <ModalSendMaintenanceReport
           maintenanceHistoryId={maintenanceHistoryId}
           userId={account?.User.id ?? ''}
+          refresh={refresh}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
         />

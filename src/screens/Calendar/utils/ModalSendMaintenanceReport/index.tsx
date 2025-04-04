@@ -22,11 +22,11 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { InProgressTag } from '@components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
-import { ShareMaintenanceHistoryButton } from '@components/ShareMaintenanceHistoryButton';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
 import { ListTag } from '@components/ListTag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { Select } from '@components/Inputs/Select';
+import { ModalEditMaintenanceHistory } from '@components/ModalEditMaintenanceHistory';
 import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
@@ -67,6 +67,7 @@ export const ModalSendMaintenanceReport = ({
   calendarType,
   yearToRequest,
   modalAdditionalInformations,
+  userId,
   handleModalSendMaintenanceReport,
   setBuildingOptions,
   setLoading,
@@ -151,6 +152,18 @@ export const ModalSendMaintenanceReport = ({
     disabled: onImageQuery,
   });
 
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const [modalEditMaintenanceHistory, setModalEditMaintenanceHistory] = useState<boolean>(false);
+
+  const handleEditModal = (modalState: boolean) => {
+    setModalEditMaintenanceHistory(modalState);
+  };
+
+  const handleRefresh = () => {
+    setRefresh((prevState) => !prevState);
+  };
+
   useEffect(() => {
     if (acceptedFiles.length > 0) {
       const uploadAcceptedFiles = async () => {
@@ -229,353 +242,404 @@ export const ModalSendMaintenanceReport = ({
         setModalLoading,
       });
     });
-  }, []);
+  }, [refresh]);
 
   return (
-    <Modal
-      bodyWidth="475px"
-      title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
-      setModal={handleModalSendMaintenanceReport}
-    >
-      {modalLoading ? (
-        <Style.LoadingContainer>
-          <DotSpinLoading />
-        </Style.LoadingContainer>
-      ) : (
-        <Style.Container>
-          <ShareMaintenanceHistoryButton maintenanceHistoryId={modalAdditionalInformations.id} />
+    <>
+      {modalEditMaintenanceHistory && (
+        <ModalEditMaintenanceHistory
+          userId={userId}
+          maintenance={maintenance as any}
+          handleEditModal={handleEditModal}
+          handleRefresh={handleRefresh}
+        />
+      )}
 
-          <h3>{maintenance?.Building.name}</h3>
+      <Modal
+        bodyWidth="475px"
+        title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
+        maintenanceHistoryId={modalAdditionalInformations.id}
+        setModal={handleModalSendMaintenanceReport}
+        handleEdit={() => handleEditModal(true)}
+      >
+        {modalLoading ? (
+          <Style.LoadingContainer>
+            <DotSpinLoading />
+          </Style.LoadingContainer>
+        ) : (
+          <Style.Container>
+            <h3>{maintenance?.Building.name}</h3>
 
-          <Style.StatusTagWrapper>
-            {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
-            <EventTag status={maintenance?.MaintenancesStatus.name} />
-            {maintenance.Maintenance.MaintenanceType?.name === 'occasional' ? (
-              <EventTag status="occasional" />
-            ) : (
-              <EventTag status="common" />
-            )}
-            {(maintenance?.MaintenancesStatus.name === 'expired' ||
-              maintenance?.MaintenancesStatus.name === 'pending') &&
-              maintenance.inProgress && <InProgressTag />}
-          </Style.StatusTagWrapper>
+            <Style.StatusTagWrapper>
+              {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
+              <EventTag status={maintenance?.MaintenancesStatus.name} />
+              {maintenance.Maintenance.MaintenanceType?.name === 'occasional' ? (
+                <EventTag status="occasional" />
+              ) : (
+                <EventTag status="common" />
+              )}
+              {(maintenance?.MaintenancesStatus.name === 'expired' ||
+                maintenance?.MaintenancesStatus.name === 'pending') &&
+                maintenance.inProgress && <InProgressTag />}
+            </Style.StatusTagWrapper>
 
-          <Style.Content>
-            <Style.Row>
-              <h6>Categoria</h6>
-              <p className="p2">{maintenance.Maintenance.Category?.name}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Elemento</h6>
-              <p className="p2">{maintenance.Maintenance.element}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Atividade</h6>
-              <p className="p2">{maintenance.Maintenance.activity}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Responsável</h6>
-              <p className="p2">{maintenance.Maintenance.responsible}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Fonte</h6>
-              <p className="p2">{maintenance.Maintenance.source}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Observação da manutenção</h6>
-              <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Instruções</h6>
-              <Style.FileAndImageRow>
-                {(maintenance.Maintenance.instructions?.length || 0) > 0
-                  ? maintenance.Maintenance.instructions?.map(({ url, name }) => (
-                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name || ''} />
-                    ))
-                  : '-'}
-              </Style.FileAndImageRow>
-            </Style.Row>
-
-            {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
+            <Style.Content>
               <Style.Row>
-                <h6>Periodicidade</h6>
-                <p className="p2">
-                  A cada{' '}
-                  {(maintenance.Maintenance.frequency || 0) > 1
-                    ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.pluralLabel}`
-                    : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.singularLabel}`}
-                </p>
+                <h6>Categoria</h6>
+                <p className="p2">{maintenance.Maintenance.Category?.name}</p>
               </Style.Row>
-            )}
 
-            <Style.Row>
-              <h6>Data de notificação</h6>
-              <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
-            </Style.Row>
-
-            {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
               <Style.Row>
-                <h6>Data de vencimento</h6>
-                <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
+                <h6>Elemento</h6>
+                <p className="p2">{maintenance.Maintenance.element}</p>
               </Style.Row>
-            )}
 
-            {!!maintenance.daysInAdvance && (
               <Style.Row>
-                <h6>Dias antecipados</h6>
-                <p className="p2">{maintenance.daysInAdvance}</p>
+                <h6>Atividade</h6>
+                <p className="p2">{maintenance.Maintenance.activity}</p>
               </Style.Row>
-            )}
 
-            {maintenance.additionalInfo && (
               <Style.Row>
-                <h6>Info. Adicional</h6>
-                <p className="p2">{maintenance.additionalInfo}</p>
+                <h6>Responsável</h6>
+                <p className="p2">{maintenance.Maintenance.responsible}</p>
               </Style.Row>
-            )}
 
-            <Style.Row>
-              <h6>Última execução</h6>
-              <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
-            </Style.Row>
+              <Style.Row>
+                <h6>Fonte</h6>
+                <p className="p2">{maintenance.Maintenance.source}</p>
+              </Style.Row>
 
-            {maintenance.userResponsible && (
-              <Style.Content style={{ marginTop: '0.5rem' }}>
-                <h3>Usuário responsável</h3>
+              <Style.Row>
+                <h6>Observação da manutenção</h6>
+                <p className="p2">{maintenance.Maintenance.observation ?? '-'}</p>
+              </Style.Row>
 
+              <Style.Row>
+                <h6>Instruções</h6>
+                <Style.FileAndImageRow>
+                  {(maintenance.Maintenance.instructions?.length || 0) > 0
+                    ? maintenance.Maintenance.instructions?.map(({ url, name }) => (
+                        <ListTag
+                          padding="4px 12px"
+                          downloadUrl={url}
+                          key={url}
+                          label={name || ''}
+                        />
+                      ))
+                    : '-'}
+                </Style.FileAndImageRow>
+              </Style.Row>
+
+              {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
                 <Style.Row>
-                  <h6>Nome</h6>
-                  <p className="p2">{maintenance.userResponsible?.name}</p>
-                </Style.Row>
-
-                <Style.Row>
-                  <h6>Telefone</h6>
+                  <h6>Periodicidade</h6>
                   <p className="p2">
-                    {
-                      applyMask({
-                        value: maintenance.userResponsible.phoneNumber || '',
-                        mask: 'TEL',
-                      }).value
-                    }
+                    A cada{' '}
+                    {(maintenance.Maintenance.frequency || 0) > 1
+                      ? `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.pluralLabel}`
+                      : `${maintenance.Maintenance.frequency} ${maintenance.Maintenance.FrequencyTimeInterval?.singularLabel}`}
                   </p>
                 </Style.Row>
+              )}
 
+              <Style.Row>
+                <h6>Data de notificação</h6>
+                <p className="p2">{dateFormatter(maintenance.notificationDate)}</p>
+              </Style.Row>
+
+              {maintenance.Maintenance.MaintenanceType?.name !== 'occasional' && (
                 <Style.Row>
-                  <h6>Email</h6>
-                  <p className="p2">{maintenance.userResponsible?.email}</p>
+                  <h6>Data de vencimento</h6>
+                  <p className="p2">{dateFormatter(maintenance.dueDate)}</p>
                 </Style.Row>
-              </Style.Content>
-            )}
+              )}
 
-            {maintenance?.Users && maintenance?.Users?.length > 0 && (
-              <UserResponsible
-                users={maintenance.Users.map(({ User }) => ({
-                  ...User,
-                }))}
-              />
-            )}
+              {!!maintenance.daysInAdvance && (
+                <Style.Row>
+                  <h6>Dias antecipados</h6>
+                  <p className="p2">{maintenance.daysInAdvance}</p>
+                </Style.Row>
+              )}
 
-            <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
-            <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
+              {maintenance.additionalInfo && (
+                <Style.Row>
+                  <h6>Info. Adicional</h6>
+                  <p className="p2">{maintenance.additionalInfo}</p>
+                </Style.Row>
+              )}
 
-            {maintenance.canReport && (
-              <>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                  <Input
-                    label="Custo"
-                    placeholder="Ex: R$ 100,00"
-                    maxLength={14}
-                    value={maintenanceReport.cost}
-                    permToCheck="maintenances:update"
-                    onChange={(e) => {
-                      setMaintenanceReport((prevState) => {
-                        const newState = { ...prevState };
-                        newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
-                        return newState;
-                      });
-                    }}
-                  />
+              <Style.Row>
+                <h6>Última execução</h6>
+                <p className="p2">{dateFormatter(maintenance.resolutionDate)}</p>
+              </Style.Row>
 
-                  <Select
-                    label="Prioridade"
-                    arrowColor="primary"
-                    placeholder="Selecione uma prioridade"
-                    selectPlaceholderValue="Selecione uma prioridade"
-                    value={maintenance.priorityName}
-                    permToCheck="maintenances:update"
-                    onChange={(e) => {
-                      setMaintenance((prevState) => {
-                        const newState = { ...prevState };
-                        newState.priorityName = e.target.value;
+              {maintenance.userResponsible && (
+                <Style.Content style={{ marginTop: '0.5rem' }}>
+                  <h3>Usuário responsável</h3>
 
-                        return newState;
-                      });
-                    }}
-                  >
-                    <option value="" disabled>
-                      Selecione uma prioridade
-                    </option>
+                  <Style.Row>
+                    <h6>Nome</h6>
+                    <p className="p2">{maintenance.userResponsible?.name}</p>
+                  </Style.Row>
 
-                    {maintenancePriorities.map((priority) => (
-                      <option key={priority.name} value={priority.name}>
-                        {priority.label}
+                  <Style.Row>
+                    <h6>Telefone</h6>
+                    <p className="p2">
+                      {
+                        applyMask({
+                          value: maintenance.userResponsible.phoneNumber || '',
+                          mask: 'TEL',
+                        }).value
+                      }
+                    </p>
+                  </Style.Row>
+
+                  <Style.Row>
+                    <h6>Email</h6>
+                    <p className="p2">{maintenance.userResponsible?.email}</p>
+                  </Style.Row>
+                </Style.Content>
+              )}
+
+              {maintenance?.Users && maintenance?.Users?.length > 0 && (
+                <UserResponsible
+                  users={maintenance.Users.map(({ User }) => ({
+                    ...User,
+                  }))}
+                />
+              )}
+
+              <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenance.id} />
+              <MaintenanceHistoryActivities maintenanceHistoryId={maintenance.id} />
+
+              {maintenance.canReport && (
+                <>
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <Input
+                      label="Custo"
+                      placeholder="Ex: R$ 100,00"
+                      maxLength={14}
+                      value={maintenanceReport.cost}
+                      permToCheck="maintenances:update"
+                      onChange={(e) => {
+                        setMaintenanceReport((prevState) => {
+                          const newState = { ...prevState };
+                          newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
+                          return newState;
+                        });
+                      }}
+                    />
+
+                    <Select
+                      label="Prioridade"
+                      arrowColor="primary"
+                      placeholder="Selecione uma prioridade"
+                      selectPlaceholderValue="Selecione uma prioridade"
+                      value={maintenance.priorityName}
+                      permToCheck="maintenances:update"
+                      onChange={(e) => {
+                        setMaintenance((prevState) => {
+                          const newState = { ...prevState };
+                          newState.priorityName = e.target.value;
+
+                          return newState;
+                        });
+                      }}
+                    >
+                      <option value="" disabled>
+                        Selecione uma prioridade
                       </option>
-                    ))}
-                  </Select>
-                </div>
 
-                <Style.FileStyleRow disabled={onFileQuery}>
-                  {images.length > 0 && <h6>Anexos</h6>}
-
-                  <Style.FileRow>
-                    {hasUpdatePermission && (
-                      <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
-                        <Image img={icon.addFile} width="40px" height="32px" radius="0" />
-                      </Style.DragAndDropZoneFile>
-                    )}
-
-                    {(files.length > 0 || onFileQuery) && (
-                      <Style.FileAndImageRow>
-                        {files.map((file, i: number) => (
-                          <Style.Tag title={file.name} key={file.originalName}>
-                            <p className="p3">{file.name}</p>
-                            <IconButton
-                              size="16px"
-                              icon={icon.xBlack}
-                              onClick={() => {
-                                setFiles((prevState) => {
-                                  const newState = [...prevState];
-                                  newState.splice(i, 1);
-                                  return newState;
-                                });
-                              }}
-                            />
-                          </Style.Tag>
-                        ))}
-
-                        {onFileQuery &&
-                          acceptedFiles.map((e) => (
-                            <Style.FileLoadingTag key={e.name}>
-                              <DotLoading />
-                            </Style.FileLoadingTag>
-                          ))}
-                      </Style.FileAndImageRow>
-                    )}
-                  </Style.FileRow>
-                </Style.FileStyleRow>
-
-                <Style.FileStyleRow disabled={onImageQuery}>
-                  {images.length > 0 && <h6>Imagens</h6>}
-
-                  <Style.FileAndImageRow>
-                    {hasUpdatePermission && (
-                      <Style.DragAndDropZoneImage
-                        {...getRootPropsImages({ className: 'dropzone' })}
-                      >
-                        <input {...getInputPropsImages()} />
-                        <Image img={icon.addImage} width="40px" height="38px" radius="0" />
-                      </Style.DragAndDropZoneImage>
-                    )}
-
-                    {images.map((file, i: number) => (
-                      <ImagePreview
-                        key={file.originalName}
-                        width="97px"
-                        height="97px"
-                        imageCustomName={file.name}
-                        src={file.url}
-                        onTrashClick={() => {
-                          setImages((prevState) => {
-                            const newState = [...prevState];
-                            newState.splice(i, 1);
-                            return newState;
-                          });
-                        }}
-                      />
-                    ))}
-
-                    {onImageQuery &&
-                      acceptedImages.map((e) => (
-                        <Style.ImageLoadingTag key={e.name}>
-                          <DotLoading />
-                        </Style.ImageLoadingTag>
+                      {maintenancePriorities.map((priority) => (
+                        <option key={priority.name} value={priority.name}>
+                          {priority.label}
+                        </option>
                       ))}
-                  </Style.FileAndImageRow>
-                </Style.FileStyleRow>
-              </>
-            )}
-          </Style.Content>
+                    </Select>
+                  </div>
 
-          <Style.ButtonContainer>
-            {!onQuery && maintenance.Maintenance.MaintenanceType?.name === 'occasional' && (
-              <PopoverButton
-                actionButtonBgColor={theme.color.actionDanger}
-                borderless
-                disabled={onQuery}
-                type="Button"
-                label="Excluir"
-                permToCheck="maintenances:delete"
-                message={{
-                  title: 'Deseja excluir este histórico de manutenção?',
-                  content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
-                  contentColor: theme.color.danger,
-                }}
-                actionButtonClick={() => {
-                  requestDeleteMaintenanceHistory({
-                    maintenanceHistoryId: modalAdditionalInformations.id,
-                    handleModalSendMaintenanceReport,
-                    onThenRequest: async () => onThenActionRequest(),
-                    setOnModalQuery: setOnQuery,
-                  });
-                }}
-              />
-            )}
+                  <Style.FileStyleRow disabled={onFileQuery}>
+                    {images.length > 0 && <h6>Anexos</h6>}
 
-            {maintenance.canReport ? (
-              <>
-                {!onQuery && (
+                    <Style.FileRow>
+                      {hasUpdatePermission && (
+                        <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                          <input {...getInputProps()} />
+                          <Image img={icon.addFile} width="40px" height="32px" radius="0" />
+                        </Style.DragAndDropZoneFile>
+                      )}
+
+                      {(files.length > 0 || onFileQuery) && (
+                        <Style.FileAndImageRow>
+                          {files.map((file, i: number) => (
+                            <Style.Tag title={file.name} key={file.originalName}>
+                              <p className="p3">{file.name}</p>
+                              <IconButton
+                                size="16px"
+                                icon={icon.xBlack}
+                                onClick={() => {
+                                  setFiles((prevState) => {
+                                    const newState = [...prevState];
+                                    newState.splice(i, 1);
+                                    return newState;
+                                  });
+                                }}
+                              />
+                            </Style.Tag>
+                          ))}
+
+                          {onFileQuery &&
+                            acceptedFiles.map((e) => (
+                              <Style.FileLoadingTag key={e.name}>
+                                <DotLoading />
+                              </Style.FileLoadingTag>
+                            ))}
+                        </Style.FileAndImageRow>
+                      )}
+                    </Style.FileRow>
+                  </Style.FileStyleRow>
+
+                  <Style.FileStyleRow disabled={onImageQuery}>
+                    {images.length > 0 && <h6>Imagens</h6>}
+
+                    <Style.FileAndImageRow>
+                      {hasUpdatePermission && (
+                        <Style.DragAndDropZoneImage
+                          {...getRootPropsImages({ className: 'dropzone' })}
+                        >
+                          <input {...getInputPropsImages()} />
+                          <Image img={icon.addImage} width="40px" height="38px" radius="0" />
+                        </Style.DragAndDropZoneImage>
+                      )}
+
+                      {images.map((file, i: number) => (
+                        <ImagePreview
+                          key={file.originalName}
+                          width="97px"
+                          height="97px"
+                          imageCustomName={file.name}
+                          src={file.url}
+                          onTrashClick={() => {
+                            setImages((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      ))}
+
+                      {onImageQuery &&
+                        acceptedImages.map((e) => (
+                          <Style.ImageLoadingTag key={e.name}>
+                            <DotLoading />
+                          </Style.ImageLoadingTag>
+                        ))}
+                    </Style.FileAndImageRow>
+                  </Style.FileStyleRow>
+                </>
+              )}
+            </Style.Content>
+
+            <Style.ButtonContainer>
+              {!onQuery && maintenance.Maintenance.MaintenanceType?.name === 'occasional' && (
+                <PopoverButton
+                  actionButtonBgColor={theme.color.actionDanger}
+                  borderless
+                  disabled={onQuery}
+                  type="Button"
+                  label="Excluir"
+                  permToCheck="maintenances:delete"
+                  message={{
+                    title: 'Deseja excluir este histórico de manutenção?',
+                    content: 'Atenção, essa ação não poderá ser desfeita posteriormente.',
+                    contentColor: theme.color.danger,
+                  }}
+                  actionButtonClick={() => {
+                    requestDeleteMaintenanceHistory({
+                      maintenanceHistoryId: modalAdditionalInformations.id,
+                      handleModalSendMaintenanceReport,
+                      onThenRequest: async () => onThenActionRequest(),
+                      setOnModalQuery: setOnQuery,
+                    });
+                  }}
+                />
+              )}
+
+              {maintenance.canReport ? (
+                <>
+                  {!onQuery && (
+                    <PopoverButton
+                      disabled={onFileQuery || onImageQuery || onQuery}
+                      actionButtonClick={() => {
+                        requestToggleInProgress({
+                          maintenanceHistoryId: modalAdditionalInformations.id,
+                          handleModalSendMaintenanceReport,
+                          setOnQuery,
+                          onThenActionRequest,
+                          inProgressChange: !maintenance.inProgress,
+                        });
+                      }}
+                      actionButtonBgColor="primary"
+                      textColor="actionBlue"
+                      borderless
+                      label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
+                      permToCheck="maintenances:update"
+                      message={{
+                        title: maintenance.inProgress
+                          ? 'Tem certeza que deseja alterar a execução?'
+                          : 'Iniciar a execução apenas indica que a manutenção está sendo realizada, mas não conclui a manutenção.',
+                        content: 'Esta ação é reversível.',
+                      }}
+                      type="Button"
+                    />
+                  )}
+
+                  {!onQuery && (
+                    <PopoverButton
+                      disabled={onFileQuery || onImageQuery || onQuery}
+                      actionButtonClick={() => {
+                        requestSaveReportProgress({
+                          maintenanceHistoryId: modalAdditionalInformations.id,
+                          maintenanceReport,
+                          maintenance,
+                          setOnQuery,
+                          handleModalSendMaintenanceReport,
+                          files,
+                          images,
+                          buildingId,
+                          calendarType,
+                          setBuildingOptions,
+                          setLoading,
+                          setMaintenancesDisplay,
+                          setMaintenancesMonthView,
+                          setMaintenancesWeekView,
+                          setYearChangeLoading,
+                          yearToRequest,
+                        });
+                      }}
+                      actionButtonBgColor="primary"
+                      textColor="actionBlue"
+                      borderless
+                      bgColor="primary"
+                      label="Salvar"
+                      permToCheck="maintenances:update"
+                      message={{
+                        title: 'Tem certeza que deseja salvar o progresso?',
+                        content: '',
+                      }}
+                      type="Button"
+                    />
+                  )}
+
                   <PopoverButton
-                    disabled={onFileQuery || onImageQuery || onQuery}
+                    disabled={onFileQuery || onImageQuery}
+                    loading={onQuery}
                     actionButtonClick={() => {
-                      requestToggleInProgress({
-                        maintenanceHistoryId: modalAdditionalInformations.id,
-                        handleModalSendMaintenanceReport,
+                      requestSendReport({
                         setOnQuery,
-                        onThenActionRequest,
-                        inProgressChange: !maintenance.inProgress,
-                      });
-                    }}
-                    actionButtonBgColor="primary"
-                    textColor="actionBlue"
-                    borderless
-                    label={maintenance.inProgress ? 'Parar execução' : 'Iniciar execução'}
-                    permToCheck="maintenances:update"
-                    message={{
-                      title: maintenance.inProgress
-                        ? 'Tem certeza que deseja alterar a execução?'
-                        : 'Iniciar a execução apenas indica que a manutenção está sendo realizada, mas não conclui a manutenção.',
-                      content: 'Esta ação é reversível.',
-                    }}
-                    type="Button"
-                  />
-                )}
-
-                {!onQuery && (
-                  <PopoverButton
-                    disabled={onFileQuery || onImageQuery || onQuery}
-                    actionButtonClick={() => {
-                      requestSaveReportProgress({
                         maintenanceHistoryId: modalAdditionalInformations.id,
                         maintenanceReport,
-                        maintenance,
-                        setOnQuery,
                         handleModalSendMaintenanceReport,
                         files,
                         images,
@@ -588,70 +652,35 @@ export const ModalSendMaintenanceReport = ({
                         setMaintenancesWeekView,
                         setYearChangeLoading,
                         yearToRequest,
+                        origin: account?.origin ?? 'Company',
                       });
                     }}
                     actionButtonBgColor="primary"
-                    textColor="actionBlue"
-                    borderless
                     bgColor="primary"
-                    label="Salvar"
-                    permToCheck="maintenances:update"
+                    label="Finalizar manutenção"
+                    permToCheck="maintenances:finish"
                     message={{
-                      title: 'Tem certeza que deseja salvar o progresso?',
-                      content: '',
+                      title: 'Tem certeza que deseja enviar o relato?',
+                      content: 'Esta ação é irreversível.',
+                      contentColor: theme.color.danger,
                     }}
                     type="Button"
                   />
-                )}
-
-                <PopoverButton
-                  disabled={onFileQuery || onImageQuery}
+                </>
+              ) : (
+                <Button
+                  label="Fechar"
+                  disable={onQuery}
                   loading={onQuery}
-                  actionButtonClick={() => {
-                    requestSendReport({
-                      setOnQuery,
-                      maintenanceHistoryId: modalAdditionalInformations.id,
-                      maintenanceReport,
-                      handleModalSendMaintenanceReport,
-                      files,
-                      images,
-                      buildingId,
-                      calendarType,
-                      setBuildingOptions,
-                      setLoading,
-                      setMaintenancesDisplay,
-                      setMaintenancesMonthView,
-                      setMaintenancesWeekView,
-                      setYearChangeLoading,
-                      yearToRequest,
-                      origin: account?.origin ?? 'Company',
-                    });
+                  onClick={() => {
+                    handleModalSendMaintenanceReport(false);
                   }}
-                  actionButtonBgColor="primary"
-                  bgColor="primary"
-                  label="Finalizar manutenção"
-                  permToCheck="maintenances:finish"
-                  message={{
-                    title: 'Tem certeza que deseja enviar o relato?',
-                    content: 'Esta ação é irreversível.',
-                    contentColor: theme.color.danger,
-                  }}
-                  type="Button"
                 />
-              </>
-            ) : (
-              <Button
-                label="Fechar"
-                disable={onQuery}
-                loading={onQuery}
-                onClick={() => {
-                  handleModalSendMaintenanceReport(false);
-                }}
-              />
-            )}
-          </Style.ButtonContainer>
-        </Style.Container>
-      )}
-    </Modal>
+              )}
+            </Style.ButtonContainer>
+          </Style.Container>
+        )}
+      </Modal>
+    </>
   );
 };

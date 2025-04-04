@@ -19,7 +19,6 @@ import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActi
 import { ListTag } from '@components/ListTag';
 import { InProgressTag } from '@components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
-import { ShareMaintenanceHistoryButton } from '@components/ShareMaintenanceHistoryButton';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
@@ -196,6 +195,7 @@ export const ModalSendMaintenanceReport = ({
     <Modal
       bodyWidth="475px"
       title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
+      maintenanceHistoryId={maintenanceHistoryId}
       setModal={handleModalSendMaintenanceReport}
     >
       {modalLoading ? (
@@ -204,8 +204,6 @@ export const ModalSendMaintenanceReport = ({
         </Style.LoadingContainer>
       ) : (
         <Style.Container>
-          <ShareMaintenanceHistoryButton maintenanceHistoryId={maintenanceHistoryId} />
-
           <h3>{maintenance?.Building.name}</h3>
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}

@@ -37,10 +37,17 @@ export const dateFormatter = (date: string | Date) => {
 export const dateTimeFormatter = (date: string) =>
   new Date(date).toLocaleString('pt-BR').substring(0, 17);
 
-export const convertToFormikDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+export const convertToFormikDate = (date: Date | string) => {
+  let newDate = date;
+
+  if (typeof newDate === 'string') {
+    newDate = new Date(newDate);
+  }
+
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const day = newDate.getDate();
+
   return `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
 };
 
