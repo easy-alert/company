@@ -138,3 +138,10 @@ export interface IMaintenance {
 export interface IRequestMaintenanceDetails {
   maintenanceHistoryId: string;
 }
+
+export interface IModalEditMaintenanceHistory {
+  userId?: string;
+  maintenance: IMaintenance;
+  handleEditModal: (modalState: boolean) => void;
+  handleRefresh: () => void;
+}

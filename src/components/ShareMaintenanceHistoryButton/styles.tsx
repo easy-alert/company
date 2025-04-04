@@ -90,12 +90,6 @@ export const ActionButtonContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: ${theme.size.xxsm};
-  width: fit-content;
-
-  position: absolute;
-  top: 24px;
-  right: 64px;
 
   @media (max-width: 400px) {
     top: 64px;

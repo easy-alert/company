@@ -14,6 +14,7 @@ export interface IModalSendMaintenanceReport {
   setBuildingOptions: React.Dispatch<React.SetStateAction<IBuildingOptions[]>>;
   buildingId: string;
   calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
+  userId: string;
   onThenActionRequest: () => Promise<void>;
 }
 
