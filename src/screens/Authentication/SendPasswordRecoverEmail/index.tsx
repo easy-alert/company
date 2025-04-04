@@ -51,7 +51,7 @@ export const SendPasswordRecoverEmail = () => {
       >
         {({ errors, values, touched }) => (
           <>
-            <img src={icon.logoTextWhite} alt="" />
+            <img src={icon.logoTextWhite} alt="" data-testid="company-logo" />
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
@@ -66,11 +66,20 @@ export const SendPasswordRecoverEmail = () => {
                     error={touched.email && errors.email ? errors.email : null}
                   />
                 </Style.InputWrapper>
-                <Button center label="Enviar" loading={onQuery} type="submit" />
+                <Button
+                  center
+                  label="Enviar"
+                  loading={onQuery}
+                  type="submit"
+                  data-testid="toSend-button"
+                />
               </Form>
             </Style.LoginContainer>
             <p className="p2">
-              Já possui conta? <Link to="/login">Faça login</Link>
+              Já possui conta?{' '}
+              <Link to="/login" data-testid="login-link">
+                Faça login
+              </Link>
             </p>
           </>
         )}
