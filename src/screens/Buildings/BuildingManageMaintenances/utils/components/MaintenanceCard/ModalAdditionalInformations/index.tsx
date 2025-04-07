@@ -179,7 +179,7 @@ export const ModalAdditionalInformations = ({
             ? convertToFormikDate(selectedMaintenance.resolutionDate)
             : '',
           hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
-          status: 'expired',
+          status: 'completed',
           firstNotificationDate: selectedMaintenance.notificationDate
             ? convertToFormikDate(selectedMaintenance.notificationDate)
             : '',
@@ -236,15 +236,17 @@ export const ModalAdditionalInformations = ({
               <Style.Wrapper decreaseOpacity={hasHistory}>
                 <FormikCheckbox
                   disable={hasHistory}
-                  label="Informar data da última conclusão"
+                  label="Informar data e status da última manutenção"
                   name="hasLastResolutionDate"
                   onChange={() => {
                     setFieldValue('hasLastResolutionDate', !values.hasLastResolutionDate);
+                    setFieldValue('status', 'completed');
 
                     if (values.lastResolutionDate) {
                       setTouched({ lastResolutionDate: false });
                       setFieldValue('lastResolutionDate', '');
                     }
+
                     setMaintenanceReport({ cost: 'R$ 0,00', observation: '' });
                     setFiles([]);
                     setImages([]);
