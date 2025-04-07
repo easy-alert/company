@@ -302,6 +302,7 @@ export const MaintenancesCalendar = () => {
           setBuildingOptions={setBuildingOptions}
           buildingId={buildingId}
           calendarType={calendarType}
+          userId={account.User.id}
           onThenActionRequest={async () =>
             requestCalendarData({
               buildingId,
