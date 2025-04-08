@@ -60,12 +60,17 @@ export const ModalEditMaintenanceHistory = ({
     setLoading(true);
 
     try {
+      const formattedDueDate = new Date(`${values.dueDate}T00:00:00`);
+      const newStatus = new Date() > formattedDueDate ? 'expired' : 'pending';
+
       const data = {
         id: maintenance.id,
-        dueDate: new Date(`${values.dueDate}T00:00:00`),
+        dueDate: formattedDueDate,
+        maintenanceStatus: newStatus,
       };
 
       await putMaintenanceHistory(data);
+
       handleEditModal(false);
       handleRefresh();
     } catch (error) {
