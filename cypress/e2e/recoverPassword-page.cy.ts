@@ -3,7 +3,7 @@ describe('Tests in Recover password', () => {
     cy.visit('/passwordrecover/sendemail');
   });
 
-  it('must visit and show login registration', () => {
+  it('should display the company logo on the password recovery page', () => {
     cy.getByTestId('company-logo').should('be.visible');
   });
 
@@ -23,7 +23,7 @@ describe('Tests in Recover password', () => {
       cy.checkToastMessage('error-toast', 'A informação: usuário não existe na base de dados.');
     });
 
-    it('should show error when submitting without filling email', () => {
+    it('should show an error when submitting without filling the email field', () => {
       cy.getByTestId('toSend-button').should('be.visible').click();
       cy.getByTestId('email-error').should('contain.text', 'E-mail obrigatório.');
     });
