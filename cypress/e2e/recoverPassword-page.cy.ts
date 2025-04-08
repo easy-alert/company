@@ -11,10 +11,10 @@ describe('Tests in Recover password', () => {
     it('should send recovery email successfully', () => {
       cy.getByTestId('email-input').should('be.visible').type('company@gmail.com');
       cy.getByTestId('toSend-button').should('be.visible').click();
-      
-      cy.checkToastMessage('success-toast', 'E-mail de recuperação de senha enviado com sucesso.');
+
       cy.url().should('include', '/login');
       cy.getByTestId('login-container').should('be.visible');
+      cy.checkToastMessage('success-toast', 'E-mail de recuperação de senha enviado com sucesso.');
     });
 
     it('should show an error when the email does not exist in the database', () => {
