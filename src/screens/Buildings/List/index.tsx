@@ -137,9 +137,7 @@ export const BuildingsList = () => {
           className="p2"
           icon={<IconPlus strokeColor="primary" />}
           permToCheck="buildings:create"
-          onClick={() => {
-            setModalCreateBuildingOpen(true);
-          }}
+          onClick={() => setModalCreateBuildingOpen(true)}
         />
       </Style.Header>
 

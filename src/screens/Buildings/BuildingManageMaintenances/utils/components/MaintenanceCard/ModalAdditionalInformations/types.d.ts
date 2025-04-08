@@ -33,4 +33,5 @@ export interface IHandleAdditionalInformations {
   maintenanceReport: IMaintenanceReport;
   files: AnnexesAndImages[];
   images: AnnexesAndImages[];
+  selectedMaintenance: IMaintenance;
 }
