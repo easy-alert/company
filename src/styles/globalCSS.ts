@@ -1,6 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
-import { icon } from '../assets/icons/index';
+import { icon } from '@assets/icons/index';
 
 export default createGlobalStyle`
   * {
