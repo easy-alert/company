@@ -29,15 +29,17 @@ describe('Tests in Login Page', () => {
       cy.getByTestId('password-input').should('be.visible').type('123123123');
       cy.getByTestId('login-button').click();
       cy.getByTestId('login-error').should('contain.text', 'E-mail ou telefone obrigatório.');
-    }); 
+    });
 
-    it.only('You must check if the password view icon is working', () => {
+    it('You must check if the password view icon is working', () => {
       cy.getByTestId('password-input').should('be.visible').type('123123123');
       cy.getByTestId('view-password').click({ multiple: true });
-      cy.getByTestId('password-input').should('have.attr', 'type', 'text').and('have.value', '123123123');
+      cy.getByTestId('password-input')
+        .should('have.attr', 'type', 'text')
+        .and('have.value', '123123123');
       cy.getByTestId('view-password').click({ multiple: true });
       cy.getByTestId('password-input').should('have.attr', 'type', 'password');
-  });
+    });
 
     it('should show an error message when the password is invalid', () => {
       cy.getByTestId('login-input').should('be.visible').type('company@gmail.com');
