@@ -33,10 +33,19 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { ITicketStatusNames } from '@customTypes/ITicket';
 
 // COMPONENTS
+import { ApexOptions } from 'apexcharts';
+import { InfoCard } from './Components/InfoCard';
 import { ModalDashboardMaintenanceDetails } from './ModalDashboardMaintenanceDetails';
 
 // STYLES
 import * as Style from './styles';
+import { ReusableChartCard } from './Components/Graphic';
+import { UserActivity } from './Components/InfoCard/utils/types';
+import {
+  getMaintenanceCategories,
+  getMaintenanceStatus,
+  getUserActivities,
+} from './Components/InfoCard/utils/functions';
 // #endregion
 
 // #region interfaces
@@ -137,6 +146,18 @@ interface IDashboardLoadings {
   ticketTypes: boolean;
   mostCompletedExpired: boolean;
 }
+
+interface StatusChartData {
+  data: number[];
+  labels: string[];
+  colors: string[];
+}
+
+type CountAndCostItem = {
+  category: string;
+  count: number;
+};
+
 // #endregion
 
 export interface ITicketFilter {
@@ -150,6 +171,7 @@ export interface ITicketFilter {
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+  const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
 
   // #region states
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
@@ -170,12 +192,6 @@ export const Dashboard = () => {
   const [maintenancesTimeline, setMaintenancesTimeline] = useState<ITimeline>({
     categories: [],
     series: [],
-  });
-
-  const [maintenanceChart, setMaintenanceChart] = useState<IPieChart>({
-    data: [],
-    labels: [],
-    colors: [],
   });
 
   const [maintenancesMostCompletedExpired, setMaintenancesMostCompletedExpired] =
@@ -260,6 +276,21 @@ export const Dashboard = () => {
 
   const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
 
+  const handleGetUserActivities = async () => {
+    try {
+      const response = await getUserActivities(dataFilter);
+      setUserActivities(response);
+    } catch (error) {
+      setUserActivities([]);
+    }
+  };
+  useEffect(() => {
+    handleGetUserActivities();
+  }, []);
+
+  const filteredUsers = userActivities.filter((user) => user.name?.trim() !== '');
+  const firstUser = filteredUsers[0] || null;
+
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
     categories: [],
@@ -303,6 +334,22 @@ export const Dashboard = () => {
     }
   };
 
+  const [maintenanceChart, setMaintenanceChart] = useState<{
+    common: StatusChartData;
+    occasional: StatusChartData;
+  }>({
+    common: { data: [], labels: [], colors: [] },
+    occasional: { data: [], labels: [], colors: [] },
+  });
+
+  const [categoriesFormatted, setCategoriesFormatted] = useState<{
+    common: CountAndCostItem[];
+    occasional: CountAndCostItem[];
+  }>({
+    common: [],
+    occasional: [],
+  });
+
   const handleGetMaintenancesCountAndCost = async (
     maintenanceType: 'common' | 'occasional' | '',
     resetFilters?: boolean,
@@ -339,6 +386,84 @@ export const Dashboard = () => {
           }));
           break;
       }
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    }
+  };
+
+  const handleGetMaintenanceCategories = async (
+    maintenanceType: 'common' | 'occasional',
+    resetFilters?: boolean,
+  ) => {
+    try {
+      const responseData = await getMaintenanceCategories(
+        dataFilter,
+        maintenanceType,
+        resetFilters,
+      );
+
+      if (!responseData?.categoriesArray) return;
+
+      const categories = responseData.categoriesArray.map((item) => ({
+        category: item.category,
+        count: item.count,
+      }));
+
+      setCategoriesFormatted((prev) => ({
+        ...prev,
+        [maintenanceType]: categories,
+      }));
+
+      setMaintenancesData((prev) => ({
+        ...prev,
+        [`${maintenanceType}MaintenanceData`]: {
+          count: Number(responseData.totalMaintenances),
+          cost: Number(responseData.totalCost),
+        },
+      }));
+    } catch (error: any) {
+      handleToastify(error.response?.data?.ServerMessage);
+    }
+  };
+
+  const handleGetMaintenanceStatus = async (
+    maintenanceType: 'common' | 'occasional',
+    resetFilters?: boolean,
+  ) => {
+    try {
+      const responseData = await getMaintenanceStatus(dataFilter, maintenanceType, resetFilters);
+
+      if (!responseData) return;
+
+      if (maintenanceType === 'common') {
+        setMaintenanceChart((prevState) => ({
+          ...prevState,
+          common: responseData,
+        }));
+      } else {
+        setMaintenanceChart((prevState) => ({
+          ...prevState,
+          occasional: responseData,
+        }));
+      }
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    }
+  };
+
+  const handleGetAllMaintenanceStatus = async (resetFilters?: boolean) => {
+    try {
+      await handleGetMaintenanceStatus('common', resetFilters);
+      await handleGetMaintenanceStatus('occasional', resetFilters);
+    } catch (error: any) {
+      handleToastify(error.response.data.ServerMessage);
+    }
+  };
+
+  const handleGetAllMaintenanceCategories = async (resetFilters?: boolean) => {
+    try {
+      handleGetMaintenanceCategories('common', resetFilters);
+      handleGetMaintenanceCategories('occasional', resetFilters);
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);
     }
@@ -491,6 +616,12 @@ export const Dashboard = () => {
 
     // get most completed and expired maintenances
     handleGetMaintenancesMostCompletedExpired(resetFilters);
+
+    // get maintenance status (common and occasional)
+    handleGetAllMaintenanceStatus(resetFilters);
+
+    // get maintenance categories (common and occasional)
+    handleGetAllMaintenanceCategories(resetFilters);
   };
 
   const handleResetFilterButton = async () => {
@@ -555,11 +686,11 @@ export const Dashboard = () => {
     });
   };
 
-  const handleSelectedMaintenance = (rating: IRating, status: IRatingStatus) => {
-    setSelectedRating(rating);
-    setSelectedRatingStatus(status);
-    setModalDashboardMaintenanceDetails(true);
-  };
+  // const handleSelectedMaintenance = (rating: IRating, status: IRatingStatus) => {
+  //   setSelectedRating(rating);
+  //   setSelectedRatingStatus(status);
+  //   setModalDashboardMaintenanceDetails(true);
+  // };
   // #endregion
 
   // #region charts options
@@ -578,7 +709,7 @@ export const Dashboard = () => {
 
       plotOptions: {
         bar: {
-          horizontal: false,
+          horizontal: true,
           columnWidth: '16px',
           endingShape: 'rounded',
         },
@@ -590,13 +721,13 @@ export const Dashboard = () => {
         shared: true,
         intersect: false,
         y: {
-          formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
+          formatter: (value: number) => value.toLocaleString('pt-BR'),
         },
       },
 
       yaxis: {
         labels: {
-          formatter: (value: any) => parseInt(value, 10).toLocaleString('pt-BR'),
+          formatter: (value: number) => value.toLocaleString('pt-BR'),
         },
       },
 
@@ -608,105 +739,122 @@ export const Dashboard = () => {
 
       xaxis: {
         categories: maintenancesTimeline.categories,
-        axisTicks: {
-          show: false,
+        labels: {
+          formatter: (value: string) => value,
         },
-        axisBorder: {
-          show: false,
-        },
+        axisTicks: { show: false },
+        axisBorder: { show: false },
       },
-      fill: {
-        opacity: 1,
-      },
-    },
+      fill: { opacity: 1 },
+    } as ApexOptions,
   };
 
-  const scoreChart = {
-    series: maintenanceChart.data,
-    options: {
-      labels: maintenanceChart.labels,
+  const scoreChart = (type: 'common' | 'occasional') => {
+    const chartData = maintenanceChart?.[type];
 
-      chart: {
-        toolbar: {
-          show: false,
+    if (type === 'occasional') console.log('chartData', chartData);
+
+    const emptyChart = {
+      series: [],
+      chartData: [],
+      options: {
+        labels: [],
+        chart: { toolbar: { show: false } },
+        tooltip: { enabled: true },
+        plotOptions: {
+          pie: {
+            donut: { labels: { show: false } },
+          },
+        },
+        colors: [],
+        dataLabels: {
+          enabled: false,
+          style: {
+            fontSize: '14px',
+            fontWeight: 400,
+          },
+        },
+        legend: {
+          position: 'bottom' as const,
+          offsetY: -10,
         },
       },
+    };
 
-      tooltip: {
-        enabled: true,
-      },
+    if (!chartData || !chartData.data?.length || !chartData.labels?.length) {
+      return emptyChart;
+    }
 
-      plotOptions: {
-        pie: {
-          startAngle: 0,
-          endAngle: 360,
-          expandOnClick: true,
-          offsetX: 0,
-          offsetY: 0,
-          customScale: 1,
-          dataLabels: {
-            offset: 0,
-            minAngleToShowLabel: 10,
-          },
-          donut: {
-            labels: {
-              show: true,
-              name: {
+    const largest = findLargestValueAndIndex(chartData.data);
+
+    return {
+      series: chartData.data,
+      options: {
+        labels: chartData.labels,
+        chart: { toolbar: { show: false } },
+        tooltip: { enabled: true },
+        plotOptions: {
+          pie: {
+            startAngle: 0,
+            endAngle: 360,
+            expandOnClick: true,
+            offsetX: 0,
+            offsetY: 0,
+            customScale: 1,
+            dataLabels: { offset: 0, minAngleToShowLabel: 10 },
+            donut: {
+              labels: {
                 show: true,
-                fontSize: '16px',
-                fontFamily: 'Helvetica, Arial, sans-serif',
-                fontWeight: 600,
-                offsetY: 4,
-                color: '#000000',
-              },
-              value: {
-                show: true,
-                fontSize: '16px',
-                fontWeight: 600,
-                color: '#000000',
-                formatter(val: any, w: any) {
-                  const percent =
-                    (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
-                  return `${percent.toFixed(1)} %`;
+                name: {
+                  show: true,
+                  fontSize: '16px',
+                  fontFamily: 'Helvetica, Arial, sans-serif',
+                  fontWeight: 600,
+                  offsetY: 4,
+                  color: '#000000',
                 },
-              },
-              total: {
-                show: true,
-                showAlways: false,
-
-                label:
-                  maintenanceChart.labels[findLargestValueAndIndex(maintenanceChart.data).index],
-                fontSize: '16px',
-                fontWeight: 600,
-                color: '#000000',
-
-                formatter(w: any) {
-                  const percent =
-                    (w.globals.seriesTotals[findLargestValueAndIndex(maintenanceChart.data).index] *
-                      100) /
-                    w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
-
-                  return `${percent.toFixed(1)} %`;
+                value: {
+                  show: true,
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#000000',
+                  formatter(val: any, w: any) {
+                    const percent =
+                      (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+                    return `${percent.toFixed(1)} %`;
+                  },
+                },
+                total: {
+                  show: true,
+                  label: chartData.labels[largest.index],
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#000000',
+                  formatter(w: any) {
+                    const percent =
+                      (w.globals.seriesTotals[largest.index] * 100) /
+                      w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+                    return `${percent.toFixed(1)} %`;
+                  },
                 },
               },
             },
           },
         },
-      },
-
-      colors: maintenanceChart.colors,
-      dataLabels: {
-        enabled: false,
-        style: {
-          fontSize: '14px',
-          fontWeight: 400,
+        colors: chartData.colors,
+        dataLabels: {
+          enabled: false,
+          style: {
+            fontSize: '14px',
+            fontWeight: 400,
+          },
+        },
+        legend: {
+          position: 'bottom' as const,
+          offsetY: -10,
         },
       },
-      legend: {
-        position: 'bottom' as const,
-        offsetY: -10,
-      },
-    },
+    };
   };
 
   const ticketTypesChart = {
@@ -1053,15 +1201,15 @@ export const Dashboard = () => {
         <Style.Wrappers>
           <Style.MaintenancesCounts>
             <Style.CountCard>
-              <h5>Manutenções avulsas</h5>
+              <h5>Total de manutenções</h5>
 
               <Style.CountCardContent>
                 {dashboardLoadings.maintenances ? (
                   <DotSpinLoading />
                 ) : (
                   <>
-                    <h2>{maintenancesData.occasionalMaintenanceData.count}</h2>
-                    <p className="p4">{maintenancesData.occasionalMaintenanceData.cost}</p>
+                    <h2>{maintenancesData.totalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.totalMaintenanceData.cost}</p>
                   </>
                 )}
               </Style.CountCardContent>
@@ -1083,15 +1231,15 @@ export const Dashboard = () => {
             </Style.CountCard>
 
             <Style.CountCard>
-              <h5>Total de manutenções</h5>
+              <h5>Manutenções avulsas</h5>
 
               <Style.CountCardContent>
                 {dashboardLoadings.maintenances ? (
                   <DotSpinLoading />
                 ) : (
                   <>
-                    <h2>{maintenancesData.totalMaintenanceData.count}</h2>
-                    <p className="p4">{maintenancesData.totalMaintenanceData.cost}</p>
+                    <h2>{maintenancesData.occasionalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.occasionalMaintenanceData.cost}</p>
                   </>
                 )}
               </Style.CountCardContent>
@@ -1118,68 +1266,6 @@ export const Dashboard = () => {
             </Style.CountCard>
           </Style.MaintenancesCounts>
 
-          {/* <Style.TicketsCounts>
-            <Style.CountCard>
-              <h5>Chamados abertos</h5>
-
-              <Style.CountCardContent>
-                {dashboardLoadings.tickets ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    <h2>{ticketsData.openTickets.count}</h2>
-                    <p className="p4">{ticketsData.openTickets.cost}</p>
-                  </>
-                )}
-              </Style.CountCardContent>
-            </Style.CountCard>
-
-            <Style.CountCard>
-              <h5>Chamados pendentes</h5>
-
-              <Style.CountCardContent>
-                {dashboardLoadings.tickets ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    <h2>{ticketsData.awaitingToFinishTickets.count}</h2>
-                    <p className="p4">{ticketsData.awaitingToFinishTickets.cost}</p>
-                  </>
-                )}
-              </Style.CountCardContent>
-            </Style.CountCard>
-
-            <Style.CountCard>
-              <h5>Chamados finalizados</h5>
-
-              <Style.CountCardContent>
-                {dashboardLoadings.tickets ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    <h2>{ticketsData.finishedTickets.count}</h2>
-                    <p className="p4">{ticketsData.finishedTickets.cost}</p>
-                  </>
-                )}
-              </Style.CountCardContent>
-            </Style.CountCard>
-
-            <Style.CountCard>
-              <h5>Chamados indeferidos</h5>
-
-              <Style.CountCardContent>
-                {dashboardLoadings.tickets ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    <h2>{ticketsData.dismissedTickets.count}</h2>
-                    <p className="p4">{ticketsData.dismissedTickets.cost}</p>
-                  </>
-                )}
-              </Style.CountCardContent>
-            </Style.CountCard>
-          </Style.TicketsCounts> */}
-
           <Style.ChartsWrapper>
             <Style.Card>
               <h5>Linha do tempo de manutenções</h5>
@@ -1200,18 +1286,11 @@ export const Dashboard = () => {
                             options={timeLineChart.options}
                             series={timeLineChart.series}
                             type="bar"
-                            height={290}
-                            width={Math.max(
-                              divWidth,
-                              (maintenancesTimeline.series[0].data.length +
-                                maintenancesTimeline.series[1].data.length +
-                                maintenancesTimeline.series[2].data.length) *
-                                30,
-                            )}
+                            height="100%"
+                            width="100%"
                           />
                         </Style.ChartWrapperX>
                       )}
-
                     {maintenancesTimeline.series.length > 0 &&
                       maintenancesTimeline.series[0].data.length === 0 && (
                         <Style.NoDataWrapper>
@@ -1225,148 +1304,59 @@ export const Dashboard = () => {
 
             <Style.PieWrapper>
               <Style.Card>
-                <h5>Score de manutenções</h5>
-
-                <Style.ChartContent>
-                  {dashboardLoadings.score ? (
-                    <DotSpinLoading />
-                  ) : (
-                    <>
-                      {maintenanceChart.data.some((data) => data > 0) && (
-                        <Chart
-                          type="donut"
-                          options={scoreChart.options as any}
-                          series={scoreChart.series}
-                          height={335}
-                        />
-                      )}
-
-                      {maintenanceChart.data[0] === 0 &&
-                        maintenanceChart.data[1] === 0 &&
-                        maintenanceChart.data[2] === 0 && (
-                          <Style.NoDataWrapper>
-                            <h6>Nenhuma informação encontrada</h6>
-                          </Style.NoDataWrapper>
-                        )}
-                    </>
-                  )}
-                </Style.ChartContent>
+                <ReusableChartCard
+                  title="Score de manutenções preventiva"
+                  type="donut"
+                  chartOptions={scoreChart('common').options}
+                  chartSeries={scoreChart('common').series}
+                  isLoading={dashboardLoadings.score}
+                />
               </Style.Card>
 
               <Style.Card>
-                <h5>Tipos de chamados</h5>
-
-                <Style.ChartContent>
-                  {dashboardLoadings.ticketTypes ? (
-                    <DotSpinLoading />
-                  ) : (
-                    <>
-                      {ticketsServicesTypeChart.data.length > 0 && (
-                        <Chart
-                          type="donut"
-                          options={ticketTypesChart.options as any}
-                          series={ticketTypesChart.series}
-                          height={335}
-                        />
-                      )}
-
-                      {ticketsServicesTypeChart.data.length === 0 && (
-                        <Style.NoDataWrapper>
-                          <h6>Nenhuma informação encontrada</h6>
-                        </Style.NoDataWrapper>
-                      )}
-                    </>
-                  )}
-                </Style.ChartContent>
+                <ReusableChartCard
+                  title="Score de manutenções avulsas"
+                  type="donut"
+                  chartOptions={scoreChart('occasional').options}
+                  chartSeries={scoreChart('occasional').series}
+                  isLoading={dashboardLoadings.score}
+                />
               </Style.Card>
+
+              <Style.Card>
+                <ReusableChartCard
+                  title="Tipos de chamados"
+                  type="donut"
+                  chartOptions={ticketTypesChart.options}
+                  chartSeries={ticketTypesChart.series}
+                  isLoading={dashboardLoadings.ticketTypes}
+                />
+              </Style.Card>
+
+              <InfoCard
+                title="Manutenções Preventivas"
+                totals={maintenancesData?.commonMaintenanceData.count || 0}
+                valueInvested={Number(maintenancesData?.commonMaintenanceData.cost) || 0}
+                categories={categoriesFormatted.common || 0}
+              />
+
+              <InfoCard
+                title="Manutenções Avulsas"
+                totals={maintenancesData?.occasionalMaintenanceData.count || 0}
+                valueInvested={Number(maintenancesData?.occasionalMaintenanceData.cost) || 0}
+                categories={categoriesFormatted.occasional || 0}
+              />
+
+              <InfoCard
+                title="Atividades por usuário"
+                totals={firstUser?.totalActivities || 0}
+                valueInvested={firstUser?.maintenanceHistoryCount || 0}
+                name={filteredUsers.map((user) => user.name)}
+                tickets={firstUser?.ticketCount || 0}
+                checklists={firstUser?.checklistCount || 0}
+              />
             </Style.PieWrapper>
           </Style.ChartsWrapper>
-
-          <Style.PanelWrapper>
-            <Style.Card>
-              <h5>Investido em manutenções</h5>
-
-              {dashboardLoadings.maintenances ? (
-                <DotSpinLoading />
-              ) : (
-                <Style.CardContent>
-                  <h2>{maintenancesData.totalMaintenanceData.cost.slice(16) || 'R$ 0,00'}</h2>
-                </Style.CardContent>
-              )}
-            </Style.Card>
-
-            <Style.Card>
-              <h5>Manutenções mais realizadas</h5>
-
-              <Style.CardContent>
-                {dashboardLoadings.mostCompletedExpired ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    {maintenancesMostCompletedExpired?.completed?.map((rating) => (
-                      <Style.MostAccomplishedMaintenance
-                        key={rating.id}
-                        onClick={() => {
-                          handleSelectedMaintenance(rating, 'completed');
-                        }}
-                      >
-                        <h6>{rating.data.Category.name}</h6>
-                        <p className="p2" title={rating.data.activity}>
-                          {rating.data.activity}
-                        </p>
-                        <p className="p3">
-                          A cada{' '}
-                          {rating.data.frequency > 1
-                            ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
-                            : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
-                        </p>
-                      </Style.MostAccomplishedMaintenance>
-                    ))}
-
-                    {maintenancesMostCompletedExpired?.completed?.length === 0 && (
-                      <h6>Nenhuma informação encontrada</h6>
-                    )}
-                  </>
-                )}
-              </Style.CardContent>
-            </Style.Card>
-
-            <Style.Card>
-              <h5>Manutenções menos realizadas</h5>
-
-              <Style.CardContent>
-                {dashboardLoadings.mostCompletedExpired ? (
-                  <DotSpinLoading />
-                ) : (
-                  <>
-                    {maintenancesMostCompletedExpired?.expired?.map((rating) => (
-                      <Style.LeastAccomplishedMaintenance
-                        key={rating.id}
-                        onClick={() => {
-                          handleSelectedMaintenance(rating, 'expired');
-                        }}
-                      >
-                        <h6>{rating.data.Category.name}</h6>
-                        <p className="p2" title={rating.data.activity}>
-                          {rating.data.activity}
-                        </p>
-                        <p className="p3">
-                          A cada{' '}
-                          {rating.data.frequency > 1
-                            ? `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.pluralLabel}`
-                            : `${rating.data.frequency} ${rating.data.FrequencyTimeInterval.singularLabel}`}
-                        </p>
-                      </Style.LeastAccomplishedMaintenance>
-                    ))}
-
-                    {maintenancesMostCompletedExpired?.expired?.length === 0 && (
-                      <h6>Nenhuma informação encontrada</h6>
-                    )}
-                  </>
-                )}
-              </Style.CardContent>
-            </Style.Card>
-          </Style.PanelWrapper>
         </Style.Wrappers>
       </Style.Container>
     </>
