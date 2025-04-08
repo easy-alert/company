@@ -39,21 +39,26 @@ export const ModalEditMaintenanceHistory = ({
     1;
 
   const notificationDate = new Date(maintenance.notificationDate);
-  const limitDate = new Date(notificationDate.setDate(notificationDate.getDate() + daysToAdd));
+  const limitDate = new Date(notificationDate); // Create a new Date object based on notificationDate
+  limitDate.setDate(notificationDate.getDate() + daysToAdd); // Mutate only the new limitDate object
 
   const schema = yup.object().shape({
     dueDate: yup
       .string()
       .required('Campo obrigatório')
-      .test('is-valid-date', 'Data de vencimento não pode ser maior que a data limite', (value) => {
-        if (!value) return false;
+      .test(
+        'is-valid-date',
+        'Data de vencimento não pode ser maior que a data limite nem menor que a data de notificação',
+        (value) => {
+          if (!value) return false;
 
-        // Parse the new due date
-        const newDueDate = new Date(`${value}T00:00:00`);
+          // Parse the new due date
+          const newDueDate = new Date(`${value}T03:00:00`);
 
-        // Validate the dates
-        return newDueDate < limitDate; // Return true if valid, false otherwise
-      }),
+          // Validate the dates
+          return notificationDate < newDueDate && newDueDate < limitDate; // Return true if valid, false otherwise
+        },
+      ),
   });
 
   const handleEditMaintenanceHistory = async (values: any) => {
