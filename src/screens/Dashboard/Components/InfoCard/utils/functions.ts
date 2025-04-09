@@ -69,15 +69,7 @@ export const getUserActivities = async (
   try {
     const response = await Api.get(uri, { params });
 
-    if (Array.isArray(response.data)) {
-      return response.data;
-    }
-
-    if (Array.isArray(response.data?.usersActivitiesArray)) {
-      return response.data.usersActivitiesArray;
-    }
-
-    return [];
+    return response.data.usersActivitiesArray || [];
   } catch (error: any) {
     handleToastify(error.response?.data?.ServerMessage);
     return [];

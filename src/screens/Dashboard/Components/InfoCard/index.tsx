@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Style from './styles';
 
 type CountAndCostItem = {
@@ -8,39 +7,38 @@ type CountAndCostItem = {
 
 interface InfoCardProps {
   title: string;
-  totals: number;
-  valueInvested: number;
+  totals?: number;
   name?: string[];
   tickets?: number;
   checklists?: number;
   categories?: CountAndCostItem[];
 }
 
-export const InfoCard: React.FC<InfoCardProps> = ({
+export const InfoCard = ({
   title,
   totals,
-  valueInvested,
   name,
   tickets,
   checklists,
   categories,
-}) => (
+}: InfoCardProps) => (
   <Style.Card>
     <h5>{title}</h5>
+
     <Style.Subtitles>
-      <Style.InfoItem>
-        <h2>Totais:</h2>
-        <h2>{totals}</h2>
-      </Style.InfoItem>
+      {!categories && (
+        <Style.InfoItem>
+          <h2>Totais:</h2>
+          <h2>{totals}</h2>
+        </Style.InfoItem>
+      )}
+    </Style.Subtitles>
 
-      <Style.InfoItem>
-        <h2>Valor investido:</h2>
-        <h2>R$ {valueInvested.toLocaleString('pt-BR')}</h2>
-      </Style.InfoItem>
-
+    <Style.Subtitles>
       {name && (
         <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
           <h2>Nome:</h2>
+
           <Style.NameScrollContainer>
             {name.map((n) => (
               <h2 key={n}>{n}</h2>
@@ -66,6 +64,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({
       {categories && (
         <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
           <h2>Categorias:</h2>
+
           <Style.CategoryScrollContainer>
             {categories.map((item) => (
               <Style.CategoryItem key={item.category}>
