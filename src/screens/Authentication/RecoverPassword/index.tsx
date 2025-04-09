@@ -1,26 +1,36 @@
-// LIBS
+// REACT
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+// LIBS
 import { Formik, Form } from 'formik';
 
-// COMPONENTS
-import { toast } from 'react-toastify';
-import { Api } from '../../../services/api';
-import { Button } from '../../../components/Buttons/Button';
-import { FormikInput } from '../../../components/Form/FormikInput';
+// SERVICES
+import { Api } from '@services/api';
+
+// GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
+
+// GLOBAL UTILS
+import { query } from '@utils/functions';
+import { handleToastify } from '@utils/toastifyResponses';
+
+// GLOBAL ASSETS
+import { icon } from '@assets/icons';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // STYLES
 import * as Style from './styles';
-import { theme } from '../../../styles/theme';
 
 // ICONS
-import { icon } from '../../../assets/icons';
 
 // FUNCTIONS
 import { changePasswordSchema } from './functions';
 
 // TYPES
-import { catchHandler, query } from '../../../utils/functions';
 
 export const RecoverPassword = () => {
   const navigate = useNavigate();
@@ -40,12 +50,12 @@ export const RecoverPassword = () => {
             password: values.password,
           })
             .then((res) => {
-              toast.success(res.data.ServerMessage.message);
+              handleToastify(res);
               navigate('/login');
             })
             .catch((err) => {
               setOnQuery(false);
-              catchHandler(err);
+              handleToastify(err.res);
             });
         }}
       >
