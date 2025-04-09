@@ -620,31 +620,27 @@ export const MaintenancesKanban = () => {
                   <Style.KanbanHeader>
                     <h5>{card.status}</h5>
 
-                    {card.status === 'Pendentes' && (
-                      <label htmlFor="showFuture">
-                        <input
-                          type="checkbox"
-                          id="showFuture"
-                          checked={showFutureMaintenances}
-                          onChange={() => {
-                            setShowFutureMaintenances((prevState) => !prevState);
-                          }}
-                        />
-                        Mostrar futuras
-                      </label>
-                    )}
-
                     {card.status === 'Vencidas' && (
                       <label htmlFor="showExpireds">
                         <input
                           type="checkbox"
                           id="showExpireds"
                           checked={showOldExpireds}
-                          onChange={() => {
-                            setShowOldExpireds((prevState) => !prevState);
-                          }}
+                          onChange={() => setShowOldExpireds((prevState) => !prevState)}
                         />
                         Mostrar expiradas
+                      </label>
+                    )}
+
+                    {card.status === 'Pendentes' && (
+                      <label htmlFor="showFuture">
+                        <input
+                          type="checkbox"
+                          id="showFuture"
+                          checked={showFutureMaintenances}
+                          onChange={() => setShowFutureMaintenances((prevState) => !prevState)}
+                        />
+                        Mostrar futuras
                       </label>
                     )}
                   </Style.KanbanHeader>
