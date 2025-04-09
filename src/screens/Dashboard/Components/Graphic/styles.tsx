@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 
 export const Card = styled.div`
-  background-color: ${({ theme }) => theme.color.white};
-  border-radius: ${({ theme }) => theme.size.xxsm};
   width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.size.xsm};
 
-  h5 {
-    text-align: center;
-  }
+  background-color: ${({ theme }) => theme.color.white};
+  padding: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+
+  overflow-x: hidden;
 `;
 
 export const ChartContent = styled.div`

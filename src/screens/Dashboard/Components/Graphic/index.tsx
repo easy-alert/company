@@ -1,6 +1,7 @@
-import React from 'react';
 import Chart from 'react-apexcharts';
+
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+
 import * as Style from './styles';
 
 interface ReusableChartCardProps {
@@ -12,15 +13,15 @@ interface ReusableChartCardProps {
   height?: number;
 }
 
-export const ReusableChartCard: React.FC<ReusableChartCardProps> = ({
+export const ReusableChartCard = ({
   title,
   type = 'donut',
   chartOptions,
   chartSeries,
   isLoading,
   height = 335,
-}) => {
-  const empytyChartSeries = chartSeries && chartSeries.every((item) => item === 0);
+}: ReusableChartCardProps) => {
+  const emptyChartSeries = chartSeries && chartSeries.every((item) => item === 0);
 
   if (isLoading) {
     return (
@@ -33,7 +34,8 @@ export const ReusableChartCard: React.FC<ReusableChartCardProps> = ({
   return (
     <Style.Card>
       <h5>{title}</h5>
-      {empytyChartSeries ? (
+
+      {emptyChartSeries ? (
         <Style.NoDataWrapper>
           <h5>Sem dados</h5>
         </Style.NoDataWrapper>
