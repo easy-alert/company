@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface ChartWrapperXProps {
+  shouldFill?: boolean;
+}
+
 export const Container = styled.div`
   padding-top: ${({ theme }) => theme.size.sm};
   display: flex;
@@ -93,25 +97,34 @@ export const Card = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   padding: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
-  width: 100%;
 
   overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
-export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
+interface ChartWrapperXProps {
+  shouldFill?: boolean;
+}
+
+export const ChartWrapperX = styled.div<ChartWrapperXProps>`
   width: 100%;
-  height: 100%;
+  height: ${({ shouldFill }) => (shouldFill ? '100%' : 'auto')};
+  padding-right: 32px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
   .apexcharts-legend {
-    transition: 0.2s !important;
-    inset: unset !important;
     position: absolute !important;
     bottom: 0 !important;
-    left: ${({ scrollLeft }) => `${scrollLeft}px !important`};
+    left: 0 !important;
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
   }
 
   ::-webkit-scrollbar {
@@ -134,14 +147,15 @@ export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
 `;
 
 export const ChartContent = styled.div`
-  height: 100%;
+  height: 650px;
   width: 100%;
-  min-height: 280px;
   position: relative;
+
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .apexcharts-canvas {
     width: 100% !important;
-    min-width: fit-content;
   }
 
   .apexcharts-toolbar {

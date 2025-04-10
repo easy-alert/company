@@ -16,7 +16,6 @@ import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
 import { getTicketsCountAndCost } from '@services/apis/getTicketsCountAndCost';
 import { getTicketsByServiceTypes } from '@services/apis/getTicketsByServiceTypes';
-import { getMaintenancesByStatus } from '@services/apis/getMaintenancesByStatus';
 import { getMaintenancesTimeline } from '@services/apis/getMaintenancesTimeline';
 
 // GLOBAL COMPONENTS
@@ -33,14 +32,11 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { ITicketStatusNames } from '@customTypes/ITicket';
 
 // COMPONENTS
+import { getMaintenanceStatus } from '@services/apis/getMaintenancesStatus';
+import { getMaintenanceCategories } from '@services/apis/getMaintenancesCategories';
+import { getUserActivities, UserActivity } from '@services/apis/getUserActivities';
 import { InfoCard } from './Components/InfoCard';
 import { ReusableChartCard } from './Components/Graphic';
-import { UserActivity } from './Components/InfoCard/utils/types';
-import {
-  getMaintenanceCategories,
-  getMaintenanceStatus,
-  getUserActivities,
-} from './Components/InfoCard/utils/functions';
 
 // STYLES
 import * as Style from './styles';
@@ -204,10 +200,8 @@ export const Dashboard = () => {
   });
 
   const [userActivities, setUserActivities] = useState<UserActivity[]>([]);
-  console.log('🚀 ~ Dashboard ~ userActivities:', userActivities);
 
   const filteredUsers = userActivities.filter((user) => user.name?.trim() !== '');
-  const firstUser = filteredUsers[0] || null;
 
   const [filterOptions, setFilterOptions] = useState<IFilterOptions>({
     buildings: [],
@@ -307,10 +301,12 @@ export const Dashboard = () => {
 
       if (!responseData?.categoriesArray) return;
 
-      const categories = responseData.categoriesArray.map((item) => ({
-        category: item.category,
-        count: item.count,
-      }));
+      const categories: CountAndCostItem[] = responseData.categoriesArray.map(
+        (item: CountAndCostItem) => ({
+          category: item.category,
+          count: item.count,
+        }),
+      );
 
       setCategoriesFormatted((prev) => ({
         ...prev,
@@ -1162,14 +1158,18 @@ export const Dashboard = () => {
                       maintenancesTimeline.series[0].data.length > 0 && (
                         <Style.ChartWrapperX
                           onScroll={handleScroll}
-                          scrollLeft={scrollLeft}
                           ref={refCallback}
+                          shouldFill={timeLineChart.series[0].data.length < 3}
                         >
                           <Chart
                             options={timeLineChart.options}
                             series={timeLineChart.series}
                             type="bar"
-                            height="100%"
+                            height={
+                              timeLineChart.series[0].data?.length < 3
+                                ? 300
+                                : timeLineChart.series[0].data.length * 80
+                            }
                             width="100%"
                           />
                         </Style.ChartWrapperX>
@@ -1213,20 +1213,24 @@ export const Dashboard = () => {
 
             <InfoCard
               title="Manutenções Preventivas"
-              categories={categoriesFormatted.common || 0}
+              categories={categoriesFormatted.common || []}
             />
 
             <InfoCard
               title="Manutenções Avulsas"
-              categories={categoriesFormatted.occasional || 0}
+              categories={categoriesFormatted.occasional || []}
             />
 
             <InfoCard
               title="Atividades por usuário"
-              totals={firstUser?.totalActivities || 0}
-              name={filteredUsers.map((user) => user.name)}
-              tickets={firstUser?.ticketCount || 0}
-              checklists={firstUser?.checklistCount || 0}
+              totals={filteredUsers.reduce(
+                (acc, user) => acc + user.ticketCount + user.checklistCount,
+                0,
+              )}
+              names={filteredUsers.map((user) => ({
+                name: user.name,
+                number: user.ticketCount + user.checklistCount,
+              }))}
             />
           </Style.PieWrapper>
         </Style.ChartsWrapper>
