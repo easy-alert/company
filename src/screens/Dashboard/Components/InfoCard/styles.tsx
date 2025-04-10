@@ -4,13 +4,11 @@ export const Card = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   padding: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
 `;
 
-export const Subtitles = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -43,17 +41,24 @@ export const InfoItem = styled.div`
 export const CategoryItem = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin: 4px 0;
-  padding: 4px;
+  background-color: ${({ theme }) => theme.color.gray1};
+  padding: 4px 8px;
+  border-radius: 5px;
+  margin-right: 16px;
+  margin-bottom: 6px;
+
+  h2 {
+    margin: 0;
+    line-height: 16px;
+  }
 `;
 
 export const NameScrollContainer = styled.div`
   width: 100%;
-  max-height: 80px;
+  max-height: 240px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  overflow-x: auto;
+
   gap: 4px;
 
   scrollbar-width: thin;
@@ -66,12 +71,10 @@ export const NameScrollContainer = styled.div`
 
 export const CategoryScrollContainer = styled.div`
   width: 100%;
-
-  max-height: 120px;
+  max-height: 260px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.color.primary} transparent;
 
@@ -79,3 +82,15 @@ export const CategoryScrollContainer = styled.div`
     width: 6px;
   }
 `;
+
+export const EmptyMessage = styled.p`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 280px;
+  opacity: 0.7;
+`;
+
+export const NameItem = styled(CategoryItem)``;

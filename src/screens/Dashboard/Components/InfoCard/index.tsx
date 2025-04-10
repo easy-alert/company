@@ -8,73 +8,64 @@ type CountAndCostItem = {
 interface InfoCardProps {
   title: string;
   totals?: number;
-  name?: string[];
-  tickets?: number;
-  checklists?: number;
+  names?: { name: string; number: number }[];
   categories?: CountAndCostItem[];
 }
 
-export const InfoCard = ({
-  title,
-  totals,
-  name,
-  tickets,
-  checklists,
-  categories,
-}: InfoCardProps) => (
-  <Style.Card>
-    <h5>{title}</h5>
+export const InfoCard = ({ title, totals, names, categories }: InfoCardProps) => {
+  const noData =
+    !totals && (!names || names.length === 0) && (!categories || categories.length === 0);
 
-    <Style.Subtitles>
-      {!categories && (
-        <Style.InfoItem>
-          <h2>Totais:</h2>
-          <h2>{totals}</h2>
-        </Style.InfoItem>
+  return (
+    <Style.Card>
+      <h5>{title}</h5>
+
+      {noData ? (
+        <Style.EmptyMessage>Sem dados</Style.EmptyMessage>
+      ) : (
+        <>
+          <Style.Container>
+            {!categories && (
+              <Style.InfoItem>
+                <h2>Totais:</h2>
+                <h2>{totals}</h2>
+              </Style.InfoItem>
+            )}
+          </Style.Container>
+
+          <Style.Container>
+            {names && names.length > 0 && (
+              <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                <h2>Nomes:</h2>
+
+                <Style.NameScrollContainer>
+                  {names.map((item) => (
+                    <Style.NameItem key={item.name}>
+                      <h2>{item.name}</h2>
+                      <h2>{item.number}</h2>
+                    </Style.NameItem>
+                  ))}
+                </Style.NameScrollContainer>
+              </Style.InfoItem>
+            )}
+
+            {categories && categories.length > 0 && (
+              <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                <h2>Categorias:</h2>
+
+                <Style.CategoryScrollContainer>
+                  {categories.map((item) => (
+                    <Style.CategoryItem key={item.category}>
+                      <h2>{item.category}</h2>
+                      <h2>{item.count}</h2>
+                    </Style.CategoryItem>
+                  ))}
+                </Style.CategoryScrollContainer>
+              </Style.InfoItem>
+            )}
+          </Style.Container>
+        </>
       )}
-    </Style.Subtitles>
-
-    <Style.Subtitles>
-      {name && (
-        <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-          <h2>Nome:</h2>
-
-          <Style.NameScrollContainer>
-            {name.map((n) => (
-              <h2 key={n}>{n}</h2>
-            ))}
-          </Style.NameScrollContainer>
-        </Style.InfoItem>
-      )}
-
-      {typeof tickets !== 'undefined' && (
-        <Style.InfoItem>
-          <h2>Tickets:</h2>
-          <h2>{tickets}</h2>
-        </Style.InfoItem>
-      )}
-
-      {typeof checklists !== 'undefined' && (
-        <Style.InfoItem>
-          <h2>Checklists:</h2>
-          <h2>{checklists}</h2>
-        </Style.InfoItem>
-      )}
-
-      {categories && (
-        <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-          <h2>Categorias:</h2>
-
-          <Style.CategoryScrollContainer>
-            {categories.map((item) => (
-              <Style.CategoryItem key={item.category}>
-                <h2>{item.category}</h2>
-                <h2>{item.count}</h2>
-              </Style.CategoryItem>
-            ))}
-          </Style.CategoryScrollContainer>
-        </Style.InfoItem>
-      )}
-    </Style.Subtitles>
-  </Style.Card>
-);
+    </Style.Card>
+  );
+};
