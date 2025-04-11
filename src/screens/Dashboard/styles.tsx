@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
+
+interface ChartWrapperXProps {
+  shouldFill?: boolean;
+}
 
 export const Container = styled.div`
   padding-top: ${({ theme }) => theme.size.sm};
@@ -71,7 +74,8 @@ export const Wrappers = styled.div`
 
 export const ChartsWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 3.1fr;
+
   gap: ${({ theme }) => theme.size.sm};
 
   @media (max-width: 1100px) {
@@ -81,21 +85,11 @@ export const ChartsWrapper = styled.div`
 
 export const PieWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: ${({ theme }) => theme.size.sm};
 
   @media (max-width: 700px) {
     grid-template-columns: 1fr;
-  }
-`;
-
-export const PanelWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: ${({ theme }) => theme.size.sm};
-
-  @media (max-width: 1100px) {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 `;
 
@@ -104,27 +98,33 @@ export const Card = styled.div`
   padding: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
 
-  min-height: 182px;
-
-  width: 100%;
-
   overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
-export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
-  overflow-x: auto;
-  overflow-y: hidden;
+interface ChartWrapperXProps {
+  shouldFill?: boolean;
+}
+
+export const ChartWrapperX = styled.div<ChartWrapperXProps>`
+  width: 100%;
+  height: ${({ shouldFill }) => (shouldFill ? '100%' : 'auto')};
+  padding-right: 32px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
   .apexcharts-legend {
-    transition: 0.2s !important;
-    inset: unset !important;
     position: absolute !important;
     bottom: 0 !important;
-    left: ${({ theme, scrollLeft }) => `${scrollLeft}px !important`};
+    left: 0 !important;
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
   }
 
   ::-webkit-scrollbar {
@@ -147,16 +147,19 @@ export const ChartWrapperX = styled.div<{ scrollLeft: number }>`
 `;
 
 export const ChartContent = styled.div`
-  height: 100%;
+  height: 650px;
   width: 100%;
-  min-height: 280px;
+  position: relative;
 
-  .apexcharts-toolbar {
-    z-index: 0 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .apexcharts-canvas {
+    width: 100% !important;
   }
 
-  .apexcharts-bar-series.apexcharts-plot-series path {
-    clip-path: inset(0% 0% -8px 0% round 8px);
+  .apexcharts-toolbar {
+    display: none !important;
   }
 `;
 
@@ -191,60 +194,7 @@ export const CardContent = styled.div`
   }
 `;
 
-const MaintenanceCard = styled.div`
-  padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm}
-    ${({ theme }) => theme.size.sm} 23px;
-  background-color: ${({ theme }) => theme.color.gray0};
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
-
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.size.xsm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-
-  cursor: pointer;
-  min-width: 0;
-  width: 100%;
-
-  > h6,
-  p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-
-export const MostAccomplishedMaintenance = styled(MaintenanceCard)`
-  background: linear-gradient(
-    90deg,
-    rgba(52, 181, 58, 1) 0%,
-    rgba(52, 181, 58, 1) 7px,
-    rgba(250, 250, 250, 1) 7px,
-    rgba(250, 250, 250, 1) 100%
-  );
-`;
-
-export const LeastAccomplishedMaintenance = styled(MaintenanceCard)`
-  background: linear-gradient(
-    90deg,
-    rgba(255, 53, 8, 1) 0%,
-    rgba(255, 53, 8, 1) 7px,
-    rgba(250, 250, 250, 1) 7px,
-    rgba(250, 250, 250, 1) 100%
-  );
-`;
-
 export const MaintenancesCounts = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: ${({ theme }) => theme.size.sm};
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr 1fr;
-  }
-`;
-
-export const TicketsCounts = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: ${({ theme }) => theme.size.sm};
