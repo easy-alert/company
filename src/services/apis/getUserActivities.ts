@@ -1,14 +1,21 @@
+import { IDashboardFilter } from '@screens/Dashboard';
 import { Api } from '@services/api';
-
 import { handleToastify } from '@utils/toastifyResponses';
 
-import type { IDashboardFilter } from '@screens/Dashboard';
+export interface UserActivity {
+  usersActivitiesArray: string[];
+  name: string;
+  maintenanceHistoryCount: number;
+  ticketCount: number;
+  checklistCount: number;
+  totalActivities: number;
+}
 
-export const getMaintenancesByStatus = async (
+export const getUserActivities = async (
   dashboardFilter: IDashboardFilter,
   resetFilters?: boolean,
-) => {
-  const uri = '/dashboard/maintenances/status';
+): Promise<UserActivity[]> => {
+  const uri = 'dashboard/users/activities';
 
   const params = {
     startDate: resetFilters ? '' : dashboardFilter.startDate,
@@ -20,14 +27,9 @@ export const getMaintenancesByStatus = async (
   try {
     const response = await Api.get(uri, { params });
 
-    return response.data;
+    return response.data.usersActivitiesArray || [];
   } catch (error: any) {
-    handleToastify(error.response.data.ServerMessage);
-
-    return {
-      data: [],
-      labels: [],
-      colors: [],
-    };
+    handleToastify(error.response?.data?.ServerMessage);
+    return [];
   }
 };
