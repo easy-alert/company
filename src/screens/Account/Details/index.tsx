@@ -35,6 +35,7 @@ import { theme } from '@styles/theme';
 // COMPONENTS
 import IconLink from '@assets/icons/IconLink';
 import IconUnlink from '@assets/icons/IconUnlink';
+import { useHasPermission } from '@hooks/useHasPermission';
 import { ModalEditCompany } from './ModalEditCompany';
 import { ModalUpdateUser } from './ModalUpdateUser';
 import { ModalCreateUser } from './ModalCreateUser';
@@ -57,6 +58,10 @@ export interface ISelectedUser {
 export const AccountDetails = () => {
   const { account, setAccount } = useAuthContext();
   const navigate = useNavigate();
+
+  const { hasPermission: accountManager } = useHasPermission({
+    permToCheck: ['admin:company', 'management:account'],
+  });
 
   const [selectedUser, setSelectedUser] = useState<ISelectedUser>();
 
@@ -201,7 +206,7 @@ export const AccountDetails = () => {
         <Style.Header>
           <h2>Detalhes da Empresa</h2>
 
-          {account?.User.isCompanyOwner && (
+          {accountManager && (
             <IconButton
               hideLabelOnMedia
               icon={<IconEdit strokeColor="primary" />}
@@ -236,7 +241,7 @@ export const AccountDetails = () => {
           <h2>Detalhes do Usuário</h2>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            {account?.User.isCompanyOwner && (
+            {accountManager && (
               <IconButton
                 label="Permissões"
                 icon={<IconEye strokeColor="primary" />}
@@ -329,7 +334,7 @@ export const AccountDetails = () => {
         <Style.Footer />
       </Style.CardSection>
 
-      {account?.User.isCompanyOwner && (
+      {accountManager && (
         <Style.UsersCard>
           <Style.UsersCardHeader>
             <h5>Usuários</h5>
