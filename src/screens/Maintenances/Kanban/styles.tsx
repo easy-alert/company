@@ -130,7 +130,7 @@ export const KanbanHeader = styled.div`
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
-  z-index: 9;
+  z-index: 4;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
 
