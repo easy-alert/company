@@ -1,9 +1,11 @@
 // #region IMPORTS
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
+
 import { toast } from 'react-toastify';
+
 import { Api } from '../services/api';
-import {
+
+import type {
   IMask,
   IUploadFile,
   IRequestListIntervals,
@@ -107,9 +109,9 @@ export const isImage = (src: string) => {
 };
 
 // #region ERRORS
-export const handleError = async ({ error }: { error: Error }) => {
+export const handleError = async ({ error }: { error: Error }): Promise<void> => {
   if (import.meta.env.PROD) {
-    axios.post('https://ada-logs.herokuapp.com/api/easy-alert/errors/create', {
+    await axios.post('https://ada-logs.herokuapp.com/api/easy-alert/errors/create', {
       projectName: 'EasyAlert',
       environment: window.location.host.includes('sandbox') ? 'Sandbox' : 'Production',
       side: 'Company',

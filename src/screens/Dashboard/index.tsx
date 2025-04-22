@@ -406,7 +406,6 @@ export const Dashboard = () => {
           }));
           break;
         default:
-          return;
       }
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);

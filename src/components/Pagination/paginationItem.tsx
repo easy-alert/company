@@ -23,11 +23,7 @@ const PaginationItem: React.FC<PaginationItemProps> = ({
 
   return (
     <Container>
-      <button
-        type="button"
-        className="notCurrent"
-        onClick={() => onPageChange(pageNumber)}
-      >
+      <button type="button" className="notCurrent" onClick={() => onPageChange(pageNumber)}>
         <p className="p5">{pageNumber}</p>
       </button>
     </Container>

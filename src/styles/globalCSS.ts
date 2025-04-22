@@ -205,7 +205,7 @@ export default createGlobalStyle`
     height: 32px;
     border-radius: ${({ theme }) => theme.size.xxsm};
     padding: 0${({ theme }) => theme.size.sm};
-// 
+//
     background-image: url(${icon.downArrow});
     background-repeat: no-repeat, repeat;
     background-position: right ${({ theme }) => theme.size.sm} top 50%, 0 0;
