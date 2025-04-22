@@ -9,18 +9,19 @@
     "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
-      "tsx": true
+      "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint"],
-
+  "plugins": ["react", "@typescript-eslint", "jsx-a11y"],
   "rules": {
     "camelcase": 2,
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
