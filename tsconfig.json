@@ -42,7 +42,7 @@
       "@customTypes/*": ["src/types/*"]
     }
   },
-  "include": ["src", "vite.config.ts", "vite-env.d.ts", "vitest.config.ts"],
+  "include": ["src", "vite.config.ts", "vite-env.d.ts", "vitest.config.ts", "index.js"],
   "exclude": ["node_modules", "build", "dist", "coverage"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
