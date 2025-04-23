@@ -15,7 +15,7 @@ export default defineConfig({
   cacheDir: 'node_modules/.vite',
 
   server: {
-    port: 3002,
+    port: 3000,
   },
 
   define: {
