@@ -35,11 +35,7 @@ export const TableContent = ({ colsBody, onClick }: ITableBody) => (
     }}
   >
     {colsBody.map((col, i: number) => (
-      <Style.TableColBody
-        key={col.cell + i}
-        cssOnMedia={col.cssOnMedia}
-        cssProps={col.cssProps}
-      >
+      <Style.TableColBody key={col.cell + i} cssOnMedia={col.cssOnMedia} cssProps={col.cssProps}>
         {col.cell}
       </Style.TableColBody>
     ))}

@@ -205,7 +205,6 @@ export const ModalChecklistCreate = ({
           {!buildingId && buildingsForSelect && (
             <Select
               label="Prédio *"
-              placeholder="Selecione o prédio"
               selectPlaceholderValue={' '}
               value={buildingsForSelect.find((b) => b.id === selectedBuildingId)?.id || ''}
               onChange={(e) => setSelectedBuildingId(e.target.value)}

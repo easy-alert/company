@@ -38,7 +38,6 @@ import { theme } from '../../../../styles/theme';
 
 Font.register({
   family: 'DMSans',
-  format: 'truetype',
   fonts: [
     {
       src: DMSansRegular,

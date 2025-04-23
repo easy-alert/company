@@ -192,7 +192,6 @@ export const ModalUpdateUser = ({ selectedUser, handleModals }: IModalUpdateUser
               name="isBlocked"
               label="Status *"
               arrowColor="primary"
-              placeholder="Selecione o status"
               selectPlaceholderValue="Selecione o status"
               value={values.isBlocked ? 'blocked' : 'active'}
               error={touched.isBlocked && errors.isBlocked ? errors.isBlocked : null}

@@ -6,12 +6,12 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "skipDefaultLibCheck": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "allowUnreachableCode": false,
-
     "allowUnusedLabels": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
@@ -22,7 +22,6 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "importsNotUsedAsValues": "remove",
-
     "module": "ESNext",
     "moduleResolution": "node",
     "preserveValueImports": false,
@@ -30,9 +29,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
     "typeRoots": ["node_modules/@types", "src/types/*"],
-
     "paths": {
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
@@ -45,9 +42,7 @@
       "@customTypes/*": ["src/types/*"]
     }
   },
-
-  "include": ["src"],
+  "include": ["src", "vite.config.ts", "vite-env.d.ts", "vitest.config.ts", "index.js"],
   "exclude": ["node_modules", "build", "dist", "coverage"],
-
   "references": [{ "path": "./tsconfig.node.json" }]
 }
