@@ -4,7 +4,6 @@
 import { Api } from '@services/api';
 
 // GLOBAL COMPONENTS
-import { ListTag } from '@components/ListTag';
 import { InProgressTag } from '@components/InProgressTag';
 
 // GLOBAL UTILS

@@ -1,9 +1,6 @@
 // REACT
 import { useState } from 'react';
 
-// LIBS
-import { useSearchParams } from 'react-router-dom';
-
 // GLOBALS COMPONENTS
 import { TextArea } from '@components/Inputs/TextArea';
 import { Button } from '@components/Buttons/Button';

@@ -1,7 +1,4 @@
 /* eslint-disable react/no-array-index-key */
-// REACT
-import { useState } from 'react';
-
 // COMPONENTS
 import { Button } from '@components/Buttons/Button';
 import { Modal } from '@components/Modal';

@@ -161,27 +161,27 @@ export const TicketReports = () => {
   };
 
   // #region csv
-  const csvHeaders = [
-    { label: 'Status', key: 'Status' },
-    { label: 'Edificação', key: 'Edificação' },
-    { label: 'Local da ocorrência', key: 'Local da ocorrência' },
-    { label: 'Tipo de assistência', key: 'Tipo de assistência' },
-    { label: 'Descrição', key: 'Descrição' },
-    { label: 'Morador', key: 'Morador' },
-    { label: 'Data', key: 'Data' },
-    { label: 'Imagens', key: 'Imagens' },
-  ];
+  // const csvHeaders = [
+  //   { label: 'Status', key: 'Status' },
+  //   { label: 'Edificação', key: 'Edificação' },
+  //   { label: 'Local da ocorrência', key: 'Local da ocorrência' },
+  //   { label: 'Tipo de assistência', key: 'Tipo de assistência' },
+  //   { label: 'Descrição', key: 'Descrição' },
+  //   { label: 'Morador', key: 'Morador' },
+  //   { label: 'Data', key: 'Data' },
+  //   { label: 'Imagens', key: 'Imagens' },
+  // ];
 
-  const csvData = tickets.map((ticket) => ({
-    Status: ticket.status?.label,
-    Edificação: ticket.building?.name,
-    'Local da ocorrência': ticket.place?.label,
-    'Tipo de assistência': ticket.types?.map((e) => e.type.label).join(', '),
-    Descrição: ticket.description,
-    Morador: ticket.residentName,
-    Data: formatDateString(ticket.createdAt, 'dd/MM/yyyy'),
-    Imagens: ticket.images?.map(({ url }) => url).join('; '),
-  }));
+  // const csvData = tickets.map((ticket) => ({
+  //   Status: ticket.status?.label,
+  //   Edificação: ticket.building?.name,
+  //   'Local da ocorrência': ticket.place?.label,
+  //   'Tipo de assistência': ticket.types?.map((e) => e.type.label).join(', '),
+  //   Descrição: ticket.description,
+  //   Morador: ticket.residentName,
+  //   Data: formatDateString(ticket.createdAt, 'dd/MM/yyyy'),
+  //   Imagens: ticket.images?.map(({ url }) => url).join('; '),
+  // }));
   // #endregion
 
   // #region tickets

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // LIBS
 import { toast } from 'react-toastify';
-import * as yup from 'yup';
 
 // FUNCTIONS
 import { Api } from '../../../../../../../services/api';
