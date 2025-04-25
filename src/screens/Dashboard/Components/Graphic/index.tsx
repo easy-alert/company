@@ -1,4 +1,4 @@
-import Chart from 'react-apexcharts';
+import ReactApexChart from 'react-apexcharts';
 
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
@@ -41,7 +41,7 @@ export const ReusableChartCard = ({
         </Style.NoDataWrapper>
       ) : (
         <Style.ChartContent>
-          <Chart type={type} options={chartOptions} series={chartSeries} height={height} />
+          <ReactApexChart type={type} options={chartOptions} series={chartSeries} height={height} />
         </Style.ChartContent>
       )}
     </Style.Card>
