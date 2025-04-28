@@ -43,6 +43,11 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   overflow-y: auto;
   overflow-x: hidden;
 
+  .sidebarButton {
+    color: white;
+    font-size: 10px;
+  }
+
   @media (max-width: 900px) {
     position: absolute;
     transform: ${({ openSidebar }) => (openSidebar ? 'translateX(0)' : 'translateX(-80px)')};
@@ -109,14 +114,13 @@ export const AppContent = styled.div`
   margin: 0 auto;
   overflow: auto;
   max-width: 1920px;
-  padding: 0 ${({ theme }) => theme.size.md} ${({ theme }) => theme.size.sm}
-    ${({ theme }) => theme.size.md};
+  padding: 0 ${({ theme }) => theme.size.md} ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
 
   @media (max-width: 900px) {
-    padding: 0 ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm}
-      ${({ theme }) => theme.size.sm};
+    padding: 0 ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm};
   }
 `;
+
 
 export const ReportIcons = styled.div`
   display: flex;
