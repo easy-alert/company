@@ -184,8 +184,8 @@ export const Dashboard = () => {
   const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
 
   const [maintenanceChart, setMaintenanceChart] = useState<{
-    common: StatusChartData;
-    occasional: StatusChartData;
+    common: any;
+    occasional: any;
   }>({
     common: { data: [], labels: [], colors: [] },
     occasional: { data: [], labels: [], colors: [] },
@@ -231,6 +231,24 @@ export const Dashboard = () => {
     ticketsData.awaitingToFinishTickets.count +
     ticketsData.finishedTickets.count +
     ticketsData.dismissedTickets.count;
+
+  const findLargestValueAndIndex = (array: number[]) => {
+    if (!array) return { value: 0, index: 0 };
+    if (array.length === 0) return { value: 0, index: 0 };
+
+    let largestValue = array[0];
+    let largestValueIndex = 0;
+
+    array.reduce((_previousIndex, currentValue, currentIndex) => {
+      if (currentValue > largestValue) {
+        largestValue = currentValue;
+        largestValueIndex = currentIndex;
+      }
+      return currentIndex;
+    }, 0);
+
+    return { value: largestValue, index: largestValueIndex };
+  };
 
   // #region requests
   const handleGetDashboardFilters = async () => {
@@ -321,20 +339,125 @@ export const Dashboard = () => {
     maintenanceType: 'common' | 'occasional',
     resetFilters?: boolean,
   ) => {
+    const emptyChart = {
+      series: [],
+      chartData: [],
+      options: {
+        labels: [],
+        chart: { toolbar: { show: false } },
+        tooltip: { enabled: true },
+        plotOptions: {
+          pie: {
+            donut: { labels: { show: false } },
+          },
+        },
+        colors: [],
+        dataLabels: {
+          enabled: false,
+          style: {
+            fontSize: '14px',
+            fontWeight: 400,
+          },
+        },
+        legend: {
+          position: 'bottom' as const,
+          offsetY: -10,
+        },
+      },
+    };
+
     try {
       const responseData = await getMaintenanceStatus(dataFilter, maintenanceType, resetFilters);
 
-      if (!responseData) return;
+      if (!responseData) {
+        // setMaintenanceChart((prevState) => ({
+        //   ...prevState,
+        //   [maintenanceType]: emptyChart,
+        // }));
+
+        return;
+      }
+
+      const largest = findLargestValueAndIndex(responseData.data);
+
+      const chartData = {
+        series: responseData.data,
+        options: {
+          labels: responseData.labels,
+          chart: { toolbar: { show: false } },
+          tooltip: { enabled: true },
+          plotOptions: {
+            pie: {
+              startAngle: 0,
+              endAngle: 360,
+              expandOnClick: true,
+              offsetX: 0,
+              offsetY: 0,
+              customScale: 1,
+              dataLabels: { offset: 0, minAngleToShowLabel: 10 },
+              donut: {
+                labels: {
+                  show: true,
+                  name: {
+                    show: true,
+                    fontSize: '16px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 600,
+                    offsetY: 4,
+                    color: '#000000',
+                  },
+                  value: {
+                    show: true,
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: '#000000',
+                    formatter(val: any, w: any) {
+                      const percent =
+                        (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+                      return `${percent.toFixed(1)} %`;
+                    },
+                  },
+                  total: {
+                    show: true,
+                    label: responseData.labels[largest.index],
+                    fontSize: '16px',
+                    fontWeight: 600,
+                    color: '#000000',
+                    formatter(w: any) {
+                      const percent =
+                        (w.globals.seriesTotals[largest.index] * 100) /
+                        w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
+                      return `${percent.toFixed(1)} %`;
+                    },
+                  },
+                },
+              },
+            },
+          },
+          colors: responseData.colors,
+          dataLabels: {
+            enabled: false,
+            style: {
+              fontSize: '14px',
+              fontWeight: 400,
+            },
+          },
+          legend: {
+            position: 'bottom' as const,
+            offsetY: -10,
+          },
+        },
+      };
 
       if (maintenanceType === 'common') {
         setMaintenanceChart((prevState) => ({
           ...prevState,
-          common: responseData,
+          common: chartData,
         }));
       } else {
         setMaintenanceChart((prevState) => ({
           ...prevState,
-          occasional: responseData,
+          occasional: chartData,
         }));
       }
     } catch (error: any) {
@@ -406,7 +529,6 @@ export const Dashboard = () => {
           }));
           break;
         default:
-          return;
       }
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);
@@ -524,24 +646,6 @@ export const Dashboard = () => {
     }
   };
 
-  const findLargestValueAndIndex = (array: number[]) => {
-    if (!array) return { value: 0, index: 0 };
-    if (array.length === 0) return { value: 0, index: 0 };
-
-    let largestValue = array[0];
-    let largestValueIndex = 0;
-
-    array.reduce((_previousIndex, currentValue, currentIndex) => {
-      if (currentValue > largestValue) {
-        largestValue = currentValue;
-        largestValueIndex = currentIndex;
-      }
-      return currentIndex;
-    }, 0);
-
-    return { value: largestValue, index: largestValueIndex };
-  };
-
   const handleFilterChange = (key: keyof IDashboardFilter, value: string) => {
     setDataFilter((prevState) => {
       const checkArray = Array.isArray(prevState[key]);
@@ -627,112 +731,6 @@ export const Dashboard = () => {
       },
       fill: { opacity: 1 },
     } as ApexOptions,
-  };
-
-  const scoreChart = (type: 'common' | 'occasional') => {
-    const chartData = maintenanceChart?.[type];
-
-    const emptyChart = {
-      series: [],
-      chartData: [],
-      options: {
-        labels: [],
-        chart: { toolbar: { show: false } },
-        tooltip: { enabled: true },
-        plotOptions: {
-          pie: {
-            donut: { labels: { show: false } },
-          },
-        },
-        colors: [],
-        dataLabels: {
-          enabled: false,
-          style: {
-            fontSize: '14px',
-            fontWeight: 400,
-          },
-        },
-        legend: {
-          position: 'bottom' as const,
-          offsetY: -10,
-        },
-      },
-    };
-
-    if (!chartData || !chartData.data?.length || !chartData.labels?.length) {
-      return emptyChart;
-    }
-
-    const largest = findLargestValueAndIndex(chartData.data);
-
-    return {
-      series: chartData.data,
-      options: {
-        labels: chartData.labels,
-        chart: { toolbar: { show: false } },
-        tooltip: { enabled: true },
-        plotOptions: {
-          pie: {
-            startAngle: 0,
-            endAngle: 360,
-            expandOnClick: true,
-            offsetX: 0,
-            offsetY: 0,
-            customScale: 1,
-            dataLabels: { offset: 0, minAngleToShowLabel: 10 },
-            donut: {
-              labels: {
-                show: true,
-                name: {
-                  show: true,
-                  fontSize: '16px',
-                  fontFamily: 'Helvetica, Arial, sans-serif',
-                  fontWeight: 600,
-                  offsetY: 4,
-                  color: '#000000',
-                },
-                value: {
-                  show: true,
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  color: '#000000',
-                  formatter(val: any, w: any) {
-                    const percent =
-                      (val * 100) / w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
-                    return `${percent.toFixed(1)} %`;
-                  },
-                },
-                total: {
-                  show: true,
-                  label: chartData.labels[largest.index],
-                  fontSize: '16px',
-                  fontWeight: 600,
-                  color: '#000000',
-                  formatter(w: any) {
-                    const percent =
-                      (w.globals.seriesTotals[largest.index] * 100) /
-                      w.globals.seriesTotals.reduce((a: any, b: any) => a + b, 0);
-                    return `${percent.toFixed(1)} %`;
-                  },
-                },
-              },
-            },
-          },
-        },
-        colors: chartData.colors,
-        dataLabels: {
-          enabled: false,
-          style: {
-            fontSize: '14px',
-            fontWeight: 400,
-          },
-        },
-        legend: {
-          position: 'bottom' as const,
-          offsetY: -10,
-        },
-      },
-    };
   };
 
   const ticketTypesChart = {
@@ -1190,16 +1188,16 @@ export const Dashboard = () => {
             <ReusableChartCard
               title="Score de manutenções preventivas"
               type="donut"
-              chartOptions={scoreChart('common').options}
-              chartSeries={scoreChart('common').series}
+              chartOptions={maintenanceChart.common.options}
+              chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
             />
 
             <ReusableChartCard
               title="Score de manutenções avulsas"
               type="donut"
-              chartOptions={scoreChart('occasional').options}
-              chartSeries={scoreChart('occasional').series}
+              chartOptions={maintenanceChart.occasional.options}
+              chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
             />
 

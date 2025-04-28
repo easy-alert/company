@@ -27,7 +27,6 @@ interface IUpdateCompany {
 export async function updateCompany({ data, company }: IUpdateCompany) {
   const uri = 'account/company';
 
-  let imageUrl: any;
   let ticketLink;
 
   if (data.ticketType === 'link') {
@@ -55,7 +54,7 @@ export async function updateCompany({ data, company }: IUpdateCompany) {
   }
 
   const body = {
-    image: imageUrl,
+    image: data.image,
     companyName: data.companyName,
     CNPJ: data.CNPJ !== '' ? unMask(data.CNPJ) : null,
     CPF: data.CPF !== '' ? unMask(data.CPF) : null,

@@ -1,0 +1,70 @@
+name: Staging Tests & Build
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  # test:
+  #   name: Run Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+
+  #     - name: Install Dependencies
+  #       run: npm ci
+
+  #     - name: Run Cypress Tests
+  #       run: npm
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    # needs: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Debug Environment Variables
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_COMPANY_URL: ${{ vars.VITE_COMPANY_URL }}
+        run: |
+          echo "VITE_API_URL: $VITE_API_URL"
+          echo "VITE_COMPANY_URL: $VITE_COMPANY_URL"
+
+      - name: Build Project
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_COMPANY_URL: ${{ vars.VITE_COMPANY_URL }}
+        run: npm run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 1

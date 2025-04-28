@@ -212,10 +212,10 @@ export const Sidebar = () => {
           <Image width="44px" height="48px" radius="0px" img={icon.logoWhite} />
         </Style.ImageMobile>
       </Style.SidebarBodyMobile>
-
       <Style.SidebarBody openSidebar={openSidebar}>
         <Style.CloseButtonMobile>
           <IconButton
+            className="sidebarButton"
             labelPos="bottom"
             icon={icon.xWhite}
             onClick={() => {
@@ -244,7 +244,10 @@ export const Sidebar = () => {
             {element.type === 'navigate' &&
               (handlePermissions(element.permission!) || element.title === 'Sair') && (
                 <IconButton
+                  className="sidebarButton"
                   title={element.title}
+                  label={element.label ?? element.title}
+                  labelPos="bottom"
                   opacity="0.5"
                   icon={element.icon}
                   onClick={() => {
@@ -282,7 +285,10 @@ export const Sidebar = () => {
                 label={element.label}
                 buttonChildren={
                   <IconButton
+                    className="sidebarButton"
                     title={element.title}
+                    label={element.label ?? element.title}
+                    labelPos="bottom"
                     opacity="0.5"
                     icon={element.icon}
                     onClick={() => {
@@ -295,10 +301,11 @@ export const Sidebar = () => {
                   <Style.ReportIcons>
                     {element.options?.map(({ icon: optionIcon, redirectFunction, url, label }) => (
                       <IconButton
+                        className="sidebarButton"
                         size="6px"
-                        labelPos="right"
-                        key={url}
                         label={label}
+                        labelPos="bottom"
+                        key={url}
                         icon={optionIcon}
                         onClick={() => {
                           const checkKeyPress = window.event as KeyboardEvent;

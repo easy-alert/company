@@ -433,7 +433,6 @@ export const ModalSendMaintenanceReport = ({
                     <Select
                       label="Prioridade"
                       arrowColor="primary"
-                      placeholder="Selecione uma prioridade"
                       selectPlaceholderValue="Selecione uma prioridade"
                       value={maintenance.priorityName}
                       permToCheck="maintenances:update"
