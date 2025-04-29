@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -49,10 +49,9 @@ export const HeaderWrapper = styled.div`
   }
 
   @media (max-width: 900px) {
-    // Em telas pequenas, ficar lado a lado
     flex-direction: row;
     align-items: center;
-    flex-wrap: wrap; // Para que quebrem linha se necessário
+    flex-wrap: wrap;
   }
 `;
 
