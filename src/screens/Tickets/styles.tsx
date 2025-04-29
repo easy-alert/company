@@ -24,8 +24,8 @@ export const Header = styled.div`
   gap: ${theme.size.xxsm};
 
   @media (max-width: 900px) {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 `;
 
@@ -48,9 +48,11 @@ export const HeaderWrapper = styled.div`
     max-width: 300px;
   }
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
+  @media (max-width: 900px) {
+    // Em telas pequenas, ficar lado a lado
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap; // Para que quebrem linha se necessário
   }
 `;
 
@@ -131,8 +133,8 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div`
-  position: -webkit-sticky; /* Safari */
+export const KanbanHeader = styled.div<{ status?: string }>`
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
@@ -145,6 +147,13 @@ export const KanbanHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.sm};
+
+  border-left: ${({ status }) => {
+    if (status === 'Em execução') return `4px solid ${theme.color.warning}`;
+    if (status === 'Concluídos') return `4px solid ${theme.color.success}`;
+    if (status === 'Indeferidos') return `4px solid ${theme.color.danger}`;
+    return 'none';
+  }};
 
   > label {
     display: flex;
@@ -296,7 +305,6 @@ export const NoDataContainer = styled.footer`
   }
 `;
 
-
 export const ListView = styled.div`
   display: flex;
   flex-direction: column;
@@ -307,7 +315,7 @@ export const ListItemWrapper = styled.div`
   background: white;
   border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 
   &:hover {
@@ -322,4 +330,15 @@ export const ListItemWrapper = styled.div`
   p {
     margin: 4px 0;
   }
+`;
+
+export const Chevron = styled.span<{ $expanded: boolean }>`
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid ${theme.color.primary};
+  transition: transform 0.2s ease;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(0)' : 'rotate(-90deg)')};
 `;

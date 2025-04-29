@@ -274,28 +274,27 @@ function TicketsPage() {
       <Style.Container>
         <Style.Header>
           <Style.HeaderWrapper>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <h2>Chamados</h2>
-              {ticketAccess && (
-                <IconButton
-                  label={viewMode === 'kanban' ? 'Visualizar em lista' : 'Visualizar em blocos'}
-                  icon={
-                    viewMode === 'kanban' ? (
-                      <IconList strokeColor="white" fillColor="primary" />
-                    ) : (
-                      <IconBlock
-                        strokeColor="white"
-                        backgroundColor="primary"
-                        padding="0"
-                        size="14px"
-                      />
-                    )
-                  }
-                  permToCheck="tickets:create"
-                  onClick={() => setViewMode((prev) => (prev === 'kanban' ? 'list' : 'kanban'))}
-                />
-              )}
-            </div>
+            <h2>Chamados</h2>
+            {ticketAccess && (
+              <IconButton
+                labelPos="right"
+                label={viewMode === 'kanban' ? 'Visualizar em lista' : 'Visualizar em blocos'}
+                icon={
+                  viewMode === 'kanban' ? (
+                    <IconList strokeColor="white" fillColor="primary" />
+                  ) : (
+                    <IconBlock
+                      strokeColor="white"
+                      backgroundColor="primary"
+                      padding="0"
+                      size="14px"
+                    />
+                  )
+                }
+                permToCheck="tickets:create"
+                onClick={() => setViewMode((prev) => (prev === 'kanban' ? 'list' : 'kanban'))}
+              />
+            )}
           </Style.HeaderWrapper>
 
           {ticketAccess && (
@@ -811,9 +810,13 @@ function TicketsPage() {
                 <div key={kanbanTicket.title}>
                   <Style.KanbanHeader
                     onClick={() => toggleColumn(kanbanTicket.title)}
+                    status={kanbanTicket.title}
                     style={{ cursor: 'pointer' }}
                   >
-                    <h5>{kanbanTicket.title}</h5>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Style.Chevron $expanded={isExpanded} />
+                      <h5>{kanbanTicket.title}</h5>
+                    </div>
                     <span>{kanbanTicket.tickets.length}</span>
                   </Style.KanbanHeader>
 
