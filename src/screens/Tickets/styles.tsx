@@ -161,6 +161,7 @@ export const KanbanHeader = styled.div`
 
 export const KanbanTicketWrapper = styled.div`
   padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+  margin: 1rem 0;
 `;
 
 export const KanbanTicketInfo = styled.div<{
@@ -292,5 +293,33 @@ export const NoDataContainer = styled.footer`
   > h3 {
     color: ${theme.color.gray4};
     text-align: center;
+  }
+`;
+
+
+export const ListView = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+export const ListItemWrapper = styled.div`
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+
+  &:hover {
+    background: #f9f9f9;
+  }
+
+  h5 {
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 4px 0;
   }
 `;
