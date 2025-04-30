@@ -307,7 +307,10 @@ export const NoDataContainer = styled.footer`
 export const ListView = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+
+  padding: ${theme.size.sm} 0;
+
+  gap: ${theme.size.sm};
 `;
 
 export const ListItemWrapper = styled.div`
