@@ -21,10 +21,10 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+          path: |
+            node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Dependencies
         run: npm ci
@@ -38,7 +38,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
+          name: production-build
           path: dist
           retention-days: 1
 
@@ -55,26 +55,26 @@ jobs:
         with:
           node-version: 20
 
-      - name: Cache node_modules
+      - name: Cache Restoration
         uses: actions/cache@v4
         with:
-          path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}-
+          path: |
+            node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build
+          path: dist
 
-      - name: Start React Server
-        run: npm start -- --port 3000 &
+      - name: Serve Production Build
+        run: |
+          npx serve -s build -l 3000 &
+          npx wait-on http://localhost:3000
         env:
           CI: true
-          VITE_API_URL: ${{ vars.VITE_API_URL }}
-          VITE_COMPANY_URL: ${{ vars.VITE_COMPANY_URL }}
-
-      - name: Wait for Server
-        run: npx wait-on http://localhost:3000
 
       - name: Run Cypress Tests
         run: npx cypress run --browser chrome
@@ -91,5 +91,4 @@ jobs:
           path: |
             cypress/screenshots
             cypress/videos
-            cypress/results
           retention-days: 1
