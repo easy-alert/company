@@ -13,6 +13,7 @@ import { InProgressTag } from '@components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
 import UserResponsible from '@components/UserResponsible';
+import { ModalEditMaintenanceHistory } from '@components/ModalEditMaintenanceHistory';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter } from '@utils/functions';
@@ -32,7 +33,9 @@ import type { IMaintenance } from '../types';
 
 export const ModalMaintenanceDetails = ({
   modalAdditionalInformations,
+  userId,
   handleModals,
+  handleRefresh,
 }: IModalMaintenanceDetails) => {
   const [modalLoading, setModalLoading] = useState<boolean>(true);
 
@@ -85,6 +88,12 @@ export const ModalMaintenanceDetails = ({
     ReportImages: [],
   });
 
+  const [modalEditMaintenanceHistory, setModalEditMaintenanceHistory] = useState<boolean>(false);
+
+  const handleEditModal = (modalState: boolean) => {
+    setModalEditMaintenanceHistory(modalState);
+  };
+
   const handleMaintenanceReport = (maintenance: IMaintenance) => {
     const formattedId =
       maintenance?.MaintenanceReport[0]?.id || maintenance?.MaintenanceReportProgress[0]?.id;
@@ -133,227 +142,241 @@ export const ModalMaintenanceDetails = ({
   }, []);
 
   return (
-    <Modal
-      bodyWidth="475px"
-      title="Detalhes de manutenção"
-      setModal={(modalState) => handleModals('modalMaintenanceDetails', modalState)}
-    >
-      {modalLoading ? (
-        <Style.LoadingContainer>
-          <DotSpinLoading />
-        </Style.LoadingContainer>
-      ) : (
-        <Style.Container>
-          <h3>{maintenanceDetails?.Building.name}</h3>
-          <Style.StatusTagWrapper>
-            {maintenanceDetails.MaintenancesStatus.name === 'overdue' && (
-              <EventTag status="completed" />
-            )}
+    <>
+      {modalEditMaintenanceHistory && (
+        <ModalEditMaintenanceHistory
+          userId={userId}
+          maintenance={maintenanceDetails}
+          handleEditModal={handleEditModal}
+          handleRefresh={handleRefresh}
+        />
+      )}
 
-            <EventTag status={maintenanceDetails?.MaintenancesStatus.name} />
+      <Modal
+        bodyWidth="475px"
+        title="Detalhes de manutenção"
+        setModal={(modalState) => handleModals('modalMaintenanceDetails', modalState)}
+        handleEdit={() => handleEditModal(true)}
+      >
+        {modalLoading ? (
+          <Style.LoadingContainer>
+            <DotSpinLoading />
+          </Style.LoadingContainer>
+        ) : (
+          <Style.Container>
+            <h3>{maintenanceDetails?.Building.name}</h3>
+            <Style.StatusTagWrapper>
+              {maintenanceDetails.MaintenancesStatus.name === 'overdue' && (
+                <EventTag status="completed" />
+              )}
 
-            <EventTag
-              status={
-                maintenanceDetails?.Maintenance.MaintenanceType.name === 'occasional'
-                  ? 'occasional'
-                  : 'common'
-              }
-            />
+              <EventTag status={maintenanceDetails?.MaintenancesStatus.name} />
 
-            {(maintenanceDetails?.MaintenancesStatus.name === 'expired' ||
-              maintenanceDetails?.MaintenancesStatus.name === 'pending') &&
-              maintenanceDetails.inProgress &&
-              !modalAdditionalInformations.isFuture && <InProgressTag />}
-          </Style.StatusTagWrapper>
+              <EventTag
+                status={
+                  maintenanceDetails?.Maintenance.MaintenanceType.name === 'occasional'
+                    ? 'occasional'
+                    : 'common'
+                }
+              />
 
-          <Style.Content>
-            <Style.Row>
-              <h6>Categoria</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.Category.name}</p>
-            </Style.Row>
+              {(maintenanceDetails?.MaintenancesStatus.name === 'expired' ||
+                maintenanceDetails?.MaintenancesStatus.name === 'pending') &&
+                maintenanceDetails.inProgress &&
+                !modalAdditionalInformations.isFuture && <InProgressTag />}
+            </Style.StatusTagWrapper>
 
-            <Style.Row>
-              <h6>Elemento</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.element}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Atividade</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.activity}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Responsável</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.responsible}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Fonte</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.source}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Observação da manutenção</h6>
-              <p className="p2">{maintenanceDetails.Maintenance.observation ?? '-'}</p>
-            </Style.Row>
-
-            <Style.Row>
-              <h6>Instruções</h6>
-              <Style.FileAndImageRow>
-                {maintenanceDetails.Maintenance.instructions.length > 0
-                  ? maintenanceDetails.Maintenance.instructions.map(({ url, name }) => (
-                      <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
-                    ))
-                  : '-'}
-              </Style.FileAndImageRow>
-            </Style.Row>
-
-            {maintenanceDetails.Maintenance.MaintenanceType.name !== 'occasional' && (
+            <Style.Content>
               <Style.Row>
-                <h6>Periodicidade</h6>
-                <p className="p2">
-                  A cada{' '}
-                  {maintenanceDetails.Maintenance.frequency > 1
-                    ? `${maintenanceDetails.Maintenance.frequency} ${maintenanceDetails.Maintenance.FrequencyTimeInterval.pluralLabel}`
-                    : `${maintenanceDetails.Maintenance.frequency} ${maintenanceDetails.Maintenance.FrequencyTimeInterval.singularLabel}`}
-                </p>
+                <h6>Categoria</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.Category.name}</p>
               </Style.Row>
-            )}
 
-            {modalAdditionalInformations.isFuture ? (
-              <>
+              <Style.Row>
+                <h6>Elemento</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.element}</p>
+              </Style.Row>
+
+              <Style.Row>
+                <h6>Atividade</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.activity}</p>
+              </Style.Row>
+
+              <Style.Row>
+                <h6>Responsável</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.responsible}</p>
+              </Style.Row>
+
+              <Style.Row>
+                <h6>Fonte</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.source}</p>
+              </Style.Row>
+
+              <Style.Row>
+                <h6>Observação da manutenção</h6>
+                <p className="p2">{maintenanceDetails.Maintenance.observation ?? '-'}</p>
+              </Style.Row>
+
+              <Style.Row>
+                <h6>Instruções</h6>
+                <Style.FileAndImageRow>
+                  {maintenanceDetails.Maintenance.instructions.length > 0
+                    ? maintenanceDetails.Maintenance.instructions.map(({ url, name }) => (
+                        <ListTag padding="4px 12px" downloadUrl={url} key={url} label={name} />
+                      ))
+                    : '-'}
+                </Style.FileAndImageRow>
+              </Style.Row>
+
+              {maintenanceDetails.Maintenance.MaintenanceType.name !== 'occasional' && (
                 <Style.Row>
-                  <h6>Data de notificação prevista</h6>
+                  <h6>Periodicidade</h6>
                   <p className="p2">
-                    {dateFormatter(modalAdditionalInformations.expectedNotificationDate)}
+                    A cada{' '}
+                    {maintenanceDetails.Maintenance.frequency > 1
+                      ? `${maintenanceDetails.Maintenance.frequency} ${maintenanceDetails.Maintenance.FrequencyTimeInterval.pluralLabel}`
+                      : `${maintenanceDetails.Maintenance.frequency} ${maintenanceDetails.Maintenance.FrequencyTimeInterval.singularLabel}`}
                   </p>
                 </Style.Row>
+              )}
 
-                <Style.Row>
-                  <h6>Data de vencimento prevista</h6>
-                  <p className="p2">{dateFormatter(modalAdditionalInformations.expectedDueDate)}</p>
-                </Style.Row>
-              </>
-            ) : (
-              <>
-                <Style.Row>
-                  <h6>Data de notificação</h6>
-                  <p className="p2">{dateFormatter(maintenanceDetails.notificationDate)}</p>
-                </Style.Row>
-
-                {maintenanceDetails.Maintenance.MaintenanceType.name !== 'occasional' && (
+              {modalAdditionalInformations.isFuture ? (
+                <>
                   <Style.Row>
-                    <h6>Data de vencimento</h6>
-                    <p className="p2">{dateFormatter(maintenanceDetails.dueDate)}</p>
+                    <h6>Data de notificação prevista</h6>
+                    <p className="p2">
+                      {dateFormatter(modalAdditionalInformations.expectedNotificationDate)}
+                    </p>
                   </Style.Row>
-                )}
-              </>
-            )}
 
-            {maintenanceDetails.resolutionDate && (
+                  <Style.Row>
+                    <h6>Data de vencimento prevista</h6>
+                    <p className="p2">
+                      {dateFormatter(modalAdditionalInformations.expectedDueDate)}
+                    </p>
+                  </Style.Row>
+                </>
+              ) : (
+                <>
+                  <Style.Row>
+                    <h6>Data de notificação</h6>
+                    <p className="p2">{dateFormatter(maintenanceDetails.notificationDate)}</p>
+                  </Style.Row>
+
+                  {maintenanceDetails.Maintenance.MaintenanceType.name !== 'occasional' && (
+                    <Style.Row>
+                      <h6>Data de vencimento</h6>
+                      <p className="p2">{dateFormatter(maintenanceDetails.dueDate)}</p>
+                    </Style.Row>
+                  )}
+                </>
+              )}
+
+              {maintenanceDetails.resolutionDate && (
+                <Style.Row>
+                  <h6>Data de conclusão</h6>
+                  <p className="p2">{dateFormatter(maintenanceDetails.resolutionDate)}</p>
+                </Style.Row>
+              )}
+
+              {!!maintenanceDetails.daysInAdvance && (
+                <Style.Row>
+                  <h6>Dias antecipados</h6>
+                  <p className="p2">{maintenanceDetails.daysInAdvance}</p>
+                </Style.Row>
+              )}
+
+              {maintenanceDetails.additionalInfo && (
+                <Style.Row>
+                  <h6>Info. Adicional</h6>
+                  <p className="p2">{maintenanceDetails.additionalInfo}</p>
+                </Style.Row>
+              )}
+
+              {maintenanceDetails?.Users && maintenanceDetails?.Users?.length > 0 && (
+                <UserResponsible
+                  users={maintenanceDetails.Users.map(({ User }) => ({
+                    ...User,
+                  }))}
+                />
+              )}
+
+              {!modalAdditionalInformations.isFuture && (
+                <>
+                  <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceDetails.id} />
+                  <MaintenanceHistoryActivities maintenanceHistoryId={maintenanceDetails.id} />
+                </>
+              )}
+
               <Style.Row>
-                <h6>Data de conclusão</h6>
-                <p className="p2">{dateFormatter(maintenanceDetails.resolutionDate)}</p>
+                <h6>Custo</h6>
+
+                <p className="p2">
+                  {
+                    applyMask({
+                      mask: 'BRL',
+                      value: String(maintenanceReport?.cost),
+                    }).value
+                  }
+                </p>
               </Style.Row>
-            )}
 
-            {!!maintenanceDetails.daysInAdvance && (
-              <Style.Row>
-                <h6>Dias antecipados</h6>
-                <p className="p2">{maintenanceDetails.daysInAdvance}</p>
-              </Style.Row>
-            )}
+              <Style.FileStyleRow>
+                <h6>Anexos</h6>
 
-            {maintenanceDetails.additionalInfo && (
-              <Style.Row>
-                <h6>Info. Adicional</h6>
-                <p className="p2">{maintenanceDetails.additionalInfo}</p>
-              </Style.Row>
-            )}
+                <Style.FileAndImageRow>
+                  {maintenanceReport.ReportAnnexes?.length > 0 ? (
+                    maintenanceReport.ReportAnnexes.map((annex) => (
+                      <Style.Tag key={annex.originalName}>
+                        <a
+                          title={annex.originalName}
+                          href={annex.url}
+                          download
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <p className="p3">{annex.name}</p>
+                          <Image size="16px" img={icon.download} />
+                        </a>
+                      </Style.Tag>
+                    ))
+                  ) : (
+                    <p className="p2">Nenhum anexo enviado.</p>
+                  )}
+                </Style.FileAndImageRow>
+              </Style.FileStyleRow>
 
-            {maintenanceDetails?.Users && maintenanceDetails?.Users?.length > 0 && (
-              <UserResponsible
-                users={maintenanceDetails.Users.map(({ User }) => ({
-                  ...User,
-                }))}
-              />
-            )}
+              <Style.FileStyleRow>
+                <h6>Imagens</h6>
 
-            {!modalAdditionalInformations.isFuture && (
-              <>
-                <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceDetails.id} />
-                <MaintenanceHistoryActivities maintenanceHistoryId={maintenanceDetails.id} />
-              </>
-            )}
+                <Style.FileAndImageRow>
+                  {maintenanceReport.ReportImages?.length > 0 ? (
+                    maintenanceReport.ReportImages.map((image) => (
+                      <ImagePreview
+                        key={image.originalName}
+                        src={image.url}
+                        downloadUrl={image.url}
+                        imageCustomName={image.name}
+                        width="97px"
+                        height="97px"
+                      />
+                    ))
+                  ) : (
+                    <p className="p2">Nenhuma imagem enviada.</p>
+                  )}
+                </Style.FileAndImageRow>
+              </Style.FileStyleRow>
+            </Style.Content>
 
-            <Style.Row>
-              <h6>Custo</h6>
-
-              <p className="p2">
-                {
-                  applyMask({
-                    mask: 'BRL',
-                    value: String(maintenanceReport?.cost),
-                  }).value
-                }
-              </p>
-            </Style.Row>
-
-            <Style.FileStyleRow>
-              <h6>Anexos</h6>
-
-              <Style.FileAndImageRow>
-                {maintenanceReport.ReportAnnexes?.length > 0 ? (
-                  maintenanceReport.ReportAnnexes.map((annex) => (
-                    <Style.Tag key={annex.originalName}>
-                      <a
-                        title={annex.originalName}
-                        href={annex.url}
-                        download
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <p className="p3">{annex.name}</p>
-                        <Image size="16px" img={icon.download} />
-                      </a>
-                    </Style.Tag>
-                  ))
-                ) : (
-                  <p className="p2">Nenhum anexo enviado.</p>
-                )}
-              </Style.FileAndImageRow>
-            </Style.FileStyleRow>
-
-            <Style.FileStyleRow>
-              <h6>Imagens</h6>
-
-              <Style.FileAndImageRow>
-                {maintenanceReport.ReportImages?.length > 0 ? (
-                  maintenanceReport.ReportImages.map((image) => (
-                    <ImagePreview
-                      key={image.originalName}
-                      src={image.url}
-                      downloadUrl={image.url}
-                      imageCustomName={image.name}
-                      width="97px"
-                      height="97px"
-                    />
-                  ))
-                ) : (
-                  <p className="p2">Nenhuma imagem enviada.</p>
-                )}
-              </Style.FileAndImageRow>
-            </Style.FileStyleRow>
-          </Style.Content>
-
-          <Button
-            bgColor="primary"
-            label="Fechar"
-            center
-            onClick={() => handleModals('modalMaintenanceDetails', false)}
-          />
-        </Style.Container>
-      )}
-    </Modal>
+            <Button
+              bgColor="primary"
+              label="Fechar"
+              center
+              onClick={() => handleModals('modalMaintenanceDetails', false)}
+            />
+          </Style.Container>
+        )}
+      </Modal>
+    </>
   );
 };
