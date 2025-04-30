@@ -122,32 +122,31 @@ export const MaintenancesKanban = () => {
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [expandedColumns, setExpandedColumns] = useState<string[]>([]);
 
-  
   const showPriority = account?.Company.showMaintenancePriority;
-  
+
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
       case 'modalSendMaintenanceReport':
         setModalMaintenanceSendReport(modalState);
         break;
-        case 'modalMaintenanceDetails':
-          setModalMaintenanceDetails(modalState);
-          break;
-          case 'modalCreateOccasionalMaintenance':
-            setModalCreateOccasionalMaintenance(modalState);
-            break;
-            
-            default:
-              break;
-            }
-          };
-          
-          const toggleColumn = (title: string) => {
-            setExpandedColumns((prev) =>
-              prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
-            );
-          };
-          
+      case 'modalMaintenanceDetails':
+        setModalMaintenanceDetails(modalState);
+        break;
+      case 'modalCreateOccasionalMaintenance':
+        setModalCreateOccasionalMaintenance(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const toggleColumn = (title: string) => {
+    setExpandedColumns((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
+    );
+  };
+
   const handleRefresh = () => {
     setRefresh((prevState) => !prevState);
   };
