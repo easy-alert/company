@@ -806,6 +806,7 @@ function TicketsPage() {
           <Style.ListView>
             {kanbanTickets.map((kanbanTicket) => {
               const isExpanded = expandedColumns.includes(kanbanTicket.title);
+
               return (
                 <div key={kanbanTicket.title}>
                   <Style.KanbanHeader
