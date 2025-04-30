@@ -34,6 +34,8 @@ import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 import IconPlus from '@assets/icons/IconPlus';
+import IconList from '@assets/icons/IconList';
+import IconBlock from '@assets/icons/IconBlock';
 
 // COMPONENTS
 
@@ -117,26 +119,35 @@ export const MaintenancesKanban = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
+  const [expandedColumns, setExpandedColumns] = useState<string[]>([]);
 
+  
   const showPriority = account?.Company.showMaintenancePriority;
-
+  
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
       case 'modalSendMaintenanceReport':
         setModalMaintenanceSendReport(modalState);
         break;
-      case 'modalMaintenanceDetails':
-        setModalMaintenanceDetails(modalState);
-        break;
-      case 'modalCreateOccasionalMaintenance':
-        setModalCreateOccasionalMaintenance(modalState);
-        break;
-
-      default:
-        break;
-    }
-  };
-
+        case 'modalMaintenanceDetails':
+          setModalMaintenanceDetails(modalState);
+          break;
+          case 'modalCreateOccasionalMaintenance':
+            setModalCreateOccasionalMaintenance(modalState);
+            break;
+            
+            default:
+              break;
+            }
+          };
+          
+          const toggleColumn = (title: string) => {
+            setExpandedColumns((prev) =>
+              prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
+            );
+          };
+          
   const handleRefresh = () => {
     setRefresh((prevState) => !prevState);
   };
@@ -246,11 +257,30 @@ export const MaintenancesKanban = () => {
             <h2>Manutenções</h2>
 
             <IconButton
+              labelPos="right"
               label="Filtros"
               icon={<IconFilter strokeColor="primary" fillColor="" />}
               hideLabelOnMedia
               disabled={loading}
               onClick={() => setShowFilter((prevState) => !prevState)}
+            />
+            <IconButton
+              labelPos="right"
+              label={viewMode === 'kanban' ? 'Visualizar em lista' : 'Visualizar em blocos'}
+              icon={
+                viewMode === 'kanban' ? (
+                  <IconList strokeColor="white" fillColor="primary" />
+                ) : (
+                  <IconBlock
+                    strokeColor="white"
+                    backgroundColor="primary"
+                    padding="0"
+                    size="14px"
+                  />
+                )
+              }
+              permToCheck="maintenances:createOccasional"
+              onClick={() => setViewMode((prev) => (prev === 'kanban' ? 'list' : 'kanban'))}
             />
           </Style.HeaderWrapper>
 
@@ -612,7 +642,7 @@ export const MaintenancesKanban = () => {
           </Style.Kanban>
         )}
 
-        {!loading && (
+        {viewMode === 'kanban' ? (
           <Style.Kanban>
             {kanban?.length > 0 &&
               kanban?.map((card) => (
@@ -765,6 +795,118 @@ export const MaintenancesKanban = () => {
                 </Style.KanbanCard>
               ))}
           </Style.Kanban>
+        ) : (
+          <Style.ListView>
+            {kanban?.map((card) => {
+              const isExpanded = expandedColumns.includes(card.status);
+
+              const filteredMaintenances = card.maintenances.filter((maintenance) => {
+                const isPending = maintenance.status === 'pending';
+                const isFuture =
+                  new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0));
+                const showExpiredOccasional =
+                  maintenance.type === 'occasional' && maintenance.status === 'expired';
+                const isExpired = maintenance.status === 'expired';
+                const isOldExpired =
+                  maintenance.status === 'expired' && maintenance.cantReportExpired;
+                const { inProgress } = maintenance;
+
+                return (
+                  (((showFutureMaintenances && isPending && isFuture) ||
+                    (isPending && !isFuture) ||
+                    !isPending) &&
+                    ((showOldExpireds && isExpired && isOldExpired) ||
+                      (isExpired && !isOldExpired) ||
+                      !isExpired)) ||
+                  showExpiredOccasional ||
+                  inProgress
+                );
+              });
+
+              return (
+                <Style.KanbanCardList key={card.status}>
+                  <Style.KanbanHeader
+                    onClick={() => toggleColumn(card.status)}
+                    status={card.status}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Style.Chevron $expanded={isExpanded} />
+                      <h5>{card.status}</h5>
+                    </div>
+
+                    {card.status === 'Vencidas' && (
+                      <label htmlFor="showExpireds">
+                        <input
+                          type="checkbox"
+                          id="showExpireds"
+                          checked={showOldExpireds}
+                          onChange={() => setShowOldExpireds((prev) => !prev)}
+                        />
+                        Mostrar expiradas
+                      </label>
+                    )}
+
+                    {card.status === 'Pendentes' && (
+                      <label htmlFor="showFuture">
+                        <input
+                          type="checkbox"
+                          id="showFuture"
+                          checked={showFutureMaintenances}
+                          onChange={() => setShowFutureMaintenances((prev) => !prev)}
+                        />
+                        Mostrar futuras
+                      </label>
+                    )}
+                  </Style.KanbanHeader>
+
+                  {isExpanded &&
+                    (filteredMaintenances.length > 0 ? (
+                      filteredMaintenances.map((maintenance) => (
+                        <Style.ListItem key={maintenance.id}>
+                          <Style.MaintenanceInfo
+                            status={maintenance.status}
+                            onClick={() => {
+                              const modal = ['pending', 'expired'].includes(maintenance.status)
+                                ? 'modalSendMaintenanceReport'
+                                : 'modalMaintenanceDetails';
+
+                              setModalAdditionalInformations({
+                                id: maintenance.id,
+                                expectedNotificationDate: '',
+                                expectedDueDate: '',
+                                isFuture: false,
+                              });
+                              handleMaintenanceHistoryIdChange(maintenance.id);
+                              handleModals(modal, true);
+                            }}
+                          >
+                            <h5>{maintenance.buildingName}</h5>
+                            <h6>{maintenance.element || maintenance.name}</h6>
+                            <p className="p2">
+                              {maintenance.activity || maintenance.checklistProgress}
+                            </p>
+                            <p className="p3">
+                              {maintenance.status === 'pending' && maintenance.label}
+                              {maintenance.status === 'expired' &&
+                                !maintenance.cantReportExpired &&
+                                maintenance.label}
+                              {(maintenance.status === 'completed' ||
+                                maintenance.status === 'overdue') &&
+                                `Concluída em ${dateFormatter(maintenance.date)}`}
+                            </p>
+                          </Style.MaintenanceInfo>
+                        </Style.ListItem>
+                      ))
+                    ) : (
+                      <Style.NoDataContainer>
+                        <h4>Nenhuma manutenção encontrada.</h4>
+                      </Style.NoDataContainer>
+                    ))}
+                </Style.KanbanCardList>
+              );
+            })}
+          </Style.ListView>
         )}
       </Style.Container>
     </>
