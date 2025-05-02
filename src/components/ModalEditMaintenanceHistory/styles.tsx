@@ -10,6 +10,12 @@ export const Container = styled.div`
   }
 `;
 
+export const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.sm};
+`;
+
 export const LoadingContainer = styled.div`
   display: flex;
   align-items: center;

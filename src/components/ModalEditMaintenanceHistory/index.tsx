@@ -6,13 +6,16 @@ import { Form, Formik } from 'formik';
 import { FormikInput } from '@components/Form/FormikInput';
 import * as yup from 'yup';
 
+// HOOKS
+import { useHasPermission } from '@hooks/useHasPermission';
+
 // SERVICES
 import { putMaintenanceHistory } from '@services/apis/putMaintenanceHistory';
 
 // COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
-
+import { FormikCheckbox } from '@components/Form/FormikCheckbox';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL FUNCTIONS
@@ -30,6 +33,10 @@ export const ModalEditMaintenanceHistory = ({
   handleEditModal,
   handleRefresh,
 }: IModalEditMaintenanceHistory) => {
+  const { hasPermission } = useHasPermission({
+    permToCheck: ['admin:company', 'manager:maintenances'],
+  });
+
   const [loading, setLoading] = useState(false);
 
   // Calculate the limit date
@@ -45,11 +52,12 @@ export const ModalEditMaintenanceHistory = ({
   const schema = yup.object().shape({
     dueDate: yup
       .string()
-      .required('Campo obrigatório')
       .test(
         'is-valid-date',
         'Data de vencimento não pode ser maior que a data limite nem menor que a data de notificação',
         (value) => {
+          if (maintenance.Maintenance.MaintenanceType.name !== 'common') return true; // Skip validation for non-common maintenance
+
           if (!value) return false;
 
           // Parse the new due date
@@ -59,6 +67,7 @@ export const ModalEditMaintenanceHistory = ({
           return notificationDate < newDueDate && newDueDate < limitDate; // Return true if valid, false otherwise
         },
       ),
+    showToResident: yup.boolean().required('Campo obrigatório'),
   });
 
   const handleEditMaintenanceHistory = async (values: any) => {
@@ -72,6 +81,7 @@ export const ModalEditMaintenanceHistory = ({
         id: maintenance.id,
         dueDate: formattedDueDate,
         maintenanceStatus: newStatus,
+        showToResident: values.showToResident,
       };
 
       await putMaintenanceHistory(data);
@@ -102,39 +112,60 @@ export const ModalEditMaintenanceHistory = ({
 
           <Formik
             initialValues={{
-              dueDate: convertToFormikDate(maintenance.dueDate),
+              dueDate: convertToFormikDate(maintenance.dueDate) ?? '',
+              showToResident: maintenance.showToResident ?? false,
             }}
             validationSchema={schema}
-            onSubmit={async (values) => handleEditMaintenanceHistory(values)}
+            onSubmit={async (values) => {
+              console.log('🚀 ~ onSubmit={ ~ values:', values);
+              await handleEditMaintenanceHistory(values);
+            }}
           >
             {({ errors, values, touched }) => (
               <Form>
-                {maintenance.Maintenance.MaintenanceType.name === 'common' ? (
-                  <>
-                    <p>
-                      A data limite para esta manutenção é:{' '}
-                      <strong>{limitDate.toLocaleDateString()}</strong>
-                    </p>
-                    <FormikInput
-                      name="dueDate"
-                      label="Data de vencimento"
-                      placeholder="Data de vencimento"
-                      type="date"
-                      value={values.dueDate}
-                      error={touched.dueDate && errors.dueDate ? errors.dueDate : null}
-                    />
-                  </>
-                ) : (
-                  <p>Manutenção avulsa não possui data de vencimento</p>
-                )}
+                <Style.FormContainer>
+                  {maintenance.MaintenancesStatus.name !== 'completed' &&
+                    maintenance.MaintenancesStatus.name !== 'overdue' && (
+                      // eslint-disable-next-line react/jsx-no-useless-fragment
+                      <>
+                        {maintenance.Maintenance.MaintenanceType.name === 'common' ? (
+                          <>
+                            <p>
+                              A data limite para esta manutenção é:{' '}
+                              <strong>{limitDate.toLocaleDateString()}</strong>
+                            </p>
+                            <FormikInput
+                              name="dueDate"
+                              label="Data de vencimento"
+                              placeholder="Data de vencimento"
+                              type="date"
+                              value={values.dueDate}
+                              error={touched.dueDate && errors.dueDate ? errors.dueDate : null}
+                            />
+                          </>
+                        ) : (
+                          <p>Manutenção avulsa não possui data de vencimento</p>
+                        )}
+                      </>
+                    )}
 
-                <Style.ButtonContainer>
-                  <Button
-                    type="submit"
-                    label="Salvar"
-                    disable={maintenance.Maintenance.MaintenanceType.name === 'occasional'}
-                  />
-                </Style.ButtonContainer>
+                  {hasPermission && (
+                    <FormikCheckbox
+                      name="showToResident"
+                      label="Mostrar para o morador"
+                      checked={values.showToResident}
+                      error={
+                        touched.showToResident && errors.showToResident
+                          ? errors.showToResident
+                          : null
+                      }
+                    />
+                  )}
+
+                  <Style.ButtonContainer>
+                    <Button type="submit" label="Salvar" />
+                  </Style.ButtonContainer>
+                </Style.FormContainer>
               </Form>
             )}
           </Formik>

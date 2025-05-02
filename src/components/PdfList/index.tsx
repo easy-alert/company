@@ -29,6 +29,23 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
     failed: 'Erro',
   };
 
+  const handleSharePdf = async (url: string, name: string) => {
+    try {
+      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+      const message = `Confira o relatório referente às datas: ${name}\n${url}`;
+
+      // const whatsappUrl = `https://${
+      //   isMobile ? 'api' : 'web'
+      // }.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+
+      const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappUrl, '_blank');
+    } catch (err) {
+      console.error('Erro ao compartilhar no WhatsApp:', err);
+    }
+  };
+
   return loading ? (
     <DotSpinLoading />
   ) : (
@@ -68,14 +85,22 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
                   { cell: statusTranslation[status] },
                   {
                     cell: (
-                      <IconButton
-                        disabled={status !== 'finished'}
-                        label="Visualizar"
-                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
-                        onClick={() => {
-                          window.open(url, '_blank');
-                        }}
-                      />
+                      <div style={{ gap: '8px' }}>
+                        <IconButton
+                          disabled={status !== 'finished'}
+                          label="Visualizar"
+                          icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                          onClick={() => {
+                            window.open(url, '_blank');
+                          }}
+                        />
+                        <IconButton
+                          disabled={status !== 'finished'}
+                          label="Compartilhar"
+                          icon={icon.whatsApp}
+                          onClick={() => handleSharePdf(url, name)}
+                        />
+                      </div>
                     ),
                   },
                 ]}

@@ -144,66 +144,76 @@ export const BuildingsList = () => {
       {buildingList.length > 0 ? (
         <Style.Content>
           <Style.GridContainer>
-            {buildingList.map((building) => (
-              <Style.BuildingCard
-                key={building.id}
-                disabled={
+            {buildingList
+              .filter((building) => {
+                if (
                   account?.User.Permissions?.findIndex(
                     (permission) => permission.Permission.name === 'admin:company',
-                  ) === -1 &&
-                  account?.User.BuildingsPermissions?.findIndex(
-                    (permission) => permission.Building.id === building.id,
-                  ) === -1
-                }
-                onClick={() => {
-                  navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`);
-                }}
-              >
-                <Style.BuildingCardHeader>
-                  <Style.BuildingCardHeaderInfo>
-                    <h5>{building.name}</h5>
-                    <p className="p3">
-                      {building?.neighborhood}
-                      {building?.city && building?.neighborhood
-                        ? `, ${building?.city}`
-                        : building.city}
-                    </p>
-                  </Style.BuildingCardHeaderInfo>
+                  ) === 0
+                )
+                  return true;
 
-                  <Image img={<IconRightArrow strokeColor="primary" />} size="16px" />
-                </Style.BuildingCardHeader>
+                const buildingId = building.id;
 
-                <Style.BuildingCardFooter>
-                  {/* Não fiz .map pra facilitar a estilização */}
-                  <Style.BuildingCardFooterInfo>
-                    <h5 className="completed">{building?.MaintenancesCount[0].count}</h5>
-                    <p className="p5">
-                      {building?.MaintenancesCount[0].count > 1
-                        ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
-                        : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
-                    </p>
-                  </Style.BuildingCardFooterInfo>
+                return (
+                  buildingId ===
+                  account?.User.BuildingsPermissions?.find(
+                    (permission) => permission.Building.id === buildingId,
+                  )?.Building.id
+                );
+              })
+              .map((building) => (
+                <Style.BuildingCard
+                  key={building.id}
+                  onClick={() =>
+                    navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`)
+                  }
+                >
+                  <Style.BuildingCardHeader>
+                    <Style.BuildingCardHeaderInfo>
+                      <h5>{building.name}</h5>
+                      <p className="p3">
+                        {building?.neighborhood}
+                        {building?.city && building?.neighborhood
+                          ? `, ${building?.city}`
+                          : building.city}
+                      </p>
+                    </Style.BuildingCardHeaderInfo>
 
-                  <Style.BuildingCardFooterInfo>
-                    <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
-                    <p className="p5">
-                      {building?.MaintenancesCount[1].count > 1
-                        ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
-                        : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
-                    </p>
-                  </Style.BuildingCardFooterInfo>
+                    <Image img={<IconRightArrow strokeColor="primary" />} size="16px" />
+                  </Style.BuildingCardHeader>
 
-                  <Style.BuildingCardFooterInfo>
-                    <h5 className="expired">{building?.MaintenancesCount[2].count}</h5>
-                    <p className="p5">
-                      {building?.MaintenancesCount[2].count > 1
-                        ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
-                        : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
-                    </p>
-                  </Style.BuildingCardFooterInfo>
-                </Style.BuildingCardFooter>
-              </Style.BuildingCard>
-            ))}
+                  <Style.BuildingCardFooter>
+                    {/* Não fiz .map pra facilitar a estilização */}
+                    <Style.BuildingCardFooterInfo>
+                      <h5 className="completed">{building?.MaintenancesCount[0].count}</h5>
+                      <p className="p5">
+                        {building?.MaintenancesCount[0].count > 1
+                          ? capitalizeFirstLetter(building?.MaintenancesCount[0].pluralLabel)
+                          : capitalizeFirstLetter(building?.MaintenancesCount[0].singularLabel)}
+                      </p>
+                    </Style.BuildingCardFooterInfo>
+
+                    <Style.BuildingCardFooterInfo>
+                      <h5 className="pending">{building?.MaintenancesCount[1].count}</h5>
+                      <p className="p5">
+                        {building?.MaintenancesCount[1].count > 1
+                          ? capitalizeFirstLetter(building?.MaintenancesCount[1].pluralLabel)
+                          : capitalizeFirstLetter(building?.MaintenancesCount[1].singularLabel)}
+                      </p>
+                    </Style.BuildingCardFooterInfo>
+
+                    <Style.BuildingCardFooterInfo>
+                      <h5 className="expired">{building?.MaintenancesCount[2].count}</h5>
+                      <p className="p5">
+                        {building?.MaintenancesCount[2].count > 1
+                          ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
+                          : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
+                      </p>
+                    </Style.BuildingCardFooterInfo>
+                  </Style.BuildingCardFooter>
+                </Style.BuildingCard>
+              ))}
           </Style.GridContainer>
 
           <Style.PaginationFooter>

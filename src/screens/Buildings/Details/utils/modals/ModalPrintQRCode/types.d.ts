@@ -1,9 +1,6 @@
 export interface IModalPrintQRCode {
   setModal: (setModal: boolean) => void;
+  buildingId: string;
   buildingName: string;
-  buildingNanoId: string;
-  notificationsConfigurations: {
-    nanoId: string;
-    name: string;
-  }[];
+  buildingImage?: string;
 }

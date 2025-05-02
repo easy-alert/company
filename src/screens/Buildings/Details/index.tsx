@@ -74,13 +74,7 @@ import {
 import * as Style from './styles';
 
 // TYPES
-import type {
-  Folder,
-  IBuildingDetail,
-  File,
-  IBanner,
-  UserBuildingsPermissions,
-} from './utils/types';
+import type { Folder, IBuildingDetail, File, IBanner } from './utils/types';
 
 // #endregion
 
@@ -273,172 +267,147 @@ export const BuildingDetails = () => {
     <DotSpinLoading />
   ) : (
     <>
-      <>
-        {modalEditBuildingOpen && building && (
-          <ModalEditBuilding
-            setModal={setModalEditBuildingOpen}
-            building={building}
-            buildingTypes={buildingTypes}
-            requestBuildingDetailsCall={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )}
+      {modalEditBuildingOpen && building && (
+        <ModalEditBuilding
+          setModal={setModalEditBuildingOpen}
+          building={building}
+          buildingTypes={buildingTypes}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
+        />
+      )}
 
-        {modalCreateNotificationConfigurationOpen && building && (
-          <ModalCreateNotificationConfiguration
-            setModal={setModalCreateNotificationConfigurationOpen}
-            buildingId={building.id}
-            emailConfirmUrl={emailConfirmUrl}
-            phoneConfirmUrl={phoneConfirmUrl}
-            requestBuildingDetailsCall={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )}
+      {modalCreateNotificationConfigurationOpen && building && (
+        <ModalCreateNotificationConfiguration
+          setModal={setModalCreateNotificationConfigurationOpen}
+          buildingId={building.id}
+          emailConfirmUrl={emailConfirmUrl}
+          phoneConfirmUrl={phoneConfirmUrl}
+          requestBuildingDetailsCall={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
+        />
+      )}
 
-        {/* {modalEditNotificationConfigurationOpen && selectedNotificationRow && building && (
-          <ModalEditNotificationConfiguration
-            buildingId={building.id}
-            selectedNotificationRow={selectedNotificationRow}
-            setModal={setModalEditNotificationConfigurationOpen}
-            emailConfirmUrl={emailConfirmUrl}
-            phoneConfirmUrl={phoneConfirmUrl}
-            requestBuildingDetailsCall={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )} */}
+      {modalAddFilesOpen && building && rootFolder && (
+        <ModalAddFiles
+          setModal={setModalAddFilesOpen}
+          setBuilding={setBuilding}
+          folderId={folderId || building?.Folders.id}
+        />
+      )}
 
-        {modalAddFilesOpen && building && rootFolder && (
-          <ModalAddFiles
-            setModal={setModalAddFilesOpen}
-            setBuilding={setBuilding}
-            folderId={folderId || building?.Folders.id}
-          />
-        )}
+      {modalCreateFolderOpen && building && rootFolder && (
+        <ModalCreateFolder
+          setModal={setModalCreateFolderOpen}
+          buildingId={building.id}
+          setBuilding={setBuilding}
+          parentId={folderId || building?.Folders.id}
+        />
+      )}
 
-        {modalCreateFolderOpen && building && rootFolder && (
-          <ModalCreateFolder
-            setModal={setModalCreateFolderOpen}
-            buildingId={building.id}
-            setBuilding={setBuilding}
-            parentId={folderId || building?.Folders.id}
-          />
-        )}
+      {modalEditFolderOpen && building && folderToEdit && (
+        <ModalEditFolder
+          setModal={setModalEditFolderOpen}
+          setBuilding={setBuilding}
+          folder={folderToEdit}
+        />
+      )}
 
-        {modalEditFolderOpen && building && folderToEdit && (
-          <ModalEditFolder
-            setModal={setModalEditFolderOpen}
-            setBuilding={setBuilding}
-            folder={folderToEdit}
-          />
-        )}
+      {modalEditFileOpen && building && fileToEdit && (
+        <ModalEditFile
+          setModal={setModalEditFileOpen}
+          setBuilding={setBuilding}
+          file={fileToEdit}
+        />
+      )}
 
-        {modalEditFileOpen && building && fileToEdit && (
-          <ModalEditFile
-            setModal={setModalEditFileOpen}
-            setBuilding={setBuilding}
-            file={fileToEdit}
-          />
-        )}
+      {modalAddBannerOpen && building && (
+        <ModalAddBanner
+          setModal={setModalAddBannerOpen}
+          onThenRequest={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
+        />
+      )}
 
-        {modalAddBannerOpen && building && (
-          <ModalAddBanner
-            setModal={setModalAddBannerOpen}
-            onThenRequest={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )}
+      {modalUpdateBannerOpen && selectedBanner && building && (
+        <ModalUpdateBanner
+          setModal={setModalUpdateBannerOpen}
+          selectedBanner={selectedBanner}
+          onThenRequest={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
+        />
+      )}
 
-        {modalUpdateBannerOpen && selectedBanner && building && (
-          <ModalUpdateBanner
-            setModal={setModalUpdateBannerOpen}
-            selectedBanner={selectedBanner}
-            onThenRequest={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )}
+      {modalPrintQRCodeOpen && building && (
+        <ModalPrintQRCode
+          setModal={setModalPrintQRCodeOpen}
+          buildingId={building.id}
+          buildingName={building?.name}
+          buildingImage={building?.image}
+        />
+      )}
 
-        {modalPrintQRCodeOpen && building && (
-          <ModalPrintQRCode
-            setModal={setModalPrintQRCodeOpen}
-            buildingName={building?.name}
-            buildingNanoId={building.nanoId}
-            notificationsConfigurations={building.NotificationsConfigurations.map((syndic) => ({
-              name: syndic.name,
-              nanoId: syndic.nanoId,
-            }))}
-          />
-        )}
+      {modalChangeClientPasswordOpen && building && (
+        <ModalChangeClientPassword
+          setModal={setModalChangeClientPasswordOpen}
+          type={passwordType}
+          onThen={async () => {
+            requestBuildingDetails({
+              buildingId: buildingId!,
+              setLoading,
+              setBuilding,
+              setUsedMaintenancesCount,
+              setTotalMaintenancesCount,
+              setRootFolder,
+            });
+          }}
+        />
+      )}
 
-        {modalChangeClientPasswordOpen && building && (
-          <ModalChangeClientPassword
-            setModal={setModalChangeClientPasswordOpen}
-            type={passwordType}
-            onThen={async () => {
-              requestBuildingDetails({
-                buildingId: buildingId!,
-                setLoading,
-                setBuilding,
-                setUsedMaintenancesCount,
-                setTotalMaintenancesCount,
-                setRootFolder,
-              });
-            }}
-          />
-        )}
-
-        {modalCreateApartmentOpen && building && (
-          <ModalCreateApartments
-            apartments={building.BuildingApartments}
-            apartmentNumber={apartmentNumber}
-            onQuery={onQuery}
-            handleChangeApartment={handleChangeApartment}
-            handleAddApartment={handleAddApartment}
-            handleRemoveApartment={handleRemoveApartment}
-            handleCreateApartment={handleCreateApartment}
-            handleCreateApartmentModal={handleCreateApartmentModal}
-          />
-        )}
-      </>
+      {modalCreateApartmentOpen && building && (
+        <ModalCreateApartments
+          apartments={building.BuildingApartments}
+          apartmentNumber={apartmentNumber}
+          onQuery={onQuery}
+          handleChangeApartment={handleChangeApartment}
+          handleAddApartment={handleAddApartment}
+          handleRemoveApartment={handleRemoveApartment}
+          handleCreateApartment={handleCreateApartment}
+          handleCreateApartmentModal={handleCreateApartmentModal}
+        />
+      )}
 
       <Style.Header>
         <h2>Detalhes de edificação - {building?.name}</h2>
