@@ -194,7 +194,7 @@ export const ModalPrintQRCode = ({
           <QRCodeCanvas
             id="QRCode"
             value={
-              selectedUser
+              selectedUser.id
                 ? `${
                     import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
                   }/maintenances?buildingId=${buildingId}`
