@@ -193,9 +193,13 @@ export const ModalPrintQRCode = ({
         <Style.HideQRCode>
           <QRCodeCanvas
             id="QRCode"
-            value={`${
-              import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
-            }/maintenances?buildingId=${buildingId}`}
+            value={
+              selectedUser
+                ? `${
+                    import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
+                  }/maintenances?buildingId=${buildingId}`
+                : `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${buildingId}`
+            }
             bgColor="#F2EAEA"
             size={300}
           />
