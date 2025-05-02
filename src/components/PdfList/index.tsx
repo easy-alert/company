@@ -32,10 +32,13 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
   const handleSharePdf = async (url: string, name: string) => {
     try {
       const isMobile = /Android|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-      const message = `Confira o PDF referente às datas: ${name}\n${url}`;
-      const whatsappUrl = `https://${
-        isMobile ? 'api' : 'web'
-      }.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+      const message = `Confira o relatório referente às datas: ${name}\n${url}`;
+
+      // const whatsappUrl = `https://${
+      //   isMobile ? 'api' : 'web'
+      // }.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+
+      const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
 
       window.open(whatsappUrl, '_blank');
     } catch (err) {
