@@ -6,6 +6,9 @@ import { Form, Formik } from 'formik';
 import { FormikInput } from '@components/Form/FormikInput';
 import * as yup from 'yup';
 
+// HOOKS
+import { useHasPermission } from '@hooks/useHasPermission';
+
 // SERVICES
 import { putMaintenanceHistory } from '@services/apis/putMaintenanceHistory';
 
@@ -30,6 +33,10 @@ export const ModalEditMaintenanceHistory = ({
   handleEditModal,
   handleRefresh,
 }: IModalEditMaintenanceHistory) => {
+  const { hasPermission } = useHasPermission({
+    permToCheck: ['admin:company', 'manager:maintenances'],
+  });
+
   const [loading, setLoading] = useState(false);
 
   // Calculate the limit date
@@ -142,14 +149,18 @@ export const ModalEditMaintenanceHistory = ({
                       </>
                     )}
 
-                  <FormikCheckbox
-                    name="showToResident"
-                    label="Mostrar para o morador"
-                    checked={values.showToResident}
-                    error={
-                      touched.showToResident && errors.showToResident ? errors.showToResident : null
-                    }
-                  />
+                  {hasPermission && (
+                    <FormikCheckbox
+                      name="showToResident"
+                      label="Mostrar para o morador"
+                      checked={values.showToResident}
+                      error={
+                        touched.showToResident && errors.showToResident
+                          ? errors.showToResident
+                          : null
+                      }
+                    />
+                  )}
 
                   <Style.ButtonContainer>
                     <Button type="submit" label="Salvar" />
