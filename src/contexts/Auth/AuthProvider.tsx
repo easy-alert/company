@@ -1,11 +1,12 @@
 // LIBS
 import { useState } from 'react';
 
-// TYPES
-import { IAccount } from '../../utils/types';
 import { AuthContext } from './AuthContext';
-import type { ILoginRequestResponse } from './utils/types';
 import { query } from '../../utils/functions';
+
+// TYPES
+import type { IAccount } from '../../utils/types';
+import type { ILoginRequestResponse } from './utils/types';
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [account, setAccount] = useState<IAccount>({} as IAccount);
