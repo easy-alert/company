@@ -138,6 +138,8 @@ export const KanbanHeader = styled.div<{ status?: string }>`
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: ${theme.size.csm};
   z-index: 9;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
@@ -225,11 +227,9 @@ export const KanbanTicketHeaderInfo = styled.div`
 
 export const KanbanTicketNumber = styled.h1`
   min-width: 30px;
-
   font-size: 18px;
   font-weight: 700;
   line-height: 16px;
-
   color: ${theme.color.primary};
 `;
 
@@ -261,8 +261,14 @@ export const ContainerList = styled.div`
   width: 100%;
 
   @media (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 530px) {
     grid-template-columns: 1fr;
-    place-items: start;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
   }
 `;
 
@@ -279,6 +285,8 @@ export const KanbanTicketGridBoxList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 
 export const KanbanTicketTitle = styled.h6`
