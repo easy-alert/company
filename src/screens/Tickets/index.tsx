@@ -870,27 +870,30 @@ function TicketsPage() {
                             }}
                           >
                             <Style.KanbanTicketInfo statusBgColor={ticket?.status?.backgroundColor}>
-                              <Style.KanbanTicketHeader>
-                                <Style.KanbanTicketHeaderInfo>
+                              <Style.ContainerList>
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketNumber>
-                                    #{ticket.ticketNumber}
+                                    <Style.KanbanTicketTitle>Número</Style.KanbanTicketTitle>#
+                                    {ticket.ticketNumber}
                                   </Style.KanbanTicketNumber>
+                                </Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketBuildingName>
+                                    <Style.KanbanTicketTitle>Prédio</Style.KanbanTicketTitle>
                                     {ticket.building?.name}
                                   </Style.KanbanTicketBuildingName>
-                                </Style.KanbanTicketHeaderInfo>
-                                {!ticket?.seen && <Style.KanbanTicketNewTag />}
-                              </Style.KanbanTicketHeader>
+                                </Style.KanbanTicketGridBoxList>
 
-                              <Style.KanbanTicketGrid>
-                                <Style.KanbanTicketGridBox>
+                                {!ticket?.seen && <Style.KanbanTicketNewTag />}
+
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
                                   <Style.KanbanTicketDescription>
                                     {ticket.residentName}
                                   </Style.KanbanTicketDescription>
-                                </Style.KanbanTicketGridBox>
+                                </Style.KanbanTicketGridBoxList>
 
-                                <Style.KanbanTicketGridBox>
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketTitle>
                                     Tipo de assistência
                                   </Style.KanbanTicketTitle>
@@ -905,18 +908,18 @@ function TicketsPage() {
                                       />
                                     ))}
                                   </Style.KanbanTicketListTags>
-                                </Style.KanbanTicketGridBox>
+                                </Style.KanbanTicketGridBoxList>
 
-                                <Style.KanbanTicketGridBox>
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketTitle>
                                     Local da ocorrência
                                   </Style.KanbanTicketTitle>
                                   <Style.KanbanTicketDescription>
                                     {ticket.place?.label}
                                   </Style.KanbanTicketDescription>
-                                </Style.KanbanTicketGridBox>
+                                </Style.KanbanTicketGridBoxList>
 
-                                <Style.KanbanTicketGridBox>
+                                <Style.KanbanTicketGridBoxList>
                                   <Style.KanbanTicketTitle>
                                     Data de abertura
                                   </Style.KanbanTicketTitle>
@@ -924,8 +927,8 @@ function TicketsPage() {
                                     {ticket.createdAt &&
                                       formatDateString(ticket.createdAt, 'dd/MM/yyyy - HH:mm')}
                                   </Style.KanbanTicketDescription>
-                                </Style.KanbanTicketGridBox>
-                              </Style.KanbanTicketGrid>
+                                </Style.KanbanTicketGridBoxList>
+                              </Style.ContainerList>
                             </Style.KanbanTicketInfo>
                           </Style.KanbanTicketWrapper>
                         )))}

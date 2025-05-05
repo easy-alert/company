@@ -254,6 +254,18 @@ export const KanbanTicketGrid = styled.div`
   grid-row-gap: 10px;
 `;
 
+export const ContainerList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 750px) {
+    grid-template-columns: 1fr;
+    place-items: start;
+  }
+`;
+
 export const KanbanTicketGridBox = styled.div`
   font-size: 40px;
   font-family: sans-serif;
@@ -261,6 +273,12 @@ export const KanbanTicketGridBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+export const KanbanTicketGridBoxList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const KanbanTicketTitle = styled.h6`
