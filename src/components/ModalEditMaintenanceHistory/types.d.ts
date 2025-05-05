@@ -85,6 +85,7 @@ export interface MaintenancesStatus {
 }
 
 export interface Building {
+  id?: string;
   name: string;
   guestCanCompleteMaintenance: boolean;
 }
@@ -94,6 +95,8 @@ export interface Category {
 }
 
 export interface Maintenance {
+  id?: string;
+
   Category: Category;
   activity: string;
   element: string;
