@@ -78,7 +78,7 @@ export const ModalEditMaintenanceHistory = ({
       const newStatus = new Date() > formattedDueDate ? 'expired' : 'pending';
 
       const data = {
-        id: maintenance.id,
+        maintenanceHistoryId: maintenance.id,
         dueDate: formattedDueDate,
         maintenanceStatus: newStatus,
         showToResident: values.showToResident,
