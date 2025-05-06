@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -124,7 +124,17 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div`
+export const KanbanCardList = styled.div`
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding-bottom: ${theme.size.sm};
+`;
+
+export const KanbanHeader = styled.div<{ status?: string }>`
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
@@ -251,4 +261,28 @@ export const NoDataContainer = styled.div`
   text-align: center;
   color: ${theme.color.gray4};
   padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+`;
+
+export const ListView = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+export const ListItem = styled.div`
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+`;
+
+export const Chevron = styled.span<{ $expanded: boolean }>`
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid ${theme.color.primary};
+  transition: transform 0.2s ease;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(0)' : 'rotate(-90deg)')};
 `;
