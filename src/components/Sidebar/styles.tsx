@@ -120,8 +120,6 @@ export const AppContent = styled.div`
     padding: 0 ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm};
   }
 `;
-
-
 export const ReportIcons = styled.div`
   display: flex;
   flex-direction: column;

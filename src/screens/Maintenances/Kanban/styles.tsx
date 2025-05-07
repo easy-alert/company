@@ -81,6 +81,10 @@ export const IconsContainer = styled.div`
   align-items: center;
 
   gap: ${theme.size.sm};
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+  }
 `;
 export const Kanban = styled.div`
   display: grid;
@@ -129,7 +133,7 @@ export const KanbanCardList = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.size.xsm};
-  background-color: ${theme.color.white};
+
   border-radius: ${theme.size.xxsm};
   padding-bottom: ${theme.size.sm};
 `;
@@ -141,6 +145,7 @@ export const KanbanHeader = styled.div<{ status?: string }>`
   width: 100%;
   background-color: ${theme.color.white};
   z-index: 4;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
 
@@ -148,6 +153,14 @@ export const KanbanHeader = styled.div<{ status?: string }>`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.sm};
+
+  border-left: ${({ status }) => {
+    if (status === 'Vencidas') return `4px solid ${theme.color.actionDanger}`;
+    if (status === 'Pendentes') return `4px solid ${theme.color.warning}`;
+    if (status === 'Em execução') return `4px solid ${theme.color.warning}`;
+    if (status === 'Concluídas') return `4px solid ${theme.color.success}`;
+    return 'none';
+  }};
 
   > label {
     display: flex;
@@ -254,19 +267,20 @@ export const EventsWrapper = styled.div`
 `;
 
 export const NoDataContainer = styled.div`
-  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  color: ${theme.color.gray4};
-  padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+  color: #888;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: 16px;
+  align-items: center;
+  height: 100%;
 `;
+
 
 export const ListView = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 `;
 
 export const ListItem = styled.div`
