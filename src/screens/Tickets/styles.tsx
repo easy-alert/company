@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -24,8 +24,8 @@ export const Header = styled.div`
   gap: ${theme.size.xxsm};
 
   @media (max-width: 900px) {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 `;
 
@@ -48,9 +48,10 @@ export const HeaderWrapper = styled.div`
     max-width: 300px;
   }
 
-  @media (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
+  @media (max-width: 900px) {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
   }
 `;
 
@@ -131,12 +132,14 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div`
-  position: -webkit-sticky; /* Safari */
+export const KanbanHeader = styled.div<{ status?: string }>`
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin-bottom: ${theme.size.csm};
   z-index: 9;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
@@ -145,6 +148,13 @@ export const KanbanHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.sm};
+
+  border-left: ${({ status }) => {
+    if (status === 'Em execução') return `4px solid ${theme.color.warning}`;
+    if (status === 'Concluídos') return `4px solid ${theme.color.success}`;
+    if (status === 'Indeferidos') return `4px solid ${theme.color.danger}`;
+    return 'none';
+  }};
 
   > label {
     display: flex;
@@ -161,6 +171,7 @@ export const KanbanHeader = styled.div`
 
 export const KanbanTicketWrapper = styled.div`
   padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+  margin: 1rem 0;
 `;
 
 export const KanbanTicketInfo = styled.div<{
@@ -216,11 +227,9 @@ export const KanbanTicketHeaderInfo = styled.div`
 
 export const KanbanTicketNumber = styled.h1`
   min-width: 30px;
-
   font-size: 18px;
   font-weight: 700;
   line-height: 16px;
-
   color: ${theme.color.primary};
 `;
 
@@ -245,6 +254,24 @@ export const KanbanTicketGrid = styled.div`
   grid-row-gap: 10px;
 `;
 
+export const ContainerList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 530px) {
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+  }
+`;
+
 export const KanbanTicketGridBox = styled.div`
   font-size: 40px;
   font-family: sans-serif;
@@ -252,6 +279,14 @@ export const KanbanTicketGridBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+export const KanbanTicketGridBoxList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 
 export const KanbanTicketTitle = styled.h6`
@@ -293,4 +328,52 @@ export const NoDataContainer = styled.footer`
     color: ${theme.color.gray4};
     text-align: center;
   }
+`;
+
+export const ListView = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ListItemWrapper = styled.div`
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+
+  &:hover {
+    background: #f9f9f9;
+  }
+
+  h5 {
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 4px 0;
+  }
+`;
+
+export const Chevron = styled.span<{ $expanded: boolean }>`
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid ${theme.color.primary};
+  transition: transform 0.2s ease;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(0)' : 'rotate(-90deg)')};
+`;
+
+export const NoTicketsMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  color: #888;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: 16px;
+  align-items: center;
+  height: 100%;
 `;

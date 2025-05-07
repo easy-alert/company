@@ -32,6 +32,8 @@ import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
+import IconList from '@assets/icons/IconList';
+import IconBlock from '@assets/icons/IconBlock';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
@@ -92,6 +94,15 @@ function TicketsPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [ticketAccess, setTicketAccess] = useState<boolean>(false);
+
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
+  const [expandedColumns, setExpandedColumns] = useState<string[]>([]);
+
+  const toggleColumn = (title: string) => {
+    setExpandedColumns((prev) =>
+      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title],
+    );
+  };
 
   const handleRefresh = () => {
     setRefresh(!refresh);
@@ -264,15 +275,37 @@ function TicketsPage() {
         <Style.Header>
           <Style.HeaderWrapper>
             <h2>Chamados</h2>
+            {ticketAccess && (
+              <IconButton
+                labelPos="right"
+                label={viewMode === 'kanban' ? 'Visualizar em lista' : 'Visualizar em blocos'}
+                icon={
+                  viewMode === 'kanban' ? (
+                    <IconList strokeColor="white" fillColor="primary" />
+                  ) : (
+                    <IconBlock
+                      strokeColor="white"
+                      backgroundColor="primary"
+                      padding="0"
+                      size="14px"
+                    />
+                  )
+                }
+                permToCheck="tickets:create"
+                onClick={() => setViewMode((prev) => (prev === 'kanban' ? 'list' : 'kanban'))}
+              />
+            )}
           </Style.HeaderWrapper>
 
           {ticketAccess && (
-            <IconButton
-              label="Abrir chamado"
-              icon={<IconPlus strokeColor="primary" />}
-              permToCheck="tickets:create"
-              onClick={() => handleCreateTicketModal(true)}
-            />
+            <div>
+              <IconButton
+                label="Abrir chamado"
+                icon={<IconPlus strokeColor="primary" />}
+                permToCheck="tickets:create"
+                onClick={() => handleCreateTicketModal(true)}
+              />
+            </div>
           )}
         </Style.Header>
 
@@ -658,122 +691,269 @@ function TicketsPage() {
           </Formik>
         </Style.FiltersContainer>
 
-        <Style.Kanban>
-          {kanbanTickets.map((kanbanTicket, i: number) => (
-            <Style.KanbanCard key={kanbanTicket.title}>
-              <Style.KanbanHeader>
-                <h5>{kanbanTicket.title}</h5>
-                <span>{kanbanTicket.tickets.length}</span>
-              </Style.KanbanHeader>
+        {viewMode === 'kanban' ? (
+          <Style.Kanban>
+            {kanbanTickets.map((kanbanTicket, i: number) => (
+              <Style.KanbanCard key={kanbanTicket.title}>
+                <Style.KanbanHeader>
+                  <h5>{kanbanTicket.title}</h5>
+                  <span>{kanbanTicket.tickets.length}</span>
+                </Style.KanbanHeader>
 
-              {loading && (
-                <>
-                  {(i === 1 || i === 2 || i === 3) && (
-                    <Style.KanbanTicketWrapper>
-                      <Skeleton />
+                {loading && (
+                  <>
+                    {(i === 1 || i === 2 || i === 3) && (
+                      <Style.KanbanTicketWrapper>
+                        <Skeleton />
+                      </Style.KanbanTicketWrapper>
+                    )}
+
+                    {(i === 0 || i === 1 || i === 2 || i === 3) && (
+                      <Style.KanbanTicketWrapper>
+                        <Skeleton />
+                      </Style.KanbanTicketWrapper>
+                    )}
+
+                    {(i === 0 || i === 2 || i === 3) && (
+                      <Style.KanbanTicketWrapper>
+                        <Skeleton />
+                      </Style.KanbanTicketWrapper>
+                    )}
+
+                    {i === 3 && (
+                      <Style.KanbanTicketWrapper>
+                        <Skeleton />
+                      </Style.KanbanTicketWrapper>
+                    )}
+                  </>
+                )}
+
+                {!loading &&
+                  kanbanTicket.tickets.length > 0 &&
+                  kanbanTicket.tickets.map((ticket) => (
+                    <Style.KanbanTicketWrapper
+                      key={ticket.id}
+                      onClick={() => {
+                        if (!ticket.seen) {
+                          handleUpdateOneTicket({ id: ticket.id, seen: true }).then(() =>
+                            handleSeenLocalKanbanTicket(ticket.id),
+                          );
+                        }
+
+                        handleSelectedTicketIdChange(ticket.id);
+                        handleTicketDetailsModal(true);
+                      }}
+                    >
+                      <Style.KanbanTicketInfo statusBgColor={ticket?.status?.backgroundColor}>
+                        <Style.KanbanTicketHeader>
+                          <Style.KanbanTicketHeaderInfo>
+                            <Style.KanbanTicketNumber>
+                              #{ticket.ticketNumber}
+                            </Style.KanbanTicketNumber>
+                            <Style.KanbanTicketBuildingName>
+                              {ticket.building?.name}
+                            </Style.KanbanTicketBuildingName>
+                          </Style.KanbanTicketHeaderInfo>
+
+                          {!ticket?.seen && <Style.KanbanTicketNewTag />}
+                        </Style.KanbanTicketHeader>
+
+                        <Style.KanbanTicketGrid>
+                          <Style.KanbanTicketGridBox>
+                            <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
+                            <Style.KanbanTicketDescription>
+                              {ticket.residentName}
+                            </Style.KanbanTicketDescription>
+                          </Style.KanbanTicketGridBox>
+
+                          <Style.KanbanTicketGridBox>
+                            <Style.KanbanTicketTitle>Tipo de assistência</Style.KanbanTicketTitle>
+                            <Style.KanbanTicketListTags>
+                              {ticket.types?.map((type) => (
+                                <ListTag
+                                  key={type.type.id}
+                                  label={type.type.label}
+                                  color={type.type.color}
+                                  backgroundColor={type.type.backgroundColor}
+                                  padding="2px 0.5rem"
+                                />
+                              ))}
+                            </Style.KanbanTicketListTags>
+                          </Style.KanbanTicketGridBox>
+
+                          <Style.KanbanTicketGridBox>
+                            <Style.KanbanTicketTitle>Local da ocorrência</Style.KanbanTicketTitle>
+                            <Style.KanbanTicketDescription>
+                              {ticket.place?.label}
+                            </Style.KanbanTicketDescription>
+                          </Style.KanbanTicketGridBox>
+
+                          <Style.KanbanTicketGridBox>
+                            <Style.KanbanTicketTitle>Data de abertura</Style.KanbanTicketTitle>
+                            <Style.KanbanTicketDescription>
+                              {ticket.createdAt &&
+                                formatDateString(ticket.createdAt, 'dd/MM/yyyy - HH:mm')}
+                            </Style.KanbanTicketDescription>
+                          </Style.KanbanTicketGridBox>
+                        </Style.KanbanTicketGrid>
+                      </Style.KanbanTicketInfo>
                     </Style.KanbanTicketWrapper>
-                  )}
+                  ))}
 
-                  {(i === 0 || i === 1 || i === 2 || i === 3) && (
-                    <Style.KanbanTicketWrapper>
-                      <Skeleton />
-                    </Style.KanbanTicketWrapper>
-                  )}
+                {!loading && kanbanTicket.tickets.length === 0 && (
+                  <Style.NoTicketsMessage>Nenhum chamado encontrado.</Style.NoTicketsMessage>
+                )}
+              </Style.KanbanCard>
+            ))}
+          </Style.Kanban>
+        ) : (
+          <Style.ListView>
+            {kanbanTickets.map((kanbanTicket) => {
+              const isExpanded = expandedColumns.includes(kanbanTicket.title);
+              return (
+                <div key={kanbanTicket.title}>
+                  <Style.KanbanHeader
+                    onClick={() => toggleColumn(kanbanTicket.title)}
+                    status={kanbanTicket.title}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Style.Chevron $expanded={isExpanded} />
+                      <h5>{kanbanTicket.title}</h5>
+                    </div>
+                    <span>{kanbanTicket.tickets.length}</span>
+                  </Style.KanbanHeader>
 
-                  {(i === 0 || i === 2 || i === 3) && (
-                    <Style.KanbanTicketWrapper>
-                      <Skeleton />
-                    </Style.KanbanTicketWrapper>
-                  )}
+                  {isExpanded &&
+                    (() => {
+                      if (loading) {
+                        return ['skeleton-1', 'skeleton-2'].map((key) => (
+                          <Style.KanbanTicketWrapper key={key}>
+                            <Style.KanbanTicketInfo statusBgColor="#eee">
+                              <Style.KanbanTicketGrid>
+                                <Style.KanbanTicketGridBox>
+                                  <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
+                                  <Skeleton width="100%" height="16px" />
+                                </Style.KanbanTicketGridBox>
 
-                  {i === 3 && (
-                    <Style.KanbanTicketWrapper>
-                      <Skeleton />
-                    </Style.KanbanTicketWrapper>
-                  )}
-                </>
-              )}
+                                <Style.KanbanTicketGridBox>
+                                  <Style.KanbanTicketTitle>
+                                    Tipo de assistência
+                                  </Style.KanbanTicketTitle>
+                                  <Skeleton width="60%" height="16px" />
+                                </Style.KanbanTicketGridBox>
 
-              {!loading &&
-                kanbanTicket.tickets.length > 0 &&
-                kanbanTicket.tickets.map((ticket) => (
-                  <Style.KanbanTicketWrapper
-                    key={ticket.id}
-                    onClick={() => {
-                      if (!ticket.seen) {
-                        handleUpdateOneTicket({
-                          id: ticket.id,
-                          seen: true,
-                        }).then(() => handleSeenLocalKanbanTicket(ticket.id));
+                                <Style.KanbanTicketGridBox>
+                                  <Style.KanbanTicketTitle>
+                                    Local da ocorrência
+                                  </Style.KanbanTicketTitle>
+                                  <Skeleton width="80%" height="16px" />
+                                </Style.KanbanTicketGridBox>
+
+                                <Style.KanbanTicketGridBox>
+                                  <Style.KanbanTicketTitle>
+                                    Data de abertura
+                                  </Style.KanbanTicketTitle>
+                                  <Skeleton width="70%" height="16px" />
+                                </Style.KanbanTicketGridBox>
+                              </Style.KanbanTicketGrid>
+                            </Style.KanbanTicketInfo>
+                          </Style.KanbanTicketWrapper>
+                        ));
                       }
 
-                      handleSelectedTicketIdChange(ticket.id);
-                      handleTicketDetailsModal(true);
-                    }}
-                  >
-                    <Style.KanbanTicketInfo statusBgColor={ticket?.status?.backgroundColor}>
-                      <Style.KanbanTicketHeader>
-                        <Style.KanbanTicketHeaderInfo>
-                          <Style.KanbanTicketNumber>
-                            #{ticket.ticketNumber}
-                          </Style.KanbanTicketNumber>
+                      if (kanbanTicket.tickets.length === 0) {
+                        return (
+                          <Style.KanbanTicketWrapper>
+                            <Style.NoTicketsMessage>
+                              Nenhum chamado encontrado.
+                            </Style.NoTicketsMessage>
+                          </Style.KanbanTicketWrapper>
+                        );
+                      }
 
-                          <Style.KanbanTicketBuildingName>
-                            {ticket.building?.name}
-                          </Style.KanbanTicketBuildingName>
-                        </Style.KanbanTicketHeaderInfo>
+                      return kanbanTicket.tickets.map((ticket) => (
+                        <Style.KanbanTicketWrapper
+                          key={ticket.id}
+                          onClick={() => {
+                            if (!ticket.seen) {
+                              handleUpdateOneTicket({ id: ticket.id, seen: true }).then(() =>
+                                handleSeenLocalKanbanTicket(ticket.id),
+                              );
+                            }
 
-                        {!ticket?.seen && <Style.KanbanTicketNewTag />}
-                      </Style.KanbanTicketHeader>
+                            handleSelectedTicketIdChange(ticket.id);
+                            handleTicketDetailsModal(true);
+                          }}
+                        >
+                          <Style.KanbanTicketInfo statusBgColor={ticket?.status?.backgroundColor}>
+                            <Style.ContainerList>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketNumber>
+                                  <Style.KanbanTicketTitle>Número</Style.KanbanTicketTitle>#
+                                  {ticket.ticketNumber}
+                                </Style.KanbanTicketNumber>
+                              </Style.KanbanTicketGridBoxList>
 
-                      <Style.KanbanTicketGrid>
-                        <Style.KanbanTicketGridBox>
-                          <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketBuildingName>
+                                  <Style.KanbanTicketTitle>Prédio</Style.KanbanTicketTitle>
+                                  {ticket.building?.name}
+                                </Style.KanbanTicketBuildingName>
+                              </Style.KanbanTicketGridBoxList>
 
-                          <Style.KanbanTicketDescription>
-                            {ticket.residentName}
-                          </Style.KanbanTicketDescription>
-                        </Style.KanbanTicketGridBox>
+                              {!ticket?.seen && <Style.KanbanTicketNewTag />}
 
-                        <Style.KanbanTicketGridBox>
-                          <Style.KanbanTicketTitle>Tipo de assistência</Style.KanbanTicketTitle>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
+                                <Style.KanbanTicketDescription>
+                                  {ticket.residentName}
+                                </Style.KanbanTicketDescription>
+                              </Style.KanbanTicketGridBoxList>
 
-                          <Style.KanbanTicketListTags>
-                            {ticket.types?.map((type) => (
-                              <ListTag
-                                key={type.type.id}
-                                label={type.type.label}
-                                color={type.type.color}
-                                backgroundColor={type.type.backgroundColor}
-                                padding="2px 0.5rem"
-                              />
-                            ))}
-                          </Style.KanbanTicketListTags>
-                        </Style.KanbanTicketGridBox>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketTitle>
+                                  Tipo de assistência
+                                </Style.KanbanTicketTitle>
+                                <Style.KanbanTicketListTags>
+                                  {ticket.types?.map((type) => (
+                                    <ListTag
+                                      key={type.type.id}
+                                      label={type.type.label}
+                                      color={type.type.color}
+                                      backgroundColor={type.type.backgroundColor}
+                                      padding="2px 0.5rem"
+                                    />
+                                  ))}
+                                </Style.KanbanTicketListTags>
+                              </Style.KanbanTicketGridBoxList>
 
-                        <Style.KanbanTicketGridBox>
-                          <Style.KanbanTicketTitle>Local da ocorrência</Style.KanbanTicketTitle>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketTitle>
+                                  Local da ocorrência
+                                </Style.KanbanTicketTitle>
+                                <Style.KanbanTicketDescription>
+                                  {ticket.place?.label}
+                                </Style.KanbanTicketDescription>
+                              </Style.KanbanTicketGridBoxList>
 
-                          <Style.KanbanTicketDescription>
-                            {ticket.place?.label}
-                          </Style.KanbanTicketDescription>
-                        </Style.KanbanTicketGridBox>
-
-                        <Style.KanbanTicketGridBox>
-                          <Style.KanbanTicketTitle>Data de abertura</Style.KanbanTicketTitle>
-
-                          <Style.KanbanTicketDescription>
-                            {ticket.createdAt &&
-                              formatDateString(ticket.createdAt, 'dd/MM/yyyy - HH:mm')}
-                          </Style.KanbanTicketDescription>
-                        </Style.KanbanTicketGridBox>
-                      </Style.KanbanTicketGrid>
-                    </Style.KanbanTicketInfo>
-                  </Style.KanbanTicketWrapper>
-                ))}
-            </Style.KanbanCard>
-          ))}
-        </Style.Kanban>
+                              <Style.KanbanTicketGridBoxList>
+                                <Style.KanbanTicketTitle>Data de abertura</Style.KanbanTicketTitle>
+                                <Style.KanbanTicketDescription>
+                                  {ticket.createdAt &&
+                                    formatDateString(ticket.createdAt, 'dd/MM/yyyy - HH:mm')}
+                                </Style.KanbanTicketDescription>
+                              </Style.KanbanTicketGridBoxList>
+                            </Style.ContainerList>
+                          </Style.KanbanTicketInfo>
+                        </Style.KanbanTicketWrapper>
+                      ));
+                    })()}
+                </div>
+              );
+            })}
+          </Style.ListView>
+        )}
       </Style.Container>
     </>
   );
