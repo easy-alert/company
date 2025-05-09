@@ -8,7 +8,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IResponse } from '@customTypes/IResponse';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
-interface IResponseGetTicketById extends IResponse {
+interface IResponseGetTicketReports extends IResponse {
   data: {
     ticketPdfs: IReportPdf[];
   };
@@ -18,7 +18,7 @@ export const getTicketReports = async () => {
   const uri = `/tickets/report/pdf`;
 
   try {
-    const response: IResponseGetTicketById = await Api.get(uri);
+    const response: IResponseGetTicketReports = await Api.get(uri);
 
     return response.data;
   } catch (error: any) {
