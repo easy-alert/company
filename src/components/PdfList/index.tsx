@@ -18,8 +18,7 @@ import IconEdit from '@assets/icons/IconEdit';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
 // SERVICES
-import { toast } from 'react-toastify';
-import { requestUpdateReportName } from './function';
+import { putReportPdf } from '@services/apis/putReportPdf';
 
 // STYLES
 import * as Style from './styles';
@@ -28,6 +27,7 @@ interface IPdfList {
   pdfList: IReportPdf[];
   loading: boolean;
   handleRefreshPdf: () => void;
+  reportType: 'ticket' | 'maintenance';
 }
 
 interface IPartialPdf {
@@ -36,7 +36,7 @@ interface IPartialPdf {
   url: string;
 }
 
-export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
+export const PdfList = ({ pdfList, loading, handleRefreshPdf, reportType }: IPdfList) => {
   const [editingPdf, setEditingPdf] = useState<IPartialPdf | null>(null);
   const [editedName, setEditedName] = useState('');
   const [pdfListState, setPdfListState] = useState<IReportPdf[]>(pdfList);
@@ -51,7 +51,6 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
     try {
       const isMobile = /Android|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
       const message = `Confira o relatório referente às datas: ${name}\n${url}`;
-
       const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
     } catch (err) {
@@ -72,24 +71,13 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
       setPdfListState(updatedList);
 
       try {
-        await requestUpdateReportName({
+        await putReportPdf({
           reportId: editingPdf.id,
-          reportType: 'ticket',
+          reportType,
           reportName: editedName,
-          onSuccess: (updatedReport) => {
-            const updatedListWithApiResponse = pdfListState.map((pdf) =>
-              pdf.id === updatedReport.id ? { ...pdf, name: updatedReport.name } : pdf,
-            );
-            setPdfListState(updatedListWithApiResponse);
-            toast.success('Nome do relatório atualizado com sucesso!');
-            handleRefreshPdf();
-          },
         });
-
         setEditingPdf(null);
       } catch (error) {
-        toast.error('Erro ao atualizar o nome do relatório.');
-
         setPdfListState(pdfList);
       }
     }
@@ -99,7 +87,7 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf }: IPdfList) => {
     if (!editingPdf) {
       setPdfListState(pdfList);
     }
-  }, [pdfList, editingPdf]);
+  }, [pdfList]);
 
   return loading ? (
     <DotSpinLoading />
