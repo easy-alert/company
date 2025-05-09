@@ -1,151 +1,139 @@
-import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
-
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.size.xsm};
-
-  > :last-child {
-    margin-top: ${theme.size.xsm};
-  }
-`;
+import styled from 'styled-components';
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
-export const Row = styled.div<{ disabled?: boolean }>`
+export const ChecklistContainer = styled.div`
+  padding: ${({ theme }) => theme.size.sm};
+  background-color: ${({ theme }) => theme.color.gray0};
+  border-radius: ${({ theme }) => theme.size.xsm};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%; /* Ensure the content does not exceed the modal width */
+  word-wrap: break-word; /* Break long words */
+`;
+
+export const ChecklistTitle = styled.h3`
+  font-size: ${({ theme }) => theme.size.sm};
+  font-weight: 500;
+
+  margin-bottom: ${({ theme }) => theme.size.sm};
+`;
+
+export const ProgressBarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xxsm};
+  gap: ${({ theme }) => theme.size.xsm};
 
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      cursor: default;
-      pointer-events: none;
-
-      :hover {
-        opacity: 1;
-      }
-    `}
+  margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
-export const DragAndDropZoneFile = styled.div`
-  width: 100%;
-  border: 1px dashed ${theme.color.gray4};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm} ${theme.size.md};
-
-  cursor: pointer;
-  transition: 0.25s;
-  :hover {
-    opacity: 0.7;
-  }
-`;
-export const DragAndDropFileContent = styled.div`
+export const ProgressBar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: ${theme.size.sm};
+  background-color: #f0f0f0;
+  border-radius: ${({ theme }) => theme.size.sm};
+  height: ${({ theme }) => theme.size.sm};
+`;
 
-  > p {
-    color: ${theme.color.gray4};
+export const Progress = styled.div`
+  background-color: ${({ theme }) => theme.color.primary};
+  border-radius: ${({ theme }) => theme.size.xsm};
+  height: 100%;
+`;
+
+export const ProgressPercentageText = styled.p`
+  margin-left: ${({ theme }) => theme.size.xsm};
+  margin-right: ${({ theme }) => theme.size.xsm};
+  font-size: 0.75rem;
+  font-weight: 500;
+`;
+
+export const ProgressText = styled.p`
+  font-size: 0.75rem;
+  color: ${({ theme }) => theme.color.gray4};
+  font-weight: 500;
+`;
+
+export const ChecklistItemContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.sm};
+  margin-left: ${({ theme }) => theme.size.xsm};
+`;
+
+export const ChecklistItem = styled.div`
+  display: flex;
+  align-items: center;
+
+  gap: ${({ theme }) => theme.size.sm};
+`;
+
+export const ChecklistObservationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  margin-top: ${({ theme }) => theme.size.sm};
+`;
+
+export const ChecklistDescriptionTitle = styled.h3`
+  font-size: ${({ theme }) => theme.size.sm};
+  font-weight: 500;
+`;
+
+export const ChecklistDescriptionTextArea = styled.textarea`
+  width: 100%;
+  padding: ${({ theme }) => theme.size.xsm};
+  border: 1px solid ${({ theme }) => theme.color.gray2};
+  border-radius: ${({ theme }) => theme.size.xsm};
+  resize: none;
+`;
+
+export const InputText = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.xsm};
+`;
+
+export const ContainerBtn = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: ${({ theme }) => theme.size.sm};
+
+  div {
+    display: flex;
+    gap: ${({ theme }) => theme.size.xxxxlg};
+    align-items: center;
   }
+`;
+
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const FileAndImageRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  gap: ${theme.size.xsm};
-
-  > .p2 {
-    opacity: 0.7;
-  }
-`;
-
-export const Tag = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 4px 12px;
-  background-color: ${theme.color.primaryL};
-  width: fit-content;
-  height: fit-content;
-  border-radius: ${theme.size.xxsm};
-  gap: ${theme.size.xsm};
-
-  > a {
-    display: flex;
-    align-items: center;
-    gap: ${theme.size.xxsm};
-    color: ${theme.color.black};
-
-    > p {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: 400;
-      max-width: 185px;
-    }
-
-    transition: 0.25s;
-    :hover {
-      opacity: 0.7;
-    }
-  }
-`;
-
-export const FileLoadingTag = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  background-color: ${theme.color.primaryL};
-  border-radius: ${theme.size.xxsm};
-  width: 130px;
+  gap: ${({ theme }) => theme.size.sm};
 `;
 
 export const ImageLoadingTag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
-  background-color: ${theme.color.primaryL};
-  border-radius: ${theme.size.xxsm};
-  height: 136px;
-  width: 132px;
+  width: 96px;
+  height: 96px;
+  background-color: ${({ theme }) => theme.color.gray0};
+  border-radius: ${({ theme }) => theme.size.xsm};
 `;
 
-export const DragAndDropZoneImage = styled.div`
+export const DeleteCheckboxContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dashed ${theme.color.gray4};
-  border-radius: ${theme.size.xxsm};
-  padding: ${theme.size.sm} ${theme.size.md};
-  height: 136px;
-  width: 132px;
-  cursor: pointer;
-  transition: 0.25s;
-  :hover {
-    opacity: 0.7;
-  }
-`;
-
-export const LoadingContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-`;
-
-export const ButtonContainer = styled.div`
-  display: flex;
-  gap: ${theme.size.sm};
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.xsm};
+  margin-top: ${({ theme }) => theme.size.sm};
 `;

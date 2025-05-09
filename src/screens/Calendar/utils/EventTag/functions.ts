@@ -26,6 +26,10 @@ export const getStatusName = (status: string) => {
       statusName = 'Preventiva';
       break;
 
+    case 'inProgress':
+      statusName = 'Em andamento';
+      break;
+
     default:
       break;
   }

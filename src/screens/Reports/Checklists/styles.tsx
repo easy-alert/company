@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme as defaultTheme } from '@styles/theme';
 
 export const Counts = styled.div`
@@ -10,14 +10,15 @@ export const Counts = styled.div`
 
 export const CountsInfo = styled.div`
   .pending {
-    color: ${({ theme }) => theme.color.warning};
+    color: #d5d5d5;
   }
-  .expired {
-    color: ${({ theme }) => theme.color.actionDanger};
+
+  .inProgress {
+    color: #ffb200;
   }
 
   .completed {
-    color: ${({ theme }) => theme.color.success};
+    color: #34b53a;
   }
 
   > p {
@@ -84,28 +85,44 @@ export const NoMaintenanceCard = styled.div`
   color: ${({ theme }) => theme.color.gray4};
 `;
 
-export const TagWrapper = styled.div`
+export const FilterWrapperFooter = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.size.xsm};
-  grid-area: 2 / 1 / 2 / 4;
+  flex-direction: column;
 
-  @media (max-width: 900px) {
-    grid-area: 6 / 1 / 6 / 2;
-  }
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
-export const Tag = styled.div`
-  width: fit-content;
-  height: fit-content;
+export const FilterTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 
+  gap: ${({ theme }) => theme.size.xsm};
+`;
+
+export const ViewButtons = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.sm};
+`;
 
-  padding: 4px 12px;
+export const CustomButton = styled.button<{ active: boolean }>`
+  padding: 0;
+  background-color: unset;
 
-  color: ${({ theme }) => theme.color.white};
-  background-color: ${({ theme }) => theme.color.primaryM};
-  border-radius: ${({ theme }) => theme.size.xxsm};
+  font-weight: 500;
+  border-radius: 0;
+  padding-bottom: ${({ theme }) => theme.size.xsm};
+  font-size: 14px;
+  line-height: 16px;
+
+  ${({ active, theme }) =>
+    active
+      ? css`
+          color: ${theme.color.primary};
+          border-bottom: 1px solid ${theme.color.primary};
+        `
+      : css`
+          color: ${theme.color.gray4};
+        `}
 `;
