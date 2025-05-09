@@ -28,7 +28,7 @@ import { ChecklistRowComponent } from './ChecklistRowComponent';
 
 // STYLES
 import * as Style from './styles';
-import { ModalChecklistDetails } from './ModalChecklistDetails2';
+import { ModalChecklistDetails } from './ModalChecklistDetails';
 
 export interface IChecklist {
   id: string;
@@ -68,7 +68,7 @@ export const Checklists = () => {
   const [checklistId, setChecklistId] = useState<string>('');
 
   const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
-  const [modalChecklistDetails, setModalChecklist] = useState(false);
+  const [modalChecklistDetails, setModalChecklistDetails] = useState(false);
 
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -83,7 +83,7 @@ export const Checklists = () => {
         setModalChecklistCreate(modalState);
         break;
       case 'modalChecklistDetails':
-        setModalChecklist(modalState);
+        setModalChecklistDetails(modalState);
         break;
 
       default:
@@ -98,7 +98,7 @@ export const Checklists = () => {
   const findManyChecklists = async () => {
     setLoading(true);
 
-    await Api.get(`/checklists/${buildingNanoId}/${date}`)
+    await Api.get(`/checklists/list/${buildingNanoId}/${date}`)
       .then((res) => {
         setChecklists(res.data.checklists);
       })
@@ -107,7 +107,7 @@ export const Checklists = () => {
   };
 
   const findManyChecklistDates = async () => {
-    await Api.get(`/checklists/${buildingNanoId}/calendar/dates`)
+    await Api.get(`/checklists/calendar/${buildingNanoId}/dates`)
       .then((res) => {
         setCalendarDates(res.data.calendarDates);
       })
@@ -147,7 +147,6 @@ export const Checklists = () => {
 
       {modalChecklistDetails && checklistId && (
         <ModalChecklistDetails
-          buildingId={buildingNanoId}
           checklistId={checklistId}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
