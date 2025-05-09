@@ -25,6 +25,7 @@ export const TagContainer = styled.div<IEventTag>`
         return theme.color.purple;
       case 'common':
         return theme.color.common;
+
       default:
         return backgroundColor || theme.color.white;
     }
