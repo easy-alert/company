@@ -3,7 +3,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 interface IRequestUpdateReportName {
   reportId: string;
-  reportType: 'ticket' | 'maintenance';
+  reportType: 'ticket' | 'maintenance' | 'checklist';
   reportName: string;
 }
 

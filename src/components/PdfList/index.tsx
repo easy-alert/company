@@ -27,7 +27,7 @@ interface IPdfList {
   pdfList: IReportPdf[];
   loading: boolean;
   handleRefreshPdf: () => void;
-  reportType: 'ticket' | 'maintenance';
+  reportType: 'ticket' | 'maintenance' | 'checklist';
 }
 
 interface IPartialPdf {
@@ -146,6 +146,7 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf, reportType }: IPdf
                           onClick={() => handleSharePdf(url, name)}
                         />
                         <IconButton
+                          disabled={status !== 'finished'}
                           label="Editar"
                           icon={<IconEdit strokeColor="primary" />}
                           onClick={() => openEditModal({ id, name, url })}
