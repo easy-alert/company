@@ -763,6 +763,7 @@ export const TicketReports = () => {
 
         {reportView === 'pdfs' && !loading && (
           <PdfList
+            reportType="ticket"
             pdfList={ticketReportPdfs}
             loading={loading}
             handleRefreshPdf={handleGetTicketsPdf}

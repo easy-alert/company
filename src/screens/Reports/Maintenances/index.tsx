@@ -689,6 +689,7 @@ export const MaintenanceReports = () => {
 
         {reportView === 'pdfs' && (
           <PdfList
+            reportType="maintenance"
             pdfList={maintenanceReportPdfs}
             loading={loading}
             handleRefreshPdf={requestReportPdfs}

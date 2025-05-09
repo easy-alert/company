@@ -1,7 +1,7 @@
 import { handleToastify } from '@utils/toastifyResponses';
-import { Api } from '../../../services/api';
+import { Api } from '@services/api';
 
-import { catchHandler } from '../../../utils/functions';
+import { catchHandler } from '@utils/functions';
 
 import type { IRequestSyndicKanban, IRequestMaintenanceDetails } from './types';
 

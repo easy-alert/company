@@ -1,7 +1,7 @@
 /* eslint-disable react/button-has-type */
 // COMPONENTS
 import { useHasPermission } from '@hooks/useHasPermission';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
 import { Background, ContainerButton, SpinnerContent } from './styles';
 
 // TYPES
