@@ -15,6 +15,14 @@ export interface IChecklists {
   status: 'pending' | 'completed';
   frequency: number | null;
   observation: string | null;
+  user?: {
+    name: string;
+  };
+  checklistItem: {
+    id: string;
+    name: string;
+    status: 'pending' | 'completed';
+  }[];
   images: {
     url: string;
     name: string;
@@ -25,7 +33,20 @@ export interface IChecklists {
   }[];
 }
 
-export interface IChecklistsForPDF {
-  month: string;
-  data: IChecklists[];
+export interface IFilterData {
+  buildings: string[];
+  status: string[];
+  startDate: string;
+  endDate: string;
+}
+
+export interface IChecklistFilterNames {
+  buildingsNames: string;
+  statusNames: string;
+}
+
+export interface ICounts {
+  pending: number;
+  inProgress: number;
+  completed: number;
 }

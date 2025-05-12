@@ -823,8 +823,9 @@ function TicketsPage() {
           <Style.ListView>
             {kanbanTickets.map((kanbanTicket) => {
               const isExpanded = expandedColumns.includes(kanbanTicket.title);
+
               return (
-                <div key={kanbanTicket.title}>
+                <div key={kanbanTicket.title} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
                   <Style.KanbanHeader
                     status={kanbanTicket.title}
                     viewMode={viewMode}

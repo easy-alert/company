@@ -172,7 +172,6 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
 
 export const KanbanTicketWrapper = styled.div`
   padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
-  margin: 1rem 0;
 `;
 
 export const KanbanTicketInfo = styled.div<{

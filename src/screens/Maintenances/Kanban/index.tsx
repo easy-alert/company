@@ -245,7 +245,9 @@ export const MaintenancesKanban = () => {
             ...modalAdditionalInformations,
             id: maintenanceHistoryId || modalAdditionalInformations.id,
           }}
+          userId={account?.User.id ?? ''}
           handleModals={handleModals}
+          handleRefresh={handleRefresh}
           handleQuery={handleQuery}
         />
       )}

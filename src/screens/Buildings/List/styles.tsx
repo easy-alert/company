@@ -60,24 +60,20 @@ export const GridContainer = styled.div`
   }
 `;
 
-export const BuildingCard = styled.div<{ disabled: boolean }>`
+export const BuildingCard = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   border-radius: ${({ theme }) => theme.size.xxsm};
   padding: ${({ theme }) => theme.size.sm};
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
-  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   transition: all 0.2s ease;
 
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
+  cursor: pointer;
+  pointer-events: all;
 
-  ${({ disabled, theme }) =>
-    !disabled &&
-    `
-    :hover {
-      background-color: ${`${theme.color.white}B3`};
-    }
-  `}
+  &:hover {
+    transform: scale(1.01);
+  }
 `;
 
 export const BuildingCardHeader = styled.div`

@@ -14,8 +14,11 @@ import ReactPDF, {
 } from '@react-pdf/renderer';
 import { QRCodeCanvas } from 'qrcode.react';
 
-// HOOKS
+// CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// HOOKS
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
@@ -106,11 +109,7 @@ const MyDocument = ({
   syndicName,
   isSquare,
 }: MyDocumentProps) => (
-  <Document
-    onRender={() => {
-      setLoading(false);
-    }}
-  >
+  <Document onRender={() => setLoading(false)}>
     <Page
       size={isSquare ? [595.28, 595.28] : 'A4'}
       style={isSquare ? stylesSquare.page : styles.page}
@@ -152,19 +151,28 @@ const MyDocument = ({
 
 export const ModalPrintQRCode = ({
   setModal,
-  buildingNanoId,
+  buildingId,
   buildingName,
-  notificationsConfigurations,
+  buildingImage,
 }: IModalPrintQRCode) => {
   const { account } = useAuthContext();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [pdfSize, setPdfSize] = useState<'A4' | 'Quadrado'>('A4');
-  const [syndicNanoId, setSyndicNanoId] = useState<string>('');
-  const [QRCodePNG, setQRCodePNG] = useState<string>('');
 
-  const syndicName = notificationsConfigurations.find(
-    ({ nanoId }) => syndicNanoId === nanoId,
-  )?.name;
+  const { usersForSelect } = useUsersForSelect({
+    buildingId,
+    checkPerms: false,
+  });
+
+  const [selectedUser, setSelectedUser] = useState<{
+    id: string;
+    name: string;
+  }>({
+    id: '',
+    name: '',
+  });
+
+  const [pdfSize, setPdfSize] = useState<'A4' | 'Quadrado'>('A4');
+  const [QRCodePNG, setQRCodePNG] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const updateLoadingState = useCallback((value: boolean) => {
     setLoading(value);
@@ -173,24 +181,24 @@ export const ModalPrintQRCode = ({
   useEffect(() => {
     const canvas: any = document.getElementById('QRCode');
     const QRCodeURL = canvas.toDataURL('image/png');
+
     setQRCodePNG(QRCodeURL);
-  }, [syndicNanoId]);
+  }, [selectedUser]);
 
   return (
     <Modal bodyWidth="60vw" title="QR Code" setModal={setModal}>
       <>
         {loading && <Style.SmallLoading />}
+
         <Style.HideQRCode>
           <QRCodeCanvas
             id="QRCode"
             value={
-              syndicNanoId
+              selectedUser.id
                 ? `${
-                    import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-                  }/syndicarea/${buildingNanoId}?syndicNanoId=${syndicNanoId}`
-                : `${
-                    import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
-                  }/home/${buildingNanoId}`
+                    import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
+                  }/maintenances?buildingId=${buildingId}`
+                : `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${buildingId}`
             }
             bgColor="#F2EAEA"
             size={300}
@@ -219,27 +227,32 @@ export const ModalPrintQRCode = ({
               disabled={loading}
               label="Tipo"
               selectPlaceholderValue=" "
-              value={syndicNanoId}
+              value={selectedUser.id}
               onChange={(e) => {
                 setLoading(true);
-                setSyndicNanoId(e.target.value);
+                setSelectedUser({
+                  id: e.target.value,
+                  name: e.target.options[e.target.selectedIndex].text,
+                });
               }}
             >
               <option value="">Morador</option>
-              {notificationsConfigurations.map((syndic) => (
-                <option key={syndic.nanoId} value={syndic.nanoId}>
-                  {syndic.name}
+
+              {usersForSelect.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
                 </option>
               ))}
             </Select>
           </Style.Selects>
+
           <div style={{ width: '100%', height: '60vh' }}>
             {!loading && (
               <PDFViewer style={{ width: '100%', height: '60vh' }}>
                 <MyDocument
                   isSquare={pdfSize !== 'A4'}
-                  syndicName={syndicName}
-                  companyImage={account?.Company.image!}
+                  syndicName={selectedUser.name}
+                  companyImage={buildingImage ?? account?.Company.image!}
                   buildingName={buildingName}
                   QRCodePNG={QRCodePNG}
                   setLoading={updateLoadingState}
@@ -251,7 +264,7 @@ export const ModalPrintQRCode = ({
             document={
               <MyDocument
                 isSquare={pdfSize !== 'A4'}
-                syndicName={syndicName}
+                syndicName={selectedUser.name}
                 companyImage={account?.Company.image!}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
