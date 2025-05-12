@@ -132,12 +132,14 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div<{ status?: string }>`
+export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | 'list' }>`
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
+  box-shadow: ${({ viewMode }) =>
+    viewMode === 'list' ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   z-index: 9;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
@@ -168,8 +170,7 @@ export const KanbanHeader = styled.div<{ status?: string }>`
 `;
 
 export const KanbanTicketWrapper = styled.div`
-  padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
-  margin: 1rem 0;
+  padding: ${theme.size.xsm} ${theme.size.sm};
 `;
 
 export const KanbanTicketInfo = styled.div<{
@@ -225,11 +226,9 @@ export const KanbanTicketHeaderInfo = styled.div`
 
 export const KanbanTicketNumber = styled.h1`
   min-width: 30px;
-
   font-size: 18px;
   font-weight: 700;
   line-height: 16px;
-
   color: ${theme.color.primary};
 `;
 
@@ -254,6 +253,24 @@ export const KanbanTicketGrid = styled.div`
   grid-row-gap: 10px;
 `;
 
+export const ContainerList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  width: 100%;
+
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 530px) {
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+  }
+`;
+
 export const KanbanTicketGridBox = styled.div`
   font-size: 40px;
   font-family: sans-serif;
@@ -261,6 +278,14 @@ export const KanbanTicketGridBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+export const KanbanTicketGridBoxList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 
 export const KanbanTicketTitle = styled.h6`
@@ -307,10 +332,6 @@ export const NoDataContainer = styled.footer`
 export const ListView = styled.div`
   display: flex;
   flex-direction: column;
-
-  padding: ${theme.size.sm} 0;
-
-  gap: ${theme.size.sm};
 `;
 
 export const ListItemWrapper = styled.div`
@@ -343,4 +364,15 @@ export const Chevron = styled.span<{ $expanded: boolean }>`
   border-top: 6px solid ${theme.color.primary};
   transition: transform 0.2s ease;
   transform: ${({ $expanded }) => ($expanded ? 'rotate(0)' : 'rotate(-90deg)')};
+`;
+
+export const NoTicketsMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  color: #888;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: 16px;
+  align-items: center;
+  height: 100%;
 `;
