@@ -827,12 +827,7 @@ function TicketsPage() {
               return (
                 <div
                   key={kanbanTicket.title}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.5rem',
-                    marginBottom: '1rem',
-                  }}
+                  style={{ backgroundColor: 'white', marginBottom: '0.75rem' }}
                 >
                   <Style.KanbanHeader
                     status={kanbanTicket.title}
