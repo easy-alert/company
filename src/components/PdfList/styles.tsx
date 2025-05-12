@@ -15,7 +15,6 @@ export const NoMaintenanceCard = styled.div`
   color: ${theme.color.gray4};
 `;
 
-
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
