@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { catchHandler } from '../../../../utils/functions';
-import {
+import { Api } from '@services/api';
+import { catchHandler } from '@utils/functions';
+import type {
   IRequestManageBuildingMaintenances,
   IRequestListCategoriesToManage,
   IRequestBuildingListForSelect,
@@ -20,21 +20,42 @@ export const requestListCategoriesToManage = async ({
 }: IRequestListCategoriesToManage) => {
   if (setTableLoading) setTableLoading(true);
 
-  await Api.post(`/buildings/maintenances/list`, {
-    buildingId,
-    currentBuildingId,
-  })
-    .then((res) => {
-      setBuildingName(res.data.buildingName);
-      setCategories(res.data.CategoriesData);
-      setLoading(false);
-      if (setTableLoading) setTableLoading(false);
-    })
-    .catch((err) => {
-      setLoading(false);
-      if (setTableLoading) setTableLoading(false);
-      catchHandler(err);
+  try {
+    const res = await Api.post(`/buildings/maintenances/list`, {
+      buildingId,
+      currentBuildingId,
     });
+
+    setBuildingName(res.data.buildingName);
+
+    let categories = res.data.CategoriesData;
+
+    const localData = localStorage.getItem(`maint-categories-${buildingId}`);
+
+    if (localData) {
+      const parsedLocal = JSON.parse(localData);
+
+      categories = categories.map((apiCategory: any) => {
+        const localMatch = parsedLocal.find((l: any) => l.id === apiCategory.id);
+        if (localMatch) {
+          return {
+            ...apiCategory,
+            Maintenances: localMatch.Maintenances,
+          };
+        }
+        return apiCategory;
+      });
+    }
+
+    setCategories(categories);
+
+    setLoading(false);
+    if (setTableLoading) setTableLoading(false);
+  } catch (err) {
+    setLoading(false);
+    if (setTableLoading) setTableLoading(false);
+    catchHandler(err);
+  }
 };
 
 export const requestManageBuildingMaintenances = async ({
