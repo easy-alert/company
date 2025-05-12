@@ -2,7 +2,7 @@
 // #region imports
 // REACT
 import { useEffect, useState } from 'react';
-import { CSVLink } from 'react-csv';
+// import { CSVLink } from 'react-csv';
 
 // LIBS
 import { Form, Formik } from 'formik';
@@ -27,8 +27,8 @@ import { PdfList } from '@components/PdfList';
 import { catchHandler, dateFormatter } from '@utils/functions';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
-import IconCsvLogo from '@assets/icons/IconCsvLogo';
+// import { icon } from '@assets/icons';
+// import IconCsvLogo from '@assets/icons/IconCsvLogo';
 import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
@@ -37,22 +37,18 @@ import type { IReportPdf } from '@customTypes/IReportPdf';
 // COMPONENTS
 import { getChecklistReports } from '@services/apis/getChecklistReports';
 import { generateChecklistReportPDF } from '@services/apis/generateChecklistReportPDF';
-import { colors } from 'react-select/dist/declarations/src/theme';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
 
 // UTILS
-import {
-  getSingularStatusNameforPdf,
-  getPluralStatusNameforPdf,
-} from '../Maintenances/ModalPrintReport/functions';
+import { getPluralStatusNameforPdf } from '../Maintenances/ModalPrintReport/functions';
 
 // STYLES
 import * as Style from './styles';
 
 // TYPES
-import type { IChecklistFilterNames, IChecklists, ICounts, IFilter, IFilterData } from './types';
+import type { IChecklistFilterNames, IChecklists, ICounts, IFilterData } from './types';
 
 // #endregion
 
@@ -605,6 +601,7 @@ export const ChecklistReports = () => {
 
         {reportView === 'pdfs' && (
           <PdfList
+            reportType="checklist"
             pdfList={checklistReportsPDF}
             loading={loading}
             handleRefreshPdf={handleGetChecklistPdf}
