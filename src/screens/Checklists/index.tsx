@@ -29,6 +29,7 @@ import { ChecklistRowComponent } from './ChecklistRowComponent';
 // STYLES
 import * as Style from './styles';
 import { ModalChecklistDetails } from './ModalChecklistDetails';
+import { ModalChecklistTemplate } from './ModalChecklistTemplate';
 
 export interface IChecklist {
   id: string;
@@ -49,7 +50,8 @@ export type TModalNames =
   | 'modalMaintenanceDetails'
   | 'modalCreateOccasionalMaintenance'
   | 'modalChecklistCreate'
-  | 'modalChecklistDetails';
+  | 'modalChecklistDetails'
+  | 'modalChecklistTemplate';
 
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
@@ -69,6 +71,7 @@ export const Checklists = () => {
 
   const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
   const [modalChecklistDetails, setModalChecklistDetails] = useState(false);
+  const [modalChecklistTemplate, setModalChecklistTemplate] = useState(false);
 
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -84,6 +87,9 @@ export const Checklists = () => {
         break;
       case 'modalChecklistDetails':
         setModalChecklistDetails(modalState);
+        break;
+      case 'modalChecklistTemplate':
+        setModalChecklistTemplate(modalState);
         break;
 
       default:
@@ -153,6 +159,8 @@ export const Checklists = () => {
         />
       )}
 
+      {modalChecklistTemplate && <ModalChecklistTemplate handleModals={handleModals} />}
+
       <Style.Container>
         <Style.Header>
           <Style.HeaderLeftSide>
@@ -177,6 +185,12 @@ export const Checklists = () => {
               ))}
             </Select>
           </Style.HeaderLeftSide>
+
+          <IconButton
+            label="Modelo de checklist"
+            icon={<IconPlus strokeColor="primary" />}
+            onClick={() => handleModals('modalChecklistTemplate', true)}
+          />
 
           <IconButton
             label="Checklist"
