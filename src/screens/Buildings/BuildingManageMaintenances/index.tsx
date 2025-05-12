@@ -18,13 +18,14 @@ import { DotLoading } from '@components/Loadings/DotLoading';
 
 // UTILS
 import { ITimeInterval } from '@utils/types';
-import { query, requestListIntervals } from '@utils/functions';
 
 // ASSETS
 import { icon } from '@assets/icons/index';
 import IconSearch from '@assets/icons/IconSearch';
 import IconCheck from '@assets/icons/IconCheck';
 import IconPlus from '@assets/icons/IconPlus';
+import { Modal } from '@components/Modal';
+import { Button } from '@components/Buttons/Button';
 
 // COMPONENTS
 import { ModalCreateCategory } from '../../Maintenances/List/utils/ModalCreateCategory';
@@ -34,7 +35,6 @@ import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
-  requestBuildingListForSelect,
   requestCategoriesForSelect,
 } from './utils/functions';
 
@@ -48,6 +48,10 @@ export const BuildingManageMaintenances = () => {
   const { buildingId } = useParams();
   const { account } = useAuthContext();
   const { maintenancePriorities } = useMaintenancePriorities();
+
+  const [showModal, setShowModal] = useState(false);
+  const [localData, setLocalData] = useState([]);
+  const [apiData, setApiData] = useState([]);
 
   const { search } = window.location;
 
@@ -87,20 +91,55 @@ export const BuildingManageMaintenances = () => {
   }, [JSON.stringify(categories)]);
 
   useEffect(() => {
-    query.delete('flow');
-
-    requestListIntervals({ setTimeIntervals });
-
-    requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! }).then(() => {
-      requestListCategoriesToManage({
-        setLoading,
+    const fetchCategories = async () => {
+      await requestListCategoriesToManage({
         setCategories,
         buildingId: buildingId!,
         setBuildingName,
         currentBuildingId: buildingId!,
+        setTableLoading,
+        setLoading,
       });
-    });
-  }, []);
+
+      setApiData((prev) => JSON.parse(JSON.stringify(categories)));
+
+      const localStorageData = localStorage.getItem(`maint-categories-${buildingId}`);
+      if (localStorageData) {
+        const parsedLocalData = JSON.parse(localStorageData);
+
+        if (JSON.stringify(parsedLocalData) !== JSON.stringify(categories)) {
+          setLocalData(parsedLocalData);
+          setShowModal(true);
+        } else {
+          localStorage.removeItem(`maint-categories-${buildingId}`);
+        }
+      }
+    };
+
+    fetchCategories();
+  }, [buildingId]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const localStorageData = localStorage.getItem(`maint-categories-${buildingId}`);
+      if (localStorageData) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [buildingId]);
+
+  useEffect(() => {
+    if (!loading && JSON.stringify(categories) !== JSON.stringify(apiData)) {
+      localStorage.setItem(`maint-categories-${buildingId}`, JSON.stringify(categories));
+    }
+  }, [categories]);
 
   return loading ? (
     <DotSpinLoading />
@@ -300,6 +339,48 @@ export const BuildingManageMaintenances = () => {
           <Image img={icon.paper} size="80px" radius="0" />
           <h3>Nenhuma categoria ou manutenção encontrada.</h3>
         </Style.NoMaintenancesContainer>
+      )}
+
+      {showModal && (
+        <Modal title="Alterações não salvas" setModal={setShowModal}>
+          <Style.ModalContent>
+            <p>Deseja salvar as alterações locais ou descartar e manter os dados do servidor?</p>
+
+            <Style.ButtonContainer>
+              <Button
+                className="useLocal"
+                bgColor="primary"
+                label="Salvar alterações"
+                onClick={() => {
+                  localStorage.setItem(
+                    `maint-categories-${buildingId}`,
+                    JSON.stringify(categories),
+                  );
+                  setShowModal(false);
+                }}
+              />
+
+              <Button
+                className="discard"
+                label="Descartar alterações"
+                onClick={async () => {
+                  await requestListCategoriesToManage({
+                    setCategories,
+                    buildingId: buildingId!,
+                    setBuildingName,
+                    currentBuildingId: buildingId!,
+                    setTableLoading,
+                    setLoading,
+                  });
+
+                  localStorage.removeItem(`maint-categories-${buildingId}`);
+                  setApiData((prev) => JSON.parse(JSON.stringify(categories)));
+                  setShowModal(false);
+                }}
+              />
+            </Style.ButtonContainer>
+          </Style.ModalContent>
+        </Modal>
       )}
     </>
   );

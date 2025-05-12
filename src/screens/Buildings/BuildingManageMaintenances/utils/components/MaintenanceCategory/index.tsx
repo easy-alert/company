@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-console */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
@@ -43,6 +43,32 @@ export const MaintenanceCategory = ({
   const [modalEditCategoryOpen, setModalEditCategoryOpen] = useState<boolean>(false);
 
   const isAllMaintenancesSelected = category.Maintenances.every((e) => e.isSelected === true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const selectedIds = category.Maintenances.filter((m) => m.isSelected).map((m) => m.id);
+
+      localStorage.setItem(`selected-maintenance-${category.id}`, JSON.stringify(selectedIds));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [category]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`selected-maintenance-${category.id}`);
+    if (saved) {
+      const selectedIds: string[] = JSON.parse(saved);
+
+      const updatedCategories = [...categories];
+      const updatedMaintenances = updatedCategories[categoryIndex].Maintenances.map((m) => ({
+        ...m,
+        isSelected: selectedIds.includes(m.id),
+      }));
+
+      updatedCategories[categoryIndex].Maintenances = updatedMaintenances;
+      setCategories(updatedCategories);
+    }
+  }, []);
 
   return (
     <>
