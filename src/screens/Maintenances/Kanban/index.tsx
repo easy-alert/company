@@ -263,6 +263,7 @@ export const MaintenancesKanban = () => {
               disabled={loading}
               onClick={() => setShowFilter((prevState) => !prevState)}
             />
+
             <IconButton
               labelPos="right"
               label={viewMode === 'kanban' ? 'Visualizar em lista' : 'Visualizar em blocos'}
@@ -278,8 +279,8 @@ export const MaintenancesKanban = () => {
                   />
                 )
               }
-              permToCheck="maintenances:createOccasional"
               onClick={() => setViewMode((prev) => (prev === 'kanban' ? 'list' : 'kanban'))}
+              disabled={loading}
             />
           </Style.HeaderWrapper>
 
@@ -628,7 +629,7 @@ export const MaintenancesKanban = () => {
             {[...Array(4)]?.map((_a, i: number) => (
               // eslint-disable-next-line react/no-array-index-key
               <Style.KanbanCard key={i}>
-                <Style.KanbanHeader />
+                <Style.KanbanHeader viewMode={viewMode} />
 
                 {[...Array(4)]?.map((_b, j: number) => (
                   // eslint-disable-next-line react/no-array-index-key
@@ -643,10 +644,10 @@ export const MaintenancesKanban = () => {
 
         {viewMode === 'kanban' ? (
           <Style.Kanban>
-            {kanban?.length > 0 &&
+            {!loading &&
               kanban?.map((card) => (
                 <Style.KanbanCard key={card.status}>
-                  <Style.KanbanHeader>
+                  <Style.KanbanHeader viewMode={viewMode}>
                     <h5>{card.status}</h5>
 
                     {card.status === 'Vencidas' && (
@@ -674,7 +675,8 @@ export const MaintenancesKanban = () => {
                     )}
                   </Style.KanbanHeader>
 
-                  {card?.maintenances?.length > 0 &&
+                  {!loading &&
+                    card?.maintenances?.length > 0 &&
                     card?.maintenances?.map((maintenance) => {
                       const isPending = maintenance.status === 'pending';
                       const isFuture =
@@ -775,22 +777,23 @@ export const MaintenancesKanban = () => {
                       );
                     })}
 
-                  {(card.maintenances.length === 0 ||
-                    (!showFutureMaintenances &&
-                      card.maintenances.every(
-                        (maintenance) =>
-                          maintenance.status === 'pending' &&
-                          !maintenance.inProgress &&
-                          new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
-                      )) ||
-                    (!showOldExpireds &&
-                      card.maintenances.every(
-                        (maintenance) => maintenance.cantReportExpired === true,
-                      ))) && (
-                    <Style.NoDataContainer>
-                      <h4>Nenhuma manutenção encontrada.</h4>
-                    </Style.NoDataContainer>
-                  )}
+                  {!loading &&
+                    (card.maintenances.length === 0 ||
+                      (!showFutureMaintenances &&
+                        card.maintenances.every(
+                          (maintenance) =>
+                            maintenance.status === 'pending' &&
+                            !maintenance.inProgress &&
+                            new Date(maintenance.date) > new Date(new Date().setHours(0, 0, 0, 0)),
+                        )) ||
+                      (!showOldExpireds &&
+                        card.maintenances.every(
+                          (maintenance) => maintenance.cantReportExpired === true,
+                        ))) && (
+                      <Style.NoDataContainer>
+                        <h4>Nenhuma manutenção encontrada.</h4>
+                      </Style.NoDataContainer>
+                    )}
                 </Style.KanbanCard>
               ))}
           </Style.Kanban>
@@ -825,9 +828,10 @@ export const MaintenancesKanban = () => {
               return (
                 <Style.KanbanCardList key={card.status}>
                   <Style.KanbanHeader
-                    onClick={() => toggleColumn(card.status)}
                     status={card.status}
+                    viewMode={viewMode}
                     style={{ cursor: 'pointer' }}
+                    onClick={() => toggleColumn(card.status)}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Style.Chevron $expanded={isExpanded} />
