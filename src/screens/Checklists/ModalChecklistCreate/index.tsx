@@ -255,7 +255,6 @@ export const ModalChecklistCreate = ({
                   handleSelectChecklistTemplate={(template) =>
                     setSelectedChecklistTemplate(template)
                   }
-                  setChecklistTemplates={setChecklistTemplates}
                 />
               )}
 
