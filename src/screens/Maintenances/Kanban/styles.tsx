@@ -93,7 +93,6 @@ export const Kanban = styled.div`
   gap: ${theme.size.sm};
 
   overflow: auto;
-  /* height: 100%; */
 
   scrollbar-width: none;
   scrollbar-color: transparent;
@@ -117,7 +116,8 @@ export const KanbanCard = styled.div`
 
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
-  padding-bottom: ${theme.size.sm};
+
+  padding-bottom: ${theme.size.xsm};
 
   scrollbar-width: none;
   scrollbar-color: transparent;
@@ -133,10 +133,11 @@ export const KanbanCardList = styled.div`
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  gap: ${theme.size.xsm};
 
   border-radius: ${theme.size.xxsm};
-  padding-bottom: ${theme.size.sm};
+  margin-bottom: ${theme.size.sm};
+
+  background-color: ${theme.color.white};
 `;
 
 export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | 'list' }>`
@@ -286,10 +287,7 @@ export const ListView = styled.div`
 `;
 
 export const ListItem = styled.div`
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: ${theme.size.xsm} ${theme.size.sm};
 `;
 
 export const Chevron = styled.span<{ $expanded: boolean }>`
