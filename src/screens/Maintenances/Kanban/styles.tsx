@@ -86,13 +86,14 @@ export const IconsContainer = styled.div`
     flex-direction: column;
   }
 `;
+
 export const Kanban = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: ${theme.size.sm};
 
   overflow: auto;
-  height: 100%;
+  /* height: 100%; */
 
   scrollbar-width: none;
   scrollbar-color: transparent;
@@ -138,16 +139,18 @@ export const KanbanCardList = styled.div`
   padding-bottom: ${theme.size.sm};
 `;
 
-export const KanbanHeader = styled.div<{ status?: string }>`
+export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | 'list' }>`
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
   z-index: 4;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
+
+  box-shadow: ${({ viewMode }) =>
+    viewMode === 'list' ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
 
   display: flex;
   align-items: center;
@@ -276,7 +279,6 @@ export const NoDataContainer = styled.div`
   align-items: center;
   height: 100%;
 `;
-
 
 export const ListView = styled.div`
   display: flex;
