@@ -114,10 +114,12 @@ export const AppContent = styled.div`
   margin: 0 auto;
   overflow: auto;
   max-width: 1920px;
-  padding: 0 ${({ theme }) => theme.size.md} ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.md};
+  padding: 0 ${({ theme }) => theme.size.md} ${({ theme }) => theme.size.sm}
+    ${({ theme }) => theme.size.md};
 
   @media (max-width: 900px) {
-    padding: 0 ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm};
+    padding: 0 ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.sm}
+      ${({ theme }) => theme.size.sm};
   }
 `;
 export const ReportIcons = styled.div`
