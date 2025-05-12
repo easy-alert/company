@@ -132,13 +132,14 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div<{ status?: string }>`
+export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | 'list' }>`
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: ${({ viewMode }) =>
+    viewMode === 'list' ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   margin-bottom: ${theme.size.csm};
   z-index: 9;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
