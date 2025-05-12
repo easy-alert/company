@@ -140,7 +140,6 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
   background-color: ${theme.color.white};
   box-shadow: ${({ viewMode }) =>
     viewMode === 'list' ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
-  margin-bottom: ${theme.size.csm};
   z-index: 9;
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
   border-radius: ${theme.size.xxsm};
@@ -171,7 +170,7 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
 `;
 
 export const KanbanTicketWrapper = styled.div`
-  padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+  padding: ${theme.size.xsm} ${theme.size.sm};
 `;
 
 export const KanbanTicketInfo = styled.div<{
