@@ -17,6 +17,7 @@ import { catchHandler, requestListIntervals } from '@utils/functions';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
+import IconSearch from '@assets/icons/IconSearch';
 
 // GLOBAL TYPES
 import type { ITimeInterval } from '@utils/types';
@@ -187,8 +188,8 @@ export const Checklists = () => {
           </Style.HeaderLeftSide>
 
           <IconButton
-            label="Modelo de checklist"
-            icon={<IconPlus strokeColor="primary" />}
+            label="Modelos de checklist"
+            icon={<IconSearch strokeColor="primary" />}
             onClick={() => handleModals('modalChecklistTemplate', true)}
           />
 
