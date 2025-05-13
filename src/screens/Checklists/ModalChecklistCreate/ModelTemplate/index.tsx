@@ -51,6 +51,7 @@ export const ModelTemplate = ({
             <Button
               bgColor="primary"
               label="Selecionar modelo"
+              disabled={checklistTemplates.length === 0}
               onClick={() => handleSelectChecklistTemplate(selectedTemplate as IChecklistTemplate)}
             />
           </Style.SelectTemplateButtonContainer>
