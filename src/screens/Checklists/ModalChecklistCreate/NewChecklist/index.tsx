@@ -4,13 +4,13 @@ import { Button } from '@components/Buttons/Button';
 import { Input } from '@components/Inputs/Input';
 import { IconButton } from '@components/Buttons/IconButton';
 
-import { icon } from '@assets/icons';
+import IconTrash from '@assets/icons/IconTrash';
+import IconPlus from '@assets/icons/IconPlus';
 
 import { handleToastifyMessage } from '@utils/toastifyResponses';
 
 import type { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
 
-import IconTrash from '@assets/icons/IconTrash';
 import * as Style from './styles';
 
 interface INewChecklist {
@@ -76,6 +76,7 @@ export const NewChecklist = ({
             <Input
               label=""
               type="text"
+              placeholder="Nome do item"
               value={item.name}
               onChange={(e) => handleNewChecklistItemChange(e, index)}
             />
@@ -87,18 +88,17 @@ export const NewChecklist = ({
           </Style.ChecklistItem>
         ))}
 
-        <Style.ChecklistButtons>
-          <Button
-            bgColor="primary"
-            label="Adicionar"
-            onClick={() => {
-              const newItems = newChecklist.items || [];
-              newItems.push({ id: newItems.length.toString(), name: '' });
-              handleNewChecklistItemChange({ target: { value: '' } } as any, newItems.length - 1);
-            }}
-          />
+        <IconButton
+          icon={<IconPlus strokeColor="success" />}
+          onClick={() => {
+            const newItems = newChecklist.items || [];
+            newItems.push({ id: newItems.length.toString(), name: '' });
+            handleNewChecklistItemChange({ target: { value: '' } } as any, newItems.length - 1);
+          }}
+        />
 
-          <Button label="Salvar" bgColor="primary" onClick={saveChecklist} />
+        <Style.ChecklistButtons>
+          <Button label="Salvar modelo" bgColor="success" onClick={saveChecklist} />
         </Style.ChecklistButtons>
       </Style.ChecklistContainer>
     </Style.Content>
