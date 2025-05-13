@@ -70,12 +70,15 @@ export const SelectedTemplateTask = styled.p`
   margin-bottom: ${theme.size.xsm};
 `;
 
-export const SelectTemplateButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+export const ChecklistTitle = styled.div`
+  margin-left: ${theme.size.xsm};
+  word-wrap: break-word;
 
-  margin-top: ${theme.size.sm};
+  > p {
+    font-size: ${theme.size.sm};
+    font-weight: 600;
+    word-wrap: break-word;
+  }
 `;
 
 export const ChecklistContainer = styled.div`
@@ -93,10 +96,10 @@ export const ChecklistItem = styled.div`
   gap: ${theme.size.xsm};
 `;
 
-export const ButtonContainer = styled.div`
+export const ChecklistButtons = styled.div`
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: space-between;
 
   margin-top: ${theme.size.sm};
 `;

@@ -19,4 +19,5 @@ export interface IIconButton {
   permToCheck?: string;
   hasCircle?: boolean;
   fill?: string;
+  zIndex?: number;
 }

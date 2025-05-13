@@ -39,7 +39,7 @@ export const ChecklistItem = styled.div`
 
 export const ChecklistButtons = styled.div`
   display: flex;
-  gap: ${theme.size.xsm};
+  justify-content: flex-end;
 
-  margin-top: ${theme.size.xsm};
+  margin-top: ${theme.size.sm};
 `;

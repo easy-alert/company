@@ -23,6 +23,7 @@ export const IconButton = ({
   title,
   loading,
   tabIndex,
+  zIndex,
   permToCheck,
   onClick,
   onAuxClick,
@@ -47,6 +48,7 @@ export const IconButton = ({
       fontWeight={fontWeight}
       disable={disabled}
       size={size}
+      zIndex={zIndex}
       onClick={(evt) => {
         if (!disabled && !loading) {
           onClick(evt);

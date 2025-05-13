@@ -15,9 +15,9 @@ export const ChecklistButtons = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  gap: ${theme.size.sm};
-  justify-content: flex-end;
-  margin-top: ${theme.size.md};
+  justify-content: space-between;
+
+  margin-top: ${theme.size.sm};
 `;
 
 export const ChecklistItem = styled.label`
