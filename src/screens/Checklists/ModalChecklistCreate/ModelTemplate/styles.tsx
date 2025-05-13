@@ -69,3 +69,34 @@ export const SelectedTemplateTask = styled.p`
   color: ${theme.color.gray6};
   margin-bottom: ${theme.size.xsm};
 `;
+
+export const SelectTemplateButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  margin-top: ${theme.size.sm};
+`;
+
+export const ChecklistContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xxsm};
+
+  margin-top: ${theme.size.xsm};
+  margin-left: ${theme.size.md};
+`;
+
+export const ChecklistItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  margin-top: ${theme.size.sm};
+`;
