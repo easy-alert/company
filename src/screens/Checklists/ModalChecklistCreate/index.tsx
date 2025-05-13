@@ -58,7 +58,11 @@ export const ModalChecklistCreate = ({
 
   const [newChecklist, setNewChecklist] = useState<IChecklistTemplate>({
     name: 'Insira o título',
-    items: [],
+    items: [
+      {
+        name: 'Insira o item',
+      },
+    ],
   });
   const [selectedChecklistTemplate, setSelectedChecklistTemplate] = useState<IChecklistTemplate>(
     {},
@@ -68,31 +72,32 @@ export const ModalChecklistCreate = ({
   const [selectedInterval, setSelectedInterval] = useState('0');
   const [startDate, setStartDate] = useState('');
 
-  const [showTemplate, setShowTemplate] = useState(false);
-  const [showNewChecklist, setShowNewChecklist] = useState(true);
+  const [checklistMode, setChecklistMode] = useState<'new' | 'template'>('new');
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
-  const disableCreateButton = showTemplate
-    ? !selectedChecklistTemplate.id || !selectedResponsible || !selectedInterval || !startDate
-    : !newChecklist.name ||
-      !newChecklist.items ||
-      !selectedResponsible ||
-      !selectedInterval ||
-      !startDate;
+  const disableCreateButton =
+    checklistMode === 'template'
+      ? !selectedChecklistTemplate.id || !selectedResponsible || !selectedInterval || !startDate
+      : !newChecklist.name ||
+        !newChecklist.items ||
+        !selectedResponsible ||
+        !selectedInterval ||
+        !startDate;
 
-  const handleShowTemplate = () => {
-    setShowTemplate(true);
-    setShowNewChecklist(false);
-    setSelectedInterval('1');
-  };
+  const handleChecklistMode = (mode: 'new' | 'template') => {
+    setSelectedResponsible('');
+    setStartDate('');
 
-  const handleShowNewChecklist = () => {
-    setShowNewChecklist(true);
-    setShowTemplate(false);
-    setSelectedChecklistTemplate({});
-    setSelectedInterval('0');
+    if (mode === 'template') {
+      setSelectedChecklistTemplate({});
+      setSelectedInterval('1');
+    } else {
+      setSelectedInterval('0');
+    }
+
+    setChecklistMode(mode);
   };
 
   const handleNewChecklistTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,7 +143,7 @@ export const ModalChecklistCreate = ({
     } finally {
       setRefresh(!refresh);
       setLoading(false);
-      handleShowTemplate();
+      handleChecklistMode('template');
     }
   };
 
@@ -151,7 +156,7 @@ export const ModalChecklistCreate = ({
       return;
     }
 
-    if (showNewChecklist && !newChecklist.items?.length) {
+    if (checklistMode === 'new' && !newChecklist.items?.length) {
       handleToastifyMessage({ type: 'error', message: 'Adicione ao menos um item ao checklist.' });
       setLoading(false);
       return;
@@ -182,7 +187,7 @@ export const ModalChecklistCreate = ({
       setLoading(true);
 
       try {
-        const responseData = await getChecklistsTemplates({ buildingId: selectedBuildingId });
+        const responseData = await getChecklistsTemplates({ buildingId: '' });
         setChecklistTemplates(responseData);
       } finally {
         setLoading(false);
@@ -227,98 +232,132 @@ export const ModalChecklistCreate = ({
                 <InputRadio
                   id="newChecklist"
                   label="Avulso"
-                  checked={showNewChecklist}
-                  onChange={handleShowNewChecklist}
+                  checked={checklistMode === 'new'}
+                  onChange={() => handleChecklistMode('new')}
                 />
 
                 <InputRadio
                   id="useTemplate"
                   label="Usar template"
-                  checked={showTemplate}
-                  onChange={handleShowTemplate}
+                  checked={checklistMode === 'template'}
+                  onChange={() => handleChecklistMode('template')}
                 />
               </Style.ChecklistButtons>
 
-              {showNewChecklist && (
-                <NewChecklist
-                  newChecklist={newChecklist}
-                  handleNewChecklistTitleChange={handleNewChecklistTitleChange}
-                  handleNewChecklistItemChange={handleNewChecklistItemChange}
-                  handleNewChecklistItemDelete={handleNewChecklistItemDelete}
-                  handleCreateChecklistTemplate={handleCreateChecklistTemplate}
-                />
+              {checklistMode === 'new' && (
+                <>
+                  <NewChecklist
+                    newChecklist={newChecklist}
+                    handleNewChecklistTitleChange={handleNewChecklistTitleChange}
+                    handleNewChecklistItemChange={handleNewChecklistItemChange}
+                    handleNewChecklistItemDelete={handleNewChecklistItemDelete}
+                    handleCreateChecklistTemplate={handleCreateChecklistTemplate}
+                  />
+
+                  <Select
+                    arrowColor="primary"
+                    label="Usuário responsável *"
+                    value={selectedResponsible}
+                    onChange={handleResponsibleChange}
+                  >
+                    <option value="" disabled>
+                      Selecione
+                    </option>
+
+                    {usersForSelect.map((user) => (
+                      <option value={user.id} key={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </Select>
+
+                  <Input
+                    label="Data de início *"
+                    type="date"
+                    value={startDate}
+                    typeDatePlaceholderValue={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </>
               )}
 
-              {showTemplate && (
-                <ModelTemplate
-                  checklistTemplates={checklistTemplates}
-                  handleSelectChecklistTemplate={(template) =>
-                    setSelectedChecklistTemplate(template)
-                  }
-                />
+              {checklistMode === 'template' && (
+                <>
+                  <ModelTemplate
+                    checklistTemplates={checklistTemplates}
+                    selectedChecklistTemplate={selectedChecklistTemplate}
+                    handleSelectChecklistTemplate={(template) =>
+                      setSelectedChecklistTemplate(template)
+                    }
+                  />
+
+                  {selectedChecklistTemplate.id && (
+                    <>
+                      <Select
+                        arrowColor="primary"
+                        label="Usuário responsável *"
+                        value={selectedResponsible}
+                        onChange={handleResponsibleChange}
+                      >
+                        <option value="" disabled>
+                          Selecione
+                        </option>
+
+                        {usersForSelect.map((user) => (
+                          <option value={user.id} key={user.id}>
+                            {user.name}
+                          </option>
+                        ))}
+                      </Select>
+
+                      <Select
+                        arrowColor="primary"
+                        label="Periodicidade *"
+                        value={selectedInterval}
+                        onChange={handleIntervalChange}
+                      >
+                        <option value="" disabled>
+                          Selecione
+                        </option>
+
+                        <option value="1">Diário</option>
+                        <option value="2">A cada 2 dias</option>
+                        <option value="3">A cada 3 dias</option>
+                        <option value="7">Semanal</option>
+                        <option value="15">Quinzenal</option>
+                        <option value="30">Mensal</option>
+                        <option value="60">Bimestral</option>
+                        <option value="90">Trimestral</option>
+                        <option value="180">Semestral</option>
+                        <option value="365">Anual</option>
+                      </Select>
+
+                      <Input
+                        label="Data de início *"
+                        type="date"
+                        value={startDate}
+                        typeDatePlaceholderValue={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </>
+                  )}
+                </>
               )}
-
-              <Select
-                arrowColor="primary"
-                label="Usuário responsável *"
-                value={selectedResponsible}
-                onChange={handleResponsibleChange}
-              >
-                <option value="" disabled>
-                  Selecione
-                </option>
-
-                {usersForSelect.map((user) => (
-                  <option value={user.id} key={user.id}>
-                    {user.name}
-                  </option>
-                ))}
-              </Select>
-
-              {!showNewChecklist && (
-                <Select
-                  arrowColor="primary"
-                  label="Periodicidade *"
-                  value={selectedInterval}
-                  onChange={handleIntervalChange}
-                >
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-
-                  <option value="1">Diário</option>
-                  <option value="2">A cada 2 dias</option>
-                  <option value="3">A cada 3 dias</option>
-                  <option value="7">Semanal</option>
-                  <option value="15">Quinzenal</option>
-                  <option value="30">Mensal</option>
-                  <option value="60">Bimestral</option>
-                  <option value="90">Trimestral</option>
-                  <option value="180">Semestral</option>
-                  <option value="365">Anual</option>
-                </Select>
-              )}
-
-              <Input
-                label="Data de início *"
-                type="date"
-                value={startDate}
-                typeDatePlaceholderValue={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
 
               <Style.ButtonContainer>
+                <Button
+                  label="Iniciar execução"
+                  textColor="actionBlue"
+                  borderless
+                  disable={disableCreateButton}
+                  onClick={() => handleCreateChecklist('inProgress')}
+                />
+
                 <Button
                   bgColor="primary"
                   label="Criar"
                   disable={disableCreateButton}
                   onClick={() => handleCreateChecklist('pending')}
-                />
-                <Button
-                  label="Iniciar execução"
-                  bgColor="transparent"
-                  disable={disableCreateButton}
-                  onClick={() => handleCreateChecklist('inProgress')}
                 />
               </Style.ButtonContainer>
             </>
