@@ -25,11 +25,11 @@ import type { ITimeInterval } from '@utils/types';
 import { ModalChecklistCreate } from './ModalChecklistCreate';
 import { MiniCalendarComponent } from './MiniCalendarComponent';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
+import { ModalChecklistDetails } from './ModalChecklistDetails';
+import { ModalChecklistTemplate } from './ModalChecklistTemplate';
 
 // STYLES
 import * as Style from './styles';
-import { ModalChecklistDetails } from './ModalChecklistDetails';
-import { ModalChecklistTemplate } from './ModalChecklistTemplate';
 
 export interface IChecklist {
   id: string;
@@ -145,7 +145,7 @@ export const Checklists = () => {
     <>
       {modalChecklistCreate && (
         <ModalChecklistCreate
-          buildingId={buildingsForSelect.find((building) => building.nanoId === buildingNanoId)?.id}
+          buildingsForSelect={buildingsForSelect}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
         />
@@ -195,7 +195,6 @@ export const Checklists = () => {
           <IconButton
             label="Checklist"
             icon={<IconPlus strokeColor="primary" />}
-            disabled={loading}
             onClick={() => handleModals('modalChecklistCreate', true)}
           />
         </Style.Header>
