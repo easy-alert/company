@@ -165,9 +165,16 @@ export const ModalChecklistCreate = ({
     try {
       newChecklist.items = newChecklist.items?.filter((item) => item.name);
 
+      const editedChecklistTemplate = {
+        id: selectedChecklistTemplate.id,
+        name: selectedChecklistTemplate.name,
+        items: selectedChecklistTemplate.items,
+      };
+
       await createChecklist({
         buildingId: selectedBuildingId,
         checklistTemplateId: selectedChecklistTemplate.id,
+        editedChecklistTemplate,
         newChecklist,
         responsibleId: selectedResponsible,
         startDate,
