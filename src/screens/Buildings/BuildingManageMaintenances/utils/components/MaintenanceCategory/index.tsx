@@ -45,13 +45,9 @@ export const MaintenanceCategory = ({
   const isAllMaintenancesSelected = category.Maintenances.every((e) => e.isSelected === true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const selectedIds = category.Maintenances.filter((m) => m.isSelected).map((m) => m.id);
+    const selectedIds = category.Maintenances.filter((m) => m.isSelected).map((m) => m.id);
 
-      localStorage.setItem(`selected-maintenance-${category.id}`, JSON.stringify(selectedIds));
-    }, 1000);
-
-    return () => clearInterval(interval);
+    localStorage.setItem(`selected-maintenance-${category.id}`, JSON.stringify(selectedIds));
   }, [category]);
 
   useEffect(() => {

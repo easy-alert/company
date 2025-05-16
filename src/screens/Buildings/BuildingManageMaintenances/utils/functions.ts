@@ -8,17 +8,19 @@ import type {
   IRequestListCategoriesToManage,
   IRequestBuildingListForSelect,
   IRequestCategoriesForSelect,
+  ICategories,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
-  setLoading,
   setCategories,
   buildingId,
-  setTableLoading,
   setBuildingName,
   currentBuildingId,
-}: IRequestListCategoriesToManage) => {
+  setTableLoading,
+  setLoading,
+}: IRequestListCategoriesToManage): Promise<ICategories[]> => {
   if (setTableLoading) setTableLoading(true);
+  if (setLoading) setLoading(true);
 
   try {
     const res = await Api.post(`/buildings/maintenances/list`, {
@@ -28,33 +30,16 @@ export const requestListCategoriesToManage = async ({
 
     setBuildingName(res.data.buildingName);
 
-    let categories = res.data.CategoriesData;
-
-    const localData = localStorage.getItem(`maint-categories-${buildingId}`);
-
-    if (localData) {
-      const parsedLocal = JSON.parse(localData);
-
-      categories = categories.map((apiCategory: any) => {
-        const localMatch = parsedLocal.find((l: any) => l.id === apiCategory.id);
-        if (localMatch) {
-          return {
-            ...apiCategory,
-            Maintenances: localMatch.Maintenances,
-          };
-        }
-        return apiCategory;
-      });
-    }
-
-    setCategories(categories);
-
-    setLoading(false);
+    if (setCategories) setCategories(res.data.CategoriesData);
+    if (setLoading) setLoading(false);
     if (setTableLoading) setTableLoading(false);
+
+    return res.data.CategoriesData;
   } catch (err) {
-    setLoading(false);
+    if (setLoading) setLoading(false);
     if (setTableLoading) setTableLoading(false);
     catchHandler(err);
+    return [];
   }
 };
 
