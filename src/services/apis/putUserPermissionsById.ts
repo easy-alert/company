@@ -8,14 +8,20 @@ interface IUserPermissions {
 }
 
 interface IPutUserPermissionsById {
+  companyId: string;
   userId: string;
   userPermissions: IUserPermissions[];
 }
 
-export async function putUserPermissionsById({ userId, userPermissions }: IPutUserPermissionsById) {
+export async function putUserPermissionsById({
+  companyId,
+  userId,
+  userPermissions,
+}: IPutUserPermissionsById) {
   const uri = `permissions/user-permissions/${userId}`;
 
   const body = {
+    companyId,
     userPermissions,
   };
 
