@@ -31,6 +31,8 @@ import IconEdit from '@assets/icons/IconEdit';
 import { Input } from '@components/Inputs/Input';
 import IconPlus from '@assets/icons/IconPlus';
 import { putChecklistTemplateById } from '@services/apis/putChecklistTemplateById';
+import IconDuplicate from '@assets/icons/IconDuplicate';
+import { createChecklistTemplate } from '@services/apis/createChecklistTemplate';
 import * as Style from './styles';
 
 import type { TModalNames } from '..';
@@ -96,6 +98,23 @@ export const ModalChecklistTemplate = ({ handleModals }: ModalSendReportProps) =
     }
   };
 
+  const handleCloneChecklistTemplate = async (checklistTemplate: IChecklistTemplate) => {
+    setLoading(true);
+
+    try {
+      await createChecklistTemplate({
+        buildingId: checklistTemplate.buildingId!,
+        name: `${checklistTemplate?.name} (Cópia)`,
+        description: checklistTemplate?.description || '',
+        items: checklistTemplate?.items || [],
+      });
+
+      handleRefresh();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     handleGetChecklistsTemplate();
   }, [refresh]);
@@ -113,7 +132,7 @@ export const ModalChecklistTemplate = ({ handleModals }: ModalSendReportProps) =
         <Style.Content>
           {!selectedTemplate && (
             <>
-              <Style.SelectTitle>Selecione um template</Style.SelectTitle>
+              <Style.SelectTitle>Selecione um modelo</Style.SelectTitle>
 
               <div>
                 {checklistTemplates.length > 0 ? (
@@ -125,6 +144,7 @@ export const ModalChecklistTemplate = ({ handleModals }: ModalSendReportProps) =
 
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <IconButton
+                          title="Editar"
                           icon={<IconEdit strokeColor="primary" />}
                           zIndex={1}
                           onClick={() => {
@@ -133,6 +153,14 @@ export const ModalChecklistTemplate = ({ handleModals }: ModalSendReportProps) =
                         />
 
                         <IconButton
+                          title="Clonar"
+                          icon={<IconDuplicate strokeColor="primary" />}
+                          zIndex={1}
+                          onClick={() => handleCloneChecklistTemplate(template)}
+                        />
+
+                        <IconButton
+                          title="Deletar"
                           icon={<IconTrash strokeColor="danger" />}
                           onClick={async () => {
                             if (template.id) {
