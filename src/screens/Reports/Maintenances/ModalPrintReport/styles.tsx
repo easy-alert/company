@@ -1,6 +1,6 @@
 import { StyleSheet } from '@react-pdf/renderer';
 import styled from 'styled-components';
-import { theme } from '../../../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Container = styled.iframe`
   width: 100%;

@@ -91,9 +91,8 @@ export const ShowResidentButton = ({
               <h3>
                 Mostra no QR Code
                 <IconButton
-                  onClick={() => handleTogglePopover(false)}
                   icon={<IconX strokeColor="primary" />}
-                  fill="primary"
+                  onClick={() => handleTogglePopover(false)}
                 />
               </h3>
 

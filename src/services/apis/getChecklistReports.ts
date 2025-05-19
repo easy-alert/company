@@ -8,24 +8,24 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { IResponse } from '@customTypes/IResponse';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 
-interface IResponseGetTicketReports extends IResponse {
+interface IResponseGetChecklistReports extends IResponse {
   data: {
-    ticketPdfs: IReportPdf[];
+    checklistPdfs: IReportPdf[];
   };
 }
 
-export const getTicketReports = async () => {
-  const uri = `/tickets/report/pdf`;
+export const getChecklistReports = async () => {
+  const uri = `/checklists/report/pdf`;
 
   try {
-    const response: IResponseGetTicketReports = await Api.get(uri);
+    const response: IResponseGetChecklistReports = await Api.get(uri);
 
     return response.data;
   } catch (error: any) {
     handleToastify(error);
 
     return {
-      ticketPdfs: [],
+      checklistPdfs: [],
     };
   }
 };

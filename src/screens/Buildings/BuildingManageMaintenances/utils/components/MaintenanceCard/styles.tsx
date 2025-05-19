@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const ArrowContainer = styled.div`
   display: flex;

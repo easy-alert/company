@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
 
 export const Container = styled.div`
   display: flex;
@@ -81,14 +81,18 @@ export const IconsContainer = styled.div`
   align-items: center;
 
   gap: ${theme.size.sm};
+
+  @media (max-width: 400px) {
+    flex-direction: column;
+  }
 `;
+
 export const Kanban = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: ${theme.size.sm};
 
   overflow: auto;
-  height: 100%;
 
   scrollbar-width: none;
   scrollbar-color: transparent;
@@ -112,7 +116,8 @@ export const KanbanCard = styled.div`
 
   background-color: ${theme.color.white};
   border-radius: ${theme.size.xxsm};
-  padding-bottom: ${theme.size.sm};
+
+  padding-bottom: ${theme.size.xsm};
 
   scrollbar-width: none;
   scrollbar-color: transparent;
@@ -124,20 +129,42 @@ export const KanbanCard = styled.div`
   }
 `;
 
-export const KanbanHeader = styled.div`
+export const KanbanCardList = styled.div`
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+
+  border-radius: ${theme.size.xxsm};
+  margin-bottom: ${theme.size.sm};
+
+  background-color: ${theme.color.white};
+`;
+
+export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | 'list' }>`
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
   width: 100%;
   background-color: ${theme.color.white};
   z-index: 4;
-  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
+
+  box-shadow: ${({ viewMode }) =>
+    viewMode === 'list' ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   border-radius: ${theme.size.xxsm};
+  padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.xsm} ${theme.size.sm};
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: ${theme.size.sm};
+
+  border-left: ${({ status }) => {
+    if (status === 'Vencidas') return `4px solid ${theme.color.actionDanger}`;
+    if (status === 'Pendentes') return `4px solid ${theme.color.warning}`;
+    if (status === 'Em execução') return `4px solid ${theme.color.warning}`;
+    if (status === 'Concluídas') return `4px solid ${theme.color.success}`;
+    return 'none';
+  }};
 
   > label {
     display: flex;
@@ -244,11 +271,32 @@ export const EventsWrapper = styled.div`
 `;
 
 export const NoDataContainer = styled.div`
-  height: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  color: ${theme.color.gray4};
-  padding: 0 ${theme.size.sm} 0 ${theme.size.sm};
+  color: #888;
+  background-color: ${theme.color.white};
+  border-radius: ${theme.size.xxsm};
+  padding: 16px;
+  align-items: center;
+  height: 100%;
+`;
+
+export const ListView = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const ListItem = styled.div`
+  padding: ${theme.size.xsm} ${theme.size.sm};
+`;
+
+export const Chevron = styled.span<{ $expanded: boolean }>`
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid ${theme.color.primary};
+  transition: transform 0.2s ease;
+  transform: ${({ $expanded }) => ($expanded ? 'rotate(0)' : 'rotate(-90deg)')};
 `;

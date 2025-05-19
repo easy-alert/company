@@ -106,7 +106,6 @@ export const MaintenanceCategory = ({
               <IconButton
                 size="16px"
                 icon={<IconEdit strokeColor="primary" />}
-                fill="primary"
                 onClick={() => {
                   setModalEditCategoryOpen(true);
                 }}
@@ -115,13 +114,10 @@ export const MaintenanceCategory = ({
             </Style.Container>
             <IconButton
               hideLabelOnMedia
-              fill="primary"
               icon={<IconPlus strokeColor="primary" />}
               size="16px"
               label="Criar manutenção"
-              onClick={() => {
-                setModalCreateMaintenanceOpen(true);
-              }}
+              onClick={() => setModalCreateMaintenanceOpen(true)}
             />
           </Style.HeaderTitle>
         </Style.HeaderCategory>

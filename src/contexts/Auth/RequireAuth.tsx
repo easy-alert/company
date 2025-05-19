@@ -49,7 +49,7 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
     })
       .then(async (res) => {
         signin(res.data);
-        updateThemeColor(res?.data?.User?.colorScheme);
+        updateThemeColor(res?.data?.Account?.User?.colorScheme);
         setLoading(false);
       })
       .catch((err) => {

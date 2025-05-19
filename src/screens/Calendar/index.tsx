@@ -384,9 +384,8 @@ export const MaintenancesCalendar = () => {
           </select>
 
           <IconButton
-            fill="primary"
-            icon={<IconPlus strokeColor="primary" />}
             label="Manutenção avulsa"
+            icon={<IconPlus strokeColor="primary" />}
             permToCheck="maintenances:createOccasional"
             onClick={() => setModalCreateOccasionalMaintenance(true)}
           />

@@ -1,8 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 // #region imports
 // REACT
-import { useState } from 'react';
-import { CSVLink } from 'react-csv';
+import { useEffect, useState } from 'react';
+// import { CSVLink } from 'react-csv';
 
 // LIBS
 import { Form, Formik } from 'formik';
@@ -19,33 +19,36 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { Button } from '@components/Buttons/Button';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { FormikInput } from '@components/Form/FormikInput';
-import { Select } from '@components/Inputs/Select';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { ListTag } from '@components/ListTag';
+import { PdfList } from '@components/PdfList';
 
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
 
 // GLOBAL ASSETS
-import { icon } from '@assets/icons';
-import IconCsvLogo from '@assets/icons/IconCsvLogo';
+// import { icon } from '@assets/icons';
+// import IconCsvLogo from '@assets/icons/IconCsvLogo';
 import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
+// GLOBAL TYPES
+import type { IReportPdf } from '@customTypes/IReportPdf';
+
 // COMPONENTS
+import { getChecklistReports } from '@services/apis/getChecklistReports';
+import { generateChecklistReportPDF } from '@services/apis/generateChecklistReportPDF';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
-import { ModalPrintChecklists } from './ModalPrintChecklists';
 
 // UTILS
-import {
-  getSingularStatusNameforPdf,
-  getPluralStatusNameforPdf,
-} from '../Maintenances/ModalPrintReport/functions';
+import { getPluralStatusNameforPdf } from '../Maintenances/ModalPrintReport/functions';
 
 // STYLES
-import * as s from './styles';
+import * as Style from './styles';
 
 // TYPES
-import type { IChecklists, IChecklistsForPDF, IFilter } from './types';
+import type { IChecklistFilterNames, IChecklists, ICounts, IFilterData } from './types';
 
 // #endregion
 
@@ -53,27 +56,107 @@ export const ChecklistReports = () => {
   // #region states
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-
   const [checklists, setChecklists] = useState<IChecklists[]>([]);
-  const [checklistsForPDF, setChecklistsForPDF] = useState<IChecklistsForPDF[]>([]);
-  const [pendingCount, setPendingCount] = useState(0);
-  const [completedCount, setCompletedCount] = useState(0);
-
-  const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
-  const [modalChecklistDetailsOpen, setModalChecklistDetailsOpen] = useState(false);
   const [checklistId, setChecklistId] = useState<string>('');
+  const [checklistReportsPDF, setChecklistReportsPDF] = useState<IReportPdf[]>([]);
 
-  const [filterforRequest, setFilterforRequest] = useState<IFilter>({
-    startDate: '',
-    endDate: '',
-    buildingNames: [],
-    statusNames: [],
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onPdfQuery, setOnPdfQuery] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [counts, setCounts] = useState<ICounts>({
+    pending: 0,
+    inProgress: 0,
+    completed: 0,
   });
 
-  const [buildingsForFilter, setBuildingsForFilter] = useState<string[]>([]);
-  const [statusForFilter, setStatusForFilter] = useState<string[]>([]);
+  const [filterData, setFilterData] = useState<IFilterData>({
+    buildings: [],
+    status: [],
+    startDate: '',
+    endDate: '',
+  });
 
+  const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
+
+  const [modalChecklistDetails, setModalChecklistDetails] = useState(false);
+
+  const [refresh, setRefresh] = useState(false);
+  // #endregion
+
+  const handleChecklistColors = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return {
+          name: 'Pendente',
+          bgColor: '#D5D5D5',
+          color: 'black',
+        };
+      case 'inProgress':
+        return {
+          name: 'Em andamento',
+          bgColor: '#FFB200',
+          color: 'white',
+        };
+
+      case 'completed':
+        return {
+          name: 'Concluído',
+          bgColor: '#34B53A',
+          color: 'white',
+        };
+      default:
+        return {
+          name: 'Pendente',
+          bgColor: '#D5D5D5',
+          color: 'black',
+        };
+    }
+  };
+
+  // #region util functions
+  const handleRefresh = () => {
+    setRefresh((prevState) => !prevState);
+  };
+
+  const handleModals = (modal: string, modalState: boolean) => {
+    switch (modal) {
+      case 'modalChecklistDetails':
+        setModalChecklistDetails(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+  // #endregion
+
+  // #region filter functions
+
+  const handleFilterChange = (key: keyof IFilterData, value: string) => {
+    setFilterData((prevState) => {
+      const checkArray = Array.isArray(prevState[key]);
+      const newFilter = { ...prevState, [key]: value };
+
+      if (checkArray) {
+        return {
+          ...newFilter,
+          [key]: [...(prevState[key] as string[]), value],
+        };
+      }
+
+      return newFilter;
+    });
+  };
+
+  const handleClearFilter = () => {
+    setFilterData({
+      buildings: [],
+      status: [],
+      startDate: '',
+      endDate: '',
+    });
+  };
   // #endregion
 
   // #region csv
@@ -105,7 +188,7 @@ export const ChecklistReports = () => {
   // #region functions
   const schemaReportFilter = yup
     .object({
-      buildingNames: yup.array().of(yup.string()),
+      buildings: yup.array().of(yup.string()),
       status: yup.array().of(yup.string()),
       startDate: yup.date().required('A data inicial é obrigatória.'),
       endDate: yup
@@ -115,16 +198,25 @@ export const ChecklistReports = () => {
     })
     .required();
 
-  const requestReportsData = async (filters: IFilter) => {
+  const requestReportsData = async () => {
     setOnQuery(true);
     setChecklists([]);
 
-    await Api.get(`/checklists/reports?filters=${JSON.stringify(filters)}`)
+    const params = {
+      buildingId: filterData?.buildings?.length === 0 ? '' : filterData?.buildings?.join(','),
+      status: filterData?.status?.length === 0 ? '' : filterData?.status?.join(','),
+      startDate: filterData?.startDate,
+      endDate: filterData?.endDate,
+    };
+
+    await Api.get(`/checklists/reports`, { params })
       .then((res) => {
         setChecklists(res.data.checklists);
-        setChecklistsForPDF(res.data.checklistsForPDF);
-        setPendingCount(res.data.pendingCount);
-        setCompletedCount(res.data.completedCount);
+        setCounts({
+          pending: res.data.pendingCount,
+          inProgress: res.data.inProgressCount,
+          completed: res.data.completedCount,
+        });
       })
       .catch((err) => {
         catchHandler(err);
@@ -134,70 +226,91 @@ export const ChecklistReports = () => {
       });
   };
 
+  // #region pdf
+  const handleGetChecklistPdf = async () => {
+    setLoading(true);
+
+    try {
+      const responseData = await getChecklistReports();
+
+      setChecklistReportsPDF(responseData.checklistPdfs);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGenerateTicketReportPDF = async () => {
+    setOnPdfQuery(true);
+
+    try {
+      const filterNames: IChecklistFilterNames = {
+        buildingsNames:
+          filterData.buildings?.length === 0
+            ? 'Todas'
+            : filterData.buildings
+                .map((building) => buildingsForSelect.find((b) => b.id === building)?.name)
+                .join(', '),
+
+        statusNames: filterData.status?.length === 0 ? 'Todos' : filterData.status.join(', '),
+      };
+
+      await generateChecklistReportPDF({ filterData, filterNames });
+
+      handleGetChecklistPdf();
+    } finally {
+      setOnPdfQuery(false);
+    }
+  };
+
+  // #endregion
+
+  useEffect(() => {
+    handleGetChecklistPdf();
+  }, [refresh]);
+
   // #endregion
 
   return (
     <>
-      {modalPrintReportOpen && (
-        <ModalPrintChecklists
-          setModal={setModalPrintReportOpen}
-          checklistsForPDF={checklistsForPDF}
-          filterforPDF={filterforRequest}
-          completedCount={completedCount}
-          pendingCount={pendingCount}
-        />
-      )}
-
-      {modalChecklistDetailsOpen && (
+      {modalChecklistDetails && checklistId && (
         <ModalChecklistDetails
           checklistId={checklistId}
-          setModal={setModalChecklistDetailsOpen}
-          onThenRequest={async () => {
-            requestReportsData(filterforRequest);
-          }}
+          handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
-      <s.Container>
+      <Style.Container>
         <h2>Relatórios de checklists</h2>
 
-        <s.FiltersContainer>
+        <Style.FiltersContainer>
           <Formik
             initialValues={{
-              buildingNames: [],
-              statusNames: [],
+              buildings: [],
+              status: [],
               startDate: '',
               endDate: '',
             }}
             validationSchema={schemaReportFilter}
-            onSubmit={async (values) => {
-              setFilterforRequest({
-                endDate: values.endDate,
-                startDate: values.startDate,
-                buildingNames: buildingsForFilter,
-                statusNames: statusForFilter,
-              });
-
-              await requestReportsData({
-                ...values,
-                buildingNames: buildingsForFilter,
-                statusNames: statusForFilter,
-              });
-            }}
+            onSubmit={() => requestReportsData()}
           >
-            {({ errors, values, touched }) => (
+            {({ errors, values, touched, setFieldValue }) => (
               <Form>
-                <s.FiltersGrid>
-                  <Select
-                    selectPlaceholderValue={buildingsForFilter.length > 0 ? ' ' : ''}
+                <Style.FiltersGrid>
+                  <FormikSelect
+                    name="buildings"
                     label="Edificação"
-                    arrowColor="primary"
+                    selectPlaceholderValue={' '}
                     value=""
+                    arrowColor="primary"
                     onChange={(e) => {
-                      setBuildingsForFilter((prevState) => [...prevState, e.target.value]);
+                      handleFilterChange('buildings', e.target.value);
 
                       if (e.target.value === 'all') {
-                        setBuildingsForFilter([]);
+                        setFilterData((prevState) => ({
+                          ...prevState,
+                          buildings: [],
+                        }));
                       }
                     }}
                   >
@@ -205,120 +318,148 @@ export const ChecklistReports = () => {
                       Selecione
                     </option>
 
-                    <option value="all" disabled={buildingsForFilter.length === 0}>
+                    <option value="all" disabled={filterData.buildings.length === 0}>
                       Todas
                     </option>
 
                     {buildingsForSelect?.map((building) => (
                       <option
-                        key={building.name}
-                        value={building.name}
-                        disabled={buildingsForFilter.some((e) => e === building.name)}
+                        key={building.id}
+                        value={building.id}
+                        disabled={filterData.buildings.some((e) => e === building.id)}
                       >
                         {building.name}
                       </option>
                     ))}
-                  </Select>
+                  </FormikSelect>
 
-                  <Select
-                    selectPlaceholderValue={statusForFilter.length > 0 ? ' ' : ''}
+                  <FormikSelect
                     label="Status"
+                    name="status"
+                    selectPlaceholderValue={' '}
                     value=""
                     arrowColor="primary"
                     onChange={(e) => {
-                      setStatusForFilter((prevState) => [...prevState, e.target.value]);
+                      handleFilterChange('status', e.target.value);
 
                       if (e.target.value === 'all') {
-                        setStatusForFilter([]);
+                        setFilterData((prevState) => ({
+                          ...prevState,
+                          status: [],
+                        }));
                       }
                     }}
                   >
                     <option value="" disabled hidden>
                       Selecione
                     </option>
-                    <option value="all" disabled={statusForFilter.length === 0}>
+
+                    <option value="all" disabled={filterData.status.length === 0}>
                       Todos
                     </option>
+
                     <option
                       value="completed"
-                      disabled={statusForFilter.some((e) => e === 'completed')}
+                      disabled={filterData.status.some((e) => e === 'completed')}
                     >
                       Concluídas
                     </option>
-                    <option value="pending" disabled={statusForFilter.some((e) => e === 'pending')}>
+                    <option
+                      value="pending"
+                      disabled={filterData.status.some((e) => e === 'pending')}
+                    >
                       Pendentes
                     </option>
-                  </Select>
+                  </FormikSelect>
 
                   <FormikInput
+                    name="startDate"
                     label="Data inicial"
                     typeDatePlaceholderValue={values.startDate}
-                    name="startDate"
                     type="date"
                     value={values.startDate}
+                    onChange={(e) => {
+                      setFieldValue('startDate', e.target.value);
+                      handleFilterChange('startDate', e.target.value);
+                    }}
                     error={touched.startDate && errors.startDate ? errors.startDate : null}
                   />
 
                   <FormikInput
+                    name="endDate"
                     label="Data final"
                     typeDatePlaceholderValue={values.endDate}
-                    name="endDate"
                     type="date"
                     value={values.endDate}
+                    onChange={(e) => {
+                      setFieldValue('endDate', e.target.value);
+                      handleFilterChange('endDate', e.target.value);
+                    }}
                     error={touched.endDate && errors.endDate ? errors.endDate : null}
                   />
+                </Style.FiltersGrid>
 
-                  <s.TagWrapper>
-                    {buildingsForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todas as edificações </p>
-                      </s.Tag>
-                    )}
-
-                    {buildingsForFilter.map((building, i: number) => (
-                      <s.Tag key={building}>
-                        <p className="p3">{building}</p>
-                        <IconButton
-                          size="14px"
-                          icon={icon.xBlack}
+                <Style.FilterWrapperFooter>
+                  <Style.FilterTags>
+                    {filterData.buildings?.length === 0 ? (
+                      <ListTag
+                        label="Todas as edificações"
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                      />
+                    ) : (
+                      filterData.buildings?.map((building) => (
+                        <ListTag
+                          key={building}
+                          label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
-                            setBuildingsForFilter((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
+                            setFilterData((prevState) => ({
+                              ...prevState,
+                              buildings: prevState.buildings?.filter((b) => b !== building),
+                            }));
                           }}
                         />
-                      </s.Tag>
-                    ))}
-
-                    {statusForFilter.length === 0 && (
-                      <s.Tag>
-                        <p className="p3">Todos os status</p>
-                      </s.Tag>
+                      ))
                     )}
 
-                    {statusForFilter.map((status, i: number) => (
-                      <s.Tag key={status}>
-                        <p className="p3">{getPluralStatusNameforPdf(status)}</p>
-                        <IconButton
-                          size="14px"
-                          icon={icon.xBlack}
+                    {filterData.status?.length === 0 ? (
+                      <ListTag
+                        label="Todos os status"
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                      />
+                    ) : (
+                      filterData.status?.map((status) => (
+                        <ListTag
+                          key={status}
+                          label={getPluralStatusNameforPdf(status)}
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
                           onClick={() => {
-                            setStatusForFilter((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
+                            setFilterData((prevState) => ({
+                              ...prevState,
+                              status: prevState.status?.filter((s) => s !== status),
+                            }));
                           }}
                         />
-                      </s.Tag>
-                    ))}
-                  </s.TagWrapper>
+                      ))
+                    )}
+                  </Style.FilterTags>
+                </Style.FilterWrapperFooter>
 
-                  <s.ButtonContainer>
-                    <s.ButtonWrapper>
-                      {/* <CSVLink
+                <Style.ButtonContainer>
+                  <Style.ButtonWrapper>
+                    {/* <CSVLink
                         data={csvData}
                         headers={csvHeaders}
                         filename={`Relatório de checklists ${new Date().toLocaleDateString(
@@ -336,80 +477,137 @@ export const ChecklistReports = () => {
                         />
                       </CSVLink> */}
 
-                      <IconButton
-                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
-                        label="Exportar"
-                        onClick={() => setModalPrintReportOpen(true)}
-                        disabled={checklists?.length === 0}
-                      />
-                      <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
-                    </s.ButtonWrapper>
-                  </s.ButtonContainer>
-                </s.FiltersGrid>
+                    <IconButton
+                      label="Exportar"
+                      icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                      onClick={() => handleGenerateTicketReportPDF()}
+                      disabled={checklists?.length === 0 || onPdfQuery}
+                    />
+
+                    <Button
+                      type="button"
+                      label="Limpar filtros"
+                      borderless
+                      textColor="primary"
+                      disable={loading}
+                      onClick={() => handleClearFilter()}
+                    />
+
+                    <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
+                  </Style.ButtonWrapper>
+                </Style.ButtonContainer>
               </Form>
             )}
           </Formik>
-        </s.FiltersContainer>
+        </Style.FiltersContainer>
+
+        <Style.ViewButtons>
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'reports'}
+            onClick={() => {
+              setReportView('reports');
+            }}
+          >
+            Relatório
+          </Style.CustomButton>
+
+          <Style.CustomButton
+            type="button"
+            active={reportView === 'pdfs'}
+            onClick={() => {
+              setReportView('pdfs');
+            }}
+          >
+            Histórico de relatórios
+          </Style.CustomButton>
+        </Style.ViewButtons>
 
         {onQuery && <DotSpinLoading />}
 
-        {!onQuery && checklists?.length === 0 && (
-          <s.NoMaintenanceCard>
-            <h4>Nenhuma checklist encontrada.</h4>
-          </s.NoMaintenanceCard>
-        )}
-
-        {!onQuery && checklists?.length > 0 && (
+        {reportView === 'reports' && !onQuery && checklists?.length > 0 && (
           <>
-            <s.CountContainer>
-              <s.Counts>
-                <s.CountsInfo>
-                  <h5 className="completed">{completedCount}</h5>
-                  <p className="p5">{completedCount > 1 ? 'Concluídas' : 'Concluída'}</p>
-                </s.CountsInfo>
+            <Style.CountContainer>
+              <Style.Counts>
+                <Style.CountsInfo>
+                  <h5 className="pending">{counts.pending}</h5>
+                  <p className="p5">{counts.pending > 1 ? 'Pendentes' : 'Pendente'}</p>
+                </Style.CountsInfo>
 
-                <s.CountsInfo>
-                  <h5 className="pending">{pendingCount}</h5>
-                  <p className="p5">{pendingCount > 1 ? 'Pendentes' : 'Pendente'}</p>
-                </s.CountsInfo>
-              </s.Counts>
-            </s.CountContainer>
+                <Style.CountsInfo>
+                  <h5 className="inProgress">{counts.inProgress}</h5>
+                  <p className="p5">Em andamento</p>
+                </Style.CountsInfo>
+
+                <Style.CountsInfo>
+                  <h5 className="completed">{counts.completed}</h5>
+                  <p className="p5">{counts.completed > 1 ? 'Concluídas' : 'Concluída'}</p>
+                </Style.CountsInfo>
+              </Style.Counts>
+            </Style.CountContainer>
             <ReportDataTable
               colsHeader={[
                 { label: 'Status' },
                 { label: 'Edificação' },
                 { label: 'Nome' },
-                { label: 'Descrição' },
                 { label: 'Responsável' },
-                { label: 'Periodicidade' },
+                { label: 'Items' },
                 { label: 'Data' },
               ]}
             >
-              {checklists?.map((checklist) => (
-                <ReportDataTableContent
-                  key={checklist.id}
-                  colsBody={[
-                    {
-                      cell: <EventTag status={checklist.status} />,
-                      cssProps: { width: '81px' },
-                    },
-                    { cell: checklist.building.name },
-                    { cell: checklist.name },
-                    { cell: checklist.description },
-                    { cell: checklist.syndic?.name || '-' },
-                    { cell: checklist.frequency ? 'Sim' : 'Não' },
-                    { cell: dateFormatter(checklist.date) },
-                  ]}
-                  onClick={() => {
-                    setChecklistId(checklist.id);
-                    setModalChecklistDetailsOpen(true);
-                  }}
-                />
-              ))}
+              {checklists?.map((checklist) => {
+                const checklistTotalItems = checklist.checklistItem.length;
+                const checklistCompletedItems = checklist.checklistItem.filter(
+                  (item) => item.status === 'completed',
+                ).length;
+
+                return (
+                  <ReportDataTableContent
+                    key={checklist.id}
+                    colsBody={[
+                      {
+                        cell: (
+                          <EventTag
+                            label={handleChecklistColors(checklist.status).name}
+                            color={handleChecklistColors(checklist.status).color}
+                            backgroundColor={handleChecklistColors(checklist.status).bgColor}
+                          />
+                        ),
+                        cssProps: { width: '81px' },
+                      },
+                      { cell: checklist.building.name },
+                      { cell: checklist.name },
+
+                      { cell: checklist.user?.name || '-' },
+                      { cell: `${checklistCompletedItems} / ${checklistTotalItems}` },
+                      { cell: dateFormatter(checklist.date) },
+                    ]}
+                    onClick={() => {
+                      setChecklistId(checklist.id);
+                      setModalChecklistDetails(true);
+                    }}
+                  />
+                );
+              })}
             </ReportDataTable>
           </>
         )}
-      </s.Container>
+
+        {reportView === 'reports' && !onQuery && checklists.length === 0 && (
+          <Style.NoMaintenanceCard>
+            <h4>Nenhum checklist encontrado.</h4>
+          </Style.NoMaintenanceCard>
+        )}
+
+        {reportView === 'pdfs' && (
+          <PdfList
+            reportType="checklist"
+            pdfList={checklistReportsPDF}
+            loading={loading}
+            handleRefreshPdf={handleGetChecklistPdf}
+          />
+        )}
+      </Style.Container>
     </>
   );
 };

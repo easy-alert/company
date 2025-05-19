@@ -134,7 +134,7 @@ export const BuildingMaintenancesList = () => {
           </Style.LeftSide>
 
           <Style.RightSide>
-            {/* <CSVLink
+            <CSVLink
               data={csvData}
               headers={csvHeaders}
               filename={`Plano de manutenção ${new Date().toLocaleDateString('pt-BR')}`}
@@ -149,7 +149,7 @@ export const BuildingMaintenancesList = () => {
                   //
                 }}
               />
-            </CSVLink> */}
+            </CSVLink>
 
             <IconButton
               label="Exportar"
@@ -173,7 +173,6 @@ export const BuildingMaintenancesList = () => {
         <Style.SearchField>
           <IconButton
             icon={<IconSearch strokeColor="primary" />}
-            fill="primary"
             size="16px"
             onClick={() =>
               filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter })

@@ -17,6 +17,5 @@ export interface IIconButton {
   loading?: boolean;
   tabIndex?: number;
   permToCheck?: string;
-  hasCircle?: boolean;
-  fill?: string;
+  zIndex?: number;
 }
