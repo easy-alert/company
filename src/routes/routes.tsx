@@ -12,6 +12,7 @@ import { Sidebar } from '@components/Sidebar';
 import { Login } from '@screens/Authentication/Login';
 import { Register } from '@screens/Authentication/Register';
 import { SelectCompany } from '@screens/Authentication/SelectCompany';
+import { Report } from '@screens/Reports';
 import Forbidden from '@screens/Forbidden';
 
 // NOTIFICATIONS CONFIRMATION
@@ -35,7 +36,6 @@ import { BuildingsList } from '@screens/Buildings/List';
 import { BuildingDetails } from '@screens/Buildings/Details';
 import { BuildingManageMaintenances } from '@screens/Buildings/BuildingManageMaintenances';
 import { BuildingMaintenancesList } from '@screens/Buildings/BuildingMaintenancesList';
-import { MaintenancesList } from '@screens/Maintenances/List';
 
 // CHECKLISTS PAGES
 import { Checklists } from '@screens/Checklists';
@@ -155,6 +155,7 @@ const AppRoutes = () => (
 
           {/* reports route */}
           <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
+            <Route index element={<Report />} />
             <Route path="maintenances" element={<MaintenanceReports />} />
             <Route path="checklists" element={<ChecklistReports />} />
             <Route path="tickets" element={<TicketReports />} />
