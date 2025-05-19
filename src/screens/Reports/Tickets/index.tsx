@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 
 // LIBS
 import { Form, Formik } from 'formik';
-import { CSVLink } from 'react-csv';
 import * as yup from 'yup';
 
 // API
@@ -32,7 +31,6 @@ import { formatDateString } from '@utils/dateFunctions';
 
 // GLOBAL ASSETS
 import IconPdfLogo from '@assets/icons/IconPdfLogo';
-import IconCsvLogo from '@assets/icons/IconCsvLogo';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
