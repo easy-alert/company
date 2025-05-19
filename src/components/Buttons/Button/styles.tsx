@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const Background = styled.div<{ center: boolean }>`
   width: fit-content;
@@ -111,11 +110,11 @@ export const ContainerButton = styled.div<{
     ${({ loading, theme }) =>
       loading &&
       `
-      border-radius: 50%; 
+      border-radius: 50%;
       padding: ${theme.size.xsm};
       opacity: 1;
       pointer-events: none;
-      width: ${theme.size.lg}; 
+      width: ${theme.size.lg};
       height: ${theme.size.lg};
       display: flex;
       align-items: center;
