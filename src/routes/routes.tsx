@@ -43,11 +43,6 @@ import { Checklists } from '@screens/Checklists';
 // TICKETS PAGES
 import TicketsPage from '@screens/Tickets';
 
-// REPORTS PAGES
-import { MaintenanceReports } from '@screens/Reports/Maintenances';
-import { ChecklistReports } from '@screens/Reports/Checklists';
-import { TicketReports } from '@screens/Reports/Tickets';
-
 // SUPPLIERS PAGES
 import { SupplierDetails } from '@screens/Suppliers/Details';
 import { SuppliersList } from '@screens/Suppliers/List';
@@ -156,9 +151,6 @@ const AppRoutes = () => (
           {/* reports route */}
           <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
             <Route index element={<Report />} />
-            <Route path="maintenances" element={<MaintenanceReports />} />
-            <Route path="checklists" element={<ChecklistReports />} />
-            <Route path="tickets" element={<TicketReports />} />
           </Route>
 
           {/* suppliers route */}

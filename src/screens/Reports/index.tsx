@@ -18,16 +18,25 @@ export const Report = () => {
   return (
     <Style.Container>
       <Style.ButtonGroup>
-        <Style.ButtonWrapper active={reportType === 'maintenance'}>
-          <Button label="Manutenção" onClick={() => handleReportChange('maintenance')} />
+        <Style.ButtonWrapper
+          active={reportType === 'maintenance'}
+          onClick={() => handleReportChange('maintenance')}
+        >
+          <Button label="Manutenção" />
         </Style.ButtonWrapper>
 
-        <Style.ButtonWrapper active={reportType === 'ticket'}>
-          <Button label="Chamados" onClick={() => handleReportChange('ticket')} />
+        <Style.ButtonWrapper
+          active={reportType === 'ticket'}
+          onClick={() => handleReportChange('ticket')}
+        >
+          <Button label="Chamados" />
         </Style.ButtonWrapper>
 
-        <Style.ButtonWrapper active={reportType === 'checklist'}>
-          <Button label="Checklist" onClick={() => handleReportChange('checklist')} />
+        <Style.ButtonWrapper
+          active={reportType === 'checklist'}
+          onClick={() => handleReportChange('checklist')}
+        >
+          <Button label="Checklist" />
         </Style.ButtonWrapper>
       </Style.ButtonGroup>
 
