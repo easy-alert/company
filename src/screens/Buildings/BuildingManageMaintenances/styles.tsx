@@ -128,3 +128,28 @@ export const CategoriesContainer = styled.div`
     background: transparent;
   }
 `;
+
+export const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  p {
+    font-size: 16px;
+    color: #333;
+  }
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+
+  button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+  }
+`;
