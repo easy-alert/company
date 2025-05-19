@@ -10,17 +10,20 @@ interface IUserBuildingsPermissions {
 }
 
 interface IPutUserPermissionsById {
+  companyId: string;
   userId: string;
   userBuildingsPermissions: IUserBuildingsPermissions[];
 }
 
 export async function putUserBuildingsPermissionsById({
+  companyId,
   userId,
   userBuildingsPermissions,
 }: IPutUserPermissionsById) {
   const uri = `permissions/user-buildings-permissions/${userId}`;
 
   const body = {
+    companyId,
     userBuildingsPermissions,
   };
 

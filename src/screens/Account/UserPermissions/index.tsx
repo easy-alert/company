@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 // LIBS
 import { useNavigate, useParams } from 'react-router-dom';
 
+// CONTEXT
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
@@ -44,8 +47,14 @@ interface IUserBuildingsPermissions {
 }
 
 function UserPermissions() {
-  const { userId } = useParams() as { userId: string };
   const navigate = useNavigate();
+  const { userId } = useParams() as { userId: string };
+
+  const {
+    account: {
+      Company: { id: companyId },
+    },
+  } = useAuthContext();
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: false });
 
   const [userPermissions, setUserPermissions] = useState<IUserPermissions[]>([]);
@@ -78,7 +87,7 @@ function UserPermissions() {
     setLoading(true);
 
     try {
-      const responseData = await getUserPermissionsById(userId);
+      const responseData = await getUserPermissionsById({ companyId, userId });
 
       setUserPermissions(responseData.userPermissions);
     } catch (error: any) {
@@ -92,7 +101,7 @@ function UserPermissions() {
     setLoading(true);
 
     try {
-      const responseData = await getUserBuildingsPermissionsById(userId);
+      const responseData = await getUserBuildingsPermissionsById({ companyId, userId });
 
       setUserBuildingsPermissions(responseData.userBuildingsPermissions);
     } catch (error: any) {
@@ -107,11 +116,13 @@ function UserPermissions() {
 
     try {
       await putUserPermissionsById({
+        companyId,
         userId,
         userPermissions,
       });
 
       await putUserBuildingsPermissionsById({
+        companyId,
         userId,
         userBuildingsPermissions,
       });
