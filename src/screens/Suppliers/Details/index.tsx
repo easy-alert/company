@@ -275,7 +275,6 @@ export const SupplierDetails = () => {
               disabled={onQuery}
               hideLabelOnMedia
               icon={<IconEdit strokeColor="primary" />}
-              hasCircle
               label="Editar"
               onClick={() => {
                 setModalEditSupplierOpen(true);

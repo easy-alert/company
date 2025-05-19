@@ -17,9 +17,9 @@ export const CustomModal = ({ children, setModal, title, bodyWidth, zIndex }: IM
   <Style.Body bodyWidth={bodyWidth} zIndex={zIndex}>
     <Style.Header>
       <h2>{title}</h2>
+
       <IconButton
         icon={<IconX strokeColor="primary" />}
-        fill="primary"
         color={theme.color.primary}
         onClick={() => {
           setModal(false);

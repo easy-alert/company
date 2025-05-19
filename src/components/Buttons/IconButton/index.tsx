@@ -1,11 +1,17 @@
-// COMPONENTS
+// HOOKS
 import { useHasPermission } from '@hooks/useHasPermission';
-import { theme } from '../../../styles/theme';
-import { ContainerButton, SpinnerContent } from './styles';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
+
+// COMPONENTS
 import { Image } from '../../Image';
 
+// STYLES
+import { ContainerButton, SpinnerContent } from './styles';
+
 // TYPES
-import { IIconButton } from './utils/types';
+import type { IIconButton } from './utils/types';
 
 export const IconButton = ({
   labelPos = 'left',

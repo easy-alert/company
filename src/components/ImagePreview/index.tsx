@@ -51,7 +51,6 @@ export const ImagePreview = ({
         )}
         {onUpdateClick && (
           <IconButton
-            fill="primary"
             icon={<IconEdit strokeColor="primary" />}
             size="24px"
             onClick={() => {

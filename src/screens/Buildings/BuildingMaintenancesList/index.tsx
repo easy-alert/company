@@ -173,7 +173,6 @@ export const BuildingMaintenancesList = () => {
         <Style.SearchField>
           <IconButton
             icon={<IconSearch strokeColor="primary" />}
-            fill="primary"
             size="16px"
             onClick={() =>
               filterFunction({ addedMaintenancesForFilter, setAddedMaintenances, filter })

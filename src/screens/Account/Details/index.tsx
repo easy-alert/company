@@ -27,7 +27,6 @@ import { icon } from '@assets/icons';
 import IconEdit from '@assets/icons/IconEdit';
 import IconEye from '@assets/icons/IconEye';
 import IconPlus from '@assets/icons/IconPlus';
-import IconTrash from '@assets/icons/IconTrash';
 
 // GLOBAL TYPES
 import { theme } from '@styles/theme';
@@ -450,7 +449,6 @@ export const AccountDetails = () => {
                             size="16px"
                             hideLabelOnMedia
                             icon={<IconEye strokeColor="primary" />}
-                            fill="primary"
                             label="Permissões"
                             onClick={() => navigate(`/account/${User.id}/permissions`)}
                           />
@@ -460,7 +458,6 @@ export const AccountDetails = () => {
                             size="16px"
                             hideLabelOnMedia
                             icon={<IconEdit strokeColor="primary" padding="4px" />}
-                            fill="primary"
                             label="Editar"
                             onClick={() => {
                               setSelectedUser({

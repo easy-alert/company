@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const ContainerButton = styled.div<{
+  title?: string;
   labelPos?: string;
   selected?: boolean;
   opacity?: string;

@@ -153,12 +153,9 @@ export const BuildingManageMaintenances = () => {
 
         <Style.SearchField>
           <IconButton
-            fill="primary"
             icon={<IconSearch strokeColor="primary" />}
             size="16px"
-            onClick={() => {
-              setFilter(inputRef.current);
-            }}
+            onClick={() => setFilter(inputRef.current)}
           />
           <input
             type="text"
