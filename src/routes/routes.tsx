@@ -12,6 +12,7 @@ import { Sidebar } from '@components/Sidebar';
 import { Login } from '@screens/Authentication/Login';
 import { Register } from '@screens/Authentication/Register';
 import { SelectCompany } from '@screens/Authentication/SelectCompany';
+import { Report } from '@screens/Reports';
 import Forbidden from '@screens/Forbidden';
 
 // NOTIFICATIONS CONFIRMATION
@@ -35,18 +36,12 @@ import { BuildingsList } from '@screens/Buildings/List';
 import { BuildingDetails } from '@screens/Buildings/Details';
 import { BuildingManageMaintenances } from '@screens/Buildings/BuildingManageMaintenances';
 import { BuildingMaintenancesList } from '@screens/Buildings/BuildingMaintenancesList';
-import { MaintenancesList } from '@screens/Maintenances/List';
 
 // CHECKLISTS PAGES
 import { Checklists } from '@screens/Checklists';
 
 // TICKETS PAGES
 import TicketsPage from '@screens/Tickets';
-
-// REPORTS PAGES
-import { MaintenanceReports } from '@screens/Reports/Maintenances';
-import { ChecklistReports } from '@screens/Reports/Checklists';
-import { TicketReports } from '@screens/Reports/Tickets';
 
 // SUPPLIERS PAGES
 import { SupplierDetails } from '@screens/Suppliers/Details';
@@ -155,9 +150,7 @@ const AppRoutes = () => (
 
           {/* reports route */}
           <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
-            <Route path="maintenances" element={<MaintenanceReports />} />
-            <Route path="checklists" element={<ChecklistReports />} />
-            <Route path="tickets" element={<TicketReports />} />
+            <Route index element={<Report />} />
           </Route>
 
           {/* suppliers route */}

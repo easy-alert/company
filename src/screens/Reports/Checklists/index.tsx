@@ -595,7 +595,7 @@ export const ChecklistReports = () => {
 
         {reportView === 'reports' && !onQuery && checklists.length === 0 && (
           <Style.NoMaintenanceCard>
-            <h4>Nenhum checklist encontrada.</h4>
+            <h4>Nenhum checklist encontrado.</h4>
           </Style.NoMaintenanceCard>
         )}
 
