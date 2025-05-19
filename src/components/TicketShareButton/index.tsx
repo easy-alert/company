@@ -46,10 +46,7 @@ export const TicketShareButton = ({ ticketId }: { ticketId: string }) => {
       )}
     >
       <Style.ButtonContainer>
-        <IconButton
-          icon={<IconUploadLine strokeColor="primary" />}
-          onClick={handleTogglePopover}
-        />
+        <IconButton icon={<IconUploadLine strokeColor="primary" />} onClick={handleTogglePopover} />
       </Style.ButtonContainer>
     </Popover>
   );
