@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
-import { icon } from '../../../assets/icons';
+
+import { icon } from '@assets/icons';
 
 export const InputContainer = styled.div<{
   typeDatePlaceholderValue?: string;
