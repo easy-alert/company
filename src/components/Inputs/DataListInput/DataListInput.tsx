@@ -211,9 +211,8 @@ export function DataListInput({
         ) : (
           <s.RootDownArrowContainer>
             <IconButton
-              fill="primary"
-              disabled={disabled}
               icon={<IconDowArrow />}
+              disabled={disabled}
               size="16px"
               onClick={(evt) => {
                 evt.stopPropagation();

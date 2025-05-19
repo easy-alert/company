@@ -1,40 +1,49 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { toast } from 'react-toastify';
+
 import { Api } from '@services/api';
+
 import { catchHandler } from '@utils/functions';
-import {
+
+import type {
   IRequestManageBuildingMaintenances,
   IRequestListCategoriesToManage,
   IRequestBuildingListForSelect,
   IRequestCategoriesForSelect,
+  ICategories,
 } from './types';
 
 export const requestListCategoriesToManage = async ({
-  setLoading,
   setCategories,
   buildingId,
-  setTableLoading,
   setBuildingName,
   currentBuildingId,
-}: IRequestListCategoriesToManage) => {
+  setTableLoading,
+  setLoading,
+}: IRequestListCategoriesToManage): Promise<ICategories[]> => {
   if (setTableLoading) setTableLoading(true);
+  if (setLoading) setLoading(true);
 
-  await Api.post(`/buildings/maintenances/list`, {
-    buildingId,
-    currentBuildingId,
-  })
-    .then((res) => {
-      setBuildingName(res.data.buildingName);
-      setCategories(res.data.CategoriesData);
-      setLoading(false);
-      if (setTableLoading) setTableLoading(false);
-    })
-    .catch((err) => {
-      setLoading(false);
-      if (setTableLoading) setTableLoading(false);
-      catchHandler(err);
+  try {
+    const res = await Api.post(`/buildings/maintenances/list`, {
+      buildingId,
+      currentBuildingId,
     });
+
+    setBuildingName(res.data.buildingName);
+
+    if (setCategories) setCategories(res.data.CategoriesData);
+    if (setLoading) setLoading(false);
+    if (setTableLoading) setTableLoading(false);
+
+    return res.data.CategoriesData;
+  } catch (err) {
+    if (setLoading) setLoading(false);
+    if (setTableLoading) setTableLoading(false);
+    catchHandler(err);
+    return [];
+  }
 };
 
 export const requestManageBuildingMaintenances = async ({

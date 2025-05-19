@@ -50,8 +50,12 @@ export const PdfList = ({ pdfList, loading, handleRefreshPdf, reportType }: IPdf
   const handleSharePdf = async (url: string, name: string) => {
     try {
       const isMobile = /Android|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-      const message = `Confira o relatório referente às datas: ${name}\n${url}`;
-      const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+      const message = `Confira o relatório: ${name}\n${url}`;
+
+      const whatsappDeepLink = `whatsapp://send?text=${encodeURIComponent(message)}`;
+      const whatsappUri = `https://web.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = isMobile ? whatsappDeepLink : whatsappUri;
+
       window.open(whatsappUrl, '_blank');
     } catch (err) {
       console.error('Erro ao compartilhar no WhatsApp:', err);

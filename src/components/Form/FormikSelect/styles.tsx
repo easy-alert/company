@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const SelectContainer = styled.div<{
   error: boolean;

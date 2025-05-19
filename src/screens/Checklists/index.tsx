@@ -17,6 +17,7 @@ import { catchHandler, requestListIntervals } from '@utils/functions';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
+import IconSearch from '@assets/icons/IconSearch';
 
 // GLOBAL TYPES
 import type { ITimeInterval } from '@utils/types';
@@ -25,10 +26,11 @@ import type { ITimeInterval } from '@utils/types';
 import { ModalChecklistCreate } from './ModalChecklistCreate';
 import { MiniCalendarComponent } from './MiniCalendarComponent';
 import { ChecklistRowComponent } from './ChecklistRowComponent';
+import { ModalChecklistDetails } from './ModalChecklistDetails';
+import { ModalChecklistTemplate } from './ModalChecklistTemplate';
 
 // STYLES
 import * as Style from './styles';
-import { ModalChecklistDetails } from './ModalChecklistDetails';
 
 export interface IChecklist {
   id: string;
@@ -49,7 +51,8 @@ export type TModalNames =
   | 'modalMaintenanceDetails'
   | 'modalCreateOccasionalMaintenance'
   | 'modalChecklistCreate'
-  | 'modalChecklistDetails';
+  | 'modalChecklistDetails'
+  | 'modalChecklistTemplate';
 
 export const Checklists = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
@@ -69,6 +72,7 @@ export const Checklists = () => {
 
   const [modalChecklistCreate, setModalChecklistCreate] = useState(false);
   const [modalChecklistDetails, setModalChecklistDetails] = useState(false);
+  const [modalChecklistTemplate, setModalChecklistTemplate] = useState(false);
 
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -84,6 +88,9 @@ export const Checklists = () => {
         break;
       case 'modalChecklistDetails':
         setModalChecklistDetails(modalState);
+        break;
+      case 'modalChecklistTemplate':
+        setModalChecklistTemplate(modalState);
         break;
 
       default:
@@ -139,7 +146,7 @@ export const Checklists = () => {
     <>
       {modalChecklistCreate && (
         <ModalChecklistCreate
-          buildingId={buildingsForSelect.find((building) => building.nanoId === buildingNanoId)?.id}
+          buildingsForSelect={buildingsForSelect}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
         />
@@ -152,6 +159,8 @@ export const Checklists = () => {
           handleRefresh={handleRefresh}
         />
       )}
+
+      {modalChecklistTemplate && <ModalChecklistTemplate handleModals={handleModals} />}
 
       <Style.Container>
         <Style.Header>
@@ -179,9 +188,14 @@ export const Checklists = () => {
           </Style.HeaderLeftSide>
 
           <IconButton
+            label="Modelos de checklist"
+            icon={<IconSearch strokeColor="primary" />}
+            onClick={() => handleModals('modalChecklistTemplate', true)}
+          />
+
+          <IconButton
             label="Checklist"
             icon={<IconPlus strokeColor="primary" />}
-            disabled={loading}
             onClick={() => handleModals('modalChecklistCreate', true)}
           />
         </Style.Header>

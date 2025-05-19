@@ -17,7 +17,6 @@ import { PopoverComponent } from '@components/Popover';
 import { icon } from '@assets/icons/index';
 
 // TYPES
-import IconDot from '@assets/icons/IconDot';
 import type { SidebarContentProps } from './utils/types';
 
 // STYLES
@@ -108,45 +107,13 @@ export const Sidebar = () => {
     },
     {
       title: 'Relatórios',
-      label: 'Relatórios',
-      type: 'popover',
+      type: 'navigate',
       icon: icon.report,
-      url: '/reports',
       permission: 'access:reports',
+      url: '/reports',
       redirectFunction: () => {
-        //
+        navigate('/reports');
       },
-      options: [
-        {
-          label: 'Chamados',
-          icon: <IconDot fillColor="primary" size="6px" />,
-          url: '/reports/tickets',
-          permission: 'access:reports',
-          redirectFunction: () => {
-            navigate('/reports/tickets');
-          },
-        },
-
-        {
-          label: 'Checklists',
-          icon: <IconDot fillColor="primary" size="6px" />,
-          url: '/reports/checklists',
-          permission: 'access:reports',
-          redirectFunction: () => {
-            navigate('/reports/checklists');
-          },
-        },
-
-        {
-          label: 'Manutenções',
-          icon: <IconDot fillColor="primary" size="6px" />,
-          url: '/reports/maintenances',
-          permission: 'access:reports',
-          redirectFunction: () => {
-            navigate('/reports/maintenances');
-          },
-        },
-      ],
     },
     {
       title: 'Prestadores de serviço',

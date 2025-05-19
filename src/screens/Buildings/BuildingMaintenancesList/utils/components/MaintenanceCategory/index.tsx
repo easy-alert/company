@@ -127,11 +127,8 @@ export const MaintenanceCategory = ({
 
               <IconButton
                 icon={<IconQrcode strokeColor="primary" />}
-                fill="primary"
                 size="18px"
-                onClick={() => {
-                  setModalPrintCategoryQrCodeOpen(true);
-                }}
+                onClick={() => setModalPrintCategoryQrCodeOpen(true)}
               />
             </Style.Container>
           </Style.HeaderTitle>

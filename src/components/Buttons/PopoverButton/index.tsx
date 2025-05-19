@@ -129,11 +129,10 @@ export const PopoverButton = ({
                     <h2>
                       {label}
                       <IconButton
+                        icon={<IconX strokeColor="primary" />}
                         onClick={() => {
                           setIsPopoverOpen(false);
                         }}
-                        icon={<IconX strokeColor="primary" />}
-                        fill="primary"
                       />
                     </h2>
                     <Style.Hr />

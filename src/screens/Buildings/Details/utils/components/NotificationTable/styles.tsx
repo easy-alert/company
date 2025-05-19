@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styled from 'styled-components';
-import { theme as defaultTheme } from '@styles/theme';
 
 export const Background = styled.div`
   max-width: 100%;

@@ -1,5 +1,5 @@
-import { IMaintenanceReport } from '../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import { AnnexesAndImages } from '../../../Calendar/types';
+import { IMaintenanceReport } from '@Calendar/utils/ModalSendMaintenanceReport/types';
+import { AnnexesAndImages } from '@Calendar/types';
 
 // MAINTENANCES
 interface IMaintenance {

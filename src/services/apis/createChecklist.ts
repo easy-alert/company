@@ -7,6 +7,7 @@ import type { IChecklist, TChecklistStatus } from '@customTypes/IChecklist';
 interface ICreateChecklist {
   buildingId: string;
   checklistTemplateId?: string;
+  editedChecklistTemplate?: IChecklist;
   newChecklist?: IChecklist;
   responsibleId: string;
   startDate: string;
@@ -17,6 +18,7 @@ interface ICreateChecklist {
 export const createChecklist = async ({
   buildingId,
   checklistTemplateId,
+  editedChecklistTemplate,
   newChecklist,
   responsibleId,
   startDate,
@@ -28,6 +30,7 @@ export const createChecklist = async ({
   const body = {
     buildingId,
     checklistTemplateId,
+    editedChecklistTemplate,
     newChecklist,
     responsibleId,
     startDate,

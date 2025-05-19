@@ -83,7 +83,6 @@ export const BuildingsList = () => {
           <Style.SearchField>
             <IconButton
               icon={<IconSearch strokeColor="primary" />}
-              fill="primary"
               size="16px"
               onClick={() => {
                 requestBuildingList({
@@ -130,7 +129,6 @@ export const BuildingsList = () => {
         </Style.LeftSide>
 
         <IconButton
-          hasCircle
           hideLabelOnMedia
           fontWeight="500"
           label="Cadastrar"
