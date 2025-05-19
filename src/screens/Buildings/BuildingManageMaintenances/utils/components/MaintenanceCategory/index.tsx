@@ -107,7 +107,7 @@ export const MaintenanceCategory = ({
               />
               <h5>{category.name}</h5>
               <span>
-                {selectedCount}/{totalCount} 
+                {selectedCount}/{totalCount}
               </span>
               <IconButton
                 size="16px"
