@@ -16,10 +16,11 @@ import { Api } from '@services/api';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL UTILS
-import { catchHandler, query } from '@utils/functions';
+import { query } from '@utils/functions';
+import { handleToastify } from '@utils/toastifyResponses';
 
 // TYPES
-import { IRequireAuth } from './utils/types';
+import type { IRequireAuth } from './utils/types';
 
 const Container = styled.div`
   display: flex;
@@ -40,21 +41,28 @@ export const RequireAuth = ({ children }: IRequireAuth) => {
 
   const backofficeToken = query.get('backofficeToken') ?? null;
   const userId = query.get('userId') ?? null;
+  const companyId = query.get('companyId') ?? null;
   const encodeRedirectUri = encodeURIComponent(location.pathname + location.search);
 
   const requestAccessToCompanyUser = async () => {
-    await Api.post('/auth/backofficeaccess', {
+    const uri = '/auth/backofficeaccess';
+
+    const params = {
+      companyId,
       userId,
       backofficeToken,
-    })
-      .then(async (res) => {
-        signin(res.data);
-        updateThemeColor(res?.data?.Account?.User?.colorScheme);
-        setLoading(false);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      });
+    };
+
+    try {
+      const response = await Api.post(uri, params);
+
+      signin(response.data);
+      updateThemeColor(response?.data?.Account?.User?.colorScheme);
+      setLoading(false);
+    } catch (error: any) {
+      handleToastify(error?.response);
+      navigate(`/login?redirect=${encodeRedirectUri}`);
+    }
   };
 
   const validateToken = async () => {
