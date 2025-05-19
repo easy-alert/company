@@ -44,6 +44,9 @@ export const MaintenanceCategory = ({
 
   const isAllMaintenancesSelected = category.Maintenances.every((e) => e.isSelected === true);
 
+  const selectedCount = category.Maintenances.filter((e) => e.isSelected).length;
+  const totalCount = category.Maintenances.length;
+
   return (
     <>
       {modalCreateMaintenanceOpen && (
@@ -103,6 +106,9 @@ export const MaintenanceCategory = ({
                 }}
               />
               <h5>{category.name}</h5>
+              <span>
+                {selectedCount}/{totalCount} 
+              </span>
               <IconButton
                 size="16px"
                 icon={<IconEdit strokeColor="primary" />}
