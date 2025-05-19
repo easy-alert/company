@@ -50,22 +50,6 @@ export const MaintenanceCategory = ({
     localStorage.setItem(`selected-maintenance-${category.id}`, JSON.stringify(selectedIds));
   }, [category]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem(`selected-maintenance-${category.id}`);
-    if (saved) {
-      const selectedIds: string[] = JSON.parse(saved);
-
-      const updatedCategories = [...categories];
-      const updatedMaintenances = updatedCategories[categoryIndex].Maintenances.map((m) => ({
-        ...m,
-        isSelected: selectedIds.includes(m.id),
-      }));
-
-      updatedCategories[categoryIndex].Maintenances = updatedMaintenances;
-      setCategories(updatedCategories);
-    }
-  }, []);
-
   return (
     <>
       {modalCreateMaintenanceOpen && (
