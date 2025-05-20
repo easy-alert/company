@@ -108,3 +108,21 @@ export const requestCategoriesForSelect = async ({
       catchHandler(err);
     });
 };
+
+export function getChangedCategories(current: ICategories[], original: ICategories[]) {
+  const originalMap = new Map(original.map((cat) => [cat.id, cat]));
+  return current.filter((cat) => {
+    const orig = originalMap.get(cat.id);
+    return !orig || JSON.stringify(cat) !== JSON.stringify(orig);
+  });
+}
+
+export function mergeCategories(original: ICategories[], changes: ICategories[]) {
+  const map = new Map(original.map((cat) => [cat.id, { ...cat }]));
+
+  changes.forEach((changed) => {
+    map.set(changed.id, changed);
+  });
+
+  return Array.from(map.values());
+}
