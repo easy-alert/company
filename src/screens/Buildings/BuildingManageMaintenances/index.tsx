@@ -24,6 +24,7 @@ import { ModalCreateCategory } from '@screens/Maintenances/List/utils/ModalCreat
 // GLOBAL UTILS
 import { autosaveDB } from '@utils/autosaveDB';
 import { handleToastifyMessage } from '@utils/toastifyResponses';
+import { query, requestListIntervals } from '@utils/functions';
 
 // GLOBAL ASSETS
 import IconSearch from '@assets/icons/IconSearch';
@@ -189,6 +190,9 @@ export const BuildingManageMaintenances = () => {
     };
 
     if (buildingId) {
+      query.delete('flow');
+
+      requestListIntervals({ setTimeIntervals });
       requestCategoriesForSelect({ setCategoriesOptions });
       requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! });
       fetchCategories();
