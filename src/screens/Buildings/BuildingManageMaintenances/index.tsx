@@ -189,6 +189,8 @@ export const BuildingManageMaintenances = () => {
     };
 
     if (buildingId) {
+      localStorage.removeItem(`maint-categories-${buildingId}`);
+
       requestCategoriesForSelect({ setCategoriesOptions });
       requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! });
       fetchCategories();
