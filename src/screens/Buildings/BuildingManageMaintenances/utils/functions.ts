@@ -15,10 +15,10 @@ import type {
 } from './types';
 
 export const requestListCategoriesToManage = async ({
-  setCategories,
   buildingId,
-  setBuildingName,
   currentBuildingId,
+  setCategories,
+  setBuildingName,
   setTableLoading,
   setLoading,
 }: IRequestListCategoriesToManage): Promise<ICategories[]> => {
