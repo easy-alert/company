@@ -1,5 +1,5 @@
 // REACT
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 // CONTEXT
@@ -21,6 +21,10 @@ import { Button } from '@components/Buttons/Button';
 import { Modal } from '@components/Modal';
 import { ModalCreateCategory } from '@screens/Maintenances/List/utils/ModalCreateCategory';
 
+// GLOBAL UTILS
+import { autosaveDB } from '@utils/autosaveDB';
+import { handleToastifyMessage } from '@utils/toastifyResponses';
+
 // GLOBAL ASSETS
 import IconSearch from '@assets/icons/IconSearch';
 import IconCheck from '@assets/icons/IconCheck';
@@ -29,11 +33,14 @@ import IconPlus from '@assets/icons/IconPlus';
 // COMPONENTS
 import { MaintenanceCategory } from './utils/components/MaintenanceCategory';
 
-// FUNCTIONS
+// UTILS
 import {
   requestManageBuildingMaintenances,
   requestListCategoriesToManage,
   requestCategoriesForSelect,
+  requestBuildingListForSelect,
+  getChangedCategories,
+  mergeCategories,
 } from './utils/functions';
 
 // STYLES
@@ -44,72 +51,107 @@ import type { IBuildingListForSelect, ICategories, ICategoriesOptions } from './
 
 export type LocalStorageData = {
   categories: ICategories[];
-  toCopyBuilding: string;
-  filter: string;
 };
 
 export const BuildingManageMaintenances = () => {
-  const { buildingId } = useParams();
   const { account } = useAuthContext();
+
   const { maintenancePriorities } = useMaintenancePriorities();
 
+  const { buildingId } = useParams();
   const navigate = useNavigate();
-
-  const [showModal, setShowModal] = useState(false);
-  const [localData, setLocalData] = useState<LocalStorageData | null>(null);
-  const [apiData, setApiData] = useState([]);
-  const [categories, setCategories] = useState<ICategories[]>([]);
-  const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
-  const [buildingName, setBuildingName] = useState<string>('');
-  const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
-  const [categoriesOptions, setCategoriesOptions] = useState<ICategoriesOptions[]>([]);
-  const [filter, setFilter] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [tableloading, setTableLoading] = useState<boolean>(false);
-  const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
-
   const inputRef = useRef('');
 
   const { search } = window.location;
 
-  const isAllCategoriesSelected = categories.every((element) =>
-    element.Maintenances.every((e) => e.isSelected === true),
+  const [buildingName, setBuildingName] = useState<string>('');
+  const [categories, setCategories] = useState<ICategories[]>([]);
+  const [originalCategories, setOriginalCategories] = useState<ICategories[]>([]);
+  const [localData, setLocalData] = useState<LocalStorageData | null>(null);
+
+  const [buildingListForSelect, setBuildingListForSelect] = useState<IBuildingListForSelect[]>([]);
+  const [categoriesOptions, setCategoriesOptions] = useState<ICategoriesOptions[]>([]);
+  const [toCopyBuilding, setToCopyBuilding] = useState<string>('');
+
+  const [filter, setFilter] = useState<string>('');
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [tableloading, setTableLoading] = useState<boolean>(false);
+
+  const [modalCreateCategoryOpen, setModalCreateCategoryOpen] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [timeIntervals, setTimeIntervals] = useState<ITimeInterval[]>([]);
+
+  const isAllCategoriesSelected = useMemo(
+    () => categories.every((element) => element.Maintenances.every((e) => e.isSelected === true)),
+    [categories],
   );
 
-  const hasSomeMaintenance = categories.some((element) => element.Maintenances.length > 0);
+  const hasSomeMaintenance = useMemo(
+    () => categories.some((element) => element.Maintenances.length > 0),
+    [categories],
+  );
 
   const handleRestoreLocalData = () => {
+    setLoading(true);
+
     if (localData) {
-      setCategories(localData.categories);
-      setToCopyBuilding(localData.toCopyBuilding);
-      setFilter(localData.filter);
+      const merged = mergeCategories(originalCategories, localData.categories);
+      if (JSON.stringify(categories) !== JSON.stringify(merged)) {
+        setCategories(merged);
+        handleToastifyMessage({
+          message: 'Dados locais restaurados com sucesso',
+          type: 'success',
+        });
+      }
+    } else {
+      handleToastifyMessage({
+        message: 'Nenhum dado local encontrado, restaurando dados da API',
+        type: 'warning',
+      });
+      autosaveDB.remove(`maint-categories-${buildingId}`);
+      setCategories(originalCategories);
+      setLocalData(null);
     }
-    setShowModal(false);
+
+    setTimeout(() => {
+      setShowModal(false);
+      setLoading(false);
+    }, 1000);
   };
 
   const handleDiscardLocalData = async () => {
-    localStorage.removeItem(`maint-categories-${buildingId}`);
-
     setLoading(true);
-    const freshData = await requestListCategoriesToManage({
-      setCategories,
-      buildingId: buildingId!,
-      setBuildingName,
-      currentBuildingId: buildingId!,
-      setTableLoading,
-      setLoading,
-    });
 
-    setApiData(JSON.parse(JSON.stringify(freshData)));
+    autosaveDB.remove(`maint-categories-${buildingId}`);
+
+    handleToastifyMessage({
+      message: 'Dados locais descartados, restaurando dados da API',
+      type: 'warning',
+    });
+    setCategories(originalCategories);
     setLocalData(null);
-    setShowModal(false);
+
+    setTimeout(() => {
+      setShowModal(false);
+      setLoading(false);
+    }, 1000);
   };
 
-  useEffect(() => {
-    requestCategoriesForSelect({ setCategoriesOptions });
-  }, [buildingId]);
+  function useDebouncedEffect(effect: () => void, deps: any[], delay: number) {
+    const handler = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+      if (handler.current) clearTimeout(handler.current);
+      handler.current = setTimeout(effect, delay);
+
+      return () => {
+        if (handler.current) clearTimeout(handler.current);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
+  }
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -118,34 +160,27 @@ export const BuildingManageMaintenances = () => {
 
       try {
         const categoriesFromApi = await requestListCategoriesToManage({
-          setCategories: () => null,
           buildingId: buildingId!,
-          setBuildingName,
           currentBuildingId: buildingId!,
+          setCategories: () => null,
+          setBuildingName,
           setTableLoading,
           setLoading,
         });
 
+        setOriginalCategories(structuredClone(categoriesFromApi));
         setCategories(categoriesFromApi);
-        setApiData(JSON.parse(JSON.stringify(categoriesFromApi)));
 
-        const savedData = localStorage.getItem(`maint-categories-${buildingId}`);
+        const savedData = await autosaveDB.load(`maint-categories-${buildingId}`);
+
         if (savedData) {
-          try {
-            const parsedData: LocalStorageData = JSON.parse(savedData);
+          if (savedData.categories && savedData.categories.length > 0) {
+            const hasChanges = savedData.categories !== categoriesFromApi;
 
-            if (parsedData.categories && parsedData.categories.length > 0) {
-              const hasChanges =
-                JSON.stringify(parsedData.categories) !== JSON.stringify(categoriesFromApi);
-              if (hasChanges) {
-                setLocalData(parsedData);
-                setShowModal(true);
-              } else {
-                localStorage.removeItem(`maint-categories-${buildingId}`);
-              }
+            if (hasChanges) {
+              setShowModal(true);
+              setLocalData(savedData);
             }
-          } catch (error) {
-            localStorage.removeItem(`maint-categories-${buildingId}`);
           }
         }
       } finally {
@@ -153,19 +188,30 @@ export const BuildingManageMaintenances = () => {
       }
     };
 
-    if (buildingId) fetchCategories();
+    if (buildingId) {
+      localStorage.removeItem(`maint-categories-${buildingId}`);
+
+      requestCategoriesForSelect({ setCategoriesOptions });
+      requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! });
+      fetchCategories();
+    }
   }, [buildingId]);
 
-  useEffect(() => {
-    if (!loading && buildingId) {
-      const dataToSave: LocalStorageData = {
-        categories,
-        toCopyBuilding,
-        filter,
-      };
-      localStorage.setItem(`maint-categories-${buildingId}`, JSON.stringify(dataToSave));
-    }
-  }, [categories, toCopyBuilding, filter, buildingId, loading]);
+  useDebouncedEffect(
+    () => {
+      if (buildingId && categories.length > 0) {
+        const changedCategories = getChangedCategories(categories, originalCategories);
+
+        if (changedCategories.length > 0) {
+          autosaveDB.save(`maint-categories-${buildingId}`, { categories: changedCategories });
+        } else {
+          autosaveDB.remove(`maint-categories-${buildingId}`);
+        }
+      }
+    },
+    [buildingId, categories, originalCategories],
+    1000,
+  );
 
   // return
   return loading ? (
@@ -174,10 +220,23 @@ export const BuildingManageMaintenances = () => {
     <>
       {modalCreateCategoryOpen && (
         <ModalCreateCategory
-          setModal={setModalCreateCategoryOpen}
           categories={categories}
+          setModal={setModalCreateCategoryOpen}
           setCategories={setCategories}
         />
+      )}
+
+      {showModal && localData && (
+        <Modal title="Alterações não salvas" setModal={setShowModal}>
+          <Style.ModalContent>
+            <p>Você tem dados não salvos, deseja restaurar?</p>
+
+            <Style.ButtonContainer>
+              <Button bgColor="primary" label="Sim" onClick={handleRestoreLocalData} />
+              <Button borderless label="Descartar" onClick={handleDiscardLocalData} />
+            </Style.ButtonContainer>
+          </Style.ModalContent>
+        </Modal>
       )}
 
       <Style.Header>
@@ -268,6 +327,7 @@ export const BuildingManageMaintenances = () => {
               }}
             >
               <option value="">Não copiar</option>
+
               {buildingListForSelect.map((element) => (
                 <option key={element.id} value={element.id}>
                   {element.name}
@@ -364,19 +424,6 @@ export const BuildingManageMaintenances = () => {
           <Image img={icon.paper} size="80px" radius="0" />
           <h3>Nenhuma categoria ou manutenção encontrada.</h3>
         </Style.NoMaintenancesContainer>
-      )}
-
-      {showModal && localData && (
-        <Modal title="Alterações não salvas" setModal={setShowModal}>
-          <Style.ModalContent>
-            <p>Você tem dados não salvos, deseja restaurar?</p>
-
-            <Style.ButtonContainer>
-              <Button bgColor="primary" label="Sim" onClick={handleRestoreLocalData} />
-              <Button borderless label="Descartar" onClick={handleDiscardLocalData} />
-            </Style.ButtonContainer>
-          </Style.ModalContent>
-        </Modal>
       )}
     </>
   );
