@@ -195,6 +195,8 @@ export const BuildingManageMaintenances = () => {
       query.delete('flow');
 
       requestListIntervals({ setTimeIntervals });
+
+      requestListIntervals({ setTimeIntervals });
       requestCategoriesForSelect({ setCategoriesOptions });
       requestBuildingListForSelect({ setBuildingListForSelect, buildingId: buildingId! });
       fetchCategories();
