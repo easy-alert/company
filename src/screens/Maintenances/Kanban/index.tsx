@@ -650,8 +650,7 @@ export const MaintenancesKanban = () => {
               kanban?.map((card) => (
                 <Style.KanbanCard key={card.status}>
                   <Style.KanbanHeader viewMode={viewMode}>
-                    <h5>{card.status}</h5>
-
+                    {card.status} ({card.maintenances.length})
                     {card.status === 'Vencidas' && (
                       <label htmlFor="showExpireds">
                         <input
@@ -663,7 +662,6 @@ export const MaintenancesKanban = () => {
                         Mostrar expiradas
                       </label>
                     )}
-
                     {card.status === 'Pendentes' && (
                       <label htmlFor="showFuture">
                         <input
@@ -837,7 +835,9 @@ export const MaintenancesKanban = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Style.Chevron $expanded={isExpanded} />
-                      <h5>{card.status}</h5>
+                      <h5>
+                        {card.status} ({card.maintenances.length})
+                      </h5>
                     </div>
 
                     {card.status === 'Vencidas' && (
