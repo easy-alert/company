@@ -114,7 +114,7 @@ export const MaintenancesKanban = () => {
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
   });
-  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [showFilter, setShowFilter] = useState<boolean>(true);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -211,10 +211,6 @@ export const MaintenancesKanban = () => {
     }
   };
   // # endregion
-
-  useEffect(() => {
-    handleGetMaintenances();
-  }, [refresh]);
 
   return (
     <>
