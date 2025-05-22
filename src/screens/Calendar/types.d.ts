@@ -71,6 +71,7 @@ export interface IRequestCalendarDataResData {
             color: string;
             backgroundColor: string;
           };
+          serviceOrderNumber: number;
         },
       ];
       Months: [

@@ -731,7 +731,16 @@ export const MaintenancesKanban = () => {
                                 }
                               }}
                             >
-                              <h5>{maintenance?.buildingName}</h5>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <h5>{maintenance?.buildingName}</h5>
+
+                                <EventTag
+                                  label={`#${maintenance.serviceOrderNumber}`}
+                                  color={theme.color.gray4}
+                                  bgColor="transparent"
+                                  fontWeight="bold"
+                                />
+                              </div>
 
                               <h6>
                                 <span>
@@ -886,7 +895,16 @@ export const MaintenancesKanban = () => {
                               handleModals(modal, true);
                             }}
                           >
-                            <h5>{maintenance.buildingName}</h5>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <h5>{maintenance?.buildingName}</h5>
+
+                              <EventTag
+                                label={`#${maintenance.serviceOrderNumber}`}
+                                color={theme.color.gray4}
+                                bgColor="transparent"
+                                fontWeight="bold"
+                              />
+                            </div>
                             <h6>{maintenance.element || maintenance.name}</h6>
                             <p className="p2">
                               {maintenance.activity || maintenance.checklistProgress}

@@ -98,6 +98,7 @@ export interface IMaintenance {
   priorityName: string;
   additionalInfo?: string;
   userResponsible?: IUser;
+  serviceOrderNumber?: number;
   Users?: {
     User: IUser;
   }[];

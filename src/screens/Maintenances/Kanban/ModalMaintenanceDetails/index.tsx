@@ -12,11 +12,14 @@ import { ImagePreview } from '@components/ImagePreview';
 import { InProgressTag } from '@components/InProgressTag';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
-import UserResponsible from '@components/UserResponsible';
 import { ModalEditMaintenanceHistory } from '@components/ModalEditMaintenanceHistory';
+import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -164,7 +167,24 @@ export const ModalMaintenanceDetails = ({
           </Style.LoadingContainer>
         ) : (
           <Style.Container>
-            <h3>{maintenanceDetails?.Building.name}</h3>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: theme.size.xsm,
+              }}
+            >
+              <h3>{maintenanceDetails?.Building?.name}</h3>
+
+              <EventTag
+                label={`#${maintenanceDetails.serviceOrderNumber}`}
+                color={theme.color.gray4}
+                bgColor="transparent"
+                fontWeight="bold"
+              />
+            </div>
+
             <Style.StatusTagWrapper>
               {maintenanceDetails.MaintenancesStatus.name === 'overdue' && (
                 <EventTag status="completed" />
@@ -185,7 +205,6 @@ export const ModalMaintenanceDetails = ({
                 maintenanceDetails.inProgress &&
                 !modalAdditionalInformations.isFuture && <InProgressTag />}
             </Style.StatusTagWrapper>
-
             <Style.Content>
               <Style.Row>
                 <h6>Categoria</h6>
@@ -367,7 +386,6 @@ export const ModalMaintenanceDetails = ({
                 </Style.FileAndImageRow>
               </Style.FileStyleRow>
             </Style.Content>
-
             <Button
               bgColor="primary"
               label="Fechar"
