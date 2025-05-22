@@ -33,6 +33,8 @@ export interface IAccount {
     ticketInfo: string | null;
     UserCompanies: IUserCompanyRelation[];
     showMaintenancePriority: boolean;
+    canAccessChecklists: boolean; 
+    canAccessTickets: boolean;  
   };
 
   Companies?: {
