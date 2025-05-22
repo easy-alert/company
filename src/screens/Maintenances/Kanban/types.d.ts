@@ -14,6 +14,7 @@ export interface MaintenanceKanban {
   priorityLabel: string;
   priorityColor: string;
   priorityBackgroundColor: string;
+  serviceOrderNumber?: number;
 
   name?: string;
   checklistProgress?: string;
@@ -130,6 +131,7 @@ export interface IMaintenance {
   daysInAdvance: number;
   additionalInfo?: string;
   userResponsible?: IUser;
+  serviceOrderNumber?: number;
   Users?: {
     User: IUser;
   }[];

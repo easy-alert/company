@@ -4,13 +4,14 @@
 import { Api } from '@services/api';
 
 // GLOBAL COMPONENTS
+import { EventTag } from '@components/EventTag';
 import { InProgressTag } from '@components/InProgressTag';
 
 // GLOBAL UTILS
 import { catchHandler } from '@utils/functions';
 
-// COMPONENTS
-import { EventTag } from './utils/EventTag';
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // TYPES
 import type { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
@@ -87,6 +88,26 @@ export const requestCalendarData = async ({
               paddingBottom: '4px',
             }}
           >
+            <div
+              className="ellipsis"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '14px',
+                lineHeight: '17px',
+              }}
+            >
+              {e.Building.name}
+
+              <EventTag
+                label={`#${e.serviceOrderNumber}`}
+                color={theme.color.gray4}
+                bgColor="transparent"
+                fontWeight="bold"
+              />
+            </div>
+
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
 
@@ -104,9 +125,6 @@ export const requestCalendarData = async ({
                 !e.isFuture && <InProgressTag />}
             </div>
 
-            <div className="ellipsis" style={{ fontSize: '14px', lineHeight: '17px' }}>
-              {e.Building.name}
-            </div>
             <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
               {e.Maintenance.element}
             </div>
