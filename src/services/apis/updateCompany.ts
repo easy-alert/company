@@ -79,6 +79,8 @@ export async function updateCompany({ data, company }: IUpdateCompany) {
       ticketInfo: response.data.updatedCompany.ticketInfo,
       ticketType: response.data.updatedCompany.ticketType,
       showMaintenancePriority: response.data.updatedCompany.showMaintenancePriority,
+      canAccessChecklists: response.data.updatedCompany.canAccessChecklists,
+      canAccessTickets: response.data.updatedCompany.canAccessTickets,
     };
 
     handleToastify(response);
