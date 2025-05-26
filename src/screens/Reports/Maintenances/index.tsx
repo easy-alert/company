@@ -101,6 +101,7 @@ export const MaintenanceReports = () => {
     buildingIds: [],
     buildingNames: [],
     maintenanceStatusNames: [],
+    search: '',
     filterBy: 'notificationDate',
   });
 
@@ -257,15 +258,17 @@ export const MaintenanceReports = () => {
 
       <s.Container>
         <h2>Relatórios de manutenções</h2>
+
         <s.FiltersContainer>
           <Formik
             initialValues={{
               maintenanceStatusId: '',
+              search: '',
+              filterBy: 'notificationDate',
               startDate: '',
               endDate: '',
               endDueDate: '',
               startDueDate: '',
-              filterBy: 'notificationDate',
             }}
             validationSchema={schemaReportFilter}
             onSubmit={async (values) => {
@@ -277,9 +280,10 @@ export const MaintenanceReports = () => {
                 categoryNames: categoriesForFilter.map((e) => e.name),
                 maintenanceStatusIds: statusForFilter.map((e) => e.id),
                 maintenanceStatusNames: statusForFilter.map((e) => e.name),
+                search: values.search,
+                filterBy: values.filterBy,
                 endDate: values.endDate,
                 startDate: values.startDate,
-                filterBy: values.filterBy,
               });
 
               await requestReportsData({
@@ -296,6 +300,7 @@ export const MaintenanceReports = () => {
                   endDate: values.endDate,
                   startDate: values.startDate,
                   filterBy: values.filterBy,
+                  search: values.search,
                 },
               });
             }}
@@ -425,6 +430,13 @@ export const MaintenanceReports = () => {
                 </s.FiltersGrid>
 
                 <s.FiltersSecondGrid>
+                  <FormikInput
+                    name="search"
+                    label="Buscar"
+                    placeholder="Procurar por algum termo"
+                    value={values.search}
+                  />
+
                   <FormikSelect
                     label="Filtrar por"
                     name="filterBy"
@@ -607,6 +619,7 @@ export const MaintenanceReports = () => {
             </s.CountContainer>
             <ReportDataTable
               colsHeader={[
+                { label: ' ' },
                 { label: 'Status' },
                 { label: 'Edificação' },
                 { label: 'Categoria' },
@@ -622,6 +635,11 @@ export const MaintenanceReports = () => {
                 <ReportDataTableContent
                   key={maintenance.id + i}
                   colsBody={[
+                    {
+                      cell: maintenance.serviceOrderNumber
+                        ? `#${maintenance.serviceOrderNumber}`
+                        : 'N/A',
+                    },
                     {
                       cell: (
                         <s.TagContainer>

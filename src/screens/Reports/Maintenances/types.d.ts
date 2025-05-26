@@ -7,6 +7,7 @@ export interface IReportsFilters {
   buildingNames: string[];
   maintenanceStatusNames: string[];
   filterBy: string;
+  search?: string;
 }
 
 export interface IFilterforPDF {
@@ -26,6 +27,7 @@ export interface IFilterforRequest {
   startDate: string;
   endDate: string;
   filterBy: string;
+  search?: string;
 }
 
 interface IFilterData {
@@ -72,6 +74,7 @@ export interface IMaintenanceReportData {
   expectedDueDate?: string;
   expectedNotificationDate?: string;
   isFuture?: boolean;
+  serviceOrderNumber?: number | null;
 
   images: {
     url: string;
