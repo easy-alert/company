@@ -133,16 +133,16 @@ export const Sidebar = () => {
         navigate('/suppliers');
       },
     },
-    {
-      title: 'Tutoriais',
-      type: 'navigate',
-      icon: icon.tutorial,
-      permission: 'access:tutorials',
-      url: '/tutorials',
-      redirectFunction: () => {
-        navigate('/tutorials');
-      },
-    },
+    // {
+    //   title: 'Tutoriais',
+    //   type: 'navigate',
+    //   icon: icon.tutorial,
+    //   permission: 'access:tutorials',
+    //   url: '/tutorials',
+    //   redirectFunction: () => {
+    //     navigate('/tutorials');
+    //   },
+    // },
     {
       title: 'Configurações',
       type: 'navigate',
