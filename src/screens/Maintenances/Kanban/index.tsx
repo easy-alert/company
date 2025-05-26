@@ -114,7 +114,7 @@ export const MaintenancesKanban = () => {
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
   });
-  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [showFilter, setShowFilter] = useState<boolean>(true);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -211,10 +211,6 @@ export const MaintenancesKanban = () => {
     }
   };
   // # endregion
-
-  useEffect(() => {
-    handleGetMaintenances();
-  }, [refresh]);
 
   return (
     <>
@@ -650,8 +646,7 @@ export const MaintenancesKanban = () => {
               kanban?.map((card) => (
                 <Style.KanbanCard key={card.status}>
                   <Style.KanbanHeader viewMode={viewMode}>
-                    <h5>{card.status}</h5>
-
+                    {card.status} ({card.maintenances.length})
                     {card.status === 'Vencidas' && (
                       <label htmlFor="showExpireds">
                         <input
@@ -663,7 +658,6 @@ export const MaintenancesKanban = () => {
                         Mostrar expiradas
                       </label>
                     )}
-
                     {card.status === 'Pendentes' && (
                       <label htmlFor="showFuture">
                         <input
@@ -731,7 +725,16 @@ export const MaintenancesKanban = () => {
                                 }
                               }}
                             >
-                              <h5>{maintenance?.buildingName}</h5>
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <h5>{maintenance?.buildingName}</h5>
+
+                                <EventTag
+                                  label={`#${maintenance.serviceOrderNumber}`}
+                                  color={theme.color.gray4}
+                                  bgColor="transparent"
+                                  fontWeight="bold"
+                                />
+                              </div>
 
                               <h6>
                                 <span>
@@ -837,7 +840,9 @@ export const MaintenancesKanban = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Style.Chevron $expanded={isExpanded} />
-                      <h5>{card.status}</h5>
+                      <h5>
+                        {card.status} ({card.maintenances.length})
+                      </h5>
                     </div>
 
                     {card.status === 'Vencidas' && (
@@ -886,7 +891,16 @@ export const MaintenancesKanban = () => {
                               handleModals(modal, true);
                             }}
                           >
-                            <h5>{maintenance.buildingName}</h5>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                              <h5>{maintenance?.buildingName}</h5>
+
+                              <EventTag
+                                label={`#${maintenance.serviceOrderNumber}`}
+                                color={theme.color.gray4}
+                                bgColor="transparent"
+                                fontWeight="bold"
+                              />
+                            </div>
                             <h6>{maintenance.element || maintenance.name}</h6>
                             <p className="p2">
                               {maintenance.activity || maintenance.checklistProgress}

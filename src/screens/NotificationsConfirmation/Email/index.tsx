@@ -9,7 +9,6 @@ import * as Style from './styles';
 import { Button } from '../../../components/Buttons/Button';
 
 // FUNCTIONS
-import { requestConfirmData } from '../utils/functions';
 import { query } from '../../../utils/functions';
 import { DotSpinLoading } from '../../../components/Loadings/DotSpinLoading';
 

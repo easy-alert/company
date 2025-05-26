@@ -10,18 +10,19 @@ import { ImagePreview } from '@components/ImagePreview';
 import { LinkSupplierToMaintenanceHistory } from '@components/LinkSupplierToMaintenanceHistory';
 import { MaintenanceHistoryActivities } from '@components/MaintenanceHistoryActivities';
 import { ListTag } from '@components/ListTag';
+import { EventTag } from '@components/EventTag';
 
 // GLOBAL UTILS
 import { applyMask, dateFormatter } from '@utils/functions';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // ASSETS
 import { icon } from '@assets/icons';
 
 // CUSTOM TYPES
 import { IMaintenance } from '@customTypes/IMaintenance';
-
-// COMPONENTS
-import { EventTag } from '../EventTag';
 
 // UTILS
 import { requestMaintenanceDetails } from './functions';
@@ -98,7 +99,24 @@ export const ModalMaintenanceDetails = ({
         </Style.LoadingContainer>
       ) : (
         <Style.Container>
-          <h3>{maintenance?.Building?.name}</h3>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: theme.size.xsm,
+            }}
+          >
+            <h3>{maintenance?.Building?.name}</h3>
+
+            <EventTag
+              label={`#${maintenance.serviceOrderNumber}`}
+              color={theme.color.gray4}
+              bgColor="transparent"
+              fontWeight="bold"
+            />
+          </div>
+
           <Style.StatusTagWrapper>
             {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
 

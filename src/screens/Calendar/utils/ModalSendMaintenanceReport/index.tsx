@@ -27,6 +27,7 @@ import { ListTag } from '@components/ListTag';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { Select } from '@components/Inputs/Select';
 import { ModalEditMaintenanceHistory } from '@components/ModalEditMaintenanceHistory';
+import { EventTag } from '@components/EventTag';
 import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
@@ -42,9 +43,6 @@ import { icon } from '@assets/icons';
 // GLOBAL TYPES
 import type { IMaintenance } from '@customTypes/IMaintenance';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
-
-// COMPONENTS
-import { EventTag } from '../EventTag';
 
 // UTILS
 import {
@@ -268,7 +266,23 @@ export const ModalSendMaintenanceReport = ({
           </Style.LoadingContainer>
         ) : (
           <Style.Container>
-            <h3>{maintenance?.Building.name}</h3>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: theme.size.xsm,
+              }}
+            >
+              <h3>{maintenance?.Building?.name}</h3>
+
+              <EventTag
+                label={`#${maintenance.serviceOrderNumber}`}
+                color={theme.color.gray4}
+                bgColor="transparent"
+                fontWeight="bold"
+              />
+            </div>
 
             <Style.StatusTagWrapper>
               {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}

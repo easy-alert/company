@@ -30,16 +30,24 @@ export const Sidebar = () => {
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(true);
 
-  const handlePermissions = (permission: string) => {
-    const adminPermission = account?.User?.Permissions?.some(
-      (perm) => perm.Permission.name === 'admin:company',
-    );
+  const handlePermissions = (permission?: string) => {
+    if (!permission) return true;
 
-    if (adminPermission) {
+    const userPermissions = account?.User?.Permissions?.map((p) => p.Permission.name) || [];
+    const isAdmin = userPermissions.includes('admin:company');
+
+    if (isAdmin) {
+      if (permission === 'access:checklist') return account?.Company?.canAccessChecklists !== false;
+      if (permission === 'access:tickets') return account?.Company?.canAccessTickets !== false;
       return true;
     }
 
-    return account?.User?.Permissions?.some((perm) => perm.Permission.name === permission);
+    if (permission === 'access:checklist' && account?.Company?.canAccessChecklists === false)
+      return false;
+    if (permission === 'access:tickets' && account?.Company?.canAccessTickets === false)
+      return false;
+
+    return userPermissions.includes(permission);
   };
 
   const SidebarContent: SidebarContentProps[] = [
@@ -125,16 +133,16 @@ export const Sidebar = () => {
         navigate('/suppliers');
       },
     },
-    {
-      title: 'Tutoriais',
-      type: 'navigate',
-      icon: icon.tutorial,
-      permission: 'access:tutorials',
-      url: '/tutorials',
-      redirectFunction: () => {
-        navigate('/tutorials');
-      },
-    },
+    // {
+    //   title: 'Tutoriais',
+    //   type: 'navigate',
+    //   icon: icon.tutorial,
+    //   permission: 'access:tutorials',
+    //   url: '/tutorials',
+    //   redirectFunction: () => {
+    //     navigate('/tutorials');
+    //   },
+    // },
     {
       title: 'Configurações',
       type: 'navigate',

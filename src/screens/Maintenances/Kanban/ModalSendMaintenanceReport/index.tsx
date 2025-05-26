@@ -300,7 +300,23 @@ export const ModalSendMaintenanceReport = ({
           </Style.LoadingContainer>
         ) : (
           <Style.Container>
-            <h3>{maintenance?.Building.name}</h3>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: theme.size.xsm,
+              }}
+            >
+              <h3>{maintenance?.Building?.name}</h3>
+
+              <EventTag
+                label={`#${maintenance.serviceOrderNumber}`}
+                color={theme.color.gray4}
+                bgColor="transparent"
+                fontWeight="bold"
+              />
+            </div>
 
             <Style.StatusTagWrapper>
               {maintenance.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
