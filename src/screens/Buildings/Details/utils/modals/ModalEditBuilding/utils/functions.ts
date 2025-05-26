@@ -88,21 +88,20 @@ export const schemaModalEditBuilding = yup
     image: yup
       .mixed()
       .nullable()
-      .test(
-        'FileSize',
-        'O tamanho da imagem excedeu o limite.',
-        (value) => !value || (value && value.size <= 5000000),
-      )
-      .test(
-        'FileType',
-        'Formato inválido.',
-        (value) =>
-          !value ||
-          (value &&
+      .test('FileSize', 'O tamanho da imagem excedeu o limite.', (value) => {
+        if (value instanceof File) return value && value.size <= 5000000;
+        return true;
+      })
+      .test('FileType', 'Formato inválido.', (value) => {
+        if (value instanceof File)
+          return (
+            value &&
             (value.type === 'image/png' ||
               value.type === 'image/jpeg' ||
-              value.type === 'image/jpg')),
-      ),
+              value.type === 'image/jpg')
+          );
+        return true;
+      }),
     name: yup.string().required('O nome deve ser preenchido.'),
     buildingTypeId: yup.string().required('O tipo deve ser selecionado.'),
     cep: yup.string().min(9, 'Digite um CEP válido.').required('o CEP deve ser preenchido.'),
