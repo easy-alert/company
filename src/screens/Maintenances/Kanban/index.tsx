@@ -1,5 +1,5 @@
 // REACT
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // LIBS
 import { Form, Formik } from 'formik';
@@ -77,6 +77,8 @@ export const MaintenancesKanban = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
   const { usersForSelect } = useUsersForSelect({ buildingId: '' });
   const { maintenanceStatusForSelect } = useMaintenanceStatusForSelect();
+
+  const didMount = useRef(false);
 
   const query = useQuery();
   const queryBuildingId = query.get('buildingId');
@@ -211,6 +213,14 @@ export const MaintenancesKanban = () => {
     }
   };
   // # endregion
+
+  useEffect(() => {
+    if (didMount.current) {
+      handleGetMaintenances();
+    } else {
+      didMount.current = true;
+    }
+  }, [refresh]);
 
   return (
     <>
