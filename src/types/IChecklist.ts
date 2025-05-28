@@ -30,11 +30,13 @@ export interface IChecklist {
   template?: IChecklistTemplate;
 
   checklistItem?: IChecklistItem[];
+
   images?: {
     id?: string;
     checklistId?: string;
     name?: string;
     url?: string;
   }[];
-  // detailImages  ChecklistDetailImage[]
+
+  checklistUsers?: IUser[];
 }
