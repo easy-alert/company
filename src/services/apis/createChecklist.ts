@@ -9,7 +9,7 @@ interface ICreateChecklist {
   checklistTemplateId?: string;
   editedChecklistTemplate?: IChecklist;
   newChecklist?: IChecklist;
-  responsibleId: string;
+  responsibleId: string[];
   startDate: string;
   interval: string;
   status: TChecklistStatus;
