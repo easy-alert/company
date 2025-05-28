@@ -21,6 +21,7 @@ import IconSearch from '@assets/icons/IconSearch';
 
 // GLOBAL TYPES
 import type { ITimeInterval } from '@utils/types';
+import type { IChecklist } from '@customTypes/IChecklist';
 
 // COMPONENTS
 import { ModalChecklistCreate } from './ModalChecklistCreate';
@@ -31,14 +32,6 @@ import { ModalChecklistTemplate } from './ModalChecklistTemplate';
 
 // STYLES
 import * as Style from './styles';
-
-export interface IChecklist {
-  id: string;
-  name: string;
-  buildingId: string;
-  syndic: { name: string } | null;
-  status: 'pending' | 'completed';
-}
 
 export interface ICalendarDates {
   pending: { date: string }[];
