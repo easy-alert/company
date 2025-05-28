@@ -2,12 +2,15 @@ import { Image } from '@components/Image';
 
 import { icon } from '@assets/icons';
 
-import type { IUser } from '@customTypes/IUser';
-
 import * as Style from './styles';
 
 interface IUserResponsible {
-  users: IUser[];
+  users: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  }[];
 }
 
 const UserResponsible = ({ users }: IUserResponsible) => {
