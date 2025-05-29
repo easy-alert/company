@@ -4,6 +4,7 @@ import type { IChecklistTemplate } from './IChecklistTemplate';
 import type { IUser } from './IUser';
 
 export type TChecklistStatus = 'pending' | 'inProgress' | 'completed';
+export type TChecklistItemStatus = 'pending' | 'approved' | 'rejected';
 
 export interface IChecklist {
   id?: string;
