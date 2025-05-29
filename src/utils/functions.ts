@@ -26,7 +26,7 @@ export const catchHandler = (err: any) => {
 };
 
 // #region DATES
-export const dateFormatter = (date: string | Date) => {
+export const dateFormatter = (date?: string | Date) => {
   if (!date) return '';
 
   if (typeof date === 'string') {
