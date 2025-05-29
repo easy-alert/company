@@ -17,6 +17,7 @@ import { FormikSelect } from '@components/Form/FormikSelect';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { InputRadio } from '@components/Inputs/InputRadio';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -36,7 +37,6 @@ interface IModalUpdateChecklist {
 const schema = yup
   .object({
     id: yup.string(),
-    userId: yup.string().required('Campo obrigatório.'),
     buildingId: yup.string().required('Campo obrigatório.'),
   })
   .required();
@@ -62,6 +62,8 @@ export const ModalUpdateChecklist = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
+  const disableSave = !checklistDetails.checklistUsers?.length || !updateMode;
+
   const inputs = [
     { id: '1', name: 'mode', value: 'this', label: 'Este checklist' },
     { id: '2', name: 'mode', value: 'thisAndFollowing', label: 'Este e os checklists seguintes' },
@@ -77,10 +79,12 @@ export const ModalUpdateChecklist = ({
     setLoading(true);
 
     try {
+      const selectedUsers = checklistDetails.checklistUsers?.map((user) => user.id) || [];
+
       await putChecklist({
         updateMode,
         checklistId,
-        userId: values.userId,
+        usersIds: selectedUsers,
       });
 
       onThenRequest();
@@ -137,13 +141,12 @@ export const ModalUpdateChecklist = ({
           <Formik
             initialValues={{
               id: checklistDetails.id,
-              userId: checklistDetails.userId || '',
               buildingId: checklistDetails.buildingId || '',
             }}
             validationSchema={schema}
             onSubmit={async (values: TSchema) => handleUpdateChecklist(values)}
           >
-            {({ errors, touched, values, submitForm }) => (
+            {({ submitForm }) => (
               <Form>
                 <FormikSelect name="buildingId" label="Edifício" disabled>
                   <option value={checklistDetails.buildingId} disabled hidden>
@@ -151,23 +154,33 @@ export const ModalUpdateChecklist = ({
                   </option>
                 </FormikSelect>
 
-                <FormikSelect
-                  name="userId"
-                  label="Usuário responsável *"
-                  selectPlaceholderValue={values.userId}
-                  arrowColor="primary"
-                  error={touched.userId && (errors.userId || null)}
-                >
-                  <option value="" disabled hidden>
-                    Selecione
-                  </option>
+                <ReactSelectComponent
+                  id="usersId"
+                  name="usersId"
+                  label="Usuário(s) *"
+                  placeholder="Selecione um ou mais usuários"
+                  selectPlaceholderValue={usersForSelect?.length}
+                  value={checklistDetails.checklistUsers?.map((user) => ({
+                    value: user.id,
+                    label: user.name,
+                    email: user.email,
+                    image: user.image,
+                  }))}
+                  isMulti
+                  options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
+                  onChange={(data) => {
+                    setChecklistDetails((prev) => ({
+                      ...prev,
 
-                  {usersForSelect.map((user) => (
-                    <option value={user.id} key={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-                </FormikSelect>
+                      checklistUsers: data.map((user: any) => ({
+                        id: user.value,
+                        name: user.label,
+                        email: user.email,
+                        image: user.image,
+                      })),
+                    }));
+                  }}
+                />
 
                 <Style.ButtonDiv>
                   <PopoverButton
@@ -176,7 +189,7 @@ export const ModalUpdateChecklist = ({
                     bgColor="primary"
                     actionButtonBgColor={theme.color.actionDanger}
                     loading={onQuery}
-                    disabled={onQuery}
+                    disabled={onQuery || disableSave}
                     message={{
                       title:
                         updateMode === 'this'

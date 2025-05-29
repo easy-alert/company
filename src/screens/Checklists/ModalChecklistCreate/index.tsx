@@ -17,6 +17,7 @@ import { Select } from '@components/Inputs/Select';
 import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { InputRadio } from '@components/Inputs/InputRadio';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
 
 // GLOBAL UTILS
 import { handleToastifyMessage } from '@utils/toastifyResponses';
@@ -68,7 +69,7 @@ export const ModalChecklistCreate = ({
     {},
   );
 
-  const [selectedResponsible, setSelectedResponsible] = useState('');
+  const [selectedResponsible, setSelectedResponsible] = useState<string[]>([]);
   const [selectedInterval, setSelectedInterval] = useState('0');
   const [startDate, setStartDate] = useState('');
 
@@ -79,15 +80,18 @@ export const ModalChecklistCreate = ({
 
   const disableCreateButton =
     checklistMode === 'template'
-      ? !selectedChecklistTemplate.id || !selectedResponsible || !selectedInterval || !startDate
+      ? !selectedChecklistTemplate.id ||
+        selectedResponsible.length === 0 ||
+        !selectedInterval ||
+        !startDate
       : !newChecklist.name ||
         !newChecklist.items ||
-        !selectedResponsible ||
+        selectedResponsible.length === 0 ||
         !selectedInterval ||
         !startDate;
 
   const handleChecklistMode = (mode: 'new' | 'template') => {
-    setSelectedResponsible('');
+    setSelectedResponsible([]);
     setStartDate('');
 
     if (mode === 'template') {
@@ -120,8 +124,8 @@ export const ModalChecklistCreate = ({
     setNewChecklist({ ...newChecklist, items: newItems });
   };
 
-  const handleResponsibleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedResponsible(e.target.value);
+  const handleResponsibleChange = (usersIds: string[]) => {
+    setSelectedResponsible(usersIds);
   };
 
   const handleIntervalChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -245,7 +249,7 @@ export const ModalChecklistCreate = ({
 
                 <InputRadio
                   id="useTemplate"
-                  label="Usar template"
+                  label="Usar modelo"
                   checked={checklistMode === 'template'}
                   onChange={() => handleChecklistMode('template')}
                 />
@@ -261,22 +265,20 @@ export const ModalChecklistCreate = ({
                     handleCreateChecklistTemplate={handleCreateChecklistTemplate}
                   />
 
-                  <Select
-                    arrowColor="primary"
-                    label="Usuário responsável *"
-                    value={selectedResponsible}
-                    onChange={handleResponsibleChange}
-                  >
-                    <option value="" disabled>
-                      Selecione
-                    </option>
+                  <ReactSelectComponent
+                    selectPlaceholderValue={usersForSelect?.length}
+                    isMulti
+                    id="usersId"
+                    name="usersId"
+                    placeholder="Selecione um ou mais usuários"
+                    label="Usuário(s) *"
+                    options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
+                    onChange={(data) => {
+                      const usersId = data.map(({ value }: { value: string }) => value);
 
-                    {usersForSelect.map((user) => (
-                      <option value={user.id} key={user.id}>
-                        {user.name}
-                      </option>
-                    ))}
-                  </Select>
+                      handleResponsibleChange(usersId);
+                    }}
+                  />
 
                   <Input
                     label="Data de início *"
@@ -300,22 +302,20 @@ export const ModalChecklistCreate = ({
 
                   {selectedChecklistTemplate.id && (
                     <>
-                      <Select
-                        arrowColor="primary"
-                        label="Usuário responsável *"
-                        value={selectedResponsible}
-                        onChange={handleResponsibleChange}
-                      >
-                        <option value="" disabled>
-                          Selecione
-                        </option>
+                      <ReactSelectComponent
+                        selectPlaceholderValue={usersForSelect?.length}
+                        isMulti
+                        id="usersId"
+                        name="usersId"
+                        placeholder="Selecione um ou mais usuários"
+                        label="Usuário(s) *"
+                        options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
+                        onChange={(data) => {
+                          const usersId = data.map(({ value }: { value: string }) => value);
 
-                        {usersForSelect.map((user) => (
-                          <option value={user.id} key={user.id}>
-                            {user.name}
-                          </option>
-                        ))}
-                      </Select>
+                          handleResponsibleChange(usersId);
+                        }}
+                      />
 
                       <Select
                         arrowColor="primary"
