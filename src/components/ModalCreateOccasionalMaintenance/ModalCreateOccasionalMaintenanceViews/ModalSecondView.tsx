@@ -22,7 +22,6 @@ const ModalSecondView = ({
   occasionalMaintenanceData,
   externalBuildingId,
   checklistActivity,
-  errors,
   handleSetView,
   handleOccasionalMaintenanceDataChange,
   handleCreateOccasionalMaintenance,

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 // SERVICES
 import { getChecklists } from '@services/apis/getChecklists';
-import { deleteChecklist } from '@services/apis/deleteChecklist';
 import { putChecklist } from '@services/apis/putChecklist';
 
 // GLOBAL COMPONENTS
@@ -14,7 +13,6 @@ import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { DotLoading } from '@components/Loadings/DotLoading';
-import { InputRadio } from '@components/Inputs/InputRadio';
 import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
