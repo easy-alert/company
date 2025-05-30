@@ -931,7 +931,7 @@ export const Dashboard = () => {
                   {buildingsForSelect.map((building) => (
                     <option
                       key={building.id}
-                      value={building.name}
+                      value={building.id}
                       disabled={dataFilter.buildings.some((e) => e === building.name)}
                     >
                       {building.name}
@@ -1029,7 +1029,7 @@ export const Dashboard = () => {
                   {dataFilter.buildings.map((e, i) => (
                     <ListTag
                       key={e}
-                      label={e}
+                      label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
                       color="white"
                       backgroundColor="primaryM"
                       fontWeight={500}
