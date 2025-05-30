@@ -14,6 +14,7 @@ import type {
   IIncreaseDaysInDate,
   TTranslateTicketType,
 } from './types';
+import { compressImageIfNeeded } from './imageCompression';
 // #endregion
 
 export const catchHandler = (err: any) => {
@@ -65,41 +66,35 @@ export const addDays = ({ date, days }: { date: Date; days: number }) => {
 // #endregion
 
 // #region UPLOAD
-export async function uploadFile(file: any) {
-  let response = {};
+export async function uploadFile(file: File): Promise<IUploadFile> {
+  try {
+    const processedFile = await compressImageIfNeeded(file);
+    const formData = new FormData();
+    formData.append('file', processedFile);
 
-  const formData = new FormData();
-  formData.append('file', file);
-
-  await Api.post('upload/file', formData)
-    .then((res) => {
-      response = res.data;
-    })
-    .catch((err) => {
-      catchHandler(err);
-    });
-
-  return response as IUploadFile;
+    const res = await Api.post('upload/file', formData);
+    return res.data as IUploadFile;
+  } catch (err) {
+    catchHandler(err);
+    throw err; // Re-throw for caller handling
+  }
 }
 
-export async function uploadManyFiles(files: any) {
-  let response: IUploadFile[] = [];
+export async function uploadManyFiles(files: File[]): Promise<IUploadFile[]> {
+  try {
+    // Process all files concurrently
+    const processedFiles = await Promise.all(files.map(compressImageIfNeeded));
 
-  const formData = new FormData();
+    const formData = new FormData();
+    processedFiles.forEach((file) => formData.append('files', file));
 
-  for (let i = 0; i < files.length; i += 1) {
-    formData.append('files', files[i]);
+    const res = await Api.post('upload/files', formData);
+    return res.data as IUploadFile[];
+  } catch (err) {
+    console.log('🚀 ~ uploadManyFiles ~ err:', err);
+    catchHandler(err);
+    throw err;
   }
-
-  await Api.post('/upload/files', formData)
-    .then((res) => {
-      response = res.data;
-    })
-    .catch((err) => {
-      catchHandler(err);
-    });
-
-  return response;
 }
 // #endregion
 
