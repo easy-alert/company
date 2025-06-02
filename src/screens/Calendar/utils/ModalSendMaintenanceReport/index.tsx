@@ -167,7 +167,7 @@ export const ModalSendMaintenanceReport = ({
       const uploadAcceptedFiles = async () => {
         setOnFileQuery(true);
 
-        const uploadedFiles = await uploadManyFiles(acceptedFiles);
+        const uploadedFiles = await uploadManyFiles([...acceptedFiles]);
 
         const formattedFiles = uploadedFiles.map((file) => ({
           name: file.originalname,
@@ -192,7 +192,7 @@ export const ModalSendMaintenanceReport = ({
       const uploadAcceptedImages = async () => {
         setOnImageQuery(true);
 
-        const uploadedImages = await uploadManyFiles(acceptedImages);
+        const uploadedImages = await uploadManyFiles([...acceptedImages]);
 
         const formattedImages = uploadedImages.map((file) => ({
           name: file.originalname,
