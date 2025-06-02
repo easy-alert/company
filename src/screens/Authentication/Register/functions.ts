@@ -18,7 +18,7 @@ export const requestCreateCompanyAndOWner = async ({
   let imageUrl;
 
   if (values.image) {
-    const { Location } = await uploadFile(values.image);
+    const { Location } = await uploadFile(values.image as unknown as File);
     imageUrl = Location;
   } else {
     imageUrl = `https://api.dicebear.com/7.x/initials/png?seed=${encodeURI(values.companyName)}`;
