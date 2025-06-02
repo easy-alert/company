@@ -26,7 +26,12 @@ export const compressImageIfNeeded = async (file: File): Promise<File> => {
     const compressed = await imageCompression(file, options);
 
     // Fallback to original if compression yields larger file
-    return compressed.size < file.size ? compressed : file;
+    if (compressed.size < file.size) {
+      // Ensure the compressed file keeps the original name and type
+      return new File([compressed], file.name, { type: compressed.type });
+    }
+
+    return file;
   } catch (error) {
     console.error('Compression error:', error);
 
