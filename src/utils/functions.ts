@@ -3,6 +3,8 @@ import axios from 'axios';
 
 import { toast } from 'react-toastify';
 
+import type { FileWithPath } from 'react-dropzone/.';
+
 import { Api } from '../services/api';
 
 import type {
@@ -15,8 +17,8 @@ import type {
   TTranslateTicketType,
 } from './types';
 import { compressImageIfNeeded } from './imageCompression';
-// #endregion
 
+// #endregion
 export const catchHandler = (err: any) => {
   toast.dismiss();
   if (err.response) {
@@ -66,7 +68,7 @@ export const addDays = ({ date, days }: { date: Date; days: number }) => {
 // #endregion
 
 // #region UPLOAD
-export async function uploadFile(file: File): Promise<IUploadFile> {
+export async function uploadFile(file: File | FileWithPath): Promise<IUploadFile> {
   try {
     const processedFile = await compressImageIfNeeded(file);
     const formData = new FormData();
@@ -80,7 +82,7 @@ export async function uploadFile(file: File): Promise<IUploadFile> {
   }
 }
 
-export async function uploadManyFiles(files: File[]): Promise<IUploadFile[]> {
+export async function uploadManyFiles(files: File[] | FileWithPath[]): Promise<IUploadFile[]> {
   try {
     // Process all files concurrently
     const processedFiles = await Promise.all(files.map(compressImageIfNeeded));
