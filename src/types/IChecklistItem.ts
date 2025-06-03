@@ -1,4 +1,4 @@
-import type { TChecklistStatus } from './IChecklist';
+import type { TChecklistItemStatus } from './IChecklist';
 
 export interface IChecklistItem {
   id?: string;
@@ -7,7 +7,7 @@ export interface IChecklistItem {
 
   name?: string;
   description?: string;
-  status?: TChecklistStatus;
+  status?: TChecklistItemStatus;
 
   createdAt?: string;
   updatedAt?: string;

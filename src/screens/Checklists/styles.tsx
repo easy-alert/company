@@ -313,8 +313,7 @@ export const NavigateButtons = styled.div`
 `;
 
 export const CalendarDiv = styled.div`
-  padding: 2px ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.xsm}
-    ${({ theme }) => theme.size.xsm};
+  padding: ${({ theme }) => `2px ${theme.size.xsm}`};
   background-color: ${({ theme }) => theme.color.white};
   border-radius: ${({ theme }) => theme.size.xxsm};
   height: fit-content;

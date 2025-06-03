@@ -168,13 +168,13 @@ const styles = StyleSheet.create({
 });
 
 const MyDocument = ({
-  setLoading,
   companyImage,
   categories,
+  setLoading,
 }: {
   companyImage?: string;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   categories: AddedMaintenances[];
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
   <Document
     onRender={() => {
@@ -186,17 +186,12 @@ const MyDocument = ({
     <Page size="A4" style={styles.page} orientation="landscape">
       <View>
         <View fixed style={styles.header}>
-          <Image
-            src={{
-              method: 'GET',
-              headers: {
-                'Cache-Control': 'no-cache',
-              },
-              body: '',
-              uri: companyImage ?? image.logoForPDF2,
-            }}
-            style={styles.companyLogo}
-          />
+          {companyImage && (
+            <Image
+              src={`${companyImage}?noCache=${Math.random().toString()}`}
+              style={styles.companyLogo}
+            />
+          )}
 
           <View style={styles.headerSide}>
             <View style={styles.headerDiv}>
@@ -338,8 +333,10 @@ const MyDocument = ({
 );
 
 export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
-  const [loading, setLoading] = useState<boolean>(true);
   const { account } = useAuthContext();
+
+  const [loading, setLoading] = useState<boolean>(true);
+
   const companyImage = account?.Company?.image;
 
   return (
@@ -355,6 +352,7 @@ export const ModalPrintPlan = ({ setModal, categories }: IModalPrintPlan) => {
               companyImage={companyImage}
             />
           </PDFViewer>
+
           <PDFDownloadLink
             document={
               <MyDocument

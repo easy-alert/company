@@ -116,11 +116,23 @@ export const ChecklistRowComponent = ({
                 }
               />
               <Style.ChecklistContent>
-                <p className="p4">{checklist.name}</p>
-                <p className="p5">
-                  {checklist.user?.name || 'Nenhum usuário vinculado'} {checklist.completedItems}/
-                  {checklist.totalItems}
+                <p className="p4" style={{ marginBottom: '2px' }}>
+                  {checklist.name} {checklist.completedItems}/{checklist.totalItems}
                 </p>
+
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  {checklist.checklistUsers &&
+                    checklist.checklistUsers.length > 0 &&
+                    checklist.checklistUsers.map((user) => (
+                      <ImageComponent
+                        key={user?.id}
+                        size="20px"
+                        radius="50%"
+                        src={user?.image || icon.personPlaceholder}
+                        alt={user?.name || 'Usuário sem imagem'}
+                      />
+                    ))}
+                </div>
               </Style.ChecklistContent>
             </Style.ChecklistRowLeftSide>
           </Style.ChecklistRow>

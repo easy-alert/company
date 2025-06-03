@@ -7,7 +7,7 @@ type TUpdateMode = 'this' | 'all' | 'thisAndFollowing' | '';
 
 interface IPutChecklist {
   checklistId: string;
-  userId?: string;
+  usersIds?: string[];
   checklistItems?: IChecklistItem[];
   observation?: string;
   status?: string;
@@ -17,7 +17,7 @@ interface IPutChecklist {
 
 export async function putChecklist({
   checklistId,
-  userId,
+  usersIds,
   checklistItems,
   observation,
   status,
@@ -27,7 +27,7 @@ export async function putChecklist({
   const uri = `/checklists/${checklistId}`;
 
   const body = {
-    userId,
+    usersIds,
     checklistItems,
     observation,
     status,
