@@ -1,7 +1,7 @@
 // #region imports
 
 // REACT
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 
 // LIBS
@@ -12,11 +12,16 @@ import { ApexOptions } from 'apexcharts';
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
+import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
 import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
 import { getTicketsCountAndCost } from '@services/apis/getTicketsCountAndCost';
 import { getTicketsByServiceTypes } from '@services/apis/getTicketsByServiceTypes';
 import { getMaintenancesTimeline } from '@services/apis/getMaintenancesTimeline';
+import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
+import { getMaintenanceStatus } from '@services/apis/getMaintenancesStatus';
+import { getMaintenanceCategories } from '@services/apis/getMaintenancesCategories';
+import { getUserActivities, UserActivity } from '@services/apis/getUserActivities';
 
 // GLOBAL COMPONENTS
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
@@ -32,9 +37,8 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { ITicketStatusNames } from '@customTypes/ITicket';
 
 // COMPONENTS
-import { getMaintenanceStatus } from '@services/apis/getMaintenancesStatus';
-import { getMaintenanceCategories } from '@services/apis/getMaintenancesCategories';
-import { getUserActivities, UserActivity } from '@services/apis/getUserActivities';
+import { ModalSendMaintenanceReport } from '@screens/Reports/Maintenances/ModalSendMaintenanceReport';
+import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
 import { InfoCard } from './Components/InfoCard';
 import { ReusableChartCard } from './Components/Graphic';
 
@@ -100,12 +104,6 @@ interface IDashboardLoadings {
   userActivities: boolean;
 }
 
-interface StatusChartData {
-  data: number[];
-  labels: string[];
-  colors: string[];
-}
-
 type CountAndCostItem = {
   category: string;
   count: number;
@@ -123,6 +121,34 @@ export interface ITicketFilter {
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+  const [kanban, setKanban] = useState<any[]>([]);
+
+  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string | null>(null);
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+  const [showTicketModal, setShowTicketModal] = useState(false);
+  const [allTickets, setAllTickets] = useState<any[]>([]);
+
+  const handleOpenTicketModal = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+    setShowTicketModal(true);
+  };
+
+  const handleCloseTicketModal = () => {
+    setShowTicketModal(false);
+    setSelectedTicketId(null);
+  };
+
+  const handleOpenMaintenanceModal = (maintenanceId: string) => {
+    setSelectedMaintenanceId(maintenanceId);
+    setShowMaintenanceModal(true);
+  };
+
+  const handleCloseMaintenanceModal = () => {
+    setShowMaintenanceModal(false);
+    setSelectedMaintenanceId(null);
+  };
 
   // #region states
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
@@ -168,10 +194,16 @@ export const Dashboard = () => {
     },
   });
 
-  const [ticketsServicesTypeChart, setTicketsServicesTypeChart] = useState<IPieChart>({
+  const [ticketsServicesTypeChart, setTicketsServicesTypeChart] = useState<{
+    data: number[];
+    labels: string[];
+    colors: string[];
+    ticketsByType?: Record<string, any[]>;
+  }>({
     data: [],
     labels: [],
     colors: [],
+    ticketsByType: {},
   });
 
   const dataFilterInitialValues: IDashboardFilter = {
@@ -250,6 +282,15 @@ export const Dashboard = () => {
     return { value: largestValue, index: largestValueIndex };
   };
 
+  // #region helpers/utils
+  function normalize(str: string) {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
   // #region requests
   const handleGetDashboardFilters = async () => {
     setLoading(true);
@@ -262,6 +303,26 @@ export const Dashboard = () => {
       handleToastify(error.response.data.ServerMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetKanban = async () => {
+    try {
+      const kanbanFilter = {
+        ...dataFilter,
+        status: [],
+        users: [],
+        priorityName: '',
+        search: '',
+      };
+
+      const response = await getMaintenancesKanban({
+        userId: '',
+        filter: kanbanFilter,
+      });
+      setKanban(response.kanban);
+    } catch (error: any) {
+      handleToastify(error.response?.data?.ServerMessage);
     }
   };
 
@@ -630,6 +691,8 @@ export const Dashboard = () => {
 
     // get users activities
     handleGetUserActivities(resetFilters);
+
+    handleGetKanban();
   };
 
   const handleResetFilterButton = async () => {
@@ -852,7 +915,54 @@ export const Dashboard = () => {
     setWindowWidth(window.innerWidth);
   };
 
+  const labels = ['Concluídas', 'Vencidas', 'Pendentes', 'Em andamento'];
+  const ticketLabels = ticketsServicesTypeChart.labels;
+
+  const activitiesByLabelCommon = labels.reduce((acc: Record<string, any[]>, label: string) => {
+    if (label === 'Em andamento') {
+      acc[label] = kanban
+        .flatMap((col: any) => col.maintenances || [])
+        .filter((m: any) => m.type === 'common' && m.inProgress);
+    } else {
+      const column = kanban.find((col: any) => col.status === label);
+      acc[label] = column
+        ? (column.maintenances || []).filter((m: any) => m.type === 'common' && !m.inProgress)
+        : [];
+    }
+    return acc;
+  }, {});
+
+  const activitiesByLabelOccasional = labels.reduce((acc: Record<string, any[]>, label: string) => {
+    if (label === 'Em andamento') {
+      acc[label] = kanban
+        .flatMap((col: any) => col.maintenances || [])
+        .filter((m: any) => m.type === 'occasional' && m.inProgress);
+    } else {
+      const column = kanban.find((col: any) => col.status === label);
+      acc[label] = column
+        ? (column.maintenances || []).filter((m: any) => m.type === 'occasional' && !m.inProgress)
+        : [];
+    }
+    return acc;
+  }, {});
+
+  const activitiesByLabelTickets = useMemo(
+    () =>
+      ticketsServicesTypeChart.labels.reduce((acc: Record<string, any[]>, label) => {
+        acc[label] = allTickets.filter((ticket) =>
+          ticket.types?.some((typeObj: any) => normalize(typeObj.type.label) === normalize(label)),
+        );
+        return acc;
+      }, {}),
+    [allTickets, ticketsServicesTypeChart.labels],
+  );
+
   // #region useEffects
+
+  useEffect(() => {
+    handleGetDashboardFilters();
+    handleGetDashboardData();
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', handleWindowResize);
@@ -931,7 +1041,7 @@ export const Dashboard = () => {
                   {buildingsForSelect.map((building) => (
                     <option
                       key={building.id}
-                      value={building.name}
+                      value={building.id}
                       disabled={dataFilter.buildings.some((e) => e === building.name)}
                     >
                       {building.name}
@@ -1029,7 +1139,7 @@ export const Dashboard = () => {
                   {dataFilter.buildings.map((e, i) => (
                     <ListTag
                       key={e}
-                      label={e}
+                      label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
                       color="white"
                       backgroundColor="primaryM"
                       fontWeight={500}
@@ -1067,6 +1177,26 @@ export const Dashboard = () => {
       </Style.FilterSection>
 
       <Style.Wrappers>
+        {showMaintenanceModal && selectedMaintenanceId && (
+          <ModalSendMaintenanceReport
+            maintenanceHistoryId={selectedMaintenanceId}
+            handleModalSendMaintenanceReport={(open: boolean) => {
+              if (!open) handleCloseMaintenanceModal();
+            }}
+            onThenRequest={async () => {
+              /* */
+            }}
+          />
+        )}
+
+        {showTicketModal && selectedTicketId && (
+          <ModalTicketDetails
+            ticketId={selectedTicketId}
+            handleTicketDetailsModal={(open: boolean) => {
+              if (!open) handleCloseTicketModal();
+            }}
+          />
+        )}
         <Style.MaintenancesCounts>
           <Style.CountCard>
             {dashboardLoadings.maintenancesCountAndCost ? (
@@ -1191,6 +1321,9 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.common.options}
               chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelCommon}
+              onMaintenanceClick={handleOpenMaintenanceModal}
+              typePopover="maintenance"
             />
 
             <ReusableChartCard
@@ -1199,6 +1332,9 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.occasional.options}
               chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelOccasional}
+              onMaintenanceClick={handleOpenMaintenanceModal}
+              typePopover="maintenance"
             />
 
             <ReusableChartCard
@@ -1207,6 +1343,9 @@ export const Dashboard = () => {
               chartOptions={ticketTypesChart.options}
               chartSeries={ticketTypesChart.series}
               isLoading={dashboardLoadings.ticketsTypes}
+              activitiesByLabel={activitiesByLabelTickets}
+              onMaintenanceClick={handleOpenTicketModal}
+              typePopover="ticket"
             />
 
             <InfoCard
