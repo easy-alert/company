@@ -58,7 +58,7 @@ function ModalThirdView({
 
         const formattedFiles = [...occasionalMaintenanceData.reportData.files];
 
-        const uploadedFiles = await uploadManyFiles(acceptedFiles);
+        const uploadedFiles = await uploadManyFiles([...acceptedFiles]);
 
         uploadedFiles.forEach((file) => {
           formattedFiles.push({
@@ -86,7 +86,7 @@ function ModalThirdView({
       const uploadAcceptedImages = async () => {
         setOnImageQuery(true);
 
-        const uploadedImages = await uploadManyFiles(acceptedImages);
+        const uploadedImages = await uploadManyFiles([...acceptedImages]);
 
         const formattedImages = [...occasionalMaintenanceData.reportData.images];
 

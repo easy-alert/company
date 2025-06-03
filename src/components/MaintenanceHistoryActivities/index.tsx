@@ -149,7 +149,7 @@ export const MaintenanceHistoryActivities = ({
     const uploadAcceptedImages = async () => {
       setOnImageQuery(true);
 
-      const uploadedImages = await uploadManyFiles(acceptedFiles);
+      const uploadedImages = await uploadManyFiles([...acceptedFiles]);
 
       const formattedImages = uploadedImages.map((file) => ({
         name: file.originalname,

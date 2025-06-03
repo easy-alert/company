@@ -63,6 +63,7 @@ export const ModalChecklistDetails = ({
 
     try {
       const uploadedFilesResponse = await uploadManyFiles(acceptedFiles);
+
       const formattedUploadedFiles = uploadedFilesResponse.map(({ Location, originalname }) => ({
         name: originalname,
         url: Location,
