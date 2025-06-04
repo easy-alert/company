@@ -632,24 +632,6 @@ export const MaintenancesKanban = () => {
           </Style.FiltersContainer>
         )}
 
-        {loading && (
-          <Style.Kanban>
-            {[...Array(4)]?.map((_a, i: number) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Style.KanbanCard key={i}>
-                <Style.KanbanHeader viewMode={viewMode} />
-
-                {[...Array(4)]?.map((_b, j: number) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <Style.KanbanMaintenanceWrapper key={j}>
-                    <Skeleton />
-                  </Style.KanbanMaintenanceWrapper>
-                ))}
-              </Style.KanbanCard>
-            ))}
-          </Style.Kanban>
-        )}
-
         {viewMode === 'kanban' ? (
           <Style.Kanban>
             {!loading &&
