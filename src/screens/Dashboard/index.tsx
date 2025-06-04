@@ -35,6 +35,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL TYPES
 import type { ITicketStatusNames } from '@customTypes/ITicket';
+import type { MaintenanceKanban } from '@screens/Maintenances/Kanban/types';
 
 // COMPONENTS
 import { ModalSendMaintenanceReport } from '@screens/Reports/Maintenances/ModalSendMaintenanceReport';
@@ -88,12 +89,6 @@ interface ITicketsData {
   totalTickets: ICountAndCost;
 }
 
-interface IPieChart {
-  data: number[];
-  labels: string[];
-  colors: string[];
-}
-
 interface IDashboardLoadings {
   maintenancesCountAndCost: boolean;
   ticketsCountAndCost: boolean;
@@ -117,12 +112,21 @@ export interface ITicketFilter {
   responsible: string[];
   seen: string;
 }
+
+interface IMaintenanceLabel {
+  [key: string]: MaintenanceKanban[];
+}
+
+interface IMaintenancesPopover {
+  common: IMaintenanceLabel;
+  occasional: IMaintenanceLabel;
+}
 // #endregion
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
-  const [kanban, setKanban] = useState<any[]>([]);
 
+  // #region states
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string | null>(null);
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
 
@@ -130,27 +134,6 @@ export const Dashboard = () => {
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [allTickets, setAllTickets] = useState<any[]>([]);
 
-  const handleOpenTicketModal = (ticketId: string) => {
-    setSelectedTicketId(ticketId);
-    setShowTicketModal(true);
-  };
-
-  const handleCloseTicketModal = () => {
-    setShowTicketModal(false);
-    setSelectedTicketId(null);
-  };
-
-  const handleOpenMaintenanceModal = (maintenanceId: string) => {
-    setSelectedMaintenanceId(maintenanceId);
-    setShowMaintenanceModal(true);
-  };
-
-  const handleCloseMaintenanceModal = () => {
-    setShowMaintenanceModal(false);
-    setSelectedMaintenanceId(null);
-  };
-
-  // #region states
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
     commonMaintenanceData: {
       count: 0,
@@ -223,6 +206,8 @@ export const Dashboard = () => {
     occasional: { data: [], labels: [], colors: [] },
   });
 
+  const [maintenancesPopover, setMaintenancesPopover] = useState<IMaintenancesPopover | null>();
+
   const [categoriesFormatted, setCategoriesFormatted] = useState<{
     common: CountAndCostItem[];
     occasional: CountAndCostItem[];
@@ -258,11 +243,7 @@ export const Dashboard = () => {
   });
   // #endregion
 
-  const totalTicketsCount =
-    ticketsData.openTickets.count +
-    ticketsData.awaitingToFinishTickets.count +
-    ticketsData.finishedTickets.count +
-    ticketsData.dismissedTickets.count;
+  const labels = ['Concluídas', 'Vencidas', 'Pendentes', 'Em andamento'];
 
   const findLargestValueAndIndex = (array: number[]) => {
     if (!array) return { value: 0, index: 0 };
@@ -291,6 +272,27 @@ export const Dashboard = () => {
       .trim();
   }
 
+  const handleOpenTicketModal = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+    setShowTicketModal(true);
+  };
+
+  const handleCloseTicketModal = () => {
+    setShowTicketModal(false);
+    setSelectedTicketId(null);
+  };
+
+  const handleOpenMaintenanceModal = (maintenanceId: string) => {
+    setSelectedMaintenanceId(maintenanceId);
+    setShowMaintenanceModal(true);
+  };
+
+  const handleCloseMaintenanceModal = () => {
+    setShowMaintenanceModal(false);
+    setSelectedMaintenanceId(null);
+  };
+  // #endregion
+
   // #region requests
   const handleGetDashboardFilters = async () => {
     setLoading(true);
@@ -316,11 +318,50 @@ export const Dashboard = () => {
         search: '',
       };
 
-      const response = await getMaintenancesKanban({
+      const responseData = await getMaintenancesKanban({
         userId: '',
         filter: kanbanFilter,
       });
-      setKanban(response.kanban);
+
+      const activitiesByLabelCommon = labels.reduce((acc: Record<string, any[]>, label: string) => {
+        if (label === 'Em andamento') {
+          acc[label] = responseData?.kanban
+            ?.flatMap((col: any) => col.maintenances || [])
+            ?.filter((m: any) => m.type === 'common' && m.inProgress);
+        } else {
+          const column = responseData?.kanban?.find((col: any) => col.status === label);
+          acc[label] = column
+            ? (column.maintenances || []).filter((m: any) => m.type === 'common' && !m.inProgress)
+            : [];
+        }
+
+        return acc;
+      }, {});
+
+      const activitiesByLabelOccasional = labels.reduce(
+        (acc: Record<string, any[]>, label: string) => {
+          if (label === 'Em andamento') {
+            acc[label] = responseData?.kanban
+              ?.flatMap((col: any) => col.maintenances || [])
+              ?.filter((m: any) => m.type === 'occasional' && m.inProgress);
+          } else {
+            const column = responseData?.kanban?.find((col: any) => col.status === label);
+            acc[label] = column
+              ? (column.maintenances || []).filter(
+                  (m: any) => m.type === 'occasional' && !m.inProgress,
+                )
+              : [];
+          }
+
+          return acc;
+        },
+        {},
+      );
+
+      setMaintenancesPopover({
+        common: activitiesByLabelCommon,
+        occasional: activitiesByLabelOccasional,
+      });
     } catch (error: any) {
       handleToastify(error.response?.data?.ServerMessage);
     }
@@ -400,42 +441,10 @@ export const Dashboard = () => {
     maintenanceType: 'common' | 'occasional',
     resetFilters?: boolean,
   ) => {
-    const emptyChart = {
-      series: [],
-      chartData: [],
-      options: {
-        labels: [],
-        chart: { toolbar: { show: false } },
-        tooltip: { enabled: true },
-        plotOptions: {
-          pie: {
-            donut: { labels: { show: false } },
-          },
-        },
-        colors: [],
-        dataLabels: {
-          enabled: false,
-          style: {
-            fontSize: '14px',
-            fontWeight: 400,
-          },
-        },
-        legend: {
-          position: 'bottom' as const,
-          offsetY: -10,
-        },
-      },
-    };
-
     try {
       const responseData = await getMaintenanceStatus(dataFilter, maintenanceType, resetFilters);
 
       if (!responseData) {
-        // setMaintenanceChart((prevState) => ({
-        //   ...prevState,
-        //   [maintenanceType]: emptyChart,
-        // }));
-
         return;
       }
 
@@ -532,6 +541,7 @@ export const Dashboard = () => {
     try {
       await handleGetMaintenanceStatus('common', resetFilters);
       await handleGetMaintenanceStatus('occasional', resetFilters);
+      await handleGetKanban();
     } catch (error: any) {
       handleToastify(error.response);
     } finally {
@@ -569,27 +579,48 @@ export const Dashboard = () => {
           setTicketsData((prevState) => ({
             ...prevState,
             openTickets: formattedData,
+            totalTickets: {
+              ...prevState.totalTickets,
+              count: prevState.openTickets.count + formattedData.count,
+            },
           }));
           break;
+
         case 'awaitingToFinish':
           setTicketsData((prevState) => ({
             ...prevState,
             awaitingToFinishTickets: formattedData,
+            totalTickets: {
+              ...prevState.totalTickets,
+              count: prevState.totalTickets.count + formattedData.count,
+            },
           }));
           break;
+
         case 'finished':
           setTicketsData((prevState) => ({
             ...prevState,
             finishedTickets: formattedData,
+            totalTickets: {
+              ...prevState.totalTickets,
+              count: prevState.totalTickets.count + formattedData.count,
+            },
           }));
           break;
+
         case 'dismissed':
           setTicketsData((prevState) => ({
             ...prevState,
             dismissedTickets: formattedData,
+            totalTickets: {
+              ...prevState.totalTickets,
+              count: prevState.totalTickets.count + formattedData.count,
+            },
           }));
           break;
+
         default:
+          break;
       }
     } catch (error: any) {
       handleToastify(error.response.data.ServerMessage);
@@ -691,8 +722,6 @@ export const Dashboard = () => {
 
     // get users activities
     handleGetUserActivities(resetFilters);
-
-    handleGetKanban();
   };
 
   const handleResetFilterButton = async () => {
@@ -915,36 +944,7 @@ export const Dashboard = () => {
     setWindowWidth(window.innerWidth);
   };
 
-  const labels = ['Concluídas', 'Vencidas', 'Pendentes', 'Em andamento'];
   const ticketLabels = ticketsServicesTypeChart.labels;
-
-  const activitiesByLabelCommon = labels.reduce((acc: Record<string, any[]>, label: string) => {
-    if (label === 'Em andamento') {
-      acc[label] = kanban
-        .flatMap((col: any) => col.maintenances || [])
-        .filter((m: any) => m.type === 'common' && m.inProgress);
-    } else {
-      const column = kanban.find((col: any) => col.status === label);
-      acc[label] = column
-        ? (column.maintenances || []).filter((m: any) => m.type === 'common' && !m.inProgress)
-        : [];
-    }
-    return acc;
-  }, {});
-
-  const activitiesByLabelOccasional = labels.reduce((acc: Record<string, any[]>, label: string) => {
-    if (label === 'Em andamento') {
-      acc[label] = kanban
-        .flatMap((col: any) => col.maintenances || [])
-        .filter((m: any) => m.type === 'occasional' && m.inProgress);
-    } else {
-      const column = kanban.find((col: any) => col.status === label);
-      acc[label] = column
-        ? (column.maintenances || []).filter((m: any) => m.type === 'occasional' && !m.inProgress)
-        : [];
-    }
-    return acc;
-  }, {});
 
   const activitiesByLabelTickets = useMemo(
     () =>
@@ -1258,7 +1258,8 @@ export const Dashboard = () => {
 
                 <Style.CountCardContent>
                   <>
-                    <h2>{totalTicketsCount}</h2>
+                    <h2>{ticketsData.totalTickets.count}</h2>
+
                     <p className="p4">
                       Em aberto: {ticketsData.openTickets.count} / Em progresso:{' '}
                       {ticketsData.awaitingToFinishTickets.count} / Finalizados:{' '}
@@ -1321,7 +1322,7 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.common.options}
               chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
-              activitiesByLabel={activitiesByLabelCommon}
+              activitiesByLabel={maintenancesPopover?.common}
               onMaintenanceClick={handleOpenMaintenanceModal}
               typePopover="maintenance"
             />
@@ -1332,7 +1333,7 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.occasional.options}
               chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
-              activitiesByLabel={activitiesByLabelOccasional}
+              activitiesByLabel={maintenancesPopover?.occasional}
               onMaintenanceClick={handleOpenMaintenanceModal}
               typePopover="maintenance"
             />
