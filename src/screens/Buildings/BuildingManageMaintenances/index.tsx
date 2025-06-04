@@ -269,13 +269,14 @@ export const BuildingManageMaintenances = () => {
                 icon={<IconCheck strokeColor="primary" size="24px" />}
                 hideLabelOnMedia
                 onClick={() => {
-                  localStorage.removeItem(`maint-categories-${buildingId}`);
+                  autosaveDB.remove(`maint-categories-${buildingId}`);
+
                   requestManageBuildingMaintenances({
                     categories,
                     buildingId: buildingId!,
+                    origin: account?.origin,
                     navigate,
                     setOnQuery,
-                    origin: account?.origin,
                   });
                 }}
               />
