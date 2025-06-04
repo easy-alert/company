@@ -163,7 +163,7 @@ export const ModalEditMaintenanceHistory = ({
                   )}
 
                   <Style.ButtonContainer>
-                    <Button type="submit" label="Salvar" />
+                    <Button type="submit" label="Salvar" bgColor="primary" />
                   </Style.ButtonContainer>
                 </Style.FormContainer>
               </Form>

@@ -543,7 +543,7 @@ export const MaintenanceReports = () => {
                       >
                         <IconButton
                           label="Exportar"
-                          icon={<IconCsvLogo fillColor="" />}
+                          icon={<IconCsvLogo strokeColor="primary" fillColor="" />}
                           disabled={maintenances.length === 0}
                           onClick={() => {
                             //

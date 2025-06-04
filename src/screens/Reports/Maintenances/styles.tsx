@@ -39,7 +39,6 @@ export const FiltersContainer = styled.div`
 `;
 
 export const FiltersGrid = styled.div`
-  margin-top: ${({ theme }) => theme.size.sm};
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: ${({ theme }) => theme.size.xsm};
