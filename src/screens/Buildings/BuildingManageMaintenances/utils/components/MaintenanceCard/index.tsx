@@ -121,6 +121,7 @@ export const MaintenanceCard = ({
 
                     newState[categoryIndex].Maintenances[newMaintenanceIndex].isSelected =
                       !newState[categoryIndex].Maintenances[newMaintenanceIndex].isSelected;
+
                     return newState;
                   });
                 }}
