@@ -26,12 +26,13 @@ export const ReusableChartCard = ({
   isLoading,
   height = 335,
   activitiesByLabel = {},
-  onMaintenanceClick,
   typePopover = 'maintenance',
+  onMaintenanceClick,
 }: ReusableChartCardProps) => {
-  const emptyChartSeries = chartSeries && chartSeries.every((item) => item === 0);
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const emptyChartSeries = chartSeries && chartSeries.every((item) => item === 0);
 
   if (isLoading) {
     return (
@@ -54,6 +55,7 @@ export const ReusableChartCard = ({
     currentLabel && chartOptions.labels
       ? chartOptions.labels.findIndex((l: string) => l.toLowerCase() === currentLabel.toLowerCase())
       : -1;
+
   const barColor =
     labelIndex !== -1 && chartOptions.colors ? chartOptions.colors[labelIndex] : '#FFB200';
 
