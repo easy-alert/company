@@ -543,7 +543,7 @@ export const MaintenanceReports = () => {
                       >
                         <IconButton
                           label="Exportar"
-                          icon={<IconCsvLogo fillColor="" />}
+                          icon={<IconCsvLogo strokeColor="primary" />}
                           disabled={maintenances.length === 0}
                           onClick={() => {
                             //
@@ -553,7 +553,7 @@ export const MaintenanceReports = () => {
 
                       <IconButton
                         label="Exportar"
-                        icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                        icon={<IconPdfLogo strokeColor="primary" />}
                         disabled={maintenances.length === 0 || onPdfQuery}
                         onClick={() => {
                           requestPdf();
