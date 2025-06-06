@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@components/Buttons/Button';
 import { Image } from '@components/Image';
 import { ListTag } from '@components/ListTag';
+import { ImageComponent } from '@components/ImageComponent';
 
 // GLOBAL UTILS
 import { capitalizeFirstLetter } from '@utils/functions';
@@ -12,9 +13,10 @@ import { handlePriorityName } from '@utils/handlePriorityName';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconDownArrow from '@assets/icons/IconDownArrow';
+import IconInfo from '@assets/icons/IconInfo';
 
 // STYLES
-import IconDownArrow from '@assets/icons/IconDownArrow';
 import * as Style from './styles';
 
 // TYPES
@@ -28,13 +30,14 @@ export const MaintenanceCard = ({
   const [cardIsOpen, setCardIsOpen] = useState<boolean>(false);
 
   return (
-    <Style.MaintenancesCard
-      hasAdditionalInformation={
-        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.information ||
-        !!maintenance.Maintenance.MaintenanceAdditionalInformation?.user
-      }
-    >
+    <Style.MaintenancesCard>
       <Style.MaintenancesCardContent>
+        <Style.MaintenancesCardAdditionalContent minHeight="10px" justifyContent="flex-end">
+          {maintenance.Maintenance.MaintenanceAdditionalInformation?.information && (
+            <IconInfo strokeColor="actionBlue" />
+          )}
+        </Style.MaintenancesCardAdditionalContent>
+
         <Style.MaintenancesCardTopContent>
           <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
             <p className="p2">{maintenance.Maintenance.element}</p>
@@ -57,6 +60,28 @@ export const MaintenanceCard = ({
             </Style.ArrowContainer>
           </Style.MaintenancesGrid>
         </Style.MaintenancesCardTopContent>
+
+        <Style.MaintenancesCardAdditionalContent minHeight="20px" justifyContent="flex-start">
+          <Style.MaintenancesGrid cardIsOpen={cardIsOpen}>
+            <div style={{ display: 'flex', gap: '4px' }}>
+              {maintenance.Maintenance.MaintenanceAdditionalInformation?.user && (
+                <ImageComponent
+                  key={maintenance.Maintenance.MaintenanceAdditionalInformation?.user?.id}
+                  size="20px"
+                  radius="50%"
+                  src={
+                    maintenance.Maintenance.MaintenanceAdditionalInformation?.user?.image ||
+                    icon.personPlaceholder
+                  }
+                  alt={
+                    maintenance.Maintenance.MaintenanceAdditionalInformation?.user?.name ||
+                    'Usuário sem imagem'
+                  }
+                />
+              )}
+            </div>
+          </Style.MaintenancesGrid>
+        </Style.MaintenancesCardAdditionalContent>
 
         <Style.MaintenancesCardBottomContainer cardIsOpen={cardIsOpen}>
           <Style.Hr />
