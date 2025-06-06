@@ -10,9 +10,8 @@ export interface IChecklist {
   id?: string;
 
   buildingId?: string;
-  syndicId?: string;
-  userId?: string;
   templateId?: string;
+  finishedById?: string;
 
   name?: string;
   description?: string;
@@ -23,12 +22,11 @@ export interface IChecklist {
   observation?: string;
   status?: TChecklistStatus;
   groupId?: string;
+  building?: IBuilding;
+  template?: IChecklistTemplate;
 
   createdAt?: string;
   updatedAt?: string;
-  building?: IBuilding;
-  user?: IUser;
-  template?: IChecklistTemplate;
 
   checklistItem?: IChecklistItem[];
 
@@ -40,4 +38,6 @@ export interface IChecklist {
   }[];
 
   checklistUsers?: IUser[];
+
+  finishedBy?: IUser;
 }
