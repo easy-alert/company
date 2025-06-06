@@ -318,10 +318,9 @@ export const ModalChecklistDetails = ({
 
           <UserResponsible
             title={
-              checklistDetails?.checklistUsers?.length === 0 ||
-              checklistDetails?.checklistUsers?.length === 1
-                ? 'Usuário responsável'
-                : 'Usuários responsáveis'
+              (checklistDetails?.checklistUsers?.length ?? 0) > 1
+                ? 'Usuários responsáveis'
+                : 'Usuário responsável'
             }
             users={checklistDetails?.checklistUsers}
           />

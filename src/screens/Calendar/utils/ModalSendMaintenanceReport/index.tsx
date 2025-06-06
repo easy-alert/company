@@ -417,6 +417,11 @@ export const ModalSendMaintenanceReport = ({
 
               {maintenance?.Users && maintenance?.Users?.length > 0 && (
                 <UserResponsible
+                  title={
+                    (maintenance?.Users?.length ?? 0) > 1
+                      ? 'Usuários responsáveis'
+                      : 'Usuário responsável'
+                  }
                   users={maintenance.Users.map(({ User }) => ({
                     ...User,
                   }))}
