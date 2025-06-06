@@ -9,23 +9,24 @@ import { DragAndDropFiles } from '@components/DragAndDropFiles';
 import { Button } from '@components/Buttons/Button';
 import { ImagePreview } from '@components/ImagePreview';
 import { Modal } from '@components/Modal';
-import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { DotLoading } from '@components/Loadings/DotLoading';
-import UserResponsible from '@components/UserResponsible';
 import { TextArea } from '@components/Inputs/TextArea';
+import { IconButton } from '@components/Buttons/IconButton';
+import UserResponsible from '@components/UserResponsible';
 
 // GLOBAL UTILS
 import { uploadManyFiles } from '@utils/functions';
+
+// GLOBAL ASSETS
+import IconCheckRound from '@assets/icons/IconCheckRound';
+import IconErrorRound from '@assets/icons/IconErrorRound';
 
 // GLOBAL TYPES
 import { IChecklist, TChecklistItemStatus, TChecklistStatus } from '@customTypes/IChecklist';
 
 // STYLES
-import IconCheckRound from '@assets/icons/IconCheckRound';
-import IconErrorRound from '@assets/icons/IconErrorRound';
-import { IconButton } from '@components/Buttons/IconButton';
 import * as Style from './styles';
 
 // TYPES
@@ -71,6 +72,7 @@ export const ModalChecklistDetails = ({
 
       setUploadedFiles((prev) => [...prev, ...formattedUploadedFiles]);
     } catch (error) {
+      console.error('Erro ao fazer upload das imagens:', error);
       // Tratamento de erro
     } finally {
       setOnImageQuery(false);
@@ -314,8 +316,18 @@ export const ModalChecklistDetails = ({
             </Style.ChecklistObservationContainer>
           </Style.ChecklistContainer>
 
-          {checklistDetails?.checklistUsers && (
-            <UserResponsible users={checklistDetails.checklistUsers} />
+          <UserResponsible
+            title={
+              checklistDetails?.checklistUsers?.length === 0 ||
+              checklistDetails?.checklistUsers?.length === 1
+                ? 'Usuário responsável'
+                : 'Usuários responsáveis'
+            }
+            users={checklistDetails?.checklistUsers}
+          />
+
+          {checklistDetails.status === 'completed' && checklistDetails?.finishedBy && (
+            <UserResponsible title="Concluído por" users={[checklistDetails.finishedBy]} />
           )}
 
           <h3>Imagens</h3>
@@ -354,6 +366,12 @@ export const ModalChecklistDetails = ({
                     }}
                   />
                 ))}
+
+              {uploadedFiles.length === 0 && (
+                <p style={{ width: '100%' }}>
+                  {checklistDetails.status === 'completed' && 'Nenhuma imagem enviada'}
+                </p>
+              )}
 
               {onImageQuery &&
                 [...Array(imagesToUploadCount).keys()].map((e) => (
