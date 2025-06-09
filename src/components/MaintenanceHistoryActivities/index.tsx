@@ -210,7 +210,7 @@ export const MaintenanceHistoryActivities = ({
             label="Enviar comentário"
             placeholder="Escreva seu comentário"
             permToCheck="maintenances:update"
-            value={comment} 
+            value={comment}
             onChange={(evt) => {
               setComment(evt.target.value);
             }}
