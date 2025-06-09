@@ -26,7 +26,8 @@ import { FutureMaintenanceTag } from '@components/FutureMaintenanceTag';
 import { FormikInput } from '@components/Form/FormikInput';
 import { Select } from '@components/Inputs/Select';
 import { Skeleton } from '@components/Skeleton';
-import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
+import { ModalSendMaintenanceReport } from '@components/MaintenanceModals/ModalSendMaintenanceReport';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
 
 // GLOBAL UTILS
 import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
@@ -40,10 +41,9 @@ import IconBlock from '@assets/icons/IconBlock';
 // COMPONENTS
 
 import IconFilter from '@assets/icons/IconFilter';
-import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
-import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
 // STYLES
+import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
 import * as Style from './styles';
 
 // TYPES
