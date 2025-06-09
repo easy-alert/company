@@ -18,7 +18,7 @@ import { applyMask, catchHandler } from '@utils/functions';
 // ASSETS
 import { icon } from '@assets/icons';
 import IconUnlink from '@assets/icons/IconUnlink';
-import IconLink from '@assets/icons/IconLink';
+import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { ISupplier } from '@customTypes/ISupplier';
@@ -130,24 +130,7 @@ export const LinkSupplierToMaintenanceHistory = ({
       )}
 
       <Style.Container>
-        {suppliers.length === 0 && (
-          <Style.Header>
-            <h3>Prestador de serviço</h3>
-
-            <IconButton
-              label="Vincular"
-              icon={<IconLink strokeColor="white" backgroundColor="primary" padding="2px" />}
-              permToCheck="maintenances:update"
-              hideLabelOnMedia
-              onClick={() => {
-                ref.current?.scrollIntoView();
-                setModalLinkSupplierOpen(true);
-              }}
-            />
-          </Style.Header>
-        )}
-
-        {suppliers.length > 0 ? (
+        {suppliers.length > 0 &&
           suppliers.map(({ name, id, email, phone, image }, index) => (
             <Style.Container key={id} style={{ marginTop: index > 0 ? '8px' : '0px' }}>
               <Style.Header>
@@ -185,9 +168,19 @@ export const LinkSupplierToMaintenanceHistory = ({
                 </Style.ColumnInfo>
               </Style.SupplierInfo>
             </Style.Container>
-          ))
-        ) : (
-          <p className="p2 opacity">Nenhum prestador de serviço vinculado.</p>
+          ))}
+
+        {suppliers.length === 0 && (
+          <IconButton
+            label="Adicionar prestador de serviço"
+            icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
+            permToCheck="maintenances:update"
+            hideLabelOnMedia
+            onClick={() => {
+              ref.current?.scrollIntoView();
+              setModalLinkSupplierOpen(true);
+            }}
+          />
         )}
       </Style.Container>
     </>

@@ -51,6 +51,7 @@ interface IMaintenance {
   lastNotificationDate?: string;
   lastNotificationStatus?: string;
   daysToAnticipate?: number;
+  inProgress?: boolean;
 }
 
 export interface ICategories {
