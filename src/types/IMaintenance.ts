@@ -1,7 +1,8 @@
+import { Building } from '../screens/Maintenances/Kanban/types.d';
 import type { IAnnexesAndImages } from './IAnnexesAndImages';
 import type { IBuilding } from './IBuilding';
 import type { ICategory } from './ICategory';
-import type { IMaintenanceReport } from './IMaintenanceReport';
+import type { IMaintenanceReport, IMaintenanceReportProgress } from './IMaintenanceReport';
 import type { ISupplier } from './ISupplier';
 import type { IUser } from './IUser';
 
@@ -9,8 +10,9 @@ export interface IMaintenancesStatus {
   name: 'expired' | 'pending' | 'completed' | 'overdue';
 }
 
-interface IMaintenanceData {
+export interface IMaintenanceData {
   id?: string;
+
   categoryId?: string;
   ownerCompanyId?: string;
   maintenanceTypeId?: string;
@@ -41,6 +43,7 @@ interface IMaintenanceData {
     singularLabel?: string;
     unitTime?: number;
   };
+
   PeriodTimeInterval?: {
     name?: string;
     id?: string;
@@ -48,6 +51,7 @@ interface IMaintenanceData {
     singularLabel?: string;
     unitTime?: number;
   };
+
   DelayTimeInterval?: {
     name?: string;
     id?: string;
@@ -62,7 +66,7 @@ interface IMaintenanceData {
   MaintenanceType?: {
     name?: string;
   };
-  suggestedSuppliers?: ISupplier[];
+
   instructions?: {
     name?: string;
     url?: string;
@@ -73,32 +77,45 @@ interface IMaintenanceData {
 
   resolutionDate?: Date | null;
   notificationDate?: Date | null;
+
   maintenanceReport?: IMaintenanceReport;
-  files?: IAnnexesAndImages[];
-  images?: IAnnexesAndImages[];
   nextNotificationDate?: string;
   lastResolutionDate?: string;
   lastNotificationDate?: string;
   lastNotificationStatus?: string;
+
+  suggestedSuppliers?: ISupplier[];
+
+  files?: IAnnexesAndImages[];
+  images?: IAnnexesAndImages[];
 }
 
 export interface IMaintenance {
-  id: string;
-  dueDate: string;
-  resolutionDate: string;
-  notificationDate: string;
-  MaintenanceReport: IMaintenanceReport[];
-  MaintenancesStatus: IMaintenancesStatus;
-  Building: IBuilding;
-  Maintenance: IMaintenanceData;
-  canReport: boolean;
-  inProgress: boolean;
-  daysInAdvance: number;
-  daysToAnticipate?: number;
-  priorityName: string;
+  id?: string;
+
+  priorityName?: string;
   additionalInfo?: string;
-  userResponsible?: IUser;
+  daysInAdvance?: number;
+  daysToAnticipate?: number;
   serviceOrderNumber?: number;
+
+  inProgress?: boolean;
+  canReport?: boolean;
+  showToResident?: boolean;
+
+  notificationDate?: string;
+  dueDate?: string;
+  resolutionDate?: string;
+
+  Building?: IBuilding;
+
+  Maintenance?: IMaintenanceData;
+  MaintenancesStatus?: IMaintenancesStatus;
+  MaintenanceReport?: IMaintenanceReport[];
+  MaintenanceReportProgress?: IMaintenanceReportProgress[];
+
+  userResponsible?: IUser;
+
   Users?: {
     User: IUser;
   }[];
