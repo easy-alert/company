@@ -1,8 +1,8 @@
-import { Building } from '../screens/Maintenances/Kanban/types.d';
 import type { IAnnexesAndImages } from './IAnnexesAndImages';
 import type { IBuilding } from './IBuilding';
 import type { ICategory } from './ICategory';
 import type { IMaintenanceReport, IMaintenanceReportProgress } from './IMaintenanceReport';
+import type { IPriority } from './IPriority';
 import type { ISupplier } from './ISupplier';
 import type { IUser } from './IUser';
 
@@ -113,6 +113,8 @@ export interface IMaintenance {
   MaintenancesStatus?: IMaintenancesStatus;
   MaintenanceReport?: IMaintenanceReport[];
   MaintenanceReportProgress?: IMaintenanceReportProgress[];
+
+  priority?: IPriority;
 
   userResponsible?: IUser;
 
