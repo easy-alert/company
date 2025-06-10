@@ -1,6 +1,9 @@
 // REACT
 import { useEffect, useState } from 'react';
 
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
 // SERVICES
 import { getMaintenanceDetails } from '@services/apis/getMaintenanceDetails';
 
@@ -36,16 +39,19 @@ import * as Style from './styles';
 
 // TYPES
 import type { IModalMaintenanceDetails } from './types';
+import { ModalMaintenanceReportEdit } from '../ModalMaintenanceReportEdit';
 
 export const ModalMaintenanceDetails = ({
   modalAdditionalInformations,
-  userId,
   handleModals,
   handleRefresh,
 }: IModalMaintenanceDetails) => {
-  const [modalLoading, setModalLoading] = useState<boolean>(true);
+  const {
+    account: {
+      User: { id: userId },
+    },
+  } = useAuthContext();
 
-  // MODAL DETALHE DE MANUTENÇÃO
   const [maintenanceDetails, setMaintenanceDetails] = useState<IMaintenance>({
     id: '',
 
@@ -107,9 +113,17 @@ export const ModalMaintenanceDetails = ({
   });
 
   const [modalEditMaintenanceHistory, setModalEditMaintenanceHistory] = useState<boolean>(false);
+  const [modalMaintenanceReportEdit, setModalMaintenanceReportEdit] = useState<boolean>(false);
+
+  const [modalLoading, setModalLoading] = useState<boolean>(true);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleEditModal = (modalState: boolean) => {
     setModalEditMaintenanceHistory(modalState);
+  };
+
+  const handleMaintenanceReportEditModal = (modalState: boolean) => {
+    setModalMaintenanceReportEdit(modalState);
   };
 
   const handleMaintenanceReport = (maintenance: IMaintenance) => {
@@ -149,6 +163,7 @@ export const ModalMaintenanceDetails = ({
 
       setMaintenanceDetails(responseData);
       handleMaintenanceReport(responseData);
+      setRefresh(!refresh);
     } finally {
       setTimeout(() => {
         setModalLoading(false);
@@ -162,12 +177,20 @@ export const ModalMaintenanceDetails = ({
 
   return (
     <>
-      {modalEditMaintenanceHistory && maintenanceDetails && (
+      {modalEditMaintenanceHistory && (
         <ModalEditMaintenanceHistory
           userId={userId}
           maintenance={maintenanceDetails}
           handleEditModal={handleEditModal}
           handleRefresh={handleRefresh}
+        />
+      )}
+
+      {modalMaintenanceReportEdit && maintenanceDetails.id && (
+        <ModalMaintenanceReportEdit
+          maintenanceHistoryId={maintenanceDetails.id}
+          handleModalEditReport={handleMaintenanceReportEditModal}
+          handleBackgroundData={handleGetMaintenanceDetails}
         />
       )}
 
@@ -347,23 +370,40 @@ export const ModalMaintenanceDetails = ({
 
               {!modalAdditionalInformations.isFuture && maintenanceDetails?.id && (
                 <>
-                  <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceDetails.id} />
-                  <MaintenanceHistoryActivities maintenanceHistoryId={maintenanceDetails.id} />
+                  <LinkSupplierToMaintenanceHistory
+                    maintenanceHistoryId={maintenanceDetails.id}
+                    showSupplierButton={false}
+                    refreshSuppliers={refresh}
+                  />
+
+                  <MaintenanceHistoryActivities
+                    maintenanceHistoryId={maintenanceDetails.id}
+                    showTextArea={false}
+                    refreshActivities={refresh}
+                  />
                 </>
               )}
 
-              <Style.Row>
-                <h6>Custo</h6>
+              <div style={{ display: 'flex', flexDirection: 'row', gap: theme.size.xsm }}>
+                <Style.Row style={{ flex: 1 }}>
+                  <h6>Custo</h6>
 
-                <p className="p2">
-                  {
-                    applyMask({
-                      mask: 'BRL',
-                      value: String(maintenanceReport?.cost),
-                    }).value
-                  }
-                </p>
-              </Style.Row>
+                  <p className="p2">
+                    {
+                      applyMask({
+                        mask: 'BRL',
+                        value: String(maintenanceReport?.cost),
+                      }).value
+                    }
+                  </p>
+                </Style.Row>
+
+                <Style.Row style={{ flex: 1 }}>
+                  <h6>Prioridade</h6>
+
+                  <p className="p2">{maintenanceDetails?.priority?.label}</p>
+                </Style.Row>
+              </div>
 
               <Style.FileStyleRow>
                 <h6>Anexos</h6>
@@ -411,12 +451,26 @@ export const ModalMaintenanceDetails = ({
                 </Style.FileAndImageRow>
               </Style.FileStyleRow>
             </Style.Content>
-            <Button
-              bgColor="primary"
-              label="Fechar"
-              center
-              onClick={() => handleModals('modalMaintenanceDetails', false)}
-            />
+
+            <Style.ButtonContainer
+              justifyContent={
+                (maintenanceDetails?.MaintenanceReport?.length ?? 0) > 0 ? 'space-evenly' : 'center'
+              }
+            >
+              <Button
+                bgColor="primary"
+                label="Fechar"
+                onClick={() => handleModals('modalMaintenanceDetails', false)}
+              />
+
+              {(maintenanceDetails?.MaintenanceReport?.length ?? 0) > 0 && (
+                <Button
+                  bgColor="primary"
+                  label="Editar relato"
+                  onClick={() => setModalMaintenanceReportEdit(true)}
+                />
+              )}
+            </Style.ButtonContainer>
           </Style.Container>
         )}
       </Modal>
