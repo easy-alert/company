@@ -45,9 +45,17 @@ export const ReusableChartCard = ({
   const currentLabel =
     hoveredIndex !== null && chartOptions.labels ? chartOptions.labels[hoveredIndex] : null;
 
+  function normalize(str: string) {
+    return (str || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
   const currentActivities = currentLabel
     ? Object.entries(activitiesByLabel).find(
-        ([label]) => label.toLowerCase() === currentLabel.toLowerCase(),
+        ([label]) => normalize(label) === normalize(currentLabel),
       )?.[1] || []
     : [];
 
