@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
 import { ImageComponent } from '@components/ImageComponent';
-import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
+import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
