@@ -19,7 +19,7 @@ import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
-import { ModalSendMaintenanceReport } from '@components/MaintenanceModals/ModalSendMaintenanceReport';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
 import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
 
@@ -28,10 +28,6 @@ import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
-
-// COMPONENTS
-
-import { ModalEditMaintenanceReport } from '../Reports/Maintenances/ModalEditMaintenanceReport';
 
 // FUNCTIONS
 import { requestCalendarData } from './functions';
@@ -49,15 +45,11 @@ export const MaintenancesCalendar = () => {
 
   const [date, setDate] = useState(new Date());
 
-  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
-    useState<boolean>(false);
-
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
-
-  const [modalMaintenanceSendReport, setModalMaintenanceSendReport] = useState<boolean>(false);
-  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
   const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
     useState<boolean>(false);
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -136,8 +128,8 @@ export const MaintenancesCalendar = () => {
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
-      case 'modalSendMaintenanceReport':
-        setModalMaintenanceSendReport(modalState);
+      case 'modalMaintenanceReportSend':
+        setModalMaintenanceReportSend(modalState);
         break;
       case 'modalMaintenanceDetails':
         setModalMaintenanceDetails(modalState);
@@ -232,7 +224,7 @@ export const MaintenancesCalendar = () => {
         ) {
           handleModals('modalMaintenanceDetails', true);
         } else if (!event.isFuture && event.id) {
-          setModalSendMaintenanceReportOpen(true);
+          handleModals('modalMaintenanceReportSend', true);
         }
       } else {
         setDate(event.start);
@@ -269,7 +261,7 @@ export const MaintenancesCalendar = () => {
   useKeyPressEvent('w', () => {
     if (
       !modalMaintenanceDetails &&
-      !modalSendMaintenanceReportOpen &&
+      !modalMaintenanceReportSend &&
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
     ) {
@@ -280,7 +272,7 @@ export const MaintenancesCalendar = () => {
   useKeyPressEvent('m', () => {
     if (
       !modalMaintenanceDetails &&
-      !modalSendMaintenanceReportOpen &&
+      !modalMaintenanceReportSend &&
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
     ) {
@@ -302,15 +294,14 @@ export const MaintenancesCalendar = () => {
           handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalMaintenanceDetails={setModalMaintenanceDetails}
-          handleModalSendMaintenanceReport={setModalMaintenanceSendReport}
+          handleModalSendMaintenanceReport={setModalMaintenanceReportSend}
           handleGetBackgroundData={handleGetCalendarData}
         />
       )}
 
-      {modalMaintenanceSendReport && (
-        <ModalSendMaintenanceReport
+      {modalMaintenanceReportSend && (
+        <ModalMaintenanceReportSend
           maintenanceHistoryId={maintenanceHistoryId}
-          userId={account?.User.id ?? ''}
           refresh={refresh}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
@@ -323,14 +314,13 @@ export const MaintenancesCalendar = () => {
             ...modalAdditionalInformations,
             id: maintenanceHistoryId || modalAdditionalInformations.id,
           }}
-          userId={account?.User.id ?? ''}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
           handleQuery={handleQuery}
         />
       )}
 
-      {modalEditReport && (
+      {/* {modalEditReport && (
         <ModalEditMaintenanceReport
           maintenanceHistoryId={maintenanceHistoryId || modalAdditionalInformations.id}
           handleModalEditReport={handleModalEditReport}
@@ -348,7 +338,7 @@ export const MaintenancesCalendar = () => {
             })
           }
         />
-      )}
+      )} */}
 
       <Style.Container>
         <Style.Header arrowColor="primary">
@@ -376,7 +366,7 @@ export const MaintenancesCalendar = () => {
             label="Manutenção avulsa"
             icon={<IconPlus strokeColor="primary" />}
             permToCheck="maintenances:createOccasional"
-            onClick={() => setModalCreateOccasionalMaintenance(true)}
+            onClick={() => handleModals('modalCreateOccasionalMaintenance', true)}
           />
         </Style.Header>
 
