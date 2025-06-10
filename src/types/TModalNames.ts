@@ -1,5 +1,6 @@
 export type TModalNames =
-  | 'modalSendMaintenanceReport'
+  | 'modalMaintenanceReportSend'
+  | 'modalMaintenanceReportEdit'
   | 'modalMaintenanceDetails'
   | 'modalCreateOccasionalMaintenance'
   | 'modalEditMaintenanceHistory';
