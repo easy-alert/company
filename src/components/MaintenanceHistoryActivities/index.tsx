@@ -38,6 +38,8 @@ import type { IMaintenanceHistoryActivities } from './types';
 
 export const MaintenanceHistoryActivities = ({
   maintenanceHistoryId,
+  showTextArea = true,
+  refreshActivities,
 }: IMaintenanceHistoryActivities) => {
   const { account } = useAuthContext();
 
@@ -141,7 +143,7 @@ export const MaintenanceHistoryActivities = ({
 
   useEffect(() => {
     findMaintenanceHistoryActivities();
-  }, []);
+  }, [refreshActivities]);
 
   useEffect(() => {
     if (acceptedFiles.length === 0) return;
@@ -203,65 +205,84 @@ export const MaintenanceHistoryActivities = ({
 
   return (
     <Style.Container>
-      <Style.SendDataSection>
-        <Style.InputRow>
-          <TextArea
-            name="activity"
-            label="Enviar comentário"
-            placeholder="Escreva seu comentário"
-            permToCheck="maintenances:update"
-            value={comment}
-            onChange={(evt) => {
-              setComment(evt.target.value);
-            }}
-          />
+      {showTextArea && (
+        <Style.SendDataSection>
+          <Style.InputRow>
+            <TextArea
+              name="activity"
+              label="Enviar comentário"
+              placeholder="Escreva seu comentário"
+              permToCheck="maintenances:update"
+              value={comment}
+              onChange={(evt) => {
+                setComment(evt.target.value);
+              }}
+            />
 
-          <Style.InputButtons>
-            <div {...getRootProps({ className: 'dropzone' })}>
-              <input {...getInputProps()} />
+            <Style.InputButtons>
+              <div {...getRootProps({ className: 'dropzone' })}>
+                <input {...getInputProps()} />
+
+                <IconButton
+                  icon={
+                    <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                  }
+                  permToCheck="maintenances:update"
+                  onClick={() => {
+                    //
+                  }}
+                />
+              </div>
 
               <IconButton
                 icon={
-                  <IconUploadLine backgroundColor="primary" strokeColor="white" padding="4px" />
+                  <IconSend
+                    backgroundColor="primary"
+                    strokeColor="white"
+                    padding="4px"
+                    strokeWidth="1.5"
+                  />
                 }
+                loading={onQuery}
+                disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
                 permToCheck="maintenances:update"
                 onClick={() => {
-                  //
+                  createActivity();
                 }}
               />
-            </div>
+            </Style.InputButtons>
+          </Style.InputRow>
 
-            <IconButton
-              icon={
-                <IconSend
-                  backgroundColor="primary"
-                  strokeColor="white"
-                  padding="4px"
-                  strokeWidth="1.5"
-                />
-              }
-              loading={onQuery}
-              disabled={(!comment && imagesToUpload.length === 0) || onImageQuery}
-              permToCheck="maintenances:update"
-              onClick={() => {
-                createActivity();
-              }}
-            />
-          </Style.InputButtons>
-        </Style.InputRow>
+          {(imagesToUpload.length > 0 || onImageQuery) && (
+            <Style.FileAndImageRow>
+              {imagesToUpload.sort(sortFiles).map((e, i: number) => {
+                if (isImage(e.url)) {
+                  return (
+                    <ImagePreview
+                      key={e.url}
+                      width="97px"
+                      height="97px"
+                      imageCustomName={e.originalName}
+                      src={e.url}
+                      onTrashClick={() => {
+                        setImagesToUpload((prevState) => {
+                          const newState = [...prevState];
+                          newState.splice(i, 1);
+                          return newState;
+                        });
+                      }}
+                    />
+                  );
+                }
 
-        {(imagesToUpload.length > 0 || onImageQuery) && (
-          <Style.FileAndImageRow>
-            {imagesToUpload.sort(sortFiles).map((e, i: number) => {
-              if (isImage(e.url)) {
                 return (
-                  <ImagePreview
+                  <ListTag
+                    downloadUrl={e.url}
                     key={e.url}
-                    width="97px"
-                    height="97px"
-                    imageCustomName={e.originalName}
-                    src={e.url}
-                    onTrashClick={() => {
+                    padding="4px 12px"
+                    label={e.originalName}
+                    maxWidth="100px"
+                    onClick={() => {
                       setImagesToUpload((prevState) => {
                         const newState = [...prevState];
                         newState.splice(i, 1);
@@ -270,35 +291,18 @@ export const MaintenanceHistoryActivities = ({
                     }}
                   />
                 );
-              }
+              })}
 
-              return (
-                <ListTag
-                  downloadUrl={e.url}
-                  key={e.url}
-                  padding="4px 12px"
-                  label={e.originalName}
-                  maxWidth="100px"
-                  onClick={() => {
-                    setImagesToUpload((prevState) => {
-                      const newState = [...prevState];
-                      newState.splice(i, 1);
-                      return newState;
-                    });
-                  }}
-                />
-              );
-            })}
-
-            {onImageQuery &&
-              acceptedFiles.map((e) => (
-                <Style.ImageLoadingTag key={e.name}>
-                  <DotLoading />
-                </Style.ImageLoadingTag>
-              ))}
-          </Style.FileAndImageRow>
-        )}
-      </Style.SendDataSection>
+              {onImageQuery &&
+                acceptedFiles.map((e) => (
+                  <Style.ImageLoadingTag key={e.name}>
+                    <DotLoading />
+                  </Style.ImageLoadingTag>
+                ))}
+            </Style.FileAndImageRow>
+          )}
+        </Style.SendDataSection>
+      )}
 
       <Style.History>
         <h3>Históricos</h3>
