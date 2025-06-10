@@ -8,6 +8,9 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // SERVICES
 import { getMaintenanceDetails } from '@services/apis/getMaintenanceDetails';
+import { getMaintenanceReportProgress } from '@services/apis/getMaintenanceReportProgress';
+import { sendMaintenanceReport } from '@services/apis/sendMaintenanceReport';
+import { saveMaintenanceReport } from '@services/apis/saveMaintenanceReport';
 
 // HOOKS
 import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
@@ -46,28 +49,24 @@ import type { IMaintenance } from '@customTypes/IMaintenance';
 import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 
-// UTILS
-import {
-  requestReportProgress,
-  requestSaveReportProgress,
-  requestSendReport,
-  requestToggleInProgress,
-} from './functions';
-
 // STYLES
 import * as Style from './styles';
 
 // TYPES
-import type { IModalSendMaintenanceReport } from './types';
+import type { IModalMaintenanceReportSend } from './types';
 
-export const ModalSendMaintenanceReport = ({
-  userId,
+export const ModalMaintenanceReportSend = ({
   maintenanceHistoryId,
   refresh,
   handleModals,
   handleRefresh,
-}: IModalSendMaintenanceReport) => {
-  const { account } = useAuthContext();
+}: IModalMaintenanceReportSend) => {
+  const {
+    account: {
+      origin,
+      User: { id: userId },
+    },
+  } = useAuthContext();
   const { hasPermission: hasUpdatePermission } = useHasPermission({
     permToCheck: ['maintenances:update'],
   });
@@ -161,7 +160,7 @@ export const ModalSendMaintenanceReport = ({
   };
 
   const handleGetReportProgress = async () => {
-    const responseData = await requestReportProgress({
+    const responseData = await getMaintenanceReportProgress({
       maintenanceHistoryId,
     });
 
@@ -175,60 +174,42 @@ export const ModalSendMaintenanceReport = ({
     }
   };
 
-  const handleChangeMaintenanceProgress = async () => {
+  const handleSaveMaintenanceReport = async (inProgress?: boolean) => {
     setOnQuery(true);
 
     try {
-      await requestToggleInProgress({
-        syndicNanoId: '',
-        userId: userId ?? '',
+      await saveMaintenanceReport({
         maintenanceHistoryId,
-        inProgressChange: !maintenance.inProgress,
+        inProgress,
+        userId: userId ?? '',
+        maintenanceReport,
+        files,
+        images,
+        origin,
       });
 
-      handleModals('modalSendMaintenanceReport', false);
+      handleModals('modalMaintenanceReportSend', false);
     } finally {
       handleRefresh();
       setOnQuery(false);
     }
   };
 
-  const handleSaveMaintenance = async () => {
+  const handleSendMaintenanceReport = async () => {
     setOnQuery(true);
 
     try {
-      await requestSaveReportProgress({
+      await sendMaintenanceReport({
         syndicNanoId: '',
         userId: userId ?? '',
         maintenanceHistoryId,
         maintenanceReport,
         files,
         images,
-        origin: account?.origin ?? 'Company',
+        origin,
       });
 
-      handleModals('modalSendMaintenanceReport', false);
-    } finally {
-      handleRefresh();
-      setOnQuery(false);
-    }
-  };
-
-  const handleSendReportMaintenance = async () => {
-    setOnQuery(true);
-
-    try {
-      await requestSendReport({
-        syndicNanoId: '',
-        userId: userId ?? '',
-        maintenanceHistoryId,
-        maintenanceReport,
-        files,
-        images,
-        origin: account?.origin ?? 'Company',
-      });
-
-      handleModals('modalSendMaintenanceReport', false);
+      handleModals('modalMaintenanceReportSend', false);
     } finally {
       handleRefresh();
       setOnQuery(false);
@@ -314,7 +295,7 @@ export const ModalSendMaintenanceReport = ({
         bodyWidth="475px"
         title={maintenance.canReport ? 'Enviar relato' : 'Detalhes de manutenção'}
         maintenanceHistoryId={maintenanceHistoryId}
-        setModal={(modalState) => handleModals('modalSendMaintenanceReport', modalState)}
+        setModal={(modalState) => handleModals('modalMaintenanceReportSend', modalState)}
         handleEdit={() => handleEditModal(true)}
       >
         {modalLoading ? (
@@ -583,7 +564,7 @@ export const ModalSendMaintenanceReport = ({
                 {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
-                    actionButtonClick={() => handleChangeMaintenanceProgress()}
+                    actionButtonClick={() => handleSaveMaintenanceReport(!maintenance.inProgress)}
                     borderless
                     actionButtonBgColor="primary"
                     textColor="actionBlue"
@@ -601,7 +582,7 @@ export const ModalSendMaintenanceReport = ({
                 {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
-                    actionButtonClick={() => handleSaveMaintenance()}
+                    actionButtonClick={() => handleSaveMaintenanceReport(maintenance?.inProgress)}
                     textColor="actionBlue"
                     borderless
                     actionButtonBgColor="primary"
@@ -613,10 +594,11 @@ export const ModalSendMaintenanceReport = ({
                     type="Button"
                   />
                 )}
+
                 <PopoverButton
                   disabled={onFileQuery || onImageQuery}
                   loading={onQuery}
-                  actionButtonClick={() => handleSendReportMaintenance()}
+                  actionButtonClick={() => handleSendMaintenanceReport()}
                   label="Finalizar manutenção"
                   actionButtonBgColor="primary"
                   bgColor="primary"
@@ -632,7 +614,7 @@ export const ModalSendMaintenanceReport = ({
               <Button
                 label="Fechar"
                 center
-                onClick={() => handleModals('modalSendMaintenanceReport', false)}
+                onClick={() => handleModals('modalMaintenanceReportSend', false)}
               />
             )}
           </Style.Container>
