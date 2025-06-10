@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 // REACT
 import { useEffect, useState } from 'react';
-import { CSVLink } from 'react-csv';
-import { toast } from 'react-toastify';
 
 // LIBS
 import { Form, Formik } from 'formik';
+import { CSVLink } from 'react-csv';
+import { toast } from 'react-toastify';
 
 // SERVICES
 import { Api } from '@services/api';
@@ -22,24 +22,25 @@ import { Select } from '@components/Inputs/Select';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { InProgressTag } from '@components/InProgressTag';
 import { PdfList } from '@components/PdfList';
+import { EventTag } from '@components/EventTag';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
+import { ModalMaintenanceReportEdit } from '@components/MaintenanceModals/ModalMaintenanceReportEdit';
 
 // GLOBAL UTILS
 import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@utils/functions';
 
-// GLOBAL ICONS
+// GLOBAL ASSETS
 import { icon } from '@assets/icons';
 import IconCsvLogo from '@assets/icons/IconCsvLogo';
 import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
+import type { TModalNames } from '@customTypes/TModalNames';
 
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
-import { EventTag } from '../../Calendar/utils/EventTag';
-import { ModalMaintenanceDetails } from '../../Calendar/utils/ModalMaintenanceDetails';
-import { ModalEditMaintenanceReport } from './ModalEditMaintenanceReport';
-import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
 
 // UTILS
 import { requestReportsData, requestReportsDataForSelect, schemaReportFilter } from './functions';
@@ -65,9 +66,14 @@ export const MaintenanceReports = () => {
   // #region states
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-  const [onPdfQuery, setOnPdfQuery] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
+  const [modalAdditionalInformations, setModalAdditionalInformations] =
+    useState<IModalAdditionalInformations>({
+      id: '',
+      expectedNotificationDate: '',
+      expectedDueDate: '',
+      isFuture: false,
+    });
 
   const [counts, setCounts] = useState<ICounts>({
     completed: 0,
@@ -83,13 +89,7 @@ export const MaintenanceReports = () => {
 
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
   const [modalEditReport, setModalEditReport] = useState<boolean>(false);
-
-  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
-
-  // const [modalPrintReportOpen, setModalPrintReportOpen] = useState<boolean>(false);
-
-  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
-    useState<boolean>(false);
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
 
@@ -113,16 +113,32 @@ export const MaintenanceReports = () => {
 
   const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
 
-  const [modalAdditionalInformations, setModalAdditionalInformations] =
-    useState<IModalAdditionalInformations>({
-      id: '',
-      expectedNotificationDate: '',
-      expectedDueDate: '',
-      isFuture: false,
-    });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refresh, setRefresh] = useState(false);
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [onPdfQuery, setOnPdfQuery] = useState<boolean>(false);
 
   // #endregion
 
+  const handleRefresh = () => {
+    setRefresh((prevState) => !prevState);
+  };
+
+  const handleModals = (modal: TModalNames, modalState: boolean) => {
+    switch (modal) {
+      case 'modalMaintenanceReportSend':
+        setModalMaintenanceReportSend(modalState);
+        break;
+      case 'modalMaintenanceDetails':
+        setModalMaintenanceDetails(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  // #region csv
   const csvHeaders = [
     { label: 'Edificação', key: 'Edificação' },
     { label: 'Status', key: 'Status' },
@@ -158,11 +174,9 @@ export const MaintenanceReports = () => {
     Anexos: data?.annexes?.map(({ url }) => url).join('; '),
     Imagens: data?.images?.map(({ url }) => url).join('; '),
   }));
+  // #endregion
 
-  const handleModalMaintenanceDetails = (modalState: boolean) => {
-    setModalMaintenanceDetails(modalState);
-  };
-
+  // #region api functions
   const requestPdf = async () => {
     setOnPdfQuery(true);
 
@@ -194,14 +208,7 @@ export const MaintenanceReports = () => {
         setLoading(false);
       });
   };
-
-  const handleModalEditReport = (modalState: boolean) => {
-    setModalEditReport(modalState);
-  };
-
-  const handleModalSendMaintenanceReport = (modalState: boolean) => {
-    setModalSendMaintenanceReportOpen(modalState);
-  };
+  // #endregion
 
   useEffect(() => {
     requestReportsDataForSelect({ setFiltersOptions, setLoading });
@@ -212,31 +219,27 @@ export const MaintenanceReports = () => {
     <DotSpinLoading />
   ) : (
     <>
+      {modalMaintenanceReportSend && (
+        <ModalMaintenanceReportSend
+          maintenanceHistoryId={maintenanceHistoryId}
+          refresh={refresh}
+          handleModals={handleModals}
+          handleRefresh={handleRefresh}
+        />
+      )}
+
       {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
-          handleModalEditReport={handleModalEditReport}
-          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
-          modalAdditionalInformations={modalAdditionalInformations}
+          modalAdditionalInformations={{
+            ...modalAdditionalInformations,
+            id: maintenanceHistoryId || modalAdditionalInformations.id,
+          }}
+          handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
-      {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
-        <ModalSendMaintenanceReport
-          maintenanceHistoryId={maintenanceHistoryId}
-          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
-          onThenRequest={async () =>
-            requestReportsData({
-              filters: filterforRequest,
-              setCounts,
-              setLoading,
-              setMaintenances,
-              setOnQuery,
-            })
-          }
-        />
-      )}
-
-      {modalEditReport && maintenanceHistoryId && (
+      {/* {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
           maintenanceHistoryId={maintenanceHistoryId}
           handleModalEditReport={handleModalEditReport}
@@ -250,10 +253,6 @@ export const MaintenanceReports = () => {
             })
           }
         />
-      )}
-      {/*
-      {modalPrintReportOpen && (
-        <ModalPrintReport setModal={setModalPrintReportOpen} filters={filterforRequest} />
       )} */}
 
       <s.Container>
@@ -688,9 +687,9 @@ export const MaintenanceReports = () => {
                         maintenance.isFuture) &&
                       maintenance.id
                     ) {
-                      setModalMaintenanceDetails(true);
+                      handleModals('modalMaintenanceDetails', true);
                     } else if (!maintenance.isFuture && maintenance.id) {
-                      setModalSendMaintenanceReportOpen(true);
+                      handleModals('modalMaintenanceReportSend', true);
                     }
                   }}
                 />

@@ -2,20 +2,22 @@
 import { useState } from 'react';
 
 // GLOBAL COMPONENTS
+import { EventTag } from '@components/EventTag';
 import { InProgressTag } from '@components/InProgressTag';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 
 // UTILS
 import { dateFormatter, applyMask } from '@utils/functions';
 
+// GLOBAL TYPES
+import { TModalNames } from '@customTypes/TModalNames';
+
 // COMPONENTS
-import { EventTag } from '../../../Calendar/utils/EventTag';
 import {
   ReportDataTable,
   ReportDataTableContent,
 } from '../../../Reports/Maintenances/ReportDataTable';
-import { ModalMaintenanceDetails } from '../../../Calendar/utils/ModalMaintenanceDetails';
-import { ModalEditMaintenanceReport } from '../../../Reports/Maintenances/ModalEditMaintenanceReport';
-import { ModalSendMaintenanceReport } from '../../../Reports/Maintenances/ModalSendMaintenanceReport';
 
 // STYLES
 import { TagContainer } from '../../../Reports/Maintenances/styles';
@@ -27,51 +29,53 @@ export const SupplierMaintenanceHistory = ({
   maintenancesHistory,
   getMaintenanceHistory,
 }: ISupplierMaintenanceHistory) => {
-  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
-
   const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
-  const [modalSendMaintenanceReportOpen, setModalSendMaintenanceReportOpen] =
-    useState<boolean>(false);
 
-  const handleModalMaintenanceDetails = (modalState: boolean) => {
-    setModalMaintenanceDetails(modalState);
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const handleModals = (modal: TModalNames, modalState: boolean) => {
+    switch (modal) {
+      case 'modalCreateOccasionalMaintenance':
+        setModalMaintenanceReportSend(modalState);
+        break;
+      case 'modalMaintenanceDetails':
+        setModalMaintenanceDetails(modalState);
+        break;
+
+      default:
+        break;
+    }
   };
 
-  const handleModalEditReport = (modalState: boolean) => {
-    setModalEditReport(modalState);
-  };
-
-  const handleModalSendMaintenanceReport = (modalState: boolean) => {
-    setModalSendMaintenanceReportOpen(modalState);
+  const handleRefresh = () => {
+    setRefresh((prevState) => !prevState);
   };
 
   return (
     <>
-      {modalMaintenanceDetails && maintenanceHistoryId && (
+      {modalMaintenanceDetails && (
         <ModalMaintenanceDetails
           modalAdditionalInformations={{
-            expectedDueDate: '',
-            expectedNotificationDate: '',
             id: maintenanceHistoryId,
-            isFuture: false,
           }}
-          handleModalEditReport={handleModalEditReport}
-          handleModalMaintenanceDetails={handleModalMaintenanceDetails}
+          handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
-      {modalSendMaintenanceReportOpen && maintenanceHistoryId && (
-        <ModalSendMaintenanceReport
-          handleModalSendMaintenanceReport={handleModalSendMaintenanceReport}
+      {modalMaintenanceReportSend && (
+        <ModalMaintenanceReportSend
           maintenanceHistoryId={maintenanceHistoryId}
-          onThenRequest={async () => {
-            getMaintenanceHistory();
-          }}
+          refresh={refresh}
+          handleModals={handleModals}
+          handleRefresh={handleRefresh}
         />
       )}
 
-      {modalEditReport && maintenanceHistoryId && (
+      {/* {modalEditReport && maintenanceHistoryId && (
         <ModalEditMaintenanceReport
           handleModalEditReport={handleModalEditReport}
           maintenanceHistoryId={maintenanceHistoryId}
@@ -79,7 +83,7 @@ export const SupplierMaintenanceHistory = ({
             getMaintenanceHistory();
           }}
         />
-      )}
+      )} */}
 
       {maintenancesHistory.length > 0 && (
         <div style={{ marginTop: '24px' }}>
@@ -147,9 +151,9 @@ export const SupplierMaintenanceHistory = ({
                       maintenanceHistory.isFuture) &&
                     maintenanceHistory.id
                   ) {
-                    setModalMaintenanceDetails(true);
+                    handleModals('modalMaintenanceDetails', true);
                   } else if (!maintenanceHistory.isFuture && maintenanceHistory.id) {
-                    handleModalSendMaintenanceReport(true);
+                    handleModals('modalEditMaintenanceHistory', true);
                   }
                 }}
               />

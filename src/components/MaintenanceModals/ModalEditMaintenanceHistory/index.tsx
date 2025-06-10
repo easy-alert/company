@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 // LIBS
 import { Form, Formik } from 'formik';
-import { FormikInput } from '@components/Form/FormikInput';
 import * as yup from 'yup';
 
 // HOOKS
@@ -15,6 +14,7 @@ import { putMaintenanceHistory } from '@services/apis/putMaintenanceHistory';
 // COMPONENTS
 import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
+import { FormikInput } from '@components/Form/FormikInput';
 import { FormikCheckbox } from '@components/Form/FormikCheckbox';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
@@ -41,11 +41,11 @@ export const ModalEditMaintenanceHistory = ({
 
   // Calculate the limit date
   const daysToAdd =
-    (maintenance.Maintenance.FrequencyTimeInterval?.unitTime ?? 0) *
-      (maintenance.Maintenance.frequency ?? 0) -
+    (maintenance?.Maintenance?.FrequencyTimeInterval?.unitTime ?? 0) *
+      (maintenance?.Maintenance?.frequency ?? 0) -
     1;
 
-  const notificationDate = new Date(maintenance.notificationDate);
+  const notificationDate = new Date(maintenance.notificationDate ?? '');
   const limitDate = new Date(notificationDate); // Create a new Date object based on notificationDate
   limitDate.setDate(notificationDate.getDate() + daysToAdd); // Mutate only the new limitDate object
 
@@ -56,7 +56,7 @@ export const ModalEditMaintenanceHistory = ({
         'is-valid-date',
         'Data de vencimento não pode ser maior que a data limite nem menor que a data de notificação',
         (value) => {
-          if (maintenance.Maintenance.MaintenanceType.name !== 'common') return true; // Skip validation for non-common maintenance
+          if (maintenance?.Maintenance?.MaintenanceType?.name !== 'common') return true; // Skip validation for non-common maintenance
 
           if (!value) return false;
 
@@ -108,12 +108,12 @@ export const ModalEditMaintenanceHistory = ({
         </Style.LoadingContainer>
       ) : (
         <Style.Container>
-          <h3>{maintenance?.Building.name}</h3>
+          <h3>{maintenance?.Building?.name}</h3>
 
           <Formik
             initialValues={{
-              dueDate: convertToFormikDate(maintenance.dueDate) ?? '',
-              showToResident: maintenance.showToResident ?? false,
+              dueDate: convertToFormikDate(maintenance.dueDate ?? '') ?? '',
+              showToResident: maintenance?.showToResident ?? false,
             }}
             validationSchema={schema}
             onSubmit={async (values) => {
@@ -124,11 +124,11 @@ export const ModalEditMaintenanceHistory = ({
             {({ errors, values, touched }) => (
               <Form>
                 <Style.FormContainer>
-                  {maintenance.MaintenancesStatus.name !== 'completed' &&
-                    maintenance.MaintenancesStatus.name !== 'overdue' && (
+                  {maintenance?.MaintenancesStatus?.name !== 'completed' &&
+                    maintenance?.MaintenancesStatus?.name !== 'overdue' && (
                       // eslint-disable-next-line react/jsx-no-useless-fragment
                       <>
-                        {maintenance.Maintenance.MaintenanceType.name === 'common' ? (
+                        {maintenance?.Maintenance?.MaintenanceType?.name === 'common' ? (
                           <>
                             <p>
                               A data limite para esta manutenção é:{' '}

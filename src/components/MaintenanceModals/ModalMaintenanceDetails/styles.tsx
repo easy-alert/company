@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+
 import { theme } from '@styles/theme';
 
 export const Container = styled.div`
@@ -42,6 +43,11 @@ export const Row = styled.div<{ disabled?: boolean }>`
         opacity: 1;
       }
     `}
+
+  > .p2 {
+    white-space: pre-wrap;
+  }
+
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: flex-start;
@@ -60,6 +66,7 @@ export const DragAndDropZoneFile = styled.div`
     opacity: 0.7;
   }
 `;
+
 export const DragAndDropFileContent = styled.div`
   display: flex;
   align-items: center;
@@ -172,4 +179,13 @@ export const FileStyleRow = styled.div<{ disabled?: boolean }>`
         opacity: 1;
       }
     `}
+`;
+
+export const ButtonContainer = styled.div<{ justifyContent?: string }>`
+  display: flex;
+  gap: ${theme.size.sm};
+
+  align-items: center;
+
+  justify-content: ${({ justifyContent }) => justifyContent || 'center'};
 `;

@@ -26,7 +26,9 @@ import { FutureMaintenanceTag } from '@components/FutureMaintenanceTag';
 import { FormikInput } from '@components/Form/FormikInput';
 import { Select } from '@components/Inputs/Select';
 import { Skeleton } from '@components/Skeleton';
-import { ModalCreateOccasionalMaintenance } from '@components/ModalCreateOccasionalMaintenance';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
 
 // GLOBAL UTILS
 import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
@@ -36,12 +38,10 @@ import { theme } from '@styles/theme';
 import IconPlus from '@assets/icons/IconPlus';
 import IconList from '@assets/icons/IconList';
 import IconBlock from '@assets/icons/IconBlock';
-
-// COMPONENTS
-
 import IconFilter from '@assets/icons/IconFilter';
-import { ModalMaintenanceDetails } from './ModalMaintenanceDetails';
-import { ModalSendMaintenanceReport } from './ModalSendMaintenanceReport';
+
+// GLOBAL TYPES
+import { TModalNames } from '@customTypes/TModalNames';
 
 // STYLES
 import * as Style from './styles';
@@ -64,12 +64,6 @@ interface IMaintenanceCategoryForSelect {
   id: string;
   name: string;
 }
-
-export type TModalNames =
-  | 'modalSendMaintenanceReport'
-  | 'modalMaintenanceDetails'
-  | 'modalCreateOccasionalMaintenance'
-  | 'modalEditMaintenanceHistory';
 
 export const MaintenancesKanban = () => {
   const { account } = useAuthContext();
@@ -95,7 +89,7 @@ export const MaintenancesKanban = () => {
     isFuture: false,
   });
 
-  const [modalMaintenanceSendReport, setModalMaintenanceSendReport] = useState<boolean>(false);
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
   const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
     useState<boolean>(false);
@@ -121,6 +115,7 @@ export const MaintenancesKanban = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
+
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [expandedColumns, setExpandedColumns] = useState<string[]>([]);
 
@@ -128,8 +123,8 @@ export const MaintenancesKanban = () => {
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
-      case 'modalSendMaintenanceReport':
-        setModalMaintenanceSendReport(modalState);
+      case 'modalMaintenanceReportSend':
+        setModalMaintenanceReportSend(modalState);
         break;
       case 'modalMaintenanceDetails':
         setModalMaintenanceDetails(modalState);
@@ -230,15 +225,14 @@ export const MaintenancesKanban = () => {
           handleModalCreateOccasionalMaintenance={setModalCreateOccasionalMaintenance}
           handleMaintenanceHistoryIdChange={handleMaintenanceHistoryIdChange}
           handleModalMaintenanceDetails={setModalMaintenanceDetails}
-          handleModalSendMaintenanceReport={setModalMaintenanceSendReport}
+          handleModalSendMaintenanceReport={setModalMaintenanceReportSend}
           handleGetBackgroundData={handleGetMaintenances}
         />
       )}
 
-      {modalMaintenanceSendReport && (
-        <ModalSendMaintenanceReport
+      {modalMaintenanceReportSend && (
+        <ModalMaintenanceReportSend
           maintenanceHistoryId={maintenanceHistoryId}
-          userId={account?.User.id ?? ''}
           refresh={refresh}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
@@ -251,7 +245,6 @@ export const MaintenancesKanban = () => {
             ...modalAdditionalInformations,
             id: maintenanceHistoryId || modalAdditionalInformations.id,
           }}
-          userId={account?.User.id ?? ''}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
           handleQuery={handleQuery}
@@ -722,7 +715,7 @@ export const MaintenancesKanban = () => {
                                     isFuture: false,
                                   });
                                   handleMaintenanceHistoryIdChange(maintenance.id);
-                                  handleModals('modalSendMaintenanceReport', true);
+                                  handleModals('modalMaintenanceReportSend', true);
                                 } else {
                                   setModalAdditionalInformations({
                                     id: maintenance.id,
@@ -888,7 +881,7 @@ export const MaintenancesKanban = () => {
                             status={maintenance.status}
                             onClick={() => {
                               const modal = ['pending', 'expired'].includes(maintenance.status)
-                                ? 'modalSendMaintenanceReport'
+                                ? 'modalMaintenanceReportSend'
                                 : 'modalMaintenanceDetails';
 
                               setModalAdditionalInformations({

@@ -32,10 +32,14 @@ import * as Style from './styles';
 
 interface ILinkSupplierToMaintenanceHistory {
   maintenanceHistoryId: string;
+  showSupplierButton?: boolean;
+  refreshSuppliers?: boolean;
 }
 
 export const LinkSupplierToMaintenanceHistory = ({
   maintenanceHistoryId,
+  showSupplierButton = true,
+  refreshSuppliers,
 }: ILinkSupplierToMaintenanceHistory) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -83,7 +87,7 @@ export const LinkSupplierToMaintenanceHistory = ({
 
   useEffect(() => {
     findMaintenanceHistorySupplier();
-  }, []);
+  }, [refreshSuppliers]);
 
   return (
     <>
@@ -112,12 +116,7 @@ export const LinkSupplierToMaintenanceHistory = ({
       )}
 
       {modalLinkSupplierOpen && (
-        <CustomBackground
-          zIndex={19}
-          onClick={() => {
-            setModalLinkSupplierOpen(false);
-          }}
-        />
+        <CustomBackground zIndex={11} onClick={() => setModalLinkSupplierOpen(false)} />
       )}
 
       {modalCreateAndLinkSupplierOpen && (
@@ -136,15 +135,20 @@ export const LinkSupplierToMaintenanceHistory = ({
               <Style.Header>
                 <h3>Prestador de serviço</h3>
 
-                <IconButton
-                  label="Desvincular"
-                  icon={<IconUnlink strokeColor="white" backgroundColor="primary" padding="2px" />}
-                  permToCheck="maintenances:update"
-                  hideLabelOnMedia
-                  disabled={onQuery}
-                  onClick={() => unlinkToMaintenanceHistory(id)}
-                />
+                {showSupplierButton && (
+                  <IconButton
+                    label="Desvincular"
+                    icon={
+                      <IconUnlink strokeColor="white" backgroundColor="primary" padding="2px" />
+                    }
+                    permToCheck="maintenances:update"
+                    hideLabelOnMedia
+                    disabled={onQuery}
+                    onClick={() => unlinkToMaintenanceHistory(id)}
+                  />
+                )}
               </Style.Header>
+
               <Style.SupplierInfo>
                 <ImageComponent src={image} size="32px" radius="100%" />
 
@@ -170,7 +174,7 @@ export const LinkSupplierToMaintenanceHistory = ({
             </Style.Container>
           ))}
 
-        {suppliers.length === 0 && (
+        {suppliers.length === 0 && showSupplierButton && (
           <IconButton
             label="Adicionar prestador de serviço"
             icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
