@@ -40,20 +40,25 @@ import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import * as Style from './styles';
 
 // UTILS
-import { requestMaintenanceDetailsForEdit, requestEditReport } from './functions';
-import { requestDeleteMaintenanceHistory } from '../functions';
+import {
+  requestMaintenanceDetailsForEdit,
+  requestEditReport,
+  requestDeleteMaintenanceHistory,
+} from './functions';
 
 // TYPES
 import { IModalEditMaintenanceReport } from './types';
 
 // TYPES
 
-export const ModalEditMaintenanceReport = ({
+export const ModalMaintenanceReportEdit = ({
   maintenanceHistoryId,
   handleModalEditReport,
-  onThenActionRequest,
+  handleBackgroundData,
 }: IModalEditMaintenanceReport) => {
-  const { account } = useAuthContext();
+  const {
+    account: { origin },
+  } = useAuthContext();
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
@@ -187,7 +192,7 @@ export const ModalEditMaintenanceReport = ({
   }, []);
 
   return (
-    <Modal title="Editar relato" setModal={handleModalEditReport}>
+    <Modal title="Editar relato" zIndex={11} setModal={handleModalEditReport}>
       {modalLoading ? (
         <Style.LoadingContainer>
           <DotSpinLoading />
@@ -338,6 +343,7 @@ export const ModalEditMaintenanceReport = ({
                 )}
               </Style.FileRow>
             </Style.FileStyleRow>
+
             <Style.FileStyleRow disabled={onImageQuery}>
               <h6>Imagens</h6>
 
@@ -392,7 +398,7 @@ export const ModalEditMaintenanceReport = ({
                   requestDeleteMaintenanceHistory({
                     maintenanceHistoryId,
                     handleModalEditReport,
-                    onThenRequest: async () => onThenActionRequest(),
+                    onThenRequest: async () => handleBackgroundData(),
                     setOnModalQuery,
                   });
                 }}
@@ -401,19 +407,19 @@ export const ModalEditMaintenanceReport = ({
 
             <Button
               label="Editar relato"
+              bgColor="primary"
               disable={onFileQuery || onImageQuery || onModalQuery}
               loading={onModalQuery}
               onClick={() => {
                 requestEditReport({
-                  setOnModalQuery,
                   maintenanceReport,
-                  handleModalEditReport,
                   files,
                   images,
-                  origin: account?.origin ?? 'Company',
+                  origin,
                   maintenanceHistoryId,
-
-                  onThenRequest: async () => onThenActionRequest(),
+                  setOnModalQuery,
+                  handleModalEditReport,
+                  onThenRequest: async () => handleBackgroundData(),
                 });
               }}
             />

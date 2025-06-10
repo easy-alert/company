@@ -1,25 +1,37 @@
 import { toast } from 'react-toastify';
-import { Api } from '../../../../services/api';
-import { applyMask, catchHandler, unMaskBRL } from '../../../../utils/functions';
-import { IRequestMaintenanceDetailsForEdit, IRequestEditReport } from './types';
+
+import { Api } from '@services/api';
+
+import { applyMask, catchHandler, unMaskBRL } from '@utils/functions';
+
+import type {
+  IRequestMaintenanceDetailsForEdit,
+  IRequestEditReport,
+  IRequestDeleteMaintenanceHistory,
+} from './types';
 
 export const requestEditReport = async ({
   maintenanceReport,
-  handleModalEditReport,
   maintenanceHistoryId,
   files,
   images,
-  setOnModalQuery,
   origin,
+  setOnModalQuery,
+  handleModalEditReport,
   onThenRequest,
 }: IRequestEditReport) => {
   setOnModalQuery(true);
+
+  const formattedCost =
+    typeof maintenanceReport.cost === 'string'
+      ? Number(unMaskBRL(maintenanceReport.cost))
+      : maintenanceReport.cost;
 
   await Api.post('/maintenances/edit/report', {
     origin,
     maintenanceHistoryId,
     maintenanceReportId: maintenanceReport.id,
-    cost: Number(unMaskBRL(maintenanceReport.cost)),
+    cost: formattedCost,
     observation: maintenanceReport.observation !== '' ? maintenanceReport.observation : null,
     ReportAnnexes: files,
     ReportImages: images,
@@ -68,5 +80,35 @@ export const requestMaintenanceDetailsForEdit = async ({
     })
     .finally(() => {
       setModalLoading(false);
+    });
+};
+
+export const requestDeleteMaintenanceHistory = async ({
+  maintenanceHistoryId,
+  onThenRequest,
+  handleModalSendMaintenanceReport,
+  handleModalEditReport,
+  setOnModalQuery,
+}: IRequestDeleteMaintenanceHistory) => {
+  setOnModalQuery(true);
+
+  await Api.delete(`/maintenances/occasional/delete/${maintenanceHistoryId}`)
+    .then((res) => {
+      onThenRequest();
+      toast.success(res.data.ServerMessage.message);
+    })
+    .catch((err) => {
+      catchHandler(err);
+    })
+    .finally(() => {
+      if (handleModalSendMaintenanceReport) {
+        handleModalSendMaintenanceReport(false);
+      }
+
+      if (handleModalEditReport) {
+        handleModalEditReport(false);
+      }
+
+      setOnModalQuery(false);
     });
 };
