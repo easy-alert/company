@@ -18,7 +18,7 @@ interface IUserCompanyRelation {
 
 export type TTranslateTicketType = 'none' | 'whatsapp' | 'email' | 'link' | 'platform';
 
-export type TOrigin = 'Backoffice' | 'Company' | 'Client' | 'App';
+export type TOrigin = 'Backoffice' | 'Company' | 'Client' | 'App' | '';
 
 export interface IAccount {
   origin: TOrigin;
