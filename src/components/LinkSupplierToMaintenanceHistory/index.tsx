@@ -39,7 +39,7 @@ interface ILinkSupplierToMaintenanceHistory {
 export const LinkSupplierToMaintenanceHistory = ({
   maintenanceHistoryId,
   showSupplierButton = true,
-  refreshSuppliers
+  refreshSuppliers,
 }: ILinkSupplierToMaintenanceHistory) => {
   const ref = useRef<HTMLDivElement>(null);
 
