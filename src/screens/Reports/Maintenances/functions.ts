@@ -1,13 +1,11 @@
 /* eslint-disable no-plusplus */
 import * as yup from 'yup';
-import { toast } from 'react-toastify';
-import { Api } from '../../../services/api';
-import { catchHandler } from '../../../utils/functions';
-import {
-  IRequestDeleteMaintenanceHistory,
-  IRequestReportsData,
-  IRequestReportsDataForSelect,
-} from './types';
+
+import { Api } from '@services/api';
+
+import { catchHandler } from '@utils/functions';
+
+import type { IRequestReportsData, IRequestReportsDataForSelect } from './types';
 
 export const requestReportsData = async ({
   setOnQuery,
@@ -62,33 +60,3 @@ export const schemaReportFilter = yup
       .required('A data final é obrigatória.'),
   })
   .required();
-
-export const requestDeleteMaintenanceHistory = async ({
-  maintenanceHistoryId,
-  onThenRequest,
-  handleModalSendMaintenanceReport,
-  handleModalEditReport,
-  setOnModalQuery,
-}: IRequestDeleteMaintenanceHistory) => {
-  setOnModalQuery(true);
-
-  await Api.delete(`/maintenances/occasional/delete/${maintenanceHistoryId}`)
-    .then((res) => {
-      onThenRequest();
-      toast.success(res.data.ServerMessage.message);
-    })
-    .catch((err) => {
-      catchHandler(err);
-    })
-    .finally(() => {
-      if (handleModalSendMaintenanceReport) {
-        handleModalSendMaintenanceReport(false);
-      }
-
-      if (handleModalEditReport) {
-        handleModalEditReport(false);
-      }
-
-      setOnModalQuery(false);
-    });
-};

@@ -129,11 +129,3 @@ export interface IRequestReportsDataForSelect {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setFiltersOptions: React.Dispatch<React.SetStateAction<IFiltersOptions | undefined>>;
 }
-
-export interface IRequestDeleteMaintenanceHistory {
-  maintenanceHistoryId: string;
-  onThenRequest: () => Promise<void>;
-  setOnModalQuery: React.Dispatch<React.SetStateAction<boolean>>;
-  handleModalSendMaintenanceReport?: (modalState: boolean) => void;
-  handleModalEditReport?: (modalState: boolean) => void;
-}

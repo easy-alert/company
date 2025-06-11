@@ -4,11 +4,11 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 import { unMaskBRL } from '@utils/functions';
 
+import type { IResponse } from '@customTypes/IResponse';
 import type {
   IOccasionalMaintenanceData,
   IOccasionalMaintenanceType,
-} from '@components/ModalCreateOccasionalMaintenance/types';
-import type { IResponse } from '@customTypes/IResponse';
+} from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance/types';
 
 interface IRequestCreateOccasionalMaintenance {
   origin: string;

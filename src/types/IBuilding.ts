@@ -1,5 +1,6 @@
 export interface IBuilding {
   id?: string;
+
   buildingTypeId?: string;
   companyId?: string;
   nanoId?: string;

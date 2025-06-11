@@ -22,6 +22,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
+import { EventTag } from '@components/EventTag';
 
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
@@ -39,7 +40,6 @@ import type { IChecklist } from '@customTypes/IChecklist';
 import { getChecklistReports } from '@services/apis/getChecklistReports';
 import { generateChecklistReportPDF } from '@services/apis/generateChecklistReportPDF';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
-import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
 
 // UTILS
@@ -570,7 +570,7 @@ export const ChecklistReports = () => {
                           <EventTag
                             label={handleChecklistColors(checklist?.status).name}
                             color={handleChecklistColors(checklist?.status).color}
-                            backgroundColor={handleChecklistColors(checklist?.status).bgColor}
+                            bgColor={handleChecklistColors(checklist?.status).bgColor}
                           />
                         ),
                         cssProps: { width: '81px' },

@@ -29,6 +29,10 @@ import {
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
+// GLOBAL TYPES
+import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+
 // UTILS
 import { handleAdditionalInformations } from './functions';
 
@@ -37,8 +41,6 @@ import * as Style from './styles';
 
 // TYPES
 import type { IModalAdditionalInformations } from './types';
-import type { IMaintenanceReport } from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import type { AnnexesAndImages } from '../../../../../../Calendar/types';
 
 export const ModalAdditionalInformations = ({
   setModal,
@@ -84,13 +86,13 @@ export const ModalAdditionalInformations = ({
     observation: '',
   });
 
-  const [files, setFiles] = useState<AnnexesAndImages[]>([]);
+  const [files, setFiles] = useState<IAnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     disabled: onFileQuery,
   });
 
-  const [images, setImages] = useState<AnnexesAndImages[]>([]);
+  const [images, setImages] = useState<IAnnexesAndImages[]>([]);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const {
     acceptedFiles: acceptedImages,
