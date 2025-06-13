@@ -304,14 +304,14 @@ export const Dashboard = () => {
   const handleSelectMaintenance = (
     maintenanceId: string,
     maintenanceStatus: TMaintenanceStatus,
-    canReportMaintenance: boolean,
+    cantReportMaintenance: boolean,
   ) => {
     setSelectedMaintenanceId(maintenanceId);
 
     if (
       maintenanceStatus === 'completed' ||
       maintenanceStatus === 'overdue' ||
-      (maintenanceStatus === 'expired' && !canReportMaintenance)
+      (maintenanceStatus === 'expired' && cantReportMaintenance)
     ) {
       handleModals('modalMaintenanceDetails', true);
     } else {
@@ -1237,14 +1237,14 @@ export const Dashboard = () => {
       </Style.FilterSection>
 
       <Style.Wrappers>
-        {modalMaintenanceReportSend && selectedMaintenanceId && (
+        {/* {modalMaintenanceReportSend && selectedMaintenanceId && (
           <ModalMaintenanceReportSend
             maintenanceHistoryId={selectedMaintenanceId}
             refresh={refresh}
             handleModals={handleModals}
             handleRefresh={handleRefresh}
           />
-        )}
+        )} */}
 
         {modalMaintenanceDetails && selectedMaintenanceId && (
           <ModalMaintenanceDetails
