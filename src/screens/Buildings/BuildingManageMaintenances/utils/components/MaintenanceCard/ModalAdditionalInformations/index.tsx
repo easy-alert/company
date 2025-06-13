@@ -61,7 +61,11 @@ export const ModalAdditionalInformations = ({
         then: yup.date().required('Informe a data da última conclusão.'),
       }),
 
-      status: yup.string().required('Campo obrigatório'),
+      status: yup.string().when('hasLastResolutionDate', {
+        is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
+        then: yup.string().required('Informe o status da manutenção.'),
+        otherwise: yup.string().notRequired(),
+      }),
 
       hasFirstNotificationDate: yup.boolean(),
       firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
@@ -181,7 +185,7 @@ export const ModalAdditionalInformations = ({
             ? convertToFormikDate(selectedMaintenance.resolutionDate)
             : '',
           hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
-          status: 'completed',
+          status: 'pending',
           firstNotificationDate: selectedMaintenance.notificationDate
             ? convertToFormikDate(selectedMaintenance.notificationDate)
             : '',
@@ -220,6 +224,7 @@ export const ModalAdditionalInformations = ({
                     }
                   }}
                 />
+
                 <FormikInput
                   typeDatePlaceholderValue={values.firstNotificationDate}
                   min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
