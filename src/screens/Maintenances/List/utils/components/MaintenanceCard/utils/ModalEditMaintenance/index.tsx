@@ -36,6 +36,7 @@ export const ModalEditMaintenance = ({
   categoryId,
   maintenancePriorities,
 }: IModalEditMaintenance) => {
+  console.log('🚀 ~ maintenancePriorities:', maintenancePriorities);
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
 
@@ -57,7 +58,7 @@ export const ModalEditMaintenance = ({
           periodTimeInterval: selectedMaintenance.PeriodTimeInterval.id,
           delay: String(selectedMaintenance.delay),
           delayTimeInterval: selectedMaintenance.DelayTimeInterval.id,
-          priorityName: selectedMaintenance.priorityName,
+          priorityName: selectedMaintenance.priorityName || 'medium',
           observation:
             selectedMaintenance.observation && selectedMaintenance.observation !== ''
               ? selectedMaintenance.observation
