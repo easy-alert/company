@@ -1,5 +1,11 @@
 import type { TModalNames } from '@customTypes/TModalNames';
-import type { IModalAdditionalInformations } from '../types';
+
+export interface IModalAdditionalInformations {
+  id: string;
+  expectedNotificationDate: string;
+  expectedDueDate: string;
+  isFuture: boolean;
+}
 
 export interface IModalMaintenanceDetails {
   modalAdditionalInformations: IModalAdditionalInformations;
