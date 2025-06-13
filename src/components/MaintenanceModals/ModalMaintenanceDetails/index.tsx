@@ -372,13 +372,13 @@ export const ModalMaintenanceDetails = ({
                 <>
                   <LinkSupplierToMaintenanceHistory
                     maintenanceHistoryId={maintenanceDetails.id}
-                    showSupplierButton={false}
+                    showSupplierButton={maintenanceDetails.canReport}
                     refreshSuppliers={refresh}
                   />
 
                   <MaintenanceHistoryActivities
                     maintenanceHistoryId={maintenanceDetails.id}
-                    showTextArea={false}
+                    showTextArea={maintenanceDetails.canReport}
                     refreshActivities={refresh}
                   />
                 </>
