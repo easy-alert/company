@@ -177,7 +177,8 @@ export const LoadingContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
   gap: ${theme.size.sm};
 `;
