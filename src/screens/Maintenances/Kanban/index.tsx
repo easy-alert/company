@@ -635,7 +635,21 @@ export const MaintenancesKanban = () => {
         {viewMode === 'kanban' ? (
           <Style.Kanban>
             {loading
-              ? ['a', 'b', 'c', 'd'].map((id) => <Skeleton key={`kanban-skeleton-${id}`} />)
+              ? [
+                  { label: 'Vencidas', name: 'expired' },
+                  { label: 'Pendentes', name: 'pending' },
+                  { label: 'Em execução', name: 'inProgress' },
+                  { label: 'Concluídas', name: 'completed' },
+                ].map((col) => (
+                  <Style.KanbanCard key={`skeleton-kanban-${col.name}`}>
+                    <Style.KanbanHeader viewMode={viewMode}>{col.label} (0)</Style.KanbanHeader>
+                    {[1, 2, 3, 4].map((skeletonId) => (
+                      <Style.SkeletonInfo key={skeletonId}>
+                        <Skeleton key={skeletonId} height="120px" />
+                      </Style.SkeletonInfo>
+                    ))}
+                  </Style.KanbanCard>
+                ))
               : kanban?.map((card) => (
                   <Style.KanbanCard key={card.status}>
                     <Style.KanbanHeader viewMode={viewMode}>
@@ -781,9 +795,9 @@ export const MaintenancesKanban = () => {
           <Style.ListView>
             {loading
               ? ['a', 'b', 'c', 'd'].map((id) => (
-                  <Style.ListItem key={`skeleton-list-${id}`}>
-                    <Skeleton />
-                  </Style.ListItem>
+                  <Style.SkeltonListItem key={`skeleton-list-${id}`}>
+                    <Skeleton height="42px" />
+                  </Style.SkeltonListItem>
                 ))
               : kanban?.map((card) => {
                   const isExpanded = expandedColumns.includes(card.status);
