@@ -24,14 +24,12 @@ export const Hr = styled.div`
   margin-top: ${({ theme }) => theme.size.xsm};
 `;
 
-export const MaintenancesCard = styled.div<{ hasAdditionalInformation: boolean }>`
+export const MaintenancesCard = styled.div`
   display: flex;
   padding: ${({ theme }) => theme.size.xsm} ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
 
-  background-color: ${({ theme }) =>
-    ({ hasAdditionalInformation }) =>
-      hasAdditionalInformation ? theme.color.primaryL : theme.color.white};
+  background-color: ${({ theme }) => theme.color.white};
 
   transition: 0.25s;
 
@@ -49,6 +47,17 @@ export const MaintenancesCardContent = styled.div`
 export const MaintenancesCardTopContent = styled.div`
   display: flex;
   min-height: 80px;
+`;
+
+export const MaintenancesCardAdditionalContent = styled.div<{
+  minHeight?: string;
+  justifyContent?: string;
+}>`
+  display: flex;
+  justify-content: ${({ justifyContent }) => justifyContent || 'flex-start'};
+  align-items: center;
+
+  min-height: ${({ minHeight }) => minHeight || '20px'};
 `;
 
 export const MaintenancesCardBottomContainer = styled.div<{ cardIsOpen: boolean }>`

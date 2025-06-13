@@ -1,5 +1,7 @@
 export interface IMaintenanceHistoryActivities {
   maintenanceHistoryId: string;
+  showTextArea?: boolean;
+  refreshActivities?: boolean;
 }
 
 export interface IOccasionallyActivitiesImages extends File {

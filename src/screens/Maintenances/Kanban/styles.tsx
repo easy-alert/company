@@ -184,7 +184,7 @@ export const KanbanMaintenanceWrapper = styled.div`
 `;
 
 export const MaintenanceInfo = styled.div<{
-  status: 'expired' | 'pending' | 'completed' | 'overdue' | 'inProgress';
+  status?: 'expired' | 'pending' | 'completed' | 'overdue' | 'inProgress';
 }>`
   padding: ${theme.size.sm} ${theme.size.sm} ${theme.size.sm} 23px;
   background-color: ${theme.color.gray0};
@@ -194,6 +194,84 @@ export const MaintenanceInfo = styled.div<{
   flex-direction: column;
   gap: ${theme.size.xsm};
   border-radius: ${theme.size.xxsm};
+
+  :hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+
+  > h6 {
+    > span {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+  }
+
+  word-break: break-word;
+
+  ${({ status }) =>
+    (status === 'pending' || status === 'inProgress') &&
+    css`
+      p.p3 {
+        color: ${theme.color.warning};
+        font-weight: 500;
+      }
+      background: linear-gradient(
+        90deg,
+        rgba(255, 178, 0, 1) 0%,
+        rgba(255, 178, 0, 1) 7px,
+        rgba(250, 250, 250, 1) 7px,
+        rgba(250, 250, 250, 1) 100%
+      );
+    `}
+
+  ${({ status }) =>
+    status === 'expired' &&
+    css`
+      p.p3 {
+        color: ${theme.color.actionDanger};
+        font-weight: 500;
+      }
+      background: linear-gradient(
+        90deg,
+        rgba(255, 53, 8, 1) 0%,
+        rgba(255, 53, 8, 1) 7px,
+        rgba(250, 250, 250, 1) 7px,
+        rgba(250, 250, 250, 1) 100%
+      );
+    `}
+
+    ${({ status }) =>
+    (status === 'overdue' || status === 'completed') &&
+    css`
+      p.p3 {
+        color: ${theme.color.success};
+        font-weight: 500;
+      }
+    `}
+
+    ${({ status }) =>
+    (status === 'completed' || status === 'overdue') &&
+    css`
+      background: linear-gradient(
+        90deg,
+        rgba(52, 181, 58, 1) 0%,
+        rgba(52, 181, 58, 1) 7px,
+        rgba(250, 250, 250, 1) 7px,
+        rgba(250, 250, 250, 1) 100%
+      );
+    `}
+`;
+
+export const SkeletonInfo = styled.div<{
+  status?: 'expired' | 'pending' | 'completed' | 'overdue' | 'inProgress';
+}>`
+  display: flex;
+  flex-direction: column;
+  border-radius: ${theme.size.xxsm};
+
+  padding: 0 ${theme.size.sm} 0 23px;
 
   :hover {
     opacity: 0.8;
@@ -288,6 +366,15 @@ export const ListView = styled.div`
 
 export const ListItem = styled.div`
   padding: ${theme.size.xsm} ${theme.size.sm};
+`;
+
+export const SkeltonListItem = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
+
+  margin-bottom: ${theme.size.sm};
 `;
 
 export const Chevron = styled.span<{ $expanded: boolean }>`

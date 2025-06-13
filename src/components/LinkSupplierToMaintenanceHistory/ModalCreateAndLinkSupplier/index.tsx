@@ -112,7 +112,7 @@ export const ModalCreateAndLinkSupplier = ({
           let imageURL: string | null = null;
 
           if (data.image) {
-            const { Location } = await uploadFile(data.image);
+            const { Location } = await uploadFile(data.image as unknown as File);
             imageURL = Location;
           }
 

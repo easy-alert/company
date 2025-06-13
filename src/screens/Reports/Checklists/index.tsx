@@ -22,6 +22,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
+import { EventTag } from '@components/EventTag';
 
 // GLOBAL UTILS
 import { catchHandler, dateFormatter } from '@utils/functions';
@@ -33,12 +34,12 @@ import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
 import type { IReportPdf } from '@customTypes/IReportPdf';
+import type { IChecklist } from '@customTypes/IChecklist';
 
 // COMPONENTS
 import { getChecklistReports } from '@services/apis/getChecklistReports';
 import { generateChecklistReportPDF } from '@services/apis/generateChecklistReportPDF';
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
-import { EventTag } from '../../Calendar/utils/EventTag';
 import { ModalChecklistDetails } from '../../Checklists/ModalChecklistDetails';
 
 // UTILS
@@ -48,7 +49,7 @@ import { getPluralStatusNameforPdf } from '../Maintenances/ModalPrintReport/func
 import * as Style from './styles';
 
 // TYPES
-import type { IChecklistFilterNames, IChecklists, ICounts, IFilterData } from './types';
+import type { IChecklistFilterNames, ICounts, IFilterData } from './types';
 
 // #endregion
 
@@ -56,7 +57,7 @@ export const ChecklistReports = () => {
   // #region states
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
-  const [checklists, setChecklists] = useState<IChecklists[]>([]);
+  const [checklists, setChecklists] = useState<IChecklist[]>([]);
   const [checklistId, setChecklistId] = useState<string>('');
   const [checklistReportsPDF, setChecklistReportsPDF] = useState<IReportPdf[]>([]);
 
@@ -84,7 +85,7 @@ export const ChecklistReports = () => {
   const [refresh, setRefresh] = useState(false);
   // #endregion
 
-  const handleChecklistColors = (status: string) => {
+  const handleChecklistColors = (status?: string) => {
     switch (status) {
       case 'pending':
         return {
@@ -556,10 +557,9 @@ export const ChecklistReports = () => {
               ]}
             >
               {checklists?.map((checklist) => {
-                const checklistTotalItems = checklist.checklistItem.length;
-                const checklistCompletedItems = checklist.checklistItem.filter(
-                  (item) => item.status === 'completed',
-                ).length;
+                const checklistTotalItems = checklist?.checklistItem?.length || 0;
+                const checklistCompletedItems =
+                  checklist?.checklistItem?.filter((item) => item.status !== 'pending').length || 0;
 
                 return (
                   <ReportDataTableContent
@@ -568,22 +568,22 @@ export const ChecklistReports = () => {
                       {
                         cell: (
                           <EventTag
-                            label={handleChecklistColors(checklist.status).name}
-                            color={handleChecklistColors(checklist.status).color}
-                            backgroundColor={handleChecklistColors(checklist.status).bgColor}
+                            label={handleChecklistColors(checklist?.status).name}
+                            color={handleChecklistColors(checklist?.status).color}
+                            bgColor={handleChecklistColors(checklist?.status).bgColor}
                           />
                         ),
                         cssProps: { width: '81px' },
                       },
-                      { cell: checklist.building.name },
+                      { cell: checklist?.building?.name },
                       { cell: checklist.name },
 
                       { cell: checklist.user?.name || '-' },
                       { cell: `${checklistCompletedItems} / ${checklistTotalItems}` },
-                      { cell: dateFormatter(checklist.date) },
+                      { cell: dateFormatter(checklist?.date) },
                     ]}
                     onClick={() => {
-                      setChecklistId(checklist.id);
+                      setChecklistId(checklist?.id || '');
                       setModalChecklistDetails(true);
                     }}
                   />

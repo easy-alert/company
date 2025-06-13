@@ -119,7 +119,7 @@ export const ModalEditSupplier = ({ setModal, onThenRequest, supplier }: IModalE
           let imageURL: any;
 
           if (!data.image.length) {
-            const { Location } = await uploadFile(data.image);
+            const { Location } = await uploadFile(data.image as unknown as File);
             imageURL = Location;
           } else {
             imageURL = data.image;

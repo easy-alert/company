@@ -14,17 +14,21 @@ import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { DotLoading } from '@components/Loadings/DotLoading';
 import UserResponsible from '@components/UserResponsible';
+import { TextArea } from '@components/Inputs/TextArea';
 
 // GLOBAL UTILS
 import { uploadManyFiles } from '@utils/functions';
 
 // GLOBAL TYPES
-import { IChecklist, TChecklistStatus } from '@customTypes/IChecklist';
+import { IChecklist, TChecklistItemStatus, TChecklistStatus } from '@customTypes/IChecklist';
 
 // STYLES
-import { TextArea } from '@components/Inputs/TextArea';
+import IconCheckRound from '@assets/icons/IconCheckRound';
+import IconErrorRound from '@assets/icons/IconErrorRound';
+import { IconButton } from '@components/Buttons/IconButton';
 import * as Style from './styles';
 
+// TYPES
 import type { TModalNames } from '..';
 
 interface ModalSendReportProps {
@@ -59,6 +63,7 @@ export const ModalChecklistDetails = ({
 
     try {
       const uploadedFilesResponse = await uploadManyFiles(acceptedFiles);
+
       const formattedUploadedFiles = uploadedFilesResponse.map(({ Location, originalname }) => ({
         name: originalname,
         url: Location,
@@ -72,8 +77,7 @@ export const ModalChecklistDetails = ({
       setImagesToUploadCount(0);
     }
   };
-
-  const handleChangeChecklistItem = (id: string) => {
+  const handleChangeChecklistItem = (id: string, status: TChecklistItemStatus) => {
     setChecklistDetails((prev) => {
       const newState = { ...prev };
 
@@ -83,8 +87,11 @@ export const ModalChecklistDetails = ({
 
       const itemIndex = newState.checklistItem.findIndex((item) => item.id === id);
 
-      newState.checklistItem[itemIndex].status =
-        newState.checklistItem[itemIndex].status === 'completed' ? 'pending' : 'completed';
+      if (itemIndex === -1) {
+        return newState;
+      }
+
+      newState.checklistItem[itemIndex].status = status;
 
       return newState;
     });
@@ -230,8 +237,9 @@ export const ModalChecklistDetails = ({
               <Style.ProgressBar>
                 <Style.ProgressPercentageText>
                   {`${Math.floor(
-                    ((checklistDetails?.checklistItem?.filter((item) => item.status === 'completed')
-                      .length || 0) /
+                    ((checklistDetails?.checklistItem?.filter(
+                      (item) => item.status === 'approved' || item.status === 'rejected',
+                    ).length || 0) /
                       (checklistDetails?.checklistItem?.length || 1)) *
                       100,
                   )}%`}
@@ -241,7 +249,7 @@ export const ModalChecklistDetails = ({
                   style={{
                     width: `${
                       ((checklistDetails?.checklistItem?.filter(
-                        (item) => item.status === 'completed',
+                        (item) => item.status === 'approved' || item.status === 'rejected',
                       ).length || 0) /
                         (checklistDetails?.checklistItem?.length || 1)) *
                       100
@@ -252,8 +260,9 @@ export const ModalChecklistDetails = ({
 
               <Style.ProgressText>
                 {`${
-                  checklistDetails?.checklistItem?.filter((item) => item.status === 'completed')
-                    .length
+                  checklistDetails?.checklistItem?.filter(
+                    (item) => item.status === 'approved' || item.status === 'rejected',
+                  ).length
                 } / ${checklistDetails?.checklistItem?.length} itens concluídos`}
               </Style.ProgressText>
             </Style.ProgressBarContainer>
@@ -261,13 +270,31 @@ export const ModalChecklistDetails = ({
             <Style.ChecklistItemContainer>
               {checklistDetails?.checklistItem?.map((item) => (
                 <Style.ChecklistItem key={item.id}>
-                  <InputCheckbox
-                    id={item.id!}
-                    label={item.name}
-                    checked={item.status === 'completed'}
-                    disable={checklistCompleted}
-                    onChange={() => handleChangeChecklistItem(item.id!)}
-                  />
+                  <p style={{ width: '100%' }}>{item.name}</p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <IconButton
+                      icon={
+                        <IconErrorRound
+                          strokeColor={item.status === 'rejected' ? 'dismissed' : 'gray'}
+                          size="24px"
+                        />
+                      }
+                      disabled={checklistCompleted}
+                      onClick={() => handleChangeChecklistItem(item.id!, 'rejected')}
+                    />
+
+                    <IconButton
+                      icon={
+                        <IconCheckRound
+                          strokeColor={item.status === 'approved' ? 'completed' : 'gray'}
+                          size="24px"
+                        />
+                      }
+                      disabled={checklistCompleted}
+                      onClick={() => handleChangeChecklistItem(item.id!, 'approved')}
+                    />
+                  </div>
                 </Style.ChecklistItem>
               ))}
             </Style.ChecklistItemContainer>
@@ -287,7 +314,9 @@ export const ModalChecklistDetails = ({
             </Style.ChecklistObservationContainer>
           </Style.ChecklistContainer>
 
-          {checklistDetails?.user && <UserResponsible users={[checklistDetails.user]} />}
+          {checklistDetails?.checklistUsers && (
+            <UserResponsible users={checklistDetails.checklistUsers} />
+          )}
 
           <h3>Imagens</h3>
 

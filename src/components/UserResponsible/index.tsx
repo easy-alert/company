@@ -2,16 +2,20 @@ import { Image } from '@components/Image';
 
 import { icon } from '@assets/icons';
 
-import type { IUser } from '@customTypes/IUser';
-
 import * as Style from './styles';
 
 interface IUserResponsible {
-  users: IUser[];
+  users: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  }[];
 }
 
 const UserResponsible = ({ users }: IUserResponsible) => {
-  const title = users?.length === 1 ? 'Usuário Responsável' : 'Usuários Responsáveis';
+  const title =
+    users?.length === 0 || users?.length === 1 ? 'Usuário Responsável' : 'Usuários Responsáveis';
 
   if (!users) {
     return null;

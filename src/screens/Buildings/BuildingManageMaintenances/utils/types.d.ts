@@ -1,5 +1,6 @@
-import { IMaintenanceReport } from '@Calendar/utils/ModalSendMaintenanceReport/types';
-import { AnnexesAndImages } from '@Calendar/types';
+import type { IMaintenanceReport } from '@Calendar/utils/ModalSendMaintenanceReport/types';
+import type { AnnexesAndImages } from '@Calendar/types';
+import type { TOrigin } from '@utils/types';
 
 // MAINTENANCES
 interface IMaintenance {
@@ -51,6 +52,7 @@ interface IMaintenance {
   lastNotificationDate?: string;
   lastNotificationStatus?: string;
   daysToAnticipate?: number;
+  inProgress?: boolean;
 }
 
 export interface ICategories {
@@ -76,7 +78,7 @@ export interface IRequestManageBuildingMaintenances {
   categories: ICategories[];
   buildingId: string;
   setOnQuery: (setOnQuery: boolean) => void;
-  origin: 'Company' | 'Backoffice' | 'Client' | undefined;
+  origin: TOrigin;
 }
 
 export interface IBuildingListForSelect {

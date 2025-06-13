@@ -29,6 +29,10 @@ import {
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
+// GLOBAL TYPES
+import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
+import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+
 // UTILS
 import { handleAdditionalInformations } from './functions';
 
@@ -37,8 +41,6 @@ import * as Style from './styles';
 
 // TYPES
 import type { IModalAdditionalInformations } from './types';
-import type { IMaintenanceReport } from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
-import type { AnnexesAndImages } from '../../../../../../Calendar/types';
 
 export const ModalAdditionalInformations = ({
   setModal,
@@ -59,7 +61,11 @@ export const ModalAdditionalInformations = ({
         then: yup.date().required('Informe a data da última conclusão.'),
       }),
 
-      status: yup.string().required('Campo obrigatório'),
+      status: yup.string().when('hasLastResolutionDate', {
+        is: (hasLastResolutionDate: boolean) => hasLastResolutionDate === true,
+        then: yup.string().required('Informe o status da manutenção.'),
+        otherwise: yup.string().notRequired(),
+      }),
 
       hasFirstNotificationDate: yup.boolean(),
       firstNotificationDate: yup.date().when('hasFirstNotificationDate', {
@@ -84,13 +90,13 @@ export const ModalAdditionalInformations = ({
     observation: '',
   });
 
-  const [files, setFiles] = useState<AnnexesAndImages[]>([]);
+  const [files, setFiles] = useState<IAnnexesAndImages[]>([]);
   const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     disabled: onFileQuery,
   });
 
-  const [images, setImages] = useState<AnnexesAndImages[]>([]);
+  const [images, setImages] = useState<IAnnexesAndImages[]>([]);
   const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
   const {
     acceptedFiles: acceptedImages,
@@ -111,7 +117,7 @@ export const ModalAdditionalInformations = ({
       const uploadAcceptedFiles = async () => {
         setOnFileQuery(true);
 
-        const uploadedFiles = await uploadManyFiles(acceptedFiles);
+        const uploadedFiles = await uploadManyFiles([...acceptedFiles]);
 
         const formattedFiles = uploadedFiles.map((file) => ({
           name: file.originalname,
@@ -136,7 +142,7 @@ export const ModalAdditionalInformations = ({
       const uploadAcceptedImages = async () => {
         setOnImageQuery(true);
 
-        const uploadedImages = await uploadManyFiles(acceptedImages);
+        const uploadedImages = await uploadManyFiles([...acceptedImages]);
 
         const formattedImages = uploadedImages.map((file) => ({
           name: file.originalname,
@@ -179,7 +185,7 @@ export const ModalAdditionalInformations = ({
             ? convertToFormikDate(selectedMaintenance.resolutionDate)
             : '',
           hasFirstNotificationDate: !!selectedMaintenance.notificationDate,
-          status: 'completed',
+          status: 'pending',
           firstNotificationDate: selectedMaintenance.notificationDate
             ? convertToFormikDate(selectedMaintenance.notificationDate)
             : '',
@@ -218,6 +224,7 @@ export const ModalAdditionalInformations = ({
                     }
                   }}
                 />
+
                 <FormikInput
                   typeDatePlaceholderValue={values.firstNotificationDate}
                   min={increaseDaysInDate({ date: new Date(), daysToIncrease: 1 })}
@@ -252,6 +259,7 @@ export const ModalAdditionalInformations = ({
                     setImages([]);
                   }}
                 />
+
                 <FormikInput
                   typeDatePlaceholderValue={values.lastResolutionDate}
                   max={convertToFormikDate(new Date())}
@@ -268,19 +276,21 @@ export const ModalAdditionalInformations = ({
 
                 {values.hasLastResolutionDate && (
                   <Style.ReportWrapper>
-                    <Input
-                      label="Custo"
-                      placeholder="Ex: R$ 100,00"
-                      maxLength={14}
-                      value={maintenanceReport.cost}
-                      onChange={(e) => {
-                        setMaintenanceReport((prevState) => {
-                          const newState = { ...prevState };
-                          newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
-                          return newState;
-                        });
-                      }}
-                    />
+                    {(values.status === 'completed' || values.status === 'overdue') && (
+                      <Input
+                        label="Custo"
+                        placeholder="Ex: R$ 100,00"
+                        maxLength={14}
+                        value={maintenanceReport.cost}
+                        onChange={(e) => {
+                          setMaintenanceReport((prevState) => {
+                            const newState = { ...prevState };
+                            newState.cost = applyMask({ mask: 'BRL', value: e.target.value }).value;
+                            return newState;
+                          });
+                        }}
+                      />
+                    )}
 
                     <FormikSelect
                       label="Status"
@@ -290,97 +300,90 @@ export const ModalAdditionalInformations = ({
                       error={touched.status && errors.status ? errors.status : null}
                     >
                       <option value="expired">Vencida</option>
-                      <option value="pending">Em andamento</option>
+                      <option value="pending">Pendente</option>
+                      <option value="inProgress">Em andamento</option>
                       <option value="completed">Concluída</option>
                       <option value="overdue">Feita em atraso</option>
                     </FormikSelect>
 
-                    {/* <TextArea
-                      label="Observação do relato"
-                      placeholder="Digite aqui"
-                      value={maintenanceReport.observation}
-                      onChange={(e) => {
-                        setMaintenanceReport((prevState) => {
-                          const newState = { ...prevState };
-                          newState.observation = e.target.value;
-                          return newState;
-                        });
-                      }}
-                    /> */}
+                    {(values.status === 'completed' || values.status === 'overdue') && (
+                      <Style.Row disabled={onFileQuery}>
+                        <h6>Anexar</h6>
+                        <Style.FileRow>
+                          <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
+                            <input {...getInputProps()} />
 
-                    <Style.Row disabled={onFileQuery}>
-                      <h6>Anexar</h6>
-                      <Style.FileRow>
-                        <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                          <input {...getInputProps()} />
+                            <Image img={icon.addFile} width="40px" height="32px" radius="0" />
+                          </Style.DragAndDropZoneFile>
 
-                          <Image img={icon.addFile} width="40px" height="32px" radius="0" />
-                        </Style.DragAndDropZoneFile>
-
-                        {(files.length > 0 || onFileQuery) && (
-                          <Style.FileAndImageRow>
-                            {files.map((e, i: number) => (
-                              <Style.Tag title={e.name} key={e.url}>
-                                <p className="p3">{e.name}</p>
-                                <IconButton
-                                  size="16px"
-                                  icon={icon.xBlack}
-                                  onClick={() => {
-                                    setFiles((prevState) => {
-                                      const newState = [...prevState];
-                                      newState.splice(i, 1);
-                                      return newState;
-                                    });
-                                  }}
-                                />
-                              </Style.Tag>
-                            ))}
-                            {onFileQuery &&
-                              acceptedFiles.map((e) => (
-                                <Style.FileLoadingTag key={e.name}>
-                                  <DotLoading />
-                                </Style.FileLoadingTag>
+                          {(files.length > 0 || onFileQuery) && (
+                            <Style.FileAndImageRow>
+                              {files.map((e, i: number) => (
+                                <Style.Tag title={e.name} key={e.url}>
+                                  <p className="p3">{e.name}</p>
+                                  <IconButton
+                                    size="16px"
+                                    icon={icon.xBlack}
+                                    onClick={() => {
+                                      setFiles((prevState) => {
+                                        const newState = [...prevState];
+                                        newState.splice(i, 1);
+                                        return newState;
+                                      });
+                                    }}
+                                  />
+                                </Style.Tag>
                               ))}
-                          </Style.FileAndImageRow>
-                        )}
-                      </Style.FileRow>
-                    </Style.Row>
-                    <Style.Row disabled={onImageQuery}>
-                      <h6>Imagens</h6>
+                              {onFileQuery &&
+                                acceptedFiles.map((e) => (
+                                  <Style.FileLoadingTag key={e.name}>
+                                    <DotLoading />
+                                  </Style.FileLoadingTag>
+                                ))}
+                            </Style.FileAndImageRow>
+                          )}
+                        </Style.FileRow>
+                      </Style.Row>
+                    )}
 
-                      <Style.FileAndImageRow>
-                        <Style.DragAndDropZoneImage
-                          {...getRootPropsImages({ className: 'dropzone' })}
-                        >
-                          <input {...getInputPropsImages()} />
-                          <Image img={icon.addImage} width="40px" height="38px" radius="0" />
-                        </Style.DragAndDropZoneImage>
+                    {(values.status === 'completed' || values.status === 'overdue') && (
+                      <Style.Row disabled={onImageQuery}>
+                        <h6>Imagens</h6>
 
-                        {images.map((e, i: number) => (
-                          <ImagePreview
-                            key={e.url}
-                            width="97px"
-                            height="97px"
-                            imageCustomName={e.name}
-                            src={e.url}
-                            onTrashClick={() => {
-                              setImages((prevState) => {
-                                const newState = [...prevState];
-                                newState.splice(i, 1);
-                                return newState;
-                              });
-                            }}
-                          />
-                        ))}
+                        <Style.FileAndImageRow>
+                          <Style.DragAndDropZoneImage
+                            {...getRootPropsImages({ className: 'dropzone' })}
+                          >
+                            <input {...getInputPropsImages()} />
+                            <Image img={icon.addImage} width="40px" height="38px" radius="0" />
+                          </Style.DragAndDropZoneImage>
 
-                        {onImageQuery &&
-                          acceptedImages.map((e) => (
-                            <Style.ImageLoadingTag key={e.name}>
-                              <DotLoading />
-                            </Style.ImageLoadingTag>
+                          {images.map((e, i: number) => (
+                            <ImagePreview
+                              key={e.url}
+                              width="97px"
+                              height="97px"
+                              imageCustomName={e.name}
+                              src={e.url}
+                              onTrashClick={() => {
+                                setImages((prevState) => {
+                                  const newState = [...prevState];
+                                  newState.splice(i, 1);
+                                  return newState;
+                                });
+                              }}
+                            />
                           ))}
-                      </Style.FileAndImageRow>
-                    </Style.Row>
+
+                          {onImageQuery &&
+                            acceptedImages.map((e) => (
+                              <Style.ImageLoadingTag key={e.name}>
+                                <DotLoading />
+                              </Style.ImageLoadingTag>
+                            ))}
+                        </Style.FileAndImageRow>
+                      </Style.Row>
+                    )}
                   </Style.ReportWrapper>
                 )}
               </Style.Wrapper>
