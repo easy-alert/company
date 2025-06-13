@@ -1,9 +1,17 @@
+// REACT
 import { useState } from 'react';
+
+// LIBS
 import ReactApexChart from 'react-apexcharts';
 
+// GLOBAL COMPONENTS
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { PopoverComponent } from '@components/Popover';
 
+// GLOBAL TYPES
+import type { TMaintenanceStatus } from '@customTypes/TMaintenanceStatus';
+
+// STYLES
 import * as Style from './styles';
 
 interface ReusableChartCardProps {
@@ -14,8 +22,13 @@ interface ReusableChartCardProps {
   isLoading: boolean;
   height?: number;
   activitiesByLabel?: Record<string, any[]>;
-  onMaintenanceClick?: (maintenanceId: string) => void;
   typePopover?: 'maintenance' | 'ticket';
+  handleSelectMaintenance?: (
+    maintenanceId: string,
+    maintenanceStatus: TMaintenanceStatus,
+    canReportMaintenance: boolean,
+  ) => void;
+  handleSelectTicket?: (ticketId: string, ticket: any) => void;
 }
 
 export const ReusableChartCard = ({
@@ -27,7 +40,8 @@ export const ReusableChartCard = ({
   height = 335,
   activitiesByLabel = {},
   typePopover = 'maintenance',
-  onMaintenanceClick,
+  handleSelectMaintenance,
+  handleSelectTicket,
 }: ReusableChartCardProps) => {
   const [open, setOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -113,7 +127,7 @@ export const ReusableChartCard = ({
                       <Style.PopoverListItem
                         key={item.id || item.ticketNumber}
                         $barcolor={barColor}
-                        onClick={() => onMaintenanceClick && onMaintenanceClick(item.id)}
+                        onClick={() => handleSelectTicket && handleSelectTicket(item.id, item)}
                       >
                         <div>
                           <strong>#{item.ticketNumber}</strong> -{' '}
@@ -127,7 +141,10 @@ export const ReusableChartCard = ({
                       <Style.PopoverListItem
                         key={item.id || `${item.category}-${item.activity}`}
                         $barcolor={barColor}
-                        onClick={() => onMaintenanceClick && onMaintenanceClick(item.id)}
+                        onClick={() =>
+                          handleSelectMaintenance &&
+                          handleSelectMaintenance(item.id, item.status, item.cantReportExpired)
+                        }
                       >
                         <div className="popover-header">
                           <strong>{item.buildingName || '-'}</strong>
