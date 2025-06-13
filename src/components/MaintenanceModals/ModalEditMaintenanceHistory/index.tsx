@@ -87,7 +87,7 @@ export const ModalEditMaintenanceHistory = ({
       await putMaintenanceHistory(data);
 
       handleEditModal(false);
-      handleRefresh();
+      if (handleRefresh) handleRefresh();
     } catch (error) {
       console.error('Error updating maintenance history:', error);
     } finally {
