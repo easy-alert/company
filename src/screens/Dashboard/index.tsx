@@ -29,16 +29,19 @@ import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
 import { FormikInput } from '@components/Form/FormikInput';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL TYPES
 import type { ITicketStatusNames } from '@customTypes/ITicket';
+import type { TModalNames } from '@customTypes/TModalNames';
+import type { TMaintenanceStatus } from '@customTypes/TMaintenanceStatus';
 
 // COMPONENTS
-import { ModalSendMaintenanceReport } from '@screens/Reports/Maintenances/ModalSendMaintenanceReport';
-import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
 import { InfoCard } from './Components/InfoCard';
 import { ReusableChartCard } from './Components/Graphic';
 
@@ -121,36 +124,15 @@ export interface ITicketFilter {
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+
+  // #region states
   const [kanban, setKanban] = useState<any[]>([]);
 
   const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string | null>(null);
-  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
-
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [showTicketModal, setShowTicketModal] = useState(false);
+
   const [allTickets, setAllTickets] = useState<any[]>([]);
 
-  const handleOpenTicketModal = (ticketId: string) => {
-    setSelectedTicketId(ticketId);
-    setShowTicketModal(true);
-  };
-
-  const handleCloseTicketModal = () => {
-    setShowTicketModal(false);
-    setSelectedTicketId(null);
-  };
-
-  const handleOpenMaintenanceModal = (maintenanceId: string) => {
-    setSelectedMaintenanceId(maintenanceId);
-    setShowMaintenanceModal(true);
-  };
-
-  const handleCloseMaintenanceModal = () => {
-    setShowMaintenanceModal(false);
-    setSelectedMaintenanceId(null);
-  };
-
-  // #region states
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
     commonMaintenanceData: {
       count: 0,
@@ -207,7 +189,7 @@ export const Dashboard = () => {
   });
 
   const dataFilterInitialValues: IDashboardFilter = {
-    startDate: new Date(new Date().setDate(new Date().getMonth() - 3)).toISOString().split('T')[0],
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
@@ -245,7 +227,12 @@ export const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+  const [modalTicketDetails, setModalTicketDetails] = useState<boolean>(false);
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [dashboardLoadings, setDashboardLoadings] = useState<IDashboardLoadings>({
     maintenancesCountAndCost: true,
@@ -258,6 +245,7 @@ export const Dashboard = () => {
   });
   // #endregion
 
+  // #region helpers/utils
   const totalTicketsCount =
     ticketsData.openTickets.count +
     ticketsData.awaitingToFinishTickets.count +
@@ -282,7 +270,6 @@ export const Dashboard = () => {
     return { value: largestValue, index: largestValueIndex };
   };
 
-  // #region helpers/utils
   function normalize(str: string) {
     return str
       .normalize('NFD')
@@ -290,6 +277,53 @@ export const Dashboard = () => {
       .toLowerCase()
       .trim();
   }
+
+  const handleModals = (modal: TModalNames, modalState: boolean) => {
+    switch (modal) {
+      case 'modalMaintenanceReportSend':
+        setModalMaintenanceReportSend(modalState);
+        break;
+
+      case 'modalMaintenanceDetails':
+        setModalMaintenanceDetails(modalState);
+        break;
+
+      case 'modalTicketDetails':
+        setModalTicketDetails(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleRefresh = () => {
+    setRefresh((prev) => !prev);
+  };
+
+  const handleSelectMaintenance = (
+    maintenanceId: string,
+    maintenanceStatus: TMaintenanceStatus,
+    canReportMaintenance: boolean,
+  ) => {
+    setSelectedMaintenanceId(maintenanceId);
+
+    if (
+      maintenanceStatus === 'completed' ||
+      maintenanceStatus === 'overdue' ||
+      (maintenanceStatus === 'expired' && !canReportMaintenance)
+    ) {
+      handleModals('modalMaintenanceDetails', true);
+    } else {
+      handleModals('modalMaintenanceReportSend', true);
+    }
+  };
+
+  const handleSelectTicket = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+    handleModals('modalTicketDetails', true);
+  };
+  // #endregion
 
   // #region requests
   const handleGetDashboardFilters = async () => {
@@ -315,6 +349,7 @@ export const Dashboard = () => {
         priorityName: '',
         search: '',
       };
+      console.log('🚀 ~ handleGetKanban ~ kanbanFilter:', kanbanFilter);
 
       const response = await getMaintenancesKanban({
         userId: '',
@@ -1202,26 +1237,40 @@ export const Dashboard = () => {
       </Style.FilterSection>
 
       <Style.Wrappers>
-        {showMaintenanceModal && selectedMaintenanceId && (
-          <ModalSendMaintenanceReport
+        {modalMaintenanceReportSend && selectedMaintenanceId && (
+          <ModalMaintenanceReportSend
             maintenanceHistoryId={selectedMaintenanceId}
-            handleModalSendMaintenanceReport={(open: boolean) => {
-              if (!open) handleCloseMaintenanceModal();
+            refresh={refresh}
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {modalMaintenanceDetails && selectedMaintenanceId && (
+          <ModalMaintenanceDetails
+            modalAdditionalInformations={{
+              id: selectedMaintenanceId,
+              expectedDueDate: '',
+              expectedNotificationDate: '',
+              isFuture: false,
             }}
-            onThenRequest={async () => {
-              /* */
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {modalTicketDetails && selectedTicketId && (
+          <ModalTicketDetails
+            ticketId={selectedTicketId}
+            handleTicketDetailsModal={(open: boolean) => {
+              if (!open) {
+                setModalTicketDetails(false);
+                setSelectedTicketId(null);
+              }
             }}
           />
         )}
 
-        {showTicketModal && selectedTicketId && (
-          <ModalTicketDetails
-            ticketId={selectedTicketId}
-            handleTicketDetailsModal={(open: boolean) => {
-              if (!open) handleCloseTicketModal();
-            }}
-          />
-        )}
         <Style.MaintenancesCounts>
           <Style.CountCard>
             {dashboardLoadings.maintenancesCountAndCost ? (
@@ -1347,7 +1396,7 @@ export const Dashboard = () => {
               chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
               activitiesByLabel={activitiesByLabelCommon}
-              onMaintenanceClick={handleOpenMaintenanceModal}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
 
             <ReusableChartCard
@@ -1357,7 +1406,7 @@ export const Dashboard = () => {
               chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
               activitiesByLabel={activitiesByLabelOccasional}
-              onMaintenanceClick={handleOpenMaintenanceModal}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
 
             <ReusableChartCard
@@ -1367,8 +1416,8 @@ export const Dashboard = () => {
               chartSeries={ticketTypesChart.series}
               isLoading={dashboardLoadings.ticketsTypes}
               activitiesByLabel={activitiesByLabelTickets}
-              onMaintenanceClick={handleOpenTicketModal}
               typePopover="ticket"
+              handleSelectTicket={handleSelectTicket}
             />
 
             <InfoCard
