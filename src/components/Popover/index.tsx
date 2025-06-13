@@ -52,7 +52,7 @@ export const PopoverComponent = ({
   return (
     <Popover
       isOpen={isPopoverOpen}
-      positions={position}
+      positions={['right', 'left', 'top', 'bottom']}
       padding={1}
       onClickOutside={() => {
         setIsPopoverOpen(false);

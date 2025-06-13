@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
+import { Modal } from '@components/Modal';
+import { theme } from '@styles/theme';
 import * as Style from './styles';
-import { Modal } from '../../../components/Modal';
-import { theme } from '../../../styles/theme';
 
 interface IMaintenance {
   Category: {

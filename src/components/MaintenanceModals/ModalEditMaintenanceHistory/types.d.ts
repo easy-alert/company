@@ -4,5 +4,5 @@ export interface IModalEditMaintenanceHistory {
   userId?: string;
   maintenance: IMaintenance;
   handleEditModal: (modalState: boolean) => void;
-  handleRefresh: () => void;
+  handleRefresh?: () => void;
 }

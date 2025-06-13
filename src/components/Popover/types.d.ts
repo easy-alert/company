@@ -6,4 +6,7 @@ export interface IPopoverButton {
   buttonChildren: ReactElement;
   label?: string;
   position?: PopoverPosition[];
+  open?: boolean;
+  chartColors?: string[];
+  chartLabels?: string[];
 }

@@ -60,6 +60,9 @@ export const SupplierMaintenanceHistory = ({
         <ModalMaintenanceDetails
           modalAdditionalInformations={{
             id: maintenanceHistoryId,
+            expectedDueDate: '',
+            expectedNotificationDate: '',
+            isFuture: false,
           }}
           handleModals={handleModals}
           handleRefresh={handleRefresh}
