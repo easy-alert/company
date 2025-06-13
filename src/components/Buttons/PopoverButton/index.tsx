@@ -42,6 +42,7 @@ export const PopoverButton = ({
   labelPos,
   fontWeight,
   textColor,
+  popoverBorderless = false,
   permToCheck,
 }: IPopoverButton) => {
   const { hasPermission } = useHasPermission({ permToCheck: permToCheck ? [permToCheck] : [] });
@@ -53,30 +54,32 @@ export const PopoverButton = ({
   }
 
   function getArrowStyle(position: string | undefined, arrowSize: number) {
+    const zIndex = 12;
+
     switch (position) {
       case 'top':
         return {
           bottom: 3,
           borderTop: `${arrowSize}px solid white`,
-          zIndex: 1,
+          zIndex,
         };
       case 'bottom':
         return {
           top: 3,
           borderBottom: `${arrowSize}px solid white`,
-          zIndex: 1,
+          zIndex,
         };
       case 'right':
         return {
           left: 3,
           borderRight: `${arrowSize}px solid white`,
-          zIndex: 1,
+          zIndex,
         };
       default:
         return {
           right: 3,
           borderLeft: `${arrowSize}px solid white`,
-          zIndex: 1,
+          zIndex,
         };
     }
   }
@@ -97,7 +100,7 @@ export const PopoverButton = ({
       onClickOutside={() => {
         setIsPopoverOpen(false);
       }}
-      containerStyle={{ zIndex: '10' }}
+      containerStyle={{ zIndex: '12' }}
       // eslint-disable-next-line react/no-unstable-nested-components
       content={({ position, childRect, popoverRect }) => {
         const arrowSize = 10;
@@ -143,6 +146,7 @@ export const PopoverButton = ({
                       <Button
                         label={label}
                         bgColor={actionButtonBgColor}
+                        borderless={popoverBorderless}
                         onClick={() => {
                           actionButtonClick();
                           togglePopOver();
