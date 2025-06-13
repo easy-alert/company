@@ -36,7 +36,6 @@ export const ModalEditMaintenance = ({
   categoryId,
   maintenancePriorities,
 }: IModalEditMaintenance) => {
-  console.log('🚀 ~ maintenancePriorities:', maintenancePriorities);
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const [onFileQuery, setFileOnQuery] = useState<boolean>(false);
 
