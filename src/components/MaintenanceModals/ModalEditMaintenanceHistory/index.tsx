@@ -125,7 +125,8 @@ export const ModalEditMaintenanceHistory = ({
               <Form>
                 <Style.FormContainer>
                   {maintenance?.MaintenancesStatus?.name !== 'completed' &&
-                    maintenance?.MaintenancesStatus?.name !== 'overdue' && (
+                    maintenance?.MaintenancesStatus?.name !== 'overdue' &&
+                    maintenance.canReport && (
                       // eslint-disable-next-line react/jsx-no-useless-fragment
                       <>
                         {maintenance?.Maintenance?.MaintenanceType?.name === 'common' ? (
