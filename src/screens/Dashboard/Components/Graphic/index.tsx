@@ -26,7 +26,7 @@ interface ReusableChartCardProps {
   handleSelectMaintenance?: (
     maintenanceId: string,
     maintenanceStatus: TMaintenanceStatus,
-    canReportMaintenance: boolean,
+    cantReportMaintenance: boolean,
   ) => void;
   handleSelectTicket?: (ticketId: string, ticket: any) => void;
 }
