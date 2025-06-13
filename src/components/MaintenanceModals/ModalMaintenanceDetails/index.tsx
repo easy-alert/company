@@ -372,13 +372,23 @@ export const ModalMaintenanceDetails = ({
                 <>
                   <LinkSupplierToMaintenanceHistory
                     maintenanceHistoryId={maintenanceDetails.id}
-                    showSupplierButton={maintenanceDetails.canReport}
+                    showSupplierButton={
+                      maintenanceDetails.canReport &&
+                      !['completed', 'overdue'].includes(
+                        maintenanceDetails.MaintenancesStatus?.name || '',
+                      )
+                    }
                     refreshSuppliers={refresh}
                   />
 
                   <MaintenanceHistoryActivities
                     maintenanceHistoryId={maintenanceDetails.id}
-                    showTextArea={maintenanceDetails.canReport}
+                    showTextArea={
+                      maintenanceDetails.canReport &&
+                      !['completed', 'overdue'].includes(
+                        maintenanceDetails.MaintenancesStatus?.name || '',
+                      )
+                    }
                     refreshActivities={refresh}
                   />
                 </>
