@@ -35,13 +35,15 @@ import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
 import IconList from '@assets/icons/IconList';
 import IconBlock from '@assets/icons/IconBlock';
 import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
-import { TModalNames } from '@customTypes/TModalNames';
+import type { TModalNames } from '@customTypes/TModalNames';
 
 // STYLES
 import * as Style from './styles';
