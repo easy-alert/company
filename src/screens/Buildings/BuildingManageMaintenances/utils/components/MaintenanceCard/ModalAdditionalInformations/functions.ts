@@ -79,7 +79,14 @@ export const handleAdditionalInformations = ({
 
     maintenance.daysToAnticipate = values.daysToAnticipate || 0;
 
-    maintenance.status = values.status;
+    if (values.status === 'inProgress') {
+      maintenance.inProgress = true;
+      maintenance.status = 'pending';
+    } else {
+      maintenance.status = values.status;
+    }
+
+    console.log('maintenance', maintenance);
 
     return newState;
   });
