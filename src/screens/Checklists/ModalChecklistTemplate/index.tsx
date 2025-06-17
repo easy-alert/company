@@ -3,38 +3,31 @@ import { useEffect, useState } from 'react';
 // SERVICES
 import { getChecklistsTemplates } from '@services/apis/getChecklistsTemplates';
 import { deleteChecklistTemplate } from '@services/apis/deleteChecklistTemplate';
+import { putChecklistTemplateById } from '@services/apis/putChecklistTemplateById';
+import { createChecklistTemplate } from '@services/apis/createChecklistTemplate';
 
 // GLOBAL COMPONENTS
 import { Button } from '@components/Buttons/Button';
-import { ImagePreview } from '@components/ImagePreview';
 import { Modal } from '@components/Modal';
-import { InputCheckbox } from '@components/Inputs/InputCheckbox';
 import { LoadingWrapper } from '@components/Loadings/LoadingWrapper';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
-import { DotLoading } from '@components/Loadings/DotLoading';
-import { InputRadio } from '@components/Inputs/InputRadio';
-import UserResponsible from '@components/UserResponsible';
 import { IconButton } from '@components/Buttons/IconButton';
-
-// GLOBAL UTILS
-import { uploadManyFiles } from '@utils/functions';
+import { Input } from '@components/Inputs/Input';
 
 // GLOBAL ASSETS
 import IconTrash from '@assets/icons/IconTrash';
+import IconEdit from '@assets/icons/IconEdit';
+import IconPlus from '@assets/icons/IconPlus';
+import IconDuplicate from '@assets/icons/IconDuplicate';
 
 // GLOBAL TYPES
 import { IChecklistTemplate } from '@customTypes/IChecklistTemplate';
-import { IChecklist, TChecklistStatus } from '@customTypes/IChecklist';
 
 // STYLES
-import IconEdit from '@assets/icons/IconEdit';
-import { Input } from '@components/Inputs/Input';
-import IconPlus from '@assets/icons/IconPlus';
-import { putChecklistTemplateById } from '@services/apis/putChecklistTemplateById';
-import IconDuplicate from '@assets/icons/IconDuplicate';
-import { createChecklistTemplate } from '@services/apis/createChecklistTemplate';
+
 import * as Style from './styles';
 
+// TYPES
 import type { TModalNames } from '..';
 
 interface ModalSendReportProps {
