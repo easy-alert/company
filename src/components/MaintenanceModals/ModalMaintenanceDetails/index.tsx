@@ -362,6 +362,11 @@ export const ModalMaintenanceDetails = ({
 
               {maintenanceDetails?.Users && maintenanceDetails?.Users?.length > 0 && (
                 <UserResponsible
+                  title={
+                    (maintenanceDetails?.Users?.length ?? 0) > 1
+                      ? 'Usuários responsáveis'
+                      : 'Usuário responsável'
+                  }
                   users={maintenanceDetails.Users.map(({ User }) => ({
                     ...User,
                   }))}
