@@ -551,7 +551,7 @@ export const ChecklistReports = () => {
                 { label: 'Status' },
                 { label: 'Edificação' },
                 { label: 'Nome' },
-                { label: 'Responsável' },
+                { label: 'Responsáveis' },
                 { label: 'Items' },
                 { label: 'Data' },
               ]}
@@ -578,7 +578,9 @@ export const ChecklistReports = () => {
                       { cell: checklist?.building?.name },
                       { cell: checklist.name },
 
-                      { cell: checklist.user?.name || '-' },
+                      {
+                        cell: checklist.checklistUsers?.map((user) => user.name).join(', ') || '-',
+                      },
                       { cell: `${checklistCompletedItems} / ${checklistTotalItems}` },
                       { cell: dateFormatter(checklist?.date) },
                     ]}
