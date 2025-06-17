@@ -40,7 +40,7 @@ export const Background = styled.div<{ zIndex: number }>`
 `;
 
 export const Body = styled.div<{ bodyWidth?: string }>`
-  width: ${({ bodyWidth }) => bodyWidth ?? '460px'};
+  width: ${({ bodyWidth }) => bodyWidth ?? '475px'};
   margin: ${theme.size.xxlg} 0;
 
   animation: fade-in-scale 0.25s cubic-bezier(0.39, 0.575, 0.565, 1) both;

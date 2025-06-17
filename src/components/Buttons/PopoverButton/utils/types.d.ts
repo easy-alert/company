@@ -29,4 +29,5 @@ export interface IPopoverButton {
   fill?: string;
   strokeColor?: string;
   buttonIcon?: React.ReactElement;
+  popoverBorderless?: boolean;
 }

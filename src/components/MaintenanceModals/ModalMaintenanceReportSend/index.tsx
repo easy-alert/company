@@ -190,7 +190,7 @@ export const ModalMaintenanceReportSend = ({
 
       handleModals('modalMaintenanceReportSend', false);
     } finally {
-      handleRefresh();
+      if (handleRefresh) handleRefresh();
       setOnQuery(false);
     }
   };
@@ -211,7 +211,7 @@ export const ModalMaintenanceReportSend = ({
 
       handleModals('modalMaintenanceReportSend', false);
     } finally {
-      handleRefresh();
+      if (handleRefresh) handleRefresh();
       setOnQuery(false);
     }
   };
@@ -436,8 +436,14 @@ export const ModalMaintenanceReportSend = ({
                 />
               )}
 
-              <LinkSupplierToMaintenanceHistory maintenanceHistoryId={maintenanceHistoryId} />
-              <MaintenanceHistoryActivities maintenanceHistoryId={maintenanceHistoryId} />
+              <LinkSupplierToMaintenanceHistory
+                maintenanceHistoryId={maintenanceHistoryId}
+                showSupplierButton={maintenance.canReport}
+              />
+              <MaintenanceHistoryActivities
+                maintenanceHistoryId={maintenanceHistoryId}
+                showTextArea={maintenance.canReport}
+              />
 
               {maintenance.canReport && (
                 <>
@@ -618,6 +624,7 @@ export const ModalMaintenanceReportSend = ({
             ) : (
               <Button
                 label="Fechar"
+                bgColor="primary"
                 center
                 onClick={() => handleModals('modalMaintenanceReportSend', false)}
               />

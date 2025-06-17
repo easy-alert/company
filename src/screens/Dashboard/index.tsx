@@ -1,7 +1,7 @@
 // #region imports
 
 // REACT
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import Chart from 'react-apexcharts';
 
 // LIBS
@@ -12,11 +12,16 @@ import { ApexOptions } from 'apexcharts';
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
+import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
 import { getDashboardFilters } from '@services/apis/getDashboardFilters';
 import { getMaintenancesCountAndCost } from '@services/apis/getMaintenancesCountAndCost';
 import { getTicketsCountAndCost } from '@services/apis/getTicketsCountAndCost';
 import { getTicketsByServiceTypes } from '@services/apis/getTicketsByServiceTypes';
 import { getMaintenancesTimeline } from '@services/apis/getMaintenancesTimeline';
+import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
+import { getMaintenanceStatus } from '@services/apis/getMaintenancesStatus';
+import { getMaintenanceCategories } from '@services/apis/getMaintenancesCategories';
+import { getUserActivities, UserActivity } from '@services/apis/getUserActivities';
 
 // GLOBAL COMPONENTS
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
@@ -24,17 +29,19 @@ import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
 import { FormikInput } from '@components/Form/FormikInput';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
+import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL TYPES
 import type { ITicketStatusNames } from '@customTypes/ITicket';
+import type { TModalNames } from '@customTypes/TModalNames';
+import type { TMaintenanceStatus } from '@customTypes/TMaintenanceStatus';
 
 // COMPONENTS
-import { getMaintenanceStatus } from '@services/apis/getMaintenancesStatus';
-import { getMaintenanceCategories } from '@services/apis/getMaintenancesCategories';
-import { getUserActivities, UserActivity } from '@services/apis/getUserActivities';
 import { InfoCard } from './Components/InfoCard';
 import { ReusableChartCard } from './Components/Graphic';
 
@@ -100,12 +107,6 @@ interface IDashboardLoadings {
   userActivities: boolean;
 }
 
-interface StatusChartData {
-  data: number[];
-  labels: string[];
-  colors: string[];
-}
-
 type CountAndCostItem = {
   category: string;
   count: number;
@@ -125,6 +126,13 @@ export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   // #region states
+  const [kanban, setKanban] = useState<any[]>([]);
+
+  const [selectedMaintenanceId, setSelectedMaintenanceId] = useState<string | null>(null);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+
+  const [allTickets, setAllTickets] = useState<any[]>([]);
+
   const [maintenancesData, setMaintenancesData] = useState<IMaintenancesData>({
     commonMaintenanceData: {
       count: 0,
@@ -168,14 +176,20 @@ export const Dashboard = () => {
     },
   });
 
-  const [ticketsServicesTypeChart, setTicketsServicesTypeChart] = useState<IPieChart>({
+  const [ticketsServicesTypeChart, setTicketsServicesTypeChart] = useState<{
+    data: number[];
+    labels: string[];
+    colors: string[];
+    ticketsByType?: Record<string, any[]>;
+  }>({
     data: [],
     labels: [],
     colors: [],
+    ticketsByType: {},
   });
 
   const dataFilterInitialValues: IDashboardFilter = {
-    startDate: new Date(new Date().setDate(new Date().getMonth() - 3)).toISOString().split('T')[0],
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
     buildings: [],
     categories: [],
@@ -213,7 +227,12 @@ export const Dashboard = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
+  const [modalTicketDetails, setModalTicketDetails] = useState<boolean>(false);
+
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [dashboardLoadings, setDashboardLoadings] = useState<IDashboardLoadings>({
     maintenancesCountAndCost: true,
@@ -226,6 +245,7 @@ export const Dashboard = () => {
   });
   // #endregion
 
+  // #region helpers/utils
   const totalTicketsCount =
     ticketsData.openTickets.count +
     ticketsData.awaitingToFinishTickets.count +
@@ -250,6 +270,61 @@ export const Dashboard = () => {
     return { value: largestValue, index: largestValueIndex };
   };
 
+  function normalize(str: string) {
+    return str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  }
+
+  const handleModals = (modal: TModalNames, modalState: boolean) => {
+    switch (modal) {
+      case 'modalMaintenanceReportSend':
+        setModalMaintenanceReportSend(modalState);
+        break;
+
+      case 'modalMaintenanceDetails':
+        setModalMaintenanceDetails(modalState);
+        break;
+
+      case 'modalTicketDetails':
+        setModalTicketDetails(modalState);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleRefresh = () => {
+    setRefresh((prev) => !prev);
+  };
+
+  const handleSelectMaintenance = (
+    maintenanceId: string,
+    maintenanceStatus: TMaintenanceStatus,
+    cantReportMaintenance: boolean,
+  ) => {
+    setSelectedMaintenanceId(maintenanceId);
+
+    if (
+      maintenanceStatus === 'completed' ||
+      maintenanceStatus === 'overdue' ||
+      (maintenanceStatus === 'expired' && cantReportMaintenance)
+    ) {
+      handleModals('modalMaintenanceDetails', true);
+    } else {
+      handleModals('modalMaintenanceReportSend', true);
+    }
+  };
+
+  const handleSelectTicket = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+    handleModals('modalTicketDetails', true);
+  };
+  // #endregion
+
   // #region requests
   const handleGetDashboardFilters = async () => {
     setLoading(true);
@@ -262,6 +337,27 @@ export const Dashboard = () => {
       handleToastify(error.response.data.ServerMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetKanban = async () => {
+    try {
+      const kanbanFilter = {
+        ...dataFilter,
+        status: [],
+        users: [],
+        priorityName: '',
+        search: '',
+      };
+      console.log('🚀 ~ handleGetKanban ~ kanbanFilter:', kanbanFilter);
+
+      const response = await getMaintenancesKanban({
+        userId: '',
+        filter: kanbanFilter,
+      });
+      setKanban(response.kanban);
+    } catch (error: any) {
+      handleToastify(error.response?.data?.ServerMessage);
     }
   };
 
@@ -630,6 +726,8 @@ export const Dashboard = () => {
 
     // get users activities
     handleGetUserActivities(resetFilters);
+
+    handleGetKanban();
   };
 
   const handleResetFilterButton = async () => {
@@ -852,7 +950,79 @@ export const Dashboard = () => {
     setWindowWidth(window.innerWidth);
   };
 
+  const labels = ['Concluídas', 'Vencidas', 'Pendentes', 'Em andamento'];
+  const ticketLabels = ticketsServicesTypeChart.labels;
+
+  const activitiesByLabelCommon = labels.reduce((acc: Record<string, any[]>, label: string) => {
+    if (label === 'Em andamento') {
+      acc[label] = kanban
+        .flatMap((col: any) => col.maintenances || [])
+        .filter((m: any) => m.type === 'common' && m.inProgress);
+    } else {
+      const column = kanban.find((col: any) => col.status === label);
+      acc[label] = column
+        ? (column.maintenances || []).filter((m: any) => m.type === 'common' && !m.inProgress)
+        : [];
+    }
+    return acc;
+  }, {});
+
+  const activitiesByLabelOccasional = labels.reduce((acc: Record<string, any[]>, label: string) => {
+    if (label === 'Em andamento') {
+      acc[label] = kanban
+        .flatMap((col: any) => col.maintenances || [])
+        .filter((m: any) => m.type === 'occasional' && m.inProgress);
+    } else {
+      const column = kanban.find((col: any) => col.status === label);
+      acc[label] = column
+        ? (column.maintenances || []).filter((m: any) => m.type === 'occasional' && !m.inProgress)
+        : [];
+    }
+    return acc;
+  }, {});
+
+  const activitiesByLabelTickets = useMemo(
+    () =>
+      ticketsServicesTypeChart.labels.reduce((acc: Record<string, any[]>, label) => {
+        acc[label] = allTickets.filter((ticket) =>
+          ticket.types?.some((typeObj: any) => normalize(typeObj.type.label) === normalize(label)),
+        );
+        return acc;
+      }, {}),
+    [allTickets, ticketsServicesTypeChart.labels],
+  );
+
   // #region useEffects
+
+  useEffect(() => {
+    const fetchAllTickets = async () => {
+      try {
+        const response = await getTicketsByBuildingNanoId({
+          filter: {
+            buildings: dataFilter.buildings || [],
+            status: [],
+            places: [],
+            serviceTypes: [],
+            apartments: [],
+            startDate: dataFilter.startDate,
+            endDate: dataFilter.endDate,
+            seen: '',
+          },
+          take: 1000,
+        });
+        setAllTickets(response.tickets || []);
+      } catch (error: any) {
+        handleToastify(error?.response?.data?.ServerMessage || 'Erro ao buscar tickets');
+      }
+    };
+
+    fetchAllTickets();
+  }, [dataFilter]);
+
+  useEffect(() => {
+    handleGetDashboardFilters();
+    handleGetDashboardData();
+  }, []);
 
   useEffect(() => {
     window.addEventListener('resize', handleWindowResize);
@@ -1067,6 +1237,40 @@ export const Dashboard = () => {
       </Style.FilterSection>
 
       <Style.Wrappers>
+        {/* {modalMaintenanceReportSend && selectedMaintenanceId && (
+          <ModalMaintenanceReportSend
+            maintenanceHistoryId={selectedMaintenanceId}
+            refresh={refresh}
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )} */}
+
+        {modalMaintenanceDetails && selectedMaintenanceId && (
+          <ModalMaintenanceDetails
+            modalAdditionalInformations={{
+              id: selectedMaintenanceId,
+              expectedDueDate: '',
+              expectedNotificationDate: '',
+              isFuture: false,
+            }}
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {modalTicketDetails && selectedTicketId && (
+          <ModalTicketDetails
+            ticketId={selectedTicketId}
+            handleTicketDetailsModal={(open: boolean) => {
+              if (!open) {
+                setModalTicketDetails(false);
+                setSelectedTicketId(null);
+              }
+            }}
+          />
+        )}
+
         <Style.MaintenancesCounts>
           <Style.CountCard>
             {dashboardLoadings.maintenancesCountAndCost ? (
@@ -1191,6 +1395,8 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.common.options}
               chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelCommon}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
 
             <ReusableChartCard
@@ -1199,6 +1405,8 @@ export const Dashboard = () => {
               chartOptions={maintenanceChart.occasional.options}
               chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelOccasional}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
 
             <ReusableChartCard
@@ -1207,6 +1415,9 @@ export const Dashboard = () => {
               chartOptions={ticketTypesChart.options}
               chartSeries={ticketTypesChart.series}
               isLoading={dashboardLoadings.ticketsTypes}
+              activitiesByLabel={activitiesByLabelTickets}
+              typePopover="ticket"
+              handleSelectTicket={handleSelectTicket}
             />
 
             <InfoCard
