@@ -6,15 +6,16 @@ import { useDropzone } from 'react-dropzone';
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
+// HOOKS
+import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
+import { useHasPermission } from '@hooks/useHasPermission';
+
 // SERVICES
 import { getMaintenanceDetails } from '@services/apis/getMaintenanceDetails';
 import { getMaintenanceReportProgress } from '@services/apis/getMaintenanceReportProgress';
 import { sendMaintenanceReport } from '@services/apis/sendMaintenanceReport';
 import { saveMaintenanceReport } from '@services/apis/saveMaintenanceReport';
-
-// HOOKS
-import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
-import { useHasPermission } from '@hooks/useHasPermission';
+import { maintenanceToggleProgress } from '@services/apis/maintenanceToggleProgress';
 
 // COMPONENTS
 import { EventTag } from '@components/EventTag';
@@ -171,6 +172,21 @@ export const ModalMaintenanceReportSend = ({
       });
       setFiles(responseData.progress.ReportAnnexesProgress);
       setImages(responseData.progress.ReportImagesProgress);
+    }
+  };
+
+  const handleMaintenanceToggleProgress = async (inProgressChange: boolean) => {
+    setOnQuery(true);
+
+    try {
+      await maintenanceToggleProgress({
+        userId: userId ?? '',
+        maintenanceHistoryId,
+        inProgressChange,
+      });
+    } finally {
+      if (handleRefresh) handleRefresh();
+      setOnQuery(false);
     }
   };
 
@@ -575,7 +591,9 @@ export const ModalMaintenanceReportSend = ({
                 {!onQuery && (
                   <PopoverButton
                     disabled={onFileQuery || onImageQuery || onQuery}
-                    actionButtonClick={() => handleSaveMaintenanceReport(!maintenance.inProgress)}
+                    actionButtonClick={() =>
+                      handleMaintenanceToggleProgress(!maintenance.inProgress)
+                    }
                     borderless
                     actionButtonBgColor="primary"
                     textColor="actionBlue"
