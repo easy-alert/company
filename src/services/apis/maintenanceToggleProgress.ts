@@ -8,7 +8,11 @@ interface IMaintenanceToggleProgress {
   inProgressChange: boolean;
 }
 
-export const maintenanceToggleProgress = async ({userId, maintenanceHistoryId, inProgressChange}:IMaintenanceToggleProgress) => {
+export const maintenanceToggleProgress = async ({
+  userId,
+  maintenanceHistoryId,
+  inProgressChange,
+}: IMaintenanceToggleProgress) => {
   const uri = `/maintenances/set/in-progress`;
 
   const body = {
