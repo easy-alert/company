@@ -9,6 +9,7 @@ import { Api } from '@services/api';
 
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+import { useHasPermission } from '@hooks/useHasPermission';
 
 // GLOBAL COMPONENTS
 import { IconButton } from '@components/Buttons/IconButton';
@@ -27,10 +28,11 @@ import IconUploadLine from '@assets/icons/IconUploadLine';
 import IconSend from '@assets/icons/IconSend';
 
 // GLOBAL TYPES
-import type { IActivity } from '@customTypes/IActivity';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+import type { IMaintenanceHistoryActivity } from '@customTypes/IMaintenanceHistoryActivity';
 
 // STYLES
+import { createMaintenanceHistoryActivity } from '@services/apis/createMaintenanceHistoryActivity';
 import * as Style from './styles';
 
 // TYPES
@@ -38,13 +40,16 @@ import type { IMaintenanceHistoryActivities } from './types';
 
 export const MaintenanceHistoryActivities = ({
   maintenanceHistoryId,
+  activities: initialActivities = [],
+  getActivities = false,
   showTextArea = true,
   refreshActivities,
+  handleRefresh,
 }: IMaintenanceHistoryActivities) => {
   const { account } = useAuthContext();
 
-  const [activities, setActivities] = useState<IActivity[]>([]);
-  const [filteredActivities, setFilteredActivities] = useState<IActivity[]>([]);
+  const [activities, setActivities] = useState<IMaintenanceHistoryActivity[]>(initialActivities);
+  const [filteredActivities, setFilteredActivities] = useState<IMaintenanceHistoryActivity[]>([]);
 
   const [comment, setComment] = useState('');
 
@@ -76,18 +81,7 @@ export const MaintenanceHistoryActivities = ({
     return 0; // Keep original order if both are in the same group
   };
 
-  const sortFiles2 = (
-    a: {
-      id: string;
-      url: string;
-      name: string;
-    },
-    b: {
-      id: string;
-      url: string;
-      name: string;
-    },
-  ) => {
+  const sortFiles2 = (a: IAnnexesAndImages, b: IAnnexesAndImages) => {
     const imageExtensions = ['png', 'jpeg', 'jpg'];
 
     const extA = a.name.split('.').pop() || '';
@@ -121,27 +115,25 @@ export const MaintenanceHistoryActivities = ({
   const createActivity = async () => {
     setOnQuery(true);
 
-    await Api.post(`/maintenance-history-activities`, {
-      maintenanceHistoryId,
-      content: comment || null,
-      images: imagesToUpload,
-      userId: account?.User.id,
-    })
-      .then(() => {
-        findMaintenanceHistoryActivities();
-        setComment('');
-        setImagesToUpload([]);
-        // toast.success(res.data.ServerMessage.message);
-      })
-      .catch((err) => {
-        catchHandler(err);
-      })
-      .finally(() => {
-        setOnQuery(false);
+    try {
+      await createMaintenanceHistoryActivity({
+        maintenanceHistoryId,
+        userId: account?.User.id,
+        comment: comment || null,
+        imagesToUpload,
       });
+    } finally {
+      if (handleRefresh) handleRefresh();
+
+      setOnQuery(false);
+      setComment('');
+      setImagesToUpload([]);
+    }
   };
 
   useEffect(() => {
+    if (!getActivities) return;
+
     findMaintenanceHistoryActivities();
   }, [refreshActivities]);
 
@@ -176,10 +168,13 @@ export const MaintenanceHistoryActivities = ({
 
     if (activeTab === 'comments') {
       activities.sort((a, b) => {
-        if (a.createdAt < b.createdAt) {
+        const aCreatedAt = a.createdAt ?? '';
+        const bCreatedAt = b.createdAt ?? '';
+
+        if (aCreatedAt < bCreatedAt) {
           return 1;
         }
-        if (a.createdAt > b.createdAt) {
+        if (aCreatedAt > bCreatedAt) {
           return -1;
         }
         return 0;
@@ -190,10 +185,13 @@ export const MaintenanceHistoryActivities = ({
 
     if (activeTab === 'notifications') {
       activities.sort((a, b) => {
-        if (a.createdAt < b.createdAt) {
+        const aCreatedAt = a.createdAt ?? '';
+        const bCreatedAt = b.createdAt ?? '';
+
+        if (aCreatedAt < bCreatedAt) {
           return 1;
         }
-        if (a.createdAt > b.createdAt) {
+        if (aCreatedAt > bCreatedAt) {
           return -1;
         }
         return 0;
@@ -330,14 +328,15 @@ export const MaintenanceHistoryActivities = ({
                       <ImageComponent src={icon.activityComment} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
-                        <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                        <p className="p3">{dateTimeFormatter(createdAt || '')}</p>
                       </Style.CommentInfo>
                     </Style.CommentHeader>
+
                     {content && <pre className="p2">{content}</pre>}
 
-                    {images.length > 0 && (
+                    {(images?.length || 0) > 0 && (
                       <Style.FileAndImageRow>
-                        {images.sort(sortFiles2).map((e) => {
+                        {images?.sort(sortFiles2).map((e) => {
                           if (isImage(e.url)) {
                             return (
                               <ImagePreview
@@ -374,7 +373,7 @@ export const MaintenanceHistoryActivities = ({
                       <ImageComponent src={icon.activityNotification} hasCircle />
                       <Style.CommentInfo>
                         <h6>{title}</h6>
-                        <p className="p3">{dateTimeFormatter(createdAt)}</p>
+                        <p className="p3">{dateTimeFormatter(createdAt || '')}</p>
                       </Style.CommentInfo>
                     </Style.CommentHeader>
                     {content && <pre className="p2">{content}</pre>}

@@ -1,7 +1,12 @@
+import type { IMaintenanceHistoryActivity } from '@customTypes/IMaintenanceHistoryActivity';
+
 export interface IMaintenanceHistoryActivities {
   maintenanceHistoryId: string;
+  activities?: IMaintenanceHistoryActivity[];
+  getActivities?: boolean;
   showTextArea?: boolean;
   refreshActivities?: boolean;
+  handleRefresh?: () => void;
 }
 
 export interface IOccasionallyActivitiesImages extends File {
