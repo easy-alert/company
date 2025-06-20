@@ -1,6 +1,7 @@
 import type { IAnnexesAndImages } from './IAnnexesAndImages';
 import type { IBuilding } from './IBuilding';
 import type { ICategory } from './ICategory';
+import type { IMaintenanceHistoryActivity } from './IMaintenanceHistoryActivity';
 import type { IMaintenanceReport, IMaintenanceReportProgress } from './IMaintenanceReport';
 import type { IPriority } from './IPriority';
 import type { ISupplier } from './ISupplier';
@@ -113,6 +114,7 @@ export interface IMaintenance {
   MaintenancesStatus?: IMaintenancesStatus;
   MaintenanceReport?: IMaintenanceReport[];
   MaintenanceReportProgress?: IMaintenanceReportProgress[];
+  activities?: IMaintenanceHistoryActivity[];
 
   priority?: IPriority;
 
