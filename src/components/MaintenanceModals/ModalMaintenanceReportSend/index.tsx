@@ -1,7 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 // REACT
 import { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
@@ -23,8 +22,6 @@ import { Input } from '@components/Inputs/Input';
 import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { Modal } from '@components/Modal';
-import { Image } from '@components/Image';
-import { DotLoading } from '@components/Loadings/DotLoading';
 import { ImagePreview } from '@components/ImagePreview';
 import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
@@ -40,7 +37,8 @@ import UserResponsible from '@components/UserResponsible';
 import { icon } from '@assets/icons';
 
 // GLOBAL FUNCTIONS
-import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
+import { imageExtensions } from '@utils/commonFileExtensions';
+import { applyMask, dateFormatter } from '@utils/functions';
 
 // GLOBAL THEMES
 import { theme } from '@styles/theme';
@@ -48,7 +46,8 @@ import { theme } from '@styles/theme';
 // TYPES
 import type { IMaintenance } from '@customTypes/IMaintenance';
 import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
-import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+import type { IAnnexesAndImagesWithActivityId } from '@customTypes/IAnnexesAndImages';
+import type { IMaintenanceHistoryActivity } from '@customTypes/IMaintenanceHistoryActivity';
 
 // STYLES
 import * as Style from './styles';
@@ -68,9 +67,6 @@ export const ModalMaintenanceReportSend = ({
       User: { id: userId },
     },
   } = useAuthContext();
-  const { hasPermission: hasUpdatePermission } = useHasPermission({
-    permToCheck: ['maintenances:update'],
-  });
 
   const { maintenancePriorities } = useMaintenancePriorities();
 
@@ -120,27 +116,8 @@ export const ModalMaintenanceReportSend = ({
     observation: '',
   });
 
-  const [files, setFiles] = useState<IAnnexesAndImages[]>([]);
-  const [onFileQuery, setOnFileQuery] = useState<boolean>(false);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    disabled: onFileQuery,
-  });
-
-  const [images, setImages] = useState<IAnnexesAndImages[]>([]);
-  const [onImageQuery, setOnImageQuery] = useState<boolean>(false);
-  const {
-    acceptedFiles: acceptedImages,
-    getRootProps: getRootPropsImages,
-    getInputProps: getInputPropsImages,
-  } = useDropzone({
-    accept: {
-      'image/png': ['.png'],
-      'image/jpg': ['.jpg'],
-      'image/jpeg': ['.jpeg'],
-      'audio/flac': ['.flac'], // Colocado isso pro celular abrir as opções de camera corretamente.
-    },
-    disabled: onImageQuery,
-  });
+  const [files, setFiles] = useState<IAnnexesAndImagesWithActivityId[]>([]);
+  const [images, setImages] = useState<IAnnexesAndImagesWithActivityId[]>([]);
 
   const [modalEditMaintenanceHistory, setModalEditMaintenanceHistory] = useState<boolean>(false);
 
@@ -158,6 +135,22 @@ export const ModalMaintenanceReportSend = ({
     });
 
     setMaintenance(responseData);
+
+    responseData?.activities?.forEach((activity: IMaintenanceHistoryActivity) => {
+      activity?.images?.forEach(({ activityId, ...image }) => {
+        const fileExtension = image.name.split('.').pop()?.toLowerCase() || '';
+        const formattedImage = {
+          ...image,
+          originalName: image.originalName || image.name,
+        };
+
+        if (imageExtensions.includes(fileExtension)) {
+          setImages((prevState) => [...prevState, formattedImage]);
+        } else {
+          setFiles((prevState) => [...prevState, formattedImage]);
+        }
+      });
+    });
   };
 
   const handleGetReportProgress = async () => {
@@ -234,61 +227,14 @@ export const ModalMaintenanceReportSend = ({
   // #endregion
 
   useEffect(() => {
-    if (acceptedFiles.length > 0) {
-      const uploadAcceptedFiles = async () => {
-        setOnFileQuery(true);
-
-        const uploadedFiles = await uploadManyFiles([...acceptedFiles]);
-
-        const formattedFiles = uploadedFiles.map((file) => ({
-          name: file.originalname,
-          originalName: file.originalname,
-          url: file.Location,
-        }));
-
-        setFiles((prevState) => {
-          let newState = [...prevState];
-          newState = [...newState, ...formattedFiles];
-          return newState;
-        });
-        setOnFileQuery(false);
-      };
-
-      uploadAcceptedFiles();
-    }
-  }, [acceptedFiles]);
-
-  useEffect(() => {
-    if (acceptedImages.length > 0) {
-      const uploadAcceptedImages = async () => {
-        setOnImageQuery(true);
-
-        const uploadedImages = await uploadManyFiles([...acceptedImages]);
-
-        const formattedImages = uploadedImages.map((file) => ({
-          name: file.originalname,
-          originalName: file.originalname,
-          url: file.Location,
-        }));
-
-        setImages((prevState) => {
-          let newState = [...prevState];
-          newState = [...newState, ...formattedImages];
-          return newState;
-        });
-        setOnImageQuery(false);
-      };
-
-      uploadAcceptedImages();
-    }
-  }, [acceptedImages]);
-
-  useEffect(() => {
     setModalLoading(true);
 
+    setFiles([]);
+    setImages([]);
+
     try {
-      handleGetReportProgress();
       handleGetMaintenanceDetails();
+      handleGetReportProgress();
     } finally {
       setTimeout(() => {
         setModalLoading(false);
@@ -456,9 +402,12 @@ export const ModalMaintenanceReportSend = ({
                 maintenanceHistoryId={maintenanceHistoryId}
                 showSupplierButton={maintenance.canReport}
               />
+
               <MaintenanceHistoryActivities
                 maintenanceHistoryId={maintenanceHistoryId}
+                activities={maintenance.activities ?? []}
                 showTextArea={maintenance.canReport}
+                handleRefresh={handleRefresh}
               />
 
               {maintenance.canReport && (
@@ -506,21 +455,16 @@ export const ModalMaintenanceReportSend = ({
                     </Select>
                   </div>
 
-                  <Style.FileStyleRow disabled={onFileQuery}>
-                    <h6>Anexar</h6>
-                    <Style.FileRow>
-                      {hasUpdatePermission && (
-                        <Style.DragAndDropZoneFile {...getRootProps({ className: 'dropzone' })}>
-                          <input {...getInputProps()} />
-                          <Image img={icon.addFile} width="40px" height="32px" radius="0" />
-                        </Style.DragAndDropZoneFile>
-                      )}
+                  <Style.FileStyleRow>
+                    <h6>Anexos</h6>
 
-                      {(files.length > 0 || onFileQuery) && (
+                    <Style.FileRow>
+                      {files.length > 0 ? (
                         <Style.FileAndImageRow>
                           {files.map((e, i: number) => (
                             <Style.Tag title={e.name} key={i}>
                               <p className="p3">{e.name}</p>
+
                               <IconButton
                                 size="16px"
                                 icon={icon.xBlack}
@@ -534,53 +478,38 @@ export const ModalMaintenanceReportSend = ({
                               />
                             </Style.Tag>
                           ))}
-                          {onFileQuery &&
-                            acceptedFiles.map((e) => (
-                              <Style.FileLoadingTag key={e.name}>
-                                <DotLoading />
-                              </Style.FileLoadingTag>
-                            ))}
+                        </Style.FileAndImageRow>
+                      ) : (
+                        <Style.FileAndImageRow>
+                          <p className="p3">Nenhum anexo adicionado</p>
                         </Style.FileAndImageRow>
                       )}
                     </Style.FileRow>
                   </Style.FileStyleRow>
-                  <Style.FileStyleRow disabled={onImageQuery}>
+
+                  <Style.FileStyleRow>
                     <h6>Imagens</h6>
 
-                    <Style.FileAndImageRow>
-                      {hasUpdatePermission && (
-                        <Style.DragAndDropZoneImage
-                          {...getRootPropsImages({ className: 'dropzone' })}
-                        >
-                          <input {...getInputPropsImages()} />
-                          <Image img={icon.addImage} width="40px" height="38px" radius="0" />
-                        </Style.DragAndDropZoneImage>
+                    <Style.FileRow>
+                      {images.length > 0 ? (
+                        <Style.FileAndImageRow>
+                          {images.map((image) => (
+                            <ImagePreview
+                              key={image.originalName}
+                              src={image.url}
+                              downloadUrl={image.url}
+                              imageCustomName={image.name}
+                              width="97px"
+                              height="97px"
+                            />
+                          ))}
+                        </Style.FileAndImageRow>
+                      ) : (
+                        <Style.FileAndImageRow>
+                          <p className="p3">Nenhuma imagem adicionada</p>
+                        </Style.FileAndImageRow>
                       )}
-
-                      {images.map((e, i: number) => (
-                        <ImagePreview
-                          key={e.name + i}
-                          width="97px"
-                          height="97px"
-                          imageCustomName={e.name}
-                          src={e.url}
-                          onTrashClick={() => {
-                            setImages((prevState) => {
-                              const newState = [...prevState];
-                              newState.splice(i, 1);
-                              return newState;
-                            });
-                          }}
-                        />
-                      ))}
-
-                      {onImageQuery &&
-                        acceptedImages.map((e) => (
-                          <Style.ImageLoadingTag key={e.name}>
-                            <DotLoading />
-                          </Style.ImageLoadingTag>
-                        ))}
-                    </Style.FileAndImageRow>
+                    </Style.FileRow>
                   </Style.FileStyleRow>
                 </>
               )}
@@ -590,7 +519,7 @@ export const ModalMaintenanceReportSend = ({
               <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
-                    disabled={onFileQuery || onImageQuery || onQuery}
+                    disabled={onQuery}
                     actionButtonClick={() =>
                       handleMaintenanceToggleProgress(!maintenance.inProgress)
                     }
@@ -605,12 +534,13 @@ export const ModalMaintenanceReportSend = ({
                       content: 'Esta ação é reversível.',
                     }}
                     type="Button"
+                    permToCheck="maintenances:update"
                   />
                 )}
 
                 {!onQuery && (
                   <PopoverButton
-                    disabled={onFileQuery || onImageQuery || onQuery}
+                    disabled={onQuery}
                     actionButtonClick={() => handleSaveMaintenanceReport(maintenance?.inProgress)}
                     textColor="actionBlue"
                     borderless
@@ -621,11 +551,11 @@ export const ModalMaintenanceReportSend = ({
                       content: '',
                     }}
                     type="Button"
+                    permToCheck="maintenances:update"
                   />
                 )}
 
                 <PopoverButton
-                  disabled={onFileQuery || onImageQuery}
                   loading={onQuery}
                   actionButtonClick={() => handleSendMaintenanceReport()}
                   label="Finalizar manutenção"
@@ -637,6 +567,7 @@ export const ModalMaintenanceReportSend = ({
                     contentColor: theme.color.danger,
                   }}
                   type="Button"
+                  permToCheck="maintenances:update"
                 />
               </Style.ButtonContainer>
             ) : (
