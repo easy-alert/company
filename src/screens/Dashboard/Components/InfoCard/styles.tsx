@@ -50,6 +50,9 @@ export const CategoryItem = styled.div`
   h2 {
     margin: 0;
     line-height: 16px;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    white-space: normal;
   }
 `;
 
