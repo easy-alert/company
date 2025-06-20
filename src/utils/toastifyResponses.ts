@@ -1,5 +1,7 @@
 import { toast } from 'react-toastify';
 
+import { SUCCESS_STATUS_CODES } from './httpsStatusCode';
+
 interface IServerResponse {
   status: number;
   data: {
@@ -17,7 +19,7 @@ interface IToastifyMessage {
 export const handleToastify = (serverResponse: IServerResponse, dismiss = true) => {
   if (dismiss) toast.dismiss();
 
-  if (serverResponse.status === 200) {
+  if (SUCCESS_STATUS_CODES.includes(serverResponse.status)) {
     toast.success(
       serverResponse?.data?.ServerMessage?.message || 'Operação realizada com sucesso',
       { toastId: 'success-toast' },
