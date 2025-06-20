@@ -1421,12 +1421,12 @@ export const Dashboard = () => {
             />
 
             <InfoCard
-              title="Manutenções Preventivas"
+              title="Manutenções preventivas"
               categories={categoriesFormatted.common || []}
             />
 
             <InfoCard
-              title="Manutenções Avulsas"
+              title="Manutenções avulsas"
               categories={categoriesFormatted.occasional || []}
             />
 
