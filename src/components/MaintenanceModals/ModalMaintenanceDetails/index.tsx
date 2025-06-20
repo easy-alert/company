@@ -34,12 +34,17 @@ import { icon } from '@assets/icons';
 import type { IMaintenance } from '@customTypes/IMaintenance';
 import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 
+// COMPONENTS
+import { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
+import { IMaintenanceHistoryActivity } from '@customTypes/IMaintenanceHistoryActivity';
+import { imageExtensions } from '@utils/commonFileExtensions';
+import { ModalMaintenanceReportEdit } from '../ModalMaintenanceReportEdit';
+
 // STYLES
 import * as Style from './styles';
 
 // TYPES
 import type { IModalMaintenanceDetails } from './types';
-import { ModalMaintenanceReportEdit } from '../ModalMaintenanceReportEdit';
 
 export const ModalMaintenanceDetails = ({
   modalAdditionalInformations,
@@ -146,12 +151,57 @@ export const ModalMaintenanceDetails = ({
       maintenance?.MaintenanceReport?.[0]?.ReportAnnexes ||
       maintenance?.MaintenanceReportProgress?.[0]?.ReportAnnexesProgress;
 
+    let formattedActivitiesImages: IAnnexesAndImages[] = [];
+    let formattedActivitiesAnnexes: IAnnexesAndImages[] = [];
+
+    if (maintenance?.activities?.length) {
+      formattedActivitiesImages = maintenance.activities.reduce(
+        (acc: IAnnexesAndImages[], activity: IMaintenanceHistoryActivity) => {
+          const images = activity?.images?.filter((image) => {
+            const ext = image.name.split('.').pop()?.toLowerCase();
+            return ext ? imageExtensions.includes(ext) : true;
+          });
+
+          return [...acc, ...(images ?? [])];
+        },
+        [],
+      );
+
+      formattedActivitiesAnnexes = maintenance.activities.reduce(
+        (acc: IAnnexesAndImages[], activity: IMaintenanceHistoryActivity) => {
+          const annexes = activity?.images?.filter((image) => {
+            const ext = image.name.split('.').pop()?.toLowerCase();
+            return ext ? !imageExtensions.includes(ext) : true;
+          });
+
+          return [...acc, ...(annexes ?? [])];
+        },
+        [],
+      );
+    }
+
+    // Merge formattedActivitiesImages into formattedImages, avoiding duplicates by name
+    const mergedImages = [...(formattedImages ?? [])];
+    const mergedAnnexes = [...(formattedAnnexes ?? [])];
+
+    formattedActivitiesImages.forEach((activityImage) => {
+      if (!mergedImages.some((img) => img.name === activityImage.name)) {
+        mergedImages.push(activityImage);
+      }
+    });
+
+    formattedActivitiesAnnexes.forEach((activityAnnex) => {
+      if (!mergedAnnexes.some((annex) => annex.name === activityAnnex.name)) {
+        mergedAnnexes.push(activityAnnex);
+      }
+    });
+
     setMaintenanceReport({
       id: formattedId,
       observation: formattedObservation,
       cost: formattedCost,
-      ReportImages: formattedImages,
-      ReportAnnexes: formattedAnnexes,
+      ReportImages: mergedImages,
+      ReportAnnexes: mergedAnnexes,
     });
   };
 
@@ -163,6 +213,7 @@ export const ModalMaintenanceDetails = ({
 
       setMaintenanceDetails(responseData);
       handleMaintenanceReport(responseData);
+
       setRefresh(!refresh);
     } finally {
       setTimeout(() => {
@@ -388,6 +439,7 @@ export const ModalMaintenanceDetails = ({
 
                   <MaintenanceHistoryActivities
                     maintenanceHistoryId={maintenanceDetails.id}
+                    activities={maintenanceDetails.activities || []}
                     showTextArea={
                       maintenanceDetails.canReport &&
                       !['completed', 'overdue'].includes(
