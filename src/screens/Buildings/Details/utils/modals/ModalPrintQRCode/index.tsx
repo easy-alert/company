@@ -174,6 +174,8 @@ export const ModalPrintQRCode = ({
   const [QRCodePNG, setQRCodePNG] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
+  const selectedImage = buildingImage || account?.Company.image;
+
   const updateLoadingState = useCallback((value: boolean) => {
     setLoading(value);
   }, []);
@@ -252,7 +254,7 @@ export const ModalPrintQRCode = ({
                 <MyDocument
                   isSquare={pdfSize !== 'A4'}
                   syndicName={selectedUser.name}
-                  companyImage={buildingImage ?? account?.Company.image!}
+                  companyImage={selectedImage}
                   buildingName={buildingName}
                   QRCodePNG={QRCodePNG}
                   setLoading={updateLoadingState}
@@ -265,7 +267,7 @@ export const ModalPrintQRCode = ({
               <MyDocument
                 isSquare={pdfSize !== 'A4'}
                 syndicName={selectedUser.name}
-                companyImage={account?.Company.image!}
+                companyImage={selectedImage}
                 buildingName={buildingName}
                 QRCodePNG={QRCodePNG}
                 setLoading={setLoading}
