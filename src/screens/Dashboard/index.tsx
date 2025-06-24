@@ -1432,13 +1432,10 @@ export const Dashboard = () => {
 
             <InfoCard
               title="Atividades por usuário"
-              totals={filteredUsers.reduce(
-                (acc, user) => acc + user.ticketCount + user.checklistCount,
-                0,
-              )}
+              totals={filteredUsers.reduce((acc, user) => acc + user.totalActivities, 0)}
               names={filteredUsers.map((user) => ({
                 name: user.name,
-                number: user.ticketCount + user.checklistCount,
+                number: user.totalActivities,
               }))}
             />
           </Style.PieWrapper>
