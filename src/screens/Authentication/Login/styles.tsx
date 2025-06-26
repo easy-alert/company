@@ -1,49 +1,117 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
+import bannerLogin from '@assets/images/bannerLogin.jpg';
 
 export const Background = styled.div`
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
   display: flex;
+  justify-content: center;
   align-items: center;
+  background-color: #2e2e2e;
+
+  background-image: url(${bannerLogin});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: auto;
+  }
+`;
+
+export const LeftSide = styled.div`
+  flex: 0.6;
+`;
+
+export const RightSide = styled.div`
+  flex: 0.4;
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: ${theme.size.sm} ${theme.size.md};
-  background-color: #3f3e3e;
+  min-height: 100vh;
+  align-items: center;
+  gap: ${theme.size.md};
+  background-color: ${theme.color.primary};
+  padding: ${theme.size.xlg} ${theme.size.lg};
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 
-  > img {
-    width: 100%;
-    max-width: 290px;
-    height: 65px;
+  h2 {
+    font-size: 18px;
+    color: ${theme.color.white};
+    text-align: center;
+    margin-bottom: ${theme.size.md};
   }
 
-  > p {
-    margin-top: ${theme.size.sm};
-    color: ${theme.color.white};
+  > img {
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: ${theme.size.md};
+  }
 
-    > a {
-      color: ${theme.color.white};
-      font-weight: 500;
-      :hover {
-        opacity: 0.7;
-      }
-    }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.size.md};
+  }
+
+  button {
+    margin-top: ${theme.size.sm};
+    background-color: white;
+    color: ${theme.color.primary};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    flex: none;
+    width: 100%;
+    height: 100%;
+    padding: ${theme.size.md};
   }
 `;
 
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${theme.color.primary};
-  border-radius: ${theme.size.xxsm};
-  gap: ${theme.size.xsm};
-  padding: ${theme.size.md};
+  gap: ${theme.size.sm};
 
-  > h2 {
-    margin-bottom: ${theme.size.sm};
-    color: ${theme.color.white};
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      color: ${theme.color.white};
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    input {
+      padding: 14px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background-color: #ffffff10;
+      color: ${theme.color.white};
+      outline: none;
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: #cccccc;
+      }
+
+      &:focus {
+        border-color: ${theme.color.white};
+        background-color: #ffffff20;
+      }
+    }
+
+    span {
+      font-size: 0.85rem;
+    }
   }
 `;
 
@@ -148,4 +216,27 @@ export const AccordionContentObservation = styled.p`
   font-weight: 600;
   font-style: italic;
   color: ${theme.color.primary};
+`;
+
+export const RecoverPassword = styled.div`
+  margin-top: 24px;
+  text-align: center;
+
+  span,
+  a {
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  a {
+    text-decoration: underline;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    margin-top: 18px;
+    padding: 0 8px;
+  }
 `;
