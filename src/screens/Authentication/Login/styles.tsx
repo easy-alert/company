@@ -168,56 +168,6 @@ export const ButtonContainer = styled.div<{
   }
 `;
 
-export const AccordionContainer = styled.div`
-  margin-top: ${theme.size.sm};
-  padding: ${theme.size.xsm};
-
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
-`;
-
-export const AccordionHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.8;
-  }
-`;
-
-export const AccordionHeaderTitle = styled.div`
-  font-weight: 600;
-
-  color: ${theme.color.primary};
-`;
-
-export const AccordionContent = styled.div<{ isOpen: boolean }>`
-  max-height: ${({ isOpen }) => (isOpen ? '150px' : '0')};
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-
-  padding: ${({ isOpen }) => (isOpen ? theme.size.xsm : '0')};
-`;
-
-export const AccordionContentText = styled.p`
-  font-weight: 600;
-  font-size: 14px;
-
-  color: ${theme.color.primary};
-
-  margin-bottom: ${theme.size.xsm};
-`;
-
-export const AccordionContentObservation = styled.p`
-  font-size: 12px;
-  font-weight: 600;
-  font-style: italic;
-  color: ${theme.color.primary};
-`;
-
 export const RecoverPassword = styled.div`
   margin-top: 24px;
   text-align: center;
