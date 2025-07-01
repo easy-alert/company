@@ -21,6 +21,7 @@ import type { IFeedItem } from '@customTypes/IFeedItem';
 import type { IPlatformVideo } from '@customTypes/IPlatformVideo';
 
 // STYLES
+import { icon } from '@assets/icons';
 import * as Style from './styles';
 
 function HomePage() {
@@ -126,7 +127,7 @@ function HomePage() {
 
           {!homeLoadings.feedLoading && feedItems.length === 0 && (
             <Style.LoadingContainer>
-              <Image img="/src/assets/icons/logoRed.svg" size="32px" />
+              <Image img={icon.logoRed} size="32px" />
               <Style.LoadingText>Nenhum item no feed</Style.LoadingText>
             </Style.LoadingContainer>
           )}
@@ -135,7 +136,7 @@ function HomePage() {
             feedItems.length > 0 &&
             feedItems.map((feedItem) => (
               <Style.InfoCard key={feedItem.id} highlight={feedItem.isPinned}>
-                <Image img="/src/assets/icons/logoRed.svg" size="32px" />
+                <Image img={icon.logoRed} size="32px" />
                 <div>
                   <strong>{feedItem.title}</strong>
                   <pre>{feedItem.description}</pre>
@@ -184,7 +185,7 @@ function HomePage() {
 
             {homeLoadings.videoLoading && (!platformVideo.url || !platformVideo.youtubeId) && (
               <Style.LoadingContainer>
-                <Image img="/src/assets/icons/logoRed.svg" size="32px" />
+                <Image img={icon.logoRed} size="32px" />
                 <Style.LoadingText>Nenhum vídeo destacado</Style.LoadingText>
               </Style.LoadingContainer>
             )}
