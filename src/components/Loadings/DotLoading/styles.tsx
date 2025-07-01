@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
-export const LoadingContainer = styled.div<{ bgColor: string }>`
+export const LoadingContainer = styled.div<{ bgColor?: string }>`
   width: 100%;
   height: 100%;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,9 +14,9 @@ export const LoadingContainer = styled.div<{ bgColor: string }>`
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    background-color: ${({ bgColor }) => bgColor};
-    color: ${({ bgColor }) => bgColor};
-    box-shadow: 9999px 0 0 -5px ${({ bgColor }) => bgColor};
+    background-color: ${({ theme, bgColor }) => bgColor || theme.color.primary};
+    color: ${({ theme, bgColor }) => bgColor || theme.color.primary};
+    box-shadow: 9999px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     animation: dotPulse 1.5s infinite linear;
     animation-delay: 0.25s;
   }
@@ -29,58 +30,58 @@ export const LoadingContainer = styled.div<{ bgColor: string }>`
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    background-color: ${({ bgColor }) => bgColor};
-    color: ${({ bgColor }) => bgColor};
+    background-color: ${({ theme, bgColor }) => bgColor || theme.color.primary};
+    color: ${({ theme, bgColor }) => bgColor || theme.color.primary};
   }
 
   .dot-pulse::before {
-    box-shadow: 9984px 0 0 -5px ${({ bgColor }) => bgColor};
+    box-shadow: 9984px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     animation: dotPulseBefore 1.5s infinite linear;
     animation-delay: 0s;
   }
 
   .dot-pulse::after {
-    box-shadow: 10014px 0 0 -5px ${({ bgColor }) => bgColor};
+    box-shadow: 10014px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     animation: dotPulseAfter 1.5s infinite linear;
     animation-delay: 0.5s;
   }
 
   @keyframes dotPulseBefore {
     0% {
-      box-shadow: 9984px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 9984px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     30% {
-      box-shadow: 9984px 0 0 2px ${({ bgColor }) => bgColor};
+      box-shadow: 9984px 0 0 2px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     60%,
     100% {
-      box-shadow: 9984px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 9984px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
   }
 
   @keyframes dotPulse {
     0% {
-      box-shadow: 9999px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 9999px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     30% {
-      box-shadow: 9999px 0 0 2px ${({ bgColor }) => bgColor};
+      box-shadow: 9999px 0 0 2px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     60%,
     100% {
-      box-shadow: 9999px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 9999px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
   }
 
   @keyframes dotPulseAfter {
     0% {
-      box-shadow: 10014px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 10014px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     30% {
-      box-shadow: 10014px 0 0 2px ${({ bgColor }) => bgColor};
+      box-shadow: 10014px 0 0 2px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
     60%,
     100% {
-      box-shadow: 10014px 0 0 -5px ${({ bgColor }) => bgColor};
+      box-shadow: 10014px 0 0 -5px ${({ theme, bgColor }) => bgColor || theme.color.primary};
     }
   }
 `;
