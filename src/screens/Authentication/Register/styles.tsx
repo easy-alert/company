@@ -101,8 +101,8 @@ export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: ${theme.size.xxsm};
-  gap: 6px; 
-  padding: ${theme.size.xsm}; 
+  gap: 6px;
+  padding: ${theme.size.xsm};
 
   a {
     color: ${theme.color.white};
