@@ -1,48 +1,93 @@
 import styled from 'styled-components';
-import { theme } from '../../../styles/theme';
+import { theme } from '@styles/theme';
+import bannerLogin from '@assets/images/bannerLogin.jpg';
 
 export const Background = styled.div`
-  min-height: 100vh;
+  width: 100%;
+  height: 100vh;
   display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
-  background-color: #3f3e3e;
-  padding: ${theme.size.xxlg} ${theme.size.md} ${theme.size.sm} ${theme.size.md};
+
+  background-image: url(${bannerLogin});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .p2 {
+    color: ${theme.color.white};
+    margin-top: 16px;
+  }
+  .p2 a {
+    color: ${theme.color.white};
+    text-decoration: underline;
+  }
 
   @media (max-width: 900px) {
+    flex-direction: column;
+    height: auto;
     padding: ${theme.size.sm} ${theme.size.md};
   }
+`;
+
+export const LeftSide = styled.div`
+  flex: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: ${theme.size.lg};
+  color: ${theme.color.black};
+
+  @media (max-width: 768px) {
+    border-radius: 12px 12px 0 0;
+    flex: none;
+    width: 100%;
+  }
+`;
+
+export const RightSide = styled.div`
+  flex: 0.4;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: ${theme.color.primary};
 
   > img {
-    width: 100%;
-    max-width: 290px;
-    height: 65px;
+    width: 70%;
+    max-width: 220px;
+    margin-bottom: ${theme.size.sm};
   }
 
-  > p {
-    margin-top: ${theme.size.sm};
-    color: ${theme.color.white};
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.size.sm};
+  }
 
-    > a {
-      color: ${theme.color.white};
-      font-weight: 500;
-      :hover {
-        opacity: 0.7;
-      }
-    }
+  button {
+    background-color: white;
+    color: ${theme.color.primary};
+  }
+
+  @media (max-width: 900px) {
+    border-radius: 0 0 12px 12px;
+    flex: none;
+    width: 100%;
+    height: auto;
+    padding: 16px 16px;
   }
 `;
 
 export const LoginContainer = styled.div`
   width: 100%;
-  max-width: 450px;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
-  margin-top: ${theme.size.xxlg};
+  margin-top: 0;
 
   @media (max-width: 900px) {
-    margin-top: ${theme.size.md};
+    margin-top: 0;
   }
 
   > form {
@@ -55,10 +100,9 @@ export const LoginContainer = styled.div`
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${theme.color.primary};
   border-radius: ${theme.size.xxsm};
-  gap: ${theme.size.xsm};
-  padding: ${theme.size.md};
+  gap: 6px;
+  padding: ${theme.size.xsm};
 
   a {
     color: ${theme.color.white};
@@ -67,7 +111,7 @@ export const InputWrapper = styled.div`
   }
 
   > h2 {
-    margin-bottom: ${theme.size.sm};
+    margin-bottom: ${theme.size.xsm};
     color: ${theme.color.white};
     white-space: nowrap;
     overflow: hidden;

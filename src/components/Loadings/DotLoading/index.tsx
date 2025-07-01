@@ -1,4 +1,3 @@
-import { theme } from '../../../styles/theme';
 import { LoadingContainer, LoadingWrapper } from './styles';
 
 interface IDotLoading {
@@ -6,7 +5,7 @@ interface IDotLoading {
   bgColor?: string;
 }
 
-export const DotLoading = ({ label, bgColor = theme.color.primary }: IDotLoading) => (
+export const DotLoading = ({ label, bgColor }: IDotLoading) => (
   <LoadingContainer bgColor={bgColor}>
     <LoadingWrapper>
       {label && <h4>{label}</h4>}
