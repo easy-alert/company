@@ -18,10 +18,7 @@ import { icon } from '@assets/icons';
 
 // UTILS
 import { applyMask } from '@utils/functions';
-import { 
-  requestCreateCompanyAndOWner, 
-  schemaModalCreateCompanyAndOwner 
-} from './functions';
+import { requestCreateCompanyAndOWner, schemaModalCreateCompanyAndOwner } from './functions';
 
 // STYLES
 import * as Style from './styles';
