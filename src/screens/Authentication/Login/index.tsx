@@ -123,7 +123,7 @@ export const Login = () => {
                 />
               </Style.InputWrapper>
               <Button
-                label="Acesse sua connta"
+                label="Acesse sua conta"
                 type="submit"
                 loading={onQuery}
                 data-testid="login-button"
