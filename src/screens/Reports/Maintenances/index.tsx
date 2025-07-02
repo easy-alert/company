@@ -181,7 +181,7 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}&search=${filterforRequest.search}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
@@ -298,8 +298,8 @@ export const MaintenanceReports = () => {
                   maintenanceStatusNames: statusForFilter.map((e) => e.name),
                   endDate: values.endDate,
                   startDate: values.startDate,
-                  filterBy: values.filterBy,
                   search: values.search,
+                  filterBy: values.filterBy,
                 },
               });
             }}
@@ -554,9 +554,7 @@ export const MaintenanceReports = () => {
                         label="Exportar"
                         icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
                         disabled={maintenances.length === 0 || onPdfQuery}
-                        onClick={() => {
-                          requestPdf();
-                        }}
+                        onClick={() => requestPdf()}
                       />
 
                       <Button label="Filtrar" type="submit" disable={onQuery} bgColor="primary" />
