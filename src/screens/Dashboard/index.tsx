@@ -1059,8 +1059,6 @@ export const Dashboard = () => {
       <h2>Dashboard</h2>
 
       <Style.FilterSection>
-        <h5>Filtros</h5>
-
         <Formik
           initialValues={{
             startDate: new Date(new Date().setMonth(new Date().getMonth() - 3))
