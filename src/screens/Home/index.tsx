@@ -112,7 +112,7 @@ function HomePage() {
     <Style.Container>
       <Style.ImageContainer>
         <img src={account?.Company.image} alt="Logo" />
-        <h2 data-testid="page-home">Bem-vindo(a), {account?.User.name}!</h2>
+        <h2 data-testid="page-home">Olá {account?.User.name}!</h2>
       </Style.ImageContainer>
 
       <Style.MainContent>
@@ -161,7 +161,7 @@ function HomePage() {
               />
               <div>
                 <strong>
-                  Usuário{' '}
+                  Empresa{' '}
                   {
                     handleRankMedal(companyCompletedMaintenancesRank.completedMaintenanceScoreRank)
                       .medal
@@ -171,7 +171,7 @@ function HomePage() {
                   Top {companyCompletedMaintenancesRank.completedMaintenanceScoreRank} Ranking
                   Brasil
                 </span>
-                <p>usuários que mais fazem manutenção</p>
+                <p>empresas que mais fazem manutenção</p>
               </div>
             </Style.RankingCard>
           )}
