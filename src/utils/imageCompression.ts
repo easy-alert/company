@@ -6,35 +6,58 @@ const compressibleTypes = ['image/jpeg', 'image/png', 'image/webp'];
 const maxSizeMB = import.meta.env.VITE_MAX_IMAGE_SIZE_MB;
 const maxWidthOrHeight = import.meta.env.VITE_MAX_DIMENSION;
 
-export const compressImageIfNeeded = async (file: File): Promise<File> => {
+// Type for browser-image-compression options (not exported by the lib)
+type ImageCompressionOptions = {
+  maxSizeMB?: number;
+  maxWidthOrHeight?: number;
+  useWebWorker?: boolean;
+  fileType?: string;
+  webpQuality?: number;
+  initialQuality?: number;
+  preserveExif?: boolean;
+  maxIteration?: number;
+  exifOrientation?: number;
+  [key: string]: any;
+};
+
+
+export const compressImageIfNeeded = async (
+  file: File,
+  optionsOverride: Partial<ImageCompressionOptions> = {},
+): Promise<File> => {
   // Skip unsupported types including GIF (preserves animations)
   if (!compressibleTypes.includes(file.type)) return file;
 
-  const options = {
-    maxSizeMB: parseFloat(maxSizeMB || '1'), // Target size
-    maxWidthOrHeight: parseInt(maxWidthOrHeight || '1920', 10), // Limits dimensions
-    useWebWorker: true, // Faster compression
-    fileType: 'image/webp', // Convert to modern format
-    webpQuality: 80, // 80% quality (ideal quality/size tradeoff)
-    initialQuality: 0.85, // Higher initial quality for heavy compression
-    preserveExif: false, // Strip metadata
-    maxIteration: 15, // Faster compression cycles
-    exifOrientation: 1, // Maintain correct orientation
+  // If the file is webp, convert to png (or jpeg if you prefer)
+  const shouldConvertWebp = file.type === 'image/webp';
+  const outputType = shouldConvertWebp ? 'image/png' : (optionsOverride.fileType || file.type);
+
+  const options: ImageCompressionOptions = {
+    maxSizeMB: parseFloat(maxSizeMB || '1'),
+    maxWidthOrHeight: parseInt(maxWidthOrHeight || '1920', 10),
+    useWebWorker: true,
+    fileType: outputType,
+    webpQuality: 80,
+    initialQuality: 0.85,
+    preserveExif: false,
+    maxIteration: 15,
+    exifOrientation: 1,
+    ...optionsOverride,
   };
 
   try {
     const compressed = await imageCompression(file, options);
-
-    // Fallback to original if compression yields larger file
     if (compressed.size < file.size) {
-      // Ensure the compressed file keeps the original name and type
-      return new File([compressed], file.name, { type: compressed.type });
+      // Use the correct extension for the new file type
+      let newName = file.name;
+      if (shouldConvertWebp) {
+        newName = file.name.replace(/\.webp$/i, '.png');
+      }
+      return new File([compressed], newName, { type: compressed.type });
     }
-
     return file;
   } catch (error) {
     console.error('Compression error:', error);
-
-    return file; // Fallback to original
+    return file;
   }
 };
