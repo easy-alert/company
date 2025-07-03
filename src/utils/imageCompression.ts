@@ -20,7 +20,6 @@ type ImageCompressionOptions = {
   [key: string]: any;
 };
 
-
 export const compressImageIfNeeded = async (
   file: File,
   optionsOverride: Partial<ImageCompressionOptions> = {},
@@ -30,7 +29,7 @@ export const compressImageIfNeeded = async (
 
   // If the file is webp, convert to png (or jpeg if you prefer)
   const shouldConvertWebp = file.type === 'image/webp';
-  const outputType = shouldConvertWebp ? 'image/png' : (optionsOverride.fileType || file.type);
+  const outputType = shouldConvertWebp ? 'image/png' : optionsOverride.fileType || file.type;
 
   const options: ImageCompressionOptions = {
     maxSizeMB: parseFloat(maxSizeMB || '1'),
