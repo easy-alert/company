@@ -21,6 +21,7 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Select } from '@components/Inputs/Select';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { InProgressTag } from '@components/InProgressTag';
+import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
 import { EventTag } from '@components/EventTag';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
@@ -36,6 +37,7 @@ import IconCsvLogo from '@assets/icons/IconCsvLogo';
 import IconPdfLogo from '@assets/icons/IconPdfLogo';
 
 // GLOBAL TYPES
+import { MAINTENANCE_TYPE } from '@customTypes/TMaintenanceType';
 import type { IReportPdf } from '@customTypes/IReportPdf';
 import type { TModalNames } from '@customTypes/TModalNames';
 
@@ -106,10 +108,9 @@ export const MaintenanceReports = () => {
   });
 
   const [buildingsForFilter, setBuildingsForFilter] = useState<IFilterData[]>([]);
-
   const [categoriesForFilter, setCategoriesForFilter] = useState<IFilterData[]>([]);
-
   const [statusForFilter, setStatusForFilter] = useState<IFilterData[]>([]);
+  const [typeForFilter, setTypeForFilter] = useState<string[]>([]);
 
   const [reportView, setReportView] = useState<'reports' | 'pdfs'>('reports');
 
@@ -426,6 +427,43 @@ export const MaintenanceReports = () => {
                       </option>
                     ))}
                   </Select>
+
+                  <FormikSelect
+                    id="maintenance-type-select"
+                    label="Tipo de manutenção"
+                    selectPlaceholderValue={typeForFilter.length > 0 ? ' ' : ''}
+                    value=""
+                    disabled={loading}
+                    onChange={(e) => {
+                      const selectedType = e.target.value;
+
+                      if (selectedType) {
+                        setTypeForFilter((prevState) => [...prevState, selectedType]);
+                      }
+
+                      if (selectedType === 'all') {
+                        setTypeForFilter([]);
+                      }
+                    }}
+                  >
+                    <option value="" disabled hidden>
+                      Selecione
+                    </option>
+
+                    <option value="all" disabled={typeForFilter.length === 0}>
+                      Todos
+                    </option>
+
+                    {MAINTENANCE_TYPE.map((maintenanceType) => (
+                      <option
+                        key={maintenanceType.value}
+                        value={maintenanceType.value}
+                        disabled={typeForFilter.includes(maintenanceType.value)}
+                      >
+                        {capitalizeFirstLetter(maintenanceType.label)}
+                      </option>
+                    ))}
+                  </FormikSelect>
                 </s.FiltersGrid>
 
                 <s.FiltersSecondGrid>
@@ -529,6 +567,36 @@ export const MaintenanceReports = () => {
                         />
                       </s.Tag>
                     ))}
+
+                    {typeForFilter.length === 0 ? (
+                      <ListTag
+                        label="Todos os tipos"
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                      />
+                    ) : (
+                      typeForFilter.map((type, i: number) => (
+                        <ListTag
+                          key={type}
+                          label={capitalizeFirstLetter(
+                            MAINTENANCE_TYPE.find((mt) => mt.value === type)?.label || '',
+                          )}
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
+                          onClick={() => {
+                            setTypeForFilter((prevState) => {
+                              const newState = [...prevState];
+                              newState.splice(i, 1);
+                              return newState;
+                            });
+                          }}
+                        />
+                      ))
+                    )}
                   </s.TagWrapper>
                   <s.ButtonContainer>
                     <s.ButtonWrapper>
