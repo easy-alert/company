@@ -103,6 +103,7 @@ export const MaintenanceReports = () => {
     buildingIds: [],
     buildingNames: [],
     maintenanceStatusNames: [],
+    type: [],
     search: '',
     filterBy: 'notificationDate',
   });
@@ -182,7 +183,7 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}&search=${filterforRequest.search}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}&search=${filterforRequest.search}&type=${filterforRequest.type.join(',')}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
@@ -282,6 +283,7 @@ export const MaintenanceReports = () => {
                 maintenanceStatusNames: statusForFilter.map((e) => e.name),
                 search: values.search,
                 filterBy: values.filterBy,
+                type: typeForFilter,
                 endDate: values.endDate,
                 startDate: values.startDate,
               });
@@ -301,6 +303,7 @@ export const MaintenanceReports = () => {
                   startDate: values.startDate,
                   search: values.search,
                   filterBy: values.filterBy,
+                  type: typeForFilter,
                 },
               });
             }}

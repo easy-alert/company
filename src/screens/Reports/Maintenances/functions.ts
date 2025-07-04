@@ -17,7 +17,7 @@ export const requestReportsData = async ({
   setOnQuery(true);
   setMaintenances([]);
   await Api.get(
-    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}&buildingNames=${filters.buildingNames}&maintenanceStatusNames=${filters.maintenanceStatusNames}&filterBy=${filters.filterBy}&search=${filters.search}`,
+    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}&buildingNames=${filters.buildingNames}&maintenanceStatusNames=${filters.maintenanceStatusNames}&filterBy=${filters.filterBy}&search=${filters.search}&type=${filters.type}`,
   )
     .then(async (res) => {
       setMaintenances(res.data.maintenances);
