@@ -183,7 +183,15 @@ export const MaintenanceReports = () => {
     setOnPdfQuery(true);
 
     await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${filterforRequest.maintenanceStatusIds}&buildingIds=${filterforRequest.buildingIds}&categoryNames=${filterforRequest.categoryNames}&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${filterforRequest.buildingNames}&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${filterforRequest.filterBy}&search=${filterforRequest.search}&type=${filterforRequest.type.join(',')}`,
+      `/buildings/reports/create/pdf?maintenanceStatusIds=${
+        filterforRequest.maintenanceStatusIds
+      }&buildingIds=${filterforRequest.buildingIds}&categoryNames=${
+        filterforRequest.categoryNames
+      }&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${
+        filterforRequest.buildingNames
+      }&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${
+        filterforRequest.filterBy
+      }&search=${filterforRequest.search}&type=${filterforRequest.type.join(',')}`,
     )
       .then((res) => {
         toast.success(res.data.ServerMessage.message);
