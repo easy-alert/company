@@ -19,12 +19,11 @@ import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
 import { Button } from '@components/Buttons/Button';
 import { IconButton } from '@components/Buttons/IconButton';
 import { ListTag } from '@components/ListTag';
-import { FormikSelect } from '@components/Form/FormikSelect';
 import { useMaintenanceStatusForSelect } from '@hooks/useMaintenanceStatusForSelect';
 import { EventTag } from '@components/EventTag';
 import { FutureMaintenanceTag } from '@components/FutureMaintenanceTag';
+import { FormikSelect } from '@components/Form/FormikSelect';
 import { FormikInput } from '@components/Form/FormikInput';
-import { Select } from '@components/Inputs/Select';
 import { Skeleton } from '@components/Skeleton';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
@@ -43,6 +42,7 @@ import IconBlock from '@assets/icons/IconBlock';
 import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
+import { MAINTENANCE_TYPE } from '@customTypes/TMaintenanceType';
 import type { TModalNames } from '@customTypes/TModalNames';
 
 // STYLES
@@ -57,6 +57,7 @@ export interface IMaintenanceFilter {
   categories: string[];
   users: string[];
   priorityName: string;
+  type: string[];
   search?: string;
   startDate?: string;
   endDate?: string;
@@ -108,6 +109,7 @@ export const MaintenancesKanban = () => {
     categories: queryCategoryId ? [queryCategoryId] : [],
     users: [],
     priorityName: '',
+    type: [],
     search: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
@@ -182,6 +184,7 @@ export const MaintenancesKanban = () => {
       categories: [],
       users: [],
       priorityName: '',
+      type: [],
       search: '',
       startDate: new Date(new Date().setDate(new Date().getDate() - 30))
         .toISOString()
@@ -309,6 +312,7 @@ export const MaintenancesKanban = () => {
                       label="Edificação"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('buildings', e.target.value);
 
@@ -344,6 +348,7 @@ export const MaintenancesKanban = () => {
                       label="Usuário"
                       selectPlaceholderValue=" "
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('users', e.target.value);
 
@@ -379,6 +384,7 @@ export const MaintenancesKanban = () => {
                       label="Status"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('status', e.target.value);
 
@@ -414,6 +420,7 @@ export const MaintenancesKanban = () => {
                       label="Categoria"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('categories', e.target.value);
 
@@ -444,12 +451,13 @@ export const MaintenancesKanban = () => {
                       ))}
                     </FormikSelect>
 
-                    <Select
-                      arrowColor="primary"
-                      disabled={loading || !showPriority}
-                      selectPlaceholderValue={' '}
+                    <FormikSelect
+                      id="priority-select"
+                      name="priorityName"
                       label="Prioridade"
+                      disabled={loading || !showPriority}
                       value={filter.priorityName}
+                      selectPlaceholderValue={' '}
                       onChange={(e) => {
                         setFilter((prevState) => {
                           const newState = { ...prevState };
@@ -462,13 +470,50 @@ export const MaintenancesKanban = () => {
                       <option value="low">Baixa</option>
                       <option value="medium">Média</option>
                       <option value="high">Alta</option>
-                    </Select>
+                    </FormikSelect>
+
+                    <FormikSelect
+                      id="maintenance-type-select"
+                      label="Tipo de manutenção"
+                      selectPlaceholderValue={' '}
+                      value=""
+                      disabled={loading}
+                      onChange={(e) => {
+                        handleFilterChange('type', e.target.value);
+
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            type: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
+                      </option>
+
+                      <option value="all" disabled={filter.type?.length === 0}>
+                        Todas
+                      </option>
+
+                      {MAINTENANCE_TYPE.map((maintenanceType) => (
+                        <option
+                          key={maintenanceType.value}
+                          value={maintenanceType.value}
+                          disabled={filter.type?.includes(maintenanceType.value)}
+                        >
+                          {capitalizeFirstLetter(maintenanceType.label)}
+                        </option>
+                      ))}
+                    </FormikSelect>
 
                     <FormikInput
                       name="search"
                       label="Buscar"
                       placeholder="Procurar por algum termo"
                       value={filter.search}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
 
@@ -478,6 +523,7 @@ export const MaintenancesKanban = () => {
                       name="startDate"
                       type="date"
                       value={filter.startDate}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('startDate', e.target.value)}
                     />
 
@@ -487,6 +533,7 @@ export const MaintenancesKanban = () => {
                       name="endDate"
                       type="date"
                       value={filter.endDate}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('endDate', e.target.value)}
                     />
                   </Style.FilterWrapper>
@@ -601,6 +648,35 @@ export const MaintenancesKanban = () => {
                               setFilter((prevState) => ({
                                 ...prevState,
                                 status: prevState.categories?.filter((c) => c !== category),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
+
+                      {filter.type?.length === 0 ? (
+                        <ListTag
+                          label="Todos os tipos"
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
+                        />
+                      ) : (
+                        filter.type?.map((type) => (
+                          <ListTag
+                            key={type}
+                            label={capitalizeFirstLetter(
+                              MAINTENANCE_TYPE.find((mt) => mt.value === type)?.label || '',
+                            )}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                type: prevState.type?.filter((t) => t !== type),
                               }));
                             }}
                           />

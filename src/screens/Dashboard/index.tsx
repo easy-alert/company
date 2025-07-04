@@ -346,10 +346,10 @@ export const Dashboard = () => {
         ...dataFilter,
         status: [],
         users: [],
+        type: [],
         priorityName: '',
         search: '',
       };
-      console.log('🚀 ~ handleGetKanban ~ kanbanFilter:', kanbanFilter);
 
       const response = await getMaintenancesKanban({
         userId: '',
