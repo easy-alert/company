@@ -17,6 +17,7 @@ export async function getMaintenancesKanban({ userId, filter }: IGetMaintenances
     category: filter?.categories?.length === 0 ? '' : filter?.categories?.join(','),
     user: filter?.users?.length === 0 ? '' : filter?.users?.join(','),
     priorityName: filter?.priorityName ?? '',
+    type: filter?.type?.length === 0 ? '' : filter?.type?.join(','),
     search: filter?.search ?? '',
     startDate: filter?.startDate,
     endDate: filter?.endDate,
