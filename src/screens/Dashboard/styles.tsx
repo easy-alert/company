@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding-top: ${({ theme }) => theme.size.sm};
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.size.md};
+  gap: ${({ theme }) => theme.size.csm2};
 
   .spacing-select {
     margin-top: 16px;
@@ -19,7 +19,6 @@ export const FilterWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: ${({ theme }) => theme.size.xsm};
-  margin-top: ${({ theme }) => theme.size.sm};
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr 1fr;
@@ -33,8 +32,9 @@ export const FilterWrapper = styled.div`
 export const Tags = styled.div`
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xsm};
+  gap: ${({ theme }) => theme.size.xxsm};
   flex-wrap: wrap;
+  margin-top: ${({ theme }) => theme.size.xxsm};
 
   grid-area: 2 / 1 / 2 / 4;
 
@@ -55,7 +55,7 @@ export const ButtonWrapper = styled.div`
   justify-content: flex-end;
   gap: ${({ theme }) => theme.size.sm};
   grid-column: span 5;
-  margin-top: ${({ theme }) => theme.size.xsm};
+  margin-top: ${({ theme }) => theme.size.xxsm};
 
   @media (max-width: 1100px) {
     grid-column: span 2;
@@ -77,6 +77,8 @@ export const ChartsWrapper = styled.div`
   grid-template-columns: 1fr 3.1fr;
 
   gap: ${({ theme }) => theme.size.sm};
+  align-items: start;
+  height: fit-content;
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
@@ -87,6 +89,8 @@ export const PieWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: ${({ theme }) => theme.size.sm};
+  align-items: start;
+  height: fit-content;
 
   @media (max-width: 700px) {
     grid-template-columns: 1fr;
@@ -103,6 +107,18 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.size.sm};
+  max-height: 100%;
+`;
+
+export const TimelineCard = styled.div`
+  background-color: ${({ theme }) => theme.color.white};
+  padding: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.size.sm};
+  height: 556px;
 `;
 
 interface ChartWrapperXProps {
@@ -147,10 +163,9 @@ export const ChartWrapperX = styled.div<ChartWrapperXProps>`
 `;
 
 export const ChartContent = styled.div`
-  height: 650px;
+  flex: 1;
   width: 100%;
   position: relative;
-
   overflow-y: auto;
   overflow-x: hidden;
 
