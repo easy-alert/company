@@ -347,7 +347,8 @@ export const Dashboard = () => {
         status: [],
         users: [],
         type: [],
-        priorityName: '',
+        priorityNames: [],
+        types: [],
         search: '',
       };
 
