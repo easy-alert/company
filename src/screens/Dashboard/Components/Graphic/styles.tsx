@@ -12,12 +12,13 @@ export const Card = styled.div`
   border-radius: ${({ theme }) => theme.size.xxsm};
 
   overflow-x: hidden;
+  max-height: 320px;
 `;
 
 export const ChartContent = styled.div`
-  height: 100%;
   width: 100%;
-  min-height: 280px;
+  min-height: 150px;
+  max-height: 260px;
   position: relative;
 
   .apexcharts-canvas {
@@ -36,7 +37,7 @@ export const NoDataWrapper = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-height: 280px;
+  min-height: 20px;
   opacity: 0.7;
 `;
 
