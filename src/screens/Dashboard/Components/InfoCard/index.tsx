@@ -18,7 +18,10 @@ export const InfoCard = ({ title, totals, names, categories }: InfoCardProps) =>
 
   return (
     <Style.Card>
-      <h5>{title}</h5>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+        <h5>{title}</h5>
+        {categories && categories.length > 0 && <h5>(Categorias) </h5>}
+      </div>
 
       {noData ? (
         <Style.EmptyMessage>Sem dados</Style.EmptyMessage>
@@ -26,7 +29,7 @@ export const InfoCard = ({ title, totals, names, categories }: InfoCardProps) =>
         <>
           <Style.Container>
             {!categories && (
-              <Style.InfoItem>
+              <Style.InfoItem style={{ marginBottom: '12px' }}>
                 <h2>Totais:</h2>
                 <h2>{totals}</h2>
               </Style.InfoItem>
@@ -36,8 +39,6 @@ export const InfoCard = ({ title, totals, names, categories }: InfoCardProps) =>
           <Style.Container>
             {names && names.length > 0 && (
               <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                <h2>Nomes:</h2>
-
                 <Style.NameScrollContainer>
                   {names.map((item) => (
                     <Style.NameItem key={item.name}>
@@ -51,8 +52,6 @@ export const InfoCard = ({ title, totals, names, categories }: InfoCardProps) =>
 
             {categories && categories.length > 0 && (
               <Style.InfoItem style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                <h2>Categorias:</h2>
-
                 <Style.CategoryScrollContainer>
                   {categories.map((item) => (
                     <Style.CategoryItem key={item.category}>
