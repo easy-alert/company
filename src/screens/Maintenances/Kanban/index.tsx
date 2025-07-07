@@ -480,9 +480,9 @@ export const MaintenancesKanban = () => {
 
                       {PRIORITY_NAME.map((priority) => (
                         <option
-                          key={priority.value}
-                          value={priority.value}
-                          disabled={filter.priorityNames?.includes(priority.value)}
+                          key={priority.name}
+                          value={priority.name}
+                          disabled={filter.priorityNames?.includes(priority.name)}
                         >
                           {capitalizeFirstLetter(priority.label)}
                         </option>
@@ -713,7 +713,7 @@ export const MaintenancesKanban = () => {
                           <ListTag
                             key={priority}
                             label={capitalizeFirstLetter(
-                              PRIORITY_NAME.find((p) => p.value === priority)?.label || '',
+                              PRIORITY_NAME.find((p) => p.name === priority)?.label || '',
                             )}
                             color="white"
                             backgroundColor="primaryM"
