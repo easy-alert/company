@@ -40,12 +40,13 @@ import UserResponsible from '@components/UserResponsible';
 import { icon } from '@assets/icons';
 
 // GLOBAL FUNCTIONS
-import { applyMask, dateFormatter, uploadManyFiles } from '@utils/functions';
+import { applyMask, capitalizeFirstLetter, dateFormatter, uploadManyFiles } from '@utils/functions';
 
 // GLOBAL THEMES
 import { theme } from '@styles/theme';
 
 // TYPES
+import { PRIORITY_NAME } from '@customTypes/TPriorityName';
 import type { IMaintenance } from '@customTypes/IMaintenance';
 import type { IMaintenanceReport } from '@customTypes/IMaintenanceReport';
 import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
@@ -71,8 +72,6 @@ export const ModalMaintenanceReportSend = ({
   const { hasPermission: hasUpdatePermission } = useHasPermission({
     permToCheck: ['maintenances:update'],
   });
-
-  const { maintenancePriorities } = useMaintenancePriorities();
 
   const [maintenance, setMaintenance] = useState<IMaintenance>({
     Building: {
@@ -488,8 +487,8 @@ export const ModalMaintenanceReportSend = ({
                       onChange={(e) => {
                         setMaintenance((prevState) => {
                           const newState = { ...prevState };
-                          newState.priorityName = e.target.value;
-
+                          newState.priorityName = e.target
+                            .value as (typeof PRIORITY_NAME)[number]['name'];
                           return newState;
                         });
                       }}
@@ -498,9 +497,9 @@ export const ModalMaintenanceReportSend = ({
                         Selecione uma prioridade
                       </option>
 
-                      {maintenancePriorities.map((priority) => (
+                      {PRIORITY_NAME.map((priority) => (
                         <option key={priority.name} value={priority.name}>
-                          {priority.label}
+                          {capitalizeFirstLetter(priority.label)}
                         </option>
                       ))}
                     </Select>
