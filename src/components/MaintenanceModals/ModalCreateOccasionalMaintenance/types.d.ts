@@ -3,6 +3,8 @@ import type { IAnnexesAndImages } from '@customTypes/IAnnexesAndImages';
 import type { IPriority } from '@customTypes/IPriority';
 import type { IBuildingForSelect } from '@customTypes/IBuildingForSelect';
 import type { IUser } from '@customTypes/IUser';
+import type { TPriorityName } from '@customTypes/TPriorityName';
+import type { TResponsible } from '@customTypes/IResponsible';
 
 export type IOccasionalMaintenanceType = 'pending' | 'finished' | '';
 
@@ -11,12 +13,12 @@ export interface IOccasionalMaintenanceData {
 
   element: string;
   activity: string;
-  responsible: string;
+  responsible: TResponsible;
   executionDate: string;
 
   inProgress: boolean;
 
-  priorityName: string;
+  priorityName: TPriorityName;
 
   usersId?: string[];
 
@@ -78,7 +80,6 @@ export interface IHandleSetOccasionalMaintenanceData {
 }
 
 export interface IModalSecondView {
-  errors: Record<string, string>;
   buildingsForSelect: IBuildingForSelect[];
   usersForSelect: IUser[];
   categoriesData: ICategory[];
