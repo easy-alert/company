@@ -6,9 +6,15 @@ import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
 import { Input } from '@components/Inputs/Input';
 import { CRUDInput } from '@components/Inputs/CRUDInput';
+import { ReactSelectComponent } from '@components/ReactSelectComponent';
+
+// GLOBAL UTILS
+import { capitalizeFirstLetter } from '@utils/functions';
+
+// GLOBAL TYPES
+import { RESPONSIBLE } from '@customTypes/IResponsible';
 
 // STYLES
-import { ReactSelectComponent } from '@components/ReactSelectComponent';
 import * as Style from '../styles';
 
 // TYPES
@@ -26,12 +32,6 @@ const ModalSecondView = ({
   handleOccasionalMaintenanceDataChange,
   handleCreateOccasionalMaintenance,
 }: IModalSecondView) => {
-  const responsibleArray = [
-    { id: '1', name: 'Equipe de manutenção local' },
-    { id: '2', name: 'Equipe capacitada' },
-    { id: '3', name: 'Equipe Especializada' },
-  ];
-
   const today = format(endOfDay(new Date()), 'yyyy-MM-dd');
   const isAfterToday = isAfter(occasionalMaintenanceData.executionDate, today);
 
@@ -63,9 +63,11 @@ const ModalSecondView = ({
       {occasionalMaintenanceData.buildingId && (
         <>
           <CRUDInput
+            id="categoryData"
+            name="categoryData"
             arrowColor="primary"
             label="Categoria *"
-            value={occasionalMaintenanceData.categoryData.name}
+            value={occasionalMaintenanceData.categoryData.name || ''}
             select={{
               createLabel: 'Criar categoria',
               options: categoriesData.map((category) => ({
@@ -143,13 +145,9 @@ const ModalSecondView = ({
               })
             }
           >
-            <option value="" disabled>
-              Selecione
-            </option>
-
-            {responsibleArray.map((responsible) => (
-              <option key={responsible.id} value={responsible.name}>
-                {responsible.name}
+            {RESPONSIBLE.map((responsible) => (
+              <option key={responsible.label} value={responsible.label}>
+                {capitalizeFirstLetter(responsible.label)}
               </option>
             ))}
           </Select>
@@ -162,6 +160,12 @@ const ModalSecondView = ({
             placeholder="Selecione um ou mais usuários"
             label="Usuário(s) *"
             options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
+            value={occasionalMaintenanceData.usersId
+              ?.map((userId) => {
+                const user = usersForSelect.find(({ id }) => id === userId);
+                return user ? { label: user.name, value: user.id } : null;
+              })
+              .filter(Boolean)}
             onChange={(data) => {
               const usersId = data.map(({ value }: { value: string }) => value);
 
