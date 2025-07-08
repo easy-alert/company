@@ -238,7 +238,6 @@ export const ModalCreateOccasionalMaintenance = ({
     )?.name;
     if (!selectedBuildingName) return;
 
-
     const buildingWords = normalizeString(selectedBuildingName).split(/\s+/).filter(Boolean);
 
     let bestCategory: ICategory | null = null;
