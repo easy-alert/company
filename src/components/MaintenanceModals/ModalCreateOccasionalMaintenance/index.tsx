@@ -238,19 +238,34 @@ export const ModalCreateOccasionalMaintenance = ({
     )?.name;
     if (!selectedBuildingName) return;
 
+
     const buildingWords = normalizeString(selectedBuildingName).split(/\s+/).filter(Boolean);
-    const categoryInBuilding = categoriesData.find((category) => {
-      if (!category.name) return false;
+
+    let bestCategory: ICategory | null = null;
+    let bestScore = 0;
+
+    categoriesData.forEach((category) => {
+      if (!category.name) return;
+
       const normalizedCategory = normalizeString(category.name);
-      return buildingWords.some((word) => normalizedCategory.includes(word));
+      const categoryWords = normalizedCategory.split(/\s+/).filter(Boolean);
+      const score = buildingWords.reduce(
+        (acc, word) => acc + (categoryWords.includes(word) ? 1 : 0),
+        0,
+      );
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestCategory = category;
+      }
     });
 
-    if (categoryInBuilding) {
+    if (bestCategory && bestScore > 0) {
       setOccasionalMaintenanceData((prevState) => ({
         ...prevState,
         categoryData: {
-          id: categoryInBuilding.id || '',
-          name: categoryInBuilding.name || '',
+          id: (bestCategory as ICategory).id || '',
+          name: (bestCategory as ICategory).name || '',
         },
       }));
     } else {
