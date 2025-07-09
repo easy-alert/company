@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 // CONTEXTS
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+import { useUsersForSelect } from '@hooks/useUsersForSelect';
 
 // SERVICES
 import { getBuildingsAndCategories } from '@services/apis/getBuildingsAndCategories';
@@ -14,6 +15,8 @@ import { Modal } from '@components/Modal';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
+import { normalizeString } from '@utils/normalizeString';
+import { convertToFormikDate } from '@utils/functions';
 
 // GLOBAL TYPES
 import type { IBuilding } from '@customTypes/IBuilding';
@@ -21,7 +24,6 @@ import type { ICategory } from '@customTypes/ICategory';
 import type { IPriority } from '@customTypes/IPriority';
 
 // COMPONENTS
-import { useUsersForSelect } from '@hooks/useUsersForSelect';
 import ModalLoading from './ModalCreateOccasionalMaintenanceViews/ModalLoading';
 import ModalSecondView from './ModalCreateOccasionalMaintenanceViews/ModalSecondView';
 import ModalThirdView from './ModalCreateOccasionalMaintenanceViews/ModalThirdView';
@@ -55,10 +57,10 @@ export const ModalCreateOccasionalMaintenance = ({
 
       element: '',
       activity: checklistActivity || '',
-      responsible: '',
-      executionDate: '',
+      responsible: 'Equipe de manutenção local',
+      executionDate: convertToFormikDate(new Date()),
       inProgress: false,
-      priorityName: '',
+      priorityName: 'medium',
 
       usersId: [],
 
@@ -84,38 +86,6 @@ export const ModalCreateOccasionalMaintenance = ({
 
   const [view, setView] = useState<number>(2);
   const [loading, setLoading] = useState<boolean>(true);
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validateFields = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!occasionalMaintenanceData.buildingId) {
-      newErrors.buildingId = 'A edificação deve ser preenchida.';
-    }
-    if (!occasionalMaintenanceData.categoryData.name) {
-      newErrors.category = 'A categoria deve ser preenchida.';
-    }
-    if (!occasionalMaintenanceData.element) {
-      newErrors.element = 'O elemento deve ser preenchido.';
-    }
-    if (!occasionalMaintenanceData.activity) {
-      newErrors.activity = 'A atividade deve ser preenchida.';
-    }
-    if (!occasionalMaintenanceData.responsible) {
-      newErrors.responsible = 'O responsável deve ser preenchido.';
-    }
-    if (!occasionalMaintenanceData.priorityName) {
-      newErrors.priority = 'A prioridade deve ser preenchida.';
-    }
-    if (!occasionalMaintenanceData.executionDate) {
-      newErrors.executionDate = 'A data de execução deve ser preenchida.';
-    }
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSetView = (viewSate: number) => {
     setView(viewSate);
@@ -164,10 +134,6 @@ export const ModalCreateOccasionalMaintenance = ({
     occasionalMaintenanceType,
     inProgress = false,
   }: IHandleCreateOccasionalMaintenance) => {
-    // if (!validateFields()) {
-    //   return;
-    // }
-
     setLoading(true);
 
     const reportDataBody =
@@ -237,6 +203,81 @@ export const ModalCreateOccasionalMaintenance = ({
     handleGetBuildingsAndCategories();
   }, []);
 
+  useEffect(() => {
+    if (externalBuildingId) {
+      setOccasionalMaintenanceData((prevState) => ({
+        ...prevState,
+        buildingId: externalBuildingId,
+      }));
+    }
+  }, [externalBuildingId]);
+
+  useEffect(() => {
+    if (occasionalMaintenanceData.buildingId && usersForSelect.length > 0) {
+      const userInBuilding = usersForSelect.some((user) => user.id === account.User.id);
+
+      if (userInBuilding) {
+        setOccasionalMaintenanceData((prevState) => ({
+          ...prevState,
+          usersId: [account.User.id],
+        }));
+      } else {
+        setOccasionalMaintenanceData((prevState) => ({
+          ...prevState,
+          usersId: [],
+        }));
+      }
+    }
+  }, [occasionalMaintenanceData.buildingId, usersForSelect, account.User.id]);
+
+  useEffect(() => {
+    if (!occasionalMaintenanceData.buildingId) return;
+
+    const selectedBuildingName = buildingsForSelect.find(
+      (building: IBuilding) => building.id === occasionalMaintenanceData.buildingId,
+    )?.name;
+    if (!selectedBuildingName) return;
+
+    const buildingWords = normalizeString(selectedBuildingName).split(/\s+/).filter(Boolean);
+
+    let bestCategory: ICategory | null = null;
+    let bestScore = 0;
+
+    categoriesData.forEach((category) => {
+      if (!category.name) return;
+
+      const normalizedCategory = normalizeString(category.name);
+      const categoryWords = normalizedCategory.split(/\s+/).filter(Boolean);
+      const score = buildingWords.reduce(
+        (acc, word) => acc + (categoryWords.includes(word) ? 1 : 0),
+        0,
+      );
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestCategory = category;
+      }
+    });
+
+    if (bestCategory && bestScore > 0) {
+      setOccasionalMaintenanceData((prevState) => ({
+        ...prevState,
+        categoryData: {
+          id: (bestCategory as ICategory).id || '',
+          name: (bestCategory as ICategory).name || '',
+        },
+      }));
+    } else {
+      setOccasionalMaintenanceData((prevState) => ({
+        ...prevState,
+        categoryData: {
+          id: '',
+          name: '',
+        },
+      }));
+    }
+  }, [buildingsForSelect, categoriesData, occasionalMaintenanceData.buildingId]);
+
   if (!handleModalCreateOccasionalMaintenance) return null;
 
   return (
@@ -254,7 +295,6 @@ export const ModalCreateOccasionalMaintenance = ({
               checklistActivity={checklistActivity}
               externalBuildingId={externalBuildingId}
               occasionalMaintenanceData={occasionalMaintenanceData}
-              errors={errors}
               handleSetView={handleSetView}
               handleOccasionalMaintenanceDataChange={handleOccasionalMaintenanceDataChange}
               handleCreateOccasionalMaintenance={handleCreateOccasionalMaintenance}

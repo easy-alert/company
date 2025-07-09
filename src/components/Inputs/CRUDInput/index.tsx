@@ -1,10 +1,17 @@
-// TYPES
+// REACT
 import { useState } from 'react';
-import { IDataList } from './utils/types';
+
 // COMPONENTS
-import * as Style from './styles';
 import { IconButton } from '../../Buttons/IconButton';
+
+// ASSETS
 import { icon } from '../../../assets/icons';
+
+// STYLES
+import * as Style from './styles';
+
+// TYPES
+import type { IDataList } from './utils/types';
 
 export const CRUDInput = ({
   label,
@@ -15,7 +22,11 @@ export const CRUDInput = ({
   select: selectProps,
   arrowColor,
 }: IDataList) => {
-  const [editing, setEditing] = useState(false);
+  const hasInitialValue =
+    !!value &&
+    selectProps.options.some((option) => option.label === value || option.value === value);
+
+  const [editing, setEditing] = useState(!hasInitialValue);
 
   return (
     <Style.InputContainer selectPlaceholderValue={value}>
@@ -26,7 +37,10 @@ export const CRUDInput = ({
           disabled={disabled}
           id={`select${name}`}
           name={`select${name}`}
-          value={value}
+          value={
+            // If value is a label, find the corresponding value
+            selectProps.options.find((option) => option.label === value)?.value || value
+          }
           onChange={(evt) => {
             setEditing(true);
 
