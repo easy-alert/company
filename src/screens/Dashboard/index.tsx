@@ -1346,7 +1346,7 @@ export const Dashboard = () => {
         </Style.MaintenancesCounts>
 
         <Style.ChartsWrapper>
-          <Style.Card>
+          <Style.TimelineCard>
             {dashboardLoadings.timeline ? (
               <DotSpinLoading />
             ) : (
@@ -1385,12 +1385,13 @@ export const Dashboard = () => {
                 </Style.ChartContent>
               </>
             )}
-          </Style.Card>
+          </Style.TimelineCard>
 
           <Style.PieWrapper>
             <ReusableChartCard
               title="Score de manutenções preventivas"
               type="donut"
+              height={250}
               chartOptions={maintenanceChart.common.options}
               chartSeries={maintenanceChart.common.series}
               isLoading={dashboardLoadings.maintenancesScore}
@@ -1401,6 +1402,7 @@ export const Dashboard = () => {
             <ReusableChartCard
               title="Score de manutenções avulsas"
               type="donut"
+              height={250}
               chartOptions={maintenanceChart.occasional.options}
               chartSeries={maintenanceChart.occasional.series}
               isLoading={dashboardLoadings.maintenancesScore}
@@ -1411,6 +1413,7 @@ export const Dashboard = () => {
             <ReusableChartCard
               title="Tipos de chamados"
               type="donut"
+              height={250}
               chartOptions={ticketTypesChart.options}
               chartSeries={ticketTypesChart.series}
               isLoading={dashboardLoadings.ticketsTypes}
