@@ -40,7 +40,7 @@ export const FiltersContainer = styled.div`
 
 export const FiltersGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: ${({ theme }) => theme.size.xsm};
 
   @media (max-width: 975px) {

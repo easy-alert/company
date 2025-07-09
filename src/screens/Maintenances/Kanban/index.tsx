@@ -19,12 +19,11 @@ import { getMaintenancesKanban } from '@services/apis/getMaintenancesKanban';
 import { Button } from '@components/Buttons/Button';
 import { IconButton } from '@components/Buttons/IconButton';
 import { ListTag } from '@components/ListTag';
-import { FormikSelect } from '@components/Form/FormikSelect';
 import { useMaintenanceStatusForSelect } from '@hooks/useMaintenanceStatusForSelect';
 import { EventTag } from '@components/EventTag';
 import { FutureMaintenanceTag } from '@components/FutureMaintenanceTag';
+import { FormikSelect } from '@components/Form/FormikSelect';
 import { FormikInput } from '@components/Form/FormikInput';
-import { Select } from '@components/Inputs/Select';
 import { Skeleton } from '@components/Skeleton';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
@@ -43,6 +42,8 @@ import IconBlock from '@assets/icons/IconBlock';
 import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
+import { MAINTENANCE_TYPE } from '@customTypes/TMaintenanceType';
+import { PRIORITY_NAME } from '@customTypes/TPriorityName';
 import type { TModalNames } from '@customTypes/TModalNames';
 
 // STYLES
@@ -56,7 +57,8 @@ export interface IMaintenanceFilter {
   status: string[];
   categories: string[];
   users: string[];
-  priorityName: string;
+  priorityNames: string[];
+  types: string[];
   search?: string;
   startDate?: string;
   endDate?: string;
@@ -107,7 +109,8 @@ export const MaintenancesKanban = () => {
     status: [],
     categories: queryCategoryId ? [queryCategoryId] : [],
     users: [],
-    priorityName: '',
+    priorityNames: [],
+    types: [],
     search: '',
     startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0],
     endDate: new Date(new Date().setDate(new Date().getDate() + 30)).toISOString().split('T')[0],
@@ -181,7 +184,8 @@ export const MaintenancesKanban = () => {
       status: [],
       categories: [],
       users: [],
-      priorityName: '',
+      priorityNames: [],
+      types: [],
       search: '',
       startDate: new Date(new Date().setDate(new Date().getDate() - 30))
         .toISOString()
@@ -309,6 +313,7 @@ export const MaintenancesKanban = () => {
                       label="Edificação"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('buildings', e.target.value);
 
@@ -344,6 +349,7 @@ export const MaintenancesKanban = () => {
                       label="Usuário"
                       selectPlaceholderValue=" "
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('users', e.target.value);
 
@@ -379,6 +385,7 @@ export const MaintenancesKanban = () => {
                       label="Status"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('status', e.target.value);
 
@@ -414,6 +421,7 @@ export const MaintenancesKanban = () => {
                       label="Categoria"
                       selectPlaceholderValue={' '}
                       value=""
+                      disabled={loading}
                       onChange={(e) => {
                         handleFilterChange('categories', e.target.value);
 
@@ -444,31 +452,85 @@ export const MaintenancesKanban = () => {
                       ))}
                     </FormikSelect>
 
-                    <Select
-                      arrowColor="primary"
+                    <FormikSelect
+                      id="priority-select"
+                      name="priorityName"
+                      label="Prioridade"
                       disabled={loading || !showPriority}
                       selectPlaceholderValue={' '}
-                      label="Prioridade"
-                      value={filter.priorityName}
+                      value=""
                       onChange={(e) => {
-                        setFilter((prevState) => {
-                          const newState = { ...prevState };
-                          newState.priorityName = e.target.value;
-                          return newState;
-                        });
+                        handleFilterChange('priorityNames', e.target.value);
+
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            priorityNames: [],
+                          }));
+                        }
                       }}
                     >
-                      <option value="">Todas</option>
-                      <option value="low">Baixa</option>
-                      <option value="medium">Média</option>
-                      <option value="high">Alta</option>
-                    </Select>
+                      <option value="" disabled hidden>
+                        Selecione
+                      </option>
+
+                      <option value="all" disabled={filter.priorityNames?.length === 0}>
+                        Todas
+                      </option>
+
+                      {PRIORITY_NAME.map((priority) => (
+                        <option
+                          key={priority.name}
+                          value={priority.name}
+                          disabled={filter.priorityNames?.includes(priority.name)}
+                        >
+                          {capitalizeFirstLetter(priority.label)}
+                        </option>
+                      ))}
+                    </FormikSelect>
+
+                    <FormikSelect
+                      id="maintenance-type-select"
+                      label="Tipo de manutenção"
+                      selectPlaceholderValue={' '}
+                      value=""
+                      disabled={loading}
+                      onChange={(e) => {
+                        handleFilterChange('types', e.target.value);
+
+                        if (e.target.value === 'all') {
+                          setFilter((prevState) => ({
+                            ...prevState,
+                            types: [],
+                          }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled hidden>
+                        Selecione
+                      </option>
+
+                      <option value="all" disabled={filter.types?.length === 0}>
+                        Todas
+                      </option>
+
+                      {MAINTENANCE_TYPE.map((maintenanceType) => (
+                        <option
+                          key={maintenanceType.value}
+                          value={maintenanceType.value}
+                          disabled={filter.types?.includes(maintenanceType.value)}
+                        >
+                          {capitalizeFirstLetter(maintenanceType.label)}
+                        </option>
+                      ))}
+                    </FormikSelect>
 
                     <FormikInput
                       name="search"
                       label="Buscar"
                       placeholder="Procurar por algum termo"
                       value={filter.search}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('search', e.target.value)}
                     />
 
@@ -478,6 +540,7 @@ export const MaintenancesKanban = () => {
                       name="startDate"
                       type="date"
                       value={filter.startDate}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('startDate', e.target.value)}
                     />
 
@@ -487,6 +550,7 @@ export const MaintenancesKanban = () => {
                       name="endDate"
                       type="date"
                       value={filter.endDate}
+                      disabled={loading}
                       onChange={(e) => handleFilterChange('endDate', e.target.value)}
                     />
                   </Style.FilterWrapper>
@@ -601,6 +665,66 @@ export const MaintenancesKanban = () => {
                               setFilter((prevState) => ({
                                 ...prevState,
                                 status: prevState.categories?.filter((c) => c !== category),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
+
+                      {filter.types?.length === 0 ? (
+                        <ListTag
+                          label="Todos os tipos"
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
+                        />
+                      ) : (
+                        filter.types?.map((type) => (
+                          <ListTag
+                            key={type}
+                            label={capitalizeFirstLetter(
+                              MAINTENANCE_TYPE.find((mt) => mt.value === type)?.label || '',
+                            )}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                type: prevState.types?.filter((t) => t !== type),
+                              }));
+                            }}
+                          />
+                        ))
+                      )}
+
+                      {filter.priorityNames?.length === 0 ? (
+                        <ListTag
+                          label="Todas as prioridades"
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
+                        />
+                      ) : (
+                        filter.priorityNames?.map((priority) => (
+                          <ListTag
+                            key={priority}
+                            label={capitalizeFirstLetter(
+                              PRIORITY_NAME.find((p) => p.name === priority)?.label || '',
+                            )}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() => {
+                              setFilter((prevState) => ({
+                                ...prevState,
+                                priorityNames: prevState.priorityNames?.filter(
+                                  (p) => p !== priority,
+                                ),
                               }));
                             }}
                           />

@@ -8,6 +8,7 @@ export interface IReportsFilters {
   maintenanceStatusNames: string[];
   filterBy: string;
   search?: string;
+  type?: string[];
 }
 
 export interface IFilterforPDF {
@@ -24,6 +25,7 @@ export interface IFilterforRequest {
   maintenanceStatusIds: string[];
   maintenanceStatusNames: string[];
   categoryNames: string[];
+  type: string[];
   startDate: string;
   endDate: string;
   filterBy: string;

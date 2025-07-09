@@ -5,6 +5,7 @@ import type { IMaintenanceReport, IMaintenanceReportProgress } from './IMaintena
 import type { IPriority } from './IPriority';
 import type { ISupplier } from './ISupplier';
 import type { IUser } from './IUser';
+import type { TPriorityName } from './TPriorityName';
 
 export interface IMaintenancesStatus {
   name: 'expired' | 'pending' | 'completed' | 'overdue';
@@ -93,7 +94,7 @@ export interface IMaintenanceData {
 export interface IMaintenance {
   id?: string;
 
-  priorityName?: string;
+  priorityName?: TPriorityName;
   additionalInfo?: string;
   daysInAdvance?: number;
   daysToAnticipate?: number;
