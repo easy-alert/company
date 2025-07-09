@@ -1236,14 +1236,14 @@ export const Dashboard = () => {
       </Style.FilterSection>
 
       <Style.Wrappers>
-        {/* {modalMaintenanceReportSend && selectedMaintenanceId && (
+        {modalMaintenanceReportSend && selectedMaintenanceId && (
           <ModalMaintenanceReportSend
             maintenanceHistoryId={selectedMaintenanceId}
             refresh={refresh}
             handleModals={handleModals}
             handleRefresh={handleRefresh}
           />
-        )} */}
+        )}
 
         {modalMaintenanceDetails && selectedMaintenanceId && (
           <ModalMaintenanceDetails
