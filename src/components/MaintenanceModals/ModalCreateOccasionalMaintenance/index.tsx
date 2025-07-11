@@ -238,44 +238,23 @@ export const ModalCreateOccasionalMaintenance = ({
     )?.name;
     if (!selectedBuildingName) return;
 
-    const buildingWords = normalizeString(selectedBuildingName).split(/\s+/).filter(Boolean);
-
-    let bestCategory: ICategory | null = null;
-    let bestScore = 0;
+    const normalizedBuildingName = normalizeString(selectedBuildingName);
 
     categoriesData.forEach((category) => {
       if (!category.name) return;
 
       const normalizedCategory = normalizeString(category.name);
-      const categoryWords = normalizedCategory.split(/\s+/).filter(Boolean);
-      const score = buildingWords.reduce(
-        (acc, word) => acc + (categoryWords.includes(word) ? 1 : 0),
-        0,
-      );
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestCategory = category;
+      if (normalizedCategory.includes(normalizedBuildingName)) {
+        setOccasionalMaintenanceData((prevState) => ({
+          ...prevState,
+          categoryData: {
+            id: category.id || '',
+            name: category.name || '',
+          },
+        }));
       }
     });
-
-    if (bestCategory && bestScore > 0) {
-      setOccasionalMaintenanceData((prevState) => ({
-        ...prevState,
-        categoryData: {
-          id: (bestCategory as ICategory).id || '',
-          name: (bestCategory as ICategory).name || '',
-        },
-      }));
-    } else {
-      setOccasionalMaintenanceData((prevState) => ({
-        ...prevState,
-        categoryData: {
-          id: '',
-          name: '',
-        },
-      }));
-    }
   }, [buildingsForSelect, categoriesData, occasionalMaintenanceData.buildingId]);
 
   if (!handleModalCreateOccasionalMaintenance) return null;
