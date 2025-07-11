@@ -122,6 +122,33 @@ export interface ITicketFilter {
 }
 // #endregion
 
+const emptyChart = {
+  series: [],
+  chartData: [],
+  options: {
+    labels: [],
+    chart: { toolbar: { show: false } },
+    tooltip: { enabled: true },
+    plotOptions: {
+      pie: {
+        donut: { labels: { show: false } },
+      },
+    },
+    colors: [],
+    dataLabels: {
+      enabled: false,
+      style: {
+        fontSize: '14px',
+        fontWeight: 400,
+      },
+    },
+    legend: {
+      position: 'bottom' as const,
+      offsetY: -10,
+    },
+  },
+};
+
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
@@ -201,8 +228,8 @@ export const Dashboard = () => {
     common: any;
     occasional: any;
   }>({
-    common: { data: [], labels: [], colors: [] },
-    occasional: { data: [], labels: [], colors: [] },
+    common: { emptyChart },
+    occasional: { emptyChart },
   });
 
   const [categoriesFormatted, setCategoriesFormatted] = useState<{
@@ -436,45 +463,10 @@ export const Dashboard = () => {
     maintenanceType: 'common' | 'occasional',
     resetFilters?: boolean,
   ) => {
-    const emptyChart = {
-      series: [],
-      chartData: [],
-      options: {
-        labels: [],
-        chart: { toolbar: { show: false } },
-        tooltip: { enabled: true },
-        plotOptions: {
-          pie: {
-            donut: { labels: { show: false } },
-          },
-        },
-        colors: [],
-        dataLabels: {
-          enabled: false,
-          style: {
-            fontSize: '14px',
-            fontWeight: 400,
-          },
-        },
-        legend: {
-          position: 'bottom' as const,
-          offsetY: -10,
-        },
-      },
-    };
-
     try {
       const responseData = await getMaintenanceStatus(dataFilter, maintenanceType, resetFilters);
 
-      if (!responseData) {
-        // setMaintenanceChart((prevState) => ({
-        //   ...prevState,
-        //   [maintenanceType]: emptyChart,
-        // }));
-
-        return;
-      }
-
+      if (!responseData) return;
       const largest = findLargestValueAndIndex(responseData.data);
 
       const chartData = {
@@ -566,8 +558,11 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, maintenancesScore: true }));
 
     try {
-      await handleGetMaintenanceStatus('common', resetFilters);
-      await handleGetMaintenanceStatus('occasional', resetFilters);
+      await Promise.all([
+        handleGetMaintenanceStatus('common', resetFilters),
+        handleGetMaintenanceStatus('occasional', resetFilters),
+        handleGetKanban(),
+      ]);
     } catch (error: any) {
       handleToastify(error.response);
     } finally {
@@ -579,8 +574,10 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, maintenancesCategories: true }));
 
     try {
-      await handleGetMaintenanceCategories('common', resetFilters);
-      await handleGetMaintenanceCategories('occasional', resetFilters);
+      await Promise.all([
+        handleGetMaintenanceCategories('common', resetFilters),
+        handleGetMaintenanceCategories('occasional', resetFilters),
+      ]);
     } catch (error: any) {
       handleToastify(error.response);
     } finally {
@@ -680,9 +677,11 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, maintenancesCountAndCost: true }));
 
     try {
-      await handleGetMaintenancesCountAndCost('', resetFilters);
-      await handleGetMaintenancesCountAndCost('common', resetFilters);
-      await handleGetMaintenancesCountAndCost('occasional', resetFilters);
+      await Promise.all([
+        handleGetMaintenancesCountAndCost('', resetFilters),
+        handleGetMaintenancesCountAndCost('common', resetFilters),
+        handleGetMaintenancesCountAndCost('occasional', resetFilters),
+      ]);
     } catch (error: any) {
       handleToastify(error);
     } finally {
@@ -694,11 +693,13 @@ export const Dashboard = () => {
     setDashboardLoadings((prevState) => ({ ...prevState, ticketsCountAndCost: true }));
 
     try {
-      await handleGetTicketsCountAndCost('', resetFilters);
-      await handleGetTicketsCountAndCost('open', resetFilters);
-      await handleGetTicketsCountAndCost('awaitingToFinish', resetFilters);
-      await handleGetTicketsCountAndCost('finished', resetFilters);
-      await handleGetTicketsCountAndCost('dismissed', resetFilters);
+      await Promise.all([
+        handleGetTicketsCountAndCost('', resetFilters),
+        handleGetTicketsCountAndCost('open', resetFilters),
+        handleGetTicketsCountAndCost('awaitingToFinish', resetFilters),
+        handleGetTicketsCountAndCost('finished', resetFilters),
+        handleGetTicketsCountAndCost('dismissed', resetFilters),
+      ]);
     } catch (error: any) {
       handleToastify(error);
     } finally {
@@ -727,8 +728,6 @@ export const Dashboard = () => {
 
     // get users activities
     handleGetUserActivities(resetFilters);
-
-    handleGetKanban();
   };
 
   const handleResetFilterButton = async () => {
@@ -1101,7 +1100,7 @@ export const Dashboard = () => {
                     <option
                       key={building.id}
                       value={building.id}
-                      disabled={dataFilter.buildings.some((e) => e === building.name)}
+                      disabled={dataFilter.buildings.some((e) => e === building.id)}
                     >
                       {building.name}
                     </option>
@@ -1165,6 +1164,54 @@ export const Dashboard = () => {
                   }}
                   error={touched.endDate && errors.endDate ? errors.endDate : null}
                 />
+              </Style.FilterWrapper>
+
+              <Style.FilterWrapperFooter>
+                <Style.Tags>
+                  {dataFilter.buildings.length === 0 ? (
+                    <ListTag
+                      label="Todas as edificações"
+                      color="white"
+                      backgroundColor="primaryM"
+                      fontWeight={500}
+                      padding="4px 12px"
+                    />
+                  ) : (
+                    dataFilter.buildings.map((e, i) => (
+                      <ListTag
+                        key={e}
+                        label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('buildings', i)}
+                      />
+                    ))
+                  )}
+
+                  {dataFilter.categories.length === 0 ? (
+                    <ListTag
+                      label="Todas as categorias"
+                      color="white"
+                      backgroundColor="primaryM"
+                      fontWeight={500}
+                      padding="4px 12px"
+                    />
+                  ) : (
+                    dataFilter.categories.map((e, i) => (
+                      <ListTag
+                        key={e}
+                        label={e}
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('categories', i)}
+                      />
+                    ))
+                  )}
+                </Style.Tags>
 
                 <Style.ButtonWrapper>
                   <Button
@@ -1183,53 +1230,7 @@ export const Dashboard = () => {
 
                   <Button label="Filtrar" type="submit" loading={onQuery} bgColor="primary" />
                 </Style.ButtonWrapper>
-
-                <Style.Tags>
-                  {dataFilter.buildings.length === 0 && (
-                    <ListTag
-                      label="Todas as edificações"
-                      color="white"
-                      backgroundColor="primaryM"
-                      fontWeight={500}
-                      padding="4px 12px"
-                    />
-                  )}
-
-                  {dataFilter.buildings.map((e, i) => (
-                    <ListTag
-                      key={e}
-                      label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
-                      color="white"
-                      backgroundColor="primaryM"
-                      fontWeight={500}
-                      padding="4px 12px"
-                      onClick={() => handleRemoveFilter('buildings', i)}
-                    />
-                  ))}
-
-                  {dataFilter.categories.length === 0 && (
-                    <ListTag
-                      label="Todas as categorias"
-                      color="white"
-                      backgroundColor="primaryM"
-                      fontWeight={500}
-                      padding="4px 12px"
-                    />
-                  )}
-
-                  {dataFilter.categories.map((e, i) => (
-                    <ListTag
-                      key={e}
-                      label={e}
-                      color="white"
-                      backgroundColor="primaryM"
-                      fontWeight={500}
-                      padding="4px 12px"
-                      onClick={() => handleRemoveFilter('categories', i)}
-                    />
-                  ))}
-                </Style.Tags>
-              </Style.FilterWrapper>
+              </Style.FilterWrapperFooter>
             </Form>
           )}
         </Formik>
