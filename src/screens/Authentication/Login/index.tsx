@@ -99,10 +99,10 @@ export const Login = () => {
                   value={values.login}
                   onChange={(e) => {
                     const { value } = e.target;
-                    if (/^\d/.test(value) || (value.length > 1 && /^\(\d{1}/.test(value))) {
-                      setFieldValue('login', applyMask({ value, mask: 'TEL' }).value);
+                    if (/[@a-zA-Z]/.test(value)) {
+                      setFieldValue('login', unMask(value));
                     } else {
-                      setFieldValue('login', value);
+                      setFieldValue('login', applyMask({ value, mask: 'TEL' }).value);
                     }
                   }}
                   error={touched.login && errors.login ? errors.login : null}
