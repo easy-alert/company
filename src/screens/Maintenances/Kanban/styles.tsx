@@ -166,6 +166,12 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
     return 'none';
   }};
 
+  > h2 {
+    min-width: 160px;
+    font-size: ${theme.size.csm2};
+    font-weight: 500;
+  }
+
   > label {
     display: flex;
     align-items: center;
@@ -173,9 +179,7 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
 
     cursor: pointer;
     color: ${theme.color.gray4};
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 14px;
+    font-size: ${theme.size.csm};
   }
 `;
 
