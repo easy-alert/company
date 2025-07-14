@@ -17,6 +17,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 
 // GLOBAL UTILS
 import { applyMask, unMask } from '@utils/functions';
+import { unMaskPhone } from '@utils/unmask';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -99,8 +100,9 @@ export const Login = () => {
                   value={values.login}
                   onChange={(e) => {
                     const { value } = e.target;
-                    if (/[@a-zA-Z]/.test(value)) {
-                      setFieldValue('login', unMask(value));
+
+                    if (value.includes('@') || /[a-zA-Z]/.test(value)) {
+                      setFieldValue('login', unMaskPhone(value));
                     } else {
                       setFieldValue('login', applyMask({ value, mask: 'TEL' }).value);
                     }
