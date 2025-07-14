@@ -6,6 +6,7 @@ export const Card = styled.div`
   border-radius: ${({ theme }) => theme.size.xxsm};
   display: flex;
   flex-direction: column;
+  height: 230px;
 `;
 
 export const Container = styled.div`
@@ -13,8 +14,6 @@ export const Container = styled.div`
   flex-direction: column;
 
   h2 {
-    margin-top: 10px;
-    font-style: normal;
     font-weight: 500;
     font-size: 12px;
     line-height: 14px;
@@ -35,20 +34,21 @@ export const InfoList = styled.div`
 export const InfoItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
 `;
 
 export const CategoryItem = styled.div`
   display: flex;
   justify-content: space-between;
+
+  gap: ${({ theme }) => theme.size.xsm};
+
   background-color: ${({ theme }) => theme.color.gray1};
-  padding: 4px 8px;
+  padding: ${({ theme }) => `${theme.size.xxsm} ${theme.size.xsm}`};
   border-radius: 5px;
   margin-right: 16px;
   margin-bottom: 6px;
 
   h2 {
-    margin: 0;
     line-height: 16px;
     overflow-wrap: anywhere;
     hyphens: auto;
@@ -58,12 +58,10 @@ export const CategoryItem = styled.div`
 
 export const NameScrollContainer = styled.div`
   width: 100%;
-  max-height: 240px;
+  max-height: 160px;
   overflow-y: auto;
-  overflow-x: auto;
-
-  gap: 4px;
-
+  display: flex;
+  flex-direction: column;
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.color.primary} transparent;
 
@@ -74,7 +72,7 @@ export const NameScrollContainer = styled.div`
 
 export const CategoryScrollContainer = styled.div`
   width: 100%;
-  max-height: 260px;
+  max-height: 160px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -92,7 +90,7 @@ export const EmptyMessage = styled.p`
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-height: 280px;
+  min-height: 240px;
   opacity: 0.7;
 `;
 
