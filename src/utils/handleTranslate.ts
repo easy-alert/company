@@ -26,7 +26,7 @@ const translations: TranslationMap = {
 };
 
 const reverseTranslations: TranslationMap = Object.fromEntries(
-  Object.entries(translations).map(([key, value]) => [value, key])
+  Object.entries(translations).map(([key, value]) => [value, key]),
 );
 
 export function handleTranslate(key: string): string {
