@@ -14,7 +14,7 @@ export const generateTicketReportPDF = async ({
   filterNames,
 }: IGenerateTicketReportPDF) => {
   const body = {
-    buildingsNanoId: filter?.buildings.length === 0 ? '' : filter?.buildings?.join(','),
+    buildingsId: filter?.buildings.length === 0 ? '' : filter?.buildings?.join(','),
     buildingsNames: filterNames?.buildingsNames,
     placesId: filter?.places?.length === 0 ? '' : filter?.places?.join(','),
     placesNames: filterNames?.placesNames,
