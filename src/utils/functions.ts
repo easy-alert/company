@@ -84,16 +84,13 @@ export async function uploadFile(file: File | FileWithPath): Promise<IUploadFile
 
 export async function uploadManyFiles(files: File[] | FileWithPath[]): Promise<IUploadFile[]> {
   try {
-    // Process all files concurrently
     const processedFiles = await Promise.all(files.map((file) => compressImageIfNeeded(file)));
-
     const formData = new FormData();
     processedFiles.forEach((file) => formData.append('files', file));
 
     const res = await Api.post('upload/files', formData);
     return res.data as IUploadFile[];
   } catch (err) {
-    console.log('🚀 ~ uploadManyFiles ~ err:', err);
     catchHandler(err);
     throw err;
   }
