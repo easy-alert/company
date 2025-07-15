@@ -506,7 +506,7 @@ export const TicketReports = () => {
                     </CSVLink> */}
 
                     <IconButton
-                      icon={<IconPdfLogo strokeColor="primary" fillColor="" />}
+                      icon={<IconPdfLogo strokeColor="primary" fillColor="primary" />}
                       label="Exportar"
                       size="20px"
                       disabled={loading || tickets.length === 0}
