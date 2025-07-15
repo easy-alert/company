@@ -199,8 +199,10 @@ export const ModalPrintQRCode = ({
               selectedUser.id
                 ? `${
                     import.meta.env.VITE_COMPANY_URL ?? 'http://localhost:3000'
-                  }/maintenances?buildingId=${buildingId}`
-                : `${import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'}/home/${buildingId}`
+                  }/maintenances?buildingId=${buildingId}&userId=${selectedUser.id}`
+                : `${
+                    import.meta.env.VITE_CLIENT_URL ?? 'http://localhost:3001'
+                  }/home/${buildingId}?userId=resident`
             }
             bgColor="#F2EAEA"
             size={300}
