@@ -18,9 +18,9 @@ export const TitleWrapper = styled.div`
 
   button {
     min-width: 60px;
-    border-radius: 0px 4px 4px 0px;
+    border-radius: 4px;
     background: ${({ theme }) => theme.color.white};
-    border: 1px solid ${({ theme }) => theme.color.gray4};
+    border: 1px solid ${({ theme }) => theme.color.gray3};
     color: #373a3c;
     cursor: pointer;
     transition: 0.2s;
@@ -43,9 +43,9 @@ export const ViewSwitcher = styled.div`
 
   button {
     min-width: 60px;
-    border-radius: 0px 4px 4px 0px;
+    border-radius: 4px;
     background: ${({ theme }) => theme.color.white};
-    border: 1px solid ${({ theme }) => theme.color.gray4};
+    border: 1px solid ${({ theme }) => theme.color.gray3};
     color: #373a3c;
     cursor: pointer;
     transition: 0.2s;
@@ -56,7 +56,7 @@ export const ViewSwitcher = styled.div`
 `;
 
 export const ViewButtonWrapper = styled.div<IButtonWrapperProps>`
-  border: 1px solid ${({ theme }) => theme.color.gray4};
+  border: 1px solid ${({ theme }) => theme.color.gray3};
   background: ${({ selected, theme }) => (selected ? theme.color.gray3 : theme.color.white)};
   border-radius: 4px;
   margin-left: 4px;
@@ -68,6 +68,7 @@ export const ViewButtonWrapper = styled.div<IButtonWrapperProps>`
   button {
     background: transparent;
     border: none;
+    border-radius: 4px;
 
     &:hover {
       background: ${({ theme }) => theme.color.gray3};
