@@ -1,5 +1,5 @@
 // TYPES
-import type { ToolbarProps } from 'react-big-calendar';
+import type { ToolbarProps, View } from 'react-big-calendar';
 
 // COMPONENTS
 import { Button } from '@components/Buttons/Button';
@@ -27,13 +27,11 @@ export const CustomToolbar = ({ date, label, onNavigate, onView, view }: Toolbar
         onClick={() => onNavigate('DATE', new Date(date.getFullYear() + 1, date.getMonth(), 1))}
       />
 
-      <Style.ViewButtonWrapper selected={view === 'month'}>
-        <Button label="Mês" onClick={() => onView('month')} />
-      </Style.ViewButtonWrapper>
-
-      <Style.ViewButtonWrapper selected={view === 'week'}>
-        <Button label="Semana" onClick={() => onView('week')} />
-      </Style.ViewButtonWrapper>
+      {(['month', 'week'] as View[]).map((type) => (
+        <Style.ViewButtonWrapper key={type} selected={view === type}>
+          <Button label={type === 'month' ? 'Mês' : 'Semana'} onClick={() => onView(type)} />
+        </Style.ViewButtonWrapper>
+      ))}
     </Style.ViewSwitcher>
   </Style.ToolbarContainer>
 );
