@@ -81,22 +81,20 @@ export const MaintenancesCalendar = () => {
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
 
-  const calendarYear = new Date(date).getFullYear();
-
-  const currentYear = new Date().getFullYear();
-
-  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
-
-  const YearOffset = 5;
-
-  const YearLimitForRequest = new Date().getFullYear() + YearOffset;
-
-  const disableCalendarNextButton =
-    YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
-
   const [buildingId, setBuildingId] = useState<string>('none');
 
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
+
+  const calendarYear = new Date(date).getFullYear();
+  const calendarMonth = new Date(date).getMonth();
+
+  const currentYear = new Date().getFullYear();
+  const YearOffset = 5;
+  const YearLimitForRequest = currentYear + YearOffset;
+
+  const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
+
+  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
 
   const locales = {
     'pt-BR': ptBR,
@@ -173,7 +171,8 @@ export const MaintenancesCalendar = () => {
   const handleGetCalendarData = async () => {
     await requestCalendarData({
       buildingId,
-      yearToRequest,
+      yearToRequest: calendarYear,
+      monthToRequest: calendarMonth + 1,
       calendarType,
       setLoading,
       setMaintenancesWeekView,
@@ -296,7 +295,7 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     handleGetCalendarData();
-  }, [buildingId, yearToRequest]);
+  }, [buildingId, calendarYear, calendarMonth]);
 
   return loading ? (
     <DotSpinLoading />
