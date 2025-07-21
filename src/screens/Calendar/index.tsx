@@ -28,9 +28,13 @@ import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
+import type { View } from 'react-big-calendar';
 
 // FUNCTIONS
 import { requestCalendarData } from './functions';
+
+// COMPONENTS
+import { CustomToolbar } from './utils/CustomToolbar';
 
 // STYLES
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -77,22 +81,20 @@ export const MaintenancesCalendar = () => {
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
 
-  const calendarYear = new Date(date).getFullYear();
-
-  const currentYear = new Date().getFullYear();
-
-  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
-
-  const YearOffset = 5;
-
-  const YearLimitForRequest = new Date().getFullYear() + YearOffset;
-
-  const disableCalendarNextButton =
-    YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
-
   const [buildingId, setBuildingId] = useState<string>('none');
 
   const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
+
+  const calendarYear = new Date(date).getFullYear();
+  const calendarMonth = new Date(date).getMonth();
+
+  const currentYear = new Date().getFullYear();
+  const YearOffset = 5;
+  const YearLimitForRequest = currentYear + YearOffset;
+
+  const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
+
+  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
 
   const locales = {
     'pt-BR': ptBR,
@@ -151,7 +153,12 @@ export const MaintenancesCalendar = () => {
     setOnQuery(queryState);
   };
 
-  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
+  const onNavigate = useCallback(
+    (newDate: Date, view?: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
+      setDate(newDate);
+    },
+    [setDate],
+  );
 
   const handleModalEditReport = (modalState: boolean) => {
     setModalEditReport(modalState);
@@ -164,7 +171,8 @@ export const MaintenancesCalendar = () => {
   const handleGetCalendarData = async () => {
     await requestCalendarData({
       buildingId,
-      yearToRequest,
+      yearToRequest: calendarYear,
+      monthToRequest: calendarMonth + 1,
       calendarType,
       setLoading,
       setMaintenancesWeekView,
@@ -246,11 +254,16 @@ export const MaintenancesCalendar = () => {
   );
 
   const onView = useCallback(
-    (newView: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
+    (newView: View) => {
       if (newView === 'month') {
         setMaintenancesDisplay([...maintenancesMonthView]);
         setCalendarType('month');
-      } else {
+      } else if (
+        newView === 'week' ||
+        newView === 'work_week' ||
+        newView === 'day' ||
+        newView === 'agenda'
+      ) {
         setMaintenancesDisplay([...maintenancesWeekView]);
         setCalendarType('week');
       }
@@ -282,7 +295,7 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     handleGetCalendarData();
-  }, [buildingId, yearToRequest]);
+  }, [buildingId, calendarYear, calendarMonth]);
 
   return loading ? (
     <DotSpinLoading />
@@ -394,6 +407,8 @@ export const MaintenancesCalendar = () => {
               allDayAccessor="id"
               drilldownView="week"
               showAllEvents
+              components={{ toolbar: CustomToolbar }}
+              views={['month', 'week', 'work_week', 'day', 'agenda']}
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>

@@ -19,6 +19,7 @@ import type { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData }
 export const requestCalendarData = async ({
   buildingId,
   yearToRequest,
+  monthToRequest,
   calendarType,
   setMaintenancesMonthView,
   setMaintenancesWeekView,
@@ -26,33 +27,38 @@ export const requestCalendarData = async ({
   setYearChangeLoading,
   setBuildingOptions,
   setLoading,
-}: IRequestCalendarData) => {
+}: IRequestCalendarData & { monthToRequest: number }) => {
   setYearChangeLoading(true);
 
-  await Api.get(`calendars/list/${String(yearToRequest)}?buildingId=${buildingId}`)
+  const query = `calendars/list?buildingId=${buildingId}&year=${yearToRequest}&month=${monthToRequest}`;
+
+  await Api.get(query)
     .then((res: IRequestCalendarDataResData) => {
       setBuildingOptions(res.data.Filter);
 
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
+        const date = new Date(res.data.Dates.Months[i].date);
+
         if (res.data.Dates.Months[i].expired > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
-            title: `${res.data.Dates.Months[i].expired} ${
-              res.data.Dates.Months[i].expired > 1 ? 'vencidas' : 'vencida'
+            title: `${res.data.Dates.Months[i].expired} vencida${
+              res.data.Dates.Months[i].expired > 1 ? 's' : ''
             }`,
-            start: new Date(res.data.Dates.Months[i].date),
-            end: new Date(res.data.Dates.Months[i].date),
+            start: date,
+            end: date,
             status: 'expired',
           });
         }
+
         if (res.data.Dates.Months[i].pending > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
             title: `${res.data.Dates.Months[i].pending} a fazer`,
-            start: new Date(res.data.Dates.Months[i].date),
-            end: new Date(res.data.Dates.Months[i].date),
+            start: date,
+            end: date,
             status: 'pending',
           });
         }
@@ -60,11 +66,11 @@ export const requestCalendarData = async ({
         if (res.data.Dates.Months[i].completed > 0) {
           maintenancesMonthMap.push({
             id: String(res.data.Dates.Months[i].id),
-            title: `${res.data.Dates.Months[i].completed} ${
-              res.data.Dates.Months[i].completed > 1 ? 'concluídas' : 'concluída'
+            title: `${res.data.Dates.Months[i].completed} concluída${
+              res.data.Dates.Months[i].completed > 1 ? 's' : ''
             }`,
-            start: new Date(res.data.Dates.Months[i].date),
-            end: new Date(res.data.Dates.Months[i].date),
+            start: date,
+            end: date,
             status: 'completed',
           });
         }
@@ -79,27 +85,9 @@ export const requestCalendarData = async ({
       const maintenancesWeekMap: ICalendarView[] = orderArray.map((e) => ({
         id: e.id,
         title: (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              paddingTop: '4px',
-              paddingBottom: '4px',
-            }}
-          >
-            <div
-              className="ellipsis"
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                fontSize: '14px',
-                lineHeight: '17px',
-              }}
-            >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
               {e.Building.name}
-
               <EventTag
                 label={`#${e.serviceOrderNumber}`}
                 color={theme.color.gray4}
@@ -107,30 +95,22 @@ export const requestCalendarData = async ({
                 fontWeight="bold"
               />
             </div>
-
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
-
               <EventTag status={e.MaintenancesStatus.name} />
-
               {e.Maintenance.frequency < 1 ? (
                 <EventTag status="occasional" />
               ) : (
                 <EventTag status="common" />
               )}
-
               {(e.MaintenancesStatus.name === 'expired' ||
                 e.MaintenancesStatus.name === 'pending') &&
                 e.inProgress &&
                 !e.isFuture && <InProgressTag />}
             </div>
-
-            <div className="ellipsis" style={{ fontSize: '12px', lineHeight: '15px' }}>
-              {e.Maintenance.element}
-            </div>
-            {/* {occult frequency of occasional maintenances } */}
+            <div style={{ fontSize: '12px' }}>{e.Maintenance.element}</div>
             {e.Maintenance.frequency >= 1 && (
-              <div className="ellipsis" style={{ fontSize: '10px', lineHeight: '13px' }}>
+              <div style={{ fontSize: '10px' }}>
                 A cada {e.Maintenance.frequency}{' '}
                 {e.Maintenance.frequency > 1
                   ? e.Maintenance.FrequencyTimeInterval.pluralLabel
@@ -146,19 +126,13 @@ export const requestCalendarData = async ({
         expectedDueDate: e.expectedDueDate,
         expectedNotificationDate: e.expectedNotificationDate,
       }));
+
       setMaintenancesWeekView([...maintenancesWeekMap]);
 
-      if (calendarType === 'week') {
-        setMaintenancesDisplay([...maintenancesWeekMap]);
-      }
-
-      if (calendarType === 'month') {
-        setMaintenancesDisplay([...maintenancesMonthMap]);
-      }
+      if (calendarType === 'week') setMaintenancesDisplay([...maintenancesWeekMap]);
+      if (calendarType === 'month') setMaintenancesDisplay([...maintenancesMonthMap]);
     })
-    .catch((err) => {
-      catchHandler(err);
-    })
+    .catch(catchHandler)
     .finally(() => {
       setYearChangeLoading(false);
       setLoading(false);

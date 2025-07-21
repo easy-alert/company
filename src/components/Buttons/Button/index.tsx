@@ -5,7 +5,7 @@ import { theme } from '@styles/theme';
 import { Background, ContainerButton, SpinnerContent } from './styles';
 
 // TYPES
-import { IButton } from './utils/types';
+import type { IButton } from './utils/types';
 
 export const Button = ({
   label,
