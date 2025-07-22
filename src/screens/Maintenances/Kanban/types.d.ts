@@ -21,7 +21,7 @@ export interface MaintenanceKanban {
 }
 
 export interface IKanban {
-  status: string;
+  status: 'Vencidas' | 'Pendentes' | 'Concluídas' | 'Em execução';
   maintenances: MaintenanceKanban[];
 }
 
