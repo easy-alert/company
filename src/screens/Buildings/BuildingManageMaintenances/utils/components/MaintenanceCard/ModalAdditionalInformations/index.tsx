@@ -215,11 +215,12 @@ export const ModalAdditionalInformations = ({
                   disable={hasHistory}
                   label="Informar data da próxima notificação"
                   name="hasFirstNotificationDate"
-                  onChange={() => {
-                    setFieldValue('hasFirstNotificationDate', !values.hasFirstNotificationDate);
+                  checked={values.hasFirstNotificationDate}
+                  onChange={(e) => {
+                    const newValue = e.target.checked;
+                    setFieldValue('hasFirstNotificationDate', newValue);
 
-                    if (values.firstNotificationDate) {
-                      setTouched({ firstNotificationDate: false });
+                    if (!newValue) {
                       setFieldValue('firstNotificationDate', '');
                     }
                   }}
@@ -245,9 +246,16 @@ export const ModalAdditionalInformations = ({
                   disable={hasHistory}
                   label="Informar data e status da última manutenção"
                   name="hasLastResolutionDate"
-                  onChange={() => {
-                    setFieldValue('hasLastResolutionDate', !values.hasLastResolutionDate);
-                    setFieldValue('status', 'completed');
+                  checked={values.hasLastResolutionDate}
+                  onChange={(e) => {
+                    const newValue = e.target.checked;
+                    setFieldValue('hasLastResolutionDate', newValue);
+
+                    if (!newValue) {
+                      setFieldValue('status', 'pending');
+                    } else {
+                      setFieldValue('status', 'completed');
+                    }
 
                     if (values.lastResolutionDate) {
                       setTouched({ lastResolutionDate: false });
