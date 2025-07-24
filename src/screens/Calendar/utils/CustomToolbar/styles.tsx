@@ -17,11 +17,11 @@ export const TitleWrapper = styled.div`
   align-items: center;
 
   button {
-    min-width: 60px;
-    border-radius: 4px;
+    min-width: ${({ theme }) => theme.size.xxxlg};
+    border-radius: ${({ theme }) => theme.size.xxsm};
     background: ${({ theme }) => theme.color.white};
     border: 1px solid ${({ theme }) => theme.color.gray3};
-    color: #373a3c;
+    color: ${({ theme }) => theme.color.gray5};
     cursor: pointer;
     transition: 0.2s;
     &:hover {
@@ -42,11 +42,11 @@ export const ViewSwitcher = styled.div`
   align-items: center;
 
   button {
-    min-width: 60px;
-    border-radius: 4px;
+    min-width: ${({ theme }) => theme.size.xxxlg};
+    border-radius: ${({ theme }) => theme.size.xxsm};
     background: ${({ theme }) => theme.color.white};
     border: 1px solid ${({ theme }) => theme.color.gray3};
-    color: #373a3c;
+    color: ${({ theme }) => theme.color.gray5};
     cursor: pointer;
     transition: 0.2s;
     &:hover {
@@ -58,8 +58,8 @@ export const ViewSwitcher = styled.div`
 export const ViewButtonWrapper = styled.div<IButtonWrapperProps>`
   border: 1px solid ${({ theme }) => theme.color.gray3};
   background: ${({ selected, theme }) => (selected ? theme.color.gray3 : theme.color.white)};
-  border-radius: 4px;
-  margin-left: 4px;
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  margin-left: ${({ theme }) => theme.size.xxsm};
 
   &:first-child {
     margin-left: 0;
@@ -68,7 +68,7 @@ export const ViewButtonWrapper = styled.div<IButtonWrapperProps>`
   button {
     background: transparent;
     border: none;
-    border-radius: 4px;
+    border-radius: ${({ theme }) => theme.size.xsm};
 
     &:hover {
       background: ${({ theme }) => theme.color.gray3};
