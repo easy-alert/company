@@ -31,6 +31,7 @@ import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/
 
 // GLOBAL UTILS
 import { capitalizeFirstLetter, dateFormatter } from '@utils/functions';
+import { handleTranslate } from '@utils/handleTranslate';
 
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
@@ -91,6 +92,15 @@ export const MaintenancesKanban = () => {
     expectedNotificationDate: '',
     expectedDueDate: '',
     isFuture: false,
+  });
+
+  const [maintenancesLength, setMaintenancesLength] = useState<{ [key: string]: number }>({
+    pending: 0,
+    inProgress: 0,
+    completed: 0,
+    expired: 0,
+    oldExpired: 0,
+    future: 0,
   });
 
   const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
@@ -161,6 +171,30 @@ export const MaintenancesKanban = () => {
     setMaintenanceHistoryId(id);
   };
 
+  const handleMaintenancesLength = (kanbanToLength: IKanban[]) => {
+    const pendingLength =
+      kanbanToLength.find((k) => k.status === 'Pendentes')?.maintenances.length || 0;
+    const completedLength =
+      kanbanToLength.find((k) => k.status === 'Concluídas')?.maintenances.length || 0;
+    const inProgressLength =
+      kanbanToLength.find((k) => k.status === 'Em execução')?.maintenances.length || 0;
+    const expiredLength =
+      kanbanToLength.find((k) => k.status === 'Vencidas')?.maintenances.length || 0;
+    const futureLength =
+      kanbanToLength
+        .find((k) => k.status === 'Pendentes')
+        ?.maintenances.filter((m) => new Date(m.date) > new Date(new Date().setHours(0, 0, 0, 0)))
+        .length || 0;
+
+    setMaintenancesLength({
+      pending: pendingLength - futureLength,
+      completed: completedLength,
+      inProgress: inProgressLength,
+      expired: expiredLength,
+      future: futureLength,
+    });
+  };
+
   // region filter functions
   const handleFilterChange = (key: keyof IMaintenanceFilter, value: string) => {
     setFilter((prevState) => {
@@ -207,6 +241,7 @@ export const MaintenancesKanban = () => {
 
       setKanban(responseData.kanban);
       setMaintenanceCategoriesForSelect(responseData.maintenanceCategoriesForSelect);
+      handleMaintenancesLength(responseData.kanban);
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -304,7 +339,14 @@ export const MaintenancesKanban = () => {
 
         {showFilter && (
           <Style.FiltersContainer>
-            <Formik initialValues={filter} onSubmit={async () => handleGetMaintenances()}>
+            <Formik
+              initialValues={filter}
+              onSubmit={async () => {
+                setShowFutureMaintenances(false);
+                setShowOldExpireds(false);
+                handleGetMaintenances();
+              }}
+            >
               {() => (
                 <Form>
                   <Style.FilterWrapper>
@@ -755,13 +797,15 @@ export const MaintenancesKanban = () => {
           <Style.Kanban>
             {loading
               ? [
-                  { label: 'Vencidas', name: 'expired' },
+                  { label: 'Vencidas/Expiradas', name: 'expired' },
                   { label: 'Pendentes', name: 'pending' },
                   { label: 'Em execução', name: 'inProgress' },
                   { label: 'Concluídas', name: 'completed' },
                 ].map((col) => (
                   <Style.KanbanCard key={`skeleton-kanban-${col.name}`}>
-                    <Style.KanbanHeader viewMode={viewMode}>{col.label} (0)</Style.KanbanHeader>
+                    <Style.KanbanHeader viewMode={viewMode}>
+                      <h2>{col.label} (0)</h2>
+                    </Style.KanbanHeader>
                     {[1, 2, 3, 4].map((skeletonId) => (
                       <Style.SkeletonInfo key={skeletonId}>
                         <Skeleton key={skeletonId} height="120px" />
@@ -772,7 +816,11 @@ export const MaintenancesKanban = () => {
               : kanban?.map((card) => (
                   <Style.KanbanCard key={card.status}>
                     <Style.KanbanHeader viewMode={viewMode}>
-                      {card.status} ({card.maintenances.length})
+                      <h2>
+                        {card.status === 'Vencidas' ? 'Vencidas/Expiradas' : card.status} (
+                        {maintenancesLength[handleTranslate(card.status)]})
+                      </h2>
+
                       {card.status === 'Vencidas' && (
                         <label htmlFor="showExpireds">
                           <input
@@ -790,7 +838,21 @@ export const MaintenancesKanban = () => {
                             type="checkbox"
                             id="showFuture"
                             checked={showFutureMaintenances}
-                            onChange={() => setShowFutureMaintenances((prevState) => !prevState)}
+                            onChange={() => {
+                              if (showFutureMaintenances) {
+                                setShowFutureMaintenances(false);
+                                setMaintenancesLength((prevState) => ({
+                                  ...prevState,
+                                  pending: prevState.pending - prevState.future,
+                                }));
+                              } else {
+                                setShowFutureMaintenances(true);
+                                setMaintenancesLength((prevState) => ({
+                                  ...prevState,
+                                  pending: prevState.pending + prevState.future,
+                                }));
+                              }
+                            }}
                           />
                           Mostrar futuras
                         </label>
@@ -955,7 +1017,8 @@ export const MaintenancesKanban = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <Style.Chevron $expanded={isExpanded} />
                           <h5>
-                            {card.status} ({card.maintenances.length})
+                            {card.status === 'Vencidas' ? 'Vencidas/Expiradas' : card.status} (
+                            {maintenancesLength[handleTranslate(card.status)]})
                           </h5>
                         </div>
 
@@ -977,7 +1040,21 @@ export const MaintenancesKanban = () => {
                               type="checkbox"
                               id="showFuture"
                               checked={showFutureMaintenances}
-                              onChange={() => setShowFutureMaintenances((prev) => !prev)}
+                              onChange={() => {
+                                if (showFutureMaintenances) {
+                                  setShowFutureMaintenances(false);
+                                  setMaintenancesLength((prevState) => ({
+                                    ...prevState,
+                                    pending: prevState.pending - prevState.future,
+                                  }));
+                                } else {
+                                  setShowFutureMaintenances(true);
+                                  setMaintenancesLength((prevState) => ({
+                                    ...prevState,
+                                    pending: prevState.pending + prevState.future,
+                                  }));
+                                }
+                              }}
                             />
                             Mostrar futuras
                           </label>
@@ -1014,14 +1091,40 @@ export const MaintenancesKanban = () => {
                                     fontWeight="bold"
                                   />
                                 </div>
-                                <h6>{maintenance.element || maintenance.name}</h6>
+
+                                <h6>
+                                  <span>
+                                    <Style.EventsWrapper>
+                                      <EventTag status={maintenance.type} />
+                                      {maintenance.status === 'pending' &&
+                                        new Date(maintenance.date) >
+                                          new Date(new Date().setHours(0, 0, 0, 0)) && (
+                                          <FutureMaintenanceTag />
+                                        )}
+                                      {maintenance.status === 'overdue' && (
+                                        <EventTag status="overdue" />
+                                      )}
+                                    </Style.EventsWrapper>
+                                    <EventTag
+                                      label={maintenance.priorityLabel}
+                                      color={theme.color.gray4}
+                                      bgColor="transparent"
+                                      fontWeight="bold"
+                                    />
+                                  </span>
+                                  {maintenance.element || maintenance.name}
+                                </h6>
+
                                 <p className="p2">
                                   {maintenance.activity || maintenance.checklistProgress}
                                 </p>
                                 <p className="p3">
                                   {maintenance.status === 'pending' && maintenance.label}
                                   {maintenance.status === 'expired' &&
-                                    !maintenance.cantReportExpired &&
+                                    !(
+                                      maintenance.status === 'expired' &&
+                                      maintenance.cantReportExpired
+                                    ) &&
                                     maintenance.label}
                                   {(maintenance.status === 'completed' ||
                                     maintenance.status === 'overdue') &&
