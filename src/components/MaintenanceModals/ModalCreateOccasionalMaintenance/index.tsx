@@ -14,7 +14,7 @@ import { getPriority } from '@services/apis/getPriority';
 import { Modal } from '@components/Modal';
 
 // GLOBAL UTILS
-import { handleToastify } from '@utils/toastifyResponses';
+import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 import { normalizeString } from '@utils/normalizeString';
 import { convertToFormikDate } from '@utils/functions';
 
@@ -121,6 +121,58 @@ export const ModalCreateOccasionalMaintenance = ({
     }));
   };
 
+  const handleCheckValues = () => {
+    console.log(
+      '🚀 ~ handleCheckValues ~ occasionalMaintenanceData:',
+      occasionalMaintenanceData.responsible,
+    );
+
+    switch (true) {
+      case !occasionalMaintenanceData.buildingId:
+        handleToastifyMessage({
+          type: 'warning',
+          message: 'Edificação deve ser selecionada',
+        });
+
+        return false;
+
+      case !occasionalMaintenanceData.categoryData.id:
+        handleToastifyMessage({
+          type: 'warning',
+          message: 'Categoria deve ser selecionada',
+        });
+
+        return false;
+
+      case !occasionalMaintenanceData.element:
+        handleToastifyMessage({
+          type: 'warning',
+          message: 'Elemento deve ser informado',
+        });
+
+        return false;
+
+      case !occasionalMaintenanceData.activity:
+        handleToastifyMessage({
+          type: 'warning',
+          message: 'Atividade deve ser informada',
+        });
+
+        return false;
+
+      case !occasionalMaintenanceData.executionDate:
+        handleToastifyMessage({
+          type: 'warning',
+          message: 'Data de execução deve ser informada',
+        });
+
+        return false;
+
+      default:
+        return true;
+    }
+  };
+
   const handleGetBuildingsAndCategories = async () => {
     setLoading(true);
 
@@ -135,6 +187,13 @@ export const ModalCreateOccasionalMaintenance = ({
     inProgress = false,
   }: IHandleCreateOccasionalMaintenance) => {
     setLoading(true);
+
+    const checkValues = handleCheckValues();
+
+    if (!checkValues) {
+      setLoading(false);
+      return;
+    }
 
     const reportDataBody =
       occasionalMaintenanceType === 'finished'
@@ -194,7 +253,7 @@ export const ModalCreateOccasionalMaintenance = ({
       const responseData = await getPriority();
       setPriorityData(responseData);
     } catch (error: any) {
-      handleToastify(error.response.data.ServerMessage);
+      handleToastify(error.response);
     }
   };
 
