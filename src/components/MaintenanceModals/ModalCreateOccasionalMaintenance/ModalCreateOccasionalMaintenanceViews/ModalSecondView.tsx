@@ -65,8 +65,8 @@ const ModalSecondView = ({
           <CRUDInput
             id="categoryData"
             name="categoryData"
-            arrowColor="primary"
             label="Categoria *"
+            arrowColor="primary"
             value={occasionalMaintenanceData.categoryData.name || ''}
             select={{
               createLabel: 'Criar categoria',
@@ -158,7 +158,7 @@ const ModalSecondView = ({
             id="usersId"
             name="usersId"
             placeholder="Selecione um ou mais usuários"
-            label="Usuário(s) *"
+            label="Usuário(s)"
             options={usersForSelect.map(({ id, name }) => ({ label: name, value: id }))}
             value={occasionalMaintenanceData.usersId
               ?.map((userId) => {
