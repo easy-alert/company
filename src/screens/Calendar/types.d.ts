@@ -31,7 +31,6 @@ export interface IRequestCalendarData {
   setMaintenancesDisplay: (setMaintenancesDisplay: ICalendarView[]) => void;
   setLoading: (setLoading: boolean) => void;
   setYearChangeLoading: (setYearChangeLoading: boolean) => void;
-  setBuildingOptions: React.Dispatch<React.SetStateAction<IBuildingOptions[]>>;
 }
 
 export interface IRequestCalendarDataResData {

@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // LIBS
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -9,9 +9,6 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
-
-// CONTEXTS
-import { AuthContext } from '@contexts/Auth/AuthContext';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
@@ -41,10 +38,9 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // TYPES
-import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
+import type { ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
-  const { account } = useContext(AuthContext);
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   const [date, setDate] = useState(new Date());
@@ -53,7 +49,6 @@ export const MaintenancesCalendar = () => {
     useState<boolean>(false);
   const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -83,8 +78,6 @@ export const MaintenancesCalendar = () => {
 
   const [buildingId, setBuildingId] = useState<string>('none');
 
-  const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
-
   const calendarYear = new Date(date).getFullYear();
   const calendarMonth = new Date(date).getMonth();
 
@@ -93,8 +86,6 @@ export const MaintenancesCalendar = () => {
   const YearLimitForRequest = currentYear + YearOffset;
 
   const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
-
-  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
 
   const locales = {
     'pt-BR': ptBR,
@@ -154,15 +145,12 @@ export const MaintenancesCalendar = () => {
   };
 
   const onNavigate = useCallback(
-    (newDate: Date, view?: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
+    (newDate: Date, view: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
       setDate(newDate);
+      setCalendarType(view);
     },
     [setDate],
   );
-
-  const handleModalEditReport = (modalState: boolean) => {
-    setModalEditReport(modalState);
-  };
 
   const handleMaintenanceHistoryIdChange = (id: string) => {
     setMaintenanceHistoryId(id);
@@ -179,7 +167,6 @@ export const MaintenancesCalendar = () => {
       setMaintenancesMonthView,
       setMaintenancesDisplay,
       setYearChangeLoading,
-      setBuildingOptions,
     });
   };
 
@@ -332,26 +319,6 @@ export const MaintenancesCalendar = () => {
           handleQuery={handleQuery}
         />
       )}
-
-      {/* {modalEditReport && (
-        <ModalEditMaintenanceReport
-          maintenanceHistoryId={maintenanceHistoryId || modalAdditionalInformations.id}
-          handleModalEditReport={handleModalEditReport}
-          onThenActionRequest={async () =>
-            requestCalendarData({
-              buildingId,
-              calendarType,
-              yearToRequest,
-              setLoading,
-              setMaintenancesWeekView,
-              setMaintenancesMonthView,
-              setMaintenancesDisplay,
-              setYearChangeLoading,
-              setBuildingOptions,
-            })
-          }
-        />
-      )} */}
 
       <Style.Container>
         <Style.Header arrowColor="primary">

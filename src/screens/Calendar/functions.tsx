@@ -25,7 +25,6 @@ export const requestCalendarData = async ({
   setMaintenancesWeekView,
   setMaintenancesDisplay,
   setYearChangeLoading,
-  setBuildingOptions,
   setLoading,
 }: IRequestCalendarData & { monthToRequest: number }) => {
   setYearChangeLoading(true);
@@ -34,8 +33,6 @@ export const requestCalendarData = async ({
 
   await Api.get(query)
     .then((res: IRequestCalendarDataResData) => {
-      setBuildingOptions(res.data.Filter);
-
       const maintenancesMonthMap: ICalendarView[] = [];
 
       for (let i = 0; i < res.data.Dates.Months.length; i += 1) {
