@@ -87,7 +87,18 @@ export const requestCalendarData = async ({
         title: (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-              {e.Building.name}
+              <p
+                style={{
+                  flex: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'wrap',
+                  wordBreak: 'break-word',
+                }}
+              >
+                {e.Building.name}
+              </p>
+
               <EventTag
                 label={`#${e.serviceOrderNumber}`}
                 color={theme.color.gray4}
@@ -95,7 +106,17 @@ export const requestCalendarData = async ({
                 fontWeight="bold"
               />
             </div>
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: '4px',
+                flexWrap: 'wrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'wrap',
+                wordBreak: 'break-word',
+              }}
+            >
               {e.MaintenancesStatus.name === 'overdue' && <EventTag status="completed" />}
               <EventTag status={e.MaintenancesStatus.name} />
               {e.Maintenance.frequency < 1 ? (
@@ -108,7 +129,17 @@ export const requestCalendarData = async ({
                 e.inProgress &&
                 !e.isFuture && <InProgressTag />}
             </div>
-            <div style={{ fontSize: '12px' }}>{e.Maintenance.element}</div>
+            <div
+              style={{
+                fontSize: '12px',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'wrap',
+                wordBreak: 'break-word',
+              }}
+            >
+              {e.Maintenance.element}
+            </div>
             {e.Maintenance.frequency >= 1 && (
               <div style={{ fontSize: '10px' }}>
                 A cada {e.Maintenance.frequency}{' '}
