@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 // LIBS
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
@@ -9,9 +9,6 @@ import parse from 'date-fns/parse';
 import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import ptBR from 'date-fns/locale/pt';
-
-// CONTEXTS
-import { AuthContext } from '@contexts/Auth/AuthContext';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
@@ -28,19 +25,22 @@ import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
+import type { View } from 'react-big-calendar';
 
 // FUNCTIONS
 import { requestCalendarData } from './functions';
+
+// COMPONENTS
+import { CustomToolbar } from './utils/CustomToolbar';
 
 // STYLES
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // TYPES
-import type { IBuildingOptions, ICalendarView, IModalAdditionalInformations } from './types';
+import type { ICalendarView, IModalAdditionalInformations } from './types';
 
 export const MaintenancesCalendar = () => {
-  const { account } = useContext(AuthContext);
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
 
   const [date, setDate] = useState(new Date());
@@ -49,7 +49,6 @@ export const MaintenancesCalendar = () => {
     useState<boolean>(false);
   const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -77,22 +76,16 @@ export const MaintenancesCalendar = () => {
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
 
-  const calendarYear = new Date(date).getFullYear();
-
-  const currentYear = new Date().getFullYear();
-
-  const yearToRequest = calendarYear > currentYear ? currentYear : calendarYear;
-
-  const YearOffset = 5;
-
-  const YearLimitForRequest = new Date().getFullYear() + YearOffset;
-
-  const disableCalendarNextButton =
-    YearLimitForRequest === new Date(date).getFullYear() && new Date(date).getMonth() === 11;
-
   const [buildingId, setBuildingId] = useState<string>('none');
 
-  const [buildingOptions, setBuildingOptions] = useState<IBuildingOptions[]>([]);
+  const calendarYear = new Date(date).getFullYear();
+  const calendarMonth = new Date(date).getMonth();
+
+  const currentYear = new Date().getFullYear();
+  const YearOffset = 5;
+  const YearLimitForRequest = currentYear + YearOffset;
+
+  const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
 
   const locales = {
     'pt-BR': ptBR,
@@ -151,11 +144,13 @@ export const MaintenancesCalendar = () => {
     setOnQuery(queryState);
   };
 
-  const onNavigate = useCallback((newDate: Date) => setDate(newDate), [setDate]);
-
-  const handleModalEditReport = (modalState: boolean) => {
-    setModalEditReport(modalState);
-  };
+  const onNavigate = useCallback(
+    (newDate: Date, view: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
+      setDate(newDate);
+      setCalendarType(view);
+    },
+    [setDate],
+  );
 
   const handleMaintenanceHistoryIdChange = (id: string) => {
     setMaintenanceHistoryId(id);
@@ -164,14 +159,14 @@ export const MaintenancesCalendar = () => {
   const handleGetCalendarData = async () => {
     await requestCalendarData({
       buildingId,
-      yearToRequest,
+      yearToRequest: calendarYear,
+      monthToRequest: calendarMonth + 1,
       calendarType,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
       setYearChangeLoading,
-      setBuildingOptions,
     });
   };
 
@@ -246,11 +241,16 @@ export const MaintenancesCalendar = () => {
   );
 
   const onView = useCallback(
-    (newView: 'month' | 'week' | 'work_week' | 'day' | 'agenda') => {
+    (newView: View) => {
       if (newView === 'month') {
         setMaintenancesDisplay([...maintenancesMonthView]);
         setCalendarType('month');
-      } else {
+      } else if (
+        newView === 'week' ||
+        newView === 'work_week' ||
+        newView === 'day' ||
+        newView === 'agenda'
+      ) {
         setMaintenancesDisplay([...maintenancesWeekView]);
         setCalendarType('week');
       }
@@ -282,7 +282,7 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     handleGetCalendarData();
-  }, [buildingId, yearToRequest]);
+  }, [buildingId, calendarYear, calendarMonth]);
 
   return loading ? (
     <DotSpinLoading />
@@ -319,26 +319,6 @@ export const MaintenancesCalendar = () => {
           handleQuery={handleQuery}
         />
       )}
-
-      {/* {modalEditReport && (
-        <ModalEditMaintenanceReport
-          maintenanceHistoryId={maintenanceHistoryId || modalAdditionalInformations.id}
-          handleModalEditReport={handleModalEditReport}
-          onThenActionRequest={async () =>
-            requestCalendarData({
-              buildingId,
-              calendarType,
-              yearToRequest,
-              setLoading,
-              setMaintenancesWeekView,
-              setMaintenancesMonthView,
-              setMaintenancesDisplay,
-              setYearChangeLoading,
-              setBuildingOptions,
-            })
-          }
-        />
-      )} */}
 
       <Style.Container>
         <Style.Header arrowColor="primary">
@@ -394,6 +374,8 @@ export const MaintenancesCalendar = () => {
               allDayAccessor="id"
               drilldownView="week"
               showAllEvents
+              components={{ toolbar: CustomToolbar }}
+              views={['month', 'week', 'work_week', 'day', 'agenda']}
             />
           </Style.CalendarWrapper>
         </Style.CalendarScroll>
