@@ -1,11 +1,14 @@
 // REACT
 import { useState } from 'react';
 
+// GLOBAL THEME
+import { theme } from '@styles/theme';
+
+// GLOBAL ASSETS
+import IconX from '@assets/icons/IconX';
+
 // COMPONENTS
 import { IconButton } from '../../Buttons/IconButton';
-
-// ASSETS
-import { icon } from '../../../assets/icons';
 
 // STYLES
 import * as Style from './styles';
@@ -26,7 +29,7 @@ export const CRUDInput = ({
     !!value &&
     selectProps.options.some((option) => option.label === value || option.value === value);
 
-  const [editing, setEditing] = useState(!hasInitialValue);
+  const [editing, setEditing] = useState(hasInitialValue);
 
   return (
     <Style.InputContainer selectPlaceholderValue={value}>
@@ -53,8 +56,8 @@ export const CRUDInput = ({
           style={{
             backgroundImage: `url("data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
               `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${
-                arrowColor || 'black'
-              }' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
+                theme.color[arrowColor as keyof typeof theme.color] || 'black'
+              }' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'>
                 <polyline points='6 9 12 15 18 9'/>
               </svg>`,
             )}")`,
@@ -66,7 +69,9 @@ export const CRUDInput = ({
           <option value="" disabled hidden>
             Selecione
           </option>
+
           <option value="create">{selectProps.createLabel}</option>
+
           {selectProps.options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -79,7 +84,7 @@ export const CRUDInput = ({
             <Style.IconContainer>
               <IconButton
                 disabled={disabled}
-                icon={icon.x}
+                icon={<IconX strokeColor={arrowColor} />}
                 size="16px"
                 onClick={() => {
                   setEditing(false);

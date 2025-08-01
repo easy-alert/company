@@ -84,7 +84,7 @@ export const createOccasionalMaintenance = async ({
 
     return response.data;
   } catch (error: any) {
-    handleToastify(error.response.data.ServerMessage);
+    handleToastify(error.response);
     return null;
   }
 };
