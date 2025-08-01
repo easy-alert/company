@@ -46,11 +46,11 @@ function HomePage() {
   const handleRankMedal = (rank: number) => {
     switch (true) {
       case rank <= 20:
-        return { medal: 'Ouro', image: image.goldMedal };
+        return { medal: 'Empresa Ouro', image: image.goldMedal };
       case rank <= 40:
-        return { medal: 'Prata', image: image.silverMedal };
+        return { medal: 'Empresa Prata', image: image.silverMedal };
       default:
-        return { medal: 'Bronze', image: image.bronzeMedal };
+        return { medal: 'Empresa Bronze', image: image.bronzeMedal };
     }
   };
 
@@ -152,26 +152,33 @@ function HomePage() {
             </Style.LoadingContainer>
           ) : (
             <Style.RankingCard>
-              <Image
-                img={
-                  handleRankMedal(companyCompletedMaintenancesRank.completedMaintenanceScoreRank)
-                    .image
-                }
-                size="80px"
-              />
+              {companyCompletedMaintenancesRank.completedMaintenanceScore !== 0 && (
+                <Image
+                  img={
+                    handleRankMedal(companyCompletedMaintenancesRank.completedMaintenanceScoreRank)
+                      .image
+                  }
+                  size="80px"
+                />
+              )}
               <div>
                 <strong>
-                  Empresa{' '}
-                  {
-                    handleRankMedal(companyCompletedMaintenancesRank.completedMaintenanceScoreRank)
-                      .medal
-                  }
+                  {companyCompletedMaintenancesRank.completedMaintenanceScore !== 0
+                    ? handleRankMedal(
+                        companyCompletedMaintenancesRank.completedMaintenanceScoreRank,
+                      ).medal
+                    : 'Sem classificação'}
                 </strong>
                 <span>
-                  Top {companyCompletedMaintenancesRank.completedMaintenanceScoreRank} Ranking
-                  Brasil
+                  {companyCompletedMaintenancesRank.completedMaintenanceScore !== 0
+                    ? `Top ${companyCompletedMaintenancesRank.completedMaintenanceScoreRank} Ranking Brasil`
+                    : ''}
                 </span>
-                <p>empresas que mais fazem manutenção</p>
+                {companyCompletedMaintenancesRank.completedMaintenanceScore !== 0 ? (
+                  <p>empresas que mais fazem manutenção</p>
+                ) : (
+                  <p>sua empresa ainda não concluiu nenhuma manutenção esse mês</p>
+                )}
               </div>
             </Style.RankingCard>
           )}
