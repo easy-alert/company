@@ -8,6 +8,9 @@ export interface ITableHeader {
     cssOnMedia?: CSSProperties;
   }[];
   children: ReactElement[];
+  pagination?: boolean;
+  registerPerPage?: number;
+  totalCountOfRegister?: number;
 }
 
 export interface ITableBody {
