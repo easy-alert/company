@@ -102,7 +102,7 @@ export const Bills = () => {
 
     try {
       const responseData = await getNiboBills({
-        filter: `startswith(originSchedule/stakeholder/cpfCnpj, '${CPF || CNPJ}')`,
+        filter: `originSchedule/stakeholder/cpfCnpj eq '${CPF || CNPJ}'`,
       });
 
       setBills(responseData?.items || []);
