@@ -31,7 +31,7 @@ export const SidebarBody = styled.div<{ openSidebar: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: ${({ theme }) => theme.size.md};
+  gap: ${({ theme }) => theme.size.csm2};
 
   padding: ${({ theme }) => theme.size.sm} ${({ theme }) => theme.size.xsm};
 
@@ -69,24 +69,31 @@ export const SidebarBodyMobile = styled.div`
   border-radius: 0rem 0rem 12px 12px;
   background-color: ${({ theme }) => theme.color.primary};
   overflow: hidden;
+
   @media (min-width: 900px) {
     display: none;
   }
 `;
+
 export const ImageMobile = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
   padding-right: 24px;
 `;
+
 export const ImageContainer = styled.div`
-  display: flex;
   width: fit-content;
+  display: flex;
+  flex-direction: column;
+
   cursor: pointer;
+
   @media (max-width: 900px) {
     display: none;
   }
 `;
+
 export const CloseButtonMobile = styled.div`
   margin: 12px 0 12px 0;
   display: flex;
@@ -98,14 +105,18 @@ export const CloseButtonMobile = styled.div`
     display: none;
   }
 `;
+
 export const Spacer = styled.div`
   height: 100%;
 `;
+
 export const Hr = styled.div`
-  height: 2px;
+  height: 1px;
   width: 100%;
+
+  margin-top: ${({ theme }) => theme.size.csm2};
+
   background-color: ${({ theme }) => theme.color.white};
-  margin-top: -${({ theme }) => theme.size.sm};
 `;
 
 export const AppContent = styled.div`
