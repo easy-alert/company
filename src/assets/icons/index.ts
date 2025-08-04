@@ -93,6 +93,8 @@ import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
+import receipt from './receipt.svg';
+import receiptWhite from './receiptWhite.svg';
 
 export const icon = {
   activityNotification,
@@ -190,4 +192,6 @@ export const icon = {
   arrowDownPrimary,
   maintenance,
   maintenanceWhite,
+  receipt,
+  receiptWhite,
 };
