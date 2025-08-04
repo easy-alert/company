@@ -2,7 +2,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
 // LIBS
+import { Form, Formik } from 'formik';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import type { View } from 'react-big-calendar';
 import { useKeyPressEvent } from 'react-use';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
@@ -19,13 +21,16 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
 import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { Button } from '@components/Buttons/Button';
+import { ListTag } from '@components/ListTag';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
+import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
-import type { View } from 'react-big-calendar';
 
 // FUNCTIONS
 import { requestCalendarData } from './functions';
@@ -50,6 +55,7 @@ export const MaintenancesCalendar = () => {
   const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
 
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -76,7 +82,7 @@ export const MaintenancesCalendar = () => {
     'month' | 'week' | 'work_week' | 'day' | 'agenda'
   >('month');
 
-  const [buildingId, setBuildingId] = useState<string>('none');
+  const [buildingIds, setBuildingIds] = useState<string[]>([]);
 
   const calendarYear = new Date(date).getFullYear();
   const calendarMonth = new Date(date).getMonth();
@@ -158,7 +164,7 @@ export const MaintenancesCalendar = () => {
 
   const handleGetCalendarData = async () => {
     await requestCalendarData({
-      buildingId,
+      buildingIds,
       yearToRequest: calendarYear,
       monthToRequest: calendarMonth + 1,
       calendarType,
@@ -168,6 +174,11 @@ export const MaintenancesCalendar = () => {
       setMaintenancesDisplay,
       setYearChangeLoading,
     });
+  };
+
+  const handleClearFilter = () => {
+    setBuildingIds([]);
+    handleGetCalendarData();
   };
 
   const eventPropGetter = useCallback(
@@ -282,7 +293,7 @@ export const MaintenancesCalendar = () => {
 
   useEffect(() => {
     handleGetCalendarData();
-  }, [buildingId, calendarYear, calendarMonth]);
+  }, [buildingIds, calendarYear, calendarMonth]);
 
   return loading ? (
     <DotSpinLoading />
@@ -322,25 +333,15 @@ export const MaintenancesCalendar = () => {
 
       <Style.Container>
         <Style.Header arrowColor="primary">
-          <h2>Calendário</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h2>Calendário</h2>
 
-          <select
-            disabled={yearChangeloading}
-            value={buildingId}
-            onChange={(e) => setBuildingId(e.target.value)}
-          >
-            <option value="none" hidden>
-              Selecione
-            </option>
-
-            <option value="">Todas</option>
-
-            {buildingsForSelect.map((building) => (
-              <option value={building.id} key={building.id}>
-                {building.name}
-              </option>
-            ))}
-          </select>
+            <IconButton
+              label="Filtros"
+              icon={<IconFilter strokeColor="primary" />}
+              onClick={() => setShowFilter(!showFilter)}
+            />
+          </div>
 
           <IconButton
             label="Manutenção avulsa"
@@ -350,14 +351,103 @@ export const MaintenancesCalendar = () => {
           />
         </Style.Header>
 
+        {showFilter && (
+          <Style.FiltersContainer>
+            <Formik
+              initialValues={{ buildings: [] }}
+              onSubmit={async () => handleGetCalendarData()}
+            >
+              {() => (
+                <Form>
+                  <Style.FilterWrapper>
+                    <div>
+                      <FormikSelect
+                        id="building-select"
+                        label="Edificação"
+                        selectPlaceholderValue={' '}
+                        value=""
+                        disabled={loading}
+                        onChange={(e) => {
+                          setBuildingIds((prev) => [...prev, e.target.value]);
+
+                          if (e.target.value === 'all') {
+                            setBuildingIds([]);
+                          }
+                        }}
+                      >
+                        <option value="" disabled hidden>
+                          Selecione
+                        </option>
+
+                        <option value="all" disabled={buildingIds.length === 0}>
+                          Todas
+                        </option>
+
+                        {buildingsForSelect?.map((building) => (
+                          <option
+                            value={building.id}
+                            key={building.id}
+                            disabled={buildingIds.some((b) => b === building.id)}
+                          >
+                            {building.name}
+                          </option>
+                        ))}
+                      </FormikSelect>
+                    </div>
+
+                    <Style.FilterButtonWrapper>
+                      <Button
+                        type="button"
+                        label="Limpar filtros"
+                        borderless
+                        textColor="primary"
+                        disable={loading}
+                        onClick={() => handleClearFilter()}
+                      />
+
+                      <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
+                    </Style.FilterButtonWrapper>
+                  </Style.FilterWrapper>
+
+                  <Style.FilterWrapperFooter>
+                    <Style.FilterTags>
+                      {buildingIds.length === 0 ? (
+                        <ListTag
+                          label="Todas as edificações"
+                          color="white"
+                          backgroundColor="primaryM"
+                          fontWeight={500}
+                          padding="4px 12px"
+                        />
+                      ) : (
+                        buildingIds.map((building) => (
+                          <ListTag
+                            key={building}
+                            label={buildingsForSelect.find((b) => b.id === building)?.name || ''}
+                            color="white"
+                            backgroundColor="primaryM"
+                            fontWeight={500}
+                            padding="4px 12px"
+                            onClick={() =>
+                              setBuildingIds((prev) => prev.filter((b) => b !== building))
+                            }
+                          />
+                        ))
+                      )}
+                    </Style.FilterTags>
+                  </Style.FilterWrapperFooter>
+                </Form>
+              )}
+            </Formik>
+          </Style.FiltersContainer>
+        )}
+
         <Style.CalendarScroll>
           <Style.CalendarWrapper
             view={calendarType}
             disableCalendarNextButton={disableCalendarNextButton}
             yearChangeloading={yearChangeloading}
           >
-            {yearChangeloading && <Style.YearLoading />}
-
             <Calendar
               date={date}
               onNavigate={onNavigate}

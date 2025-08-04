@@ -8,47 +8,16 @@ export const Container = styled.header`
 export const Header = styled.header<{ arrowColor?: string }>`
   display: flex;
   align-items: center;
-  margin-bottom: ${({ theme }) => theme.size.sm};
+  justify-content: space-between;
+
   gap: ${({ theme }) => theme.size.sm};
 
-  > :nth-child(3) {
-    margin-left: auto;
-  }
-
-  > select {
-    max-width: 300px;
-    cursor: pointer;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    font-size: 14px;
-    outline: none;
-    width: 100%;
-    background-color: ${({ theme }) => theme.color.white};
-    border-radius: ${({ theme }) => theme.size.xxsm};
-    padding: 0 ${({ theme }) => theme.size.sm};
-    padding-right: 40px;
-
-    background-image: ${({ arrowColor = 'black', theme }) => {
-      const color = theme.color[arrowColor as keyof typeof theme.color] || arrowColor;
-      return `url("data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-        `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='${color}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>
-          <polyline points='6 9 12 15 18 9'/>
-        </svg>`,
-      )}")`;
-    }};
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-  }
+  margin-bottom: ${({ theme }) => theme.size.sm};
 
   @media (max-width: 900px) {
     flex-direction: column;
     align-items: flex-start;
     gap: ${({ theme }) => theme.size.xxsm};
-    > :last-child {
-      margin-left: 0;
-    }
   }
 `;
 
@@ -63,12 +32,15 @@ export const CalendarWrapper = styled.div<{
   disableCalendarNextButton: boolean;
   yearChangeloading: boolean;
 }>`
+  /* position: relative; */
   width: 100%;
-  background-color: ${({ theme }) => theme.color.white};
-  padding: ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
   min-width: 850px;
-  position: relative;
+
+  background-color: ${({ theme }) => theme.color.white};
+
+  padding-right: ${({ theme }) => theme.size.sm};
+  padding-left: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
 
   .ellipsis {
     white-space: nowrap;
@@ -277,10 +249,6 @@ export const CalendarWrapper = styled.div<{
 `;
 
 export const YearLoading = styled.div`
-  position: absolute;
-  left: 260px;
-  top: 19px;
-
   border: 4px solid ${({ theme }) => theme.color.primaryL};
   border-top: 4px solid ${({ theme }) => theme.color.primary};
   border-radius: 50%;
@@ -296,4 +264,44 @@ export const YearLoading = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+export const FiltersContainer = styled.div`
+  background-color: ${({ theme }) => theme.color.white};
+  padding: ${({ theme }) => theme.size.sm};
+  border-radius: ${({ theme }) => theme.size.xxsm};
+
+  margin-bottom: ${({ theme }) => theme.size.sm};
+`;
+
+export const FilterWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  align-items: end;
+
+  gap: ${({ theme }) => theme.size.xsm};
+`;
+
+export const FilterWrapperFooter = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: ${({ theme }) => theme.size.xsm};
+`;
+
+export const FilterButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  gap: ${({ theme }) => theme.size.sm};
+`;
+
+export const FilterTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: ${({ theme }) => theme.size.xsm};
 `;
