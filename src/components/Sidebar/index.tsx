@@ -62,13 +62,23 @@ export const Sidebar = () => {
       },
     },
     {
-      title: 'Calendário',
+      title: 'Calendário manutenções',
       type: 'navigate',
       icon: icon.calendar,
-      permission: 'access:calendar',
-      url: '/calendar',
+      permission: 'access:calendar-maintenances',
+      url: '/calendar-maintenances',
       redirectFunction: () => {
-        navigate('/calendar');
+        navigate('/calendar-maintenances');
+      },
+    },
+    {
+      title: 'Calendário chamados',
+      type: 'navigate',
+      icon: icon.calendarCalled,
+      permission: 'access:calendar',
+      url: '/calendar-called',
+      redirectFunction: () => {
+        navigate('/calendar-called');
       },
     },
     {
