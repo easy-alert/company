@@ -366,7 +366,7 @@ export const MaintenancesCalendar = () => {
                         label="Edificação"
                         selectPlaceholderValue={' '}
                         value=""
-                        disabled={loading}
+                        disabled={yearChangeloading}
                         onChange={(e) => {
                           setBuildingIds((prev) => [...prev, e.target.value]);
 
@@ -398,7 +398,7 @@ export const MaintenancesCalendar = () => {
                     <Style.FilterButtonWrapper>
                       <Button
                         type="button"
-                        label="Limpar filtros"
+                        label="Limpar"
                         borderless
                         textColor="primary"
                         disable={loading}
@@ -448,6 +448,8 @@ export const MaintenancesCalendar = () => {
             disableCalendarNextButton={disableCalendarNextButton}
             yearChangeloading={yearChangeloading}
           >
+            {yearChangeloading && <DotSpinLoading />}
+
             <Calendar
               date={date}
               onNavigate={onNavigate}
