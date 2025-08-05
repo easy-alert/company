@@ -93,8 +93,10 @@ import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
+import calendarCalled from './calendarCalled.svg';
 
 export const icon = {
+  calendarCalled,
   activityNotification,
   smallPaper,
   update,
