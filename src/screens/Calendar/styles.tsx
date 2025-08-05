@@ -40,6 +40,7 @@ export const CalendarWrapper = styled.div<{
 
   padding-right: ${({ theme }) => theme.size.sm};
   padding-left: ${({ theme }) => theme.size.sm};
+  padding-bottom: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
 
   .ellipsis {
