@@ -15,7 +15,7 @@ export const getCalendarCalled = async ({
   year,
   buildingId,
 }: IGetCalendarCalledParams) => {
-  const uri = `calendar-called/list/${year}?companyId=${companyId}&buildingId=${buildingId}`;
+  const uri = `calendar-tickets/list/${year}?companyId=${companyId}&buildingId=${buildingId}`;
 
   try {
     const response: { data: IResponseGetCalendarCalled } = await Api.get(uri);

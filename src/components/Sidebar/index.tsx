@@ -76,9 +76,9 @@ export const Sidebar = () => {
       type: 'navigate',
       icon: icon.calendarCalled,
       permission: 'access:calendar',
-      url: '/calendar-called',
+      url: '/calendar-tickets',
       redirectFunction: () => {
-        navigate('/calendar-called');
+        navigate('/calendar-tickets');
       },
     },
     {

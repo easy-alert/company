@@ -111,10 +111,10 @@ const AppRoutes = () => (
             <Route index element={<MaintenancesCalendar />} />
           </Route>
 
-          {/* calendar called route */}
+          {/* calendar tickets route */}
           <Route
-            path="/calendar-called"
-            element={<PermissionRoute requiredPermission="access:calendar-called" />}
+            path="/calendar-tickets"
+            element={<PermissionRoute requiredPermission="access:calendar-tickets" />}
           >
             <Route index element={<CalendarCalled />} />
           </Route>
