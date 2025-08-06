@@ -64,7 +64,6 @@
     "react-to-print": "^2.14.12",
     "react-toastify": "^9.0.7",
     "react-use": "^17.6.0",
-    "react-yearly-calendar": "^1.2.6",
     "styled-components": "^5.3.5",
     "yup": "^0.32.11"
   },
