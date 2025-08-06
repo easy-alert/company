@@ -17,7 +17,7 @@ import { theme } from '@styles/theme';
 import type { ICalendarView, IRequestCalendarData, IRequestCalendarDataResData } from './types';
 
 export const requestCalendarData = async ({
-  buildingId,
+  buildingIds,
   yearToRequest,
   monthToRequest,
   calendarType,
@@ -29,9 +29,15 @@ export const requestCalendarData = async ({
 }: IRequestCalendarData & { monthToRequest: number }) => {
   setYearChangeLoading(true);
 
-  const query = `calendars/list?buildingId=${buildingId}&year=${yearToRequest}&month=${monthToRequest}`;
+  const params = {
+    buildingIds: buildingIds.length > 0 ? buildingIds.join(',') : '',
+    year: yearToRequest,
+    month: monthToRequest,
+  };
 
-  await Api.get(query)
+  const query = `calendars/list`;
+
+  await Api.get(query, { params })
     .then((res: IRequestCalendarDataResData) => {
       const maintenancesMonthMap: ICalendarView[] = [];
 
