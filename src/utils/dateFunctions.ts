@@ -15,3 +15,9 @@ export function convertToTimestamp(isoString: string): number {
   const date = parseISO(isoString);
   return date.getTime();
 }
+
+export const formatDate = (dateString: string) => {
+  const [datePart] = dateString.split('T');
+  const [year, month, day] = datePart.split('-');
+  return `${day}/${month}/${year}`; // Returns '05/07/2025'
+};

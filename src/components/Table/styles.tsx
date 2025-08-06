@@ -63,3 +63,16 @@ export const TableColBody = styled.td<{
     ${({ cssOnMedia }) => cssOnMedia}
   }
 `;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: ${theme.size.sm};
+
+  @media (max-width: 900px) {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+`;
