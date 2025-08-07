@@ -65,20 +65,20 @@ export const Sidebar = () => {
       title: 'Calendário manutenções',
       type: 'navigate',
       icon: icon.calendar,
-      permission: 'access:calendar-maintenances',
-      url: '/calendar-maintenances',
+      permission: 'access:calendarMaintenances',
+      url: '/calendarMaintenances',
       redirectFunction: () => {
-        navigate('/calendar-maintenances');
+        navigate('/calendarMaintenances');
       },
     },
     {
       title: 'Calendário chamados',
       type: 'navigate',
       icon: icon.calendarCalled,
-      permission: 'access:calendar',
-      url: '/calendar-tickets',
+      permission: 'access:calendarTickets',
+      url: '/calendarTickets',
       redirectFunction: () => {
-        navigate('/calendar-tickets');
+        navigate('/calendarTickets');
       },
     },
     {

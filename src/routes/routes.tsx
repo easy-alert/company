@@ -30,7 +30,7 @@ import { Dashboard } from '@screens/Dashboard';
 
 // CALENDAR PAGES
 import { MaintenancesCalendar } from '@screens/Calendar';
-import { CalendarCalled } from '@screens/CalendarCalled';
+import { CalendarTickets } from '@screens/CalendarTickets';
 
 // BUILDINGS PAGES
 import { BuildingsList } from '@screens/Buildings/List';
@@ -103,20 +103,20 @@ const AppRoutes = () => (
             <Route index element={<Dashboard />} />
           </Route>
 
-          {/* calendar route */}
+          {/* calendar maintenances route */}
           <Route
-            path="/calendar-maintenances"
-            element={<PermissionRoute requiredPermission="access:calendar-maintenances" />}
+            path="/calendarMaintenances"
+            element={<PermissionRoute requiredPermission="access:calendarMaintenances" />}
           >
             <Route index element={<MaintenancesCalendar />} />
           </Route>
 
           {/* calendar tickets route */}
           <Route
-            path="/calendar-tickets"
-            element={<PermissionRoute requiredPermission="access:calendar-tickets" />}
+            path="/calendarTickets"
+            element={<PermissionRoute requiredPermission="access:calendarTickets" />}
           >
-            <Route index element={<CalendarCalled />} />
+            <Route index element={<CalendarTickets />} />
           </Route>
 
           {/* maintenances route */}
