@@ -1,5 +1,3 @@
-import { normalizeString } from './normalizeString';
-
 interface TranslationMap {
   [key: string]: string;
 }
