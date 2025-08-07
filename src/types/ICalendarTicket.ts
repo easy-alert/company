@@ -16,13 +16,14 @@ export interface ICalendarBuilding {
   name: string;
 }
 
-export interface IResponseGetCalendarCalled {
+export interface IResponseGetCalendarTicket {
   Days: ICalendarDay[];
   buildings: ICalendarBuilding[];
 }
 
-export interface IGetCalendarCalledParams {
+export interface IGetCalendarTicketParams {
   companyId: string;
   year: number;
-  buildingId?: string;
+  month: number;
+  buildingIds?: string[];
 }
