@@ -329,9 +329,16 @@ export const CalendarTickets = () => {
             eventContent={renderEventContent}
             eventClick={handleEventClick}
             datesSet={(arg) => {
+              let newDate = arg.start;
+              if (arg.view.type === 'dayGridYear') {
+                const calendarApi = calendarRef.current?.getApi();
+                const currentYear =
+                  calendarApi?.getDate().getFullYear() ?? new Date().getFullYear();
+                newDate = new Date(currentYear, 0, 1);
+              }
               setCalendarState((prev) => ({
                 ...prev,
-                date: arg.start,
+                date: newDate,
                 currentView: arg.view.type,
               }));
             }}
