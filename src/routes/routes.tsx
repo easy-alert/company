@@ -166,7 +166,7 @@ const AppRoutes = () => (
           </Route>
 
           {/* stock route */}
-          <Route path="/stock" element={<PermissionRoute requiredPermission="access:stock" />}>
+          <Route path="/stock" element={<PermissionRoute requiredPermission="" />}>
             <Route index element={<Stock />} />
           </Route>
 

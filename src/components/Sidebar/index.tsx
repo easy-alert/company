@@ -52,6 +52,7 @@ export const Sidebar = () => {
 
   const SidebarContent: SidebarContentProps[] = [
     {
+      order: 1,
       title: 'Dashboard',
       type: 'navigate',
       icon: icon.dashboard,
@@ -62,6 +63,7 @@ export const Sidebar = () => {
       },
     },
     {
+      order: 2,
       title: 'Calendário manutenções',
       type: 'navigate',
       icon: icon.calendar,
@@ -72,6 +74,7 @@ export const Sidebar = () => {
       },
     },
     {
+      order: 3,
       title: 'Calendário chamados',
       type: 'navigate',
       icon: icon.calendarCalled,
@@ -82,6 +85,7 @@ export const Sidebar = () => {
       },
     },
     {
+      order: 4,
       title: 'Edificações',
       type: 'navigate',
       icon: icon.building,
@@ -92,6 +96,7 @@ export const Sidebar = () => {
       },
     },
     {
+      order: 5,
       title: 'Manutenções',
       type: 'navigate',
       icon: icon.maintenanceWhite,
@@ -103,6 +108,7 @@ export const Sidebar = () => {
     },
 
     {
+      order: 6,
       title: 'Checklists',
       type: 'navigate',
       icon: icon.checklists,
@@ -114,6 +120,7 @@ export const Sidebar = () => {
     },
 
     {
+      order: 7,
       title: 'Chamados',
       type: 'navigate',
       icon: icon.whiteSiren,
@@ -124,6 +131,7 @@ export const Sidebar = () => {
       },
     },
     {
+      order: 8,
       title: 'Relatórios',
       type: 'navigate',
       icon: icon.report,
@@ -134,16 +142,7 @@ export const Sidebar = () => {
       },
     },
     {
-      title: 'Estoque',
-      type: 'navigate',
-      icon: icon.box,
-      permission: 'access:stock',
-      url: '/stock',
-      redirectFunction: () => {
-        navigate('/stock');
-      },
-    },
-    {
+      order: 9,
       title: 'Prestadores de serviço',
       type: 'navigate',
       icon: icon.suppliers,
@@ -164,6 +163,7 @@ export const Sidebar = () => {
     //   },
     // },
     {
+      order: 11,
       title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,
@@ -175,6 +175,7 @@ export const Sidebar = () => {
     },
 
     {
+      order: 12,
       title: 'Sair',
       type: 'navigate',
       icon: icon.power,
@@ -185,6 +186,22 @@ export const Sidebar = () => {
       },
     },
   ];
+
+  if (account?.Company?.id === 'ac6adf37-4bfb-4c16-8656-62db0547efca') {
+    SidebarContent.push({
+      order: 10,
+      title: 'Estoque',
+      type: 'navigate',
+      icon: icon.box,
+      permission: 'access:stock',
+      url: '/stock',
+      redirectFunction: () => {
+        navigate('/stock');
+      },
+    });
+
+    SidebarContent.sort((a, b) => a.order! - b.order!);
+  }
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
