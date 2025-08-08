@@ -55,6 +55,9 @@ import { Tutorials } from '@screens/Tutorials';
 import { AccountDetails } from '@screens/Account/Details';
 import UserPermissions from '@screens/Account/UserPermissions';
 
+// STOCK PAGES
+import { Stock } from '@screens/Stock';
+
 // RECOVER PASSWORD
 import { SendPasswordRecoverEmail } from '@screens/Authentication/SendPasswordRecoverEmail';
 import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
@@ -160,6 +163,11 @@ const AppRoutes = () => (
           {/* reports route */}
           <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
             <Route index element={<Report />} />
+          </Route>
+
+          {/* stock route */}
+          <Route path="/stock" element={<PermissionRoute requiredPermission="" />}>
+            <Route index element={<Stock />} />
           </Route>
 
           {/* suppliers route */}
