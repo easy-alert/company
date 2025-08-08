@@ -60,6 +60,7 @@ import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
 
 // PERMISSION PROTECTED ROUTE
 import { MaintenancesKanban } from '@screens/Maintenances/Kanban';
+import Stock from '@screens/Stock';
 import PermissionRoute from './PermissionRoute';
 
 const AppRoutes = () => (
@@ -151,6 +152,11 @@ const AppRoutes = () => (
           {/* reports route */}
           <Route path="/reports" element={<PermissionRoute requiredPermission="access:reports" />}>
             <Route index element={<Report />} />
+          </Route>
+
+          {/* stock route */}
+          <Route path="/stock" element={<PermissionRoute requiredPermission="access:stock" />}>
+            <Route index element={<Stock />} />
           </Route>
 
           {/* suppliers route */}

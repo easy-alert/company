@@ -124,6 +124,16 @@ export const Sidebar = () => {
       },
     },
     {
+      title: 'Estoque',
+      type: 'navigate',
+      icon: icon.box,
+      permission: 'access:stock',
+      url: '/stock',
+      redirectFunction: () => {
+        navigate('/stock');
+      },
+    },
+    {
       title: 'Prestadores de serviço',
       type: 'navigate',
       icon: icon.suppliers,
