@@ -1,5 +1,3 @@
-import { normalizeString } from './normalizeString';
-
 interface TranslationMap {
   [key: string]: string;
 }
@@ -23,6 +21,10 @@ const translations: TranslationMap = {
   inProgress: 'em execução',
   completed: 'concluídas',
   overdue: 'feitas em atraso',
+  open: 'em aberto',
+  awaitingToFinish: 'em execução',
+  finished: 'concluída',
+  dismissed: 'indeferido',
 };
 
 const reverseTranslations: TranslationMap = Object.fromEntries(
@@ -31,13 +33,13 @@ const reverseTranslations: TranslationMap = Object.fromEntries(
 
 export function handleTranslate(key: string): string {
   // Check if the key exists in the translations map
-  if (Object.prototype.hasOwnProperty.call(translations, key.toLocaleLowerCase())) {
-    return translations[key.toLocaleLowerCase()];
+  if (Object.prototype.hasOwnProperty.call(translations, key)) {
+    return translations[key];
   }
 
   // If the key is not found in the translations map, check if it exists in the reverse translations map
-  if (Object.prototype.hasOwnProperty.call(reverseTranslations, key.toLocaleLowerCase())) {
-    return reverseTranslations[key.toLocaleLowerCase()];
+  if (Object.prototype.hasOwnProperty.call(reverseTranslations, key)) {
+    return reverseTranslations[key];
   }
 
   console.warn(`Translation for key "${key}" not found.`);
