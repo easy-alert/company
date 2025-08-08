@@ -93,10 +93,12 @@ import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
+import box from './box.svg';
 
 export const icon = {
   activityNotification,
   smallPaper,
+  box,
   update,
   upload,
   activityComment,
