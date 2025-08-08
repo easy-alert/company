@@ -18,12 +18,11 @@ export interface ICalendarBuilding {
 
 export interface IResponseGetCalendarTicket {
   Days: ICalendarDay[];
-  buildings: ICalendarBuilding[];
 }
 
 export interface IGetCalendarTicketParams {
   companyId: string;
   year: number;
-  month: number;
+  month?: number;
   buildingIds?: string[];
 }

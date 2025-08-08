@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.header`
+export const Container = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.color.gray1};
   padding: ${({ theme }) => theme.size.md} 0;
@@ -54,10 +54,9 @@ export const CalendarWrapper = styled.div<{
   yearChangeloading: boolean;
   backgroundColor?: string;
 }>`
-  width: 100%;
   background-color: ${({ theme }) => theme.color.white};
   padding: ${({ theme }) => theme.size.md};
-  border-radius: 8px;
+  border-radius: ${({ theme }) => theme.size.xsm};
   border: 1px solid ${({ theme }) => theme.color.gray2};
 
   .custom-event {
@@ -188,6 +187,10 @@ export const CalendarWrapper = styled.div<{
     color: ${({ theme }) => theme.color.primary} !important;
     font-weight: bold;
   }
+
+  .fc-daygrid-event-harness {
+    padding: 4px 4px;
+  }
 `;
 
 export const CustomEvent = styled.div<{ status?: string }>`
@@ -198,11 +201,9 @@ export const CustomEvent = styled.div<{ status?: string }>`
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   color: ${({ theme }) => theme.color.gray6};
   cursor: pointer;
-  padding: ${({ theme }) => theme.size.xsm};
-  margin: ${({ theme }) => theme.size.xsm};
+  padding: 0 4px;
   word-break: break-word;
   white-space: normal;
-  max-width: 220px;
   box-sizing: border-box;
 
   &.status-awaitingtofinish {

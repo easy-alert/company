@@ -11,26 +11,26 @@ export const getCalendarTicket = async ({
   month,
   buildingIds,
 }: IGetCalendarTicketParams) => {
-  const query = new URLSearchParams({
+  const params = {
     companyId,
-    year: year.toString(),
-    month: month.toString(),
+    year,
+    month,
     ...(buildingIds &&
       buildingIds.length > 0 && {
         buildingIds: buildingIds.join(','),
       }),
-  }).toString();
+  };
 
-  const uri = `calendarTickets/list?${query}`;
+  const uri = `calendarTickets/list`;
 
   try {
-    const response: { data: IResponseGetCalendarTicket } = await Api.get(uri);
+    const response: { data: IResponseGetCalendarTicket } = await Api.get(uri, { params });
     return response.data;
   } catch (error: any) {
-    handleToastify(error);
+    handleToastify(error.response);
+
     return {
       Days: [],
-      buildings: [],
     };
   }
 };
