@@ -94,11 +94,13 @@ import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
 import calendarCalled from './calendarCalled.svg';
+import box from './box.svg';
+import report2 from './report2.svg';
 
 export const icon = {
-  calendarCalled,
   activityNotification,
   smallPaper,
+  box,
   update,
   upload,
   activityComment,
@@ -192,4 +194,6 @@ export const icon = {
   arrowDownPrimary,
   maintenance,
   maintenanceWhite,
+  calendarCalled,
+  report2,
 };

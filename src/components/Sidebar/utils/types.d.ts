@@ -10,6 +10,7 @@ interface IBase {
 }
 
 export interface SidebarContentProps extends IBase {
+  order?: number;
   type: 'navigate' | 'popover';
   options?: IBase[];
 }
