@@ -6,12 +6,27 @@ export const Container = styled.div`
   padding: ${({ theme }) => theme.size.md} 0;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.size.sm} 0;
+  }
 `;
 
 export const Header = styled.header`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.size.sm};
+
+  h2 {
+    font-size: ${({ theme }) => theme.size.lg};
+    word-break: break-word;
+  }
+
+  @media (max-width: 500px) {
+    h2 {
+      font-size: ${({ theme }) => theme.size.md};
+    }
+  }
 `;
 
 export const EventInfoRow = styled.div`
@@ -59,6 +74,26 @@ export const CalendarWrapper = styled.div<{
   border-radius: ${({ theme }) => theme.size.xsm};
   border: 1px solid ${({ theme }) => theme.color.gray2};
 
+  ${({ view }) =>
+    (view === 'dayGridWeek' || view === 'dayGridMonth' || view === 'dayGridYear') &&
+    `
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .fc-toolbar {
+      min-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* Garante que não empilhe no responsivo */
+      flex-wrap: nowrap;
+      gap: 0;
+    }
+    .fc-scrollgrid {
+      min-width: 900px;
+    }
+  `}
+
   .custom-event {
     margin: ${({ theme }) => theme.size.sm};
     background-color: ${({ theme }) => theme.color.gray0};
@@ -72,6 +107,24 @@ export const CalendarWrapper = styled.div<{
     max-width: 220px;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  @media (max-width: 1024px) {
+    padding: ${({ theme }) => theme.size.sm};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.size.xsm};
+  }
+
+  @media (max-width: 500px) {
+    .fc-toolbar-title {
+      font-size: ${({ theme }) => theme.size.sm};
+    }
+
+    .custom-event {
+      max-width: 180px;
+    }
   }
 
   .fc-toolbar-title {
@@ -89,6 +142,7 @@ export const CalendarWrapper = styled.div<{
     border: 1px solid ${({ theme }) => theme.color.gray2};
     color: ${({ theme }) => theme.color.gray6};
     border-radius: 6px;
+
     padding: 6px 18px;
     transition: background 0.2s, color 0.2s;
     box-shadow: none;
@@ -234,6 +288,10 @@ export const AssistanceTypeTag = styled.span<{ color?: string; background?: stri
   font-weight: 600;
   font-size: ${({ theme }) => theme.size.csm};
   display: inline-block;
+
+  @media (max-width: 500px) {
+    font-size: ${({ theme }) => theme.size.xxsm};
+  }
 `;
 
 export const FiltersContainer = styled.div`
@@ -241,6 +299,10 @@ export const FiltersContainer = styled.div`
   padding: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
   margin-bottom: ${({ theme }) => theme.size.sm};
+
+  @media (max-width: 768px) {
+    padding: ${({ theme }) => theme.size.xsm};
+  }
 `;
 
 export const FilterWrapper = styled.div`
@@ -249,6 +311,11 @@ export const FilterWrapper = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   gap: ${({ theme }) => theme.size.xsm};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 export const FilterWrapperFooter = styled.div`
@@ -261,6 +328,11 @@ export const FilterButtonWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.size.sm};
+
+  @media (max-width: 500px) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
 export const FilterTags = styled.div`
@@ -268,4 +340,8 @@ export const FilterTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.size.xsm};
+
+  @media (max-width: 500px) {
+    justify-content: center;
+  }
 `;
