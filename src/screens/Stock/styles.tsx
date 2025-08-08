@@ -13,6 +13,17 @@ export const FiltrosWrapper = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   font-size: ${({ theme }) => theme.size.csm2};
+  position: relative;
+`;
+
+export const IconReportWrapper = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 `;
 
 export const Filtros = styled.div`

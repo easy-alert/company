@@ -1,3 +1,4 @@
+// REACT
 import { useState } from 'react';
 
 // GLOBAL COMPONENTS
@@ -5,9 +6,11 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { Button } from '@components/Buttons/Button';
 import { Modal } from '@components/Modal';
 import { Select } from '@components/Inputs/Select';
+import { Image } from '@components/Image';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
+import { icon } from '@assets/icons';
 
 // STYLES
 import * as Style from './styles';
@@ -171,6 +174,9 @@ export const Stock = () => {
 
       <form onSubmit={(e) => e.preventDefault()} style={{ width: '100%' }}>
         <Style.FiltrosWrapper>
+          <Style.IconReportWrapper>
+            <Image img={icon.report2} size="24px" />
+          </Style.IconReportWrapper>
           <div
             style={{
               width: '100%',
