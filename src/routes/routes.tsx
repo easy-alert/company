@@ -54,13 +54,15 @@ import { Tutorials } from '@screens/Tutorials';
 import { AccountDetails } from '@screens/Account/Details';
 import UserPermissions from '@screens/Account/UserPermissions';
 
+// STOCK PAGES
+import { Stock } from '@screens/Stock';
+
 // RECOVER PASSWORD
 import { SendPasswordRecoverEmail } from '@screens/Authentication/SendPasswordRecoverEmail';
 import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
 
 // PERMISSION PROTECTED ROUTE
 import { MaintenancesKanban } from '@screens/Maintenances/Kanban';
-import Stock from '@screens/Stock';
 import PermissionRoute from './PermissionRoute';
 
 const AppRoutes = () => (
