@@ -48,7 +48,20 @@ export const HeaderWrapper = styled.div`
 export const ActionsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
   justify-content: center;
   gap: ${theme.size.csm};
+`;
+
+export const NoDataContainer = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 84%;
+  gap: ${theme.size.xxsm};
+  > h3 {
+    color: ${theme.color.gray4};
+    text-align: center;
+  }
 `;

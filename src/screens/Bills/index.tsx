@@ -1,19 +1,34 @@
+// REACT
 import { useEffect, useState, useCallback } from 'react';
+
+// LIBS
+import type { CSSProperties } from 'styled-components';
+
+// CONTEXTS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
+
+// SERVICES
 import { getNiboBills } from '@services/nibo/getNiboBills';
+import { getNiboReceipts } from '@services/nibo/getNiboReceipts';
+
+// GLOBAL COMPONENTS
 import { Table, TableContent } from '@components/Table';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
-import type { IBill } from '@customTypes/nibo/IBill';
-import TableCell, { type TTableCellType } from '@components/TableCell';
-import { handleTranslate } from '@utils/handleTranslate';
-import { CSSProperties } from 'styled-components';
-import { formatDate } from '@utils/dateFunctions';
-import { useAuthContext } from '@contexts/Auth/UseAuthContext';
-import { NoDataContainer } from '@screens/Tickets/styles';
-import IconEye from '@assets/icons/IconEye';
 import { IconButton } from '@components/Buttons/IconButton';
-import { getNiboReceipts } from '@services/nibo/getNiboReceipts';
+import TableCell, { type TTableCellType } from '@components/TableCell';
+
+// GLOBAL UTILS
+import { formatDate } from '@utils/dateFunctions';
+import { handleTranslate } from '@utils/handleTranslate';
 import { handleToastifyMessage } from '@utils/toastifyResponses';
+
+// GLOBAL ASSETS
 import IconDownload from '@assets/icons/IconDownload';
+
+// CUSTOM TYPES
+import type { IBill } from '@customTypes/nibo/IBill';
+
+// STYLES
 import * as Style from './styles';
 
 interface IColsHeader {
@@ -31,7 +46,7 @@ interface IColsBody {
 export const Bills = () => {
   const {
     account: {
-      Company: { CPF, CNPJ },
+      Company: { CPF, CNPJ, linkedExternalForPayment },
     },
   } = useAuthContext();
 
@@ -57,7 +72,7 @@ export const Bills = () => {
 
           if (!pdfFileUrl) {
             handleToastifyMessage({
-              message: 'Recibo não encontrado',
+              message: 'NF não encontrada',
               type: 'warning',
             });
 
@@ -68,7 +83,7 @@ export const Bills = () => {
           window.open(pdfFileUrl, '_blank');
         } catch (error) {
           handleToastifyMessage({
-            message: 'Erro ao abrir recibo',
+            message: 'Erro ao abrir NF',
             type: 'error',
           });
         }
@@ -85,7 +100,7 @@ export const Bills = () => {
           />
 
           <IconButton
-            label="Recibo"
+            label="NF"
             hideLabelOnMedia
             icon={<IconDownload strokeColor="primary" />}
             onClick={handleOpenReceipt}
@@ -100,13 +115,36 @@ export const Bills = () => {
   const handleGetNiboBills = async () => {
     setLoading(true);
 
+    let countData = 0;
+    let billsData: IBill[] = [];
+
     try {
       const responseData = await getNiboBills({
         filter: `originSchedule/stakeholder/cpfCnpj eq '${CPF || CNPJ}'`,
       });
 
-      setBills(responseData?.items || []);
-      setBillsCount(responseData?.count || 0);
+      billsData = [...billsData, ...(responseData?.items || [])];
+      countData = responseData?.count || 0;
+
+      await Promise.all(
+        linkedExternalForPayment.map(async (externalId) => {
+          const data = await getNiboBills({
+            filter: `originSchedule/stakeholder/cpfCnpj eq '${externalId}'`,
+          });
+
+          if (!data) {
+            return;
+          }
+
+          billsData = [...billsData, ...(data?.items || [])];
+          countData = data?.count || 0;
+        }),
+      );
+
+      setBills(
+        billsData.sort((a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime()),
+      );
+      setBillsCount(countData);
     } catch (error) {
       handleToastifyMessage({
         message: 'Erro ao buscar contas',
@@ -123,7 +161,10 @@ export const Bills = () => {
 
   const colsHeader: IColsHeader[] = [
     {
-      label: 'Nº',
+      label: 'Nome',
+    },
+    {
+      label: 'CPF/CNPJ',
     },
     {
       label: 'Data de vencimento',
@@ -165,8 +206,12 @@ export const Bills = () => {
 
   const colsBody: IColsBody[] = [
     {
-      cell: (item: IBill) => item.id,
+      cell: (item: IBill) => item.originSchedule.description,
       type: 'string',
+    },
+    {
+      cell: (item: IBill) => item.originSchedule.stakeholder.cpfCnpj,
+      type: 'cpfCnpj',
     },
     {
       cell: (item: IBill) => formatDate(item.dueDate),
@@ -221,9 +266,9 @@ export const Bills = () => {
       {loading && <DotSpinLoading />}
 
       {!loading && bills.length === 0 && (
-        <NoDataContainer>
+        <Style.NoDataContainer>
           <p>Nenhuma conta encontrada</p>
-        </NoDataContainer>
+        </Style.NoDataContainer>
       )}
 
       {!loading && bills.length > 0 && (
@@ -231,7 +276,7 @@ export const Bills = () => {
           colsHeader={colsHeader}
           pagination
           totalCountOfRegister={billsCount}
-          registerPerPage={10}
+          registerPerPage={5}
         >
           {bills?.map((item) => (
             <TableContent
