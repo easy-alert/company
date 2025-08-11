@@ -1,31 +1,23 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Container = styled.header`
   width: 100%;
-  background: ${({ theme }) => theme.color.gray1};
-  padding: ${({ theme }) => theme.size.md} 0;
-  display: flex;
-  flex-direction: column;
-
-  @media (max-width: 768px) {
-    padding: ${({ theme }) => theme.size.sm} 0;
-  }
+  padding-top: ${({ theme }) => theme.size.sm};
 `;
 
 export const Header = styled.header`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
   gap: ${({ theme }) => theme.size.sm};
 
-  h2 {
-    font-size: ${({ theme }) => theme.size.lg};
-    word-break: break-word;
-  }
+  margin-bottom: ${({ theme }) => theme.size.sm};
 
-  @media (max-width: 500px) {
-    h2 {
-      font-size: ${({ theme }) => theme.size.md};
-    }
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.size.xxsm};
   }
 `;
 
@@ -85,10 +77,10 @@ export const CalendarWrapper = styled.div<{
       display: flex;
       justify-content: space-between;
       align-items: center;
-      /* Garante que não empilhe no responsivo */
       flex-wrap: nowrap;
       gap: 0;
     }
+
     .fc-scrollgrid {
       min-width: 900px;
     }
@@ -298,24 +290,18 @@ export const FiltersContainer = styled.div`
   background-color: ${({ theme }) => theme.color.white};
   padding: ${({ theme }) => theme.size.sm};
   border-radius: ${({ theme }) => theme.size.xxsm};
-  margin-bottom: ${({ theme }) => theme.size.sm};
 
-  @media (max-width: 768px) {
-    padding: ${({ theme }) => theme.size.xsm};
-  }
+  margin-bottom: ${({ theme }) => theme.size.sm};
 `;
 
 export const FilterWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: ${({ theme }) => theme.size.xsm};
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
+  align-items: end;
+
+  gap: ${({ theme }) => theme.size.xsm};
 `;
 
 export const FilterWrapperFooter = styled.div`
