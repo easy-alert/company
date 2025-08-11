@@ -1,31 +1,60 @@
 /* eslint-disable react/no-array-index-key */
 // TYPES
-import { ITableBody, ITableHeader } from './utils/types';
+import { useState } from 'react';
+import { Pagination } from '@components/Pagination';
+import type { ITableBody, ITableHeader } from './utils/types';
 
 // COMPONENTS
 import * as Style from './styles';
 import { theme } from '../../styles/theme';
 
-export const Table = ({ colsHeader, children }: ITableHeader) => (
-  <Style.Background>
-    <Style.TableContainer>
-      <Style.TableHead>
-        <Style.TableRowHead>
-          {colsHeader.map((col) => (
-            <Style.TableColHeader
-              key={col.label}
-              cssProps={col.cssProps}
-              cssOnMedia={col.cssOnMedia}
-            >
-              {col.label}
-            </Style.TableColHeader>
-          ))}
-        </Style.TableRowHead>
-      </Style.TableHead>
-      <Style.TableBody>{children}</Style.TableBody>
-    </Style.TableContainer>
-  </Style.Background>
-);
+export const Table = ({
+  colsHeader,
+  children,
+  pagination,
+  totalCountOfRegister,
+  registerPerPage,
+}: ITableHeader) => {
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  return (
+    <Style.Background>
+      <Style.TableContainer>
+        <Style.TableHead>
+          <Style.TableRowHead>
+            {colsHeader.map((col) => (
+              <Style.TableColHeader
+                key={col.label}
+                cssProps={col.cssProps}
+                cssOnMedia={col.cssOnMedia}
+              >
+                {col.label}
+              </Style.TableColHeader>
+            ))}
+          </Style.TableRowHead>
+        </Style.TableHead>
+        <Style.TableBody>
+          {children.slice((page - 1) * (registerPerPage || 0), page * (registerPerPage || 0))}
+        </Style.TableBody>
+      </Style.TableContainer>
+
+      {pagination && (
+        <Style.PaginationContainer>
+          <Pagination
+            currentPage={page}
+            totalCountOfRegister={totalCountOfRegister || 0}
+            registerPerPage={registerPerPage || 0}
+            onPageChange={handlePageChange}
+          />
+        </Style.PaginationContainer>
+      )}
+    </Style.Background>
+  );
+};
 
 export const TableContent = ({ colsBody, onClick }: ITableBody) => (
   <Style.TableRow

@@ -80,6 +80,7 @@ export async function updateCompany({ data, company }: IUpdateCompany) {
       ticketType: response.data.updatedCompany.ticketType,
       showMaintenancePriority: response.data.updatedCompany.showMaintenancePriority,
       canAccessChecklists: response.data.updatedCompany.canAccessChecklists,
+      linkedExternalForPayment: response.data.updatedCompany.linkedExternalForPayment,
       canAccessTickets: response.data.updatedCompany.canAccessTickets,
     };
 
