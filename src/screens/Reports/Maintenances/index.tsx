@@ -26,7 +26,6 @@ import { PdfList } from '@components/PdfList';
 import { EventTag } from '@components/EventTag';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
-import { ModalMaintenanceReportEdit } from '@components/MaintenanceModals/ModalMaintenanceReportEdit';
 
 // GLOBAL UTILS
 import { applyMask, capitalizeFirstLetter, catchHandler, dateFormatter } from '@utils/functions';
@@ -42,6 +41,7 @@ import type { IReportPdf } from '@customTypes/IReportPdf';
 import type { TModalNames } from '@customTypes/TModalNames';
 
 // COMPONENTS
+import { handleToastify } from '@utils/toastifyResponses';
 import { ReportDataTable, ReportDataTableContent } from './ReportDataTable';
 
 // UTILS
@@ -90,7 +90,6 @@ export const MaintenanceReports = () => {
   const [filtersOptions, setFiltersOptions] = useState<IFiltersOptions | undefined>();
 
   const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-  const [modalEditReport, setModalEditReport] = useState<boolean>(false);
   const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
 
   const [showNoDataMessage, setShowNoDataMessage] = useState<boolean>(false);
@@ -182,22 +181,25 @@ export const MaintenanceReports = () => {
   const requestPdf = async () => {
     setOnPdfQuery(true);
 
-    await Api.get(
-      `/buildings/reports/create/pdf?maintenanceStatusIds=${
-        filterforRequest.maintenanceStatusIds
-      }&buildingIds=${filterforRequest.buildingIds}&categoryNames=${
-        filterforRequest.categoryNames
-      }&startDate=${filterforRequest.startDate}&endDate=${filterforRequest.endDate}&buildingNames=${
-        filterforRequest.buildingNames
-      }&maintenanceStatusNames=${filterforRequest.maintenanceStatusNames}&filterBy=${
-        filterforRequest.filterBy
-      }&search=${filterforRequest.search}&type=${filterforRequest.type.join(',')}`,
-    )
+    const params = {
+      maintenanceStatusIds: filterforRequest.maintenanceStatusIds,
+      buildingIds: filterforRequest.buildingIds,
+      categoryNames: filterforRequest.categoryNames,
+      startDate: filterforRequest.startDate,
+      endDate: filterforRequest.endDate,
+      buildingNames: filterforRequest.buildingNames,
+      maintenanceStatusNames: filterforRequest.maintenanceStatusNames,
+      filterBy: filterforRequest.filterBy,
+      search: filterforRequest.search,
+      type: filterforRequest.type.join(','),
+    };
+
+    await Api.get(`/buildings/reports/create/pdf`, { params })
       .then((res) => {
-        toast.success(res.data.ServerMessage.message);
+        handleToastify(res);
       })
-      .catch((err) => {
-        catchHandler(err);
+      .catch((err: any) => {
+        handleToastify(err.response);
       })
       .finally(() => {
         setOnPdfQuery(false);
@@ -249,22 +251,6 @@ export const MaintenanceReports = () => {
         />
       )}
 
-      {/* {modalEditReport && maintenanceHistoryId && (
-        <ModalEditMaintenanceReport
-          maintenanceHistoryId={maintenanceHistoryId}
-          handleModalEditReport={handleModalEditReport}
-          onThenActionRequest={async () =>
-            requestReportsData({
-              filters: filterforRequest,
-              setCounts,
-              setLoading,
-              setMaintenances,
-              setOnQuery,
-            })
-          }
-        />
-      )} */}
-
       <s.Container>
         <h2>Relatórios de manutenções</h2>
 
@@ -273,7 +259,7 @@ export const MaintenanceReports = () => {
             initialValues={{
               maintenanceStatusId: '',
               search: '',
-              filterBy: 'notificationDate',
+              filterBy: 'allActivities',
               startDate: '',
               endDate: '',
               endDueDate: '',
@@ -492,6 +478,7 @@ export const MaintenanceReports = () => {
                     selectPlaceholderValue={values.filterBy}
                     error={touched.filterBy && errors.filterBy ? errors.filterBy : null}
                   >
+                    <option value="allActivities">Todas as atividades</option>
                     <option value="notificationDate">Data de notificação</option>
                     <option value="dueDate">Data de vencimento</option>
                   </FormikSelect>

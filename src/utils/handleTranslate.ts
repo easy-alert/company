@@ -27,6 +27,10 @@ const translations: TranslationMap = {
   unpaid: 'pendente',
   canceled: 'cancelado',
   sent: 'enviado',
+  open: 'em aberto',
+  awaitingToFinish: 'em execução',
+  finished: 'concluída',
+  dismissed: 'indeferido',
 };
 
 const reverseTranslations: TranslationMap = Object.fromEntries(

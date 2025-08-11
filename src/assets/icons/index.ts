@@ -93,12 +93,16 @@ import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
+import calendarCalled from './calendarCalled.svg';
+import box from './box.svg';
+import report2 from './report2.svg';
 import receipt from './receipt.svg';
 import receiptWhite from './receiptWhite.svg';
 
 export const icon = {
   activityNotification,
   smallPaper,
+  box,
   update,
   upload,
   activityComment,
@@ -192,6 +196,8 @@ export const icon = {
   arrowDownPrimary,
   maintenance,
   maintenanceWhite,
+  calendarCalled,
+  report2,
   receipt,
   receiptWhite,
 };

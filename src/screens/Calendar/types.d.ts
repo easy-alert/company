@@ -23,7 +23,7 @@ export interface IModalAdditionalInformations {
 }
 
 export interface IRequestCalendarData {
-  buildingId: string;
+  buildingIds: string[];
   yearToRequest: number;
   calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
   setMaintenancesWeekView: (setMaintenancesWeekView: ICalendarView[]) => void;
