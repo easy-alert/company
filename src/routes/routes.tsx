@@ -62,8 +62,13 @@ import { Stock } from '@screens/Stock';
 import { SendPasswordRecoverEmail } from '@screens/Authentication/SendPasswordRecoverEmail';
 import { RecoverPassword } from '@screens/Authentication/RecoverPassword';
 
-// PERMISSION PROTECTED ROUTE
+// BILLS PAGES
+import { Bills } from '@screens/Bills';
+
+// MAINTENANCES PAGES
 import { MaintenancesKanban } from '@screens/Maintenances/Kanban';
+
+// PERMISSION PROTECTED ROUTE
 import PermissionRoute from './PermissionRoute';
 
 const AppRoutes = () => (
@@ -185,6 +190,11 @@ const AppRoutes = () => (
             element={<PermissionRoute requiredPermission="access:tutorials" />}
           >
             <Route index element={<Tutorials />} />
+          </Route>
+
+          {/* bills route */}
+          <Route path="/bills" element={<PermissionRoute requiredPermission="access:bills" />}>
+            <Route index element={<Bills />} />
           </Route>
 
           {/* account route */}

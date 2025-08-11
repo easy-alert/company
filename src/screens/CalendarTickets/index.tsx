@@ -22,12 +22,16 @@ import { getCalendarTicket } from '@services/apis/getCalendarTicket';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { Button } from '@components/Buttons/Button';
 import { ListTag } from '@components/ListTag';
+import { IconButton } from '@components/Buttons/IconButton';
 
 // COMPONENTS
 import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
+
+// GLOBAL ASSETS
+import IconFilter from '@assets/icons/IconFilter';
 
 // STYLES
 import * as Style from './styles';
@@ -93,6 +97,8 @@ export const CalendarTickets = () => {
     selectedTicket: null as any,
     showModal: false,
   });
+
+  const [showFilter, setShowFilter] = useState(false);
 
   const handleModalTicketDetails = (state: boolean) => {
     setModalTicketDetails(state);
@@ -188,15 +194,25 @@ export const CalendarTickets = () => {
 
       <Style.Container>
         <Style.Header>
-          <h2>Calendário chamados</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <h2>Calendário chamados</h2>
 
-          <Formik
-            initialValues={{ buildings: [] }}
-            onSubmit={async () => handleGetCalendarTicket()}
-          >
-            {() => (
-              <Form>
-                <Style.FiltersContainer>
+            <IconButton
+              label="Filtros"
+              icon={<IconFilter strokeColor="primary" />}
+              onClick={() => setShowFilter(!showFilter)}
+            />
+          </div>
+        </Style.Header>
+
+        {showFilter && (
+          <Style.FiltersContainer>
+            <Formik
+              initialValues={{ buildings: [] }}
+              onSubmit={async () => handleGetCalendarTicket()}
+            >
+              {() => (
+                <Form>
                   <Style.FilterWrapper>
                     <div>
                       <FormikSelect
@@ -286,11 +302,11 @@ export const CalendarTickets = () => {
                       )}
                     </Style.FilterTags>
                   </Style.FilterWrapperFooter>
-                </Style.FiltersContainer>
-              </Form>
-            )}
-          </Formik>
-        </Style.Header>
+                </Form>
+              )}
+            </Formik>
+          </Style.FiltersContainer>
+        )}
 
         <Style.CalendarWrapper
           view={calendarState.currentView}
@@ -329,9 +345,17 @@ export const CalendarTickets = () => {
             eventContent={renderEventContent}
             eventClick={handleEventClick}
             datesSet={(arg) => {
+              let newDate = arg.start;
+
+              if (arg.view.type === 'dayGridYear') {
+                const calendarApi = calendarRef.current?.getApi();
+                const currentYear =
+                  calendarApi?.getDate()?.getFullYear() ?? new Date().getFullYear();
+                newDate = new Date(currentYear, 0, 1);
+              }
               setCalendarState((prev) => ({
                 ...prev,
-                date: arg.start,
+                date: newDate,
                 currentView: arg.view.type,
               }));
             }}

@@ -93,6 +93,8 @@ export const MaintenancesCalendar = () => {
 
   const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
 
+  const allowedViews = ['month', 'week', 'work_week', 'day', 'agenda'];
+
   const locales = {
     'pt-BR': ptBR,
   };
@@ -153,11 +155,12 @@ export const MaintenancesCalendar = () => {
   const onNavigate = useCallback(
     (newDate: Date, view: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
       setDate(newDate);
-      setCalendarType(view);
+      if (allowedViews.includes(view)) {
+        setCalendarType(view as typeof calendarType);
+      }
     },
     [setDate],
   );
-
   const handleMaintenanceHistoryIdChange = (id: string) => {
     setMaintenanceHistoryId(id);
   };
@@ -334,7 +337,7 @@ export const MaintenancesCalendar = () => {
       <Style.Container>
         <Style.Header arrowColor="primary">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h2>Calendário</h2>
+            <h2>Calendário manutenções</h2>
 
             <IconButton
               label="Filtros"

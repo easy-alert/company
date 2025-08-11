@@ -4,10 +4,19 @@ import { theme } from '@styles/theme';
 
 import * as Style from './styles';
 
-interface ITableCell extends React.HTMLAttributes<HTMLTableCellElement> {
-  value?: string | null;
-  type?: 'string' | 'date' | 'datetime' | 'time' | 'currency' | 'phone';
+export type TTableCellType =
+  | 'string'
+  | 'date'
+  | 'datetime'
+  | 'time'
+  | 'currency'
+  | 'phone'
+  | 'currencyNibo'
+  | 'cpfCnpj';
 
+interface ITableCell extends React.HTMLAttributes<HTMLTableCellElement> {
+  value?: string | number | null;
+  type?: TTableCellType;
   textSize?: keyof typeof theme.size;
   subTextSize?: keyof typeof theme.size;
   alignItems?: 'left' | 'center' | 'right';
@@ -25,6 +34,7 @@ function TableCellString({ value, textSize = 'sm', alignItems = 'left', ...props
 
 function TableCellDate({
   value,
+  type = 'date',
   textSize = 'sm',
   subTextSize = 'xsm',
   alignItems = 'left',
@@ -38,12 +48,14 @@ function TableCellDate({
     );
   }
 
-  const date = dateTimeFormatter(value).split(',');
+  const date = dateTimeFormatter(value?.toString() || '').split(',');
 
   return (
     <Style.TableCellContainer alignItems={alignItems} {...props}>
       <Style.TableCellText textSize={textSize}>{date[0]}</Style.TableCellText>
-      <Style.TableCellDescription subTextSize={subTextSize}>{date[1]}</Style.TableCellDescription>
+      {type === 'datetime' && (
+        <Style.TableCellDescription subTextSize={subTextSize}>{date[1]}</Style.TableCellDescription>
+      )}
     </Style.TableCellContainer>
   );
 }
@@ -66,9 +78,11 @@ function TableCell({
 
   switch (type) {
     case 'date':
+    case 'datetime':
       return (
         <TableCellDate
           value={value}
+          type={type}
           textSize={textSize}
           subTextSize={subTextSize}
           alignItems={alignItems}
@@ -78,15 +92,52 @@ function TableCell({
     case 'phone':
       return (
         <TableCellString
-          value={applyMask({ value, mask: 'TEL' }).value}
+          value={applyMask({ value: value?.toString() || '', mask: 'TEL' }).value}
           textSize={textSize}
           alignItems={alignItems}
           {...props}
         />
       );
+    case 'currency':
+      return (
+        <TableCellString
+          value={applyMask({ value: value?.toString() || '', mask: 'BRL' }).value}
+          textSize={textSize}
+          alignItems={alignItems}
+          {...props}
+        />
+      );
+    case 'currencyNibo':
+      return (
+        <TableCellString
+          value={`R$ ${Number(value)?.toFixed(2).toString().replace('.', ',')}`}
+          textSize={textSize}
+          alignItems={alignItems}
+          {...props}
+        />
+      );
+    case 'cpfCnpj':
+      return (
+        <TableCellString
+          value={
+            value?.toString().length === 11
+              ? applyMask({ value: value?.toString() || '', mask: 'CPF' }).value
+              : applyMask({ value: value?.toString() || '', mask: 'CNPJ' }).value
+          }
+          textSize={textSize}
+          alignItems={alignItems}
+          {...props}
+        />
+      );
+
     default:
       return (
-        <TableCellString value={value} textSize={textSize} alignItems={alignItems} {...props} />
+        <TableCellString
+          value={value?.toString() || ''}
+          textSize={textSize}
+          alignItems={alignItems}
+          {...props}
+        />
       );
   }
 }

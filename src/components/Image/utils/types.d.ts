@@ -6,4 +6,5 @@ export interface ImageProps {
   width?: string;
   height?: string;
   alt?: string;
+  style?: React.CSSProperties;
 }

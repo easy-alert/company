@@ -96,6 +96,8 @@ import maintenanceWhite from './maintenanceWhite.svg';
 import calendarCalled from './calendarCalled.svg';
 import box from './box.svg';
 import report2 from './report2.svg';
+import receipt from './receipt.svg';
+import receiptWhite from './receiptWhite.svg';
 
 export const icon = {
   activityNotification,
@@ -196,4 +198,6 @@ export const icon = {
   maintenanceWhite,
   calendarCalled,
   report2,
+  receipt,
+  receiptWhite,
 };
