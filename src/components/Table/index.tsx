@@ -12,8 +12,8 @@ export const Table = ({
   colsHeader,
   children,
   pagination,
-  registerPerPage,
   totalCountOfRegister,
+  registerPerPage,
 }: ITableHeader) => {
   const [page, setPage] = useState(1);
 
@@ -37,7 +37,9 @@ export const Table = ({
             ))}
           </Style.TableRowHead>
         </Style.TableHead>
-        <Style.TableBody>{children}</Style.TableBody>
+        <Style.TableBody>
+          {children.slice((page - 1) * (registerPerPage || 0), page * (registerPerPage || 0))}
+        </Style.TableBody>
       </Style.TableContainer>
 
       {pagination && (
