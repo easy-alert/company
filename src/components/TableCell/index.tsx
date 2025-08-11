@@ -11,7 +11,8 @@ export type TTableCellType =
   | 'time'
   | 'currency'
   | 'phone'
-  | 'currencyNibo';
+  | 'currencyNibo'
+  | 'cpfCnpj';
 
 interface ITableCell extends React.HTMLAttributes<HTMLTableCellElement> {
   value?: string | number | null;
@@ -110,6 +111,19 @@ function TableCell({
       return (
         <TableCellString
           value={`R$ ${Number(value)?.toFixed(2).toString().replace('.', ',')}`}
+          textSize={textSize}
+          alignItems={alignItems}
+          {...props}
+        />
+      );
+    case 'cpfCnpj':
+      return (
+        <TableCellString
+          value={
+            value?.toString().length === 11
+              ? applyMask({ value: value?.toString() || '', mask: 'CPF' }).value
+              : applyMask({ value: value?.toString() || '', mask: 'CNPJ' }).value
+          }
           textSize={textSize}
           alignItems={alignItems}
           {...props}
