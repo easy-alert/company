@@ -144,10 +144,10 @@ export const Sidebar = () => {
     //   },
     // },
     {
-      title: 'Contas',
+      title: 'Financeiro',
       type: 'navigate',
       icon: icon.receiptWhite,
-      permission: 'access:account',
+      permission: 'access:bills',
       url: '/bills',
       redirectFunction: () => {
         navigate('/bills');
