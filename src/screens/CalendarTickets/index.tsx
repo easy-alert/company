@@ -129,7 +129,11 @@ export const CalendarTickets = () => {
         Object.entries(statusMap).forEach(([statusKey, count]) => {
           calendarEvents.push({
             id: `${day.date}-${statusKey}`,
-            title: `${count} ${handleTranslate(statusKey)}`,
+            title: `${count} ${handleTranslate({
+              key: statusKey,
+              plural: true,
+              alternative: true,
+            })}`,
             start: day.date,
             allDay: true,
             status: statusKey,
@@ -140,7 +144,7 @@ export const CalendarTickets = () => {
       calendarEvents = (data.Days || []).flatMap((day: any) =>
         day.tickets.map((ticket: any) => ({
           id: ticket.id,
-          title: handleTranslate(ticket.statusName),
+          title: handleTranslate({ key: ticket.statusName, plural: true, alternative: true }),
           start: new Date(ticket.createdAt),
           allDay: true,
           status: ticket.statusName,
