@@ -122,11 +122,6 @@ export const ModalCreateOccasionalMaintenance = ({
   };
 
   const handleCheckValues = () => {
-    console.log(
-      '🚀 ~ handleCheckValues ~ occasionalMaintenanceData:',
-      occasionalMaintenanceData.responsible,
-    );
-
     switch (true) {
       case !occasionalMaintenanceData.buildingId:
         handleToastifyMessage({
@@ -136,7 +131,7 @@ export const ModalCreateOccasionalMaintenance = ({
 
         return false;
 
-      case !occasionalMaintenanceData.categoryData.id:
+      case !occasionalMaintenanceData.categoryData.name:
         handleToastifyMessage({
           type: 'warning',
           message: 'Categoria deve ser selecionada',
