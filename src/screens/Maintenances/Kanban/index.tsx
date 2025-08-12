@@ -818,7 +818,7 @@ export const MaintenancesKanban = () => {
                     <Style.KanbanHeader viewMode={viewMode}>
                       <h2>
                         {card.status === 'Vencidas' ? 'Vencidas/Expiradas' : card.status} (
-                        {maintenancesLength[handleTranslate(card.status)]})
+                        {maintenancesLength[handleTranslate({ key: card.status, plural: true })]})
                       </h2>
 
                       {card.status === 'Vencidas' && (
@@ -1018,7 +1018,12 @@ export const MaintenancesKanban = () => {
                           <Style.Chevron $expanded={isExpanded} />
                           <h5>
                             {card.status === 'Vencidas' ? 'Vencidas/Expiradas' : card.status} (
-                            {maintenancesLength[handleTranslate(card.status)]})
+                            {
+                              maintenancesLength[
+                                handleTranslate({ key: card.status, plural: true }) || 0
+                              ]
+                            }
+                            )
                           </h5>
                         </div>
 
