@@ -238,7 +238,8 @@ export const Bills = () => {
       },
     },
     {
-      cell: (item: IBill) => handleTranslate(item.statusDescription, true),
+      cell: (item: IBill) =>
+        handleTranslate({ key: item.statusDescription, capitalize: true, alternative: true }),
       type: 'string',
       cssProps: {
         width: '150px',
