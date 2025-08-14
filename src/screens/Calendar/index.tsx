@@ -1,29 +1,27 @@
-// REACT
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import { useKeyPressEvent } from 'react-use';
+import FullCalendar from '@fullcalendar/react';
 
 // LIBS
 import { Form, Formik } from 'formik';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import type { View } from 'react-big-calendar';
-import { useKeyPressEvent } from 'react-use';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import ptBR from 'date-fns/locale/pt';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // GLOBAL COMPONENTS
+import { Button } from '@components/Buttons/Button';
 import { IconButton } from '@components/Buttons/IconButton';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
+import { FormikSelect } from '@components/Form/FormikSelect';
+import { ListTag } from '@components/ListTag';
+import { EventTag } from '@components/EventTag';
+import { Calendar } from '@components/Calendar';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
 import { ModalCreateOccasionalMaintenance } from '@components/MaintenanceModals/ModalCreateOccasionalMaintenance';
-import { FormikSelect } from '@components/Form/FormikSelect';
-import { Button } from '@components/Buttons/Button';
-import { ListTag } from '@components/ListTag';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
@@ -31,43 +29,88 @@ import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
+import type { IMaintenance } from '@customTypes/IMaintenance';
+import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 
-// FUNCTIONS
+// LOCAL SERVICES / UTILS
 import { requestCalendarData } from './functions';
 
-// COMPONENTS
-import { CustomToolbar } from './utils/CustomToolbar';
-
 // STYLES
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
 
 // TYPES
 import type { ICalendarView, IModalAdditionalInformations } from './types';
 
+export type CalendarEventData = ICalendarView & Partial<IMaintenance> & { isFuture?: boolean };
+
+const statusLabels: Record<string, string> = {
+  expired: 'Vencidas/Expiradas',
+  pending: 'Pendentes',
+  inProgress: 'Em execução',
+  completed: 'Concluídas',
+};
+
+const renderEventContent = (arg: EventContentArg) => {
+  const { event, view } = arg;
+  const { status } = event.extendedProps;
+
+  const isWeekView = view.type === 'dayGridWeek';
+  const statusClass = `status-${(status || event.title || '').toLowerCase().replace(/\s/g, '-')}`;
+
+  if (!isWeekView) {
+    const label = statusLabels[status] || event.title;
+    return (
+      <Style.CustomEvent className={statusClass}>
+        <span>{label}</span>
+      </Style.CustomEvent>
+    );
+  }
+
+  return (
+    <Style.CustomEvent
+      className={statusClass}
+      style={{
+        flexDirection: 'column',
+        padding: '8px',
+        background: '#ffffff',
+        maxWidth: '177px',
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <Style.EventInfoRow>
+          <p>{event?.extendedProps?.Building?.name}</p>
+          <EventTag
+            label={event?.extendedProps?.serviceOrderNumber}
+            color={theme.color.gray4}
+            bgColor="white"
+            fontWeight="bold"
+          />
+        </Style.EventInfoRow>
+
+        <Style.EventInfoRow>
+          <p>{event?.extendedProps?.Maintenance?.element}</p>
+        </Style.EventInfoRow>
+      </div>
+    </Style.CustomEvent>
+  );
+};
+
 export const MaintenancesCalendar = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+  const calendarRef = useRef<FullCalendar | null>(null);
 
   const [date, setDate] = useState(new Date());
-
-  const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] =
-    useState<boolean>(false);
-  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState<boolean>(false);
-  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState<boolean>(false);
-
-  const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [refresh, setRefresh] = useState<boolean>(false);
-  const [onQuery, setOnQuery] = useState<boolean>(false);
-
-  const [yearChangeloading, setYearChangeLoading] = useState<boolean>(false);
-
+  const [modalCreateOccasionalMaintenance, setModalCreateOccasionalMaintenance] = useState(false);
+  const [modalMaintenanceReportSend, setModalMaintenanceReportSend] = useState(false);
+  const [modalMaintenanceDetails, setModalMaintenanceDetails] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
+  const [onQuery, setOnQuery] = useState(false);
+  const [yearChangeloading, setYearChangeLoading] = useState(false);
   const [maintenancesWeekView, setMaintenancesWeekView] = useState<ICalendarView[]>([]);
-
   const [maintenancesMonthView, setMaintenancesMonthView] = useState<ICalendarView[]>([]);
-
   const [maintenancesDisplay, setMaintenancesDisplay] = useState<ICalendarView[]>([]);
-
   const [modalAdditionalInformations, setModalAdditionalInformations] =
     useState<IModalAdditionalInformations>({
       id: '',
@@ -75,57 +118,39 @@ export const MaintenancesCalendar = () => {
       expectedDueDate: '',
       isFuture: false,
     });
-
-  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState<string>('');
-
-  const [calendarType, setCalendarType] = useState<
-    'month' | 'week' | 'work_week' | 'day' | 'agenda'
-  >('month');
-
+  const [maintenanceHistoryId, setMaintenanceHistoryId] = useState('');
+  const [calendarType, setCalendarType] = useState<'dayGridMonth' | 'dayGridWeek'>('dayGridMonth');
   const [buildingIds, setBuildingIds] = useState<string[]>([]);
+
+  const calendarTypeMap: Record<'dayGridMonth' | 'dayGridWeek', 'month' | 'week'> = {
+    dayGridMonth: 'month',
+    dayGridWeek: 'week',
+  };
 
   const calendarYear = new Date(date).getFullYear();
   const calendarMonth = new Date(date).getMonth();
-
   const currentYear = new Date().getFullYear();
   const YearOffset = 5;
   const YearLimitForRequest = currentYear + YearOffset;
-
   const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
 
-  const allowedViews = ['month', 'week', 'work_week', 'day', 'agenda'];
-
-  const locales = {
-    'pt-BR': ptBR,
-  };
-
-  const localizer = dateFnsLocalizer({
-    format,
-    parse,
-    startOfWeek,
-    getDay,
-    locales,
-  });
-
-  const messages = {
-    date: 'Data',
-    time: 'Tempo',
-    event: 'Evento',
-    allDay: 'Dia todo',
-    week: 'Semana',
-    work_week: 'Semana de trabalho',
-    day: 'Dia',
-    month: 'Mês',
-    previous: 'Anterior',
-    next: 'Próximo',
-    yesterday: 'Ontem',
-    tomorrow: 'Amanhã',
-    today: 'Hoje',
-    agenda: 'Agenda',
-    noEventsInRange: 'Nenhum evento encontrado.',
-
-    showMore: (total: any) => `+${total}`,
-  };
+  const events = useMemo(
+    () =>
+      (maintenancesDisplay as CalendarEventData[]).map((ev) => ({
+        id: ev.id ?? '',
+        building: ev.Building?.name ?? '',
+        title: ev.Maintenance?.element ?? (typeof ev.title === 'string' ? ev.title : 'Manutenção'),
+        start: ev.start instanceof Date ? ev.start.toISOString() : ev.start,
+        end: ev.end instanceof Date ? ev.end.toISOString() : ev.end,
+        status: ev.MaintenancesStatus?.name ?? ev.status ?? '',
+        expectedDueDate: ev.expectedDueDate,
+        expectedNotificationDate: ev.expectedNotificationDate,
+        isFuture: ev.isFuture,
+        extendedProps: ev,
+        allDay: true,
+      })),
+    [maintenancesDisplay],
+  );
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
@@ -138,139 +163,100 @@ export const MaintenancesCalendar = () => {
       case 'modalCreateOccasionalMaintenance':
         setModalCreateOccasionalMaintenance(modalState);
         break;
-
       default:
         break;
     }
   };
 
-  const handleRefresh = () => {
-    setRefresh((prevState) => !prevState);
-  };
+  const handleRefresh = () => setRefresh((prev) => !prev);
+  const handleQuery = (state: boolean) => setOnQuery(state);
+  const handleMaintenanceHistoryIdChange = (id: string) => setMaintenanceHistoryId(id);
 
-  const handleQuery = (queryState: boolean) => {
-    setOnQuery(queryState);
-  };
-
-  const onNavigate = useCallback(
-    (newDate: Date, view: View, action?: 'PREV' | 'NEXT' | 'TODAY' | 'DATE') => {
-      setDate(newDate);
-      if (allowedViews.includes(view)) {
-        setCalendarType(view as typeof calendarType);
-      }
+  const handleGetCalendarData = useCallback(
+    async (startDate?: Date, endDate?: Date) => {
+      await requestCalendarData({
+        buildingIds,
+        yearToRequest: calendarYear,
+        monthToRequest: calendarMonth + 1,
+        calendarType: calendarTypeMap[calendarType],
+        setLoading,
+        setMaintenancesWeekView,
+        setMaintenancesMonthView,
+        setMaintenancesDisplay,
+        setYearChangeLoading,
+        startDate,
+        endDate,
+      });
     },
-    [setDate],
-  );
-  const handleMaintenanceHistoryIdChange = (id: string) => {
-    setMaintenanceHistoryId(id);
-  };
-
-  const handleGetCalendarData = async () => {
-    await requestCalendarData({
+    [
       buildingIds,
-      yearToRequest: calendarYear,
-      monthToRequest: calendarMonth + 1,
+      calendarYear,
+      calendarMonth,
       calendarType,
       setLoading,
       setMaintenancesWeekView,
       setMaintenancesMonthView,
       setMaintenancesDisplay,
       setYearChangeLoading,
-    });
-  };
+    ],
+  );
 
   const handleClearFilter = () => {
     setBuildingIds([]);
     handleGetCalendarData();
   };
 
-  const eventPropGetter = useCallback(
-    (event: any) => ({
-      ...(event.status === 'expired' && {
-        style: {
-          background:
-            'linear-gradient(90deg, rgba(255,53,8,1) 0%, rgba(255,53,8,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
-          color: 'black',
-        },
-      }),
+  const handleEventClick = (info: EventClickArg) => {
+    const event = info.event.extendedProps;
 
-      ...(event.status === 'pending' && {
-        style: {
-          background:
-            'linear-gradient(90deg, rgba(255,178,0,1) 0%, rgba(255,178,0,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
-          color: 'black',
-        },
-      }),
+    if (yearChangeloading) return;
 
-      ...((event.status === 'completed' || event.status === 'overdue') && {
-        style: {
-          background:
-            'linear-gradient(90deg, rgba(52,181,58,1) 0%, rgba(52,181,58,1) 6px, rgba(250,250,250,1) 6px, rgba(250,250,250,1) 100%)',
-          color: 'black',
-        },
-      }),
-    }),
-    [],
-  );
+    if (calendarType === 'dayGridWeek') {
+      handleMaintenanceHistoryIdChange(event.id);
 
-  const onSelectEvent = useCallback(
-    (event: any) => {
-      if (yearChangeloading) return;
+      setModalAdditionalInformations({
+        id: event.id,
+        expectedNotificationDate: event.expectedNotificationDate,
+        isFuture: event.isFuture,
+        expectedDueDate: event.expectedDueDate,
+      });
 
-      if (calendarType === 'week') {
-        handleMaintenanceHistoryIdChange(event.id);
-
-        setModalAdditionalInformations({
-          id: event.id,
-          expectedNotificationDate: event.expectedNotificationDate,
-          isFuture: event.isFuture,
-          expectedDueDate: event.expectedDueDate,
-        });
-
-        if (
-          (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
-          event.id
-        ) {
-          handleModals('modalMaintenanceDetails', true);
-        } else if (!event.isFuture && event.id) {
-          handleModals('modalMaintenanceReportSend', true);
-        }
-      } else {
-        setDate(event.start);
-        setMaintenancesDisplay([...maintenancesWeekView]);
-        setCalendarType('week');
-      }
-    },
-    [
-      calendarType,
-      setCalendarType,
-      maintenancesDisplay,
-      setMaintenancesDisplay,
-      date,
-      setDate,
-      modalAdditionalInformations,
-      setModalAdditionalInformations,
-      yearChangeloading,
-    ],
-  );
-
-  const onView = useCallback(
-    (newView: View) => {
-      if (newView === 'month') {
-        setMaintenancesDisplay([...maintenancesMonthView]);
-        setCalendarType('month');
-      } else if (
-        newView === 'week' ||
-        newView === 'work_week' ||
-        newView === 'day' ||
-        newView === 'agenda'
+      if (
+        (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
+        event.id
       ) {
-        setMaintenancesDisplay([...maintenancesWeekView]);
-        setCalendarType('week');
+        handleModals('modalMaintenanceDetails', true);
+      } else if (!event.isFuture && event.id) {
+        handleModals('modalMaintenanceReportSend', true);
       }
-    },
-    [calendarType, setCalendarType, maintenancesDisplay, setMaintenancesDisplay],
-  );
+    } else if (info.event.start) {
+      setDate(info.event.start);
+      setMaintenancesDisplay([...maintenancesWeekView]);
+      setCalendarType('dayGridWeek');
+      calendarRef.current?.getApi().changeView('dayGridWeek', info.event.start);
+    }
+  };
+
+  const handleDatesSet = (arg: {
+    start: Date;
+    end: Date;
+    startStr: string;
+    endStr: string;
+    view: { type: string };
+  }) => {
+    const { start, end, view } = arg;
+    setDate(start);
+
+    if (view.type === 'dayGridMonth') {
+      setMaintenancesDisplay([...maintenancesMonthView]);
+      setCalendarType('dayGridMonth');
+    } else {
+      setMaintenancesDisplay([...maintenancesWeekView]);
+      setCalendarType('dayGridWeek');
+    }
+
+    handleGetCalendarData(start, end);
+  };
 
   useKeyPressEvent('w', () => {
     if (
@@ -279,7 +265,8 @@ export const MaintenancesCalendar = () => {
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
     ) {
-      onView('week');
+      setCalendarType('dayGridWeek');
+      calendarRef.current?.getApi().changeView('dayGridWeek');
     }
   });
 
@@ -290,13 +277,14 @@ export const MaintenancesCalendar = () => {
       !modalCreateOccasionalMaintenance &&
       !yearChangeloading
     ) {
-      onView('month');
+      setCalendarType('dayGridMonth');
+      calendarRef.current?.getApi().changeView('dayGridMonth');
     }
   });
 
   useEffect(() => {
     handleGetCalendarData();
-  }, [buildingIds, calendarYear, calendarMonth]);
+  }, [handleGetCalendarData]);
 
   return loading ? (
     <DotSpinLoading />
@@ -338,14 +326,12 @@ export const MaintenancesCalendar = () => {
         <Style.Header arrowColor="primary">
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <h2>Calendário manutenções</h2>
-
             <IconButton
               label="Filtros"
               icon={<IconFilter strokeColor="primary" />}
               onClick={() => setShowFilter(!showFilter)}
             />
           </div>
-
           <IconButton
             label="Manutenção avulsa"
             icon={<IconPlus strokeColor="primary" />}
@@ -356,10 +342,7 @@ export const MaintenancesCalendar = () => {
 
         {showFilter && (
           <Style.FiltersContainer>
-            <Formik
-              initialValues={{ buildings: [] }}
-              onSubmit={async () => handleGetCalendarData()}
-            >
+            <Formik initialValues={{}} onSubmit={async () => handleGetCalendarData()}>
               {() => (
                 <Form>
                   <Style.FilterWrapper>
@@ -372,20 +355,15 @@ export const MaintenancesCalendar = () => {
                         disabled={yearChangeloading}
                         onChange={(e) => {
                           setBuildingIds((prev) => [...prev, e.target.value]);
-
-                          if (e.target.value === 'all') {
-                            setBuildingIds([]);
-                          }
+                          if (e.target.value === 'all') setBuildingIds([]);
                         }}
                       >
                         <option value="" disabled hidden>
                           Selecione
                         </option>
-
                         <option value="all" disabled={buildingIds.length === 0}>
                           Todas
                         </option>
-
                         {buildingsForSelect?.map((building) => (
                           <option
                             value={building.id}
@@ -405,9 +383,8 @@ export const MaintenancesCalendar = () => {
                         borderless
                         textColor="primary"
                         disable={loading}
-                        onClick={() => handleClearFilter()}
+                        onClick={handleClearFilter}
                       />
-
                       <Button type="submit" label="Filtrar" disable={loading} bgColor="primary" />
                     </Style.FilterButtonWrapper>
                   </Style.FilterWrapper>
@@ -445,35 +422,18 @@ export const MaintenancesCalendar = () => {
           </Style.FiltersContainer>
         )}
 
-        <Style.CalendarScroll>
-          <Style.CalendarWrapper
-            view={calendarType}
-            disableCalendarNextButton={disableCalendarNextButton}
-            yearChangeloading={yearChangeloading}
-          >
-            {yearChangeloading && <DotSpinLoading />}
-
-            <Calendar
-              date={date}
-              onNavigate={onNavigate}
-              eventPropGetter={eventPropGetter}
-              view={calendarType}
-              onView={onView}
-              localizer={localizer}
-              messages={messages}
-              style={{ height: 768 }}
-              onSelectEvent={onSelectEvent}
-              events={maintenancesDisplay}
-              tooltipAccessor={() => ''}
-              culture="pt-BR"
-              allDayAccessor="id"
-              drilldownView="week"
-              showAllEvents
-              components={{ toolbar: CustomToolbar }}
-              views={['month', 'week', 'work_week', 'day', 'agenda']}
-            />
-          </Style.CalendarWrapper>
-        </Style.CalendarScroll>
+        <Calendar
+          ref={calendarRef}
+          events={events}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+          onDatesSet={handleDatesSet}
+          initialDate={date}
+          initialView={calendarType}
+          height={768}
+          disableCalendarNextButton={disableCalendarNextButton}
+          yearChangeloading={yearChangeloading}
+        />
       </Style.Container>
     </>
   );

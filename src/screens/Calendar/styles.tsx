@@ -1,7 +1,6 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Container = styled.header`
-  width: 100%;
   padding-top: ${({ theme }) => theme.size.sm};
 `;
 
@@ -18,252 +17,6 @@ export const Header = styled.header<{ arrowColor?: string }>`
     flex-direction: column;
     align-items: flex-start;
     gap: ${({ theme }) => theme.size.xxsm};
-  }
-`;
-
-export const CalendarScroll = styled.div`
-  width: 100%;
-  display: flex;
-  overflow-x: auto;
-`;
-
-export const CalendarWrapper = styled.div<{
-  view: string;
-  disableCalendarNextButton: boolean;
-  yearChangeloading: boolean;
-}>`
-  /* position: relative; */
-  width: 100%;
-  min-width: 850px;
-
-  background-color: ${({ theme }) => theme.color.white};
-
-  padding-right: ${({ theme }) => theme.size.sm};
-  padding-left: ${({ theme }) => theme.size.sm};
-  padding-bottom: ${({ theme }) => theme.size.sm};
-  border-radius: ${({ theme }) => theme.size.xxsm};
-
-  .ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .rbc-btn-group {
-    :last-child {
-      > button {
-        :nth-child(2) {
-          border-radius: 0px 4px 4px 0px;
-        }
-
-        :nth-child(3),
-        :nth-child(4) {
-          display: none;
-        }
-      }
-    }
-  }
-
-  .rbc-btn-group {
-    ${({ yearChangeloading }) =>
-      yearChangeloading &&
-      css`
-        opacity: 0.7;
-        pointer-events: none;
-      `}
-  }
-
-  .rbc-btn-group {
-    > :nth-child(3) {
-      ${({ disableCalendarNextButton }) =>
-        disableCalendarNextButton &&
-        css`
-          opacity: 0.7;
-          pointer-events: none;
-        `}
-    }
-  }
-
-  .rbc-today {
-    background-color: transparent;
-    > button {
-      color: ${({ theme }) => theme.color.primary};
-      font-weight: 900;
-    }
-  }
-
-  .rbc-now {
-    > button {
-      color: ${({ theme }) => theme.color.primary};
-      font-weight: 900;
-    }
-  }
-
-  .rbc-time-header-gutter {
-    padding: 0;
-  }
-
-  .rbc-time-view {
-    border: none;
-  }
-  .rbc-time-content {
-    display: none;
-  }
-
-  .rbc-month-view {
-    border-radius: ${({ theme }) => theme.size.xxsm};
-  }
-  /* .rbc-header::first-letter {
-    text-transform: uppercase;
-  } */
-
-  .rbc-row-content {
-    height: 706px;
-    overflow-y: scroll;
-    scrollbar-color: transparent;
-    scrollbar-width: none;
-
-    ::-webkit-scrollbar {
-      width: 0;
-      background: transparent;
-    }
-  }
-
-  .rbc-allday-cell {
-    box-sizing: border-box;
-    min-height: 706px;
-  }
-
-  .rbc-time-header-cell {
-    border-top: 1px solid #ddd;
-    border-radius: ${({ theme }) => theme.size.xxsm};
-  }
-
-  .rbc-header {
-    pointer-events: none;
-    font-weight: 400;
-  }
-
-  .rbc-time-header-content {
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-radius: ${({ theme }) => theme.size.xxsm};
-  }
-
-  .rbc-event {
-    margin-top: ${({ theme }) => theme.size.xsm};
-    padding: ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.xxsm}
-      ${({ theme }) => theme.size.xxsm} ${({ theme }) => theme.size.sm};
-    font-size: 12px;
-    line-height: 14px;
-    border-radius: ${({ theme }) => theme.size.xxsm};
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.08);
-
-    :hover {
-      opacity: 0.8;
-    }
-
-    :focus {
-      outline: none;
-    }
-  }
-
-  .rbc-row-segment {
-    padding: 0 ${({ theme }) => theme.size.xxsm};
-  }
-
-  ${({ view }) =>
-    view === 'month' &&
-    css`
-      .rbc-button-link {
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        text-align: right;
-        padding-right: 6px;
-      }
-
-      .rbc-date-cell {
-        padding-right: 0;
-      }
-    `}
-
-  .rbc-btn-group {
-    :first-child {
-      > button {
-        background-color: transparent;
-      }
-    }
-  }
-
-  /* nao lembro o que era esse */
-  /* .rbc-selected {
-    background-color: red;
-  } */
-
-  .rbc-off-range-bg {
-    background-color: #ededed80;
-  }
-
-  /* change weekends background */
-  /* .rbc-time-header-cell > :nth-child(6),
-  .rbc-time-header-cell > :last-child,
-  .rbc-month-header > :nth-child(6),
-  .rbc-month-header > :last-child {
-    background-color: #ededed !important;
-  }
-
-  .rbc-time-header-cell > :last-child,
-  .rbc-month-header > :last-child {
-    border-top-right-radius: ${({ theme }) => theme.size.xsm};
-  }
-
-  .rbc-row-bg > :nth-child(6),
-  .rbc-row-bg > :last-child {
-    background-color: #ededed !important;
-  } */
-
-  /* ***********************************************************************  */
-
-  /* hide weekend */
-  /* .rbc-time-header-cell > :nth-child(6),
-  .rbc-time-header-cell > :last-child,
-  .rbc-month-header > :nth-child(6),
-  .rbc-month-header > :last-child {
-    display: none;
-  }
-
-  .rbc-row-bg > :nth-child(6),
-  .rbc-row-bg > :last-child {
-    display: none;
-  }
-
-  .rbc-row > .rbc-date-cell:nth-child(6),
-  .rbc-row > .rbc-date-cell:last-child {
-    display: none;
-  }
-
-  .rbc-row-segment {
-    flex-basis: 20% !important;
-    max-width: 20% !important;
-  } */
-`;
-
-export const YearLoading = styled.div`
-  border: 4px solid ${({ theme }) => theme.color.primaryL};
-  border-top: 4px solid ${({ theme }) => theme.color.primary};
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  animation: spin 0.5s linear infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 `;
 
@@ -305,4 +58,77 @@ export const FilterTags = styled.div`
   align-items: center;
 
   gap: ${({ theme }) => theme.size.xsm};
+`;
+
+export const CustomEvent = styled.div<{ status?: string }>`
+  background-color: ${({ theme }) => theme.color.gray0};
+  display: flex;
+  flex-direction: column;
+  border-radius: ${({ theme }) => theme.size.xsm};
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  color: ${({ theme }) => theme.color.gray6};
+  cursor: pointer;
+  padding: 0 4px;
+  white-space: normal;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.status-expired {
+    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.danger};
+  }
+  &.status-pending,
+  &.status-overdue {
+    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.warning};
+  }
+  &.status-completed {
+    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.success};
+  }
+`;
+
+export const EventInfoRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  p {
+    font-weight: 600;
+    color: ${({ theme }) => theme.color.gray6};
+    margin: 0;
+  }
+
+  @media (max-width: 500px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: ${({ theme }) => theme.size.xxsm};
+  }
+`;
+
+export const EventTicketNumber = styled.span`
+  color: ${({ theme }) => theme.color.gray4};
+  font-size: 12px;
+  font-weight: 600;
+
+  @media (max-width: 500px) {
+    font-size: 10px;
+    margin-left: 0;
+    margin-top: ${({ theme }) => theme.size.xxsm};
+  }
+`;
+
+export const AssistanceTypeTag = styled.span<{ color?: string; background?: string }>`
+  color: ${({ color }) => color || 'inherit'};
+  background: ${({ background }) => background || 'transparent'};
+  border-radius: ${({ theme }) => theme.size.xsm};
+  padding: 0 ${({ theme }) => theme.size.xsm};
+  margin-right: ${({ theme }) => theme.size.xxsm};
+  font-weight: 600;
+  font-size: ${({ theme }) => theme.size.csm};
+  display: inline-block;
+
+  @media (max-width: 500px) {
+    font-size: ${({ theme }) => theme.size.xxsm};
+  }
 `;
