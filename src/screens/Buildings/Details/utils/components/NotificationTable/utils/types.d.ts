@@ -7,7 +7,7 @@ export interface ITableHeader {
     cssProps?: CSSProperties;
     cssOnMedia?: CSSProperties;
   }[];
-  children: ReactElement[];
+  children: ReactElement | ReactElement[];
 }
 
 export interface ITableBody {
