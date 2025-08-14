@@ -1,10 +1,9 @@
-// REACT
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // LIBS
 import FullCalendar from '@fullcalendar/react';
-import { EventContentArg } from '@fullcalendar/core';
+import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 
 // CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
@@ -20,7 +19,7 @@ import { FormikSelect } from '@components/Form/FormikSelect';
 import { Button } from '@components/Buttons/Button';
 import { IconButton } from '@components/Buttons/IconButton';
 import { ListTag } from '@components/ListTag';
-import { CalendarWidget } from '@components/Calendar';
+import { Calendar } from '@components/Calendar';
 
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
@@ -200,9 +199,7 @@ export const CalendarTickets = () => {
     }));
   }, [account?.Company?.id, calendarState]);
 
-  const handleEventClick = (info: {
-    event: { id: string; start: Date; extendedProps: ICalendarEvent };
-  }) => {
+  const handleEventClick = (info: EventClickArg) => {
     const calendarApi = calendarRef.current?.getApi();
 
     if (calendarApi?.view.type === 'dayGridMonth' && info.event.start) {
@@ -357,7 +354,7 @@ export const CalendarTickets = () => {
           </Style.FiltersContainer>
         )}
 
-        <CalendarWidget
+        <Calendar
           ref={calendarRef}
           events={dataState.events}
           eventContent={renderEventContent}
