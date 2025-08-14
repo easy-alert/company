@@ -293,11 +293,11 @@ export const MaintenanceReports = () => {
                   categoryNames: categoriesForFilter.map((e) => e.name),
                   maintenanceStatusIds: statusForFilter.map((e) => e.id),
                   maintenanceStatusNames: statusForFilter.map((e) => e.name),
-                  endDate: values.endDate,
-                  startDate: values.startDate,
                   search: values.search,
                   filterBy: values.filterBy,
                   type: typeForFilter,
+                  endDate: values.endDate,
+                  startDate: values.startDate,
                 },
               });
             }}
