@@ -21,38 +21,8 @@ export const Header = styled.header`
   }
 `;
 
-export const EventInfoRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  p {
-    font-weight: 600;
-    color: ${({ theme }) => theme.color.gray6};
-    margin: 0;
-  }
-
-  @media (max-width: 500px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: ${({ theme }) => theme.size.xxsm};
-  }
-`;
-
 export const EventBuilding = styled.span`
   font-weight: 700;
-`;
-
-export const EventTicketNumber = styled.span`
-  color: ${({ theme }) => theme.color.gray4};
-  font-size: 12px;
-  font-weight: 600;
-
-  @media (max-width: 500px) {
-    font-size: 10px;
-    margin-left: 0;
-    margin-top: ${({ theme }) => theme.size.xxsm};
-  }
 `;
 
 export const CalendarWrapper = styled.div<{
@@ -239,51 +209,12 @@ export const CalendarWrapper = styled.div<{
   }
 `;
 
-export const CustomEvent = styled.div<{ status?: string }>`
-  background-color: ${({ theme }) => theme.color.gray0};
-  display: flex;
-  flex-direction: column;
-  border-radius: ${({ theme }) => theme.size.xsm};
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  color: ${({ theme }) => theme.color.gray6};
-  cursor: pointer;
-  padding: 0 4px;
-  word-break: break-word;
-  white-space: normal;
-  box-sizing: border-box;
-
-  &.status-awaitingtofinish {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.warning};
-  }
-  &.status-finished {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.success};
-  }
-  &.status-dismissed {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.danger};
-  }
-`;
-
 export const CustomEventBar = styled.div`
   height: ${({ theme }) => theme.size.xxsm};
   width: 100%;
   margin-bottom: ${({ theme }) => theme.size.xxsm};
   border-radius: ${({ theme }) => theme.size.xxsm};
   background: ${({ theme }) => theme.color.gray2};
-`;
-
-export const AssistanceTypeTag = styled.span<{ color?: string; background?: string }>`
-  color: ${({ color }) => color || 'inherit'};
-  background: ${({ background }) => background || 'transparent'};
-  border-radius: ${({ theme }) => theme.size.xsm};
-  padding: 0 ${({ theme }) => theme.size.xsm};
-  margin-right: ${({ theme }) => theme.size.xxsm};
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.size.csm};
-  display: inline-block;
-
-  @media (max-width: 500px) {
-    font-size: ${({ theme }) => theme.size.xxsm};
-  }
 `;
 
 export const FiltersContainer = styled.div`
