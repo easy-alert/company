@@ -7,14 +7,17 @@ interface ChartWrapperXProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: ${({ theme }) => theme.size.csm2};
-
   padding-top: ${({ theme }) => theme.size.sm};
 
   .spacing-select {
     margin-top: 16px;
   }
+`;
+
+export const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const FilterWrapper = styled.div`
@@ -96,6 +99,12 @@ export const PieWrapper = styled.div`
 
   @media (max-width: 700px) {
     grid-template-columns: 1fr;
+  }
+
+  @media print {
+    display: block !important;
+    grid-template-columns: none !important;
+    margin-top: 0 !important;
   }
 `;
 
