@@ -16,9 +16,23 @@ export const requestReportsData = async ({
 }: IRequestReportsData) => {
   setOnQuery(true);
   setMaintenances([]);
-  await Api.get(
-    `/buildings/reports/list?maintenanceStatusIds=${filters.maintenanceStatusIds}&buildingIds=${filters.buildingIds}&categoryNames=${filters.categoryNames}&startDate=${filters.startDate}&endDate=${filters.endDate}&buildingNames=${filters.buildingNames}&maintenanceStatusNames=${filters.maintenanceStatusNames}&filterBy=${filters.filterBy}&search=${filters.search}&type=${filters.type}`,
-  )
+
+  const uri = '/buildings/reports/list';
+
+  const params = {
+    maintenanceStatusIds: filters.maintenanceStatusIds,
+    buildingIds: filters.buildingIds,
+    categoryNames: filters.categoryNames,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    buildingNames: filters.buildingNames,
+    maintenanceStatusNames: filters.maintenanceStatusNames,
+    filterBy: filters.filterBy,
+    search: filters.search,
+    type: filters.type,
+  };
+
+  await Api.get(uri, { params })
     .then(async (res) => {
       setMaintenances(res.data.maintenances);
       setCounts(res.data.counts);
