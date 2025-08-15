@@ -77,7 +77,7 @@ export const Sidebar = () => {
       order: 3,
       title: 'Calendário chamados',
       type: 'navigate',
-      icon: icon.calendarCalled,
+      icon: icon.calendar,
       permission: 'access:calendarTickets',
       url: '/calendarTickets',
       redirectFunction: () => {
