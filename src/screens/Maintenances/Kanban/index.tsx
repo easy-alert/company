@@ -885,7 +885,9 @@ export const MaintenancesKanban = () => {
                         return shouldRender ? (
                           <Style.KanbanMaintenanceWrapper key={maintenance.id}>
                             <Style.MaintenanceInfo
-                              status={maintenance.status}
+                              status={
+                                card.status === 'Em execução' ? 'inProgress' : maintenance.status
+                              }
                               onClick={() => {
                                 const modal = ['pending', 'expired'].includes(maintenance.status)
                                   ? 'modalMaintenanceReportSend'
