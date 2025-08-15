@@ -93,6 +93,7 @@ export interface IBuildingDetail {
     floor: string;
   }[];
   image?: string;
+  ticketsCount: number;
 }
 
 export interface IRequestBuildingDetails {

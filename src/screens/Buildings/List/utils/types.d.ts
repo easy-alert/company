@@ -14,6 +14,7 @@ export interface IBuildingList {
   createdAt: Date;
   MaintenanceScore: number;
   MaintenancesCount: MaintenanceCount[];
+  ticketsCount: number;
 }
 
 export interface IRequestBuildingList {
