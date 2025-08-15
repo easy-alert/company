@@ -252,4 +252,13 @@ export default createGlobalStyle`
     gap: ${({ theme }) => theme.size.xsm};
     width: 100%;
   }
+
+  @media print {
+  body, #root, .App, .Container {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    box-sizing: border-box !important;
+  }
+}
+
 `;
