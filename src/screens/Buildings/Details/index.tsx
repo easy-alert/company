@@ -448,6 +448,11 @@ export const BuildingDetails = () => {
                       : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
                   </p>
                 </Style.MaintenanceCardFooterInfo>
+
+                <Style.MaintenanceCardFooterInfo>
+                  <h5 className="tickets">{building?.ticketsCount ?? 0}</h5>
+                  <p className="p5">Chamados</p>
+                </Style.MaintenanceCardFooterInfo>
               </Style.MaintenanceCardFooter>
             </Style.CardHeaderLeftSide>
             <Style.ButtonWrapper>
