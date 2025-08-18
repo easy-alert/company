@@ -262,6 +262,11 @@ export const BuildingsList = () => {
                           : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
                       </p>
                     </Style.BuildingCardFooterInfo>
+
+                    <Style.BuildingCardFooterInfo>
+                      <h5 className="tickets">{building?.ticketsCount ?? 0}</h5>
+                      <p className="p5">Chamados</p>
+                    </Style.BuildingCardFooterInfo>
                   </Style.BuildingCardFooter>
                 </Style.BuildingCard>
               ))}
