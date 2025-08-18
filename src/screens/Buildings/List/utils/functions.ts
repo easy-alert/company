@@ -9,11 +9,20 @@ export const requestBuildingList = async ({
   setPage,
   page = 1,
   filter = '',
+  filterType = '',
   resetPage,
 }: IRequestBuildingList) => {
-  await Api.get(`/buildings/list?page=${page}&search=${filter}`)
+  const uri = `/buildings/list`;
+
+  const params = {
+    page,
+    search: filter,
+    filterBy: filterType,
+  };
+
+  await Api.get(uri, { params })
     .then((res) => {
-      setBuildingList(res.data.Buildings);
+      setBuildingList(res.data.buildings);
       setCount(res.data.buildingsCount);
       if (resetPage && setPage) setPage(1);
     })
