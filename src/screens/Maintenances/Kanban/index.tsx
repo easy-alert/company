@@ -832,6 +832,7 @@ export const MaintenancesKanban = () => {
                           Mostrar expiradas
                         </label>
                       )}
+
                       {card.status === 'Pendentes' && (
                         <label htmlFor="showFuture">
                           <input
@@ -885,7 +886,7 @@ export const MaintenancesKanban = () => {
                         return shouldRender ? (
                           <Style.KanbanMaintenanceWrapper key={maintenance.id}>
                             <Style.MaintenanceInfo
-                              status={maintenance.status}
+                              status={maintenance.inProgress ? 'inProgress' : maintenance.status}
                               onClick={() => {
                                 const modal = ['pending', 'expired'].includes(maintenance.status)
                                   ? 'modalMaintenanceReportSend'
@@ -1071,7 +1072,7 @@ export const MaintenancesKanban = () => {
                           filteredMaintenances.map((maintenance) => (
                             <Style.ListItem key={maintenance.id}>
                               <Style.MaintenanceInfo
-                                status={maintenance.status}
+                                status={maintenance.inProgress ? 'inProgress' : maintenance.status}
                                 onClick={() => {
                                   const modal = ['pending', 'expired'].includes(maintenance.status)
                                     ? 'modalMaintenanceReportSend'
