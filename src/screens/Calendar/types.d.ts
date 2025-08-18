@@ -1,6 +1,6 @@
 export interface ICalendarView {
-  start: Date;
-  end: Date;
+  start: Date | string;
+  end: Date | string;
   id: string;
   title: string | JSX.Element;
   status: 'expired' | 'pending' | 'completed' | 'overdue';
@@ -34,56 +34,54 @@ export interface IRequestCalendarData {
 }
 
 export interface IRequestCalendarDataResData {
-  data: {
-    Filter: IBuildingOptions[];
-
-    Dates: {
-      Weeks: [
-        {
-          inProgress: boolean;
-          MaintenancesStatus: {
-            name: 'expired' | 'pending' | 'completed' | 'overdue';
+  Filter: IBuildingOptions[];
+  Dates: {
+    Weeks: [
+      {
+        inProgress: boolean;
+        MaintenancesStatus: {
+          name: 'expired' | 'pending' | 'completed' | 'overdue';
+          pluralLabel: string;
+          singularLabel: string;
+        };
+        Building: {
+          name: string;
+          id: string;
+        };
+        Maintenance: {
+          frequency: number;
+          element: string;
+          id: string;
+          FrequencyTimeInterval: {
             pluralLabel: string;
             singularLabel: string;
           };
-          Building: {
-            name: string;
-            id: string;
-          };
-          Maintenance: {
-            frequency: number;
-            element: string;
-            id: string;
-            FrequencyTimeInterval: {
-              pluralLabel: string;
-              singularLabel: string;
-            };
-          };
-          notificationDate: string;
-          isFuture: boolean;
-          id: string;
-          expectedDueDate: string;
-          expectedNotificationDate: string;
-          priority: {
-            name: string;
-            label: string;
-            color: string;
-            backgroundColor: string;
-          };
-          serviceOrderNumber: number;
-        },
-      ];
-      Months: [
-        {
-          id: string;
-          date: string;
-          completed: number;
-          expired: number;
-          pending: number;
-        },
-      ];
-    };
+        };
+        notificationDate: string;
+        isFuture: boolean;
+        id: string;
+        expectedDueDate: string;
+        expectedNotificationDate: string;
+        priority: {
+          name: string;
+          label: string;
+          color: string;
+          backgroundColor: string;
+        };
+        serviceOrderNumber: number;
+      },
+    ];
+    Months: [
+      {
+        id: string;
+        date: string;
+        completed: number;
+        expired: number;
+        pending: number;
+      },
+    ];
   };
+  Events: ICalendarView[];
 }
 
 export interface AnnexesAndImages {
