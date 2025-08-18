@@ -20,17 +20,20 @@ export const requestReportsData = async ({
   const uri = '/buildings/reports/list';
 
   const params = {
-    maintenanceStatusIds: filters.maintenanceStatusIds,
-    buildingIds: filters.buildingIds,
-    categoryNames: filters.categoryNames,
+    maintenanceStatusIds:
+      filters.maintenanceStatusIds.length > 0 ? filters.maintenanceStatusIds : undefined,
+    buildingIds: filters.buildingIds.length > 0 ? filters.buildingIds : undefined,
+    categoryNames: filters.categoryNames.length > 0 ? filters.categoryNames : undefined,
     startDate: filters.startDate,
     endDate: filters.endDate,
-    buildingNames: filters.buildingNames,
-    maintenanceStatusNames: filters.maintenanceStatusNames,
+    buildingNames: filters.buildingNames.length > 0 ? filters.buildingNames : undefined,
+    maintenanceStatusNames:
+      filters.maintenanceStatusNames.length > 0 ? filters.maintenanceStatusNames : undefined,
     filterBy: filters.filterBy,
     search: filters.search,
-    type: filters.type,
+    type: filters.type?.length > 0 ? filters.type : undefined,
   };
+  console.log('🚀 ~ requestReportsData ~ params:', params);
 
   await Api.get(uri, { params })
     .then(async (res) => {

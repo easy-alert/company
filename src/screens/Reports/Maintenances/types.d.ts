@@ -8,7 +8,7 @@ export interface IReportsFilters {
   maintenanceStatusNames: string[];
   filterBy: string;
   search?: string;
-  type?: string[];
+  type: string[];
 }
 
 export interface IFilterforPDF {
