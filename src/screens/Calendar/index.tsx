@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { useKeyPressEvent } from 'react-use';
-import FullCalendar from '@fullcalendar/react';
 
 // LIBS
+import FullCalendar from '@fullcalendar/react';
 import { Form, Formik } from 'formik';
+import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 
 // HOOKS
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
@@ -29,68 +30,57 @@ import IconFilter from '@assets/icons/IconFilter';
 
 // GLOBAL TYPES
 import type { TModalNames } from '@customTypes/TModalNames';
-import type { IMaintenance } from '@customTypes/IMaintenance';
-import { EventClickArg, EventContentArg } from '@fullcalendar/core';
-
-// LOCAL SERVICES / UTILS
-import { requestCalendarData } from './functions';
 
 // STYLES
 import * as Style from './styles';
 
 // TYPES
 import type { ICalendarView, IModalAdditionalInformations } from './types';
-
-export type CalendarEventData = ICalendarView & Partial<IMaintenance> & { isFuture?: boolean };
-
-const statusLabels: Record<string, string> = {
-  expired: 'Vencidas/Expiradas',
-  pending: 'Pendentes',
-  inProgress: 'Em execução',
-  completed: 'Concluídas',
-};
+import { requestCalendarData } from './functions';
 
 const renderEventContent = (arg: EventContentArg) => {
   const { event, view } = arg;
-  const { status } = event.extendedProps;
-
+  const { status, rawData } = event.extendedProps;
+  const serviceOrderNumber = rawData?.serviceOrderNumber;
+  const Maintenance = rawData?.Maintenance;
+  const Building = rawData?.Building;
   const isWeekView = view.type === 'dayGridWeek';
   const statusClass = `status-${(status || event.title || '').toLowerCase().replace(/\s/g, '-')}`;
 
   if (!isWeekView) {
-    const label = statusLabels[status] || event.title;
     return (
       <Style.CustomEvent className={statusClass}>
-        <span>{label}</span>
+        <span>{event.title}</span>
       </Style.CustomEvent>
     );
   }
 
   return (
-    <Style.CustomEvent
-      className={statusClass}
-      style={{
-        flexDirection: 'column',
-        padding: '8px',
-        background: '#ffffff',
-        maxWidth: '177px',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <Style.EventInfoRow>
-          <p>{event?.extendedProps?.Building?.name}</p>
+    <Style.CustomEvent className={statusClass}>
+      <Style.CustomEventHeader>
+        <strong>{Building?.name}</strong>
+        {serviceOrderNumber && (
+          <EventTag label={`#${serviceOrderNumber}`} color="#9D9D9D" bgColor={theme.color.gray0} />
+        )}
+      </Style.CustomEventHeader>
+      <Style.CustomEventTags>
+        <EventTag status={status} color="white" fontWeight={600} />
+        {Maintenance?.MaintenanceType?.name && (
           <EventTag
-            label={event?.extendedProps?.serviceOrderNumber}
-            color={theme.color.gray4}
-            bgColor="white"
-            fontWeight="bold"
+            status={Maintenance.MaintenanceType.name}
+            label={Maintenance.MaintenanceType.name === 'common' ? 'Preventiva' : 'Avulsa'}
+            color="white"
           />
-        </Style.EventInfoRow>
-
-        <Style.EventInfoRow>
-          <p>{event?.extendedProps?.Maintenance?.element}</p>
-        </Style.EventInfoRow>
-      </div>
+        )}
+      </Style.CustomEventTags>
+      {Maintenance?.element && (
+        <Style.CustomEventElement>{Maintenance.element}</Style.CustomEventElement>
+      )}
+      {Maintenance?.frequency && Maintenance?.FrequencyTimeInterval?.singularLabel && (
+        <Style.CustomEventFrequency>
+          A cada {Maintenance.frequency} {Maintenance.FrequencyTimeInterval.singularLabel}
+        </Style.CustomEventFrequency>
+      )}
     </Style.CustomEvent>
   );
 };
@@ -134,23 +124,20 @@ export const MaintenancesCalendar = () => {
   const YearLimitForRequest = currentYear + YearOffset;
   const disableCalendarNextButton = YearLimitForRequest === calendarYear && calendarMonth === 11;
 
-  const events = useMemo(
-    () =>
-      (maintenancesDisplay as CalendarEventData[]).map((ev) => ({
-        id: ev.id ?? '',
-        building: ev.Building?.name ?? '',
-        title: ev.Maintenance?.element ?? (typeof ev.title === 'string' ? ev.title : 'Manutenção'),
-        start: ev.start instanceof Date ? ev.start.toISOString() : ev.start,
-        end: ev.end instanceof Date ? ev.end.toISOString() : ev.end,
-        status: ev.MaintenancesStatus?.name ?? ev.status ?? '',
-        expectedDueDate: ev.expectedDueDate,
-        expectedNotificationDate: ev.expectedNotificationDate,
-        isFuture: ev.isFuture,
-        extendedProps: ev,
-        allDay: true,
-      })),
-    [maintenancesDisplay],
-  );
+  const events = useMemo(() => {
+    const mapEvent = (ev: ICalendarView) => {
+      let { start, end, title } = ev;
+      if (typeof start !== 'string') start = new Date(start).toISOString();
+      if (end !== undefined && typeof end !== 'string') end = new Date(end).toISOString();
+      if (typeof title !== 'string') title = '';
+      return { ...ev, start, end, title, allDay: false };
+    };
+
+    if (calendarType === 'dayGridMonth') {
+      return maintenancesMonthView.map(mapEvent);
+    }
+    return maintenancesDisplay.map(mapEvent);
+  }, [calendarType, maintenancesMonthView, maintenancesDisplay]);
 
   const handleModals = (modal: TModalNames, modalState: boolean) => {
     switch (modal) {
@@ -207,31 +194,30 @@ export const MaintenancesCalendar = () => {
   };
 
   const handleEventClick = (info: EventClickArg) => {
-    const event = info.event.extendedProps;
-
     if (yearChangeloading) return;
 
     if (calendarType === 'dayGridWeek') {
-      handleMaintenanceHistoryIdChange(event.id);
+      handleMaintenanceHistoryIdChange(info.event.id);
 
       setModalAdditionalInformations({
-        id: event.id,
-        expectedNotificationDate: event.expectedNotificationDate,
-        isFuture: event.isFuture,
-        expectedDueDate: event.expectedDueDate,
+        id: info.event.id,
+        expectedNotificationDate: info.event.extendedProps.expectedNotificationDate,
+        isFuture: info.event.extendedProps.isFuture,
+        expectedDueDate: info.event.extendedProps.expectedDueDate,
       });
 
       if (
-        (event.status === 'completed' || event.status === 'overdue' || event.isFuture) &&
-        event.id
+        (info.event.extendedProps.status === 'completed' ||
+          info.event.extendedProps.status === 'overdue' ||
+          info.event.extendedProps.isFuture) &&
+        info.event.id
       ) {
         handleModals('modalMaintenanceDetails', true);
-      } else if (!event.isFuture && event.id) {
+      } else if (!info.event.extendedProps.isFuture && info.event.id) {
         handleModals('modalMaintenanceReportSend', true);
       }
     } else if (info.event.start) {
       setDate(info.event.start);
-      setMaintenancesDisplay([...maintenancesWeekView]);
       setCalendarType('dayGridWeek');
       calendarRef.current?.getApi().changeView('dayGridWeek', info.event.start);
     }
@@ -248,10 +234,8 @@ export const MaintenancesCalendar = () => {
     setDate(start);
 
     if (view.type === 'dayGridMonth') {
-      setMaintenancesDisplay([...maintenancesMonthView]);
       setCalendarType('dayGridMonth');
     } else {
-      setMaintenancesDisplay([...maintenancesWeekView]);
       setCalendarType('dayGridWeek');
     }
 
@@ -285,6 +269,10 @@ export const MaintenancesCalendar = () => {
   useEffect(() => {
     handleGetCalendarData();
   }, [handleGetCalendarData]);
+
+  useEffect(() => {
+    console.log('Eventos enviados para o calendário:', events);
+  }, [events]);
 
   return loading ? (
     <DotSpinLoading />

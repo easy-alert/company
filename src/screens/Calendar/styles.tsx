@@ -88,47 +88,34 @@ export const CustomEvent = styled.div<{ status?: string }>`
   }
 `;
 
-export const EventInfoRow = styled.div`
+export const CustomEventHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  gap: 6px;
+  margin-bottom: 4px;
 
-  p {
-    font-weight: 600;
-    color: ${({ theme }) => theme.color.gray6};
-    margin: 0;
-  }
-
-  @media (max-width: 500px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: ${({ theme }) => theme.size.xxsm};
-  }
-`;
-
-export const EventTicketNumber = styled.span`
-  color: ${({ theme }) => theme.color.gray4};
-  font-size: 12px;
-  font-weight: 600;
-
-  @media (max-width: 500px) {
-    font-size: 10px;
-    margin-left: 0;
-    margin-top: ${({ theme }) => theme.size.xxsm};
+  strong {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    font-weight: 700;
   }
 `;
 
-export const AssistanceTypeTag = styled.span<{ color?: string; background?: string }>`
-  color: ${({ color }) => color || 'inherit'};
-  background: ${({ background }) => background || 'transparent'};
-  border-radius: ${({ theme }) => theme.size.xsm};
-  padding: 0 ${({ theme }) => theme.size.xsm};
-  margin-right: ${({ theme }) => theme.size.xxsm};
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.size.csm};
-  display: inline-block;
+export const CustomEventTags = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+`;
 
-  @media (max-width: 500px) {
-    font-size: ${({ theme }) => theme.size.xxsm};
-  }
+export const CustomEventElement = styled.div`
+  margin-bottom: 2px;
+  font-size: 13px;
+`;
+
+export const CustomEventFrequency = styled.div`
+  font-size: 13px;
 `;
