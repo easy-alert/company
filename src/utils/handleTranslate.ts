@@ -101,7 +101,6 @@ export function handleTranslate({
   alternative = false,
 }: IHandleTranslate): string {
   const lowerKey = key.toLowerCase();
-  console.log('🚀 ~ handleTranslate ~ lowerKey:', lowerKey);
   const translations = plural ? pluralTranslations : singularTranslations;
   const reverseTranslations = plural ? reversePluralTranslations : reverseSingularTranslations;
 
@@ -127,14 +126,12 @@ export function handleTranslate({
   // Check if the key exists in the translations map
   if (Object.prototype.hasOwnProperty.call(translations, lowerKey)) {
     const translation = translations[lowerKey];
-    console.log('🚀 ~ handleTranslate ~ translation:', translation);
     return capitalize ? capitalizeFirstLetter(translation) : translation;
   }
 
   // If the key is not found in the translations map, check if it exists in the reverse translations map
   if (Object.prototype.hasOwnProperty.call(reverseTranslations, lowerKey)) {
     const translation = reverseTranslations[lowerKey];
-    console.log('🚀 ~ handleTranslate ~ translation:', translation);
     return capitalize ? capitalizeFirstLetter(translation) : translation;
   }
 
