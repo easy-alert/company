@@ -43,30 +43,25 @@ export const requestCalendarData = async ({
 
   await Api.get<IRequestCalendarDataResData>(query, { params })
     .then((res) => {
-      const monthsData = res.data?.data?.Dates?.Months ?? [];
-      const weeksData = res.data?.data?.Dates?.Weeks ?? [];
+      const monthsData = res.data?.Dates?.Months ?? [];
+      const weeksData = res.data?.Dates?.Weeks ?? [];
+      const eventsData = res.data?.Events ?? [];
 
       const maintenancesMonthMap: ICalendarView[] = monthsData
         .map((day) => {
           const date = new Date(day.date);
+          const titles = [];
+          if (day.pending > 0) titles.push(`${day.pending} pendente${day.pending > 1 ? 's' : ''}`);
+          if (day.completed > 0)
+            titles.push(`${day.completed} concluída${day.completed > 1 ? 's' : ''}`);
+          if (day.expired > 0) titles.push(`${day.expired} vencida${day.expired > 1 ? 's' : ''}`);
+
           return [
-            ...(day.expired > 0
-              ? [
-                  {
-                    id: `${day.date}-expired`,
-                    title: `${day.expired} vencida${day.expired > 1 ? 's' : ''}`,
-                    start: date,
-                    end: date,
-                    status: 'expired' as const,
-                    allDay: true,
-                  },
-                ]
-              : []),
             ...(day.pending > 0
               ? [
                   {
                     id: `${day.date}-pending`,
-                    title: `${day.pending} a fazer`,
+                    title: `${day.pending} pendente${day.pending > 1 ? 's' : ''}`,
                     start: date,
                     end: date,
                     status: 'pending' as const,
@@ -82,6 +77,18 @@ export const requestCalendarData = async ({
                     start: date,
                     end: date,
                     status: 'completed' as const,
+                    allDay: true,
+                  },
+                ]
+              : []),
+            ...(day.expired > 0
+              ? [
+                  {
+                    id: `${day.date}-expired`,
+                    title: `${day.expired} vencida${day.expired > 1 ? 's' : ''}`,
+                    start: date,
+                    end: date,
+                    status: 'expired' as const,
                     allDay: true,
                   },
                 ]
@@ -110,14 +117,9 @@ export const requestCalendarData = async ({
         extendedProps: e,
         allDay: true,
       }));
-
       setMaintenancesWeekView([...maintenancesWeekMap]);
 
-      if (calendarType === 'week') {
-        setMaintenancesDisplay([...maintenancesWeekMap]);
-      } else if (calendarType === 'month') {
-        setMaintenancesDisplay([...maintenancesMonthMap]);
-      }
+      setMaintenancesDisplay(eventsData);
     })
     .catch(catchHandler)
     .finally(() => {
