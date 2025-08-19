@@ -87,7 +87,7 @@ export const BuildingsList = () => {
         setLoading,
       });
     });
-  }, [filter, filterType, page]);
+  }, []);
 
   return loading ? (
     <DotSpinLoading />
@@ -150,6 +150,7 @@ export const BuildingsList = () => {
               placeholder="Procurar"
               value={filter}
               onChange={(evt) => {
+                console.log('🚀 ~ evt:', evt.target.value);
                 setFilter(evt.target.value);
 
                 if (evt.target.value === '') {
@@ -217,7 +218,9 @@ export const BuildingsList = () => {
                 <Style.BuildingCard
                   key={building.id}
                   onClick={() =>
-                    navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`)
+                    navigate(
+                      `/buildings/details/${building.id}?page=${page}&filter=${filter}&filterType=${filterType}`,
+                    )
                   }
                 >
                   <Style.BuildingCardHeader>
