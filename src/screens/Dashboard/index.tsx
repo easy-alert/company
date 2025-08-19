@@ -1067,400 +1067,400 @@ export const Dashboard = () => {
   return loading ? (
     <DotSpinLoading />
   ) : (
-    <div ref={dashboardRef}>
-      <Style.Container>
-        <Style.TopBar>
-          <h2>Dashboard</h2>
-          <Button label="Imprimir" type="button" onClick={handlePrint} />
-        </Style.TopBar>
+    <Style.Container ref={dashboardRef}>
+      <Style.TopBar>
+        <h2>Dashboard</h2>
+        <Button label="Imprimir" type="button" onClick={handlePrint} bgColor="primary" />
+      </Style.TopBar>
 
-        <Style.FilterSection>
-          <Formik
-            initialValues={{
-              startDate: new Date(new Date().setMonth(new Date().getMonth() - 3))
-                .toISOString()
-                .split('T')[0],
-              endDate: new Date().toISOString().split('T')[0],
-              edification: [],
-              category: [],
-              responsible: [],
-              seen: '',
-            }}
-            onSubmit={async () => handleGetDashboardData()}
-          >
-            {({ values, setFieldValue, touched, errors }) => (
-              <Form>
-                <Style.FilterWrapper>
-                  <Select
-                    selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
-                    label="Edificação"
-                    arrowColor="primary"
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('buildings', e.target.value);
+      <Style.FilterSection>
+        <Formik
+          initialValues={{
+            startDate: new Date(new Date().setMonth(new Date().getMonth() - 3))
+              .toISOString()
+              .split('T')[0],
+            endDate: new Date().toISOString().split('T')[0],
+            edification: [],
+            category: [],
+            responsible: [],
+            seen: '',
+          }}
+          onSubmit={async () => handleGetDashboardData()}
+        >
+          {({ values, setFieldValue, touched, errors }) => (
+            <Form>
+              <Style.FilterWrapper>
+                <Select
+                  selectPlaceholderValue={dataFilter.buildings.length > 0 ? ' ' : ''}
+                  label="Edificação"
+                  arrowColor="primary"
+                  value=""
+                  onChange={(e) => {
+                    handleFilterChange('buildings', e.target.value);
 
-                      if (e.target.value === 'all') {
-                        setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
+                    if (e.target.value === 'all') {
+                      setDataFilter((prevState) => ({ ...prevState, buildings: [] }));
+                    }
+                  }}
+                >
+                  <option value="" disabled hidden>
+                    Selecione
+                  </option>
+
+                  <option value="all" disabled={dataFilter.buildings.length === 0}>
+                    Todas
+                  </option>
+
+                  {buildingsForSelect.map((building) => (
+                    <option
+                      key={building.id}
+                      value={building.id}
+                      disabled={dataFilter.buildings.some((e) => e === building.id)}
+                    >
+                      {building.name}
                     </option>
+                  ))}
+                </Select>
 
-                    <option value="all" disabled={dataFilter.buildings.length === 0}>
-                      Todas
+                <Select
+                  selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
+                  label="Categoria"
+                  arrowColor="primary"
+                  value=""
+                  onChange={(e) => {
+                    handleFilterChange('categories', e.target.value);
+
+                    if (e.target.value === 'all') {
+                      setDataFilter((prevState) => ({ ...prevState, categories: [] }));
+                    }
+                  }}
+                >
+                  <option value="" disabled hidden>
+                    Selecione
+                  </option>
+
+                  <option value="all" disabled={dataFilter.categories.length === 0}>
+                    Todas
+                  </option>
+
+                  {filterOptions.categories.map((category) => (
+                    <option
+                      label={category}
+                      key={category}
+                      disabled={dataFilter.categories.some((e) => e === category)}
+                    >
+                      {category}
                     </option>
+                  ))}
+                </Select>
 
-                    {buildingsForSelect.map((building) => (
-                      <option
-                        key={building.id}
-                        value={building.id}
-                        disabled={dataFilter.buildings.some((e) => e === building.id)}
-                      >
-                        {building.name}
-                      </option>
-                    ))}
-                  </Select>
+                <FormikInput
+                  label="Data inicial"
+                  typeDatePlaceholderValue={values.startDate}
+                  name="startDate"
+                  type="date"
+                  value={values.startDate}
+                  onChange={(e) => {
+                    setFieldValue('startDate', e.target.value);
+                    handleFilterChange('startDate', e.target.value);
+                  }}
+                  error={touched.startDate && errors.startDate ? errors.startDate : null}
+                />
 
-                  <Select
-                    selectPlaceholderValue={dataFilter.categories.length > 0 ? ' ' : ''}
-                    label="Categoria"
-                    arrowColor="primary"
-                    value=""
-                    onChange={(e) => {
-                      handleFilterChange('categories', e.target.value);
+                <FormikInput
+                  label="Data final"
+                  typeDatePlaceholderValue={values.endDate}
+                  name="endDate"
+                  type="date"
+                  value={values.endDate}
+                  onChange={(e) => {
+                    setFieldValue('endDate', e.target.value);
+                    handleFilterChange('endDate', e.target.value);
+                  }}
+                  error={touched.endDate && errors.endDate ? errors.endDate : null}
+                />
+              </Style.FilterWrapper>
 
-                      if (e.target.value === 'all') {
-                        setDataFilter((prevState) => ({ ...prevState, categories: [] }));
-                      }
-                    }}
-                  >
-                    <option value="" disabled hidden>
-                      Selecione
-                    </option>
-
-                    <option value="all" disabled={dataFilter.categories.length === 0}>
-                      Todas
-                    </option>
-
-                    {filterOptions.categories.map((category) => (
-                      <option
-                        label={category}
-                        key={category}
-                        disabled={dataFilter.categories.some((e) => e === category)}
-                      >
-                        {category}
-                      </option>
-                    ))}
-                  </Select>
-
-                  <FormikInput
-                    label="Data inicial"
-                    typeDatePlaceholderValue={values.startDate}
-                    name="startDate"
-                    type="date"
-                    value={values.startDate}
-                    onChange={(e) => {
-                      setFieldValue('startDate', e.target.value);
-                      handleFilterChange('startDate', e.target.value);
-                    }}
-                    error={touched.startDate && errors.startDate ? errors.startDate : null}
-                  />
-
-                  <FormikInput
-                    label="Data final"
-                    typeDatePlaceholderValue={values.endDate}
-                    name="endDate"
-                    type="date"
-                    value={values.endDate}
-                    onChange={(e) => {
-                      setFieldValue('endDate', e.target.value);
-                      handleFilterChange('endDate', e.target.value);
-                    }}
-                    error={touched.endDate && errors.endDate ? errors.endDate : null}
-                  />
-                </Style.FilterWrapper>
-
-                <Style.FilterWrapperFooter>
-                  <Style.Tags>
-                    {dataFilter.buildings.length === 0 ? (
-                      <ListTag
-                        label="Todas as edificações"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      dataFilter.buildings.map((e, i) => (
-                        <ListTag
-                          key={e}
-                          label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
-                          padding="4px 12px"
-                          onClick={() => handleRemoveFilter('buildings', i)}
-                        />
-                      ))
-                    )}
-
-                    {dataFilter.categories.length === 0 ? (
-                      <ListTag
-                        label="Todas as categorias"
-                        color="white"
-                        backgroundColor="primaryM"
-                        fontWeight={500}
-                        padding="4px 12px"
-                      />
-                    ) : (
-                      dataFilter.categories.map((e, i) => (
-                        <ListTag
-                          key={e}
-                          label={e}
-                          color="white"
-                          backgroundColor="primaryM"
-                          fontWeight={500}
-                          padding="4px 12px"
-                          onClick={() => handleRemoveFilter('categories', i)}
-                        />
-                      ))
-                    )}
-                  </Style.Tags>
-
-                  <Style.ButtonWrapper>
-                    <Button
-                      label="Limpar filtros"
-                      type="button"
-                      textColor="primary"
-                      disable={onQuery}
-                      borderless
-                      onClick={() => {
-                        setFieldValue('startDate', '');
-                        setFieldValue('endDate', '');
-
-                        handleResetFilterButton();
-                      }}
+              <Style.FilterWrapperFooter>
+                <Style.Tags>
+                  {dataFilter.buildings.length === 0 ? (
+                    <ListTag
+                      label="Todas as edificações"
+                      color="white"
+                      backgroundColor="primaryM"
+                      fontWeight={500}
+                      padding="4px 12px"
                     />
+                  ) : (
+                    dataFilter.buildings.map((e, i) => (
+                      <ListTag
+                        key={e}
+                        label={buildingsForSelect.find((b) => b.id === e)?.name || ''}
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('buildings', i)}
+                      />
+                    ))
+                  )}
 
-                    <Button label="Filtrar" type="submit" loading={onQuery} bgColor="primary" />
-                  </Style.ButtonWrapper>
-                </Style.FilterWrapperFooter>
-              </Form>
+                  {dataFilter.categories.length === 0 ? (
+                    <ListTag
+                      label="Todas as categorias"
+                      color="white"
+                      backgroundColor="primaryM"
+                      fontWeight={500}
+                      padding="4px 12px"
+                    />
+                  ) : (
+                    dataFilter.categories.map((e, i) => (
+                      <ListTag
+                        key={e}
+                        label={e}
+                        color="white"
+                        backgroundColor="primaryM"
+                        fontWeight={500}
+                        padding="4px 12px"
+                        onClick={() => handleRemoveFilter('categories', i)}
+                      />
+                    ))
+                  )}
+                </Style.Tags>
+
+                <Style.ButtonWrapper>
+                  <Button
+                    label="Limpar filtros"
+                    type="button"
+                    textColor="primary"
+                    disable={onQuery}
+                    borderless
+                    onClick={() => {
+                      setFieldValue('startDate', '');
+                      setFieldValue('endDate', '');
+
+                      handleResetFilterButton();
+                    }}
+                  />
+
+                  <Button label="Filtrar" type="submit" loading={onQuery} bgColor="primary" />
+                </Style.ButtonWrapper>
+              </Style.FilterWrapperFooter>
+            </Form>
+          )}
+        </Formik>
+      </Style.FilterSection>
+
+      <Style.Wrappers>
+        {modalMaintenanceReportSend && selectedMaintenanceId && (
+          <ModalMaintenanceReportSend
+            maintenanceHistoryId={selectedMaintenanceId}
+            refresh={refresh}
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {modalMaintenanceDetails && selectedMaintenanceId && (
+          <ModalMaintenanceDetails
+            modalAdditionalInformations={{
+              id: selectedMaintenanceId,
+              expectedDueDate: '',
+              expectedNotificationDate: '',
+              isFuture: false,
+            }}
+            handleModals={handleModals}
+            handleRefresh={handleRefresh}
+          />
+        )}
+
+        {modalTicketDetails && selectedTicketId && (
+          <ModalTicketDetails
+            ticketId={selectedTicketId}
+            handleTicketDetailsModal={(open: boolean) => {
+              if (!open) {
+                setModalTicketDetails(false);
+                setSelectedTicketId(null);
+              }
+            }}
+          />
+        )}
+
+        <Style.MaintenancesCounts>
+          <Style.CountCard>
+            {dashboardLoadings.maintenancesCountAndCost ? (
+              <DotSpinLoading />
+            ) : (
+              <>
+                <h5>Total de manutenções</h5>
+
+                <Style.CountCardContent>
+                  <>
+                    <h2>{maintenancesData.totalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.totalMaintenanceData.cost}</p>
+                  </>
+                </Style.CountCardContent>
+              </>
             )}
-          </Formik>
-        </Style.FilterSection>
+          </Style.CountCard>
 
-        <Style.Wrappers>
-          {modalMaintenanceReportSend && selectedMaintenanceId && (
-            <ModalMaintenanceReportSend
-              maintenanceHistoryId={selectedMaintenanceId}
-              refresh={refresh}
-              handleModals={handleModals}
-              handleRefresh={handleRefresh}
+          <Style.CountCard>
+            {dashboardLoadings.maintenancesCountAndCost ? (
+              <DotSpinLoading />
+            ) : (
+              <>
+                <h5>Manutenções preventivas</h5>
+
+                <Style.CountCardContent>
+                  <>
+                    <h2>{maintenancesData.commonMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.commonMaintenanceData.cost}</p>
+                  </>
+                </Style.CountCardContent>
+              </>
+            )}
+          </Style.CountCard>
+
+          <Style.CountCard>
+            {dashboardLoadings.maintenancesCountAndCost ? (
+              <DotSpinLoading />
+            ) : (
+              <>
+                <h5>Manutenções avulsas</h5>
+
+                <Style.CountCardContent>
+                  <>
+                    <h2>{maintenancesData.occasionalMaintenanceData.count}</h2>
+                    <p className="p4">{maintenancesData.occasionalMaintenanceData.cost}</p>
+                  </>
+                </Style.CountCardContent>
+              </>
+            )}
+          </Style.CountCard>
+
+          <Style.CountCard>
+            {dashboardLoadings.ticketsCountAndCost ? (
+              <DotSpinLoading />
+            ) : (
+              <>
+                <h5>Total de chamados</h5>
+
+                <Style.CountCardContent>
+                  <>
+                    <h2>{totalTicketsCount}</h2>
+                    <p className="p4">
+                      Em aberto: {ticketsData.openTickets.count} / Em progresso:{' '}
+                      {ticketsData.awaitingToFinishTickets.count} / Finalizados:{' '}
+                      {ticketsData.finishedTickets.count} / Indeferidos:{' '}
+                      {ticketsData.dismissedTickets.count}
+                    </p>
+                  </>
+                </Style.CountCardContent>
+              </>
+            )}
+          </Style.CountCard>
+        </Style.MaintenancesCounts>
+
+        <Style.ChartsWrapper className="ChartsWrapper">
+          <Style.TimelineCard className="TimelineCard">
+            {dashboardLoadings.timeline ? (
+              <DotSpinLoading />
+            ) : (
+              <>
+                <h5>Linha do tempo de manutenções</h5>
+
+                <Style.ChartContent>
+                  <>
+                    {maintenancesTimeline.series.length > 0 &&
+                      maintenancesTimeline.series[0].data.length > 0 && (
+                        <Style.ChartWrapperX
+                          className="timeline-print-fix"
+                          onScroll={handleScroll}
+                          ref={refCallback}
+                          shouldFill={timeLineChart.series[0].data.length < 3}
+                        >
+                          <Chart
+                            className="timeline-chart"
+                            options={timeLineChart.options}
+                            series={timeLineChart.series}
+                            type="bar"
+                            height={
+                              (timeLineChart.series[0]?.data?.length ?? 0) < 3
+                                ? 300
+                                : (timeLineChart.series[0]?.data?.length ?? 0) * 80
+                            }
+                            width="100%"
+                          />
+                        </Style.ChartWrapperX>
+                      )}
+                    {maintenancesTimeline.series.length > 0 &&
+                      maintenancesTimeline.series[0].data.length === 0 && (
+                        <Style.NoDataWrapper>
+                          <h6>Nenhuma informação encontrada</h6>
+                        </Style.NoDataWrapper>
+                      )}
+                  </>
+                </Style.ChartContent>
+              </>
+            )}
+          </Style.TimelineCard>
+
+          <Style.PieWrapper className="PieWrapper">
+            <ReusableChartCard
+              title="Score de manutenções preventivas"
+              type="donut"
+              height={250}
+              chartOptions={maintenanceChart.common.options}
+              chartSeries={maintenanceChart.common.series}
+              isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelCommon}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
-          )}
 
-          {modalMaintenanceDetails && selectedMaintenanceId && (
-            <ModalMaintenanceDetails
-              modalAdditionalInformations={{
-                id: selectedMaintenanceId,
-                expectedDueDate: '',
-                expectedNotificationDate: '',
-                isFuture: false,
-              }}
-              handleModals={handleModals}
-              handleRefresh={handleRefresh}
+            <ReusableChartCard
+              title="Score de manutenções avulsas"
+              type="donut"
+              height={250}
+              chartOptions={maintenanceChart.occasional.options}
+              chartSeries={maintenanceChart.occasional.series}
+              isLoading={dashboardLoadings.maintenancesScore}
+              activitiesByLabel={activitiesByLabelOccasional}
+              handleSelectMaintenance={handleSelectMaintenance}
             />
-          )}
 
-          {modalTicketDetails && selectedTicketId && (
-            <ModalTicketDetails
-              ticketId={selectedTicketId}
-              handleTicketDetailsModal={(open: boolean) => {
-                if (!open) {
-                  setModalTicketDetails(false);
-                  setSelectedTicketId(null);
-                }
-              }}
+            <ReusableChartCard
+              title="Tipos de chamados"
+              type="donut"
+              height={250}
+              chartOptions={ticketTypesChart.options}
+              chartSeries={ticketTypesChart.series}
+              isLoading={dashboardLoadings.ticketsTypes}
+              activitiesByLabel={activitiesByLabelTickets}
+              typePopover="ticket"
+              handleSelectTicket={handleSelectTicket}
             />
-          )}
 
-          <Style.MaintenancesCounts>
-            <Style.CountCard>
-              {dashboardLoadings.maintenancesCountAndCost ? (
-                <DotSpinLoading />
-              ) : (
-                <>
-                  <h5>Total de manutenções</h5>
+            <InfoCard
+              title="Manutenções preventivas"
+              categories={categoriesFormatted.common || []}
+            />
 
-                  <Style.CountCardContent>
-                    <>
-                      <h2>{maintenancesData.totalMaintenanceData.count}</h2>
-                      <p className="p4">{maintenancesData.totalMaintenanceData.cost}</p>
-                    </>
-                  </Style.CountCardContent>
-                </>
-              )}
-            </Style.CountCard>
+            <InfoCard
+              title="Manutenções avulsas"
+              categories={categoriesFormatted.occasional || []}
+            />
 
-            <Style.CountCard>
-              {dashboardLoadings.maintenancesCountAndCost ? (
-                <DotSpinLoading />
-              ) : (
-                <>
-                  <h5>Manutenções preventivas</h5>
-
-                  <Style.CountCardContent>
-                    <>
-                      <h2>{maintenancesData.commonMaintenanceData.count}</h2>
-                      <p className="p4">{maintenancesData.commonMaintenanceData.cost}</p>
-                    </>
-                  </Style.CountCardContent>
-                </>
-              )}
-            </Style.CountCard>
-
-            <Style.CountCard>
-              {dashboardLoadings.maintenancesCountAndCost ? (
-                <DotSpinLoading />
-              ) : (
-                <>
-                  <h5>Manutenções avulsas</h5>
-
-                  <Style.CountCardContent>
-                    <>
-                      <h2>{maintenancesData.occasionalMaintenanceData.count}</h2>
-                      <p className="p4">{maintenancesData.occasionalMaintenanceData.cost}</p>
-                    </>
-                  </Style.CountCardContent>
-                </>
-              )}
-            </Style.CountCard>
-
-            <Style.CountCard>
-              {dashboardLoadings.ticketsCountAndCost ? (
-                <DotSpinLoading />
-              ) : (
-                <>
-                  <h5>Total de chamados</h5>
-
-                  <Style.CountCardContent>
-                    <>
-                      <h2>{totalTicketsCount}</h2>
-                      <p className="p4">
-                        Em aberto: {ticketsData.openTickets.count} / Em progresso:{' '}
-                        {ticketsData.awaitingToFinishTickets.count} / Finalizados:{' '}
-                        {ticketsData.finishedTickets.count} / Indeferidos:{' '}
-                        {ticketsData.dismissedTickets.count}
-                      </p>
-                    </>
-                  </Style.CountCardContent>
-                </>
-              )}
-            </Style.CountCard>
-          </Style.MaintenancesCounts>
-
-          <Style.ChartsWrapper>
-            <Style.TimelineCard>
-              {dashboardLoadings.timeline ? (
-                <DotSpinLoading />
-              ) : (
-                <>
-                  <h5>Linha do tempo de manutenções</h5>
-
-                  <Style.ChartContent>
-                    <>
-                      {maintenancesTimeline.series.length > 0 &&
-                        maintenancesTimeline.series[0].data.length > 0 && (
-                          <Style.ChartWrapperX
-                            onScroll={handleScroll}
-                            ref={refCallback}
-                            shouldFill={timeLineChart.series[0].data.length < 3}
-                          >
-                            <Chart
-                              options={timeLineChart.options}
-                              series={timeLineChart.series}
-                              type="bar"
-                              height={
-                                timeLineChart.series[0].data?.length < 3
-                                  ? 300
-                                  : timeLineChart.series[0].data.length * 80
-                              }
-                              width="100%"
-                            />
-                          </Style.ChartWrapperX>
-                        )}
-                      {maintenancesTimeline.series.length > 0 &&
-                        maintenancesTimeline.series[0].data.length === 0 && (
-                          <Style.NoDataWrapper>
-                            <h6>Nenhuma informação encontrada</h6>
-                          </Style.NoDataWrapper>
-                        )}
-                    </>
-                  </Style.ChartContent>
-                </>
-              )}
-            </Style.TimelineCard>
-
-            <Style.PieWrapper>
-              <ReusableChartCard
-                title="Score de manutenções preventivas"
-                type="donut"
-                height={250}
-                chartOptions={maintenanceChart.common.options}
-                chartSeries={maintenanceChart.common.series}
-                isLoading={dashboardLoadings.maintenancesScore}
-                activitiesByLabel={activitiesByLabelCommon}
-                handleSelectMaintenance={handleSelectMaintenance}
-              />
-
-              <ReusableChartCard
-                title="Score de manutenções avulsas"
-                type="donut"
-                height={250}
-                chartOptions={maintenanceChart.occasional.options}
-                chartSeries={maintenanceChart.occasional.series}
-                isLoading={dashboardLoadings.maintenancesScore}
-                activitiesByLabel={activitiesByLabelOccasional}
-                handleSelectMaintenance={handleSelectMaintenance}
-              />
-
-              <ReusableChartCard
-                title="Tipos de chamados"
-                type="donut"
-                height={250}
-                chartOptions={ticketTypesChart.options}
-                chartSeries={ticketTypesChart.series}
-                isLoading={dashboardLoadings.ticketsTypes}
-                activitiesByLabel={activitiesByLabelTickets}
-                typePopover="ticket"
-                handleSelectTicket={handleSelectTicket}
-              />
-
-              <InfoCard
-                title="Manutenções preventivas"
-                categories={categoriesFormatted.common || []}
-              />
-
-              <InfoCard
-                title="Manutenções avulsas"
-                categories={categoriesFormatted.occasional || []}
-              />
-
-              <InfoCard
-                title="Atividades por usuário"
-                totals={filteredUsers.reduce((acc, user) => acc + user.totalActivities, 0)}
-                names={filteredUsers.map((user) => ({
-                  name: user.name,
-                  number: user.totalActivities,
-                }))}
-              />
-            </Style.PieWrapper>
-          </Style.ChartsWrapper>
-        </Style.Wrappers>
-      </Style.Container>
-    </div>
+            <InfoCard
+              title="Atividades por usuário"
+              totals={filteredUsers.reduce((acc, user) => acc + user.totalActivities, 0)}
+              names={filteredUsers.map((user) => ({
+                name: user.name,
+                number: user.totalActivities,
+              }))}
+            />
+          </Style.PieWrapper>
+        </Style.ChartsWrapper>
+      </Style.Wrappers>
+    </Style.Container>
   );
 };
