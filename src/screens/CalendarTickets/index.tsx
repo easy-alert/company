@@ -214,7 +214,7 @@ export const CalendarTickets = () => {
   };
 
   const handleDatesSet = (arg: { start: Date; view: { type: string; currentStart?: Date } }) => {
-    let newDate = arg.start;
+    let newDate = arg.view.currentStart ?? arg.start;
     if (arg.view.type === 'dayGridYear') {
       const yearValue = arg.view.currentStart?.getFullYear() ?? new Date().getFullYear();
       newDate = new Date(yearValue, 0, 1);
