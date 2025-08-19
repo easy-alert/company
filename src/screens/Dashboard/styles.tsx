@@ -100,12 +100,6 @@ export const PieWrapper = styled.div`
   @media (max-width: 700px) {
     grid-template-columns: 1fr;
   }
-
-  @media print {
-    display: block !important;
-    grid-template-columns: none !important;
-    margin-top: 0 !important;
-  }
 `;
 
 export const Card = styled.div`
@@ -130,6 +124,13 @@ export const TimelineCard = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.size.sm};
   height: 556px;
+
+  @media print {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    page-break-inside: avoid !important;
+  }
 `;
 
 interface ChartWrapperXProps {
@@ -144,6 +145,12 @@ export const ChartWrapperX = styled.div<ChartWrapperXProps>`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  @media print {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
 
   .apexcharts-legend {
     position: absolute !important;
