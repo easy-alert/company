@@ -35,9 +35,6 @@ import type { TModalNames } from '@customTypes/TModalNames';
 // FUNCTIONS
 import { requestCalendarData } from './functions';
 
-// COMPONENTS
-import { CustomToolbar } from './utils/CustomToolbar';
-
 // STYLES
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import * as Style from './styles';
@@ -469,7 +466,6 @@ export const MaintenancesCalendar = () => {
               allDayAccessor="id"
               drilldownView="week"
               showAllEvents
-              components={{ toolbar: CustomToolbar }}
               views={['month', 'week', 'work_week', 'day', 'agenda']}
             />
           </Style.CalendarWrapper>
