@@ -159,6 +159,10 @@ export const MaintenanceCardFooterInfo = styled.div`
     color: ${({ theme }) => theme.color.success};
   }
 
+  .tickets {
+    color: ${({ theme }) => theme.color.gray4};
+  }
+
   > p {
     color: ${({ theme }) => theme.color.gray4};
     font-weight: 500;
