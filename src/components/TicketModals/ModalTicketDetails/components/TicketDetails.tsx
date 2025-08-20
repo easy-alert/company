@@ -291,28 +291,27 @@ function TicketDetails({
           )}
 
           {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
-            <>
-              <Button
-                label="Reprovar"
-                permToCheck="tickets:update"
-                bgColor="dismissed"
-                onClick={() => handleSetView('dismiss')}
-              />
-              <PopoverButton
-                type="Button"
-                label="Excluir"
-                permToCheck="tickets:delete"
-                actionButtonBgColor={theme.background.dismissed}
-                fontWeight="700"
-                message={{
-                  title: 'Deseja excluir este chamado?',
-                  content: 'Atenção, essa ação é irreversível.',
-                  contentColor: theme.color.danger,
-                }}
-                actionButtonClick={() => handleDeleteTicket(ticket.id)}
-              />
-            </>
+            <Button
+              label="Reprovar"
+              permToCheck="tickets:update"
+              bgColor="dismissed"
+              onClick={() => handleSetView('dismiss')}
+            />
           )}
+
+          <PopoverButton
+            type="Button"
+            label="Excluir"
+            permToCheck="tickets:delete"
+            actionButtonBgColor={theme.background.dismissed}
+            fontWeight="700"
+            message={{
+              title: 'Deseja excluir este chamado?',
+              content: 'Atenção, essa ação é irreversível.',
+              contentColor: theme.color.danger,
+            }}
+            actionButtonClick={() => handleDeleteTicket(ticket.id)}
+          />
         </Style.ButtonsContainer>
       )}
     </Style.TicketDetailsContainer>
