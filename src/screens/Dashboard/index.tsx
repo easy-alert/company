@@ -31,7 +31,7 @@ import { ListTag } from '@components/ListTag';
 import { FormikInput } from '@components/Form/FormikInput';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
-import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
