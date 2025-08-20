@@ -25,7 +25,7 @@ import { ListTag } from '@components/ListTag';
 import { IconButton } from '@components/Buttons/IconButton';
 
 // COMPONENTS
-import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
