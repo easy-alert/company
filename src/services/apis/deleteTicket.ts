@@ -11,14 +11,12 @@ export async function deleteTicketById({ ticketId }: IDeleteTicket) {
   try {
     const response = await Api.delete(uri);
 
-    handleToastify({
-      status: 200,
-      data: response.data,
-    });
+    handleToastify(response);
 
     return response.data;
   } catch (error: any) {
-    handleToastify(error.response);
+    handleToastify(error?.response);
+
     return null;
   }
 }

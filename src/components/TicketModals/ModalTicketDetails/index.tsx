@@ -133,14 +133,10 @@ export const ModalTicketDetails = ({
     setLoading(true);
     try {
       await deleteTicketById({ ticketId: id });
-      handleToastifyMessage({
-        type: 'success',
-        message: 'Chamado excluído com sucesso.',
-      });
       if (handleRefresh) handleRefresh();
       handleTicketDetailsModal(false);
     } catch (error: any) {
-      handleToastify(error);
+      handleToastify(error?.response);
     } finally {
       setLoading(false);
     }
