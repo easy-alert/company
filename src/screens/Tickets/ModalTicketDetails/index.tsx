@@ -1,14 +1,11 @@
-// REACT
 import { useEffect, useState } from 'react';
 
-// LIBS
-// CONTEXTS
-// HOOKS
 // SERVICES
 import { getTicketById } from '@services/apis/getTicketById';
 import { putTicketById } from '@services/apis/putTicketById';
 import { getAllTicketDismissReasons } from '@services/apis/getAllTicketDismissReasons';
 import { postTicketSignature } from '@services/apis/postTicketSignature';
+import { deleteTicketById } from '@services/apis/deleteTicket';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
@@ -17,7 +14,6 @@ import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 // GLOBAL UTILS
 import { handleToastify, handleToastifyMessage } from '@utils/toastifyResponses';
 
-// GLOBAL ASSETS
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
 import type { ITicketDismissReason } from '@customTypes/ITicketDismissReason';
@@ -25,9 +21,6 @@ import type { ITicketDismissReason } from '@customTypes/ITicketDismissReason';
 // COMPONENTS
 import TicketDismiss from './components/TicketDismiss';
 import TicketDetails from './components/TicketDetails';
-
-// UTILS
-// STYLES
 
 interface IModalTicketDetails {
   ticketId: string;
@@ -136,6 +129,23 @@ function ModalTicketDetails({
     }
   };
 
+  const handleDeleteTicket = async (id: string) => {
+    setLoading(true);
+    try {
+      await deleteTicketById({ ticketId: id });
+      handleToastifyMessage({
+        type: 'success',
+        message: 'Chamado excluído com sucesso.',
+      });
+      if (handleRefresh) handleRefresh();
+      handleTicketDetailsModal(false);
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     handleGetTicketById();
     handleGetTicketDismissReasons();
@@ -167,6 +177,7 @@ function ModalTicketDetails({
               handleSetView={handleSetView}
               handleUpdateOneTicket={handleUpdateOneTicket}
               handleUploadSignature={handleUploadSignature}
+              handleDeleteTicket={handleDeleteTicket}
             />
           )}
 
