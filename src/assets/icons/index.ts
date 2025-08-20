@@ -93,7 +93,6 @@ import arrowUpPrimary from './arrowUpPrimary.svg';
 import arrowDownPrimary from './arrowDownPrimary.svg';
 import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
-import calendarCalled from './calendarCalled.svg';
 import box from './box.svg';
 import report2 from './report2.svg';
 import receipt from './receipt.svg';
@@ -196,7 +195,6 @@ export const icon = {
   arrowDownPrimary,
   maintenance,
   maintenanceWhite,
-  calendarCalled,
   report2,
   receipt,
   receiptWhite,
