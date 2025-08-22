@@ -19,11 +19,13 @@ export const TableBody = styled.tbody``;
 
 export const TableRowHead = styled.tr<{ bgColor?: string }>``;
 
-export const TableRow = styled.tr<{ bgColor?: string }>`
+export const TableRow = styled.tr<{ bgColor?: string; hasOnClick?: boolean }>`
   ${({ bgColor }) => bgColor && `background-color: ${theme.color.white};`};
+
+  ${({ hasOnClick }) => hasOnClick && `cursor: pointer;`};
+
   :hover {
-    cursor: pointer;
-    background-color: ${`${theme.color.white}B3`};
+    ${({ hasOnClick }) => hasOnClick && `background-color: ${`${theme.color.white}B3`};`};
   }
 `;
 

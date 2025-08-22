@@ -1,12 +1,13 @@
 /* eslint-disable react/no-array-index-key */
-// TYPES
 import { useState } from 'react';
-import { Pagination } from '@components/Pagination';
-import type { ITableBody, ITableHeader } from './utils/types';
 
-// COMPONENTS
+import { Pagination } from '@components/Pagination';
+
+import { theme } from '@styles/theme';
+
 import * as Style from './styles';
-import { theme } from '../../styles/theme';
+
+import type { ITableBody, ITableHeader } from './types';
 
 export const Table = ({
   colsHeader,
@@ -37,6 +38,7 @@ export const Table = ({
             ))}
           </Style.TableRowHead>
         </Style.TableHead>
+
         <Style.TableBody>
           {children.slice((page - 1) * (registerPerPage || 0), page * (registerPerPage || 0))}
         </Style.TableBody>
@@ -57,12 +59,7 @@ export const Table = ({
 };
 
 export const TableContent = ({ colsBody, onClick }: ITableBody) => (
-  <Style.TableRow
-    bgColor={theme.color.white}
-    onClick={() => {
-      onClick();
-    }}
-  >
+  <Style.TableRow bgColor={theme.color.white} hasOnClick={!!onClick} onClick={onClick}>
     {colsBody.map((col, i: number) => (
       <Style.TableColBody key={col.cell + i} cssOnMedia={col.cssOnMedia} cssProps={col.cssProps}>
         {col.cell}
