@@ -50,6 +50,18 @@ const singularTranslations: TranslationMap = {
   sent: 'enviado',
   open: 'em aberto',
   dismissed: 'indeferido',
+
+  // STOCK
+  registration: 'registro',
+  incoming: 'entrada',
+  outgoing: 'saída',
+  transferIn: 'transferência de entrada',
+  transferOut: 'transferência de saída',
+  adjustment: 'ajuste',
+  loss: 'perda',
+  damaged: 'danificado',
+  deleted: 'deletado',
+  removal: 'remoção',
 };
 
 const pluralTranslations: TranslationMap = {
@@ -76,6 +88,18 @@ const pluralTranslations: TranslationMap = {
   sent: 'enviados',
   open: 'em aberto',
   dismissed: 'indeferidos',
+
+  // STOCK
+  registration: 'registros',
+  incoming: 'entradas',
+  outgoing: 'saídas',
+  transferIn: 'transferências de entrada',
+  transferOut: 'transferências de saída',
+  adjustment: 'ajustes',
+  loss: 'perdas',
+  damaged: 'danificados',
+  deleted: 'deletados',
+  removal: 'remoções',
 };
 
 const reverseSingularTranslations: TranslationMap = Object.fromEntries(
