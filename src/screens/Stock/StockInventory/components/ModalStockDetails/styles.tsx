@@ -73,10 +73,20 @@ export const MovementValue = styled.span`
   word-break: break-all;
 `;
 
+export const FormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: ${({ theme }) => theme.size.sm};
+`;
+
 export const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
+
+  margin-top: ${({ theme }) => theme.size.sm};
 
   gap: ${({ theme }) => theme.size.sm};
 `;
