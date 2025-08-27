@@ -29,7 +29,7 @@ export const SpinnerContent = styled.div`
 
 export const ContainerButton = styled.div<{
   disable: boolean;
-  loading: number;
+  loading: boolean;
   outlined: boolean;
   bgColor: string;
   borderless: boolean;
