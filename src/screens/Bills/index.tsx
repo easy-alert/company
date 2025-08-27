@@ -15,7 +15,7 @@ import { getNiboReceipts } from '@services/nibo/getNiboReceipts';
 import { Table, TableContent } from '@components/Table';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { IconButton } from '@components/Buttons/IconButton';
-import TableCell, { type TTableCellType } from '@components/TableCell';
+import TableCell from '@components/TableCell';
 
 // GLOBAL UTILS
 import { formatDate } from '@utils/dateFunctions';
@@ -27,21 +27,10 @@ import IconDownload from '@assets/icons/IconDownload';
 
 // CUSTOM TYPES
 import type { IBill } from '@customTypes/nibo/IBill';
+import type { IColsBody, IColsHeader } from '@components/Table/types';
 
 // STYLES
 import * as Style from './styles';
-
-interface IColsHeader {
-  label: string;
-  cssProps?: CSSProperties;
-}
-
-interface IColsBody {
-  cell: (item: IBill) => string | number | React.ReactNode;
-  type?: TTableCellType;
-  node?: boolean;
-  cssProps?: CSSProperties;
-}
 
 export const Bills = () => {
   const {
@@ -204,7 +193,7 @@ export const Bills = () => {
     },
   ];
 
-  const colsBody: IColsBody[] = [
+  const colsBody: IColsBody<IBill>[] = [
     {
       cell: (item: IBill) => item.originSchedule.description,
       type: 'string',

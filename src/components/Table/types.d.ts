@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CSSProperties } from 'styled-components';
+import type { TTableCellType } from '@components/TableCell';
+import type { CSSProperties } from 'styled-components';
 
 export interface ITableHeader {
   colsHeader: {
@@ -20,5 +21,17 @@ export interface ITableBody {
     cssOnMedia?: CSSProperties;
   }[];
 
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export interface IColsHeader {
+  label: string;
+  cssProps?: CSSProperties;
+}
+
+export interface IColsBody<T> {
+  cell: (item: T) => string | number | React.ReactNode;
+  cssProps?: CSSProperties;
+  type?: TTableCellType;
+  node?: boolean;
 }
