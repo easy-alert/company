@@ -29,6 +29,13 @@ export interface IStockMovement {
   transferTo?: IBuilding;
 }
 
+export interface IStockMovementForm {
+  stockId: string;
+  movementType: TStockMovements;
+  quantity: number;
+  transferToId: string;
+}
+
 // model StockMovement {
 //   id String @id @default(uuid())
 

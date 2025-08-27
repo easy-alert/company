@@ -1,5 +1,7 @@
 import type { IBuilding } from './IBuilding';
+import type { IStock } from './IStock';
 import type { IStockItemType } from './IStockItemType';
+import type { IStockMovement } from './IStockMovements';
 
 export interface IStockItem {
   id: string;
@@ -20,8 +22,13 @@ export interface IStockItem {
   building?: IBuilding;
   stockItemType?: IStockItemType;
 
-  // stocks: IStock[];
-  // movements: IStockMovement[];
+  stocks?: IStock[];
+  movements?: IStockMovement[];
+
+  _count?: {
+    stocks?: number;
+    movements?: number;
+  };
 }
 
 export interface IStockItemForm {
