@@ -18,6 +18,7 @@ import IconTrash from '@assets/icons/IconTrash';
 import type { IStockItemType, IStockItemTypeForm } from '@customTypes/IStockItemType';
 import type { IColsBody, IColsHeader } from '@components/Table/types';
 
+import { handleToastifyMessage } from '@utils/toastifyResponses';
 import { ModalCreateStockItemType } from './components/ModalCreateStockItemType';
 import { ModalEditStockItemType } from './components/ModalEditStockItemType';
 
@@ -117,6 +118,15 @@ export const StockItemTypes = () => {
   const renderActions = useCallback(
     (stockItemType: IStockItemType) => {
       const handleDeleteStockItemType = async (id: string) => {
+        if ((stockItemType._count?.stockItems || 0) > 0) {
+          handleToastifyMessage({
+            type: 'warning',
+            message: 'Não é possível excluir este tipo de item, pois possui itens associados.',
+          });
+
+          return;
+        }
+
         setLoading(true);
 
         try {
