@@ -11,6 +11,8 @@ import { IconButton } from '@components/Buttons/IconButton';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import TableCell from '@components/TableCell';
 
+import { handleToastifyMessage } from '@utils/toastifyResponses';
+
 import IconPlus from '@assets/icons/IconPlus';
 import IconEdit from '@assets/icons/IconEdit';
 import IconTrash from '@assets/icons/IconTrash';
@@ -123,6 +125,14 @@ export const StockItems = () => {
   const renderActions = useCallback(
     (stockItem: IStockItem) => {
       const handleDeleteStockItem = async (id: string) => {
+        if ((stockItem._count?.stocks || 0) > 0) {
+          handleToastifyMessage({
+            type: 'warning',
+            message: 'Não é possível excluir este item, pois possui estoques associados.',
+          });
+
+          return;
+        }
         setLoading(true);
 
         try {
@@ -173,6 +183,7 @@ export const StockItems = () => {
     { label: 'Descrição' },
     { label: 'Tipo' },
     { label: 'Unidade' },
+    { label: 'Usado em', cssProps: { width: '1%', textAlign: 'center' } },
     { label: 'Ações', cssProps: { width: '1%', textAlign: 'center' } },
   ];
 
@@ -181,6 +192,10 @@ export const StockItems = () => {
     { cell: (item: IStockItem) => item.description },
     { cell: (item: IStockItem) => item.stockItemType?.name },
     { cell: (item: IStockItem) => item.unit },
+    {
+      cell: (item: IStockItem) => item._count?.stocks || 0,
+      cssProps: { width: '1%', textAlign: 'center' },
+    },
     { cell: renderActions, node: true, cssProps: { width: '1%', textAlign: 'center' } },
   ];
 
