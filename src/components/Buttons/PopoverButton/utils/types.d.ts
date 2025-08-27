@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, ButtonHTMLAttributes } from 'react';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IPopoverButton {
@@ -14,6 +14,7 @@ export interface IPopoverButton {
   bgColor?: string;
   iconButtonColor?: string;
   type: 'IconButton' | 'Button';
+  buttonType?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   loading?: boolean;
   buttonIcon?: ReactNode;
   buttonIconSize?: string;
