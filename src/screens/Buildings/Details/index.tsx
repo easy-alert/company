@@ -850,41 +850,6 @@ export const BuildingDetails = () => {
                     },
                   ]}
                 />
-                <NotificationTableContent
-                  onClick={() => {
-                    //
-                  }}
-                  colsBody={[
-                    {
-                      cell: 'Responsável',
-                      cssProps: {
-                        borderBottomLeftRadius: theme.size.xsm,
-                      },
-                    },
-                    {
-                      cell: building.syndicPassword ? 'Cadastrada' : 'Não cadastrada',
-                    },
-                    {
-                      cell: (
-                        <Style.PasswordDiv>
-                          <IconButton
-                            label="Editar"
-                            icon={<IconEdit strokeColor="primary" />}
-                            size="16px"
-                            className="p4"
-                            onClick={() => {
-                              setPasswordType('responsible');
-                              setModalChangeClientPasswordOpen(true);
-                            }}
-                          />
-                        </Style.PasswordDiv>
-                      ),
-                      cssProps: {
-                        borderBottomRightRadius: theme.size.xsm,
-                      },
-                    },
-                  ]}
-                />
               </NotificationTable>
             ) : (
               <Style.NoDataContainer>

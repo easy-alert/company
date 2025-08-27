@@ -25,6 +25,8 @@ import { Button } from '@components/Buttons/Button';
 import { Skeleton } from '@components/Skeleton';
 import { ListTag } from '@components/ListTag';
 import { FormikInput } from '@components/Form/FormikInput';
+import { ModalCreateTicket } from '@components/TicketModals/ModalCreateTicket';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
@@ -41,8 +43,6 @@ import type { ITicket } from '@customTypes/ITicket';
 
 // COMPONENTS
 import { useQuery } from '@hooks/useQuery';
-import ModalTicketDetails from './ModalTicketDetails';
-import { ModalCreateTicket } from './ModalCreateTicket';
 
 // STYLES
 import * as Style from './styles';

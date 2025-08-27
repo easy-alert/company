@@ -108,17 +108,15 @@ export const BuildingsList = () => {
               onChange={(evt) => {
                 setFilterType(evt.target.value as IFilterType['value']);
 
-                if (evt.target.value === '') {
-                  requestBuildingList({
-                    setBuildingList,
-                    page: 1,
-                    setCount,
-                    filter: '',
-                    filterType: '',
-                    setPage,
-                    resetPage: true,
-                  });
-                }
+                requestBuildingList({
+                  setBuildingList,
+                  page: 1,
+                  setCount,
+                  filter,
+                  filterType: evt.target.value as IFilterType['value'],
+                  setPage,
+                  resetPage: true,
+                });
               }}
             >
               {filterTypes.map((type) => (

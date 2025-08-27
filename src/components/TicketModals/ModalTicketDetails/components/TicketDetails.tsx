@@ -11,6 +11,7 @@ import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
 import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
 
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
@@ -23,6 +24,7 @@ import { icon } from '@assets/icons';
 import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
+import { theme } from '@styles/theme';
 import * as Style from '../styles';
 
 interface ITicketDetails {
@@ -33,6 +35,7 @@ interface ITicketDetails {
   handleSetView: (viewState: 'details' | 'dismiss') => void;
   handleUpdateOneTicket: (updatedTicket: ITicket, refresh?: boolean, closeModal?: boolean) => void;
   handleUploadSignature: (signature: string) => void;
+  handleDeleteTicket: (ticketId: string) => void;
 }
 
 function TicketDetails({
@@ -43,6 +46,7 @@ function TicketDetails({
   handleSetView,
   handleUpdateOneTicket,
   handleUploadSignature,
+  handleDeleteTicket,
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
 
@@ -294,6 +298,20 @@ function TicketDetails({
               onClick={() => handleSetView('dismiss')}
             />
           )}
+
+          <PopoverButton
+            type="Button"
+            label="Excluir"
+            permToCheck="tickets:delete"
+            actionButtonBgColor={theme.background.dismissed}
+            fontWeight="700"
+            message={{
+              title: 'Deseja excluir este chamado?',
+              content: 'Atenção, essa ação é irreversível.',
+              contentColor: theme.color.danger,
+            }}
+            actionButtonClick={() => handleDeleteTicket(ticket.id)}
+          />
         </Style.ButtonsContainer>
       )}
     </Style.TicketDetailsContainer>
