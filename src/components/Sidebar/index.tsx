@@ -163,6 +163,17 @@ export const Sidebar = () => {
     //   },
     // },
     {
+      order: 10,
+      title: 'Financeiro',
+      type: 'navigate',
+      icon: icon.receiptWhite,
+      permission: 'access:bills',
+      url: '/bills',
+      redirectFunction: () => {
+        navigate('/bills');
+      },
+    },
+    {
       order: 11,
       title: 'Configurações',
       type: 'navigate',
@@ -224,6 +235,7 @@ export const Sidebar = () => {
           <Image width="44px" height="48px" radius="0px" img={icon.logoWhite} />
         </Style.ImageMobile>
       </Style.SidebarBodyMobile>
+
       <Style.SidebarBody openSidebar={openSidebar}>
         <Style.CloseButtonMobile>
           <IconButton
@@ -239,15 +251,15 @@ export const Sidebar = () => {
           />
         </Style.CloseButtonMobile>
 
-        <Style.ImageContainer
-          onClick={() => {
-            navigate('/home');
-          }}
+        <div
+          style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
         >
-          <Image width="44px" height="48px" radius="0px" img={icon.logoWhite} />
-        </Style.ImageContainer>
+          <Style.ImageContainer onClick={() => navigate('/home')}>
+            <Image width="44px" height="48px" radius="0px" img={icon.logoWhite} />
+          </Style.ImageContainer>
 
-        <Style.Hr />
+          <Style.Hr />
+        </div>
 
         {SidebarContent.map((element, i: number) => (
           <React.Fragment key={element.url}>
@@ -291,67 +303,6 @@ export const Sidebar = () => {
                   selected={window.location.pathname.startsWith(element.url)}
                 />
               )}
-
-            {element.type === 'popover' && handlePermissions(element.permission!) && (
-              <PopoverComponent
-                label={element.label}
-                buttonChildren={
-                  <IconButton
-                    className="sidebarButton"
-                    title={element.title}
-                    label={element.label ?? element.title}
-                    labelPos="bottom"
-                    opacity="0.5"
-                    icon={element.icon}
-                    onClick={() => {
-                      //
-                    }}
-                    selected={window.location.pathname.startsWith(element.url)}
-                  />
-                }
-                contentChildren={
-                  <Style.ReportIcons>
-                    {element.options?.map(({ icon: optionIcon, redirectFunction, url, label }) => (
-                      <IconButton
-                        className="sidebarButton"
-                        size="6px"
-                        label={label}
-                        labelPos="bottom"
-                        key={url}
-                        icon={optionIcon}
-                        onClick={() => {
-                          const checkKeyPress = window.event as KeyboardEvent;
-                          if (checkKeyPress?.ctrlKey) {
-                            window.open(url, '_blank');
-                          } else if (openSidebar) {
-                            setAnimate(false);
-                            setTimeout(() => {
-                              setOpenSidebar(false);
-                              redirectFunction();
-                            }, 125);
-                          } else {
-                            redirectFunction();
-                          }
-                        }}
-                        onAuxClick={() => {
-                          if (openSidebar) {
-                            setAnimate(false);
-                            setTimeout(() => {
-                              setOpenSidebar(false);
-                              window.open(url, '_blank');
-                            }, 125);
-                          } else {
-                            window.open(url, '_blank');
-                          }
-                        }}
-                        selected={window.location.pathname.startsWith(url)}
-                      />
-                    ))}
-                  </Style.ReportIcons>
-                }
-                position={['right', 'bottom']}
-              />
-            )}
           </React.Fragment>
         ))}
       </Style.SidebarBody>

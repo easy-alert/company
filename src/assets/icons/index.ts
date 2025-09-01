@@ -95,6 +95,8 @@ import maintenance from './maintenance.svg';
 import maintenanceWhite from './maintenanceWhite.svg';
 import box from './box.svg';
 import report2 from './report2.svg';
+import receipt from './receipt.svg';
+import receiptWhite from './receiptWhite.svg';
 
 export const icon = {
   activityNotification,
@@ -194,4 +196,6 @@ export const icon = {
   maintenance,
   maintenanceWhite,
   report2,
+  receipt,
+  receiptWhite,
 };

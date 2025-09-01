@@ -161,7 +161,7 @@ export const KanbanHeader = styled.div<{ status?: string; viewMode: 'kanban' | '
   border-left: ${({ status }) => {
     if (status === 'Vencidas') return `4px solid ${theme.color.actionDanger}`;
     if (status === 'Pendentes') return `4px solid ${theme.color.warning}`;
-    if (status === 'Em execução') return `4px solid ${theme.color.warning}`;
+    if (status === 'Em execução') return `4px solid ${theme.color.actionBlue}`;
     if (status === 'Concluídas') return `4px solid ${theme.color.success}`;
     return 'none';
   }};
@@ -215,7 +215,7 @@ export const MaintenanceInfo = styled.div<{
   word-break: break-word;
 
   ${({ status }) =>
-    (status === 'pending' || status === 'inProgress') &&
+    status === 'pending' &&
     css`
       p.p3 {
         color: ${theme.color.warning};
@@ -225,6 +225,22 @@ export const MaintenanceInfo = styled.div<{
         90deg,
         rgba(255, 178, 0, 1) 0%,
         rgba(255, 178, 0, 1) 7px,
+        rgba(250, 250, 250, 1) 7px,
+        rgba(250, 250, 250, 1) 100%
+      );
+    `}
+
+  ${({ status }) =>
+    status === 'inProgress' &&
+    css`
+      p.p3 {
+        color: ${theme.color.actionBlue};
+        font-weight: 500;
+      }
+      background: linear-gradient(
+        90deg,
+        ${theme.color.actionBlue} 0%,
+        ${theme.color.actionBlue} 7px,
         rgba(250, 250, 250, 1) 7px,
         rgba(250, 250, 250, 1) 100%
       );
@@ -246,18 +262,13 @@ export const MaintenanceInfo = styled.div<{
       );
     `}
 
-    ${({ status }) =>
+  ${({ status }) =>
     (status === 'overdue' || status === 'completed') &&
     css`
       p.p3 {
         color: ${theme.color.success};
         font-weight: 500;
       }
-    `}
-
-    ${({ status }) =>
-    (status === 'completed' || status === 'overdue') &&
-    css`
       background: linear-gradient(
         90deg,
         rgba(52, 181, 58, 1) 0%,
@@ -293,7 +304,7 @@ export const SkeletonInfo = styled.div<{
   word-break: break-word;
 
   ${({ status }) =>
-    (status === 'pending' || status === 'inProgress') &&
+    status === 'pending' &&
     css`
       p.p3 {
         color: ${theme.color.warning};
@@ -303,6 +314,22 @@ export const SkeletonInfo = styled.div<{
         90deg,
         rgba(255, 178, 0, 1) 0%,
         rgba(255, 178, 0, 1) 7px,
+        rgba(250, 250, 250, 1) 7px,
+        rgba(250, 250, 250, 1) 100%
+      );
+    `}
+
+  ${({ status }) =>
+    status === 'inProgress' &&
+    css`
+      p.p3 {
+        color: ${theme.color.actionBlue};
+        font-weight: 500;
+      }
+      background: linear-gradient(
+        90deg,
+        ${theme.color.actionBlue} 0%,
+        ${theme.color.actionBlue} 7px,
         rgba(250, 250, 250, 1) 7px,
         rgba(250, 250, 250, 1) 100%
       );
@@ -324,18 +351,13 @@ export const SkeletonInfo = styled.div<{
       );
     `}
 
-    ${({ status }) =>
+  ${({ status }) =>
     (status === 'overdue' || status === 'completed') &&
     css`
       p.p3 {
         color: ${theme.color.success};
         font-weight: 500;
       }
-    `}
-
-    ${({ status }) =>
-    (status === 'completed' || status === 'overdue') &&
-    css`
       background: linear-gradient(
         90deg,
         rgba(52, 181, 58, 1) 0%,

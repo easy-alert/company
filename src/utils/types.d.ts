@@ -37,6 +37,7 @@ export interface IAccount {
     showMaintenancePriority: boolean;
     canAccessChecklists: boolean;
     canAccessTickets: boolean;
+    linkedExternalForPayment: string[];
   };
 
   Companies?: {

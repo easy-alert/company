@@ -19,11 +19,13 @@ export const TableBody = styled.tbody``;
 
 export const TableRowHead = styled.tr<{ bgColor?: string }>``;
 
-export const TableRow = styled.tr<{ bgColor?: string }>`
+export const TableRow = styled.tr<{ bgColor?: string; hasOnClick?: boolean }>`
   ${({ bgColor }) => bgColor && `background-color: ${theme.color.white};`};
+
+  ${({ hasOnClick }) => hasOnClick && `cursor: pointer;`};
+
   :hover {
-    cursor: pointer;
-    background-color: ${`${theme.color.white}B3`};
+    ${({ hasOnClick }) => hasOnClick && `background-color: ${`${theme.color.white}B3`};`};
   }
 `;
 
@@ -61,5 +63,18 @@ export const TableColBody = styled.td<{
 
   @media (max-width: 900px) {
     ${({ cssOnMedia }) => cssOnMedia}
+  }
+`;
+
+export const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: ${theme.size.sm};
+
+  @media (max-width: 900px) {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
   }
 `;

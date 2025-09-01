@@ -21,6 +21,7 @@ import { theme } from '../../../styles/theme';
 
 export const PopoverButton = ({
   type = 'Button',
+  buttonType = 'button',
   label = '',
   buttonIconSize = '24px',
   buttonIcon = '',
@@ -147,6 +148,7 @@ export const PopoverButton = ({
                         label={label}
                         bgColor={actionButtonBgColor}
                         borderless={popoverBorderless}
+                        type={buttonType}
                         onClick={() => {
                           actionButtonClick();
                           togglePopOver();

@@ -11,25 +11,41 @@ import { icon } from '@assets/icons/index';
 import { Image } from '@components/Image';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Pagination } from '@components/Pagination';
+import { Select } from '@components/Inputs/Select';
 
 // GLOBAL FUNCTIONS
 import { capitalizeFirstLetter, requestBuildingTypes } from '@utils/functions';
 
-// GLOBAL TYPES
-import type { IBuildingTypes } from '@utils/types';
-
-// STYLES
+// GLOBAL ICONS
 import IconRightArrow from '@assets/icons/IconRightArrow';
 import IconSearch from '@assets/icons/IconSearch';
 import IconPlus from '@assets/icons/IconPlus';
-import * as Style from './styles';
+
+// GLOBAL TYPES
+import type { IBuildingTypes } from '@utils/types';
 
 // MODALS
 import { ModalCreateBuilding } from './utils/ModalCreateBuilding';
 import { requestBuildingList } from './utils/functions';
 
+// STYLES
+import * as Style from './styles';
+
 // TYPES
 import type { IBuildingList } from './utils/types';
+
+interface IFilterType {
+  value: 'mostRecent' | 'oldest' | 'mostScore' | 'leastScore' | '';
+  label: string;
+}
+
+const filterTypes: IFilterType[] = [
+  { value: '', label: 'Filtrar por' },
+  { value: 'mostRecent', label: 'Mais recentes' },
+  { value: 'oldest', label: 'Mais antigos' },
+  { value: 'mostScore', label: 'Mais pontuados' },
+  { value: 'leastScore', label: 'Menos pontuados' },
+];
 
 export const BuildingsList = () => {
   const { account } = useContext(AuthContext);
@@ -43,6 +59,7 @@ export const BuildingsList = () => {
 
   // FILTER
   const [filter, setFilter] = useState<string>('');
+  const [filterType, setFilterType] = useState<IFilterType['value']>('');
   const [loading, setLoading] = useState<boolean>(true);
 
   // PAGINATION
@@ -53,15 +70,18 @@ export const BuildingsList = () => {
   const [search] = useSearchParams();
   const queryPage = Number(search.get('page'));
   const queryFilter = search.get('filter');
+  const queryFilterType = search.get('filterType');
 
   useEffect(() => {
     if (queryPage) setPage(queryPage);
     if (queryFilter) setFilter(queryFilter);
+    if (queryFilterType) setFilterType(queryFilterType as IFilterType['value']);
 
     requestBuildingTypes({ setBuildingTypes }).then(() => {
       requestBuildingList({
         page: queryPage || page,
         filter: queryFilter || filter,
+        filterType: queryFilterType || filterType,
         setBuildingList,
         setCount,
         setLoading,
@@ -80,6 +100,33 @@ export const BuildingsList = () => {
         <Style.LeftSide>
           <h2>Edificações</h2>
 
+          <Style.SelectWrapper>
+            <Select
+              name="filterType"
+              value={filterType}
+              selectPlaceholderValue="Filtrar por"
+              onChange={(evt) => {
+                setFilterType(evt.target.value as IFilterType['value']);
+
+                requestBuildingList({
+                  setBuildingList,
+                  page: 1,
+                  setCount,
+                  filter,
+                  filterType: evt.target.value as IFilterType['value'],
+                  setPage,
+                  resetPage: true,
+                });
+              }}
+            >
+              {filterTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </Select>
+          </Style.SelectWrapper>
+
           <Style.SearchField>
             <IconButton
               icon={<IconSearch strokeColor="primary" />}
@@ -90,6 +137,7 @@ export const BuildingsList = () => {
                   page: 1,
                   setCount,
                   filter,
+                  filterType,
                   setPage,
                   resetPage: true,
                 });
@@ -100,13 +148,16 @@ export const BuildingsList = () => {
               placeholder="Procurar"
               value={filter}
               onChange={(evt) => {
+                console.log('🚀 ~ evt:', evt.target.value);
                 setFilter(evt.target.value);
+
                 if (evt.target.value === '') {
                   requestBuildingList({
                     setBuildingList,
                     page: 1,
                     setCount,
                     filter: '',
+                    filterType: '',
                     setPage,
                     resetPage: true,
                   });
@@ -119,6 +170,7 @@ export const BuildingsList = () => {
                     page: 1,
                     setCount,
                     filter,
+                    filterType,
                     setPage,
                     resetPage: true,
                   });
@@ -164,7 +216,9 @@ export const BuildingsList = () => {
                 <Style.BuildingCard
                   key={building.id}
                   onClick={() =>
-                    navigate(`/buildings/details/${building.id}?page=${page}&filter=${filter}`)
+                    navigate(
+                      `/buildings/details/${building.id}?page=${page}&filter=${filter}&filterType=${filterType}`,
+                    )
                   }
                 >
                   <Style.BuildingCardHeader>
@@ -208,6 +262,11 @@ export const BuildingsList = () => {
                           ? capitalizeFirstLetter(building?.MaintenancesCount[2].pluralLabel)
                           : capitalizeFirstLetter(building?.MaintenancesCount[2].singularLabel)}
                       </p>
+                    </Style.BuildingCardFooterInfo>
+
+                    <Style.BuildingCardFooterInfo>
+                      <h5 className="tickets">{building?.ticketsCount ?? 0}</h5>
+                      <p className="p5">Chamados</p>
                     </Style.BuildingCardFooterInfo>
                   </Style.BuildingCardFooter>
                 </Style.BuildingCard>

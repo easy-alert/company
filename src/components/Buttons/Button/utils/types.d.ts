@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
@@ -10,4 +10,6 @@ export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   borderless?: boolean;
   textColor?: string;
   permToCheck?: string;
+  icon?: ReactNode;
+  size?: string;
 }

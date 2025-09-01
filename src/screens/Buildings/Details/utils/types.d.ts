@@ -83,7 +83,6 @@ export interface IBuildingDetail {
   Banners: IBanner[];
   mandatoryReportProof: boolean;
   residentPassword: string | null;
-  syndicPassword: string | null;
   nextMaintenanceCreationBasis: 'executionDate' | 'notificationDate';
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
@@ -93,6 +92,7 @@ export interface IBuildingDetail {
     floor: string;
   }[];
   image?: string;
+  ticketsCount: number;
 }
 
 export interface IRequestBuildingDetails {

@@ -31,7 +31,7 @@ import { ListTag } from '@components/ListTag';
 import { FormikInput } from '@components/Form/FormikInput';
 import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
-import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
@@ -40,6 +40,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 import type { ITicketStatusNames } from '@customTypes/ITicket';
 import type { TModalNames } from '@customTypes/TModalNames';
 import type { TMaintenanceStatus } from '@customTypes/TMaintenanceStatus';
+import { useReactToPrint } from 'react-to-print';
 
 // COMPONENTS
 import { InfoCard } from './Components/InfoCard';
@@ -151,6 +152,7 @@ const emptyChart = {
 
 export const Dashboard = () => {
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+  const dashboardRef = useRef<HTMLDivElement>(null);
 
   // #region states
   const [kanban, setKanban] = useState<any[]>([]);
@@ -221,6 +223,16 @@ export const Dashboard = () => {
     buildings: [],
     categories: [],
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => dashboardRef.current,
+    documentTitle: 'Dashboard',
+    removeAfterPrint: true,
+    onBeforeGetContent: () => {
+      window.dispatchEvent(new Event('resize'));
+      return Promise.resolve();
+    },
+  });
 
   const [dataFilter, setDataFilter] = useState<IDashboardFilter>(dataFilterInitialValues);
 
@@ -1055,8 +1067,11 @@ export const Dashboard = () => {
   return loading ? (
     <DotSpinLoading />
   ) : (
-    <Style.Container>
-      <h2>Dashboard</h2>
+    <Style.Container ref={dashboardRef}>
+      <Style.TopBar>
+        <h2>Dashboard</h2>
+        <Button label="Imprimir" type="button" onClick={handlePrint} bgColor="primary" />
+      </Style.TopBar>
 
       <Style.FilterSection>
         <Formik
@@ -1346,8 +1361,8 @@ export const Dashboard = () => {
           </Style.CountCard>
         </Style.MaintenancesCounts>
 
-        <Style.ChartsWrapper>
-          <Style.TimelineCard>
+        <Style.ChartsWrapper className="ChartsWrapper">
+          <Style.TimelineCard className="TimelineCard">
             {dashboardLoadings.timeline ? (
               <DotSpinLoading />
             ) : (
@@ -1359,18 +1374,20 @@ export const Dashboard = () => {
                     {maintenancesTimeline.series.length > 0 &&
                       maintenancesTimeline.series[0].data.length > 0 && (
                         <Style.ChartWrapperX
+                          className="timeline-print-fix"
                           onScroll={handleScroll}
                           ref={refCallback}
                           shouldFill={timeLineChart.series[0].data.length < 3}
                         >
                           <Chart
+                            className="timeline-chart"
                             options={timeLineChart.options}
                             series={timeLineChart.series}
                             type="bar"
                             height={
-                              timeLineChart.series[0].data?.length < 3
+                              (timeLineChart.series[0]?.data?.length ?? 0) < 3
                                 ? 300
-                                : timeLineChart.series[0].data.length * 80
+                                : (timeLineChart.series[0]?.data?.length ?? 0) * 80
                             }
                             width="100%"
                           />
@@ -1388,7 +1405,7 @@ export const Dashboard = () => {
             )}
           </Style.TimelineCard>
 
-          <Style.PieWrapper>
+          <Style.PieWrapper className="PieWrapper">
             <ReusableChartCard
               title="Score de manutenções preventivas"
               type="donut"

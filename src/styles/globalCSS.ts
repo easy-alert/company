@@ -252,4 +252,40 @@ export default createGlobalStyle`
     gap: ${({ theme }) => theme.size.xsm};
     width: 100%;
   }
+
+@media print {
+  body, #root, .App, .Container {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .ChartsWrapper,
+  .PieWrapper {
+    display: block !important;
+    width: 100% !important;
+  }
+  div[class*="TimelineCard"], [class*="TimelineCard"] {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+  div[class*="ChartWrapperX"], [class*="ChartWrapperX"] {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .timeline-chart,
+  .timeline-print-fix,
+  .timeline-print-fix .apexcharts-canvas,
+  .timeline-print-fix svg {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
 `;

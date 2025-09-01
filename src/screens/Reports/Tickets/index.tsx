@@ -24,6 +24,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { Select } from '@components/Inputs/Select';
 import { ListTag } from '@components/ListTag';
 import { PdfList } from '@components/PdfList';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
 import { handleToastify } from '@utils/toastifyResponses';
@@ -42,7 +43,6 @@ import type { IReportPdf } from '@customTypes/IReportPdf';
 // COMPONENTS
 import { ReportDataTable, ReportDataTableContent } from '../Maintenances/ReportDataTable';
 import { ModalPrintTickets } from './ModalPrintTickets';
-import ModalTicketDetails from '../../Tickets/ModalTicketDetails';
 
 // STYLES
 import * as Style from './styles';

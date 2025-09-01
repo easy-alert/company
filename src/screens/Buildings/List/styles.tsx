@@ -13,25 +13,36 @@ export const Header = styled.header`
 `;
 
 export const LeftSide = styled.div`
+  width: 50%;
+
   display: flex;
   align-items: center;
-  width: 50%;
-  > h2 {
-    margin-right: ${({ theme }) => theme.size.sm};
-  }
+
+  gap: ${({ theme }) => theme.size.xsm};
 
   @media (max-width: 900px) {
     width: 60%;
+
     flex-direction: column;
     align-items: flex-start;
+
+    gap: ${({ theme }) => theme.size.xxsm};
   }
 `;
 
-export const SearchField = styled.div`
+export const SelectWrapper = styled.div`
+  min-width: 200px;
   display: flex;
   align-items: center;
-  gap: ${({ theme }) => theme.size.xxsm};
+`;
+
+export const SearchField = styled.div`
   width: 100%;
+  display: flex;
+  align-items: center;
+
+  gap: ${({ theme }) => theme.size.xxsm};
+
   > input {
     height: 24px;
     width: 100%;
@@ -122,6 +133,10 @@ export const BuildingCardFooterInfo = styled.div`
 
   .completed {
     color: ${({ theme }) => theme.color.success};
+  }
+
+  .tickets {
+    color: ${({ theme }) => theme.color.gray4};
   }
 
   > p {

@@ -6,11 +6,15 @@ interface MaintenanceCount {
 }
 
 export interface IBuildingList {
+  id: string;
+  nanoId: string;
   name: string;
   city: string;
   neighborhood: string;
-  id: string;
+  createdAt: Date;
+  MaintenanceScore: number;
   MaintenancesCount: MaintenanceCount[];
+  ticketsCount: number;
 }
 
 export interface IRequestBuildingList {
@@ -18,6 +22,7 @@ export interface IRequestBuildingList {
   setLoading?: (setLoading: boolean) => void;
   setPage?: (setPage: number) => void;
   setCount: (setCount: number) => void;
+  filterType?: string;
   page: number;
   filter?: string;
   resetPage?: boolean;
