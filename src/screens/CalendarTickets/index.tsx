@@ -39,9 +39,6 @@ import type {
   IResponseGetCalendarTicket,
 } from '@customTypes/ICalendarTicket';
 
-// COMPONENTS
-import ModalTicketDetails from '@screens/Tickets/ModalTicketDetails';
-
 // STYLES
 import * as Style from './styles';
 
