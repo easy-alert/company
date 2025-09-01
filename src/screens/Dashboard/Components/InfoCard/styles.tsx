@@ -6,7 +6,7 @@ export const Card = styled.div`
   border-radius: ${({ theme }) => theme.size.xxsm};
   display: flex;
   flex-direction: column;
-  height: 230px;
+  min-height: 230px;
 `;
 
 export const Container = styled.div`
@@ -68,6 +68,11 @@ export const NameScrollContainer = styled.div`
   &::-webkit-scrollbar {
     width: 6px;
   }
+  @media print {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
 `;
 
 export const CategoryScrollContainer = styled.div`
@@ -81,6 +86,11 @@ export const CategoryScrollContainer = styled.div`
 
   &::-webkit-scrollbar {
     width: 6px;
+  }
+  @media print {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
   }
 `;
 

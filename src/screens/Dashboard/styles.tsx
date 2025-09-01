@@ -7,14 +7,17 @@ interface ChartWrapperXProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-
   gap: ${({ theme }) => theme.size.csm2};
-
   padding-top: ${({ theme }) => theme.size.sm};
 
   .spacing-select {
     margin-top: 16px;
   }
+`;
+
+export const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const FilterWrapper = styled.div`
@@ -121,6 +124,13 @@ export const TimelineCard = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.size.sm};
   height: 556px;
+
+  @media print {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    page-break-inside: avoid !important;
+  }
 `;
 
 interface ChartWrapperXProps {
@@ -135,6 +145,12 @@ export const ChartWrapperX = styled.div<ChartWrapperXProps>`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  @media print {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
 
   .apexcharts-legend {
     position: absolute !important;
