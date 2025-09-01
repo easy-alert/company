@@ -1,13 +1,9 @@
-// REACT
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Form, Formik } from 'formik';
 
 // LIBS
 import FullCalendar from '@fullcalendar/react';
-import interactionPlugin from '@fullcalendar/interaction';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import ptBrLocale from '@fullcalendar/core/locales/pt-br';
-import { EventContentArg } from '@fullcalendar/core';
-import { Form, Formik } from 'formik';
+import { EventClickArg, EventContentArg } from '@fullcalendar/core';
 
 // CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
@@ -21,80 +17,117 @@ import { getCalendarTicket } from '@services/apis/getCalendarTicket';
 // GLOBAL COMPONENTS
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { Button } from '@components/Buttons/Button';
-import { ListTag } from '@components/ListTag';
 import { IconButton } from '@components/Buttons/IconButton';
-
-// COMPONENTS
 import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
+import { ListTag } from '@components/ListTag';
+import { Calendar } from '@components/Calendar';
 
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
 
+// GLOBAL STYLES
+import * as CalendarStyle from '@components/Calendar/styles';
+
 // GLOBAL ASSETS
 import IconFilter from '@assets/icons/IconFilter';
+
+// GLOBAL TYPES
+import type {
+  ICalendarDay,
+  ICalendarEvent,
+  ICalendarTicket,
+  IResponseGetCalendarTicket,
+} from '@customTypes/ICalendarTicket';
 
 // STYLES
 import * as Style from './styles';
 
-const renderEventContent = ({ event, view }: EventContentArg) => {
-  const { building, assistanceTypes = [], place, ticketNumber } = event.extendedProps;
+const renderEventContent = (arg: EventContentArg) => {
+  const { event, view } = arg;
+  const {
+    building,
+    assistanceTypes = [],
+    place,
+    ticketNumber,
+    status,
+  } = event.extendedProps as ICalendarEvent;
   const isWeekView = view.type === 'dayGridWeek';
 
   return (
-    <Style.CustomEvent
-      className={`status-${(event.extendedProps.status || event.title || '')
-        .toLowerCase()
-        .replace(/\s/g, '-')}`}
+    <CalendarStyle.CustomEvent
+      className={`status-${(status || event.title || '').toLowerCase().replace(/\s/g, '-')}`}
     >
       {!isWeekView ? (
-        <span style={{ fontWeight: 600 }}>{event.title}</span>
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            flexWrap: 'wrap',
+            gap: 4,
+            lineHeight: 1.2,
+          }}
+        >
+          <span style={{ wordBreak: 'break-word', flex: 1 }}>{event.title}</span>
+          {ticketNumber && (
+            <CalendarStyle.EventTicketNumber style={{ marginLeft: 4, whiteSpace: 'nowrap' }}>
+              #{ticketNumber}
+            </CalendarStyle.EventTicketNumber>
+          )}
+        </span>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2, padding: '4px 2px' }}>
-          <Style.EventInfoRow>
+          <CalendarStyle.EventInfoRow>
             <p>{building}</p>
-
-            <Style.EventTicketNumber>#{ticketNumber}</Style.EventTicketNumber>
-          </Style.EventInfoRow>
-
+            <CalendarStyle.EventTicketNumber style={{ marginLeft: 6, whiteSpace: 'nowrap' }}>
+              #{ticketNumber}
+            </CalendarStyle.EventTicketNumber>
+          </CalendarStyle.EventInfoRow>
           <span>{place || 'Não informado'}</span>
           <span>
             {assistanceTypes.length > 0
-              ? assistanceTypes.map((type: any) => (
-                  <Style.AssistanceTypeTag
+              ? assistanceTypes.map((type) => (
+                  <CalendarStyle.AssistanceTypeTag
                     key={type.label}
                     color={type.color}
                     background={type.backgroundColor}
                   >
                     {type.label}
-                  </Style.AssistanceTypeTag>
+                  </CalendarStyle.AssistanceTypeTag>
                 ))
               : 'Não informado'}
           </span>
         </div>
       )}
-    </Style.CustomEvent>
+    </CalendarStyle.CustomEvent>
   );
 };
 
 export const CalendarTickets = () => {
   const { account } = useContext(AuthContext);
+  const calendarRef = useRef<FullCalendar>(null);
   const { buildingsForSelect } = useBuildingsForSelect({
     checkPerms: false,
   });
 
-  const calendarRef = useRef<FullCalendar>(null);
-
-  const [calendarState, setCalendarState] = useState({
+  const [calendarState, setCalendarState] = useState<{
+    date: Date;
+    currentView: string;
+    buildingIds: string[];
+  }>({
     date: new Date(),
     currentView: 'dayGridMonth',
-    buildingIds: [] as string[],
+    buildingIds: [],
   });
 
   const [modalTicketDetails, setModalTicketDetails] = useState(false);
 
-  const [dataState, setDataState] = useState({
-    events: [] as any[],
-    selectedTicket: null as any,
+  const [dataState, setDataState] = useState<{
+    events: ICalendarEvent[];
+    selectedTicket: { id: string } | null;
+    showModal: boolean;
+  }>({
+    events: [],
+    selectedTicket: null,
     showModal: false,
   });
 
@@ -109,20 +142,20 @@ export const CalendarTickets = () => {
 
     const { date, currentView, buildingIds } = calendarState;
 
-    const data = await getCalendarTicket({
+    const data: IResponseGetCalendarTicket = await getCalendarTicket({
       companyId: account.Company.id,
       year: date.getFullYear(),
       month: currentView === 'dayGridYear' ? undefined : date.getMonth() + 1,
       buildingIds: buildingIds.length > 0 ? buildingIds : undefined,
     });
 
-    let calendarEvents: any[] = [];
+    let calendarEvents: ICalendarEvent[] = [];
 
     if (currentView === 'dayGridMonth') {
-      (data.Days || []).forEach((day: any) => {
+      (data.Days || []).forEach((day: ICalendarDay) => {
         const statusMap: Record<string, number> = {};
 
-        day.tickets.forEach((ticket: any) => {
+        day.tickets.forEach((ticket: ICalendarTicket) => {
           statusMap[ticket.statusName] = (statusMap[ticket.statusName] ?? 0) + 1;
         });
 
@@ -141,8 +174,8 @@ export const CalendarTickets = () => {
         });
       });
     } else {
-      calendarEvents = (data.Days || []).flatMap((day: any) =>
-        day.tickets.map((ticket: any) => ({
+      calendarEvents = (data.Days || []).flatMap((day: ICalendarDay) =>
+        day.tickets.map((ticket: ICalendarTicket) => ({
           id: ticket.id,
           title: handleTranslate({ key: ticket.statusName, plural: true, alternative: true }),
           start: new Date(ticket.createdAt),
@@ -152,7 +185,7 @@ export const CalendarTickets = () => {
           place: ticket.place?.label,
           ticketNumber: ticket.ticketNumber,
           assistanceTypes: Array.isArray(ticket.types)
-            ? ticket.types.map((t: any) => ({
+            ? ticket.types.map((t) => ({
                 label: t.type.label,
                 color: t.type.color,
                 backgroundColor: t.type.backgroundColor,
@@ -168,7 +201,7 @@ export const CalendarTickets = () => {
     }));
   }, [account?.Company?.id, calendarState]);
 
-  const handleEventClick = (info: any) => {
+  const handleEventClick = (info: EventClickArg) => {
     const calendarApi = calendarRef.current?.getApi();
 
     if (calendarApi?.view.type === 'dayGridMonth' && info.event.start) {
@@ -182,13 +215,26 @@ export const CalendarTickets = () => {
     }
   };
 
+  const handleDatesSet = (arg: { start: Date; view: { type: string; currentStart?: Date } }) => {
+    let newDate = arg.view.currentStart ?? arg.start;
+    if (arg.view.type === 'dayGridYear') {
+      const yearValue = arg.view.currentStart?.getFullYear() ?? new Date().getFullYear();
+      newDate = new Date(yearValue, 0, 1);
+    }
+    setCalendarState((prev) => ({
+      ...prev,
+      date: newDate,
+      currentView: arg.view.type,
+    }));
+  };
+
   useEffect(() => {
     handleGetCalendarTicket();
   }, [calendarState]);
 
   return (
     <>
-      {modalTicketDetails && (
+      {modalTicketDetails && dataState.selectedTicket?.id && (
         <ModalTicketDetails
           ticketId={dataState.selectedTicket.id}
           userId={account?.User?.id}
@@ -212,7 +258,8 @@ export const CalendarTickets = () => {
         {showFilter && (
           <Style.FiltersContainer>
             <Formik
-              initialValues={{ buildings: [] }}
+              initialValues={{ buildings: calendarState.buildingIds }}
+              enableReinitialize
               onSubmit={async () => handleGetCalendarTicket()}
             >
               {() => (
@@ -229,7 +276,7 @@ export const CalendarTickets = () => {
                           const selected = e.target.value;
                           if (selected === 'all') {
                             setCalendarState((prev) => ({ ...prev, buildingIds: [] }));
-                          } else {
+                          } else if (!calendarState.buildingIds.includes(selected)) {
                             setCalendarState((prev) => ({
                               ...prev,
                               buildingIds: [...prev.buildingIds, selected],
@@ -240,11 +287,9 @@ export const CalendarTickets = () => {
                         <option value="" disabled hidden>
                           Selecione
                         </option>
-
                         <option value="all" disabled={calendarState.buildingIds.length === 0}>
                           Todas
                         </option>
-
                         {buildingsForSelect.map((building) => (
                           <option
                             key={building.id}
@@ -285,7 +330,6 @@ export const CalendarTickets = () => {
                       ) : (
                         calendarState.buildingIds.map((buildingId) => {
                           const building = buildingsForSelect.find((b) => b.id === buildingId);
-
                           return (
                             <ListTag
                               key={buildingId}
@@ -312,63 +356,19 @@ export const CalendarTickets = () => {
           </Style.FiltersContainer>
         )}
 
-        <Style.CalendarWrapper
+        <Calendar
+          ref={calendarRef}
+          events={dataState.events}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+          initialDate={calendarState.date}
+          initialView={calendarState.currentView}
+          onDatesSet={handleDatesSet}
+          height={750}
           view={calendarState.currentView}
           disableCalendarNextButton={false}
           yearChangeloading={false}
-        >
-          <FullCalendar
-            ref={calendarRef}
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            initialDate={calendarState.date}
-            locale={ptBrLocale}
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,dayGridWeek,dayGridYear',
-            }}
-            buttonText={{
-              today: 'Hoje',
-              month: 'Mês',
-              week: 'Semana',
-              day: 'Dia',
-              prev: 'Anterior',
-              next: 'Próximo',
-            }}
-            views={{
-              dayGridMonth: { buttonText: 'Mês' },
-              dayGridWeek: { buttonText: 'Semana' },
-              dayGridYear: {
-                type: 'dayGrid',
-                duration: { years: 1 },
-                buttonText: 'Ano',
-              },
-            }}
-            events={dataState.events}
-            eventContent={renderEventContent}
-            eventClick={handleEventClick}
-            datesSet={(arg) => {
-              let newDate = arg.start;
-
-              if (arg.view.type === 'dayGridYear') {
-                const calendarApi = calendarRef.current?.getApi();
-                const currentYear =
-                  calendarApi?.getDate()?.getFullYear() ?? new Date().getFullYear();
-                newDate = new Date(currentYear, 0, 1);
-              }
-              setCalendarState((prev) => ({
-                ...prev,
-                date: newDate,
-                currentView: arg.view.type,
-              }));
-            }}
-            selectable
-            dayMaxEvents={false}
-            eventDisplay="block"
-            height={750}
-          />
-        </Style.CalendarWrapper>
+        />
       </Style.Container>
     </>
   );

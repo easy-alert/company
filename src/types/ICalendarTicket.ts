@@ -1,9 +1,17 @@
+export interface IAssistanceType {
+  label: string;
+  color?: string;
+  backgroundColor?: string;
+}
+
 export interface ICalendarTicket {
   id: string;
   statusName: string;
   createdAt: string;
   building?: { name: string };
-  types?: { type: { label: string } }[];
+  place?: { label: string };
+  ticketNumber?: string;
+  types?: { type: IAssistanceType }[];
 }
 
 export interface ICalendarDay {
@@ -25,4 +33,16 @@ export interface IGetCalendarTicketParams {
   year: number;
   month?: number;
   buildingIds?: string[];
+}
+
+export interface ICalendarEvent {
+  id: string;
+  title: string;
+  start: Date | string;
+  allDay: boolean;
+  status: string;
+  building?: string;
+  place?: string;
+  ticketNumber?: string;
+  assistanceTypes?: IAssistanceType[];
 }
