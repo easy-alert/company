@@ -13,6 +13,7 @@ export interface IStockItem {
   name?: string;
   description?: string;
   unit?: string;
+  imageUrl?: string;
   isActive?: boolean;
 
   createdAt?: string;
@@ -35,6 +36,7 @@ export interface IStockItemForm {
   name: string;
   description?: string;
   unit: string;
+  image?: string | File | null;
   stockItemTypeId: string;
   isActive: boolean;
 }

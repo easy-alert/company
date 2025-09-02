@@ -69,6 +69,7 @@ export const StockItems = () => {
         name: values.name,
         description: values.description || '',
         unit: values.unit,
+        image: values.image,
         stockItemTypeId: values.stockItemTypeId,
         isActive: values.isActive,
       });
@@ -94,6 +95,7 @@ export const StockItems = () => {
         name: values.name,
         description: values.description || '',
         unit: values.unit,
+        image: values.image,
         stockItemTypeId: values.stockItemTypeId,
         isActive: values.isActive,
       });
@@ -107,6 +109,7 @@ export const StockItems = () => {
                   name: responseData.stockItem.name,
                   description: responseData.stockItem.description,
                   unit: responseData.stockItem.unit,
+                  imageUrl: responseData.stockItem.imageUrl,
                   stockItemType: responseData.stockItem.stockItemType,
                   isActive: responseData.stockItem.isActive,
                 }
