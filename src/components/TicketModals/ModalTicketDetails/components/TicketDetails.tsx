@@ -242,6 +242,37 @@ function TicketDetails({
         </Style.TicketDetailsColumnContent>
       )}
 
+      {showButtons && (ticket.statusName === 'dismissed' || ticket.statusName === 'finished') && (
+        <Style.ButtonsContainer>
+          <Button
+            label="Reabrir como Aberto"
+            permToCheck="tickets:update"
+            bgColor="primary"
+            onClick={() =>
+              handleUpdateOneTicket({
+                id: ticket.id,
+                statusName: 'open',
+                userId,
+              })
+            }
+          />
+          {ticket.statusName === 'finished' && (
+            <Button
+              label="Mover para Em execução"
+              permToCheck="tickets:update"
+              bgColor="awaitingToFinish"
+              onClick={() =>
+                handleUpdateOneTicket({
+                  id: ticket.id,
+                  statusName: 'awaitingToFinish',
+                  userId,
+                })
+              }
+            />
+          )}
+        </Style.ButtonsContainer>
+      )}
+
       {showButtons && (
         <Style.ButtonsContainer>
           {ticket.statusName === 'open' && (
