@@ -8,10 +8,8 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // GLOBAL COMPONENTS
-// COMPONENTS
 import { Image } from '@components/Image';
 import { IconButton } from '@components/Buttons/IconButton';
-import { PopoverComponent } from '@components/Popover';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons/index';
@@ -175,6 +173,17 @@ export const Sidebar = () => {
     },
     {
       order: 11,
+      title: 'Estoque',
+      type: 'navigate',
+      icon: icon.box,
+      permission: 'access:stock',
+      url: '/stock',
+      redirectFunction: () => {
+        navigate('/stock');
+      },
+    },
+    {
+      order: 12,
       title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,
@@ -186,7 +195,7 @@ export const Sidebar = () => {
     },
 
     {
-      order: 12,
+      order: 13,
       title: 'Sair',
       type: 'navigate',
       icon: icon.power,
@@ -197,22 +206,6 @@ export const Sidebar = () => {
       },
     },
   ];
-
-  if (account?.Company?.id === 'ac6adf37-4bfb-4c16-8656-62db0547efca') {
-    SidebarContent.push({
-      order: 10,
-      title: 'Estoque',
-      type: 'navigate',
-      icon: icon.box,
-      permission: 'access:stock',
-      url: '/stock',
-      redirectFunction: () => {
-        navigate('/stock');
-      },
-    });
-
-    SidebarContent.sort((a, b) => a.order! - b.order!);
-  }
 
   useEffect(() => {
     if (window.location.href.endsWith('/')) {
