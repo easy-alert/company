@@ -6,6 +6,15 @@ export const Container = styled.div`
   gap: ${({ theme }) => theme.size.sm};
 `;
 
+export const ImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: ${({ theme }) => theme.size.xsm};
+`;
+
 export const ColumnContainer = styled.div`
   height: fit-content;
 
@@ -60,6 +69,12 @@ export const MovementContent = styled.div`
 `;
 
 export const MovementLabel = styled.span`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+`;
+
+export const MovementNotes = styled.span`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;

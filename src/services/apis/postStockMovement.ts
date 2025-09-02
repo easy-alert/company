@@ -18,6 +18,7 @@ export async function postStockMovement({
   stockId,
   movementType,
   quantity,
+  notes,
   transferToId,
 }: IPostStockItem) {
   const api = '/stock/movements';
@@ -26,6 +27,7 @@ export async function postStockMovement({
     stockId,
     movementType,
     quantity,
+    notes,
     transferToId,
   };
 
