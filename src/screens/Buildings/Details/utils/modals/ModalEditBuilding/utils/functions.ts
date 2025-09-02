@@ -44,6 +44,7 @@ export const requestEditBuilding = async ({
       nextMaintenanceCreationBasis: values.nextMaintenanceCreationBasis,
       isActivityLogPublic: values.isActivityLogPublic,
       guestCanCompleteMaintenance: values.guestCanCompleteMaintenance,
+      showAllTicketsToResident: values.showAllTicketsToResident,
     },
   })
     .then((res) => {
@@ -119,5 +120,6 @@ export const schemaModalEditBuilding = yup
     keepNotificationAfterWarrantyEnds: yup.boolean(),
     isActivityLogPublic: yup.boolean(),
     guestCanCompleteMaintenance: yup.boolean(),
+    showAllTicketsToResident: yup.boolean(),
   })
   .required();
