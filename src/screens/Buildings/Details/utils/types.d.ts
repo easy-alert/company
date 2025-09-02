@@ -93,6 +93,7 @@ export interface IBuildingDetail {
   }[];
   image?: string;
   ticketsCount: number;
+  showAllTicketsToResident: boolean;
 }
 
 export interface IRequestBuildingDetails {

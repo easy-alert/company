@@ -15,7 +15,7 @@ import { PopoverButton } from '@components/Buttons/PopoverButton';
 import * as Style from './styles';
 
 // TYPES
-import { IModalEditBuilding } from './utils/types';
+import type { IModalEditBuilding, IEditBuilding } from './utils/types';
 
 // FUNCTIONS
 import {
@@ -47,20 +47,21 @@ export const ModalEditBuilding = ({
         initialValues={{
           id: building.id,
           name: building.name,
-          buildingTypeId: building.BuildingType.id,
+          buildingTypeId: building.BuildingType?.id,
           cep: building.cep ? applyMask({ mask: 'CEP', value: building.cep }).value : '',
           city: building.city ?? '',
           state: building.state ?? '',
           neighborhood: building.neighborhood ?? '',
           streetName: building.streetName ?? '',
           area: '',
-          deliveryDate: convertToFormikDate(new Date(building.deliveryDate)),
-          warrantyExpiration: convertToFormikDate(new Date(building.warrantyExpiration)),
+          deliveryDate: convertToFormikDate(new Date(building.deliveryDate ?? '')),
+          warrantyExpiration: convertToFormikDate(new Date(building.warrantyExpiration ?? '')),
           keepNotificationAfterWarrantyEnds: building.keepNotificationAfterWarrantyEnds,
           mandatoryReportProof: building.mandatoryReportProof,
           nextMaintenanceCreationBasis: building.nextMaintenanceCreationBasis,
           isActivityLogPublic: building.isActivityLogPublic,
           guestCanCompleteMaintenance: building.guestCanCompleteMaintenance,
+          showAllTicketsToResident: building.showAllTicketsToResident,
           image: building.image,
         }}
         validationSchema={schemaModalEditBuilding}
@@ -68,7 +69,7 @@ export const ModalEditBuilding = ({
           await requestEditBuilding({
             setModal,
             setOnQuery,
-            values,
+            values: values as IEditBuilding,
             requestBuildingDetailsCall,
           });
         }}
@@ -221,6 +222,12 @@ export const ModalEditBuilding = ({
                 label="Convidado pode concluir manutenção?"
               />
 
+              <FormikCheckbox
+                name="showAllTicketsToResident"
+                labelColor={theme.color.gray4}
+                label="Mostrar todos os chamados para residente?"
+              />
+
               <Style.ButtonContainer>
                 {!onQuery && (
                   <PopoverButton
@@ -239,7 +246,7 @@ export const ModalEditBuilding = ({
                       requestDeleteBuilding({
                         setModal,
                         setOnQuery,
-                        buildingId: building.id,
+                        buildingId: building.id || '',
                         navigate,
                       });
                     }}

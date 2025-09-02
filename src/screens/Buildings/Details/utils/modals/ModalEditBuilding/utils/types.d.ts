@@ -1,5 +1,5 @@
-import { IBuildingTypes } from '@utils/types';
-import { IBuildingDetail } from '@types';
+import type { IBuildingTypes } from '@utils/types';
+import type { IBuildingDetail } from '../../../types';
 
 interface IEditBuilding {
   id: string;
@@ -17,6 +17,7 @@ interface IEditBuilding {
   nextMaintenanceCreationBasis: string;
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
+  showAllTicketsToResident: boolean;
   image?: string;
 }
 
