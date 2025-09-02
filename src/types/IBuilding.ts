@@ -1,3 +1,5 @@
+import type { IBuildingType } from './IBuildingType';
+
 export interface IBuilding {
   id?: string;
 
@@ -12,12 +14,14 @@ export interface IBuilding {
   neighborhood?: string;
   streetName?: string;
   area?: string;
+  image?: string;
   deliveryDate?: string;
   warrantyExpiration?: string;
   keepNotificationAfterWarrantyEnds?: boolean;
   mandatoryReportProof?: boolean;
   isActivityLogPublic?: boolean;
   guestCanCompleteMaintenance?: boolean;
+  showAllTicketsToResident?: boolean;
 
   residentPassword?: string;
 
@@ -26,7 +30,7 @@ export interface IBuilding {
   createdAt?: string;
   updatedAt?: string;
 
-  // BuildingType?: IBuildingType;
+  BuildingType?: IBuildingType;
   // Company?: ICompany;
   // NotificationsConfigurations?: IBuildingNotificationConfiguration[];
   // Categories?: IBuildingCategory[];
