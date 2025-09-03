@@ -242,12 +242,13 @@ function TicketDetails({
         </Style.TicketDetailsColumnContent>
       )}
 
-      {showButtons && (ticket.statusName === 'dismissed' || ticket.statusName === 'finished') && (
+      {showButtons && (ticket.statusName === 'dismissed' || ticket.statusName === 'finished') ? (
         <Style.ButtonsContainer>
           <Button
             label="Reabrir como Aberto"
             permToCheck="tickets:update"
-            bgColor="primary"
+            textColor="actionBlue"
+            bgColor="transparent"
             onClick={() =>
               handleUpdateOneTicket({
                 id: ticket.id,
@@ -256,80 +257,6 @@ function TicketDetails({
               })
             }
           />
-          {ticket.statusName === 'finished' && (
-            <Button
-              label="Mover para Em execução"
-              permToCheck="tickets:update"
-              bgColor="awaitingToFinish"
-              onClick={() =>
-                handleUpdateOneTicket({
-                  id: ticket.id,
-                  statusName: 'awaitingToFinish',
-                  userId,
-                })
-              }
-            />
-          )}
-        </Style.ButtonsContainer>
-      )}
-
-      {showButtons && (
-        <Style.ButtonsContainer>
-          {ticket.statusName === 'open' && (
-            <Button
-              label="Executar"
-              permToCheck="tickets:update"
-              bgColor="awaitingToFinish"
-              onClick={() =>
-                handleUpdateOneTicket({
-                  id: ticket.id,
-                  statusName: 'awaitingToFinish',
-                  userId,
-                })
-              }
-            />
-          )}
-
-          {ticket.statusName === 'awaitingToFinish' && (
-            <>
-              <Button
-                label="Voltar para Aberto"
-                textColor="actionBlue"
-                bgColor="transparent"
-                permToCheck="tickets:update"
-                onClick={() =>
-                  handleUpdateOneTicket({
-                    id: ticket.id,
-                    statusName: 'open',
-                    userId,
-                  })
-                }
-              />
-
-              <Button
-                label="Finalizar"
-                permToCheck="tickets:update"
-                bgColor="finished"
-                onClick={() =>
-                  handleUpdateOneTicket({
-                    id: ticket.id,
-                    statusName: 'finished',
-                    userId,
-                  })
-                }
-              />
-            </>
-          )}
-
-          {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
-            <Button
-              label="Reprovar"
-              permToCheck="tickets:update"
-              bgColor="dismissed"
-              onClick={() => handleSetView('dismiss')}
-            />
-          )}
-
           <PopoverButton
             type="Button"
             label="Excluir"
@@ -344,6 +271,79 @@ function TicketDetails({
             actionButtonClick={() => handleDeleteTicket(ticket.id)}
           />
         </Style.ButtonsContainer>
+      ) : (
+        showButtons && (
+          <Style.ButtonsContainer>
+            {ticket.statusName === 'open' && (
+              <Button
+                label="Executar"
+                permToCheck="tickets:update"
+                bgColor="awaitingToFinish"
+                onClick={() =>
+                  handleUpdateOneTicket({
+                    id: ticket.id,
+                    statusName: 'awaitingToFinish',
+                    userId,
+                  })
+                }
+              />
+            )}
+
+            {ticket.statusName === 'awaitingToFinish' && (
+              <>
+                <Button
+                  label="Voltar para Aberto"
+                  textColor="actionBlue"
+                  bgColor="transparent"
+                  permToCheck="tickets:update"
+                  onClick={() =>
+                    handleUpdateOneTicket({
+                      id: ticket.id,
+                      statusName: 'open',
+                      userId,
+                    })
+                  }
+                />
+
+                <Button
+                  label="Finalizar"
+                  permToCheck="tickets:update"
+                  bgColor="finished"
+                  onClick={() =>
+                    handleUpdateOneTicket({
+                      id: ticket.id,
+                      statusName: 'finished',
+                      userId,
+                    })
+                  }
+                />
+              </>
+            )}
+
+            {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
+              <Button
+                label="Reprovar"
+                permToCheck="tickets:update"
+                bgColor="dismissed"
+                onClick={() => handleSetView('dismiss')}
+              />
+            )}
+
+            <PopoverButton
+              type="Button"
+              label="Excluir"
+              permToCheck="tickets:delete"
+              actionButtonBgColor={theme.background.dismissed}
+              fontWeight="700"
+              message={{
+                title: 'Deseja excluir este chamado?',
+                content: 'Atenção, essa ação é irreversível.',
+                contentColor: theme.color.danger,
+              }}
+              actionButtonClick={() => handleDeleteTicket(ticket.id)}
+            />
+          </Style.ButtonsContainer>
+        )
       )}
     </Style.TicketDetailsContainer>
   );
