@@ -15,6 +15,7 @@ interface ICreateBuilding {
   nextMaintenanceCreationBasis: string;
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
+  showAllTicketsToResident: boolean;
 }
 
 export interface IModalCreateBuilding {

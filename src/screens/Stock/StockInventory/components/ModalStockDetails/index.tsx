@@ -15,8 +15,10 @@ import { deleteStock } from '@services/apis/deleteStock';
 import { Modal } from '@components/Modal';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { Button } from '@components/Buttons/Button';
+import { Image } from '@components/Image';
 import { FormikSelect } from '@components/Form/FormikSelect';
 import { FormikInput } from '@components/Form/FormikInput';
+import { FormikTextArea } from '@components/Form/FormikTextArea';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL UTILS
@@ -104,6 +106,7 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
         ...values,
         quantity: values.movementType === 'INCOMING' ? values.quantity : -values.quantity,
       });
+
       handleRefresh();
       handleViewChange('details');
       onRefresh?.();
@@ -171,6 +174,10 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
         <Style.Container>
           {view === 'details' && (
             <>
+              <Style.ImageContainer>
+                <Image img={stock?.stockItem?.imageUrl || ''} alt="" size="100px" />
+              </Style.ImageContainer>
+
               <Style.ColumnContainer>
                 {ticketDetailsRows.map(({ label, value, color }) => (
                   <Style.ColumnContent key={label}>
@@ -198,6 +205,7 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
                             capitalize: true,
                           })} por ${movement.lastUpdatedBy?.name}`}
                     </Style.MovementLabel>
+                    <Style.MovementNotes>{movement.notes}</Style.MovementNotes>
                     <Style.MovementValue>
                       {formatDateString(movement.movementDate, 'dd/MM/yyyy - HH:mm')}
                     </Style.MovementValue>
@@ -236,6 +244,7 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
                 stockId,
                 movementType: '' as TStockMovementTypeSelect,
                 quantity: 0,
+                notes: '',
                 transferToId: '',
               }}
               validationSchema={movementStockSchema}
@@ -314,6 +323,14 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
                       stockTransfersForSelect.filter(
                         (stockTransfer) => stockTransfer.id !== stockId,
                       ).length === 0 && <p>Nenhuma transferência disponível</p>}
+
+                    <FormikTextArea
+                      name="notes"
+                      label="Observações"
+                      value={values.notes}
+                      onChange={(e) => handleChange(e)}
+                      error={touched.notes && errors.notes ? errors.notes : null}
+                    />
                   </Style.FormWrapper>
 
                   <Style.ButtonContainer>

@@ -4,12 +4,14 @@ import { handleToastify } from '@utils/toastifyResponses';
 
 import type { IStockItem } from '@customTypes/IStockItem';
 import type { IServerMessage } from '@customTypes/IServerMessage';
+import { uploadFile } from '@utils/functions';
 
 interface IPostStockItem {
   id: string;
   name: string;
   description: string;
   unit: string;
+  image?: string | File | null;
   stockItemTypeId: string;
   isActive: boolean;
 }
@@ -24,6 +26,7 @@ export interface IStockItemBody {
   name: string;
   description?: string;
   unit: string;
+  imageUrl?: string;
   stockItemTypeId: string;
   isActive: boolean;
 }
@@ -33,16 +36,27 @@ export async function putStockItem({
   name,
   description,
   unit,
+  image,
   stockItemTypeId,
   isActive,
 }: IPostStockItem) {
   const api = '/stock/items';
+
+  let imageUrl: string | null = null;
+
+  if (image && typeof image === 'object') {
+    const { Location } = await uploadFile(image);
+    imageUrl = Location;
+  } else {
+    imageUrl = image || '';
+  }
 
   const body: IStockItemBody = {
     id,
     name,
     description,
     unit,
+    imageUrl,
     stockItemTypeId,
     isActive,
   };

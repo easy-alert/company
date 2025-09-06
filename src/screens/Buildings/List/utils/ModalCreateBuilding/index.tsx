@@ -55,11 +55,12 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           nextMaintenanceCreationBasis: 'executionDate',
           isActivityLogPublic: false,
           guestCanCompleteMaintenance: false,
+          showAllTicketsToResident: false,
         }}
         validationSchema={schemaModalCreateBuilding}
-        onSubmit={async (values) => {
-          requestCreateBuilding({ setModal, setOnQuery, values, navigate });
-        }}
+        onSubmit={async (values) =>
+          requestCreateBuilding({ setModal, setOnQuery, values, navigate })
+        }
       >
         {({ errors, values, touched, setFieldValue }) => (
           <Style.FormContainer>
@@ -219,6 +220,12 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
                 name="guestCanCompleteMaintenance"
                 labelColor={theme.color.gray4}
                 label="Convidado pode concluir manutenção?"
+              />
+
+              <FormikCheckbox
+                name="showAllTicketsToResident"
+                labelColor={theme.color.gray4}
+                label="Mostrar todos os chamados para o morador?"
               />
 
               <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />

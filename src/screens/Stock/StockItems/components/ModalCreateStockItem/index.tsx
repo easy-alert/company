@@ -2,6 +2,8 @@
 import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
+import type { ChangeEvent } from 'react';
+
 // HOOKS
 import { useStockItemTypesForSelect } from '@hooks/useStockItemTypesForSelect';
 
@@ -10,12 +12,13 @@ import { Modal } from '@components/Modal';
 import { Button } from '@components/Buttons/Button';
 import { FormikInput } from '@components/Form/FormikInput';
 import { FormikSelect } from '@components/Form/FormikSelect';
+import { FormikImageInput } from '@components/Form/FormikImageInput';
+import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 
 // GLOBAL TYPES
-import { IStockItemForm } from '@customTypes/IStockItem';
+import type { IStockItemForm } from '@customTypes/IStockItem';
 
 // STYLES
-import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import * as Style from '../../../styles';
 
 interface IModalCreateStockItem {
@@ -25,6 +28,23 @@ interface IModalCreateStockItem {
 }
 
 const createStockItemSchema = yup.object().shape({
+  image: yup
+    .mixed()
+    .test(
+      'FileSize',
+      'O tamanho da imagem excedeu o limite.',
+      (value) => !value || (value && value.size <= 5000000),
+    )
+    .test(
+      'FileType',
+      'Formato inválido.',
+      (value) =>
+        !value ||
+        (value &&
+          (value.type === 'image/png' ||
+            value.type === 'image/jpeg' ||
+            value.type === 'image/jpg')),
+    ),
   name: yup.string().required('Nome é obrigatório'),
   description: yup.string(),
   unit: yup.string().required('Unidade é obrigatória'),
@@ -46,6 +66,7 @@ export const ModalCreateStockItem = ({ loading, onSubmit, onClose }: IModalCreat
           validationSchema={createStockItemSchema}
           onSubmit={(values) => onSubmit(values)}
           initialValues={{
+            image: null,
             name: '',
             description: '',
             unit: '',
@@ -53,9 +74,23 @@ export const ModalCreateStockItem = ({ loading, onSubmit, onClose }: IModalCreat
             isActive: true,
           }}
         >
-          {({ errors, values, touched }) => (
+          {({ errors, values, touched, setFieldValue }) => (
             <Style.ModalFormContainer>
               <Form>
+                <FormikImageInput
+                  name="image"
+                  label="Foto"
+                  error={touched.image && errors.image ? errors.image : null}
+                  defaultImage={values.image}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    const file = event.target.files?.[0];
+
+                    if (file) {
+                      setFieldValue('image', file as File);
+                    }
+                  }}
+                />
+
                 <FormikInput
                   name="name"
                   label="Nome *"

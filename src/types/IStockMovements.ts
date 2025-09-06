@@ -33,6 +33,7 @@ export interface IStockMovementForm {
   stockId: string;
   movementType: TStockMovements;
   quantity: number;
+  notes?: string;
   transferToId: string;
 }
 
