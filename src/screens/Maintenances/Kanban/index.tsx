@@ -195,6 +195,28 @@ export const MaintenancesKanban = () => {
     });
   };
 
+  const handleGetCategories = async () => {
+    try {
+      const responseData = await getMaintenancesKanban({
+        userId: account?.User.id ?? '',
+        filter: {
+          buildings: [],
+          status: [],
+          categories: [],
+          users: [],
+          priorityNames: [],
+          types: [],
+          search: '',
+          startDate: undefined,
+          endDate: undefined,
+        },
+      });
+      setMaintenanceCategoriesForSelect(responseData.maintenanceCategoriesForSelect);
+    } catch (e) {
+      setMaintenanceCategoriesForSelect([]);
+    }
+  };
+
   // region filter functions
   const handleFilterChange = (key: keyof IMaintenanceFilter, value: string) => {
     setFilter((prevState) => {
@@ -257,6 +279,10 @@ export const MaintenancesKanban = () => {
       didMount.current = true;
     }
   }, [refresh]);
+
+  useEffect(() => {
+    handleGetCategories();
+  }, []);
 
   return (
     <>
