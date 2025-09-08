@@ -78,4 +78,7 @@ export interface ITicket {
   building?: IBuilding;
   dismissReasons?: ITicketDismissReason;
   dismissedBy?: IBuildingNotificationConfiguration;
+
+  editedFields?: string[];
+  lastEditedAt?: string | Date;
 }
