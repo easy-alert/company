@@ -28,15 +28,29 @@ import { theme } from '@styles/theme';
 import * as Style from '../styles';
 
 interface ITicketDetails {
-  ticket: ITicket;
+  ticket: ITicket & { editedFields?: string[] };
   userId?: string;
   showButtons?: boolean;
   signatureLoading: boolean;
   handleSetView: (viewState: 'details' | 'dismiss') => void;
-  handleUpdateOneTicket: (updatedTicket: ITicket, refresh?: boolean, closeModal?: boolean) => void;
+  handleUpdateOneTicket: (
+    updatedTicket: ITicket,
+    refresh?: boolean,
+    closeModal?: boolean,
+  ) => Promise<ITicket>;
   handleUploadSignature: (signature: string) => void;
   handleDeleteTicket: (ticketId: string) => void;
 }
+
+type EditableField =
+  | 'residentName'
+  | 'residentPhone'
+  | 'residentApartment'
+  | 'residentEmail'
+  | 'residentCPF'
+  | 'description';
+
+type EditedData = Record<EditableField, string>;
 
 function TicketDetails({
   ticket,
@@ -49,79 +63,147 @@ function TicketDetails({
   handleDeleteTicket,
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
+  const [localTicket, setLocalTicket] = useState(ticket);
 
-  const disableComment = ticket?.statusName !== 'awaitingToFinish';
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedData, setEditedData] = useState<EditedData>({
+    residentName: ticket.residentName || '',
+    residentPhone: ticket.residentPhone || '',
+    residentApartment: ticket.residentApartment || '',
+    residentEmail: ticket.residentEmail || '',
+    residentCPF: ticket.residentCPF || '',
+    description: ticket.description || '',
+  });
+
+  const disableComment = localTicket?.statusName !== 'awaitingToFinish';
+
+  const editedFields: string[] = localTicket.editedFields || [];
 
   const ticketDetailsRows = [
     {
       label: 'Edificação',
-      value: ticket?.building?.name,
+      value: localTicket?.building?.name,
+      field: null,
     },
     {
       label: 'Apartamento do morador',
-      value: ticket?.residentApartment,
+      value: localTicket?.residentApartment,
+      field: 'residentApartment',
     },
     {
       label: 'Nome do morador',
-      value: ticket?.residentName,
+      value: localTicket?.residentName,
+      field: 'residentName',
     },
     {
       label: 'Telefone do morador',
-      value: applyMask({ value: ticket?.residentPhone || '', mask: 'TEL' }).value,
+      value: applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value,
+      field: 'residentPhone',
     },
     {
       label: 'E-mail do morador',
-      value: ticket?.residentEmail,
+      value: localTicket?.residentEmail,
+      field: 'residentEmail',
     },
     {
       label: 'CPF do morador',
-      value: applyMask({ value: ticket?.residentCPF || '', mask: 'CPF' }).value,
+      value: applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value,
+      field: 'residentCPF',
     },
     {
       label: 'Local da ocorrência',
-      place: ticket?.place,
+      place: localTicket?.place,
+      field: null,
     },
     {
       label: 'Tipo de assistência',
-      types: ticket?.types,
+      types: localTicket?.types,
+      field: null,
     },
     {
       label: 'Data de abertura',
-      value: ticket?.createdAt ? formatDateString(ticket.createdAt, 'dd/MM/yyyy - HH:mm') : '',
+      value: localTicket?.createdAt
+        ? formatDateString(localTicket.createdAt, 'dd/MM/yyyy - HH:mm')
+        : '',
+      field: null,
     },
   ];
 
   const ticketDetailsDismissedRows = [
     {
       label: 'Indeferido por',
-      value: ticket.dismissedBy?.name,
+      value: localTicket.dismissedBy?.name,
     },
     {
       label: 'Data de indeferimento',
-      value: ticket?.dismissedAt ? formatDateString(ticket?.dismissedAt, 'dd/MM/yyyy - HH:mm') : '',
+      value: localTicket?.dismissedAt
+        ? formatDateString(localTicket?.dismissedAt, 'dd/MM/yyyy - HH:mm')
+        : '',
     },
     {
       label: 'Justificativa',
-      value: ticket?.dismissReasons?.label,
+      value: localTicket?.dismissReasons?.label,
     },
-    { label: 'Observação', value: ticket?.dismissObservation },
+    { label: 'Observação', value: localTicket?.dismissObservation },
   ];
 
   const handleToggleShowToResident = () => {
-    handleUpdateOneTicket({ id: ticket.id, showToResident: !ticket.showToResident });
+    handleUpdateOneTicket({ id: localTicket.id, showToResident: !localTicket.showToResident });
+  };
+
+  const handleFieldChange = (field: EditableField, value: string) => {
+    setEditedData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = async () => {
+    const updated = await handleUpdateOneTicket({
+      ...localTicket,
+      residentName: editedData.residentName,
+      residentPhone: editedData.residentPhone,
+      residentApartment: editedData.residentApartment,
+      residentEmail: editedData.residentEmail,
+      residentCPF: editedData.residentCPF,
+      description: editedData.description,
+      userId,
+    });
+
+    if (updated) {
+      setLocalTicket(updated);
+      setIsEditing(false);
+      setEditedData({
+        residentName: updated.residentName || '',
+        residentPhone: updated.residentPhone || '',
+        residentApartment: updated.residentApartment || '',
+        residentEmail: updated.residentEmail || '',
+        residentCPF: updated.residentCPF || '',
+        description: updated.description || '',
+      });
+    }
   };
 
   return (
     <Style.TicketDetailsContainer>
-      <TicketShareButton ticketId={ticket.id} />
+      {localTicket.lastEditedAt && (
+        <Style.TicketEditedAlert>
+          Editado em{' '}
+          {formatDateString(
+            typeof localTicket.lastEditedAt === 'string'
+              ? localTicket.lastEditedAt
+              : localTicket.lastEditedAt?.toISOString() || '',
+            'dd/MM/yyyy HH:mm',
+          )}
+        </Style.TicketEditedAlert>
+      )}
+
+      <TicketShareButton ticketId={localTicket.id} />
 
       <TicketShowResidentButton
-        showToResident={ticket.showToResident}
+        showToResident={localTicket.showToResident}
         handleToggleShowToResident={handleToggleShowToResident}
       />
 
       <Style.TicketDetailsColumnContainer>
-        {ticketDetailsRows.map(({ label, value, place, types }) => {
+        {ticketDetailsRows.map(({ label, value, place, types, field }) => {
           if (label === 'Local da ocorrência') {
             return (
               <Style.TicketDetailsColumnContent key={label}>
@@ -135,7 +217,6 @@ function TicketDetails({
             return (
               <Style.TicketDetailsColumnContent key={label}>
                 <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-
                 {Array.isArray(types) &&
                   types.map(({ type: ticketType }) => (
                     <ListTag
@@ -151,23 +232,109 @@ function TicketDetails({
 
           return (
             <Style.TicketDetailsColumnContent key={label}>
-              <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-              <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
+              <Style.TicketDetailsRowLabel>
+                {label}
+                {field && editedFields.includes(field) && (
+                  <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
+                )}
+              </Style.TicketDetailsRowLabel>
+              {isEditing && field ? (
+                <input
+                  style={{
+                    width: '100%',
+                    minHeight: 32,
+                    marginTop: 4,
+                    marginBottom: 4,
+                    borderRadius: 6,
+                    border: '1px solid #ccc',
+                    padding: 8,
+                    fontSize: 14,
+                  }}
+                  value={editedData[field as EditableField]}
+                  onChange={(e) => handleFieldChange(field as EditableField, e.target.value)}
+                />
+              ) : (
+                <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
+              )}
             </Style.TicketDetailsColumnContent>
           );
         })}
       </Style.TicketDetailsColumnContainer>
 
       <Style.TicketDetailsDescriptionContainer>
-        <Style.TicketDetailsRowLabel>Descrição</Style.TicketDetailsRowLabel>
-        <Style.TicketDetailsRowValue>{ticket.description}</Style.TicketDetailsRowValue>
+        <Style.TicketDetailsRowLabel>
+          Descrição
+          {editedFields.includes('description') && (
+            <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
+          )}
+        </Style.TicketDetailsRowLabel>
+        {isEditing ? (
+          <textarea
+            style={{
+              width: '100%',
+              minHeight: 60,
+              marginTop: 8,
+              marginBottom: 8,
+              borderRadius: 6,
+              border: '1px solid #ccc',
+              padding: 8,
+              fontSize: 14,
+              resize: 'vertical',
+            }}
+            value={editedData.description}
+            onChange={(e) => handleFieldChange('description', e.target.value)}
+          />
+        ) : (
+          <Style.TicketDetailsRowValue>{localTicket.description}</Style.TicketDetailsRowValue>
+        )}
       </Style.TicketDetailsDescriptionContainer>
+
+      {showButtons && (
+        <div
+          style={{
+            marginTop: 16,
+            marginBottom: 8,
+            display: isEditing ? 'flex' : undefined,
+            gap: isEditing ? 8 : undefined,
+            alignItems: 'center',
+          }}
+        >
+          {!isEditing ? (
+            <Button
+              label="Editar dados"
+              bgColor="primary"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+            />
+          ) : (
+            <>
+              <Button label="Salvar" bgColor="finished" size="sm" onClick={handleSave} />
+              <Button
+                label="Cancelar"
+                bgColor="transparent"
+                textColor="danger"
+                size="sm"
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditedData({
+                    residentName: localTicket.residentName || '',
+                    residentPhone: localTicket.residentPhone || '',
+                    residentApartment: localTicket.residentApartment || '',
+                    residentEmail: localTicket.residentEmail || '',
+                    residentCPF: localTicket.residentCPF || '',
+                    description: localTicket.description || '',
+                  });
+                }}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       <Style.TicketDetailsImagesContainer>
         <Style.TicketDetailsRowLabel>Imagens</Style.TicketDetailsRowLabel>
-
         <Style.TicketDetailsImagesContent>
-          {ticket?.images?.map((image) => (
+          {localTicket?.images?.map((image) => (
             <ImagePreview
               key={image.id}
               src={image.url}
@@ -181,22 +348,22 @@ function TicketDetails({
       </Style.TicketDetailsImagesContainer>
 
       <TicketHistoryActivities
-        ticketId={ticket.id}
+        ticketId={localTicket.id}
         userId={userId}
         disableComment={disableComment}
       />
 
-      {ticket.statusName !== 'open' && (
+      {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
             <Typography variant="h3">
               Assinatura:
               <Typography variant="span" fontSize="sm" style={{ textDecoration: 'underline' }}>
-                {ticket.residentName}
+                {localTicket.residentName}
               </Typography>
             </Typography>
 
-            {!ticket?.signature && (
+            {!localTicket?.signature && (
               <IconButton
                 icon={icon.signing}
                 onClick={() => setOpenSignaturePad(!openSignaturePad)}
@@ -204,7 +371,7 @@ function TicketDetails({
             )}
           </Style.TicketSignatureHeader>
 
-          {!ticket?.signature ? (
+          {!localTicket?.signature ? (
             openSignaturePad && (
               <SignaturePad
                 loading={signatureLoading}
@@ -215,8 +382,8 @@ function TicketDetails({
             )
           ) : (
             <ImagePreview
-              src={ticket.signature}
-              downloadUrl={ticket.signature}
+              src={localTicket.signature}
+              downloadUrl={localTicket.signature}
               imageCustomName="assinatura"
               width="128px"
               height="128px"
@@ -225,10 +392,9 @@ function TicketDetails({
         </Style.TicketSignatureContainer>
       )}
 
-      {ticket?.statusName === 'dismissed' && (
+      {localTicket?.statusName === 'dismissed' && (
         <Style.TicketDetailsColumnContent>
           <Style.TicketDetailsTitle>Detalhes do indeferimento</Style.TicketDetailsTitle>
-
           <Style.TicketDetailsDismissedContainer>
             <Style.TicketDetailsDismissedContent>
               {ticketDetailsDismissedRows.map(({ label, value }) => (
@@ -244,14 +410,14 @@ function TicketDetails({
 
       {showButtons && (
         <Style.ButtonsContainer>
-          {ticket.statusName === 'open' && (
+          {localTicket.statusName === 'open' && (
             <Button
               label="Executar"
               permToCheck="tickets:update"
               bgColor="awaitingToFinish"
               onClick={() =>
                 handleUpdateOneTicket({
-                  id: ticket.id,
+                  id: localTicket.id,
                   statusName: 'awaitingToFinish',
                   userId,
                 })
@@ -259,7 +425,7 @@ function TicketDetails({
             />
           )}
 
-          {ticket.statusName === 'awaitingToFinish' && (
+          {localTicket.statusName === 'awaitingToFinish' && (
             <>
               <Button
                 label="Voltar para Aberto"
@@ -268,7 +434,7 @@ function TicketDetails({
                 permToCheck="tickets:update"
                 onClick={() =>
                   handleUpdateOneTicket({
-                    id: ticket.id,
+                    id: localTicket.id,
                     statusName: 'open',
                     userId,
                   })
@@ -281,7 +447,7 @@ function TicketDetails({
                 bgColor="finished"
                 onClick={() =>
                   handleUpdateOneTicket({
-                    id: ticket.id,
+                    id: localTicket.id,
                     statusName: 'finished',
                     userId,
                   })
@@ -290,7 +456,7 @@ function TicketDetails({
             </>
           )}
 
-          {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
+          {(localTicket.statusName === 'open' || localTicket.statusName === 'awaitingToFinish') && (
             <Button
               label="Reprovar"
               permToCheck="tickets:update"
@@ -310,7 +476,7 @@ function TicketDetails({
               content: 'Atenção, essa ação é irreversível.',
               contentColor: theme.color.danger,
             }}
-            actionButtonClick={() => handleDeleteTicket(ticket.id)}
+            actionButtonClick={() => handleDeleteTicket(localTicket.id)}
           />
         </Style.ButtonsContainer>
       )}
