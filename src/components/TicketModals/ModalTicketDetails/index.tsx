@@ -69,13 +69,13 @@ export const ModalTicketDetails = ({
     updatedTicket: ITicket,
     refresh = true,
     closeModal = true,
-  ) => {
+  ): Promise<ITicket> => {
     setLoading(true);
 
     try {
       const responseTicket = await putTicketById(updatedTicket);
 
-      if (!responseTicket) return;
+      if (!responseTicket) throw new Error('Erro ao atualizar o ticket');
       setTicket(responseTicket);
 
       if (refresh && handleRefresh) {
@@ -85,8 +85,11 @@ export const ModalTicketDetails = ({
       if (closeModal && handleTicketDetailsModal) {
         handleTicketDetailsModal(false);
       }
+
+      return responseTicket;
     } catch (error: any) {
       handleToastify(error);
+      throw error;
     } finally {
       setLoading(false);
     }
