@@ -131,3 +131,14 @@ export const DismissTicketText = styled.span`
   line-height: 16px;
   margin-bottom: ${({ theme }) => theme.size.xsm};
 `;
+
+export const TicketEditedAlert = styled.div`
+  background: #fff3cd;
+  color: #856404;
+  padding: 8px 16px;
+  border-radius: ${({ theme }) => theme.size.xxsm};
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.size.xsm};
+`;

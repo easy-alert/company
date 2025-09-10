@@ -1,14 +1,32 @@
 import { Api } from '@services/api';
-
 import { handleToastify } from '@utils/toastifyResponses';
-
 import type { ITicket } from '@customTypes/ITicket';
 
 export async function putTicketById(updatedTicket: ITicket) {
   const uri = `/tickets/${updatedTicket.id}`;
 
+  const {
+    id,
+    residentName,
+    residentPhone,
+    residentApartment,
+    residentEmail,
+    residentCPF,
+    description,
+    userId,
+  } = updatedTicket;
+
   const body = {
-    updatedTicket,
+    updatedTicket: {
+      id,
+      residentName,
+      residentPhone,
+      residentApartment,
+      residentEmail,
+      residentCPF,
+      description,
+      userId,
+    },
   };
 
   try {
