@@ -14,6 +14,7 @@ export async function putTicketById(updatedTicket: ITicket) {
     residentCPF,
     description,
     userId,
+    statusName,
   } = updatedTicket;
 
   const body = {
@@ -26,6 +27,7 @@ export async function putTicketById(updatedTicket: ITicket) {
       residentCPF,
       description,
       userId,
+      statusName,
     },
   };
 
