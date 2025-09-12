@@ -195,11 +195,11 @@ export const MaintenancesKanban = () => {
     });
   };
 
-  const handleGetCategories = async () => {
+  const handleGetCategories = async (customFilter?: IMaintenanceFilter) => {
     try {
       const responseData = await getMaintenancesKanban({
         userId: account?.User.id ?? '',
-        filter: {
+        filter: customFilter ?? {
           buildings: [],
           status: [],
           categories: [],
@@ -281,8 +281,8 @@ export const MaintenancesKanban = () => {
   }, [refresh]);
 
   useEffect(() => {
-    handleGetCategories();
-  }, []);
+    handleGetCategories(filter);
+  }, [filter.buildings]);
 
   return (
     <>
