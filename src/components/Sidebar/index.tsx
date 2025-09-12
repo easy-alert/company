@@ -62,28 +62,17 @@ export const Sidebar = () => {
     },
     {
       order: 2,
-      title: 'Calendário manutenções',
+      title: 'Calendário',
       type: 'navigate',
       icon: icon.calendar,
-      permission: 'access:calendarMaintenances',
-      url: '/calendarMaintenances',
+      permission: 'access:calendar',
+      url: '/calendar',
       redirectFunction: () => {
-        navigate('/calendarMaintenances');
+        navigate('/calendar');
       },
     },
     {
       order: 3,
-      title: 'Calendário chamados',
-      type: 'navigate',
-      icon: icon.calendar,
-      permission: 'access:calendarTickets',
-      url: '/calendarTickets',
-      redirectFunction: () => {
-        navigate('/calendarTickets');
-      },
-    },
-    {
-      order: 4,
       title: 'Edificações',
       type: 'navigate',
       icon: icon.building,
@@ -94,7 +83,7 @@ export const Sidebar = () => {
       },
     },
     {
-      order: 5,
+      order: 4,
       title: 'Manutenções',
       type: 'navigate',
       icon: icon.maintenanceWhite,
@@ -106,7 +95,7 @@ export const Sidebar = () => {
     },
 
     {
-      order: 6,
+      order: 5,
       title: 'Checklists',
       type: 'navigate',
       icon: icon.checklists,
@@ -118,7 +107,7 @@ export const Sidebar = () => {
     },
 
     {
-      order: 7,
+      order: 6,
       title: 'Chamados',
       type: 'navigate',
       icon: icon.whiteSiren,
@@ -129,7 +118,7 @@ export const Sidebar = () => {
       },
     },
     {
-      order: 8,
+      order: 7,
       title: 'Relatórios',
       type: 'navigate',
       icon: icon.report,
@@ -140,7 +129,7 @@ export const Sidebar = () => {
       },
     },
     {
-      order: 9,
+      order: 8,
       title: 'Prestadores de serviço',
       type: 'navigate',
       icon: icon.suppliers,
@@ -161,7 +150,7 @@ export const Sidebar = () => {
     //   },
     // },
     {
-      order: 10,
+      order: 9,
       title: 'Financeiro',
       type: 'navigate',
       icon: icon.receiptWhite,
@@ -172,7 +161,7 @@ export const Sidebar = () => {
       },
     },
     {
-      order: 11,
+      order: 10,
       title: 'Estoque',
       type: 'navigate',
       icon: icon.box,
@@ -183,7 +172,7 @@ export const Sidebar = () => {
       },
     },
     {
-      order: 12,
+      order: 11,
       title: 'Configurações',
       type: 'navigate',
       icon: icon.gear,
@@ -195,7 +184,7 @@ export const Sidebar = () => {
     },
 
     {
-      order: 13,
+      order: 12,
       title: 'Sair',
       type: 'navigate',
       icon: icon.power,
