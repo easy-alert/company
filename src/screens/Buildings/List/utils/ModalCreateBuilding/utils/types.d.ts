@@ -16,6 +16,7 @@ interface ICreateBuilding {
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
   showAllTicketsToResident: boolean;
+  ticketAnnexRequired: boolean;
 }
 
 export interface IModalCreateBuilding {

@@ -3,6 +3,7 @@ import type { IBuildingDetail } from '../../../types';
 
 interface IEditBuilding {
   id: string;
+  image?: string;
   name: string;
   buildingTypeId: string;
   cep: string;
@@ -18,7 +19,7 @@ interface IEditBuilding {
   isActivityLogPublic: boolean;
   guestCanCompleteMaintenance: boolean;
   showAllTicketsToResident: boolean;
-  image?: string;
+  ticketAnnexRequired: boolean;
 }
 
 export interface IModalEditBuilding {

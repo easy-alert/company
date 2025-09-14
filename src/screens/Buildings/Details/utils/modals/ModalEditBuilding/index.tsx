@@ -46,6 +46,7 @@ export const ModalEditBuilding = ({
       <Formik
         initialValues={{
           id: building.id,
+          image: building.image,
           name: building.name,
           buildingTypeId: building.BuildingType?.id,
           cep: building.cep ? applyMask({ mask: 'CEP', value: building.cep }).value : '',
@@ -62,7 +63,7 @@ export const ModalEditBuilding = ({
           isActivityLogPublic: building.isActivityLogPublic,
           guestCanCompleteMaintenance: building.guestCanCompleteMaintenance,
           showAllTicketsToResident: building.showAllTicketsToResident,
-          image: building.image,
+          ticketAnnexRequired: building.ticketAnnexRequired,
         }}
         validationSchema={schemaModalEditBuilding}
         onSubmit={async (values) => {
@@ -225,7 +226,13 @@ export const ModalEditBuilding = ({
               <FormikCheckbox
                 name="showAllTicketsToResident"
                 labelColor={theme.color.gray4}
-                label="Mostrar todos os chamados para residente?"
+                label="Mostrar todos os chamados para morador?"
+              />
+
+              <FormikCheckbox
+                name="ticketAnnexRequired"
+                labelColor={theme.color.gray4}
+                label="Anexos de chamados obrigatórios?"
               />
 
               <Style.ButtonContainer>

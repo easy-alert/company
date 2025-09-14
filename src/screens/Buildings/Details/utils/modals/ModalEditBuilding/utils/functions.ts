@@ -45,6 +45,7 @@ export const requestEditBuilding = async ({
       isActivityLogPublic: values.isActivityLogPublic,
       guestCanCompleteMaintenance: values.guestCanCompleteMaintenance,
       showAllTicketsToResident: values.showAllTicketsToResident,
+      ticketAnnexRequired: values.ticketAnnexRequired,
     },
   })
     .then((res) => {
@@ -121,5 +122,6 @@ export const schemaModalEditBuilding = yup
     isActivityLogPublic: yup.boolean(),
     guestCanCompleteMaintenance: yup.boolean(),
     showAllTicketsToResident: yup.boolean(),
+    ticketAnnexRequired: yup.boolean(),
   })
   .required();

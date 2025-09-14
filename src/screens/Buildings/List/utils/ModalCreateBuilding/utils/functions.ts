@@ -35,6 +35,7 @@ export const requestCreateBuilding = async ({
     isActivityLogPublic: values.isActivityLogPublic,
     guestCanCompleteMaintenance: values.guestCanCompleteMaintenance,
     showAllTicketsToResident: values.showAllTicketsToResident,
+    ticketAnnexRequired: values.ticketAnnexRequired,
   })
     .then((res) => {
       setModal(false);
@@ -86,5 +87,6 @@ export const schemaModalCreateBuilding = yup
     isActivityLogPublic: yup.boolean(),
     guestCanCompleteMaintenance: yup.boolean(),
     showAllTicketsToResident: yup.boolean(),
+    ticketAnnexRequired: yup.boolean(),
   })
   .required();
