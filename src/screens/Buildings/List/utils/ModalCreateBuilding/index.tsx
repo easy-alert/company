@@ -56,6 +56,7 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
           isActivityLogPublic: false,
           guestCanCompleteMaintenance: false,
           showAllTicketsToResident: false,
+          ticketAnnexRequired: false,
         }}
         validationSchema={schemaModalCreateBuilding}
         onSubmit={async (values) =>
@@ -225,7 +226,13 @@ export const ModalCreateBuilding = ({ setModal, buildingTypes }: IModalCreateBui
               <FormikCheckbox
                 name="showAllTicketsToResident"
                 labelColor={theme.color.gray4}
-                label="Mostrar todos os chamados para o morador?"
+                label="Mostrar todos os chamados para morador?"
+              />
+
+              <FormikCheckbox
+                name="ticketAnnexRequired"
+                labelColor={theme.color.gray4}
+                label="Anexos de chamados obrigatórios?"
               />
 
               <Button center label="Cadastrar" type="submit" loading={onQuery} bgColor="primary" />

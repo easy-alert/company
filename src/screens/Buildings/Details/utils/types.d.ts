@@ -94,6 +94,7 @@ export interface IBuildingDetail {
   image?: string;
   ticketsCount: number;
   showAllTicketsToResident: boolean;
+  ticketAnnexRequired: boolean;
 }
 
 export interface IRequestBuildingDetails {
