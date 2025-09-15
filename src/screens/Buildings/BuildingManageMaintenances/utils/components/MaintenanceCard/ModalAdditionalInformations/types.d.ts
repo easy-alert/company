@@ -2,7 +2,7 @@ import { ICategories, IMaintenance } from '../../../types';
 import {
   IMaintenanceReport,
   AnnexesAndImages,
-} from '../../../../../../Calendar/utils/ModalSendMaintenanceReport/types';
+} from '../../../../../../Calendar/CalendarMaintenance/utils/ModalSendMaintenanceReport/types';
 
 export interface IModalAdditionalInformations {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
