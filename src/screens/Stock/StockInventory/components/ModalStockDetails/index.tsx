@@ -12,6 +12,7 @@ import { postStockMovement } from '@services/apis/postStockMovement';
 import { deleteStock } from '@services/apis/deleteStock';
 
 // GLOBAL COMPONENTS
+import { StockHistoryActivities } from '@components/StockHistoryActivities';
 import { Modal } from '@components/Modal';
 import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { Button } from '@components/Buttons/Button';
@@ -41,6 +42,7 @@ import * as Style from './styles';
 
 interface IModalStockDetails {
   stockId: string;
+  userId?: string;
   onClose: () => void;
   onRefresh?: () => void;
 }
@@ -59,7 +61,7 @@ const movementStockSchema = yup.object().shape({
   }),
 });
 
-export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDetails) => {
+export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModalStockDetails) => {
   const [stock, setStock] = useState<IStock | null>(null);
   const [stockMovementType, setStockMovementType] = useState<TStockMovementTypeSelect | ''>('');
 
@@ -188,6 +190,8 @@ export const ModalStockDetails = ({ stockId, onClose, onRefresh }: IModalStockDe
                   </Style.ColumnContent>
                 ))}
               </Style.ColumnContainer>
+
+              <StockHistoryActivities stockId={stockId} userId={userId} />
 
               <Style.MovementsContainer>
                 <h2>Últimas Movimentações (5)</h2>

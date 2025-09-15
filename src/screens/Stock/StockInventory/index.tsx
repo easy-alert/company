@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // HOOKS
+import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 import { useStockItemTypesForSelect } from '@hooks/useStockItemTypesForSelect';
 
@@ -23,7 +24,6 @@ import TableCell from '@components/TableCell';
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
 import IconFilter from '@assets/icons/IconFilter';
-import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
@@ -34,14 +34,11 @@ import type { IStock, IStockForm } from '@customTypes/IStock';
 import type { IColsBody, IColsHeader } from '@components/Table/types';
 
 // COMPONENTS
-import IconTrash from '@assets/icons/IconTrash';
-import { deleteStock } from '@services/apis/deleteStock';
-import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { ModalCreateStock } from './components/ModalCreateStock';
+import { ModalStockDetails } from './components/ModalStockDetails';
 
 // STYLES
 import * as Style from './styles';
-import { ModalStockDetails } from './components/ModalStockDetails';
 
 export interface IStockFilter {
   buildingIds?: string[];
@@ -51,6 +48,11 @@ export interface IStockFilter {
 }
 
 export const StockInventory = () => {
+  const {
+    account: {
+      User: { id: userId },
+    },
+  } = useAuthContext();
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: false });
   const { stockItemTypesForSelect } = useStockItemTypesForSelect({ buildingId: '' });
 
@@ -347,6 +349,7 @@ export const StockInventory = () => {
       {modalStockDetails && selectedStock && (
         <ModalStockDetails
           stockId={selectedStock}
+          userId={userId}
           onClose={() => handleModalStockDetails(false)}
           onRefresh={handleRefresh}
         />
