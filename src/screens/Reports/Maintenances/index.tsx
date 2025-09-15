@@ -62,7 +62,7 @@ import type {
   IFiltersOptions,
   IMaintenanceReportData,
 } from './types';
-import type { IModalAdditionalInformations } from '../../Calendar/types';
+import type { IModalAdditionalInformations } from '../../Calendar/CalendarMaintenance/types';
 
 export const MaintenanceReports = () => {
   // #region states
