@@ -194,7 +194,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
               <StockHistoryActivities stockId={stockId} userId={userId} />
 
               <Style.MovementsContainer>
-                <h2>Últimas Movimentações (5)</h2>
+                <h3>Últimas Movimentações (5)</h3>
 
                 {stock?.movements?.map((movement) => (
                   <Style.MovementContent key={movement.id}>
