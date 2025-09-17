@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // HOOKS
@@ -28,6 +28,7 @@ import IconFilter from '@assets/icons/IconFilter';
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
 import { dateTimeFormatter } from '@utils/functions';
+import { useReactToPrint } from 'react-to-print';
 
 // GLOBAL TYPES
 import type { IStock, IStockForm } from '@customTypes/IStock';
@@ -59,6 +60,8 @@ export const StockInventory = () => {
   const [stocks, setStocks] = useState<IStock[]>([]);
   const [stocksCount, setStocksCount] = useState(0);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
+
+  const printRef = useRef<HTMLDivElement>(null);
 
   const [filter, setFilter] = useState<IStockFilter>({
     buildingIds: [],
@@ -98,6 +101,16 @@ export const StockInventory = () => {
     setSelectedStock(stock.id);
     setModalStockDetails(modalState);
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: 'Lista de Estoque',
+    removeAfterPrint: true,
+    onBeforeGetContent: () => {
+      window.dispatchEvent(new Event('resize'));
+      return Promise.resolve();
+    },
+  });
 
   // endregion
 
@@ -376,6 +389,7 @@ export const StockInventory = () => {
               icon={<IconPlus strokeColor="primary" />}
               onClick={() => handleModalCreateStock(true)}
             />
+            <Button label="Imprimir" onClick={handlePrint} type="button" />
           </Style.IconsContainer>
         </Style.Header>
 
@@ -631,30 +645,32 @@ export const StockInventory = () => {
         )}
 
         {!loading && stocks.length > 0 && (
-          <Table
-            colsHeader={colsHeader}
-            pagination
-            totalCountOfRegister={stocksCount}
-            registerPerPage={5}
-          >
-            {stocks?.map((item) => (
-              <TableContent
-                key={item.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleModalStockDetails(true, item);
-                }}
-                colsBody={colsBody.map((col) => ({
-                  cell: col.node ? (
-                    col.cell(item)
-                  ) : (
-                    <TableCell value={col.cell(item)?.toString() || ''} type={col.type} />
-                  ),
-                  cssProps: col.cssProps,
-                }))}
-              />
-            ))}
-          </Table>
+          <Style.Print ref={printRef}>
+            <Table
+              colsHeader={colsHeader}
+              pagination
+              totalCountOfRegister={stocksCount}
+              registerPerPage={5}
+            >
+              {stocks?.map((item) => (
+                <TableContent
+                  key={item.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleModalStockDetails(true, item);
+                  }}
+                  colsBody={colsBody.map((col) => ({
+                    cell: col.node ? (
+                      col.cell(item)
+                    ) : (
+                      <TableCell value={col.cell(item)?.toString() || ''} type={col.type} />
+                    ),
+                    cssProps: col.cssProps,
+                  }))}
+                />
+              ))}
+            </Table>
+          </Style.Print>
         )}
       </Style.Container>
     </>
