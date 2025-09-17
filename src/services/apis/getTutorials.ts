@@ -10,7 +10,6 @@ export async function getTutorials() {
 
     return response.data;
   } catch (error) {
-    console.log('🚀 ~ getTutorials ~ error:', error);
     catchHandler(error);
 
     return null;
