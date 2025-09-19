@@ -6,6 +6,8 @@ import { putTicketById } from '@services/apis/putTicketById';
 import { getAllTicketDismissReasons } from '@services/apis/getAllTicketDismissReasons';
 import { postTicketSignature } from '@services/apis/postTicketSignature';
 import { deleteTicketById } from '@services/apis/deleteTicket';
+import { postTicketImage } from '@services/apis/postTicketImage';
+import { deleteTicketImage } from '@services/apis/deleteTicketImage';
 
 // GLOBAL COMPONENTS
 import { Modal } from '@components/Modal';
@@ -145,6 +147,46 @@ export const ModalTicketDetails = ({
     }
   };
 
+  const handleUploadImage = async (file: File) => {
+    setLoading(true);
+    try {
+      await postTicketImage({ ticketId, file });
+      await handleGetTicketById();
+      setTicket((prev) =>
+        prev
+          ? {
+              ...prev,
+              editedFields: [...new Set([...(prev.editedFields || []), 'images'])],
+            }
+          : prev,
+      );
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveImage = async (imageId: string) => {
+    setLoading(true);
+    try {
+      await deleteTicketImage({ ticketId, imageId });
+      await handleGetTicketById();
+      setTicket((prev) =>
+        prev
+          ? {
+              ...prev,
+              editedFields: [...new Set([...(prev.editedFields || []), 'images'])],
+            }
+          : prev,
+      );
+    } catch (error: any) {
+      handleToastify(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     handleGetTicketById();
     handleGetTicketDismissReasons();
@@ -177,6 +219,8 @@ export const ModalTicketDetails = ({
               handleUpdateOneTicket={handleUpdateOneTicket}
               handleUploadSignature={handleUploadSignature}
               handleDeleteTicket={handleDeleteTicket}
+              handleUploadImage={handleUploadImage}
+              handleRemoveImage={handleRemoveImage}
             />
           )}
 
