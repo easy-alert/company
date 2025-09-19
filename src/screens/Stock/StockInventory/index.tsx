@@ -407,7 +407,7 @@ export const StockInventory = () => {
               icon={<IconPlus strokeColor="primary" />}
               onClick={() => handleModalCreateStock(true)}
             />
-            <Button label="Imprimir" onClick={handlePrint} type="button" />
+            <Button label="Imprimir" onClick={handlePrint} type="button" bgColor="primary" />
           </Style.IconsContainer>
         </Style.Header>
 
@@ -694,4 +694,3 @@ export const StockInventory = () => {
     </>
   );
 };
-

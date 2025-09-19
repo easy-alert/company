@@ -235,7 +235,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
 
                 <Button
                   label="Movimentar"
-                  color="primary"
+                  bgColor="primary"
                   onClick={() => handleViewChange('movement')}
                 />
               </Style.ButtonContainer>
@@ -349,6 +349,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
                       type="Button"
                       buttonType="submit"
                       label="Atualizar"
+                      bgColor="primary"
                       buttonIcon={<IconTrash strokeColor="primary" />}
                       actionButtonBgColor="primary"
                       message={{
