@@ -20,6 +20,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Table, TableContent } from '@components/Table';
 import TableCell from '@components/TableCell';
+import { Image } from '@components/Image';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
@@ -179,6 +180,17 @@ export const StockInventory = () => {
   // endregion
 
   // region table
+  const renderStockImageCell = useCallback(
+    (item: IStock) => (
+      <Image
+        img={item.stockItem?.imageUrl || ''}
+        alt={item.stockItem?.name || 'Foto do ativo'}
+        size="60px"
+      />
+    ),
+    [],
+  );
+
   const renderStatusCell = useCallback((item: IStock) => {
     const isNonCompliant = (item.quantity || 0) < (item.minimumQuantity || 0);
 
@@ -272,6 +284,7 @@ export const StockInventory = () => {
   // }, []);
 
   const colsHeader: IColsHeader[] = [
+    { label: 'Foto', cssProps: { width: '1%' } },
     { label: 'Ativo' },
     { label: 'Tipo' },
     { label: 'Edificação' },
@@ -283,6 +296,11 @@ export const StockInventory = () => {
   ];
 
   const colsBody: IColsBody<IStock>[] = [
+    {
+      cell: renderStockImageCell,
+      node: true,
+      cssProps: { textAlign: 'center' },
+    },
     {
       cell: (item: IStock) => item.stockItem?.name || '',
       cssProps: {
