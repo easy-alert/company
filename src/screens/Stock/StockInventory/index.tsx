@@ -1,5 +1,5 @@
 // REACT
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Form, Formik } from 'formik';
 
 // HOOKS
@@ -20,6 +20,7 @@ import { FormikInput } from '@components/Form/FormikInput';
 import { DotSpinLoading } from '@components/Loadings/DotSpinLoading';
 import { Table, TableContent } from '@components/Table';
 import TableCell from '@components/TableCell';
+import { Image } from '@components/Image';
 
 // GLOBAL ASSETS
 import IconPlus from '@assets/icons/IconPlus';
@@ -28,6 +29,7 @@ import IconFilter from '@assets/icons/IconFilter';
 // GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
 import { dateTimeFormatter } from '@utils/functions';
+import { useReactToPrint } from 'react-to-print';
 
 // GLOBAL TYPES
 import type { IStock, IStockForm } from '@customTypes/IStock';
@@ -59,6 +61,8 @@ export const StockInventory = () => {
   const [stocks, setStocks] = useState<IStock[]>([]);
   const [stocksCount, setStocksCount] = useState(0);
   const [selectedStock, setSelectedStock] = useState<string | null>(null);
+
+  const printRef = useRef<HTMLDivElement>(null);
 
   const [filter, setFilter] = useState<IStockFilter>({
     buildingIds: [],
@@ -98,6 +102,16 @@ export const StockInventory = () => {
     setSelectedStock(stock.id);
     setModalStockDetails(modalState);
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: 'Lista de Estoque',
+    removeAfterPrint: true,
+    onBeforeGetContent: () => {
+      window.dispatchEvent(new Event('resize'));
+      return Promise.resolve();
+    },
+  });
 
   // endregion
 
@@ -179,6 +193,17 @@ export const StockInventory = () => {
   // endregion
 
   // region table
+  const renderStockImageCell = useCallback(
+    (item: IStock) => (
+      <Image
+        img={item.stockItem?.imageUrl || ''}
+        alt={item.stockItem?.name || 'Foto do ativo'}
+        size="60px"
+      />
+    ),
+    [],
+  );
+
   const renderStatusCell = useCallback((item: IStock) => {
     const isNonCompliant = (item.quantity || 0) < (item.minimumQuantity || 0);
 
@@ -272,6 +297,7 @@ export const StockInventory = () => {
   // }, []);
 
   const colsHeader: IColsHeader[] = [
+    { label: 'Foto', cssProps: { width: '1%' } },
     { label: 'Ativo' },
     { label: 'Tipo' },
     { label: 'Edificação' },
@@ -283,6 +309,11 @@ export const StockInventory = () => {
   ];
 
   const colsBody: IColsBody<IStock>[] = [
+    {
+      cell: renderStockImageCell,
+      node: true,
+      cssProps: { textAlign: 'center' },
+    },
     {
       cell: (item: IStock) => item.stockItem?.name || '',
       cssProps: {
@@ -376,6 +407,7 @@ export const StockInventory = () => {
               icon={<IconPlus strokeColor="primary" />}
               onClick={() => handleModalCreateStock(true)}
             />
+            <Button label="Imprimir" onClick={handlePrint} type="button" />
           </Style.IconsContainer>
         </Style.Header>
 
@@ -631,32 +663,35 @@ export const StockInventory = () => {
         )}
 
         {!loading && stocks.length > 0 && (
-          <Table
-            colsHeader={colsHeader}
-            pagination
-            totalCountOfRegister={stocksCount}
-            registerPerPage={20}
-          >
-            {stocks?.map((item) => (
-              <TableContent
-                key={item.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleModalStockDetails(true, item);
-                }}
-                colsBody={colsBody.map((col) => ({
-                  cell: col.node ? (
-                    col.cell(item)
-                  ) : (
-                    <TableCell value={col.cell(item)?.toString() || ''} type={col.type} />
-                  ),
-                  cssProps: col.cssProps,
-                }))}
-              />
-            ))}
-          </Table>
+          <Style.Print ref={printRef}>
+            <Table
+              colsHeader={colsHeader}
+              pagination
+              totalCountOfRegister={stocksCount}
+              registerPerPage={5}
+            >
+              {stocks?.map((item) => (
+                <TableContent
+                  key={item.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleModalStockDetails(true, item);
+                  }}
+                  colsBody={colsBody.map((col) => ({
+                    cell: col.node ? (
+                      col.cell(item)
+                    ) : (
+                      <TableCell value={col.cell(item)?.toString() || ''} type={col.type} />
+                    ),
+                    cssProps: col.cssProps,
+                  }))}
+                />
+              ))}
+            </Table>
+          </Style.Print>
         )}
       </Style.Container>
     </>
   );
 };
+
