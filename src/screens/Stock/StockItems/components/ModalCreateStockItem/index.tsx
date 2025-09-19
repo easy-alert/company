@@ -137,7 +137,7 @@ export const ModalCreateStockItem = ({ loading, onSubmit, onClose }: IModalCreat
                   ))}
                 </FormikSelect>
 
-                <Button center label="Criar" type="submit" loading={loading} />
+                <Button center label="Criar" type="submit" loading={loading} bgColor="primary" />
               </Form>
             </Style.ModalFormContainer>
           )}

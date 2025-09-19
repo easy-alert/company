@@ -235,7 +235,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
 
                 <Button
                   label="Movimentar"
-                  color="primary"
+                  bgColor="primary"
                   onClick={() => handleViewChange('movement')}
                 />
               </Style.ButtonContainer>

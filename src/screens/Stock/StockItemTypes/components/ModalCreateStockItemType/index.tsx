@@ -59,7 +59,7 @@ export const ModalCreateStockItemType = ({
               error={touched.description && errors.description ? errors.description : null}
             />
 
-            <Button center label="Criar" type="submit" loading={loading} />
+            <Button center label="Criar" type="submit" loading={loading} bgColor="primary" />
           </Form>
         </Style.ModalFormContainer>
       )}
