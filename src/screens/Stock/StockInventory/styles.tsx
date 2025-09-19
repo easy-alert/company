@@ -115,3 +115,20 @@ export const ActionsContainer = styled.div`
   justify-content: center;
   gap: ${({ theme }) => theme.size.xsm};
 `;
+
+export const Print = styled.div`
+  overflow-x: auto;
+
+  @media print {
+    margin-top: 40px;
+    overflow: visible !important;
+
+    * {
+      overflow: visible !important;
+      scrollbar-width: none !important;
+    }
+    *::-webkit-scrollbar {
+      display: none !important;
+    }
+  }
+`;
