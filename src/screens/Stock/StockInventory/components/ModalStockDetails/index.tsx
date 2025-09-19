@@ -349,6 +349,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
                       type="Button"
                       buttonType="submit"
                       label="Atualizar"
+                      bgColor="primary"
                       buttonIcon={<IconTrash strokeColor="primary" />}
                       actionButtonBgColor="primary"
                       message={{
