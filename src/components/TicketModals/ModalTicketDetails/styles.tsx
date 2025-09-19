@@ -142,3 +142,31 @@ export const TicketEditedAlert = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.size.xsm};
 `;
+
+export const TicketImageWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+export const TicketImageUploadLabel = styled.label`
+  margin-left: 8px;
+  cursor: pointer;
+  display: inline-block;
+`;
+
+export const TicketImageUploadInput = styled.input`
+  display: none;
+`;
+
+export const TicketImageUploadSpan = styled.span`
+  width: 128px;
+  height: 128px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  font-size: 32px;
+  color: #888;
+  cursor: pointer;
+`;

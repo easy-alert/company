@@ -40,6 +40,8 @@ interface ITicketDetails {
   ) => Promise<ITicket>;
   handleUploadSignature: (signature: string) => void;
   handleDeleteTicket: (ticketId: string) => void;
+  handleUploadImage?: (file: File) => Promise<void>;
+  handleRemoveImage?: (imageId: string) => Promise<void>;
 }
 
 type EditableField =
@@ -61,6 +63,8 @@ function TicketDetails({
   handleUpdateOneTicket,
   handleUploadSignature,
   handleDeleteTicket,
+  handleUploadImage,
+  handleRemoveImage,
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
   const [localTicket, setLocalTicket] = useState(ticket);
@@ -178,6 +182,12 @@ function TicketDetails({
         residentCPF: updated.residentCPF || '',
         description: updated.description || '',
       });
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0] && handleUploadImage) {
+      await handleUploadImage(event.target.files[0]);
     }
   };
 
@@ -332,18 +342,36 @@ function TicketDetails({
       )}
 
       <Style.TicketDetailsImagesContainer>
-        <Style.TicketDetailsRowLabel>Imagens</Style.TicketDetailsRowLabel>
+        <Style.TicketDetailsRowLabel>
+          Imagens
+          {editedFields.includes('images') && (
+            <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
+          )}
+        </Style.TicketDetailsRowLabel>
         <Style.TicketDetailsImagesContent>
           {localTicket?.images?.map((image) => (
-            <ImagePreview
-              key={image.id}
-              src={image.url}
-              downloadUrl={image.url}
-              imageCustomName={image.name}
-              width="128px"
-              height="128px"
-            />
+            <Style.TicketImageWrapper key={image.id}>
+              <ImagePreview
+                src={image.url}
+                downloadUrl={image.url}
+                imageCustomName={image.name}
+                width="128px"
+                height="128px"
+                onTrashClick={isEditing ? () => handleRemoveImage?.(image.id) : undefined}
+              />
+            </Style.TicketImageWrapper>
           ))}
+          {isEditing && (
+            <Style.TicketImageUploadLabel htmlFor="ticket-image-upload">
+              <Style.TicketImageUploadInput
+                id="ticket-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              <Style.TicketImageUploadSpan>+</Style.TicketImageUploadSpan>
+            </Style.TicketImageUploadLabel>
+          )}
         </Style.TicketDetailsImagesContent>
       </Style.TicketDetailsImagesContainer>
 
@@ -558,4 +586,3 @@ function TicketDetails({
 }
 
 export default TicketDetails;
-
