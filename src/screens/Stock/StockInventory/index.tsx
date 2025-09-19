@@ -668,7 +668,7 @@ export const StockInventory = () => {
               colsHeader={colsHeader}
               pagination
               totalCountOfRegister={stocksCount}
-              registerPerPage={5}
+              registerPerPage={20}
             >
               {stocks?.map((item) => (
                 <TableContent
@@ -694,3 +694,4 @@ export const StockInventory = () => {
     </>
   );
 };
+
