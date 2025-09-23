@@ -8,22 +8,8 @@ import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 // HOOKS
 import { useQuery } from '@hooks/useQuery';
 
-// SERVICES
-import { loginCompany } from '@services/apis/loginCompany';
-
-// GLOBAL COMPONENTS
-
-// GLOBAL UTILS
-import { applyMask, unMask } from '@utils/functions';
-
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
-
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
-
-// GLOBAL TYPES
-import { IAccount } from '@utils/types';
 
 // STYLES
 import { loginWithCompany } from '@services/apis/loginWithCompany';

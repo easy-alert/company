@@ -8,12 +8,8 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
   transition: 0.25s;
 
   > input {
-    width: ${({ theme }) =>
-      ({ size }) =>
-        size};
-    height: ${({ theme }) =>
-      ({ size }) =>
-        size};
+    width: ${({ size }) => size};
+    height: ${({ size }) => size};
     accent-color: ${({ theme }) => theme.color.primary};
   }
 

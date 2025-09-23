@@ -31,11 +31,9 @@ const PermissionRoute = ({ requiredPermission }: IPermissionRoute) => {
     if (!hasCalendarMaintenances && !hasTickets) {
       return <Navigate to="/forbidden" replace />;
     }
-  } else {
+  } else if (!userPermissions.includes(requiredPermission)) {
     // Lógica padrão para outras permissões
-    if (!userPermissions.includes(requiredPermission)) {
-      return <Navigate to="/forbidden" replace />;
-    }
+    return <Navigate to="/forbidden" replace />;
   }
 
   return <Outlet />;

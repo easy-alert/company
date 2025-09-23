@@ -8,7 +8,6 @@ export const PopoverComponent = ({
   buttonChildren,
   contentChildren,
   label,
-  position = ['left', 'top', 'bottom', 'right'],
 }: IPopoverButton) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 

@@ -7,7 +7,6 @@ import { useDropzone } from 'react-dropzone';
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
-import { useMaintenancePriorities } from '@hooks/useMaintenancePriorities';
 import { useHasPermission } from '@hooks/useHasPermission';
 
 // SERVICES

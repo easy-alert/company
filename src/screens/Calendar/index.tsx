@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
+import { AuthContext } from '@contexts/Auth/AuthContext';
 import { Button } from '@components/Buttons/Button';
 import { MaintenancesCalendar } from '@screens/Calendar/CalendarMaintenance';
 import { CalendarTickets } from './CalendarTickets';
-import { AuthContext } from '@contexts/Auth/AuthContext';
 import * as Style from './styles';
 
 export const Calendar = () => {

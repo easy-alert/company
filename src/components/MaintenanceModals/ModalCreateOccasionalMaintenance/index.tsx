@@ -41,7 +41,6 @@ export const ModalCreateOccasionalMaintenance = ({
   externalBuildingId,
   checklistActivity,
   ticketsIds,
-  ticketsToAnswer,
   handleGetBackgroundData,
   handleMaintenanceHistoryIdChange,
   handleResetTickets,
