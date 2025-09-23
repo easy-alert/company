@@ -28,7 +28,6 @@ import * as Style from './styles';
 import type { IModalEditMaintenanceHistory } from './types';
 
 export const ModalEditMaintenanceHistory = ({
-  userId,
   maintenance,
   handleEditModal,
   handleRefresh,
