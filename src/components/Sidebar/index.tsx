@@ -45,6 +45,11 @@ export const Sidebar = () => {
     if (permission === 'access:tickets' && account?.Company?.canAccessTickets === false)
       return false;
 
+    // Lógica especial para o calendário: aceita access:calendarMaintenances OU access:tickets
+    if (permission === 'access:calendarMaintenances') {
+      return userPermissions.includes('access:calendarMaintenances') || userPermissions.includes('access:tickets');
+    }
+
     return userPermissions.includes(permission);
   };
 
@@ -65,7 +70,7 @@ export const Sidebar = () => {
       title: 'Calendário',
       type: 'navigate',
       icon: icon.calendar,
-      permission: 'access:calendar',
+      permission: 'access:calendarMaintenances',
       url: '/calendar',
       redirectFunction: () => {
         navigate('/calendar');
