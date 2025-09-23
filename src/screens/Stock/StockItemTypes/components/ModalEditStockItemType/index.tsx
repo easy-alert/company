@@ -67,7 +67,7 @@ export const ModalEditStockItemType = ({
 
               <FormikCheckbox name="isActive" label="Ativo" checked={values.isActive} />
 
-              <Button center label="Atualizar" type="submit" loading={loading} />
+              <Button center label="Atualizar" type="submit" loading={loading} bgColor="primary" />
             </Form>
           </Style.ModalFormContainer>
         )}

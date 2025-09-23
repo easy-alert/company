@@ -149,7 +149,7 @@ export const ModalCreateStock = ({ loading, onSubmit, onClose }: IModalCreateSto
                   error={touched.notes && errors.notes ? errors.notes : null}
                 />
 
-                <Button center label="Criar" type="submit" loading={loading} />
+                <Button center label="Criar" type="submit" loading={loading} bgColor="primary" />
               </Form>
             </Style.ModalFormContainer>
           )}
