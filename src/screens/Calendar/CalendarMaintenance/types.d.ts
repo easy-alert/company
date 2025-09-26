@@ -1,5 +1,3 @@
-import type { IAccount } from '@utils/types';
-
 export interface ICalendarView {
   start: Date;
   end: Date;
@@ -8,6 +6,8 @@ export interface ICalendarView {
   status: 'expired' | 'pending' | 'completed' | 'overdue';
   expectedDueDate?: string;
   expectedNotificationDate?: string;
+  isFuture?: boolean;
+  element?: string;
 }
 
 export interface IBuildingOptions {
