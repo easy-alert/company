@@ -42,7 +42,7 @@ import type {
 // STYLES
 import * as Style from './styles';
 
-const renderEventContent = (arg: EventContentArg) => {
+export const renderEventContent = (arg: EventContentArg) => {
   const { event, view } = arg;
   const {
     building,
