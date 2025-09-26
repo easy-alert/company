@@ -4,16 +4,17 @@ import { Button } from '@components/Buttons/Button';
 import { MaintenancesCalendar } from '@screens/Calendar/CalendarMaintenance';
 import { CalendarTickets } from './CalendarTickets';
 import * as Style from './styles';
+import { CalendarUnified } from './CalendarUnified';
 
 export const Calendar = () => {
   const { account } = useContext(AuthContext);
-  
+
   const userPermissions = account?.User?.Permissions?.map((p) => p.Permission.name) || [];
   const isAdmin = userPermissions.includes('admin:company');
-  
+
   const hasCalendarMaintenances = userPermissions.includes('access:calendarMaintenances');
   const hasTickets = userPermissions.includes('access:tickets');
-  
+
   // Determina qual aba mostrar por padrão baseado nas permissões
   const getDefaultCalendarType = (): 'maintenance' | 'ticket' => {
     if (hasCalendarMaintenances) return 'maintenance';
@@ -47,8 +48,17 @@ export const Calendar = () => {
         )}
       </Style.ButtonGroup>
 
-      {calendarType === 'maintenance' && (hasCalendarMaintenances || isAdmin) && <MaintenancesCalendar />}
+      <Style.Container>
+        <CalendarUnified />
+      </Style.Container>
+
+      {calendarType === 'maintenance' && (hasCalendarMaintenances || isAdmin) && (
+        <MaintenancesCalendar />
+      )}
       {calendarType === 'ticket' && (hasTickets || isAdmin) && <CalendarTickets />}
+
+      {calendarType === 'maintenance' && <MaintenancesCalendar />}
+      {calendarType === 'ticket' && <CalendarTickets />}
     </Style.Container>
   );
 };
