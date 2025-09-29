@@ -920,8 +920,6 @@ function TicketsPage() {
                                 </Style.KanbanTicketBuildingName>
                               </Style.KanbanTicketGridBoxList>
 
-                              {!ticket?.seen && <Style.KanbanTicketNewTag />}
-
                               <Style.KanbanTicketGridBoxList>
                                 <Style.KanbanTicketTitle>Morador</Style.KanbanTicketTitle>
                                 <Style.KanbanTicketDescription>
