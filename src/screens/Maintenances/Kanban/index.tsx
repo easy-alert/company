@@ -912,7 +912,11 @@ export const MaintenancesKanban = () => {
                         return shouldRender ? (
                           <Style.KanbanMaintenanceWrapper key={maintenance.id}>
                             <Style.MaintenanceInfo
-                              status={maintenance.inProgress ? 'inProgress' : maintenance.status}
+                              status={
+                                maintenance.inProgress && maintenance.status !== 'expired'
+                                  ? 'inProgress'
+                                  : maintenance.status
+                              }
                               onClick={() => {
                                 const modal = ['pending', 'expired'].includes(maintenance.status)
                                   ? 'modalMaintenanceReportSend'
@@ -965,9 +969,9 @@ export const MaintenancesKanban = () => {
                                 {maintenance.activity || maintenance.checklistProgress}
                               </p>
                               <p className="p3">
-                                {maintenance.status === 'pending' && maintenance.label}
-                                {maintenance.status === 'expired' &&
-                                  !isOldExpired &&
+                                {(maintenance.status === 'pending' ||
+                                  (maintenance.status === 'expired' &&
+                                    !maintenance.cantReportExpired)) &&
                                   maintenance.label}
                                 {(maintenance.status === 'completed' ||
                                   maintenance.status === 'overdue') &&
@@ -1179,3 +1183,4 @@ export const MaintenancesKanban = () => {
     </>
   );
 };
+
