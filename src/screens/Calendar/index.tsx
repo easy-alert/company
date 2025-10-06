@@ -3,8 +3,9 @@ import { AuthContext } from '@contexts/Auth/AuthContext';
 import { Button } from '@components/Buttons/Button';
 import { MaintenancesCalendar } from '@screens/Calendar/CalendarMaintenance';
 import { CalendarTickets } from './CalendarTickets';
-import * as Style from './styles';
 import { CalendarUnified } from './CalendarUnified';
+
+import * as Style from './styles';
 
 export const Calendar = () => {
   const { account } = useContext(AuthContext);
@@ -56,9 +57,6 @@ export const Calendar = () => {
         <MaintenancesCalendar />
       )}
       {calendarType === 'ticket' && (hasTickets || isAdmin) && <CalendarTickets />}
-
-      {calendarType === 'maintenance' && <MaintenancesCalendar />}
-      {calendarType === 'ticket' && <CalendarTickets />}
     </Style.Container>
   );
 };
