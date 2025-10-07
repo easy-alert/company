@@ -46,6 +46,8 @@ import { useQuery } from '@hooks/useQuery';
 
 // STYLES
 import * as Style from './styles';
+import IconEdit from '@assets/icons/IconEdit';
+import { ModalEditTicketForm } from '@components/TicketModals/ModalEditTicketForm';
 
 interface IKanbanTicket {
   title: string;
@@ -67,6 +69,7 @@ function TicketsPage() {
   const { account } = useAuthContext();
 
   const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: true });
+  const [editTicketFormModal, setEditTicketFormModal] = useState<boolean>(false);
   const { serviceTypes } = useServiceTypes({ buildingNanoId: 'all', page: 1, take: 10 });
   const { ticketPlaces } = useTicketPlaces({ placeId: 'all' });
   const { ticketStatus } = useTicketStatus({ statusName: 'all' });
@@ -243,6 +246,10 @@ function TicketsPage() {
     setCreateTicketModal(modalState);
   };
 
+  const handleEditTicketFormModal = (modalState: boolean) => {
+    setEditTicketFormModal(modalState);
+  };
+
   useEffect(() => {
     if (query.get('ticketId')) {
       setSelectedTicketId(query.get('ticketId') || '');
@@ -272,6 +279,8 @@ function TicketsPage() {
           handleRefresh={handleRefresh}
         />
       )}
+
+      {editTicketFormModal && <ModalEditTicketForm setModal={handleEditTicketFormModal} />}
 
       <Style.Container>
         <Style.Header>
@@ -308,7 +317,14 @@ function TicketsPage() {
           </Style.HeaderWrapper>
 
           {ticketAccess && (
-            <div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <IconButton
+                label="Editar formulário"
+                icon={<IconEdit strokeColor="primary" />}
+                permToCheck="tickets:update"
+                onClick={() => handleEditTicketFormModal(true)}
+                disabled={loading}
+              />
               <IconButton
                 label="Abrir chamado"
                 icon={<IconPlus strokeColor="primary" />}
