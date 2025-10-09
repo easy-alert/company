@@ -1,10 +1,10 @@
 import { Button } from '@components/Buttons/Button';
-import { Switch } from '@components/Buttons/SwitchButton';
 import { Modal } from '@components/Modal';
-import { Api } from '@services/api';
-import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { TicketFieldKey, useEditTicketFormConfig } from './useEditTicketFormConfig';
+import { toast } from 'react-toastify';
+import { FieldRow } from './components/FieldRow';
+import { TicketFieldKey, useEditTicketFormConfig } from './hooks/useEditTicketFormConfig';
+import { useTicketFormConfigApi } from './hooks/useTicketFormConfigApi';
 
 const FIELD_LABELS: Record<TicketFieldKey, string> = {
   residentName: 'Nome do morador',
@@ -21,27 +21,25 @@ const FIELD_LABELS: Record<TicketFieldKey, string> = {
 export const ModalEditTicketForm = ({ setModal }: { setModal: (modal: boolean) => void }) => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { configArray, toggleHidden, toggleRequired, getPayload, setConfig } = useEditTicketFormConfig();
+  const { config, setConfig, toggleHidden, toggleRequired } = useEditTicketFormConfig();
+  const { loadConfig, saveConfig } = useTicketFormConfigApi();
 
   useEffect(() => {
-    let mounted = true;
+    const controller = new AbortController();
     setLoading(true);
-    Api.get('/ticket-fields-config/form-config')
-      .then((res) => {
-        if (!mounted) return;
-        setConfig(res.data);
+    loadConfig()
+      .then((data) => {
+        if (!controller.signal.aborted) setConfig(data);
       })
       .catch(() => {
         toast.error('Não foi possível carregar a configuração');
       })
       .finally(() => {
-        if (mounted) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       });
 
-    return () => {
-      mounted = false;
-    };
-  }, [setConfig]);
+    return () => controller.abort();
+  }, []);
 
   return (
     <Modal title="Editar formulário" setModal={setModal}>
@@ -62,31 +60,16 @@ export const ModalEditTicketForm = ({ setModal }: { setModal: (modal: boolean) =
         {loading ? (
           <span style={{ opacity: 0.8 }}>Carregando configuração...</span>
         ) : (
-        configArray.map(({ key, hidden, required }) => (
-          <div
-            key={key}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 120px 140px',
-              alignItems: 'center',
-              gap: 12,
-            }}
-          >
-            <span>{FIELD_LABELS[key] ?? key}</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Switch checked={hidden} onChange={() => toggleHidden(key)} />
-            </div>
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: hidden ? 0.5 : 1 }}
-            >
-              <Switch
-                checked={required}
-                onChange={() => toggleRequired(key)}
-                disabled={hidden}
-              />
-            </div>
-          </div>
-        ))
+          Object.entries(config).map(([key, { hidden, required }]) => (
+            <FieldRow
+              key={key}
+              label={FIELD_LABELS[key as TicketFieldKey] ?? key}
+              hidden={hidden}
+              required={required}
+              onToggleHidden={() => toggleHidden(key as TicketFieldKey)}
+              onToggleRequired={() => toggleRequired(key as TicketFieldKey)}
+            />
+          ))
         )}
 
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
@@ -104,9 +87,8 @@ export const ModalEditTicketForm = ({ setModal }: { setModal: (modal: boolean) =
             onClick={async () => {
               try {
                 setSaving(true);
-                const payload = getPayload();
-                await Api.put('/ticket-fields-configs/form-config', payload);
-                toast.success('Configuração salva');
+                await saveConfig(config);
+                toast.success('Configuração salva com sucesso!');
                 setModal(false);
               } catch (err) {
                 toast.error('Erro ao salvar configuração');
