@@ -1,35 +1,35 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '@contexts/Auth/AuthContext';
-import { Button } from '@components/Buttons/Button';
-import { MaintenancesCalendar } from '@screens/Calendar/CalendarMaintenance';
-import { CalendarTickets } from './CalendarTickets';
-import { CalendarUnified } from './CalendarUnified';
+// import { Button } from '@components/Buttons/Button';
+// import { MaintenancesCalendar } from '@screens/Calendar/CalendarMaintenance';
+// import { CalendarTickets } from './CalendarTickets';
+import { EventCalendar } from './EventCalendar';
 
 import * as Style from './styles';
 
 export const Calendar = () => {
   const { account } = useContext(AuthContext);
 
-  const userPermissions = account?.User?.Permissions?.map((p) => p.Permission.name) || [];
-  const isAdmin = userPermissions.includes('admin:company');
+  // const userPermissions = account?.User?.Permissions?.map((p) => p.Permission.name) || [];
+  // const isAdmin = userPermissions.includes('admin:company');
 
-  const hasCalendarMaintenances = userPermissions.includes('access:calendarMaintenances');
-  const hasTickets = userPermissions.includes('access:tickets');
+  // const hasCalendarMaintenances = userPermissions.includes('access:calendarMaintenances');
+  // const hasTickets = userPermissions.includes('access:tickets');
 
-  // Determina qual aba mostrar por padrão baseado nas permissões
-  const getDefaultCalendarType = (): 'maintenance' | 'ticket' => {
-    if (hasCalendarMaintenances) return 'maintenance';
-    if (hasTickets) return 'ticket';
-    return 'maintenance'; // fallback
-  };
+  // // Determina qual aba mostrar por padrão baseado nas permissões
+  // const getDefaultCalendarType = (): 'maintenance' | 'ticket' => {
+  //   if (hasCalendarMaintenances) return 'maintenance';
+  //   if (hasTickets) return 'ticket';
+  //   return 'maintenance'; // fallback
+  // };
 
-  const [calendarType, setCalendarType] = useState<'maintenance' | 'ticket' | 'checklist'>(
-    getDefaultCalendarType(),
-  );
+  // const [calendarType, setCalendarType] = useState<'maintenance' | 'ticket' | 'checklist'>(
+  //   getDefaultCalendarType(),
+  // );
 
   return (
     <Style.Container>
-      <Style.ButtonGroup>
+      {/* <Style.ButtonGroup>
         {(hasCalendarMaintenances || isAdmin) && (
           <Style.ButtonWrapper
             active={calendarType === 'maintenance'}
@@ -47,16 +47,16 @@ export const Calendar = () => {
             <Button label="Chamados" />
           </Style.ButtonWrapper>
         )}
-      </Style.ButtonGroup>
+      </Style.ButtonGroup> */}
 
       <Style.Container>
-        <CalendarUnified />
+        <EventCalendar />
       </Style.Container>
 
-      {calendarType === 'maintenance' && (hasCalendarMaintenances || isAdmin) && (
+      {/* {calendarType === 'maintenance' && (hasCalendarMaintenances || isAdmin) && (
         <MaintenancesCalendar />
       )}
-      {calendarType === 'ticket' && (hasTickets || isAdmin) && <CalendarTickets />}
+      {calendarType === 'ticket' && (hasTickets || isAdmin) && <CalendarTickets />} */}
     </Style.Container>
   );
 };
