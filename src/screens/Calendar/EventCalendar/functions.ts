@@ -1,13 +1,22 @@
+// SERVICES
 import { getCalendarTicket } from '@services/apis/getCalendarTicket';
+
+// GLOBAL UTILS
 import { handleTranslate } from '@utils/handleTranslate';
+
+// GLOBAL TYPES
 import type {
   ICalendarDay,
   ICalendarEvent,
   ICalendarTicket,
   IResponseGetCalendarTicket,
 } from '@customTypes/ICalendarTicket';
-import { ICalendarView } from '../CalendarMaintenance/types';
+
+// UTILS
 import { requestCalendarData } from '../CalendarMaintenance/functions';
+
+// TYPES
+import { ICalendarView } from '../CalendarMaintenance/types';
 
 export const getUnifiedCalendarTickets = async ({
   companyId,
@@ -50,6 +59,7 @@ export const getUnifiedCalendarTickets = async ({
           start: day.date,
           allDay: true,
           status: statusKey,
+          extendedProps: { type: 'ticket' },
         });
       });
     });
@@ -94,55 +104,45 @@ export const getUnifiedCalendarMaintenances = async ({
   month: number;
   calendarType: 'month' | 'week' | 'work_week' | 'day' | 'agenda';
 }) => {
-  let maintenancesMonth: ICalendarView[] = [];
-  let maintenancesWeek: ICalendarView[] = [];
+  let maintenancesData: ICalendarView[] = [];
 
-  await requestCalendarData({
-    buildingIds: buildingIds || [],
-    yearToRequest: year,
-    monthToRequest: month,
-    calendarType,
-    setLoading: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-    setMaintenancesMonthView: (arr: ICalendarView[]) => {
-      maintenancesMonth = arr;
-    },
-    setMaintenancesWeekView: (arr: ICalendarView[]) => {
-      maintenancesWeek = arr;
-    },
-    setMaintenancesDisplay: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-    setYearChangeLoading: () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
+  await new Promise<void>((resolve) => {
+    requestCalendarData({
+      buildingIds: buildingIds || [],
+      yearToRequest: year,
+      monthToRequest: month,
+      calendarType,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      setLoading: () => {},
+      setMaintenancesMonthView: (arr: ICalendarView[]) => {
+        if (calendarType === 'month') {
+          maintenancesData = arr;
+          resolve();
+        }
+      },
+      setMaintenancesWeekView: (arr: ICalendarView[]) => {
+        if (calendarType !== 'month') {
+          maintenancesData = arr;
+          resolve();
+        }
+      },
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      setMaintenancesDisplay: () => {},
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      setYearChangeLoading: () => {},
+    });
   });
 
-  const mapEvent = (event: ICalendarView) => {
-    let title = 'Manutenção';
-    if (event.title && typeof event.title === 'string' && event.title.trim() !== '') {
-      title = event.title;
-    } else if (event.element) {
-      title = event.element;
-    } else if (event.status) {
-      title = event.status.charAt(0).toUpperCase() + event.status.slice(1);
-    }
-
-    return {
-      id: event.id,
-      title,
-      start: event.start,
-      end: event.end,
-      allDay: true,
-      status: event.status,
-      extendedProps: {
-        ...event,
-        isFuture: event.isFuture,
-        expectedDueDate: event.expectedDueDate,
-        expectedNotificationDate: event.expectedNotificationDate,
-        type: 'maintenance',
-      },
+  return maintenancesData.map((event) => ({
+    id: event.id,
+    title: typeof event.title === 'string' ? event.title : event.element || 'Manutenção',
+    start: event.start,
+    end: event.end,
+    allDay: true,
+    status: event.status,
+    extendedProps: {
+      ...event,
       type: 'maintenance',
-    };
-  };
-
-  if (calendarType === 'month') {
-    return maintenancesMonth.map(mapEvent);
-  }
-  return maintenancesWeek.map(mapEvent);
+    },
+  }));
 };
