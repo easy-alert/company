@@ -5,9 +5,11 @@ import { useEffect, useMemo, useState } from 'react';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { Formik, Form } from 'formik';
+import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
 
 // HOOKS
 import { useTicketPlacesForSelect } from '@hooks/useTicketPlacesForSelect';
+import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
 
 // SERVICES
 import { Api } from '@services/api';
@@ -22,7 +24,6 @@ import { DragAndDropFiles } from '@components/DragAndDropFiles';
 import { ImagePreview } from '@components/ImagePreview';
 import { DotLoading } from '@components/Loadings/DotLoading';
 import { FormikSelect } from '@components/Form/FormikSelect';
-import { ReactSelectComponent } from '@components/ReactSelectComponent';
 import { ListTag } from '@components/ListTag';
 
 // GLOBAL UTILS
@@ -32,15 +33,13 @@ import { handleToastify } from '@utils/toastifyResponses';
 // GLOBAL TYPES
 import type { IBuilding } from '@customTypes/IBuilding';
 import type { IBuildingApartment } from '@customTypes/IBuildingApartments';
+import { defaultConfig } from '../ModalEditTicketForm/domain/defaultConfig.constant';
+import { useTicketFormConfigApi } from '../ModalEditTicketForm/hooks/useTicketFormConfigApi';
+import { useEditTicketFormConfig } from '../ModalEditTicketForm/hooks/useEditTicketFormConfig';
+import { TicketFormConfig } from '../ModalEditTicketForm/domain/ticketFormConfig.type';
 
 // STYLES
-import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
 import * as Style from './styles';
-import { TicketFormConfig } from '../ModalEditTicketForm/domain/ticketFormConfig.type';
-import { defaultConfig } from '../ModalEditTicketForm/domain/defaultConfig.constant';
-import { useEditTicketFormConfig } from '../ModalEditTicketForm/hooks/useEditTicketFormConfig';
-import { useTicketFormConfigApi } from '../ModalEditTicketForm/hooks/useTicketFormConfigApi';
-import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
 
 interface IModalCreateTicket {
   buildings: IBuilding[];

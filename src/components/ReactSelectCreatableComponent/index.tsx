@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components, react/jsx-pascal-case */
 import Select from 'react-select/creatable';
 import * as RSComponents from 'react-select';
 import { IReactSelectCreatableComponent } from './types';
@@ -85,7 +86,9 @@ export const ReactSelectCreatableComponent = ({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        onDeleteOption && onDeleteOption({ label: data.label, value: data.value });
+                        if (onDeleteOption) {
+                          onDeleteOption({ label: data.label, value: data.value });
+                        }
                       }}
                       title="Excluir opção"
                       style={{

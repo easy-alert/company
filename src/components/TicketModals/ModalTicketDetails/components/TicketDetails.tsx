@@ -16,19 +16,19 @@ import { PopoverButton } from '@components/Buttons/PopoverButton';
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
+import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
+import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
+import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
 import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
 import { theme } from '@styles/theme';
 import * as Style from '../styles';
-import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
-import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
-import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-shadow
 export enum ETicketFieldKey {
   residentName = 'residentName',
   residentPhone = 'residentPhone',
@@ -9,4 +10,3 @@ export enum ETicketFieldKey {
   types = 'types',
   attachments = 'attachments',
 }
-
