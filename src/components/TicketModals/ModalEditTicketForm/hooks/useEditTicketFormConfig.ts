@@ -1,39 +1,8 @@
 import { useMemo, useReducer } from 'react';
-
-export type TicketFieldKey =
-  | 'residentName'
-  | 'residentPhone'
-  | 'residentApartment'
-  | 'residentEmail'
-  | 'residentCPF'
-  | 'description'
-  | 'placeId'
-  | 'types'
-  | 'attachments';
-
-export interface TicketFieldState {
-  hidden: boolean;
-  required: boolean;
-}
-
-export type TicketFormConfig = Record<TicketFieldKey, TicketFieldState>;
-
-const defaultConfig: Readonly<TicketFormConfig> = {
-  residentName: { hidden: false, required: true },
-  residentPhone: { hidden: false, required: true },
-  residentApartment: { hidden: false, required: true },
-  residentEmail: { hidden: false, required: true },
-  residentCPF: { hidden: false, required: true },
-  description: { hidden: false, required: true },
-  placeId: { hidden: false, required: true },
-  types: { hidden: false, required: true },
-  attachments: { hidden: false, required: false },
-};
-
-type Action =
-  | { type: 'toggleHidden'; field: TicketFieldKey }
-  | { type: 'toggleRequired'; field: TicketFieldKey }
-  | { type: 'setConfig'; config: Partial<TicketFormConfig> };
+import { Action } from '../domain/action.type';
+import { defaultConfig } from '../domain/defaultConfig.constant';
+import { TicketFieldKey } from '../domain/ticketFieldKey.type';
+import { TicketFormConfig } from '../domain/ticketFormConfig.type';
 
 function normalizeConfig(
   base: TicketFormConfig,

@@ -3,7 +3,8 @@ import { Modal } from '@components/Modal';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FieldRow } from './components/FieldRow';
-import { TicketFieldKey, useEditTicketFormConfig } from './hooks/useEditTicketFormConfig';
+import { useEditTicketFormConfig } from './hooks/useEditTicketFormConfig';
+import { TicketFieldKey } from './domain/ticketFieldKey.type';
 import { useTicketFormConfigApi } from './hooks/useTicketFormConfigApi';
 
 const FIELD_LABELS: Record<TicketFieldKey, string> = {

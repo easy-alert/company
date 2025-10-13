@@ -1,5 +1,5 @@
 import { Api } from '@services/api';
-import { TicketFormConfig } from './useEditTicketFormConfig';
+import { TicketFormConfig } from '../domain/ticketFormConfig.type';
 
 export function useTicketFormConfigApi() {
   const loadConfig = async (): Promise<Partial<TicketFormConfig>> => {
