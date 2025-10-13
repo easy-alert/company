@@ -148,19 +148,22 @@ export const ModalCreateTicket = ({
       .catch(() => setConfig(defaultConfig));
   }, []);
 
-  // Optimistic overlays for options (avoid reload tearing the select)
-  const [addedPlaces, setAddedPlaces] = useState<{
-    id: string;
-    label: string;
-    companyId?: string | null;
-  }[]>([]);
+  const [addedPlaces, setAddedPlaces] = useState<
+    {
+      id: string;
+      label: string;
+      companyId?: string | null;
+    }[]
+  >([]);
   const [removedPlaceIds, setRemovedPlaceIds] = useState<string[]>([]);
 
-  const [addedTypes, setAddedTypes] = useState<{
-    id: string;
-    singularLabel: string;
-    companyId?: string | null;
-  }[]>([]);
+  const [addedTypes, setAddedTypes] = useState<
+    {
+      id: string;
+      singularLabel: string;
+      companyId?: string | null;
+    }[]
+  >([]);
   const [removedTypeIds, setRemovedTypeIds] = useState<string[]>([]);
 
   const mergedPlaces = useMemo(() => {
@@ -174,7 +177,10 @@ export const ModalCreateTicket = ({
 
   const mergedTypes = useMemo(() => {
     const base = ticketServiceTypesForSelect || [];
-    const byId = new Map<string, { id: string; singularLabel: string; companyId?: string | null }>();
+    const byId = new Map<
+      string,
+      { id: string; singularLabel: string; companyId?: string | null }
+    >();
     base.forEach((t) => byId.set(t.id, t));
     addedTypes.forEach((t) => byId.set(t.id, t));
     removedTypeIds.forEach((id) => byId.delete(id));
@@ -429,9 +435,9 @@ export const ModalCreateTicket = ({
                     id="types"
                     name="types"
                     options={mergedTypes.map(({ id, singularLabel, companyId }) => ({
-                        label: singularLabel,
-                        value: id,
-                        companyId,
+                      label: singularLabel,
+                      value: id,
+                      companyId,
                     }))}
                     value={(() => {
                       const selectedIds = (values.types || []).map((t: any) => t.serviceTypeId);

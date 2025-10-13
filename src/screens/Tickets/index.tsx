@@ -8,46 +8,46 @@ import { Form, Formik } from 'formik';
 import { useAuthContext } from '@contexts/Auth/UseAuthContext';
 
 // HOOKS
+import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 import { useServiceTypes } from '@hooks/useServiceTypes';
+import { useTicketApartments } from '@hooks/useTicketApartments';
 import { useTicketPlaces } from '@hooks/useTicketPlaces';
 import { useTicketStatus } from '@hooks/useTicketStatus';
-import { useTicketApartments } from '@hooks/useTicketApartments';
-import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
 
 // SERVICES
 import { getTicketsByBuildingNanoId } from '@services/apis/getTicketsByBuildingNanoId';
 import { putTicketById } from '@services/apis/putTicketById';
 
 // GLOBAL COMPONENTS
-import { IconButton } from '@components/Buttons/IconButton';
-import { Select } from '@components/Inputs/Select';
 import { Button } from '@components/Buttons/Button';
-import { Skeleton } from '@components/Skeleton';
-import { ListTag } from '@components/ListTag';
+import { IconButton } from '@components/Buttons/IconButton';
 import { FormikInput } from '@components/Form/FormikInput';
+import { Select } from '@components/Inputs/Select';
+import { ListTag } from '@components/ListTag';
+import { Skeleton } from '@components/Skeleton';
 import { ModalCreateTicket } from '@components/TicketModals/ModalCreateTicket';
 import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 
 // GLOBAL UTILS
-import { handleToastify } from '@utils/toastifyResponses';
 import { formatDateString } from '@utils/dateFunctions';
+import { handleToastify } from '@utils/toastifyResponses';
 
 // GLOBAL ASSETS
-import IconPlus from '@assets/icons/IconPlus';
-import IconList from '@assets/icons/IconList';
 import IconBlock from '@assets/icons/IconBlock';
 import IconFilter from '@assets/icons/IconFilter';
+import IconList from '@assets/icons/IconList';
+import IconPlus from '@assets/icons/IconPlus';
 
 // GLOBAL TYPES
 import type { ITicket } from '@customTypes/ITicket';
 
 // COMPONENTS
 import { useQuery } from '@hooks/useQuery';
+import { ModalEditTicketForm } from '@components/TicketModals/ModalEditTicketForm';
 
 // STYLES
-import * as Style from './styles';
 import IconEdit from '@assets/icons/IconEdit';
-import { ModalEditTicketForm } from '@components/TicketModals/ModalEditTicketForm';
+import * as Style from './styles';
 
 interface IKanbanTicket {
   title: string;
