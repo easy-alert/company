@@ -27,6 +27,32 @@ export const ReactSelectDiv = styled.div<{
   }
 `;
 
+export const Row = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`;
+
+export const IconButton = styled.button`
+  margin-top: 2px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${theme.color.gray4};
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
 export const ErrorMessage = styled.div`
   display: flex;
   color: ${theme.color.danger};

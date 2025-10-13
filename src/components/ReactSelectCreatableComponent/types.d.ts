@@ -11,11 +11,14 @@ export interface IReactSelectCreatableComponent {
   noOptionsMessage?: () => string;
   maxMenuHeight?: number;
   onChange?: ((newValue: any, actionMeta: ActionMeta<any>) => void) | undefined;
+  onCreateOption?: (inputValue: string) => void;
+  onDeleteOption?: (value: any) => void;
   isOptionDisabled?: ((option: any, selectValue: Options<any>) => boolean) | undefined;
   value?: any;
   options: {
     label: any;
     value: any;
+    companyId?: string | null;
   }[];
   newCustomStyle?: any;
   defaultValue?: {
