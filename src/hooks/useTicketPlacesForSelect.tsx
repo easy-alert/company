@@ -7,6 +7,7 @@ import { handleToastify } from '@utils/toastifyResponses';
 interface ITicketPlaceForSelect {
   id: string;
   label: string;
+  companyId?: string | null;
 }
 
 export const useTicketPlacesForSelect = () => {
@@ -33,5 +34,5 @@ export const useTicketPlacesForSelect = () => {
     getTicketPlaces();
   }, []);
 
-  return { ticketPlacesForSelect, loadingTicketPlacesForSelect };
+  return { ticketPlacesForSelect, loadingTicketPlacesForSelect, reloadTicketPlaces: getTicketPlaces };
 };

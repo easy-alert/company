@@ -22,6 +22,7 @@ export interface IBuilding {
   isActivityLogPublic?: boolean;
   guestCanCompleteMaintenance?: boolean;
   showAllTicketsToResident?: boolean;
+  ticketAnnexRequired?: boolean;
 
   residentPassword?: string;
 

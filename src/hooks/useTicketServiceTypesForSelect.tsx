@@ -9,6 +9,7 @@ interface ITicketServiceTypeForSelect {
   name: string;
   singularLabel: string;
   pluralLabel: string;
+  companyId?: string | null;
 }
 
 export const useTicketServiceTypesForSelect = () => {
@@ -38,5 +39,9 @@ export const useTicketServiceTypesForSelect = () => {
     getTicketServiceTypes();
   }, []);
 
-  return { ticketServiceTypesForSelect, loadingTicketServiceTypesForSelect };
+  return {
+    ticketServiceTypesForSelect,
+    loadingTicketServiceTypesForSelect,
+    reloadTicketServiceTypes: getTicketServiceTypes,
+  };
 };

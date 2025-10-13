@@ -1,4 +1,6 @@
+/* eslint-disable react/no-unstable-nested-components, react/jsx-pascal-case */
 import Select from 'react-select/creatable';
+import * as RSComponents from 'react-select';
 import { IReactSelectCreatableComponent } from './types';
 import * as Style from './styles';
 import { theme } from '../../styles/theme';
@@ -37,6 +39,8 @@ export const ReactSelectCreatableComponent = ({
   id,
   name,
   onChange,
+  onCreateOption,
+  onDeleteOption,
   options,
   placeholder,
   isClearable = false,
@@ -50,23 +54,62 @@ export const ReactSelectCreatableComponent = ({
 }: IReactSelectCreatableComponent) => (
   <Style.ReactSelectDiv selectPlaceholderValue={selectPlaceholderValue}>
     {label && <h6>{label}</h6>}
-    <Select
-      defaultValue={defaultValue}
-      isMulti={isMulti}
-      value={value}
-      isDisabled={isDisabled}
-      name={name}
-      id={id}
-      placeholder={placeholder}
-      isClearable={isClearable}
-      styles={newCustomStyle || customStyles}
-      noOptionsMessage={noOptionsMessage}
-      maxMenuHeight={maxMenuHeight}
-      options={options}
-      onChange={onChange}
-      isOptionDisabled={isOptionDisabled}
-      formatCreateLabel={(data) => `Criar "${data}"`}
-    />
+    <Style.Row>
+      <div style={{ flex: 1 }}>
+        <Select
+          defaultValue={defaultValue}
+          isMulti={isMulti}
+          value={value}
+          isDisabled={isDisabled}
+          name={name}
+          id={id}
+          placeholder={placeholder}
+          isClearable={isClearable}
+          styles={newCustomStyle || customStyles}
+          noOptionsMessage={noOptionsMessage}
+          maxMenuHeight={maxMenuHeight}
+          options={options}
+          onChange={onChange}
+          onCreateOption={onCreateOption}
+          isOptionDisabled={isOptionDisabled}
+          formatCreateLabel={(data) => `Criar "${data}"`}
+          components={onDeleteOption ? {
+            Option: (props: any) => {
+              const { data } = props;
+              return (
+                <RSComponents.components.Option {...props}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span>{data.label}</span>
+                    {data.companyId ? (
+                      <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (onDeleteOption) {
+                          onDeleteOption({ label: data.label, value: data.value });
+                        }
+                      }}
+                      title="Excluir opção"
+                      style={{
+                        border: 'none',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        padding: 0,
+                        marginLeft: 8,
+                      }}
+                    >
+                      🗑️
+                    </button>
+                    ) : null}
+                  </div>
+                </RSComponents.components.Option>
+              );
+            },
+          } : undefined}
+        />
+      </div>
+    </Style.Row>
     {!!error && (
       <Style.ErrorMessage>
         <p className="p3">{error}</p>
