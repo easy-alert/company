@@ -287,6 +287,7 @@ function TicketDetails({
         })}
       </Style.TicketDetailsColumnContainer>
 
+      {!isHidden(ETicketFieldKey.description) && (
       <Style.TicketDetailsDescriptionContainer>
         <Style.TicketDetailsRowLabel>
           Descrição
@@ -312,8 +313,9 @@ function TicketDetails({
           />
         ) : (
           <Style.TicketDetailsRowValue>{localTicket.description}</Style.TicketDetailsRowValue>
-        )}
-      </Style.TicketDetailsDescriptionContainer>
+          )}
+        </Style.TicketDetailsDescriptionContainer>
+      )}
 
       {showButtons && (
         <div
