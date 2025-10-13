@@ -26,9 +26,13 @@ import type { ITicket } from '@customTypes/ITicket';
 // STYLES
 import { theme } from '@styles/theme';
 import * as Style from '../styles';
+import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
+import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
+import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
+  fieldsConfig?: Record<string, { hidden: boolean; required: boolean }>;
   userId?: string;
   showButtons?: boolean;
   signatureLoading: boolean;
@@ -56,6 +60,7 @@ type EditedData = Record<EditableField, string>;
 
 function TicketDetails({
   ticket,
+  fieldsConfig,
   userId,
   showButtons,
   signatureLoading,
@@ -83,6 +88,10 @@ function TicketDetails({
 
   const editedFields: string[] = localTicket.editedFields || [];
 
+  const config = fieldsConfig ?? defaultConfig;
+  const isHidden = (key: TicketFieldKey) => !!config[key]?.hidden;
+  const withPlaceholder = (val?: string | null) => (val && val !== '' ? val : 'Não definido');
+
   const ticketDetailsRows = [
     {
       label: 'Edificação',
@@ -91,27 +100,27 @@ function TicketDetails({
     },
     {
       label: 'Apartamento do morador',
-      value: localTicket?.residentApartment,
+      value: withPlaceholder(localTicket?.residentApartment),
       field: 'residentApartment',
     },
     {
       label: 'Nome do morador',
-      value: localTicket?.residentName,
+      value: withPlaceholder(localTicket?.residentName),
       field: 'residentName',
     },
     {
       label: 'Telefone do morador',
-      value: applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value,
+      value: withPlaceholder(applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value),
       field: 'residentPhone',
     },
     {
       label: 'E-mail do morador',
-      value: localTicket?.residentEmail,
+      value: withPlaceholder(localTicket?.residentEmail),
       field: 'residentEmail',
     },
     {
       label: 'CPF do morador',
-      value: applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value,
+      value: withPlaceholder(applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value),
       field: 'residentCPF',
     },
     {
@@ -213,8 +222,14 @@ function TicketDetails({
       />
 
       <Style.TicketDetailsColumnContainer>
-        {ticketDetailsRows.map(({ label, value, place, types, field }) => {
+        {ticketDetailsRows
+          .filter(({ field }) => {
+            if (!field) return true;
+            return !isHidden(field as TicketFieldKey);
+          })
+          .map(({ label, value, place, types, field }) => {
           if (label === 'Local da ocorrência') {
+            if (isHidden(ETicketFieldKey.placeId)) return null;
             return (
               <Style.TicketDetailsColumnContent key={label}>
                 <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
@@ -224,6 +239,7 @@ function TicketDetails({
           }
 
           if (label === 'Tipo de assistência') {
+            if (isHidden(ETicketFieldKey.types)) return null;
             return (
               <Style.TicketDetailsColumnContent key={label}>
                 <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>

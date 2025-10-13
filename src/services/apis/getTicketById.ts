@@ -11,6 +11,7 @@ import type { ITicket } from '@customTypes/ITicket';
 interface IResponseGetTicketById extends IResponse {
   data: {
     ticket: ITicket;
+    fieldsConfig?: Record<string, { hidden: boolean; required: boolean }>;
   };
 }
 
@@ -20,9 +21,9 @@ export const getTicketById = async (ticketId: string) => {
   try {
     const response: IResponseGetTicketById = await Api.get(uri);
 
-    const { ticket } = response.data;
+    const { ticket, fieldsConfig } = response.data;
 
-    return ticket;
+    return { ticket, fieldsConfig };
   } catch (error: any) {
     handleToastify(error);
     return {} as ITicket;
