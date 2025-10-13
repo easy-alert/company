@@ -1,5 +1,5 @@
 // REACT
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // COMPONENTS
 import * as yup from 'yup';
@@ -36,6 +36,10 @@ import type { IBuildingApartment } from '@customTypes/IBuildingApartments';
 // STYLES
 import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
 import * as Style from './styles';
+import { TicketFormConfig } from '../ModalEditTicketForm/domain/ticketFormConfig.type';
+import { defaultConfig } from '../ModalEditTicketForm/domain/defaultConfig.constant';
+import { useEditTicketFormConfig } from '../ModalEditTicketForm/hooks/useEditTicketFormConfig';
+import { useTicketFormConfigApi } from '../ModalEditTicketForm/hooks/useTicketFormConfigApi';
 
 interface IModalCreateTicket {
   buildings: IBuilding[];
@@ -43,32 +47,66 @@ interface IModalCreateTicket {
   handleRefresh?: () => void;
 }
 
-const schema = yup
-  .object({
+function buildSchema(formConfig: TicketFormConfig) {
+  const schema: any = {
     buildingNanoId: yup.string().required('O prédio deve ser preenchido.'),
-    residentName: yup.string().required('O nome do morador deve ser preenchido.'),
-    residentPhone: yup.string().required('O telefone do morador deve ser preenchido.'),
-    residentApartment: yup.string().required('O apartamento do morador deve ser preenchido.'),
-    residentEmail: yup
-      .string()
-      .email('E-mail inválido.')
-      .required('O e-mail do morador deve ser preenchido.'),
-    residentCPF: yup.string().required('O CPF do morador deve ser preenchido.'),
-    description: yup.string().required('A descrição deve ser preenchido.'),
-    placeId: yup.string().required('O local da ocorrência deve ser preenchido.'),
-    types: yup
-      .array()
-      .of(
-        yup.object({
-          serviceTypeId: yup.string().required('O tipo da assistência deve ser preenchido.'),
-        }),
-      )
-      .min(1, 'O tipo da assistência deve ser preenchido.')
-      .required('O tipo da assistência deve ser preenchido.'),
-  })
-  .required();
+  };
 
-type TSchema = yup.InferType<typeof schema>;
+  const isRequired = (x: boolean, msg: string) =>
+    x ? yup.string().required(msg) : yup.string().optional();
+
+  if (!formConfig.residentName.hidden)
+    schema.residentName = isRequired(
+      formConfig.residentName.required,
+      'O nome do morador deve ser preenchido.',
+    );
+  if (!formConfig.residentPhone.hidden)
+    schema.residentPhone = isRequired(
+      formConfig.residentPhone.required,
+      'O telefone do morador deve ser preenchido.',
+    );
+  if (!formConfig.residentApartment.hidden)
+    schema.residentApartment = isRequired(
+      formConfig.residentApartment.required,
+      'O apartamento do morador deve ser preenchido.',
+    );
+  if (!formConfig.residentEmail.hidden)
+    schema.residentEmail = formConfig.residentEmail.required
+      ? yup.string().email('E-mail inválido.').required('O e-mail do morador deve ser preenchido.')
+      : yup.string().email('E-mail inválido.').optional();
+  if (!formConfig.residentCPF.hidden)
+    schema.residentCPF = isRequired(
+      formConfig.residentCPF.required,
+      'O CPF do morador deve ser preenchido.',
+    );
+  if (!formConfig.description.hidden)
+    schema.description = isRequired(
+      formConfig.description.required,
+      'A descrição deve ser preenchido.',
+    );
+  if (!formConfig.placeId.hidden)
+    schema.placeId = isRequired(
+      formConfig.placeId.required,
+      'O local da ocorrência deve ser preenchido.',
+    );
+  if (!formConfig.types.hidden)
+    schema.types = formConfig.types.required
+      ? yup
+          .array()
+          .of(
+            yup.object({
+              serviceTypeId: yup.string().required('O tipo da assistência deve ser preenchido.'),
+            }),
+          )
+          .min(1, 'O tipo da assistência deve ser preenchido.')
+          .required('O tipo da assistência deve ser preenchido.')
+      : yup
+          .array()
+          .of(yup.object({ serviceTypeId: yup.string().optional() }))
+          .optional();
+
+  return yup.object(schema).required();
+}
 
 export const ModalCreateTicket = ({
   buildings,
@@ -86,6 +124,9 @@ export const ModalCreateTicket = ({
   const [imagesToUploadCount, setImagesToUploadCount] = useState<number>(0);
   const [images, setImages] = useState<{ url: string; name: string }[]>([]);
 
+  const { config: formConfig, setConfig } = useEditTicketFormConfig();
+  const { loadConfig } = useTicketFormConfigApi();
+
   const handleGetBuildingsApartmentsById = async (buildingId: string) => {
     try {
       const responseData = await getBuildingsApartmentsById({ buildingId });
@@ -96,8 +137,31 @@ export const ModalCreateTicket = ({
     }
   };
 
-  const submitForm = async (values: TSchema) => {
+  useEffect(() => {
+    loadConfig()
+      .then((data) => setConfig({ ...defaultConfig, ...data }))
+      .catch(() => setConfig(defaultConfig));
+  }, []);
+
+  const submitForm = async (values: any) => {
     setOnQuery(true);
+
+    const attachmentsRequired = (values.buildingNanoId && buildings.find((b) => b.nanoId === values.buildingNanoId)?.ticketAnnexRequired) || formConfig.attachments.required;
+
+    if (attachmentsRequired && images.length === 0) {
+      toast.error('Anexos são obrigatórios');
+      setOnQuery(false);
+      return;
+    }
+
+    const schema = buildSchema(formConfig);
+    try {
+      await schema.validate(values, { abortEarly: false });
+    } catch (err: any) {
+      toast.error('Preencha os campos obrigatórios');
+      setOnQuery(false);
+      return;
+    }
 
     await Api.post(`/tickets`, {
       ...values,
@@ -140,7 +204,7 @@ export const ModalCreateTicket = ({
               placeId: '',
               types: [],
             }}
-            validationSchema={schema}
+            validationSchema={buildSchema(formConfig)}
             onSubmit={submitForm}
           >
             {({ errors, touched, values, setFieldValue }) => (
@@ -168,10 +232,10 @@ export const ModalCreateTicket = ({
                   ))}
                 </FormikSelect>
 
-                {buildingsApartments.length > 0 ? (
+                {!formConfig.residentApartment.hidden && (buildingsApartments.length > 0 ? (
                   <FormikSelect
                     name="residentApartment"
-                    label="Apartamento do morador *"
+                    label={`Apartamento do morador ${formConfig.residentApartment.required ? '*' : ''}`}
                     selectPlaceholderValue={values.residentApartment}
                     error={touched.residentApartment && (errors.residentApartment || null)}
                   >
@@ -188,23 +252,26 @@ export const ModalCreateTicket = ({
                 ) : (
                   <FormikInput
                     name="residentApartment"
-                    label="Apartamento do morador *"
+                    label={`Apartamento do morador ${formConfig.residentApartment.required ? '*' : ''}`}
                     placeholder="Ex: Informe o apartamento"
                     disabled={!values.buildingNanoId}
                     error={touched.residentName && (errors.residentName || null)}
                   />
-                )}
+                ))}
 
+                {!formConfig.residentName.hidden && (
                 <FormikInput
                   name="residentName"
-                  label="Nome do morador *"
+                  label={`Nome do morador ${formConfig.residentName.required ? '*' : ''}`}
                   placeholder="Ex: Informe o nome"
                   disabled={!values.buildingNanoId}
                   error={touched.residentName && (errors.residentName || null)}
                 />
+                )}
 
+                {!formConfig.residentPhone.hidden && (
                 <FormikInput
-                  label="Telefone do morador *"
+                  label={`Telefone do morador ${formConfig.residentPhone.required ? '*' : ''}`}
                   name="residentPhone"
                   maxLength={
                     applyMask({
@@ -222,9 +289,11 @@ export const ModalCreateTicket = ({
                   }}
                   disabled={!values.buildingNanoId}
                 />
+                )}
 
+                {!formConfig.residentCPF.hidden && (
                 <FormikInput
-                  label="CPF do morador *"
+                  label={`CPF do morador ${formConfig.residentCPF.required ? '*' : ''}`}
                   name="residentCPF"
                   placeholder="Ex: 000.000.000-00"
                   value={applyMask({ mask: 'CPF', value: values.residentCPF }).value}
@@ -238,20 +307,24 @@ export const ModalCreateTicket = ({
                   }
                   onChange={(e) => setFieldValue('residentCPF', e.target.value)}
                 />
+                )}
 
+                {!formConfig.residentEmail.hidden && (
                 <FormikInput
                   name="residentEmail"
-                  label="E-mail do morador *"
+                  label={`E-mail do morador ${formConfig.residentEmail.required ? '*' : ''}`}
                   placeholder="Ex: Informe o e-mail"
                   disabled={!values.buildingNanoId}
                   error={touched.residentEmail && (errors.residentEmail || null)}
                 />
+                )}
 
+                {!formConfig.placeId.hidden && (
                 <FormikSelect
                   arrowColor="primary"
                   name="placeId"
                   selectPlaceholderValue={values.placeId}
-                  label="Local da ocorrência *"
+                  label={`Local da ocorrência ${formConfig.placeId.required ? '*' : ''}`}
                   disabled={!values.buildingNanoId}
                   error={touched.placeId && (errors.placeId || null)}
                 >
@@ -265,12 +338,14 @@ export const ModalCreateTicket = ({
                     </option>
                   ))}
                 </FormikSelect>
+                )}
 
+                {!formConfig.types.hidden && (
                 <ReactSelectComponent
                   selectPlaceholderValue={values.types.length}
                   isMulti
                   isClearable={false}
-                  label="Tipo da assistência *"
+                  label={`Tipo da assistência ${formConfig.types.required ? '*' : ''}`}
                   id="1"
                   name="2"
                   options={ticketServiceTypesForSelect.map(({ id, singularLabel }) => ({
@@ -287,15 +362,19 @@ export const ModalCreateTicket = ({
                   isDisabled={!values.buildingNanoId}
                   error={touched.types && (errors.types || null)}
                 />
+                )}
 
+                {!formConfig.description.hidden && (
                 <FormikTextArea
-                  label="Descrição *"
+                  label={`Descrição ${formConfig.description.required ? '*' : ''}`}
                   placeholder="Informe a descrição"
                   name="description"
                   disabled={!values.buildingNanoId}
                   error={touched.description && (errors.description || null)}
                 />
+                )}
 
+                {!formConfig.attachments.hidden && (
                 <Style.Row>
                   <h6>Anexos</h6>
 
@@ -369,6 +448,7 @@ export const ModalCreateTicket = ({
                       ))}
                   </Style.FileAndImageRow>
                 </Style.Row>
+                )}
 
                 <Button
                   bgColor="primary"
@@ -386,3 +466,4 @@ export const ModalCreateTicket = ({
     </Modal>
   );
 };
+
