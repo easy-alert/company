@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { IconButton } from '@components/Buttons/IconButton';
 import { icon } from '@assets/icons';
 import { moveTicketChecklistItem as moveTicketChecklistItemApi } from '@services/apis/moveTicketChecklistItem';
+import { theme } from '@styles/theme';
 
 interface ITicketChecklistItems {
   checklistItems: ITicketChecklistItem[];
@@ -18,7 +19,7 @@ export const TicketChecklistItems = ({
   onChange,
 }: ITicketChecklistItems) => {
   const [items, setItems] = useState<ITicketChecklistItem[]>(checklistItems);
-  
+
   useEffect(() => {
     setItems(checklistItems);
   }, [checklistItems]);
@@ -81,12 +82,30 @@ export const TicketChecklistItems = ({
             {item.title}
           </p>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-            <IconButton title="Mover para cima" icon={icon.arrowUpPrimary} size="18px" onClick={() => handleMove(item.id, 'up')} />
-            <IconButton title="Mover para baixo" icon={icon.arrowDownPrimary} size="18px" onClick={() => handleMove(item.id, 'down')} />
-            <IconButton title="Remover" icon={icon.x} size="18px" onClick={() => handleDelete(item.id)} />
+            <div style={{ display: 'flex', gap: 6, filter: 'invert(1)' }}>
+              <IconButton
+                title="Mover para cima"
+                icon={icon.arrowUpWhite}
+                size="10px"
+                onClick={() => handleMove(item.id, 'up')}
+              />
+              <IconButton
+                title="Mover para baixo"
+                icon={icon.arrowDownWhite}
+                size="10px"
+                onClick={() => handleMove(item.id, 'down')}
+              />
+            </div>
+            <IconButton
+              title="Remover"
+              icon={icon.x}
+              size="18px"
+              onClick={() => handleDelete(item.id)}
+            />
           </div>
         </div>
       ))}
     </div>
   );
 };
+
