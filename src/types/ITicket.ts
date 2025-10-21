@@ -1,6 +1,7 @@
 import type { IBuilding } from './IBuilding';
 import type { IBuildingNotificationConfiguration } from './IBuildingNotificationConfiguration';
 import type { ITicketDismissReason } from './ITicketDismissReason';
+import type { ITicketChecklistItem } from './ITicketChecklistItem';
 
 export type ITicketStatusNames = 'open' | 'awaitingToFinish' | 'finished' | 'dismissed';
 
@@ -78,6 +79,8 @@ export interface ITicket {
   building?: IBuilding;
   dismissReasons?: ITicketDismissReason;
   dismissedBy?: IBuildingNotificationConfiguration;
+
+  checklistItems?: ITicketChecklistItem[];
 
   editedFields?: string[];
   lastEditedAt?: string | Date;
