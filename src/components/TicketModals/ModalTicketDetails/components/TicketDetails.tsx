@@ -29,6 +29,9 @@ import type { ITicket } from '@customTypes/ITicket';
 // STYLES
 import { theme } from '@styles/theme';
 import * as Style from '../styles';
+import { TicketChecklistItems } from './TicketChecklistItems';
+import { postTicketChecklistItem } from '@services/apis/postTicketChecklistItem';
+import type { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
@@ -73,6 +76,7 @@ function TicketDetails({
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
   const [localTicket, setLocalTicket] = useState(ticket);
+  const [newChecklistTitle, setNewChecklistTitle] = useState('');
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState<EditedData>({
@@ -198,6 +202,19 @@ function TicketDetails({
     if (event.target.files && event.target.files[0] && handleUploadImage) {
       await handleUploadImage(event.target.files[0]);
     }
+  };
+
+  const handleCreateChecklistItem = async () => {
+    if (!newChecklistTitle.trim()) return;
+    const item = await postTicketChecklistItem({
+      ticketId: localTicket.id,
+      title: newChecklistTitle.trim(),
+      userId,
+    });
+    const next: ITicketChecklistItem[] = [...(localTicket.checklistItems || []), item]
+      .sort((a, b) => a.position - b.position);
+    setLocalTicket({ ...localTicket, checklistItems: next });
+    setNewChecklistTitle('');
   };
 
   return (
@@ -398,7 +415,27 @@ function TicketDetails({
         userId={userId}
         disableComment={disableComment}
       />
-
+      <div style={{ marginTop: 16 }}>
+        <h3>Checklist</h3>
+        <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+          <input
+            placeholder="Adicionar item"
+            value={newChecklistTitle}
+            onChange={(e) => setNewChecklistTitle(e.target.value)}
+            style={{ flex: 1, minHeight: 32, borderRadius: 6, border: '1px solid #ccc', padding: 8 }}
+          />
+          <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
+        </div>
+        {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
+          <TicketChecklistItems
+            checklistItems={localTicket.checklistItems}
+            userId={userId}
+            onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
+          />
+        ) : (
+          <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
+        )}
+      </div>
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
