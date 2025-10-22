@@ -2,36 +2,36 @@
 import { useState } from 'react';
 
 // COMPONENTS
-import { ListTag } from '@components/ListTag';
-import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
-import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
+import { IconButton } from '@components/Buttons/IconButton';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { ImagePreview } from '@components/ImagePreview';
+import { ListTag } from '@components/ListTag';
+import SignaturePad from '@components/SignaturePad';
+import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
-import { IconButton } from '@components/Buttons/IconButton';
-import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
-import { PopoverButton } from '@components/Buttons/PopoverButton';
+import { TicketChecklistItems } from '@components/TicketModals/ModalTicketDetails/components/TicketChecklistItems';
 
 // GLOBAL UTILS
+import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
+import { postTicketChecklistItem } from '@services/apis/postTicketChecklistItem';
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
-import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
 
 // GLOBAL TYPES
-import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
 import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
+import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
 import type { ITicket } from '@customTypes/ITicket';
+import type { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 
 // STYLES
 import { theme } from '@styles/theme';
 import * as Style from '../styles';
-import { TicketChecklistItems } from './TicketChecklistItems';
-import { postTicketChecklistItem } from '@services/apis/postTicketChecklistItem';
-import type { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
