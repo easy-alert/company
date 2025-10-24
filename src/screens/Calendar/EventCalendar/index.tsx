@@ -1,18 +1,17 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import { EventClickArg } from '@fullcalendar/core';
 
 // CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
 
 // HOOKS
-import { useBuildingsForSelect } from '@hooks/useBuildingsForSelect';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 // COMPONENTS
 import { Calendar as CalendarComponent } from '@components/Calendar';
-import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
-import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
 import { ModalMaintenanceDetails } from '@components/MaintenanceModals/ModalMaintenanceDetails';
+import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalMaintenanceReportSend';
+import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
+import { EventClickArg } from '@fullcalendar/core';
+import FullCalendar from '@fullcalendar/react';
 import { renderEventContent as ticketEventContent } from '../CalendarTickets';
 
 // FUNCTIONS
@@ -75,17 +74,9 @@ function Event(arg: any) {
   }
 
   if (type === 'ticket') {
-    if (view.type === 'dayGridMonth') {
-      const background = getTicketBackground(extendedProps.status);
+    const background = getTicketBackground(extendedProps.status);
 
-      return (
-        <Style.MonthEventWrapper style={{ background }}>
-          <span>{event.title}</span>
-        </Style.MonthEventWrapper>
-      );
-    }
-
-    return ticketEventContent(arg);
+    return ticketEventContent(arg, background);
   }
 
   return <div>{event.title}</div>;
@@ -94,7 +85,6 @@ function Event(arg: any) {
 export const EventCalendar = () => {
   const { account } = useContext(AuthContext);
   const calendarRef = useRef<FullCalendar>(null);
-  const { buildingsForSelect } = useBuildingsForSelect({ checkPerms: false });
 
   const [modalTicketDetails, setModalTicketDetails] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<{ id: string } | null>(null);
