@@ -2,12 +2,10 @@ import { EventCalendar } from './EventCalendar';
 
 import * as Style from './styles';
 
-export const Calendar = () => {
-  return (
+export const Calendar = () => (
+  <Style.Container>
     <Style.Container>
-      <Style.Container>
-        <EventCalendar />
-      </Style.Container>
+      <EventCalendar />
     </Style.Container>
-  );
-};
+  </Style.Container>
+);

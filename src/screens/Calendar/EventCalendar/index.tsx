@@ -11,17 +11,17 @@ import { ModalMaintenanceReportSend } from '@components/MaintenanceModals/ModalM
 import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails';
 import { EventClickArg } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
-import { renderEventContent as ticketEventContent } from '../CalendarTickets';
+import IconFilter from '@assets/icons/IconFilter';
 import { BuildingFilter } from '@components/BuildingFilter';
 import { IconButton } from '@components/Buttons/IconButton';
-import IconFilter from '@assets/icons/IconFilter';
 
 // FUNCTIONS
+import { renderEventContent as ticketEventContent } from '../CalendarTickets';
 import { getUnifiedCalendarMaintenances, getUnifiedCalendarTickets } from './functions';
 
 // STYLES
-import * as Style from './styles';
 import { Header } from '../CalendarTickets/styles';
+import * as Style from './styles';
 
 function getMaintenanceBackground(status: string) {
   switch (status) {
