@@ -1,4 +1,3 @@
-
 // CONTEXTS
 import { AuthContext } from '@contexts/Auth/AuthContext';
 
@@ -13,12 +12,16 @@ import { ModalTicketDetails } from '@components/TicketModals/ModalTicketDetails'
 import { EventClickArg } from '@fullcalendar/core';
 import FullCalendar from '@fullcalendar/react';
 import { renderEventContent as ticketEventContent } from '../CalendarTickets';
+import { BuildingFilter } from '@components/BuildingFilter';
+import { IconButton } from '@components/Buttons/IconButton';
+import IconFilter from '@assets/icons/IconFilter';
 
 // FUNCTIONS
 import { getUnifiedCalendarMaintenances, getUnifiedCalendarTickets } from './functions';
 
 // STYLES
 import * as Style from './styles';
+import { Header } from '../CalendarTickets/styles';
 
 function getMaintenanceBackground(status: string) {
   switch (status) {
@@ -105,6 +108,7 @@ export const EventCalendar = () => {
   });
 
   const [dataState, setDataState] = useState<{ events: any[] }>({ events: [] });
+  const [showFilter, setShowFilter] = useState(false);
 
   const handleDatesSet = (arg: { start: Date; view: { type: string; currentStart?: Date } }) => {
     let newDate = arg.view.currentStart ?? arg.start;
@@ -199,6 +203,28 @@ export const EventCalendar = () => {
 
   return (
     <Style.Container>
+      <Header>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 12 }}>
+          <h2>Calendário</h2>
+          <IconButton
+            label="Filtros"
+            icon={<IconFilter strokeColor="primary" />}
+            onClick={() => setShowFilter(!showFilter)}
+          />
+        </div>
+      </Header>
+
+      {showFilter && (
+        <BuildingFilter
+          buildingIds={calendarState.buildingIds}
+          setBuildingIds={(ids) => setCalendarState((prev) => ({ ...prev, buildingIds: ids }))}
+          onApply={handleGetCalendarEvents}
+          disabled={false}
+          clearButtonLabel="Limpar filtros"
+          applyButtonLabel="Filtrar"
+        />
+      )}
+
       <CalendarComponent
         ref={calendarRef}
         events={dataState.events}
@@ -241,3 +267,4 @@ export const EventCalendar = () => {
     </Style.Container>
   );
 };
+
