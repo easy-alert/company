@@ -77,20 +77,20 @@ export const TicketSignatureContainer = styled.div`
 
 export const TicketSignatureHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: flex-end;
   align-items: center;
-
-  margin-bottom: ${({ theme }) => theme.size.xsm};
+  gap: 8px;
 `;
 
 export const TicketDetailsRowLabel = styled.span`
-  font-weight: 400;
-  font-size: 12px;
+  font-weight: 500;
+  font-size: 14px;
   line-height: 16px;
 `;
 
 export const TicketDetailsRowValue = styled.span`
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   line-height: 16px;
 
@@ -126,9 +126,10 @@ export const DismissTicketContainer = styled.div`
 `;
 
 export const DismissTicketText = styled.span`
-  font-weight: 400;
+  font-weight: 500;
   font-size: 14px;
   line-height: 16px;
+
   margin-bottom: ${({ theme }) => theme.size.xsm};
 `;
 
@@ -169,4 +170,71 @@ export const TicketImageUploadSpan = styled.span`
   font-size: 32px;
   color: #888;
   cursor: pointer;
+`;
+
+export const DetailsListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+
+export const DetailItemWrapper = styled.div`
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgb(153, 153, 153);
+  background-color: rgb(237, 237, 237);
+  border-radius: 0.5rem;
+`;
+
+export const DetailItemContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+export const DetailItemContentVertical = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const BuildingName = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+`;
+
+export const DetailItemVertical = styled.span`
+  display: flex;
+  gap: 20px;
+  width: 100%;
+`;
+
+export const SignatureImageContainer = styled.div`
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-top: 8px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SignatureImage = styled.img`
+  max-width: 100%;
+  max-height: 80px;
+  height: auto;
+  object-fit: contain;
 `;

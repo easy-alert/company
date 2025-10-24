@@ -1,33 +1,41 @@
 // REACT
 import { useState } from 'react';
 
-// COMPONENTS
+// GLOBAL COMPONENTS
 import { ListTag } from '@components/ListTag';
 import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
 import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
+import { IconButton } from '@components/Buttons/IconButton';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
-import { IconButton } from '@components/Buttons/IconButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
-import { PopoverButton } from '@components/Buttons/PopoverButton';
 
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
-import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
+
+// GLOBAL STYLES
+import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
+import IconX from '@assets/icons/IconX';
+import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL TYPES
-import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
-import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
 import type { ITicket } from '@customTypes/ITicket';
 
+// COMPONENTS
+import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
+
+// TYPES
+import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
+import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
+
 // STYLES
-import { theme } from '@styles/theme';
 import * as Style from '../styles';
 
 interface ITicketDetails {
@@ -38,7 +46,7 @@ interface ITicketDetails {
   signatureLoading: boolean;
   handleSetView: (viewState: 'details' | 'dismiss') => void;
   handleUpdateOneTicket: (
-    updatedTicket: ITicket,
+    updatedTicket: Partial<ITicket>,
     refresh?: boolean,
     closeModal?: boolean,
   ) => Promise<ITicket>;
@@ -54,9 +62,10 @@ type EditableField =
   | 'residentApartment'
   | 'residentEmail'
   | 'residentCPF'
-  | 'description';
+  | 'description'
+  | 'images';
 
-type EditedData = Record<EditableField, string>;
+type EditedData = Record<Exclude<EditableField, 'images'>, string>;
 
 function TicketDetails({
   ticket,
@@ -73,8 +82,7 @@ function TicketDetails({
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
   const [localTicket, setLocalTicket] = useState(ticket);
-
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [editedData, setEditedData] = useState<EditedData>({
     residentName: ticket.residentName || '',
     residentPhone: ticket.residentPhone || '',
@@ -85,19 +93,12 @@ function TicketDetails({
   });
 
   const disableComment = localTicket?.statusName !== 'awaitingToFinish';
-
   const editedFields: string[] = localTicket.editedFields || [];
-
   const config = fieldsConfig ?? defaultConfig;
   const isHidden = (key: TicketFieldKey) => !!config[key]?.hidden;
   const withPlaceholder = (val?: string | null) => (val && val !== '' ? val : 'Não definido');
 
   const ticketDetailsRows = [
-    {
-      label: 'Edificação',
-      value: localTicket?.building?.name,
-      field: null,
-    },
     {
       label: 'Apartamento do morador',
       value: withPlaceholder(localTicket?.residentApartment),
@@ -110,7 +111,9 @@ function TicketDetails({
     },
     {
       label: 'Telefone do morador',
-      value: withPlaceholder(applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value),
+      value: withPlaceholder(
+        applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value,
+      ),
       field: 'residentPhone',
     },
     {
@@ -120,19 +123,13 @@ function TicketDetails({
     },
     {
       label: 'CPF do morador',
-      value: withPlaceholder(applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value),
+      value: withPlaceholder(
+        applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value,
+      ),
       field: 'residentCPF',
     },
-    {
-      label: 'Local da ocorrência',
-      place: localTicket?.place,
-      field: null,
-    },
-    {
-      label: 'Tipo de assistência',
-      types: localTicket?.types,
-      field: null,
-    },
+    { label: 'Local da ocorrência', place: localTicket?.place, field: null },
+    { label: 'Tipo de assistência', types: localTicket?.types, field: null },
     {
       label: 'Data de abertura',
       value: localTicket?.createdAt
@@ -143,20 +140,14 @@ function TicketDetails({
   ];
 
   const ticketDetailsDismissedRows = [
-    {
-      label: 'Indeferido por',
-      value: localTicket.dismissedBy?.name,
-    },
+    { label: 'Indeferido por', value: localTicket.dismissedBy?.name },
     {
       label: 'Data de indeferimento',
       value: localTicket?.dismissedAt
         ? formatDateString(localTicket?.dismissedAt, 'dd/MM/yyyy - HH:mm')
         : '',
     },
-    {
-      label: 'Justificativa',
-      value: localTicket?.dismissReasons?.label,
-    },
+    { label: 'Justificativa', value: localTicket?.dismissReasons?.label },
     { label: 'Observação', value: localTicket?.dismissObservation },
   ];
 
@@ -164,34 +155,45 @@ function TicketDetails({
     handleUpdateOneTicket({ id: localTicket.id, showToResident: !localTicket.showToResident });
   };
 
-  const handleFieldChange = (field: EditableField, value: string) => {
+  const handleFieldChange = (field: Exclude<EditableField, 'images'>, value: string) => {
     setEditedData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = async () => {
-    const updated = await handleUpdateOneTicket({
-      ...localTicket,
-      residentName: editedData.residentName,
-      residentPhone: editedData.residentPhone,
-      residentApartment: editedData.residentApartment,
-      residentEmail: editedData.residentEmail,
-      residentCPF: editedData.residentCPF,
-      description: editedData.description,
+  const handleSaveField = async () => {
+    if (!editingField || editingField === 'images') {
+      setEditingField(null);
+      return;
+    }
+    const updatedFromApi = await handleUpdateOneTicket({
+      id: localTicket.id,
+      [editingField]: editedData[editingField],
       userId,
     });
 
-    if (updated) {
-      setLocalTicket(updated);
-      setIsEditing(false);
-      setEditedData({
-        residentName: updated.residentName || '',
-        residentPhone: updated.residentPhone || '',
-        residentApartment: updated.residentApartment || '',
-        residentEmail: updated.residentEmail || '',
-        residentCPF: updated.residentCPF || '',
-        description: updated.description || '',
+    if (updatedFromApi) {
+      setLocalTicket((prevState) => {
+        const previousFields = prevState.editedFields || [];
+        const newEditedFields = [...new Set([...previousFields, editingField])];
+        return {
+          ...prevState,
+          ...updatedFromApi,
+          editedFields: newEditedFields,
+        };
       });
+      setEditingField(null);
     }
+  };
+
+  const handleCancelEdit = () => {
+    if (!editingField || editingField === 'images') {
+      setEditingField(null);
+      return;
+    }
+    setEditedData((prev) => ({
+      ...prev,
+      [editingField]: (localTicket[editingField as keyof ITicket] as string) || '',
+    }));
+    setEditingField(null);
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,196 +204,226 @@ function TicketDetails({
 
   return (
     <Style.TicketDetailsContainer>
-      {localTicket.lastEditedAt && (
-        <Style.TicketEditedAlert>
-          Editado em{' '}
-          {formatDateString(
-            typeof localTicket.lastEditedAt === 'string'
-              ? localTicket.lastEditedAt
-              : localTicket.lastEditedAt?.toISOString() || '',
-            'dd/MM/yyyy HH:mm',
-          )}
-        </Style.TicketEditedAlert>
-      )}
-
       <TicketShareButton ticketId={localTicket.id} />
-
       <TicketShowResidentButton
         showToResident={localTicket.showToResident}
         handleToggleShowToResident={handleToggleShowToResident}
       />
-
-      <Style.TicketDetailsColumnContainer>
+      <Typography variant="h3" style={{ fontWeight: 500, marginBottom: '8px' }}>
+        {localTicket.building?.name}
+      </Typography>
+      <Style.DetailsListContainer>
         {ticketDetailsRows
-          .filter(({ field }) => {
-            if (!field) return true;
-            return !isHidden(field as TicketFieldKey);
-          })
-          .map(({ label, value, place, types, field }) => {
-          if (label === 'Local da ocorrência') {
-            if (isHidden(ETicketFieldKey.placeId)) return null;
-            return (
-              <Style.TicketDetailsColumnContent key={label}>
-                <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-                <ListTag label={place?.label || ''} color="white" backgroundColor="gray4" />
-              </Style.TicketDetailsColumnContent>
-            );
-          }
-
-          if (label === 'Tipo de assistência') {
-            if (isHidden(ETicketFieldKey.types)) return null;
-            return (
-              <Style.TicketDetailsColumnContent key={label}>
-                <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-                {Array.isArray(types) &&
-                  types.map(({ type: ticketType }) => (
-                    <ListTag
-                      key={ticketType.id}
-                      label={ticketType.label}
-                      color={ticketType.color}
-                      backgroundColor={ticketType.backgroundColor}
-                    />
-                  ))}
-              </Style.TicketDetailsColumnContent>
-            );
-          }
-
-          return (
-            <Style.TicketDetailsColumnContent key={label}>
-              <Style.TicketDetailsRowLabel>
-                {label}
-                {field && editedFields.includes(field) && (
-                  <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
-                )}
-              </Style.TicketDetailsRowLabel>
-              {isEditing && field ? (
-                <input
+          .filter(({ field }) => (!field ? true : !isHidden(field as TicketFieldKey)))
+          .map(({ label, value, place, types, field }) => (
+            <Style.DetailItemWrapper key={label}>
+              {field ? (
+                <>
+                  <div
+                    style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}
+                  >
+                    <Style.DetailItemContent>
+                      <Style.TicketDetailsRowLabel>{label}:</Style.TicketDetailsRowLabel>
+                      {editingField === field ? (
+                        <input
+                          style={{
+                            flex: 1,
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            padding: '6px 8px',
+                            fontSize: '14px',
+                            backgroundColor: 'white',
+                          }}
+                          value={editedData[field as Exclude<EditableField, 'images'>]}
+                          onChange={(e) =>
+                            handleFieldChange(
+                              field as Exclude<EditableField, 'images'>,
+                              e.target.value,
+                            )
+                          }
+                        />
+                      ) : (
+                        <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
+                      )}
+                    </Style.DetailItemContent>
+                    {editedFields.includes(field) &&
+                      localTicket.lastEditedAt &&
+                      editingField !== field && (
+                        <span style={{ fontSize: '11px', color: '#888' }}>
+                          editado{' '}
+                          {formatDateString(
+                            typeof localTicket.lastEditedAt === 'string'
+                              ? localTicket.lastEditedAt
+                              : localTicket.lastEditedAt?.toISOString(),
+                            'dd/MM/yyyy',
+                          )}
+                        </span>
+                      )}
+                  </div>
+                  {showButtons &&
+                    (editingField === field ? (
+                      <div style={{ display: 'flex' }}>
+                        <IconButton icon={icon.save} onClick={handleSaveField} />
+                        <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+                      </div>
+                    ) : (
+                      <IconButton
+                        icon={<IconEdit strokeColor="primary" />}
+                        onClick={() => setEditingField(field as EditableField)}
+                        disabled={!!editingField}
+                      />
+                    ))}
+                </>
+              ) : (
+                <Style.DetailItemContentVertical>
+                  <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
+                  {value && <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>}
+                  {place && (
+                    <ListTag label={place?.label || ''} color="white" backgroundColor="gray4" />
+                  )}
+                  {Array.isArray(types) &&
+                    types.map(({ type: ticketType }) => (
+                      <ListTag
+                        key={ticketType.id}
+                        label={ticketType.label}
+                        color={ticketType.color}
+                        backgroundColor={ticketType.backgroundColor}
+                      />
+                    ))}
+                </Style.DetailItemContentVertical>
+              )}
+            </Style.DetailItemWrapper>
+          ))}
+        {!isHidden(ETicketFieldKey.description) && (
+          <Style.DetailItemWrapper>
+            <Style.DetailItemContentVertical>
+              <Style.TicketDetailsRowLabel>Descrição</Style.TicketDetailsRowLabel>
+              {editingField === 'description' ? (
+                <textarea
                   style={{
                     width: '100%',
-                    minHeight: 32,
-                    marginTop: 4,
-                    marginBottom: 4,
-                    borderRadius: 6,
+                    minHeight: 60,
                     border: '1px solid #ccc',
-                    padding: 8,
+                    borderRadius: '4px',
+                    padding: '6px 8px',
                     fontSize: 14,
+                    resize: 'vertical',
+                    backgroundColor: 'white',
                   }}
-                  value={editedData[field as EditableField]}
-                  onChange={(e) => handleFieldChange(field as EditableField, e.target.value)}
+                  value={editedData.description}
+                  onChange={(e) => handleFieldChange('description', e.target.value)}
                 />
               ) : (
-                <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
+                <>
+                  <Style.TicketDetailsRowValue>
+                    {localTicket.description}
+                  </Style.TicketDetailsRowValue>
+                  {editedFields.includes('description') && localTicket.lastEditedAt && (
+                    <span style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
+                      editado{' '}
+                      {formatDateString(
+                        typeof localTicket.lastEditedAt === 'string'
+                          ? localTicket.lastEditedAt
+                          : localTicket.lastEditedAt?.toISOString(),
+                        'dd/MM/yyyy',
+                      )}
+                    </span>
+                  )}
+                </>
               )}
-            </Style.TicketDetailsColumnContent>
-          );
-        })}
-      </Style.TicketDetailsColumnContainer>
+            </Style.DetailItemContentVertical>
+            {showButtons &&
+              (editingField === 'description' ? (
+                <div style={{ display: 'flex' }}>
+                  <IconButton icon={icon.save} onClick={handleSaveField} />
+                  <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+                </div>
+              ) : (
+                <IconButton
+                  icon={<IconEdit strokeColor="primary" />}
+                  onClick={() => setEditingField('description')}
+                  disabled={!!editingField}
+                />
+              ))}
+          </Style.DetailItemWrapper>
+        )}
+      </Style.DetailsListContainer>
 
-      {!isHidden(ETicketFieldKey.description) && (
-      <Style.TicketDetailsDescriptionContainer>
-        <Style.TicketDetailsRowLabel>
-          Descrição
-          {editedFields.includes('description') && (
-            <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
-          )}
-        </Style.TicketDetailsRowLabel>
-        {isEditing ? (
-          <textarea
-            style={{
-              width: '100%',
-              minHeight: 60,
-              marginTop: 8,
-              marginBottom: 8,
-              borderRadius: 6,
-              border: '1px solid #ccc',
-              padding: 8,
-              fontSize: 14,
-              resize: 'vertical',
-            }}
-            value={editedData.description}
-            onChange={(e) => handleFieldChange('description', e.target.value)}
-          />
-        ) : (
-          <Style.TicketDetailsRowValue>{localTicket.description}</Style.TicketDetailsRowValue>
-          )}
-        </Style.TicketDetailsDescriptionContainer>
-      )}
-
-      {showButtons && (
-        <div
-          style={{
-            marginTop: 16,
-            marginBottom: 8,
-            display: isEditing ? 'flex' : undefined,
-            gap: isEditing ? 8 : undefined,
-            alignItems: 'center',
-          }}
-        >
-          {!isEditing ? (
-            <Button
-              label="Editar dados"
-              bgColor="primary"
-              size="sm"
-              onClick={() => setIsEditing(true)}
-            />
+      <Style.DetailItemWrapper>
+        <Style.DetailItemVertical>
+          <Style.TicketDetailsRowLabel>
+            Imagens
+            {editedFields.includes('images') && (
+              <span style={{ fontWeight: 'normal', color: '#888', marginLeft: 8, fontSize: 12 }}>
+                (editado{' '}
+                {formatDateString(
+                  typeof localTicket.lastEditedAt === 'string'
+                    ? localTicket.lastEditedAt
+                    : localTicket.lastEditedAt?.toISOString(),
+                  'dd/MM/yyyy',
+                )}
+                )
+              </span>
+            )}
+          </Style.TicketDetailsRowLabel>
+          <Style.TicketDetailsImagesContent>
+            {localTicket?.images?.map((image) => (
+              <Style.TicketImageWrapper key={image.id}>
+                <ImagePreview
+                  src={image.url}
+                  downloadUrl={image.url}
+                  imageCustomName={image.name}
+                  width="128px"
+                  height="128px"
+                  onTrashClick={
+                    editingField === 'images' ? () => handleRemoveImage?.(image.id) : undefined
+                  }
+                />
+              </Style.TicketImageWrapper>
+            ))}
+            {editingField === 'images' && (
+              <Style.TicketImageUploadLabel htmlFor="ticket-image-upload">
+                <Style.TicketImageUploadInput
+                  id="ticket-image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+                <Style.TicketImageUploadSpan>+</Style.TicketImageUploadSpan>
+              </Style.TicketImageUploadLabel>
+            )}
+          </Style.TicketDetailsImagesContent>
+        </Style.DetailItemVertical>
+        {showButtons &&
+          (editingField === 'images' ? (
+            <div style={{ display: 'flex' }}>
+              <IconButton
+                icon={icon.save}
+                onClick={() => setEditingField(null)}
+                title="Concluir edição de imagens"
+              />
+            </div>
           ) : (
-            <>
-              <Button label="Salvar" bgColor="finished" size="sm" onClick={handleSave} />
-              <Button
-                label="Cancelar"
-                bgColor="transparent"
-                textColor="danger"
-                size="sm"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditedData({
-                    residentName: localTicket.residentName || '',
-                    residentPhone: localTicket.residentPhone || '',
-                    residentApartment: localTicket.residentApartment || '',
-                    residentEmail: localTicket.residentEmail || '',
-                    residentCPF: localTicket.residentCPF || '',
-                    description: localTicket.description || '',
-                  });
-                }}
-              />
-            </>
-          )}
-        </div>
-      )}
-
-      <Style.TicketDetailsImagesContainer>
-        <Style.TicketDetailsRowLabel>
-          Imagens
-          {editedFields.includes('images') && (
-            <span style={{ color: '#FFA500', marginLeft: 8, fontSize: 12 }}>(Editado)</span>
-          )}
-        </Style.TicketDetailsRowLabel>
-        <Style.TicketDetailsImagesContent>
-          {localTicket?.images?.map((image) => (
-            <Style.TicketImageWrapper key={image.id}>
-              <ImagePreview
-                src={image.url}
-                downloadUrl={image.url}
-                imageCustomName={image.name}
-                width="128px"
-                height="128px"
-                onTrashClick={isEditing ? () => handleRemoveImage?.(image.id) : undefined}
-              />
-            </Style.TicketImageWrapper>
+            <IconButton
+              icon={<IconEdit strokeColor="primary" />}
+              onClick={() => setEditingField('images')}
+              disabled={!!editingField}
+            />
           ))}
-          {isEditing && (
-            <Style.TicketImageUploadLabel htmlFor="ticket-image-upload">
-              <Style.TicketImageUploadInput
-                id="ticket-image-upload"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-              />
-              <Style.TicketImageUploadSpan>+</Style.TicketImageUploadSpan>
-            </Style.TicketImageUploadLabel>
-          )}
-        </Style.TicketDetailsImagesContent>
-      </Style.TicketDetailsImagesContainer>
+      </Style.DetailItemWrapper>
+
+      {/* <Style.ButtonContainer>
+    <IconButton
+     label="Adicionar prestador de serviço"
+     icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
+     onClick={() => console.log('Adicionar prestador')}
+    />
+    <IconButton
+     label="Adicionar checklist de tarefas"
+     icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
+     onClick={() => console.log('Adicionar checklist')}
+    />
+   </Style.ButtonContainer>  */}
 
       <TicketHistoryActivities
         ticketId={localTicket.id}
@@ -402,13 +434,7 @@ function TicketDetails({
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
-            <Typography variant="h3">
-              Assinatura:
-              <Typography variant="span" fontSize="sm" style={{ textDecoration: 'underline' }}>
-                {localTicket.residentName}
-              </Typography>
-            </Typography>
-
+            <Typography variant="h3">Assinatura {localTicket.residentName}</Typography>
             {!localTicket?.signature && (
               <IconButton
                 icon={icon.signing}
@@ -423,35 +449,39 @@ function TicketDetails({
                 loading={signatureLoading}
                 onSave={(signature: string) => {
                   handleUploadSignature(signature);
+                  setOpenSignaturePad(false);
                 }}
               />
             )
           ) : (
-            <ImagePreview
-              src={localTicket.signature}
-              downloadUrl={localTicket.signature}
-              imageCustomName="assinatura"
-              width="128px"
-              height="128px"
-            />
+            <Style.SignatureImageContainer>
+              <Style.SignatureImage
+                src={localTicket.signature}
+                alt={`Assinatura de ${localTicket.residentName}`}
+              />
+            </Style.SignatureImageContainer>
           )}
         </Style.TicketSignatureContainer>
       )}
 
       {localTicket?.statusName === 'dismissed' && (
-        <Style.TicketDetailsColumnContent>
-          <Style.TicketDetailsTitle>Detalhes do indeferimento</Style.TicketDetailsTitle>
-          <Style.TicketDetailsDismissedContainer>
-            <Style.TicketDetailsDismissedContent>
-              {ticketDetailsDismissedRows.map(({ label, value }) => (
-                <Style.TicketDetailsColumnContent key={label}>
-                  <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-                  <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
-                </Style.TicketDetailsColumnContent>
-              ))}
-            </Style.TicketDetailsDismissedContent>
-          </Style.TicketDetailsDismissedContainer>
-        </Style.TicketDetailsColumnContent>
+        <>
+          <Style.TicketDetailsTitle style={{ marginTop: '24px', marginBottom: '8px' }}>
+            Detalhes do indeferimento
+          </Style.TicketDetailsTitle>
+          <Style.DetailsListContainer>
+            {ticketDetailsDismissedRows.map(({ label, value }) => (
+              <Style.DetailItemWrapper key={label}>
+                <Style.DetailItemContent>
+                  <Style.TicketDetailsRowLabel>{label}:</Style.TicketDetailsRowLabel>
+                  <Style.TicketDetailsRowValue>
+                    {withPlaceholder(value)}
+                  </Style.TicketDetailsRowValue>
+                </Style.DetailItemContent>
+              </Style.DetailItemWrapper>
+            ))}
+          </Style.DetailsListContainer>
+        </>
       )}
 
       {showButtons && (ticket.statusName === 'dismissed' || ticket.statusName === 'finished') ? (
@@ -470,13 +500,11 @@ function TicketDetails({
               }
             />
           )}
-
           {localTicket.statusName === 'awaitingToFinish' && (
             <>
-              <Button
-                label="Voltar para Aberto"
-                textColor="actionBlue"
-                bgColor="transparent"
+              <IconButton
+                icon={icon.callBack}
+                title="Voltar para Aberto"
                 permToCheck="tickets:update"
                 onClick={() =>
                   handleUpdateOneTicket({
@@ -486,7 +514,6 @@ function TicketDetails({
                   })
                 }
               />
-
               <Button
                 label="Finalizar"
                 permToCheck="tickets:update"
@@ -501,7 +528,6 @@ function TicketDetails({
               />
             </>
           )}
-
           {(localTicket.statusName === 'open' || localTicket.statusName === 'awaitingToFinish') && (
             <Button
               label="Reprovar"
@@ -510,7 +536,6 @@ function TicketDetails({
               onClick={() => handleSetView('dismiss')}
             />
           )}
-
           <PopoverButton
             type="Button"
             label="Excluir"
@@ -542,38 +567,6 @@ function TicketDetails({
                 }
               />
             )}
-
-            {ticket.statusName === 'awaitingToFinish' && (
-              <>
-                <Button
-                  label="Voltar para Aberto"
-                  textColor="actionBlue"
-                  bgColor="transparent"
-                  permToCheck="tickets:update"
-                  onClick={() =>
-                    handleUpdateOneTicket({
-                      id: ticket.id,
-                      statusName: 'open',
-                      userId,
-                    })
-                  }
-                />
-
-                <Button
-                  label="Finalizar"
-                  permToCheck="tickets:update"
-                  bgColor="finished"
-                  onClick={() =>
-                    handleUpdateOneTicket({
-                      id: ticket.id,
-                      statusName: 'finished',
-                      userId,
-                    })
-                  }
-                />
-              </>
-            )}
-
             {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
               <Button
                 label="Reprovar"
@@ -582,7 +575,6 @@ function TicketDetails({
                 onClick={() => handleSetView('dismiss')}
               />
             )}
-
             <PopoverButton
               type="Button"
               label="Excluir"
@@ -596,6 +588,34 @@ function TicketDetails({
               }}
               actionButtonClick={() => handleDeleteTicket(ticket.id)}
             />
+            {ticket.statusName === 'awaitingToFinish' && (
+              <>
+                <Button
+                  label="Finalizar"
+                  permToCheck="tickets:update"
+                  bgColor="finished"
+                  onClick={() =>
+                    handleUpdateOneTicket({
+                      id: ticket.id,
+                      statusName: 'finished',
+                      userId,
+                    })
+                  }
+                />
+                <IconButton
+                  icon={icon.callBack}
+                  title="Voltar para Aberto"
+                  permToCheck="tickets:update"
+                  onClick={() =>
+                    handleUpdateOneTicket({
+                      id: localTicket.id,
+                      statusName: 'open',
+                      userId,
+                    })
+                  }
+                />
+              </>
+            )}
           </Style.ButtonsContainer>
         )
       )}
