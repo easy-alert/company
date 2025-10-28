@@ -227,9 +227,9 @@ function TicketsPage() {
     }
   };
 
-  const handleUpdateOneTicket = async (updatedTicket: ITicket) => {
+  const handleSeeTicket = async (ticketId: string) => {
     try {
-      await putTicketById(updatedTicket);
+      await putTicketById({ id: ticketId, seen: true });
     } catch (error: any) {
       handleToastify(error);
     } finally {
@@ -764,7 +764,7 @@ function TicketsPage() {
                       key={ticket.id}
                       onClick={() => {
                         if (!ticket.seen) {
-                          handleUpdateOneTicket({ id: ticket.id, seen: true }).then(() =>
+                          handleSeeTicket(ticket.id).then(() =>
                             handleSeenLocalKanbanTicket(ticket.id),
                           );
                         }
@@ -911,7 +911,7 @@ function TicketsPage() {
                           key={ticket.id}
                           onClick={() => {
                             if (!ticket.seen) {
-                              handleUpdateOneTicket({ id: ticket.id, seen: true }).then(() =>
+                              handleSeeTicket(ticket.id).then(() =>
                                 handleSeenLocalKanbanTicket(ticket.id),
                               );
                             }
