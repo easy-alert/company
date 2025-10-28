@@ -1,5 +1,4 @@
-// REACT
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // GLOBAL COMPONENTS
 import { ListTag } from '@components/ListTag';
@@ -12,11 +11,15 @@ import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
 import SignaturePad from '@components/SignaturePad';
 import Typography from '@components/Typography';
+import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
+
+// HOOKS
+import { useTicketPlacesForSelect } from '@hooks/useTicketPlacesForSelect';
+import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
 
 // GLOBAL UTILS
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
-
 // GLOBAL STYLES
 import { theme } from '@styles/theme';
 
@@ -63,9 +66,11 @@ type EditableField =
   | 'residentEmail'
   | 'residentCPF'
   | 'description'
-  | 'images';
+  | 'images'
+  | 'place'
+  | 'types';
 
-type EditedData = Record<Exclude<EditableField, 'images'>, string>;
+type EditedData = Record<Exclude<EditableField, 'images' | 'place' | 'types'>, string>;
 
 function TicketDetails({
   ticket,
@@ -83,6 +88,9 @@ function TicketDetails({
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
   const [localTicket, setLocalTicket] = useState(ticket);
   const [editingField, setEditingField] = useState<EditableField | null>(null);
+  const [isConfirmPopoverOpen, setConfirmPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
   const [editedData, setEditedData] = useState<EditedData>({
     residentName: ticket.residentName || '',
     residentPhone: ticket.residentPhone || '',
@@ -91,6 +99,16 @@ function TicketDetails({
     residentCPF: ticket.residentCPF || '',
     description: ticket.description || '',
   });
+
+  const { ticketPlacesForSelect } = useTicketPlacesForSelect();
+  const { ticketServiceTypesForSelect } = useTicketServiceTypesForSelect();
+
+  const [editedPlaceId, setEditedPlaceId] = useState<string | null>(null);
+  const [editedTypes, setEditedTypes] = useState<{ serviceTypeId: string }[]>([]);
+
+  useEffect(() => {
+    setLocalTicket(ticket);
+  }, [ticket]);
 
   const disableComment = localTicket?.statusName !== 'awaitingToFinish';
   const editedFields: string[] = localTicket.editedFields || [];
@@ -102,40 +120,31 @@ function TicketDetails({
     {
       label: 'Apartamento do morador',
       value: withPlaceholder(localTicket?.residentApartment),
-      field: 'residentApartment',
+      field: 'residentApartment' as EditableField,
     },
     {
       label: 'Nome do morador',
       value: withPlaceholder(localTicket?.residentName),
-      field: 'residentName',
+      field: 'residentName' as EditableField,
     },
     {
       label: 'Telefone do morador',
       value: withPlaceholder(
         applyMask({ value: localTicket?.residentPhone || '', mask: 'TEL' }).value,
       ),
-      field: 'residentPhone',
+      field: 'residentPhone' as EditableField,
     },
     {
       label: 'E-mail do morador',
       value: withPlaceholder(localTicket?.residentEmail),
-      field: 'residentEmail',
+      field: 'residentEmail' as EditableField,
     },
     {
       label: 'CPF do morador',
       value: withPlaceholder(
         applyMask({ value: localTicket?.residentCPF || '', mask: 'CPF' }).value,
       ),
-      field: 'residentCPF',
-    },
-    { label: 'Local da ocorrência', place: localTicket?.place, field: null },
-    { label: 'Tipo de assistência', types: localTicket?.types, field: null },
-    {
-      label: 'Data de abertura',
-      value: localTicket?.createdAt
-        ? formatDateString(localTicket.createdAt, 'dd/MM/yyyy - HH:mm')
-        : '',
-      field: null,
+      field: 'residentCPF' as EditableField,
     },
   ];
 
@@ -155,7 +164,10 @@ function TicketDetails({
     handleUpdateOneTicket({ id: localTicket.id, showToResident: !localTicket.showToResident });
   };
 
-  const handleFieldChange = (field: Exclude<EditableField, 'images'>, value: string) => {
+  const handleFieldChange = (
+    field: Exclude<EditableField, 'images' | 'place' | 'types'>,
+    value: string,
+  ) => {
     setEditedData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -164,35 +176,52 @@ function TicketDetails({
       setEditingField(null);
       return;
     }
-    const updatedFromApi = await handleUpdateOneTicket({
-      id: localTicket.id,
-      [editingField]: editedData[editingField],
-      userId,
-    });
 
-    if (updatedFromApi) {
-      setLocalTicket((prevState) => {
-        const previousFields = prevState.editedFields || [];
-        const newEditedFields = [...new Set([...previousFields, editingField])];
-        return {
-          ...prevState,
-          ...updatedFromApi,
-          editedFields: newEditedFields,
-        };
-      });
+    const updatePayload: Partial<ITicket> = { id: localTicket.id, userId };
+
+    switch (editingField) {
+      case 'place':
+        updatePayload.placeId = editedPlaceId || undefined;
+        break;
+      case 'types':
+        updatePayload.types = editedTypes as any;
+        break;
+      default:
+        if (editingField in editedData) {
+          updatePayload[editingField] = editedData[editingField as keyof EditedData];
+        }
+        break;
+    }
+
+    try {
+      const updatedFromApi = await handleUpdateOneTicket(updatePayload, true, false);
+      if (updatedFromApi) {
+        setLocalTicket((prevState) => {
+          const previousFields = prevState.editedFields || [];
+          const newEditedFields = [...new Set([...previousFields, editingField])];
+          return {
+            ...prevState,
+            ...updatedFromApi,
+            editedFields: newEditedFields,
+          };
+        });
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o chamado:', error);
+    } finally {
       setEditingField(null);
     }
   };
 
   const handleCancelEdit = () => {
-    if (!editingField || editingField === 'images') {
-      setEditingField(null);
-      return;
+    if (!editingField) return;
+
+    if (editingField !== 'place' && editingField !== 'types' && editingField !== 'images') {
+      setEditedData((prev) => ({
+        ...prev,
+        [editingField]: (localTicket[editingField as keyof ITicket] as string) || '',
+      }));
     }
-    setEditedData((prev) => ({
-      ...prev,
-      [editingField]: (localTicket[editingField as keyof ITicket] as string) || '',
-    }));
     setEditingField(null);
   };
 
@@ -202,6 +231,134 @@ function TicketDetails({
     }
   };
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setConfirmPopoverOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const popoverContent = (
+    <Style.PopoverContainer>
+      <Style.PopoverHeader>
+        <h2>O que deseja fazer?</h2>
+        <IconButton icon={<IconX />} onClick={() => setConfirmPopoverOpen(false)} />
+      </Style.PopoverHeader>
+      <div>
+        <Style.PopoverMessage>
+          Você pode reabrir o chamado ou excluí-lo permanentemente.
+          <p>Atenção: a exclusão é uma ação irreversível.</p>
+        </Style.PopoverMessage>
+      </div>
+      <Style.PopoverActions>
+        <Button
+          label="Voltar para Aberto"
+          bgColor="#007bff"
+          onClick={async () => {
+            const updated = await handleUpdateOneTicket({
+              id: localTicket.id,
+              statusName: 'open',
+              userId,
+            });
+            if (updated) setLocalTicket(updated);
+            setConfirmPopoverOpen(false);
+          }}
+        />
+        <Button
+          label="Excluir"
+          bgColor="dismissed"
+          onClick={() => {
+            handleDeleteTicket(localTicket.id);
+            setConfirmPopoverOpen(false);
+          }}
+        />
+      </Style.PopoverActions>
+    </Style.PopoverContainer>
+  );
+
+  const renderPlaceField = () => {
+    if (editingField === 'place') {
+      return (
+        <div style={{ width: '100%' }}>
+          <ReactSelectCreatableComponent
+            id="place"
+            name="place"
+            selectPlaceholderValue={editedPlaceId}
+            options={ticketPlacesForSelect.map((p) => ({ label: p.label, value: p.id }))}
+            value={
+              editedPlaceId
+                ? {
+                    label:
+                      ticketPlacesForSelect.find((p) => p.id === editedPlaceId)?.label ||
+                      localTicket.place?.label ||
+                      '',
+                    value: editedPlaceId,
+                  }
+                : null
+            }
+            onChange={(option: any) => setEditedPlaceId(option?.value || null)}
+            placeholder=""
+            isClearable
+          />
+        </div>
+      );
+    }
+
+    if (localTicket.place) {
+      return <ListTag label={localTicket.place.label} color="white" backgroundColor="gray4" />;
+    }
+
+    return <Style.TicketDetailsRowValue>Não definido</Style.TicketDetailsRowValue>;
+  };
+
+  const renderTypesField = () => {
+    if (editingField === 'types') {
+      return (
+        <div style={{ width: '100%' }}>
+          <ReactSelectCreatableComponent
+            id="types"
+            name="types"
+            selectPlaceholderValue={editedTypes.length > 0}
+            isMulti
+            options={ticketServiceTypesForSelect.map((t) => ({
+              label: t.singularLabel,
+              value: t.id,
+            }))}
+            value={editedTypes.map((et) => {
+              const typeInfo = ticketServiceTypesForSelect.find((t) => t.id === et.serviceTypeId);
+              return { label: typeInfo?.singularLabel || '', value: et.serviceTypeId };
+            })}
+            onChange={(options: any) => {
+              const newTypes = options
+                ? options.map((opt: any) => ({ serviceTypeId: opt.value }))
+                : [];
+              setEditedTypes(newTypes);
+            }}
+            placeholder=""
+          />
+        </div>
+      );
+    }
+
+    if (Array.isArray(localTicket.types) && localTicket.types.length > 0) {
+      return localTicket.types.map(({ type: ticketType }) => (
+        <ListTag
+          key={ticketType.id}
+          label={ticketType.label}
+          color={ticketType.color}
+          backgroundColor={ticketType.backgroundColor}
+        />
+      ));
+    }
+
+    return <Style.TicketDetailsRowValue>Não definido</Style.TicketDetailsRowValue>;
+  };
+
   return (
     <Style.TicketDetailsContainer>
       <TicketShareButton ticketId={localTicket.id} />
@@ -209,91 +366,148 @@ function TicketDetails({
         showToResident={localTicket.showToResident}
         handleToggleShowToResident={handleToggleShowToResident}
       />
-      <Typography variant="h3" style={{ fontWeight: 500, marginBottom: '8px' }}>
-        {localTicket.building?.name}
-      </Typography>
+      <Style.TicketHeader>
+        <Style.BuildingName>{localTicket.building?.name}</Style.BuildingName>
+
+        <Style.TicketDate>
+          Data de Abertura:{' '}
+          {localTicket?.createdAt
+            ? formatDateString(localTicket.createdAt, 'dd/MM/yyyy')
+            : 'Não definida'}
+        </Style.TicketDate>
+      </Style.TicketHeader>
+
       <Style.DetailsListContainer>
-        {ticketDetailsRows
-          .filter(({ field }) => (!field ? true : !isHidden(field as TicketFieldKey)))
-          .map(({ label, value, place, types, field }) => (
-            <Style.DetailItemWrapper key={label}>
-              {field ? (
-                <>
-                  <div
-                    style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}
-                  >
-                    <Style.DetailItemContent>
-                      <Style.TicketDetailsRowLabel>{label}:</Style.TicketDetailsRowLabel>
-                      {editingField === field ? (
-                        <input
-                          style={{
-                            flex: 1,
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            padding: '6px 8px',
-                            fontSize: '14px',
-                            backgroundColor: 'white',
-                          }}
-                          value={editedData[field as Exclude<EditableField, 'images'>]}
-                          onChange={(e) =>
-                            handleFieldChange(
-                              field as Exclude<EditableField, 'images'>,
-                              e.target.value,
-                            )
-                          }
-                        />
-                      ) : (
-                        <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
-                      )}
-                    </Style.DetailItemContent>
-                    {editedFields.includes(field) &&
-                      localTicket.lastEditedAt &&
-                      editingField !== field && (
-                        <span style={{ fontSize: '11px', color: '#888' }}>
-                          editado{' '}
-                          {formatDateString(
-                            typeof localTicket.lastEditedAt === 'string'
-                              ? localTicket.lastEditedAt
-                              : localTicket.lastEditedAt?.toISOString(),
-                            'dd/MM/yyyy',
-                          )}
-                        </span>
-                      )}
-                  </div>
-                  {showButtons &&
-                    (editingField === field ? (
-                      <div style={{ display: 'flex' }}>
-                        <IconButton icon={icon.save} onClick={handleSaveField} />
-                        <IconButton icon={<IconX />} onClick={handleCancelEdit} />
-                      </div>
-                    ) : (
-                      <IconButton
-                        icon={<IconEdit strokeColor="primary" />}
-                        onClick={() => setEditingField(field as EditableField)}
-                        disabled={!!editingField}
-                      />
-                    ))}
-                </>
+        {ticketDetailsRows.map(({ label, field, value }) => (
+          <Style.DetailItemWrapper key={label}>
+            <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
+              <Style.DetailItemContent>
+                <Style.TicketDetailsRowLabel>{label}:</Style.TicketDetailsRowLabel>
+                {editingField === field ? (
+                  <input
+                    style={{
+                      flex: 1,
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      padding: '6px 8px',
+                      fontSize: '14px',
+                      backgroundColor: 'white',
+                    }}
+                    value={editedData[field as keyof EditedData]}
+                    onChange={(e) => handleFieldChange(field as keyof EditedData, e.target.value)}
+                  />
+                ) : (
+                  <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>
+                )}
+              </Style.DetailItemContent>
+              {editedFields.includes(field) &&
+                localTicket.lastEditedAt &&
+                editingField !== field && (
+                  <span style={{ fontSize: '11px', color: '#888' }}>
+                    editado{' '}
+                    {formatDateString(
+                      typeof localTicket.lastEditedAt === 'string'
+                        ? localTicket.lastEditedAt
+                        : localTicket.lastEditedAt?.toISOString(),
+                      'dd/MM/yyyy',
+                    )}
+                  </span>
+                )}
+            </div>
+            {showButtons &&
+              (editingField === field ? (
+                <div style={{ display: 'flex' }}>
+                  <IconButton icon={icon.save} onClick={handleSaveField} />
+                  <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+                </div>
               ) : (
-                <Style.DetailItemContentVertical>
-                  <Style.TicketDetailsRowLabel>{label}</Style.TicketDetailsRowLabel>
-                  {value && <Style.TicketDetailsRowValue>{value}</Style.TicketDetailsRowValue>}
-                  {place && (
-                    <ListTag label={place?.label || ''} color="white" backgroundColor="gray4" />
+                <IconButton
+                  icon={<IconEdit strokeColor="primary" />}
+                  onClick={() => setEditingField(field)}
+                  disabled={!!editingField}
+                />
+              ))}
+          </Style.DetailItemWrapper>
+        ))}
+
+        <Style.DetailItemWrapper>
+          <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
+            <Style.DetailItemContent>
+              <Style.TicketDetailsRowLabel>Local da ocorrência:</Style.TicketDetailsRowLabel>
+              {renderPlaceField()}
+            </Style.DetailItemContent>
+            {editedFields.includes('place') &&
+              localTicket.lastEditedAt &&
+              editingField !== 'place' && (
+                <span style={{ fontSize: '11px', color: '#888' }}>
+                  editado{' '}
+                  {formatDateString(
+                    typeof localTicket.lastEditedAt === 'string'
+                      ? localTicket.lastEditedAt
+                      : localTicket.lastEditedAt?.toISOString(),
+                    'dd/MM/yyyy',
                   )}
-                  {Array.isArray(types) &&
-                    types.map(({ type: ticketType }) => (
-                      <ListTag
-                        key={ticketType.id}
-                        label={ticketType.label}
-                        color={ticketType.color}
-                        backgroundColor={ticketType.backgroundColor}
-                      />
-                    ))}
-                </Style.DetailItemContentVertical>
+                </span>
               )}
-            </Style.DetailItemWrapper>
-          ))}
+          </div>
+          {showButtons &&
+            (editingField === 'place' ? (
+              <div style={{ display: 'flex' }}>
+                <IconButton icon={icon.save} onClick={handleSaveField} />
+                <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+              </div>
+            ) : (
+              <IconButton
+                icon={<IconEdit strokeColor="primary" />}
+                onClick={() => {
+                  setEditingField('place');
+                  setEditedPlaceId(localTicket.place?.id || null);
+                }}
+                disabled={!!editingField}
+              />
+            ))}
+        </Style.DetailItemWrapper>
+
+        <Style.DetailItemWrapper>
+          <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
+            <Style.DetailItemContent>
+              <Style.TicketDetailsRowLabel>Tipo de assistência:</Style.TicketDetailsRowLabel>
+              {renderTypesField()}
+            </Style.DetailItemContent>
+            {editedFields.includes('types') &&
+              localTicket.lastEditedAt &&
+              editingField !== 'types' && (
+                <span style={{ fontSize: '11px', color: '#888' }}>
+                  editado{' '}
+                  {formatDateString(
+                    typeof localTicket.lastEditedAt === 'string'
+                      ? localTicket.lastEditedAt
+                      : localTicket.lastEditedAt?.toISOString(),
+                    'dd/MM/yyyy',
+                  )}
+                </span>
+              )}
+          </div>
+          {showButtons &&
+            (editingField === 'types' ? (
+              <div style={{ display: 'flex' }}>
+                <IconButton icon={icon.save} onClick={handleSaveField} />
+                <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+              </div>
+            ) : (
+              <IconButton
+                icon={<IconEdit strokeColor="primary" />}
+                onClick={() => {
+                  setEditingField('types');
+                  setEditedTypes(
+                    localTicket.types?.map((t) => ({ serviceTypeId: t.type.id })) || [],
+                  );
+                }}
+                disabled={!!editingField}
+              />
+            ))}
+        </Style.DetailItemWrapper>
+
         {!isHidden(ETicketFieldKey.description) && (
           <Style.DetailItemWrapper>
             <Style.DetailItemContentVertical>
@@ -316,7 +530,7 @@ function TicketDetails({
               ) : (
                 <>
                   <Style.TicketDetailsRowValue>
-                    {localTicket.description}
+                    {withPlaceholder(localTicket.description)}
                   </Style.TicketDetailsRowValue>
                   {editedFields.includes('description') && localTicket.lastEditedAt && (
                     <span style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
@@ -353,7 +567,7 @@ function TicketDetails({
         <Style.DetailItemVertical>
           <Style.TicketDetailsRowLabel>
             Imagens
-            {editedFields.includes('images') && (
+            {editedFields.includes('images') && localTicket.lastEditedAt && (
               <span style={{ fontWeight: 'normal', color: '#888', marginLeft: 8, fontSize: 12 }}>
                 (editado{' '}
                 {formatDateString(
@@ -434,7 +648,7 @@ function TicketDetails({
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
-            <Typography variant="h3">Assinatura {localTicket.residentName}</Typography>
+            <Typography variant="h5">Assinatura: {localTicket.residentName}</Typography>
             {!localTicket?.signature && (
               <IconButton
                 icon={icon.signing}
@@ -442,7 +656,6 @@ function TicketDetails({
               />
             )}
           </Style.TicketSignatureHeader>
-
           {!localTicket?.signature ? (
             openSignaturePad && (
               <SignaturePad
@@ -484,58 +697,9 @@ function TicketDetails({
         </>
       )}
 
-      {showButtons && (ticket.statusName === 'dismissed' || ticket.statusName === 'finished') ? (
+      {showButtons &&
+      (localTicket.statusName === 'dismissed' || localTicket.statusName === 'finished') ? (
         <Style.ButtonsContainer>
-          {localTicket.statusName === 'open' && (
-            <Button
-              label="Executar"
-              permToCheck="tickets:update"
-              bgColor="awaitingToFinish"
-              onClick={() =>
-                handleUpdateOneTicket({
-                  id: localTicket.id,
-                  statusName: 'awaitingToFinish',
-                  userId,
-                })
-              }
-            />
-          )}
-          {localTicket.statusName === 'awaitingToFinish' && (
-            <>
-              <IconButton
-                icon={icon.callBack}
-                title="Voltar para Aberto"
-                permToCheck="tickets:update"
-                onClick={() =>
-                  handleUpdateOneTicket({
-                    id: localTicket.id,
-                    statusName: 'open',
-                    userId,
-                  })
-                }
-              />
-              <Button
-                label="Finalizar"
-                permToCheck="tickets:update"
-                bgColor="finished"
-                onClick={() =>
-                  handleUpdateOneTicket({
-                    id: localTicket.id,
-                    statusName: 'finished',
-                    userId,
-                  })
-                }
-              />
-            </>
-          )}
-          {(localTicket.statusName === 'open' || localTicket.statusName === 'awaitingToFinish') && (
-            <Button
-              label="Reprovar"
-              permToCheck="tickets:update"
-              bgColor="dismissed"
-              onClick={() => handleSetView('dismiss')}
-            />
-          )}
           <PopoverButton
             type="Button"
             label="Excluir"
@@ -553,21 +717,23 @@ function TicketDetails({
       ) : (
         showButtons && (
           <Style.ButtonsContainer>
-            {ticket.statusName === 'open' && (
+            {localTicket.statusName === 'open' && (
               <Button
                 label="Executar"
                 permToCheck="tickets:update"
                 bgColor="awaitingToFinish"
-                onClick={() =>
-                  handleUpdateOneTicket({
-                    id: ticket.id,
+                onClick={async () => {
+                  const updated = await handleUpdateOneTicket({
+                    id: localTicket.id,
                     statusName: 'awaitingToFinish',
                     userId,
-                  })
-                }
+                  });
+                  if (updated) setLocalTicket(updated);
+                }}
               />
             )}
-            {(ticket.statusName === 'open' || ticket.statusName === 'awaitingToFinish') && (
+            {(localTicket.statusName === 'open' ||
+              localTicket.statusName === 'awaitingToFinish') && (
               <Button
                 label="Reprovar"
                 permToCheck="tickets:update"
@@ -575,45 +741,45 @@ function TicketDetails({
                 onClick={() => handleSetView('dismiss')}
               />
             )}
-            <PopoverButton
-              type="Button"
-              label="Excluir"
-              permToCheck="tickets:delete"
-              actionButtonBgColor={theme.background.dismissed}
-              fontWeight="700"
-              message={{
-                title: 'Deseja excluir este chamado?',
-                content: 'Atenção, essa ação é irreversível.',
-                contentColor: theme.color.danger,
-              }}
-              actionButtonClick={() => handleDeleteTicket(ticket.id)}
-            />
-            {ticket.statusName === 'awaitingToFinish' && (
+            {localTicket.statusName === 'open' && (
+              <PopoverButton
+                type="Button"
+                label="Excluir"
+                permToCheck="tickets:delete"
+                actionButtonBgColor={theme.background.dismissed}
+                fontWeight="700"
+                message={{
+                  title: 'Deseja excluir este chamado?',
+                  content: 'Atenção, essa ação é irreversível.',
+                  contentColor: theme.color.danger,
+                }}
+                actionButtonClick={() => handleDeleteTicket(localTicket.id)}
+              />
+            )}
+            {localTicket.statusName === 'awaitingToFinish' && (
               <>
                 <Button
                   label="Finalizar"
                   permToCheck="tickets:update"
                   bgColor="finished"
-                  onClick={() =>
-                    handleUpdateOneTicket({
-                      id: ticket.id,
+                  onClick={async () => {
+                    const updated = await handleUpdateOneTicket({
+                      id: localTicket.id,
                       statusName: 'finished',
                       userId,
-                    })
-                  }
+                    });
+                    if (updated) setLocalTicket(updated);
+                  }}
                 />
-                <IconButton
-                  icon={icon.callBack}
-                  title="Voltar para Aberto"
-                  permToCheck="tickets:update"
-                  onClick={() =>
-                    handleUpdateOneTicket({
-                      id: localTicket.id,
-                      statusName: 'open',
-                      userId,
-                    })
-                  }
-                />
+                <div style={{ position: 'relative' }} ref={popoverRef}>
+                  <IconButton
+                    icon={icon.callBack}
+                    title="Mais opções"
+                    permToCheck="tickets:update"
+                    onClick={() => setConfirmPopoverOpen((prev) => !prev)}
+                  />
+                  {isConfirmPopoverOpen && popoverContent}
+                </div>
               </>
             )}
           </Style.ButtonsContainer>

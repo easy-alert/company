@@ -113,9 +113,9 @@ export const TicketDetailsDismissedContent = styled.div`
 
 export const ButtonsContainer = styled.div`
   display: flex;
-  justify-content: space-evenly;
-
-  margin-top: ${({ theme }) => theme.size.sm};
+  gap: ${({ theme }) => theme.size.sm};
+  align-items: center;
+  justify-content: center;
 `;
 
 // styles for DismissTicket.tsx
@@ -237,4 +237,58 @@ export const SignatureImage = styled.img`
   max-height: 80px;
   height: auto;
   object-fit: contain;
+`;
+
+export const TicketHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+`;
+
+export const TicketDate = styled.span`
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+`;
+
+export const PopoverContainer = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 8px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  width: 300px;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+export const PopoverHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const PopoverMessage = styled.p`
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+
+  p {
+    color: ${({ theme }) => theme.color.danger};
+  }
+`;
+
+export const PopoverActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
 `;

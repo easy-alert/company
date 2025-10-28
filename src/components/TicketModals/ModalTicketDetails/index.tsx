@@ -84,7 +84,8 @@ export const ModalTicketDetails = ({
       const responseTicket = await putTicketById(ticketToSend);
 
       if (!responseTicket) throw new Error('Erro ao atualizar o ticket');
-      setTicket(responseTicket);
+
+      setTicket((currentTicket) => ({ ...currentTicket!, ...responseTicket }));
 
       if (refresh && handleRefresh) {
         handleRefresh();
@@ -94,7 +95,7 @@ export const ModalTicketDetails = ({
         handleTicketDetailsModal(false);
       }
 
-      return responseTicket;
+      return { ...ticket, ...responseTicket };
     } catch (error: any) {
       handleToastify(error);
       throw error;
