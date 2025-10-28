@@ -96,6 +96,8 @@ import maintenanceWhite from './maintenanceWhite.svg';
 import box from './box.svg';
 import report2 from './report2.svg';
 import receipt from './receipt.svg';
+import callBack from './callBack.svg';
+import save from './save.svg';
 import receiptWhite from './receiptWhite.svg';
 
 export const icon = {
@@ -103,7 +105,9 @@ export const icon = {
   smallPaper,
   box,
   update,
+  save,
   upload,
+  callBack,
   activityComment,
   send,
   addWithCircle,
