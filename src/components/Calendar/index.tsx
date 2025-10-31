@@ -60,7 +60,7 @@ export const Calendar = forwardRef<FullCalendar, ICalendarProps>(
         initialDate={initialDate}
         locale={ptBrLocale}
         headerToolbar={{
-          left: 'prev,next today',
+          left: 'prev,next,today',
           center: 'title',
           right: 'dayGridMonth,dayGridWeek,dayGridYear',
         }}

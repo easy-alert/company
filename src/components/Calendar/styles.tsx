@@ -1,25 +1,20 @@
 import styled from 'styled-components';
 
 export const CustomEvent = styled.div<{ status?: string }>`
+  font-size: 13px;
+  font-weight: 500;
+  color: black;
   background-color: ${({ theme }) => theme.color.gray0};
+  min-height: 24px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   border-radius: ${({ theme }) => theme.size.xsm};
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  color: ${({ theme }) => theme.color.gray6};
+  padding-left: 0.8em;
   cursor: pointer;
-  padding: 0 4px;
   white-space: normal;
   box-sizing: border-box;
-  &.status-awaitingtofinish {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.warning};
-  }
-  &.status-finished {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.success};
-  }
-  &.status-dismissed {
-    border-left: ${({ theme }) => theme.size.xsm} solid ${({ theme }) => theme.color.danger};
-  }
 `;
 
 export const EventInfoRow = styled.div`
@@ -40,7 +35,7 @@ export const EventInfoRow = styled.div`
 
 export const EventTicketNumber = styled.span`
   color: ${({ theme }) => theme.color.gray4};
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 600;
   @media (max-width: 500px) {
     font-size: 10px;
