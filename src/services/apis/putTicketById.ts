@@ -2,7 +2,7 @@ import { Api } from '@services/api';
 import { handleToastify } from '@utils/toastifyResponses';
 import type { ITicket } from '@customTypes/ITicket';
 
-export async function putTicketById(updatedTicket: ITicket) {
+export async function putTicketById(updatedTicket: Partial<ITicket>) {
   const uri = `/tickets/${updatedTicket.id}`;
 
   const {
@@ -15,6 +15,8 @@ export async function putTicketById(updatedTicket: ITicket) {
     description,
     userId,
     statusName,
+    placeId,
+    types,
     seen,
   } = updatedTicket;
 
@@ -29,6 +31,8 @@ export async function putTicketById(updatedTicket: ITicket) {
       description,
       userId,
       statusName,
+      placeId,
+      types,
       seen,
     },
   };

@@ -43,7 +43,8 @@ export const ModalTicketDetails = ({
 }: IModalTicketDetails) => {
   const [ticket, setTicket] = useState<ITicket>();
   const [dismissReasons, setDismissReasons] = useState<ITicketDismissReason[]>([]);
-  const [fieldsConfig, setFieldsConfig] = useState<Record<string, { hidden: boolean; required: boolean }>>();
+  const [fieldsConfig, setFieldsConfig] =
+    useState<Record<string, { hidden: boolean; required: boolean }>>();
 
   const [view, setView] = useState<IViewState>('details');
 
@@ -69,17 +70,22 @@ export const ModalTicketDetails = ({
   };
 
   const handleUpdateOneTicket = async (
-    updatedTicket: ITicket,
+    updatedTicket: Partial<ITicket>,
     refresh = true,
     closeModal = true,
   ): Promise<ITicket> => {
     setLoading(true);
 
     try {
-      const responseTicket = await putTicketById(updatedTicket);
+      if (!ticket) throw new Error('Ticket não carregado para atualização.');
+
+      const ticketToSend = { ...ticket, ...updatedTicket };
+
+      const responseTicket = await putTicketById(ticketToSend);
 
       if (!responseTicket) throw new Error('Erro ao atualizar o ticket');
-      setTicket(responseTicket);
+
+      setTicket((currentTicket) => ({ ...currentTicket!, ...responseTicket }));
 
       if (refresh && handleRefresh) {
         handleRefresh();
@@ -89,7 +95,7 @@ export const ModalTicketDetails = ({
         handleTicketDetailsModal(false);
       }
 
-      return responseTicket;
+      return { ...ticket, ...responseTicket };
     } catch (error: any) {
       handleToastify(error);
       throw error;
