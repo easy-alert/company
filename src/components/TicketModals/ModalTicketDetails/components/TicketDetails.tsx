@@ -29,13 +29,13 @@ import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/do
 import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
-import * as Style from '../styles';
 import { useTicketPlacesForSelect } from '@hooks/useTicketPlacesForSelect';
 import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
 import { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
-import { TicketChecklistItems } from './TicketChecklistItems';
 import { theme } from '@styles/theme';
+import { TicketChecklistItems } from './TicketChecklistItems';
+import * as Style from '../styles';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
