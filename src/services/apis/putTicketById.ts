@@ -17,6 +17,7 @@ export async function putTicketById(updatedTicket: Partial<ITicket>) {
     statusName,
     placeId,
     types,
+    seen,
   } = updatedTicket;
 
   const body = {
@@ -32,6 +33,7 @@ export async function putTicketById(updatedTicket: Partial<ITicket>) {
       statusName,
       placeId,
       types,
+      seen,
     },
   };
 

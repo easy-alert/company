@@ -1,27 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 
-// GLOBAL COMPONENTS
+// COMPONENTS
 import { ListTag } from '@components/ListTag';
+import SignaturePad from '@components/SignaturePad';
 import { TicketHistoryActivities } from '@components/TicketHistoryActivities';
 import { ImagePreview } from '@components/ImagePreview';
 import { Button } from '@components/Buttons/Button';
-import { IconButton } from '@components/Buttons/IconButton';
-import { PopoverButton } from '@components/Buttons/PopoverButton';
 import { TicketShareButton } from '@components/TicketShareButton';
 import { TicketShowResidentButton } from '@components/TicketShowResidentButton';
-import SignaturePad from '@components/SignaturePad';
+import { IconButton } from '@components/Buttons/IconButton';
 import Typography from '@components/Typography';
-import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
-
-// HOOKS
-import { useTicketPlacesForSelect } from '@hooks/useTicketPlacesForSelect';
-import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
+import { PopoverButton } from '@components/Buttons/PopoverButton';
 
 // GLOBAL UTILS
+import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
+import { postTicketChecklistItem } from '@services/apis/postTicketChecklistItem';
 import { formatDateString } from '@utils/dateFunctions';
 import { applyMask } from '@utils/functions';
-// GLOBAL STYLES
-import { theme } from '@styles/theme';
 
 // GLOBAL ASSETS
 import { icon } from '@assets/icons';
@@ -29,17 +24,18 @@ import IconX from '@assets/icons/IconX';
 import IconEdit from '@assets/icons/IconEdit';
 
 // GLOBAL TYPES
-import type { ITicket } from '@customTypes/ITicket';
-
-// COMPONENTS
-import { defaultConfig } from '@components/TicketModals/ModalEditTicketForm/domain/defaultConfig.constant';
-
-// TYPES
 import { TicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.type';
 import { ETicketFieldKey } from '@components/TicketModals/ModalEditTicketForm/domain/ticketFieldKey.enum';
+import type { ITicket } from '@customTypes/ITicket';
 
 // STYLES
 import * as Style from '../styles';
+import { useTicketPlacesForSelect } from '@hooks/useTicketPlacesForSelect';
+import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForSelect';
+import { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
+import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
+import { TicketChecklistItems } from './TicketChecklistItems';
+import { theme } from '@styles/theme';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
@@ -87,6 +83,7 @@ function TicketDetails({
 }: ITicketDetails) {
   const [openSignaturePad, setOpenSignaturePad] = useState<boolean>(false);
   const [localTicket, setLocalTicket] = useState(ticket);
+  const [newChecklistTitle, setNewChecklistTitle] = useState('');
   const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [isConfirmPopoverOpen, setConfirmPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -229,6 +226,19 @@ function TicketDetails({
     if (event.target.files && event.target.files[0] && handleUploadImage) {
       await handleUploadImage(event.target.files[0]);
     }
+  };
+
+  const handleCreateChecklistItem = async () => {
+    if (!newChecklistTitle.trim()) return;
+    const item = await postTicketChecklistItem({
+      ticketId: localTicket.id,
+      title: newChecklistTitle.trim(),
+      userId,
+    });
+    const next: ITicketChecklistItem[] = [...(localTicket.checklistItems || []), item]
+      .sort((a, b) => a.position - b.position);
+    setLocalTicket({ ...localTicket, checklistItems: next });
+    setNewChecklistTitle('');
   };
 
   useEffect(() => {
@@ -644,7 +654,27 @@ function TicketDetails({
         userId={userId}
         disableComment={disableComment}
       />
-
+      <div style={{ marginTop: 16 }}>
+        <h3>Checklist</h3>
+        <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+          <input
+            placeholder="Adicionar item"
+            value={newChecklistTitle}
+            onChange={(e) => setNewChecklistTitle(e.target.value)}
+            style={{ flex: 1, minHeight: 32, borderRadius: 6, border: '1px solid #ccc', padding: 8 }}
+          />
+          <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
+        </div>
+        {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
+          <TicketChecklistItems
+            checklistItems={localTicket.checklistItems}
+            userId={userId}
+            onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
+          />
+        ) : (
+          <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
+        )}
+      </div>
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
