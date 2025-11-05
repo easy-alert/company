@@ -478,7 +478,7 @@ export const ModalMaintenanceDetails = ({
                 onClick={() => handleModals('modalMaintenanceDetails', false)}
               />
 
-              {(maintenanceDetails?.MaintenanceReport?.length ?? 0) > 0 && (
+              {(maintenanceDetails?.resolutionDate &&
                 <Button
                   bgColor="primary"
                   label="Editar relato"
