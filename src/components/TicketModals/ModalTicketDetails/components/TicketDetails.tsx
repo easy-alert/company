@@ -704,7 +704,7 @@ function TicketDetails({
                 padding: 8,
               }}
             />
-            <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
+            <Button label="Adicionar" bgColor='primary' size="sm" onClick={handleCreateChecklistItem} />
           </div>
           {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
             <TicketChecklistItems
