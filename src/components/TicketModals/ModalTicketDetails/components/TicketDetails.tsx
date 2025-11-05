@@ -36,6 +36,7 @@ import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableC
 import { theme } from '@styles/theme';
 import { TicketChecklistItems } from './TicketChecklistItems';
 import * as Style from '../styles';
+import IconPlus from '@assets/icons/IconPlus';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
@@ -87,6 +88,9 @@ function TicketDetails({
   const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [isConfirmPopoverOpen, setConfirmPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const [isChecklistOpen, setIsChecklistOpen] = useState<boolean>(
+    Boolean(localTicket.checklistItems?.length),
+  );
 
   const [editedData, setEditedData] = useState<EditedData>({
     residentName: ticket.residentName || '',
@@ -240,6 +244,7 @@ function TicketDetails({
     );
     setLocalTicket({ ...localTicket, checklistItems: next });
     setNewChecklistTitle('');
+    setIsChecklistOpen(true);
   };
 
   useEffect(() => {
@@ -533,7 +538,14 @@ function TicketDetails({
           <Style.DetailItemWrapper
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between'}}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: 'space-between',
+              }}
+            >
               <Style.TicketDetailsRowLabel>Descrição:</Style.TicketDetailsRowLabel>
               {showButtons &&
                 (editingField === 'description' ? (
@@ -659,26 +671,20 @@ function TicketDetails({
         )}
       </Style.DetailItemWrapper>
 
-      {/* <Style.ButtonContainer>
-    <IconButton
+      <Style.ButtonContainer>
+        {/* <IconButton
      label="Adicionar prestador de serviço"
      icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
      onClick={() => console.log('Adicionar prestador')}
-    />
-    <IconButton
-     label="Adicionar checklist de tarefas"
-     icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
-     onClick={() => console.log('Adicionar checklist')}
-    />
-   </Style.ButtonContainer>  */}
-
-      <TicketHistoryActivities
-        ticketId={localTicket.id}
-        userId={userId}
-        disableComment={disableComment}
-      />
-      <div style={{ marginTop: 16 }}>
-        <h3>Checklist</h3>
+    /> */}
+        <IconButton
+          label={isChecklistOpen ? 'Ocultar checklist de tarefas' : 'Adicionar checklist de tarefas'}
+          icon={isChecklistOpen ? <IconX strokeColor="white" backgroundColor="primary" padding="2px" /> : <IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
+          onClick={() => setIsChecklistOpen((prev) => !prev)}
+        />
+      </Style.ButtonContainer>
+      {isChecklistOpen && (
+      <div>
         <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
           <input
             placeholder="Adicionar item"
@@ -704,6 +710,13 @@ function TicketDetails({
           <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
         )}
       </div>
+      )}
+
+      <TicketHistoryActivities
+        ticketId={localTicket.id}
+        userId={userId}
+        disableComment={disableComment}
+      />
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
