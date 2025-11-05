@@ -34,7 +34,8 @@ import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForS
 import { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
 import { theme } from '@styles/theme';
-import { TicketChecklistItems } from './TicketChecklistItems';
+import { TicketChecklistItems } from '@components/TicketModals/ModalTicketDetails/components/TicketChecklistItems';
+import IconPlus from '@assets/icons/IconPlus';
 import * as Style from '../styles';
 
 interface ITicketDetails {
@@ -87,6 +88,9 @@ function TicketDetails({
   const [editingField, setEditingField] = useState<EditableField | null>(null);
   const [isConfirmPopoverOpen, setConfirmPopoverOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
+  const [isChecklistOpen, setIsChecklistOpen] = useState<boolean>(
+    Boolean(localTicket.checklistItems?.length),
+  );
 
   const [editedData, setEditedData] = useState<EditedData>({
     residentName: ticket.residentName || '',
@@ -235,10 +239,12 @@ function TicketDetails({
       title: newChecklistTitle.trim(),
       userId,
     });
-    const next: ITicketChecklistItem[] = [...(localTicket.checklistItems || []), item]
-      .sort((a, b) => a.position - b.position);
+    const next: ITicketChecklistItem[] = [...(localTicket.checklistItems || []), item].sort(
+      (a, b) => a.position - b.position,
+    );
     setLocalTicket({ ...localTicket, checklistItems: next });
     setNewChecklistTitle('');
+    setIsChecklistOpen(true);
   };
 
   useEffect(() => {
@@ -377,7 +383,17 @@ function TicketDetails({
         handleToggleShowToResident={handleToggleShowToResident}
       />
       <Style.TicketHeader>
-        <Style.BuildingName>{localTicket.building?.name}</Style.BuildingName>
+        <Style.BuildingName>
+          {localTicket.building?.name}
+          <Style.StatusPill
+            style={{
+              backgroundColor: localTicket.status?.backgroundColor,
+              color: localTicket.status?.color,
+            }}
+          >
+            {localTicket.status?.label}
+          </Style.StatusPill>
+        </Style.BuildingName>
 
         <Style.TicketDate>
           Data de Abertura:{' '}
@@ -519,162 +535,194 @@ function TicketDetails({
         </Style.DetailItemWrapper>
 
         {!isHidden(ETicketFieldKey.description) && (
-          <Style.DetailItemWrapper>
-            <Style.DetailItemContentVertical>
-              <Style.TicketDetailsRowLabel>Descrição</Style.TicketDetailsRowLabel>
-              {editingField === 'description' ? (
-                <textarea
-                  style={{
-                    width: '100%',
-                    minHeight: 60,
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    padding: '6px 8px',
-                    fontSize: 14,
-                    resize: 'vertical',
-                    backgroundColor: 'white',
-                  }}
-                  value={editedData.description}
-                  onChange={(e) => handleFieldChange('description', e.target.value)}
-                />
-              ) : (
-                <>
-                  <Style.TicketDetailsRowValue>
-                    {withPlaceholder(localTicket.description)}
-                  </Style.TicketDetailsRowValue>
-                  {editedFields.includes('description') && localTicket.lastEditedAt && (
-                    <span style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
-                      editado{' '}
-                      {formatDateString(
-                        typeof localTicket.lastEditedAt === 'string'
-                          ? localTicket.lastEditedAt
-                          : localTicket.lastEditedAt?.toISOString(),
-                        'dd/MM/yyyy',
-                      )}
-                    </span>
+          <Style.DetailItemWrapper
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Style.TicketDetailsRowLabel>Descrição:</Style.TicketDetailsRowLabel>
+              {showButtons &&
+                (editingField === 'description' ? (
+                  <div style={{ display: 'flex' }}>
+                    <IconButton icon={icon.save} onClick={handleSaveField} />
+                    <IconButton icon={<IconX />} onClick={handleCancelEdit} />
+                  </div>
+                ) : (
+                  <IconButton
+                    icon={<IconEdit strokeColor="primary" />}
+                    onClick={() => setEditingField('description')}
+                    disabled={!!editingField}
+                  />
+                ))}
+            </div>
+            {editingField === 'description' ? (
+              <textarea
+                style={{
+                  width: '100%',
+                  minHeight: 60,
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  padding: '6px 8px',
+                  fontSize: 14,
+                  resize: 'vertical',
+                  backgroundColor: 'white',
+                }}
+                value={editedData.description}
+                onChange={(e) => handleFieldChange('description', e.target.value)}
+              />
+            ) : (
+                <Style.TicketDetailsRowValue>
+                  {withPlaceholder(localTicket.description)}
+                </Style.TicketDetailsRowValue>
+            )}
+            {editedFields.includes('description') && localTicket.lastEditedAt && (
+              <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
+                <span style={{ fontSize: '11px', color: '#888', display: 'block', marginTop: 4 }}>
+                  editado{' '}
+                  {formatDateString(
+                    typeof localTicket.lastEditedAt === 'string'
+                      ? localTicket.lastEditedAt
+                      : localTicket.lastEditedAt?.toISOString(),
+                    'dd/MM/yyyy',
                   )}
-                </>
-              )}
-            </Style.DetailItemContentVertical>
-            {showButtons &&
-              (editingField === 'description' ? (
-                <div style={{ display: 'flex' }}>
-                  <IconButton icon={icon.save} onClick={handleSaveField} />
-                  <IconButton icon={<IconX />} onClick={handleCancelEdit} />
-                </div>
-              ) : (
-                <IconButton
-                  icon={<IconEdit strokeColor="primary" />}
-                  onClick={() => setEditingField('description')}
-                  disabled={!!editingField}
-                />
-              ))}
+                </span>
+              </div>
+            )}
           </Style.DetailItemWrapper>
         )}
       </Style.DetailsListContainer>
 
-      <Style.DetailItemWrapper>
-        <Style.DetailItemVertical>
-          <Style.TicketDetailsRowLabel>
-            Imagens
-            {editedFields.includes('images') && localTicket.lastEditedAt && (
-              <span style={{ fontWeight: 'normal', color: '#888', marginLeft: 8, fontSize: 12 }}>
-                (editado{' '}
-                {formatDateString(
-                  typeof localTicket.lastEditedAt === 'string'
-                    ? localTicket.lastEditedAt
-                    : localTicket.lastEditedAt?.toISOString(),
-                  'dd/MM/yyyy',
-                )}
-                )
-              </span>
-            )}
-          </Style.TicketDetailsRowLabel>
-          <Style.TicketDetailsImagesContent>
-            {localTicket?.images?.map((image) => (
-              <Style.TicketImageWrapper key={image.id}>
-                <ImagePreview
-                  src={image.url}
-                  downloadUrl={image.url}
-                  imageCustomName={image.name}
-                  width="128px"
-                  height="128px"
-                  onTrashClick={
-                    editingField === 'images' ? () => handleRemoveImage?.(image.id) : undefined
-                  }
+      <Style.DetailItemWrapper
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Style.TicketDetailsRowLabel>Imagens:</Style.TicketDetailsRowLabel>
+          {showButtons &&
+            (editingField === 'images' ? (
+              <div style={{ display: 'flex' }}>
+                <IconButton
+                  icon={icon.save}
+                  onClick={() => setEditingField(null)}
+                  title="Concluir edição de imagens"
                 />
-              </Style.TicketImageWrapper>
-            ))}
-            {editingField === 'images' && (
-              <Style.TicketImageUploadLabel htmlFor="ticket-image-upload">
-                <Style.TicketImageUploadInput
-                  id="ticket-image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                />
-                <Style.TicketImageUploadSpan>+</Style.TicketImageUploadSpan>
-              </Style.TicketImageUploadLabel>
-            )}
-          </Style.TicketDetailsImagesContent>
-        </Style.DetailItemVertical>
-        {showButtons &&
-          (editingField === 'images' ? (
-            <div style={{ display: 'flex' }}>
+              </div>
+            ) : (
               <IconButton
-                icon={icon.save}
-                onClick={() => setEditingField(null)}
-                title="Concluir edição de imagens"
+                icon={<IconEdit strokeColor="primary" />}
+                onClick={() => setEditingField('images')}
+                disabled={!!editingField}
               />
-            </div>
-          ) : (
-            <IconButton
-              icon={<IconEdit strokeColor="primary" />}
-              onClick={() => setEditingField('images')}
-              disabled={!!editingField}
-            />
+            ))}
+        </div>
+        <Style.TicketDetailsImagesContent>
+          {localTicket?.images?.map((image) => (
+            <Style.TicketImageWrapper key={image.id}>
+              <ImagePreview
+                src={image.url}
+                downloadUrl={image.url}
+                imageCustomName={image.name}
+                width="128px"
+                height="128px"
+                onTrashClick={
+                  editingField === 'images' ? () => handleRemoveImage?.(image.id) : undefined
+                }
+              />
+            </Style.TicketImageWrapper>
           ))}
+          {editingField === 'images' && (
+            <Style.TicketImageUploadLabel htmlFor="ticket-image-upload">
+              <Style.TicketImageUploadInput
+                id="ticket-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              <Style.TicketImageUploadSpan>+</Style.TicketImageUploadSpan>
+            </Style.TicketImageUploadLabel>
+          )}
+        </Style.TicketDetailsImagesContent>
+        {editedFields.includes('images') && localTicket.lastEditedAt && (
+          <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
+            <span style={{ fontSize: '11px', color: '#888', display: 'block', marginTop: 4 }}>
+              editado{' '}
+              {formatDateString(
+                typeof localTicket.lastEditedAt === 'string'
+                  ? localTicket.lastEditedAt
+                  : localTicket.lastEditedAt?.toISOString(),
+                'dd/MM/yyyy',
+              )}
+            </span>
+          </div>
+        )}
       </Style.DetailItemWrapper>
 
-      {/* <Style.ButtonContainer>
-    <IconButton
+      <Style.ButtonContainer>
+        {/* <IconButton
      label="Adicionar prestador de serviço"
      icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
      onClick={() => console.log('Adicionar prestador')}
-    />
-    <IconButton
-     label="Adicionar checklist de tarefas"
-     icon={<IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
-     onClick={() => console.log('Adicionar checklist')}
-    />
-   </Style.ButtonContainer>  */}
+    /> */}
+        <IconButton
+          label={
+            isChecklistOpen ? 'Ocultar checklist de tarefas' : 'Adicionar checklist de tarefas'
+          }
+          icon={
+            isChecklistOpen ? (
+              <IconX strokeColor="white" backgroundColor="primary" padding="2px" />
+            ) : (
+              <IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />
+            )
+          }
+          onClick={() => setIsChecklistOpen((prev) => !prev)}
+        />
+      </Style.ButtonContainer>
+      {isChecklistOpen && (
+        <div>
+          <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+            <input
+              placeholder="Adicionar item"
+              value={newChecklistTitle}
+              onChange={(e) => setNewChecklistTitle(e.target.value)}
+              style={{
+                flex: 1,
+                minHeight: 32,
+                borderRadius: 6,
+                border: '1px solid #ccc',
+                padding: 8,
+              }}
+            />
+            <Button label="Adicionar" bgColor='primary' size="sm" onClick={handleCreateChecklistItem} />
+          </div>
+          {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
+            <TicketChecklistItems
+              checklistItems={localTicket.checklistItems}
+              userId={userId}
+              onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
+            />
+          ) : (
+            <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
+          )}
+        </div>
+      )}
 
       <TicketHistoryActivities
         ticketId={localTicket.id}
         userId={userId}
         disableComment={disableComment}
       />
-      <div style={{ marginTop: 16 }}>
-        <h3>Checklist</h3>
-        <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
-          <input
-            placeholder="Adicionar item"
-            value={newChecklistTitle}
-            onChange={(e) => setNewChecklistTitle(e.target.value)}
-            style={{ flex: 1, minHeight: 32, borderRadius: 6, border: '1px solid #ccc', padding: 8 }}
-          />
-          <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
-        </div>
-        {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
-          <TicketChecklistItems
-            checklistItems={localTicket.checklistItems}
-            userId={userId}
-            onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
-          />
-        ) : (
-          <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
-        )}
-      </div>
       {localTicket.statusName !== 'open' && (
         <Style.TicketSignatureContainer>
           <Style.TicketSignatureHeader>
@@ -820,3 +868,4 @@ function TicketDetails({
 }
 
 export default TicketDetails;
+
