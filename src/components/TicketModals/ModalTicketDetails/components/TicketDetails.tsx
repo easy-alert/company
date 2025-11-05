@@ -678,38 +678,46 @@ function TicketDetails({
      onClick={() => console.log('Adicionar prestador')}
     /> */}
         <IconButton
-          label={isChecklistOpen ? 'Ocultar checklist de tarefas' : 'Adicionar checklist de tarefas'}
-          icon={isChecklistOpen ? <IconX strokeColor="white" backgroundColor="primary" padding="2px" /> : <IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />}
+          label={
+            isChecklistOpen ? 'Ocultar checklist de tarefas' : 'Adicionar checklist de tarefas'
+          }
+          icon={
+            isChecklistOpen ? (
+              <IconX strokeColor="white" backgroundColor="primary" padding="2px" />
+            ) : (
+              <IconPlus strokeColor="white" backgroundColor="primary" padding="2px" />
+            )
+          }
           onClick={() => setIsChecklistOpen((prev) => !prev)}
         />
       </Style.ButtonContainer>
       {isChecklistOpen && (
-      <div>
-        <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
-          <input
-            placeholder="Adicionar item"
-            value={newChecklistTitle}
-            onChange={(e) => setNewChecklistTitle(e.target.value)}
-            style={{
-              flex: 1,
-              minHeight: 32,
-              borderRadius: 6,
-              border: '1px solid #ccc',
-              padding: 8,
-            }}
-          />
-          <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
+        <div>
+          <div style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+            <input
+              placeholder="Adicionar item"
+              value={newChecklistTitle}
+              onChange={(e) => setNewChecklistTitle(e.target.value)}
+              style={{
+                flex: 1,
+                minHeight: 32,
+                borderRadius: 6,
+                border: '1px solid #ccc',
+                padding: 8,
+              }}
+            />
+            <Button label="Adicionar" size="sm" onClick={handleCreateChecklistItem} />
+          </div>
+          {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
+            <TicketChecklistItems
+              checklistItems={localTicket.checklistItems}
+              userId={userId}
+              onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
+            />
+          ) : (
+            <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
+          )}
         </div>
-        {localTicket.checklistItems && localTicket.checklistItems?.length > 0 ? (
-          <TicketChecklistItems
-            checklistItems={localTicket.checklistItems}
-            userId={userId}
-            onChange={(items) => setLocalTicket({ ...localTicket, checklistItems: items })}
-          />
-        ) : (
-          <div style={{ color: '#888', fontSize: 14 }}>Nenhum item adicionado.</div>
-        )}
-      </div>
       )}
 
       <TicketHistoryActivities
