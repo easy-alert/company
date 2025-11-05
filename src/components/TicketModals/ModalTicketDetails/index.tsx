@@ -205,7 +205,7 @@ export const ModalTicketDetails = ({
     <Modal
       title={
         view === 'details'
-          ? `Detalhes do chamado #${ticket?.ticketNumber}`
+          ? `Chamado #${ticket?.ticketNumber}`
           : `Indeferir chamado #${ticket?.ticketNumber}`
       }
       bodyWidth="475px"

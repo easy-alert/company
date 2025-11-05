@@ -84,7 +84,7 @@ export const TicketSignatureHeader = styled.div`
 `;
 
 export const TicketDetailsRowLabel = styled.span`
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
   line-height: 16px;
 `;
@@ -210,8 +210,10 @@ export const ButtonContainer = styled.div`
 `;
 
 export const BuildingName = styled.h3`
-  font-size: 1.125rem;
-  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  font-size: 1.5rem;
   margin: 0 0 0.75rem 0;
 `;
 
@@ -250,6 +252,7 @@ export const TicketDate = styled.span`
   font-size: 12px;
   color: #555;
   font-weight: 500;
+  font-style: italic;
 `;
 
 export const PopoverContainer = styled.div`
@@ -291,4 +294,13 @@ export const PopoverActions = styled.div`
   justify-content: flex-end;
   gap: 12px;
   margin-top: 8px;
+`;
+
+
+export const StatusPill = styled.span`
+  border-radius: ${({ theme }) => theme.size.xsm};
+  font-weight: 500;
+  font-size: 11px;
+  padding: 0 .5em;
+  margin-top: .5em;
 `;
