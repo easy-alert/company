@@ -34,9 +34,9 @@ import { useTicketServiceTypesForSelect } from '@hooks/useTicketServiceTypesForS
 import { ITicketChecklistItem } from '@customTypes/ITicketChecklistItem';
 import { ReactSelectCreatableComponent } from '@components/ReactSelectCreatableComponent';
 import { theme } from '@styles/theme';
-import { TicketChecklistItems } from './TicketChecklistItems';
-import * as Style from '../styles';
+import { TicketChecklistItems } from '@components/TicketModals/ModalTicketDetails/components/TicketChecklistItems';
 import IconPlus from '@assets/icons/IconPlus';
+import * as Style from '../styles';
 
 interface ITicketDetails {
   ticket: ITicket & { editedFields?: string[] };
@@ -577,11 +577,9 @@ function TicketDetails({
                 onChange={(e) => handleFieldChange('description', e.target.value)}
               />
             ) : (
-              <>
                 <Style.TicketDetailsRowValue>
                   {withPlaceholder(localTicket.description)}
                 </Style.TicketDetailsRowValue>
-              </>
             )}
             {editedFields.includes('description') && localTicket.lastEditedAt && (
               <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, gap: '2px' }}>
