@@ -177,7 +177,7 @@ export const ModalStockDetails = ({ stockId, userId, onClose, onRefresh }: IModa
           {view === 'details' && (
             <>
               <Style.ImageContainer>
-                <Image img={stock?.stockItem?.imageUrl || ''} alt="" size="100px" />
+                <Image img={stock?.stockItem?.imageUrl} alt="" size="100px" />
               </Style.ImageContainer>
 
               <Style.ColumnContainer>

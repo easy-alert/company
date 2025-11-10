@@ -16,8 +16,8 @@ export const Image = ({
   style,
 }: ImageProps) => (
   <Style.ImgHolder radius={radius} size={size} width={width} height={height} style={style}>
-    {typeof img === 'string' ? (
-      <img src={img} alt={alt ?? ''} />
+    {typeof img === 'string' || !img ? (
+      <img src={img || 'https://placehold.co/100?text=Sem+imagem'} alt={alt ?? ''} />
     ) : (
       React.cloneElement(img as React.ReactElement)
     )}
