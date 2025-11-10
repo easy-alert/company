@@ -609,7 +609,7 @@ function TicketDetails({
             justifyContent: 'space-between',
           }}
         >
-          <Style.TicketDetailsRowLabel>Imagens:</Style.TicketDetailsRowLabel>
+          <Style.TicketDetailsRowLabel>Arquivos:</Style.TicketDetailsRowLabel>
           {showButtons &&
             (editingField === 'images' ? (
               <div style={{ display: 'flex' }}>
