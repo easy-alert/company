@@ -27,7 +27,6 @@ import * as Style from './styles';
 
 export const StockItems = () => {
   const [stockItems, setStockItems] = useState<IStockItem[]>([]);
-  const [stockItemsCount, setStockItemsCount] = useState(0);
 
   const [selectedStockItemId, setSelectedStockItemId] = useState<string | null>(null);
 
@@ -52,7 +51,6 @@ export const StockItems = () => {
 
       if (responseData) {
         setStockItems(responseData?.stockItems || []);
-        setStockItemsCount(responseData?.count || 0);
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +74,6 @@ export const StockItems = () => {
 
       if (responseData) {
         setStockItems([...stockItems, responseData.stockItem]);
-        setStockItemsCount(stockItemsCount + 1);
         handleModalCreateStockItem(false);
       }
     } catch (error) {
@@ -143,7 +140,6 @@ export const StockItems = () => {
 
           if (responseData?.stockItem?.id) {
             setStockItems(stockItems.filter((item) => item.id !== responseData.stockItem.id));
-            setStockItemsCount(stockItemsCount - 1);
           }
         } catch (error) {
           console.log(error);
@@ -178,7 +174,7 @@ export const StockItems = () => {
         </Style.ActionsContainer>
       );
     },
-    [stockItems, stockItemsCount],
+    [stockItems],
   );
 
   const colsHeader: IColsHeader[] = [
@@ -256,8 +252,8 @@ export const StockItems = () => {
           <Table
             colsHeader={colsHeader}
             pagination
-            totalCountOfRegister={stockItemsCount}
-            registerPerPage={5}
+            totalCountOfRegister={stockItems.length}
+            registerPerPage={10}
           >
             {stockItems?.map((item) => (
               <TableContent
