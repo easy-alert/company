@@ -42,7 +42,7 @@ import type {
 // STYLES
 import * as Style from './styles';
 
-const renderEventContent = (arg: EventContentArg) => {
+export const renderEventContent = (arg: EventContentArg, background?: string) => {
   const { event, view } = arg;
   const {
     building,
@@ -56,6 +56,7 @@ const renderEventContent = (arg: EventContentArg) => {
   return (
     <CalendarStyle.CustomEvent
       className={`status-${(status || event.title || '').toLowerCase().replace(/\s/g, '-')}`}
+      style={{ background }}
     >
       {!isWeekView ? (
         <span

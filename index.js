@@ -37,7 +37,9 @@ app.use(
         // max-age=0: don't cache locally without revalidation.
         // must-revalidate: forces revalidation for shared caches (CDNs).
         // public: allows shared caches.
-        res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
       }
 
       // 2. For Vite's cache-busted assets (e.g., main.abc1234.js, style.def5678.css)

@@ -745,8 +745,6 @@ export const Dashboard = () => {
   const handleResetFilterButton = async () => {
     setDataFilter({
       ...dataFilterInitialValues,
-      startDate: '',
-      endDate: '',
     });
 
     try {
@@ -1236,8 +1234,8 @@ export const Dashboard = () => {
                     disable={onQuery}
                     borderless
                     onClick={() => {
-                      setFieldValue('startDate', '');
-                      setFieldValue('endDate', '');
+                      setFieldValue('startDate', new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0]);
+                      setFieldValue('endDate', new Date().toISOString().split('T')[0]);
 
                       handleResetFilterButton();
                     }}

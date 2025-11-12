@@ -45,4 +45,8 @@ export interface ICalendarEvent {
   place?: string;
   ticketNumber?: string;
   assistanceTypes?: IAssistanceType[];
+  extendedProps?: {
+    type: 'ticket' | 'maintenance';
+    [key: string]: any;
+  };
 }
