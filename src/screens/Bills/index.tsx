@@ -109,7 +109,7 @@ export const Bills = () => {
 
     try {
       const responseData = await getNiboBills({
-        filter: `originSchedule/stakeholder/cpfCnpj eq '${CPF || CNPJ}'`,
+        filter: `debtor/document eq '${CPF || CNPJ}'`,
       });
 
       billsData = [...billsData, ...(responseData?.items || [])];
@@ -118,7 +118,7 @@ export const Bills = () => {
       await Promise.all(
         linkedExternalForPayment.map(async (externalId) => {
           const data = await getNiboBills({
-            filter: `originSchedule/stakeholder/cpfCnpj eq '${externalId}'`,
+            filter: `debtor/document eq '${externalId}'`,
           });
 
           if (!data) {
@@ -289,3 +289,4 @@ export const Bills = () => {
     </Style.Container>
   );
 };
+

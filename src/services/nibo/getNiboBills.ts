@@ -17,7 +17,7 @@ interface IGetNiboBillsResponse extends IResponse {
 }
 
 export const getNiboBills = async ({ filter, orderBy, top, skip }: IGetNiboBills) => {
-  const uri = '/schedules/credit/promise';
+  const uri = '/public/collections';
 
   const params = {
     $filter: filter,
@@ -36,3 +36,4 @@ export const getNiboBills = async ({ filter, orderBy, top, skip }: IGetNiboBills
     return null;
   }
 };
+
