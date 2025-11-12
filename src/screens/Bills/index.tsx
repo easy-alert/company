@@ -267,7 +267,7 @@ export const Bills = () => {
           colsHeader={colsHeader}
           pagination
           totalCountOfRegister={billsCount}
-          registerPerPage={5}
+          registerPerPage={20}
         >
           {bills?.map((item) => (
             <TableContent
