@@ -57,20 +57,28 @@ interface CustomAttributes {
 
 export interface IBill {
   id: string;
-  originScheduleId: string;
+  stakeholderId: string;
+  scheduleId: string;
+  debtor: {
+    document: string;
+    name: string;
+  };
   dueDate: string; // ISO 8601 date string
   paidAt?: string; // ISO 8601 date string
   value: number;
   paidValue?: number;
+  lasStatusChangeDate?: string; // ISO 8601 date string
   createAt: string; // ISO 8601 date string
-  status: number;
-  statusDescription: string;
-  externalId: string;
+  status: {
+    code: number;
+    description: string;
+  };
   url: string;
   emails: string;
   opens: number;
   barcode: string;
   automaticallyGenerated: boolean;
-  customAttributes: CustomAttributes;
-  originSchedule: OriginSchedule;
+  // customAttributes: CustomAttributes;
+  // originSchedule: OriginSchedule;
 }
+
