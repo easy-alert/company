@@ -195,11 +195,11 @@ export const Bills = () => {
 
   const colsBody: IColsBody<IBill>[] = [
     {
-      cell: (item: IBill) => item.originSchedule.description,
+      cell: (item: IBill) => item.debtor.name,
       type: 'string',
     },
     {
-      cell: (item: IBill) => item.originSchedule.stakeholder.cpfCnpj,
+      cell: (item: IBill) => item.debtor.document,
       type: 'cpfCnpj',
     },
     {
@@ -211,7 +211,8 @@ export const Bills = () => {
       },
     },
     {
-      cell: (item: IBill) => (item.paidAt ? formatDate(item.paidAt) : ''),
+      cell: (item: IBill) =>
+        item.paidValue && item.lasStatusChangeDate ? formatDate(item.lasStatusChangeDate) : '',
       type: 'string',
       cssProps: {
         width: '1%',
@@ -228,7 +229,7 @@ export const Bills = () => {
     },
     {
       cell: (item: IBill) =>
-        handleTranslate({ key: item.statusDescription, capitalize: true, alternative: true }),
+        handleTranslate({ key: item.status.description, capitalize: true, alternative: true }),
       type: 'string',
       cssProps: {
         width: '150px',
@@ -236,7 +237,7 @@ export const Bills = () => {
       },
     },
     {
-      cell: (item: IBill) => renderActions(item.originScheduleId, item.url, item.statusDescription),
+      cell: (item: IBill) => renderActions(item.scheduleId, item.url, item.status.description),
       node: true,
       cssProps: {
         width: 'fit-content',
